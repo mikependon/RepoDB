@@ -7,6 +7,7 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RepoDb
@@ -303,6 +304,7 @@ namespace RepoDb
         /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkMergeAsync<TEntity>(this SqlConnection connection,
             IEnumerable<TEntity> entities,
@@ -314,7 +316,8 @@ namespace RepoDb
             int? batchSize = null,
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            SqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             return await BulkMergeAsyncInternal(connection: connection,
@@ -328,7 +331,8 @@ namespace RepoDb
                 batchSize: batchSize,
                 isReturnIdentity: isReturnIdentity,
                 usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -347,6 +351,7 @@ namespace RepoDb
         /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkMergeAsync<TEntity>(this SqlConnection connection,
             string tableName,
@@ -359,7 +364,8 @@ namespace RepoDb
             int? batchSize = null,
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            SqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             return await BulkMergeAsyncInternal(connection: connection,
@@ -373,7 +379,8 @@ namespace RepoDb
                 batchSize: batchSize,
                 isReturnIdentity: isReturnIdentity,
                 usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -390,6 +397,7 @@ namespace RepoDb
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkMergeAsync<TEntity>(this SqlConnection connection,
             DbDataReader reader,
@@ -400,7 +408,8 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            SqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             return await BulkMergeAsyncInternal(connection: connection,
@@ -414,7 +423,8 @@ namespace RepoDb
                 batchSize: batchSize,
                 isReturnIdentity: false,
                 usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         #endregion
@@ -435,6 +445,7 @@ namespace RepoDb
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkMergeAsync(this SqlConnection connection,
             string tableName,
@@ -446,7 +457,8 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            SqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             return await BulkMergeAsyncInternal(connection: connection,
                 tableName: tableName,
@@ -459,7 +471,8 @@ namespace RepoDb
                 batchSize: batchSize,
                 isReturnIdentity: false,
                 usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -478,6 +491,7 @@ namespace RepoDb
         /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkMergeAsync<TEntity>(this SqlConnection connection,
             DataTable dataTable,
@@ -490,7 +504,8 @@ namespace RepoDb
             int? batchSize = null,
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            SqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             return await BulkMergeAsyncInternal(connection: connection,
@@ -505,7 +520,8 @@ namespace RepoDb
                 batchSize: batchSize,
                 isReturnIdentity: isReturnIdentity,
                 usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -524,6 +540,7 @@ namespace RepoDb
         /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkMergeAsync(this SqlConnection connection,
             string tableName,
@@ -537,7 +554,8 @@ namespace RepoDb
             int? batchSize = null,
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            SqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             return await BulkMergeAsyncInternal(connection: connection,
                 tableName: tableName,
@@ -551,7 +569,8 @@ namespace RepoDb
                 batchSize: batchSize,
                 isReturnIdentity: isReturnIdentity,
                 usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         #endregion
@@ -573,6 +592,7 @@ namespace RepoDb
         /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         internal static int BulkMergeInternal<TEntity>(SqlConnection connection,
             string tableName,
@@ -788,6 +808,7 @@ namespace RepoDb
         /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         internal static int BulkMergeInternal(SqlConnection connection,
             string tableName,
@@ -984,6 +1005,7 @@ namespace RepoDb
         /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         internal static int BulkMergeInternal(SqlConnection connection,
             string tableName,
@@ -1203,6 +1225,7 @@ namespace RepoDb
         /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         internal static async Task<int> BulkMergeAsyncInternal<TEntity>(SqlConnection connection,
             string tableName,
@@ -1215,7 +1238,8 @@ namespace RepoDb
             int? batchSize = null,
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            SqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Variables
@@ -1227,7 +1251,7 @@ namespace RepoDb
             if (transaction == null)
             {
                 // Add the transaction if not present
-                transaction = (SqlTransaction)(await connection.EnsureOpenAsync()).BeginTransaction();
+                transaction = (SqlTransaction)(await connection.EnsureOpenAsync(cancellationToken)).BeginTransaction();
             }
             else
             {
@@ -1250,7 +1274,7 @@ namespace RepoDb
             try
             {
                 // Get the DB Fields
-                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, true);
+                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, true, cancellationToken);
 
                 // Variables needed
                 var entityFields = FieldCache.Get<TEntity>().Select(f => f.Name);
@@ -1299,7 +1323,7 @@ namespace RepoDb
                     tempTableName,
                     fields,
                     dbSetting);
-                await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
+                await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
 
                 // Set the options to KeepIdentity if needed
                 if (options == null &&
@@ -1318,24 +1342,25 @@ namespace RepoDb
                         fields?.Any(field => string.Equals(field.Name, dbField.Name, StringComparison.OrdinalIgnoreCase)) == true);
 
                 // Do the bulk insertion first
-                await BulkInsertAsyncInternal(connection,
-                    tempTableName,
-                    entities,
-                    filteredDbFields,
-                    mappings,
-                    options,
-                    null,
-                    bulkCopyTimeout,
-                    batchSize,
-                    false,
-                    false,
-                    transaction);
+                await BulkInsertAsyncInternal(connection: connection,
+                   tableName: tempTableName,
+                   entities: entities,
+                   dbFields: filteredDbFields,
+                   mappings: mappings,
+                   options: options,
+                   hints: hints,
+                   bulkCopyTimeout: bulkCopyTimeout,
+                   batchSize: batchSize,
+                   isReturnIdentity: false,
+                   usePhysicalPseudoTempTable: false,
+                   transaction,
+                   cancellationToken: cancellationToken);
 
                 // Create the clustered index
                 sql = GetCreateTemporaryTableClusteredIndexSqlText(tempTableName,
                     qualifiers,
                     dbSetting);
-                await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
+                await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
 
                 // Merge the actual merge
                 sql = GetBulkMergeSqlText(tableName,
@@ -1351,17 +1376,17 @@ namespace RepoDb
                 // Identity if the identity is to return
                 if (isReturnIdentity != true)
                 {
-                    result = await connection.ExecuteNonQueryAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction);
+                    result = await connection.ExecuteNonQueryAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, cancellationToken: cancellationToken);
                 }
                 else
                 {
-                    using (var reader = (DbDataReader)(await connection.ExecuteReaderAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction)))
+                    using (var reader = (DbDataReader)(await connection.ExecuteReaderAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, cancellationToken: cancellationToken)))
                     {
                         var func = Compiler.GetPropertySetterFunc<TEntity>(identityDbField.Name);
                         var list = entities.AsList();
-                        while (await reader.ReadAsync())
+                        while (await reader.ReadAsync(cancellationToken))
                         {
-                            var value = Converter.DbNullToNull(await reader.GetFieldValueAsync<object>(0));
+                            var value = Converter.DbNullToNull(await reader.GetFieldValueAsync<object>(0, cancellationToken));
                             var entity = list[result];
                             func(entity, value);
                             result++;
@@ -1371,7 +1396,7 @@ namespace RepoDb
 
                 // Drop the table after used
                 sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
-                await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
+                await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
 
                 // Commit the transaction
                 if (hasTransaction == false)
@@ -1418,6 +1443,7 @@ namespace RepoDb
         /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         internal static async Task<int> BulkMergeAsyncInternal(SqlConnection connection,
             string tableName,
@@ -1430,7 +1456,8 @@ namespace RepoDb
             int? batchSize = null,
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            SqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             // Variables
             var dbSetting = connection.GetDbSetting();
@@ -1441,7 +1468,7 @@ namespace RepoDb
             if (transaction == null)
             {
                 // Add the transaction if not present
-                transaction = (SqlTransaction)(await connection.EnsureOpenAsync()).BeginTransaction();
+                transaction = (SqlTransaction)(await connection.EnsureOpenAsync(cancellationToken)).BeginTransaction();
             }
             else
             {
@@ -1464,7 +1491,7 @@ namespace RepoDb
             try
             {
                 // Get the DB Fields
-                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, true);
+                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, true, cancellationToken);
 
                 // Variables needed
                 var readerFields = Enumerable.Range(0, reader.FieldCount)
@@ -1514,7 +1541,7 @@ namespace RepoDb
                     tempTableName,
                     fields,
                     dbSetting);
-                await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
+                await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
 
                 // Set the options to KeepIdentity if needed
                 if (options == null &&
@@ -1533,24 +1560,25 @@ namespace RepoDb
                         fields?.Any(field => string.Equals(field.Name, dbField.Name, StringComparison.OrdinalIgnoreCase)) == true);
 
                 // Do the bulk insertion first
-                await BulkInsertAsyncInternal(connection,
-                    tempTableName,
-                    reader,
-                    filteredDbFields,
-                    mappings,
-                    options,
-                    null,
-                    bulkCopyTimeout,
-                    batchSize,
-                    false,
-                    false,
-                    transaction);
+                await BulkInsertAsyncInternal(connection: connection,
+                    tableName: tempTableName,
+                    reader: reader,
+                    dbFields: filteredDbFields,
+                    mappings: mappings,
+                    options: options,
+                    hints: hints,
+                    bulkCopyTimeout: bulkCopyTimeout,
+                    batchSize: batchSize,
+                    isReturnIdentity: false,
+                    usePhysicalPseudoTempTable: false,
+                    transaction,
+                    cancellationToken: cancellationToken);
 
                 // Create the clustered index
                 sql = GetCreateTemporaryTableClusteredIndexSqlText(tempTableName,
                     qualifiers,
                     dbSetting);
-                await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
+                await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
 
                 // Merge the actual merge
                 sql = GetBulkMergeSqlText(tableName,
@@ -1564,11 +1592,11 @@ namespace RepoDb
                     isReturnIdentity.GetValueOrDefault());
 
                 // Identity if the identity is to return
-                result = await connection.ExecuteNonQueryAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction);
+                result = await connection.ExecuteNonQueryAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, cancellationToken: cancellationToken);
 
                 // Drop the table after used
                 sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
-                await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
+                await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
 
                 // Commit the transaction
                 if (hasTransaction == false)
@@ -1616,6 +1644,7 @@ namespace RepoDb
         /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         internal static async Task<int> BulkMergeAsyncInternal(SqlConnection connection,
             string tableName,
@@ -1629,7 +1658,8 @@ namespace RepoDb
             int? batchSize = null,
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            SqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             // Variables
             var dbSetting = connection.GetDbSetting();
@@ -1640,7 +1670,7 @@ namespace RepoDb
             if (transaction == null)
             {
                 // Add the transaction if not present
-                transaction = (SqlTransaction)(await connection.EnsureOpenAsync()).BeginTransaction();
+                transaction = (SqlTransaction)(await connection.EnsureOpenAsync(cancellationToken)).BeginTransaction();
             }
             else
             {
@@ -1663,7 +1693,7 @@ namespace RepoDb
             try
             {
                 // Get the DB Fields
-                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, true);
+                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, true, cancellationToken);
 
                 // Variables needed
                 var tableFields = Enumerable.Range(0, dataTable.Columns.Count)
@@ -1713,7 +1743,7 @@ namespace RepoDb
                     tempTableName,
                     fields,
                     dbSetting);
-                await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
+                await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
 
                 // Filter the DB Fields
                 var filteredDbFields = dbFields?
@@ -1721,25 +1751,26 @@ namespace RepoDb
                         fields?.Any(field => string.Equals(field.Name, dbField.Name, StringComparison.OrdinalIgnoreCase)) == true);
 
                 // Do the bulk insertion first
-                await BulkInsertAsyncInternal(connection,
-                    tempTableName,
-                    dataTable,
-                    rowState,
-                    filteredDbFields,
-                    mappings,
-                    options,
-                    null,
-                    bulkCopyTimeout,
-                    batchSize,
-                    false,
-                    false,
-                    transaction);
+                await BulkInsertAsyncInternal(connection: connection,
+                    tableName: tempTableName,
+                    dataTable: dataTable,
+                    rowState: rowState,
+                    dbFields: filteredDbFields,
+                    mappings: mappings,
+                    options: options,
+                    hints: hints,
+                    bulkCopyTimeout: bulkCopyTimeout,
+                    batchSize: batchSize,
+                    isReturnIdentity: false,
+                    usePhysicalPseudoTempTable: false,
+                    transaction,
+                    cancellationToken: cancellationToken);
 
                 // Create the clustered index
                 sql = GetCreateTemporaryTableClusteredIndexSqlText(tempTableName,
                     qualifiers,
                     dbSetting);
-                await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
+                await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
 
                 // Set the options to KeepIdentity if needed
                 if (options == null &&
@@ -1767,11 +1798,11 @@ namespace RepoDb
                 var column = dataTable.Columns[identityDbField.Name];
                 if (isReturnIdentity == true && column?.ReadOnly == false)
                 {
-                    using (var reader = (DbDataReader)(await connection.ExecuteReaderAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction)))
+                    using (var reader = (DbDataReader)(await connection.ExecuteReaderAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, cancellationToken: cancellationToken)))
                     {
-                        while (await reader.ReadAsync())
+                        while (await reader.ReadAsync(cancellationToken))
                         {
-                            var value = Converter.DbNullToNull((await reader.GetFieldValueAsync<object>(0)));
+                            var value = Converter.DbNullToNull((await reader.GetFieldValueAsync<object>(0, cancellationToken)));
                             dataTable.Rows[result][column] = value;
                             result++;
                         }
@@ -1779,12 +1810,12 @@ namespace RepoDb
                 }
                 else
                 {
-                    result = await connection.ExecuteNonQueryAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction);
+                    result = await connection.ExecuteNonQueryAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, cancellationToken: cancellationToken);
                 }
 
                 // Drop the table after used
                 sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
-                await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
+                await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
 
                 // Commit the transaction
                 if (hasTransaction == false)

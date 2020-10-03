@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RepoDb.Contexts.Providers
@@ -100,6 +101,7 @@ namespace RepoDb.Contexts.Providers
         /// <param name="hints"></param>
         /// <param name="transaction"></param>
         /// <param name="statementBuilder"></param>
+        /// <param name="cancellationToken"></param>
         /// <returns></returns>
         public static async Task<UpdateExecutionContext<TEntity>> CreateAsync<TEntity>(IDbConnection connection,
             string tableName,
@@ -107,7 +109,8 @@ namespace RepoDb.Contexts.Providers
             IEnumerable<Field> fields,
             string hints = null,
             IDbTransaction transaction = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             var key = GetKey<TEntity>(tableName, fields, hints, where);
@@ -120,7 +123,7 @@ namespace RepoDb.Contexts.Providers
             }
 
             // Create
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
+            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
             context = CreateInternal<TEntity>(connection,
                 tableName,
                 where,

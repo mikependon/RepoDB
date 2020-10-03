@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RepoDb
@@ -374,6 +375,7 @@ namespace RepoDb
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> BatchQueryAsync(string tableName,
             int page,
@@ -381,7 +383,8 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             return DbRepository.BatchQueryAsync<TEntity>(tableName: tableName,
                 page: page,
@@ -389,7 +392,8 @@ namespace RepoDb
                 orderBy: orderBy,
                 fields: fields,
                 hints: hints,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -403,6 +407,7 @@ namespace RepoDb
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> BatchQueryAsync(string tableName,
             int page,
@@ -411,7 +416,8 @@ namespace RepoDb
             object where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             return DbRepository.BatchQueryAsync<TEntity>(tableName: tableName,
                 page: page,
@@ -420,7 +426,8 @@ namespace RepoDb
                 where: where,
                 fields: fields,
                 hints: hints,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -434,6 +441,7 @@ namespace RepoDb
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> BatchQueryAsync(string tableName,
             int page,
@@ -442,7 +450,8 @@ namespace RepoDb
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
             IEnumerable<Field> fields = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             return DbRepository.BatchQueryAsync<TEntity>(tableName: tableName,
                 page: page,
@@ -451,7 +460,8 @@ namespace RepoDb
                 where: where,
                 fields: fields,
                 hints: hints,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -465,6 +475,7 @@ namespace RepoDb
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> BatchQueryAsync(string tableName,
             int page,
@@ -473,7 +484,8 @@ namespace RepoDb
             QueryField where = null,
             string hints = null,
             IEnumerable<Field> fields = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             return DbRepository.BatchQueryAsync<TEntity>(tableName: tableName,
                 page: page,
@@ -482,7 +494,8 @@ namespace RepoDb
                 where: where,
                 fields: fields,
                 hints: hints,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -496,6 +509,7 @@ namespace RepoDb
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> BatchQueryAsync(string tableName,
             int page,
@@ -504,7 +518,8 @@ namespace RepoDb
             IEnumerable<QueryField> where = null,
             string hints = null,
             IEnumerable<Field> fields = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             return DbRepository.BatchQueryAsync<TEntity>(tableName: tableName,
                 page: page,
@@ -513,7 +528,8 @@ namespace RepoDb
                 where: where,
                 fields: fields,
                 hints: hints,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -527,6 +543,7 @@ namespace RepoDb
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> BatchQueryAsync(string tableName,
             int page,
@@ -535,7 +552,8 @@ namespace RepoDb
             QueryGroup where = null,
             string hints = null,
             IEnumerable<Field> fields = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             return DbRepository.BatchQueryAsync<TEntity>(tableName: tableName,
                 page: page,
@@ -544,7 +562,8 @@ namespace RepoDb
                 where: where,
                 fields: fields,
                 hints: hints,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -556,20 +575,23 @@ namespace RepoDb
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> BatchQueryAsync(int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             return DbRepository.BatchQueryAsync<TEntity>(page: page,
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
                 fields: fields,
                 hints: hints,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -582,6 +604,7 @@ namespace RepoDb
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> BatchQueryAsync(int page,
             int rowsPerBatch,
@@ -589,7 +612,8 @@ namespace RepoDb
             object where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             return DbRepository.BatchQueryAsync<TEntity>(page: page,
                 rowsPerBatch: rowsPerBatch,
@@ -597,7 +621,8 @@ namespace RepoDb
                 where: where,
                 fields: fields,
                 hints: hints,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -610,6 +635,7 @@ namespace RepoDb
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> BatchQueryAsync(int page,
             int rowsPerBatch,
@@ -617,7 +643,8 @@ namespace RepoDb
             Expression<Func<TEntity, bool>> where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             return DbRepository.BatchQueryAsync<TEntity>(page: page,
                 rowsPerBatch: rowsPerBatch,
@@ -625,7 +652,8 @@ namespace RepoDb
                 where: where,
                 fields: fields,
                 hints: hints,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -638,6 +666,7 @@ namespace RepoDb
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> BatchQueryAsync(int page,
             int rowsPerBatch,
@@ -645,7 +674,8 @@ namespace RepoDb
             QueryField where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             return DbRepository.BatchQueryAsync<TEntity>(page: page,
                 rowsPerBatch: rowsPerBatch,
@@ -653,7 +683,8 @@ namespace RepoDb
                 where: where,
                 fields: fields,
                 hints: hints,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -666,6 +697,7 @@ namespace RepoDb
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> BatchQueryAsync(int page,
             int rowsPerBatch,
@@ -673,7 +705,8 @@ namespace RepoDb
             IEnumerable<QueryField> where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             return DbRepository.BatchQueryAsync<TEntity>(page: page,
                 rowsPerBatch: rowsPerBatch,
@@ -681,7 +714,8 @@ namespace RepoDb
                 where: where,
                 fields: fields,
                 hints: hints,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -694,6 +728,7 @@ namespace RepoDb
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> BatchQueryAsync(int page,
             int rowsPerBatch,
@@ -701,7 +736,8 @@ namespace RepoDb
             QueryGroup where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             return DbRepository.BatchQueryAsync<TEntity>(page: page,
                 rowsPerBatch: rowsPerBatch,
@@ -709,7 +745,8 @@ namespace RepoDb
                 where: where,
                 fields: fields,
                 hints: hints,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         #endregion

@@ -5,6 +5,8 @@ using RepoDb.Resolvers;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RepoDb.DbHelpers
@@ -44,9 +46,9 @@ namespace RepoDb.DbHelpers
         #region Helpers
 
         /// <summary>
-        /// Returns the command text that is being used to extract schema definitions.
+        /// 
         /// </summary>
-        /// <returns>The command text.</returns>
+        /// <returns></returns>
         private string GetCommandText()
         {
             return @"
@@ -75,11 +77,11 @@ namespace RepoDb.DbHelpers
         }
 
         /// <summary>
-        /// Converts the <see cref="IDataReader"/> object into <see cref="DbField"/> object.
+        /// 
         /// </summary>
-        /// <param name="reader">The instance of <see cref="IDataReader"/> object.</param>
-        /// <returns>The instance of converted <see cref="DbField"/> object.</returns>
-        private DbField ReaderToDbField(IDataReader reader)
+        /// <param name="reader"></param>
+        /// <returns></returns>
+        private DbField ReaderToDbField(DbDataReader reader)
         {
             return new DbField(reader.GetString(0),
                 reader.IsDBNull(1) ? false : reader.GetBoolean(1),
@@ -90,6 +92,26 @@ namespace RepoDb.DbHelpers
                 null,
                 null,
                 reader.IsDBNull(4) ? "text" : reader.GetString(4));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        private async Task<DbField> ReaderToDbFieldAsync(DbDataReader reader,
+            CancellationToken cancellationToken = default)
+        {
+            return new DbField(await reader.GetFieldValueAsync<string>(0, cancellationToken),
+                await reader.IsDBNullAsync(1, cancellationToken) ? false : await reader.GetFieldValueAsync<bool>(1, cancellationToken),
+                await reader.IsDBNullAsync(2, cancellationToken) ? false : await reader.GetFieldValueAsync<bool>(2, cancellationToken),
+                await reader.IsDBNullAsync(3, cancellationToken) ? false : await reader.GetFieldValueAsync<bool>(3, cancellationToken),
+                await reader.IsDBNullAsync(4, cancellationToken) ? DbTypeResolver.Resolve("text") : DbTypeResolver.Resolve(await reader.GetFieldValueAsync<string>(4, cancellationToken)),
+                null,
+                null,
+                null,
+                await reader.IsDBNullAsync(4) ? "text" : reader.GetString(4));
         }
 
         #endregion
@@ -118,7 +140,7 @@ namespace RepoDb.DbHelpers
             };
 
             // Iterate and extract
-            using (var reader = connection.ExecuteReader(commandText, param, transaction: transaction))
+            using (var reader = (DbDataReader)connection.ExecuteReader(commandText, param, transaction: transaction))
             {
                 var dbFields = new List<DbField>();
 
@@ -139,10 +161,12 @@ namespace RepoDb.DbHelpers
         /// <param name="connection">The instance of the connection object.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A list of <see cref="DbField"/> of the target table.</returns>
         public async Task<IEnumerable<DbField>> GetFieldsAsync(IDbConnection connection,
             string tableName,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             // Variables
             var commandText = GetCommandText();
@@ -153,14 +177,15 @@ namespace RepoDb.DbHelpers
             };
 
             // Iterate and extract
-            using (var reader = await connection.ExecuteReaderAsync(commandText, param, transaction: transaction))
+            using (var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, param, transaction: transaction,
+                cancellationToken: cancellationToken))
             {
                 var dbFields = new List<DbField>();
 
                 // Iterate the list of the fields
-                while (reader.Read())
+                while (await reader.ReadAsync(cancellationToken))
                 {
-                    dbFields.Add(ReaderToDbField(reader));
+                    dbFields.Add(await ReaderToDbFieldAsync(reader));
                 }
 
                 // Return the list of fields
@@ -182,7 +207,7 @@ namespace RepoDb.DbHelpers
             IDbTransaction transaction = null)
         {
             // TODO: May fail with trigger?
-            return connection.ExecuteScalar("SELECT lastval();");
+            return connection.ExecuteScalar("SELECT lastval();", transaction: transaction);
         }
 
         /// <summary>
@@ -190,12 +215,15 @@ namespace RepoDb.DbHelpers
         /// </summary>
         /// <param name="connection">The instance of the connection object.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The newly generated identity from the database.</returns>
         public async Task<object> GetScopeIdentityAsync(IDbConnection connection,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             // TODO: May fail with trigger?
-            return await connection.ExecuteScalarAsync("SELECT lastval();");
+            return await connection.ExecuteScalarAsync("SELECT lastval();", transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         #endregion

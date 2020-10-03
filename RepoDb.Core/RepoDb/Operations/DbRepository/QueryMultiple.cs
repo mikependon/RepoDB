@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RepoDb
@@ -621,6 +622,7 @@ namespace RepoDb
         /// <param name="top2">The number of rows to be returned (at T2).</param>
         /// <param name="hints2">The table hints to be used (at T2).</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<T1, T2>(Expression<Func<T1, bool>> where1,
             Expression<Func<T2, bool>> where2,
@@ -630,7 +632,8 @@ namespace RepoDb
             int? top2 = 0,
             IEnumerable<OrderField> orderBy2 = null,
             string hints2 = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
         {
@@ -651,7 +654,8 @@ namespace RepoDb
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
-                    statementBuilder: StatementBuilder);
+                    statementBuilder: StatementBuilder,
+                    cancellationToken: cancellationToken);
             }
             catch
             {
@@ -688,6 +692,7 @@ namespace RepoDb
         /// <param name="top3">The number of rows to be returned (at T3).</param>
         /// <param name="hints3">The table hints to be used (at T3).</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<T1, T2, T3>(Expression<Func<T1, bool>> where1,
             Expression<Func<T2, bool>> where2,
@@ -701,7 +706,8 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -727,7 +733,8 @@ namespace RepoDb
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
-                    statementBuilder: StatementBuilder);
+                    statementBuilder: StatementBuilder,
+                    cancellationToken: cancellationToken);
             }
             catch
             {
@@ -769,6 +776,7 @@ namespace RepoDb
         /// <param name="top4">The number of rows to be returned (at T4).</param>
         /// <param name="hints4">The table hints to be used (at T4).</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>>
             QueryMultipleAsync<T1, T2, T3, T4>(Expression<Func<T1, bool>> where1,
@@ -787,7 +795,8 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -818,7 +827,8 @@ namespace RepoDb
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
-                    statementBuilder: StatementBuilder);
+                    statementBuilder: StatementBuilder,
+                    cancellationToken: cancellationToken);
             }
             catch
             {
@@ -865,6 +875,7 @@ namespace RepoDb
         /// <param name="top5">The number of rows to be returned (at T5).</param>
         /// <param name="hints5">The table hints to be used (at T5).</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>>
             QueryMultipleAsync<T1, T2, T3, T4, T5>(Expression<Func<T1, bool>> where1,
@@ -887,7 +898,8 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy5 = null,
             int? top5 = 0,
             string hints5 = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -923,7 +935,8 @@ namespace RepoDb
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
-                    statementBuilder: StatementBuilder);
+                    statementBuilder: StatementBuilder,
+                    cancellationToken: cancellationToken);
             }
             catch
             {
@@ -975,6 +988,7 @@ namespace RepoDb
         /// <param name="top6">The number of rows to be returned (at T6).</param>
         /// <param name="hints6">The table hints to be used (at T6).</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>>
             QueryMultipleAsync<T1, T2, T3, T4, T5, T6>(Expression<Func<T1, bool>> where1,
@@ -1001,7 +1015,8 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy6 = null,
             int? top6 = 0,
             string hints6 = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -1042,7 +1057,8 @@ namespace RepoDb
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
-                    statementBuilder: StatementBuilder);
+                    statementBuilder: StatementBuilder,
+                    cancellationToken: cancellationToken);
             }
             catch
             {
@@ -1099,6 +1115,7 @@ namespace RepoDb
         /// <param name="top7">The number of rows to be returned (at T7).</param>
         /// <param name="hints7">The table hints to be used (at T7).</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>>
             QueryMultipleAsync<T1, T2, T3, T4, T5, T6, T7>(Expression<Func<T1, bool>> where1,
@@ -1129,7 +1146,8 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy7 = null,
             int? top7 = 0,
             string hints7 = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -1175,7 +1193,8 @@ namespace RepoDb
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     trace: Trace,
-                    statementBuilder: StatementBuilder);
+                    statementBuilder: StatementBuilder,
+                    cancellationToken: cancellationToken);
             }
             catch
             {

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RepoDb.DbHelpers
@@ -43,22 +44,22 @@ namespace RepoDb.DbHelpers
         #region Helpers
 
         /// <summary>
-        /// Returns the command text that is being used to extract schema definitions.
+        /// 
         /// </summary>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <returns>The command text.</returns>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
         private string GetCommandText(string tableName)
         {
             return $"pragma table_info({DataEntityExtension.GetTableName(tableName)});";
         }
 
         /// <summary>
-        /// Converts the <see cref="IDataReader"/> object into <see cref="DbField"/> object.
+        /// 
         /// </summary>
-        /// <param name="reader">The instance of <see cref="IDataReader"/> object.</param>
-        /// <param name="identityFieldName">The name of the identity column.</param>
-        /// <returns>The instance of converted <see cref="DbField"/> object.</returns>
-        private DbField ReaderToDbField(IDataReader reader,
+        /// <param name="reader"></param>
+        /// <param name="identityFieldName"></param>
+        /// <returns></returns>
+        private DbField ReaderToDbField(DbDataReader reader,
             string identityFieldName)
         {
             return new DbField(reader.GetString(1),
@@ -73,13 +74,35 @@ namespace RepoDb.DbHelpers
         }
 
         /// <summary>
-        /// Gets the list of <see cref="DbField"/> of the table.
+        /// 
         /// </summary>
-        /// <typeparam name="TDbConnection">The type of <see cref="DbConnection"/> object.</typeparam>
-        /// <param name="connection">The instance of the connection object.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="transaction">The transaction object that is currently in used.</param>
-        /// <returns>A list of <see cref="DbField"/> of the target table.</returns>
+        /// <param name="reader"></param>
+        /// <param name="identityFieldName"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        private async Task<DbField> ReaderToDbFieldAsync(DbDataReader reader,
+            string identityFieldName,
+            CancellationToken cancellationToken = default)
+        {
+            return new DbField(await reader.GetFieldValueAsync<string>(1, cancellationToken),
+                await reader.IsDBNullAsync(5, cancellationToken) ? false : reader.GetBoolean(5),
+                string.Equals(await reader.GetFieldValueAsync<string>(1, cancellationToken), identityFieldName, StringComparison.OrdinalIgnoreCase),
+                await reader.IsDBNullAsync(3, cancellationToken) ? true : await reader.GetFieldValueAsync<bool>(3, cancellationToken) == false,
+                await reader.IsDBNullAsync(2, cancellationToken) ? DbTypeResolver.Resolve("text") : DbTypeResolver.Resolve(await reader.GetFieldValueAsync<string>(2, cancellationToken)),
+                null,
+                null,
+                null,
+                null);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TDbConnection"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
         private string GetIdentityFieldName<TDbConnection>(TDbConnection connection,
             string tableName,
             IDbTransaction transaction = null)
@@ -90,6 +113,45 @@ namespace RepoDb.DbHelpers
             var sql = connection.ExecuteScalar<string>(commandText: commandText,
                 param: new { TableName = DataEntityExtension.GetTableName(tableName).AsUnquoted(DbSetting) },
                 transaction: transaction);
+
+            // Return
+            return GetIdentityFieldNameInternal(sql);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TDbConnection"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        private async Task<string> GetIdentityFieldNameAsync<TDbConnection>(TDbConnection connection,
+            string tableName,
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+            where TDbConnection : IDbConnection
+        {
+            // Sql text
+            var commandText = "SELECT sql FROM [sqlite_master] WHERE name = @TableName AND type = 'table';";
+            var sql = await connection.ExecuteScalarAsync<string>(commandText: commandText,
+                param: new { TableName = DataEntityExtension.GetTableName(tableName).AsUnquoted(DbSetting) },
+                transaction: transaction,
+                cancellationToken: cancellationToken);
+
+            // Return
+            return GetIdentityFieldNameInternal(sql);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <returns></returns>
+        private string GetIdentityFieldNameInternal(string sql)
+        {
+            // Sql text
             var fields = ParseTableFieldsFromSql(sql);
 
             // Iterate the fields
@@ -109,10 +171,10 @@ namespace RepoDb.DbHelpers
         }
 
         /// <summary>
-        /// Returns true if the field is an identity based on the definition from link (https://sqlite.org/autoinc.html).
+        /// 
         /// </summary>
-        /// <param name="field">The field to identify.</param>
-        /// <returns>True if the field is an identity.</returns>
+        /// <param name="field"></param>
+        /// <returns></returns>
         private bool IsIdentity(string field) =>
             field.ToUpper().Contains("AUTOINCREMENT") ||
             field.ToUpper().Contains("INTEGER PRIMARY KEY") ||
@@ -120,10 +182,10 @@ namespace RepoDb.DbHelpers
             (field.ToUpper().Contains("INTEGER") && field.ToUpper().Contains("PRIMARY") && field.ToUpper().Contains("KEY"));
 
         /// <summary>
-        /// Parses the table sql and return the list of the fields.
+        /// 
         /// </summary>
-        /// <param name="sql">The sql to be parsed.</param>
-        /// <returns>The list of the fields.</returns>
+        /// <param name="sql"></param>
+        /// <returns></returns>
         private string[] ParseTableFieldsFromSql(string sql)
         {
             if (string.IsNullOrEmpty(sql))
@@ -164,7 +226,7 @@ namespace RepoDb.DbHelpers
             var commandText = GetCommandText(tableName);
 
             // Iterate and extract
-            using (var reader = connection.ExecuteReader(commandText, transaction: transaction))
+            using (var reader = (DbDataReader)connection.ExecuteReader(commandText, transaction: transaction))
             {
                 var dbFields = new List<DbField>();
                 var identity = GetIdentityFieldName(connection, tableName, transaction);
@@ -186,24 +248,26 @@ namespace RepoDb.DbHelpers
         /// <param name="connection">The instance of the connection object.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A list of <see cref="DbField"/> of the target table.</returns>
         public async Task<IEnumerable<DbField>> GetFieldsAsync(IDbConnection connection,
             string tableName,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             // Variables
             var commandText = GetCommandText(tableName);
 
             // Iterate and extract
-            using (var reader = await connection.ExecuteReaderAsync(commandText, transaction: transaction))
+            using (var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, cancellationToken: cancellationToken))
             {
                 var dbFields = new List<DbField>();
-                var identity = GetIdentityFieldName(connection, tableName, transaction);
+                var identity = await GetIdentityFieldNameAsync(connection, tableName, transaction, cancellationToken);
 
                 // Iterate the list of the fields
-                while (reader.Read())
+                while (await reader.ReadAsync(cancellationToken))
                 {
-                    dbFields.Add(ReaderToDbField(reader, identity));
+                    dbFields.Add(await ReaderToDbFieldAsync(reader, identity, cancellationToken));
                 }
 
                 // Return the list of fields
@@ -224,7 +288,7 @@ namespace RepoDb.DbHelpers
         public object GetScopeIdentity(IDbConnection connection,
             IDbTransaction transaction = null)
         {
-            return connection.ExecuteScalar("SELECT last_insert_rowid();");
+            return connection.ExecuteScalar("SELECT last_insert_rowid();", transaction: transaction);
         }
 
         /// <summary>
@@ -232,11 +296,14 @@ namespace RepoDb.DbHelpers
         /// </summary>
         /// <param name="connection">The instance of the connection object.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The newly generated identity from the database.</returns>
         public async Task<object> GetScopeIdentityAsync(IDbConnection connection,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
-            return await connection.ExecuteScalarAsync("SELECT last_insert_rowid();");
+            return await connection.ExecuteScalarAsync("SELECT last_insert_rowid();", transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         #endregion

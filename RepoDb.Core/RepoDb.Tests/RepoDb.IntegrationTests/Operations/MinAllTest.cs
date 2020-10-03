@@ -276,7 +276,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region MinAllAsync(TableName)
 
         [TestMethod]
-        public void TestSqlConnectionMinAllTableNameAsync()
+        public void TestSqlConnectionMinAllAsyncViaTableName()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -296,7 +296,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMinAllTableNameAsyncWithHints()
+        public void TestSqlConnectionMinAllAsyncViaTableNameWithHints()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -317,7 +317,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMinAllTypedResultTableNameAsync()
+        public void TestSqlConnectionMinAllTypedResultAsyncViaTableName()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -337,7 +337,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMinAllTypedResultTableNameAsyncWithHints()
+        public void TestSqlConnectionMinAllTypedResultAsyncViaTableNameWithHints()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);

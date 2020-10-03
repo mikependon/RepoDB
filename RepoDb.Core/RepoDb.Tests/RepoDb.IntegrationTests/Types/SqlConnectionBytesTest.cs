@@ -24,7 +24,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
             Database.Cleanup();
         }
 
-        #region <TEntity>
+        #region Operation<TEntity>
 
         [TestMethod]
         public void TestSqlConnectionBytesCrud()
@@ -284,7 +284,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
 
         #endregion
 
-        #region (TableName)
+        #region Operation(TableName)
 
         [TestMethod]
         public void TestSqlConnectionBytesCrudViaTableName()
@@ -349,7 +349,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
         }
 
         [TestMethod]
-        public void TestSqlConnectionBytesCrudViaTableNameAsync()
+        public void TestSqlConnectionBytesCrudViaAsyncViaTableName()
         {
             // Setup
             var text = "RepoDb"; // Helper.GetAssemblyDescription();
@@ -383,7 +383,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
         }
 
         [TestMethod]
-        public void TestSqlConnectionBytesNullCrudViaTableNameAsync()
+        public void TestSqlConnectionBytesNullCrudViaAsyncViaTableName()
         {
             // Setup
             var entity = new

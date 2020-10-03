@@ -7,6 +7,7 @@ using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RepoDb
@@ -276,6 +277,7 @@ namespace RepoDb
         /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table. This argument will only be used if the 'isReturnIdentity' argument is 'true'.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkInsertAsync<TEntity>(this SqlConnection connection,
             IEnumerable<TEntity> entities,
@@ -286,7 +288,8 @@ namespace RepoDb
             int? batchSize = null,
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            SqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             return await BulkInsertAsyncInternal(connection: connection,
@@ -300,7 +303,8 @@ namespace RepoDb
                 batchSize: batchSize,
                 isReturnIdentity: isReturnIdentity,
                 usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -318,6 +322,7 @@ namespace RepoDb
         /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table. This argument will only be used if the 'isReturnIdentity' argument is 'true'.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkInsertAsync<TEntity>(this SqlConnection connection,
             string tableName,
@@ -329,7 +334,8 @@ namespace RepoDb
             int? batchSize = null,
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            SqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             return await BulkInsertAsyncInternal(connection: connection,
@@ -343,7 +349,8 @@ namespace RepoDb
                 batchSize: batchSize,
                 isReturnIdentity: isReturnIdentity,
                 usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -357,6 +364,7 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkInsertAsync<TEntity>(this SqlConnection connection,
             DbDataReader reader,
@@ -364,7 +372,8 @@ namespace RepoDb
             SqlBulkCopyOptions? options = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            SqlTransaction transaction = null)
+            SqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             return await BulkInsertAsyncInternal(connection: connection,
@@ -375,7 +384,8 @@ namespace RepoDb
                 options: options,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         #endregion
@@ -393,6 +403,7 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkInsertAsync(this SqlConnection connection,
             string tableName,
@@ -401,7 +412,8 @@ namespace RepoDb
             SqlBulkCopyOptions? options = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            SqlTransaction transaction = null)
+            SqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             return await BulkInsertAsyncInternal(connection: connection,
                 tableName: tableName,
@@ -411,7 +423,8 @@ namespace RepoDb
                 options: options,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -429,6 +442,7 @@ namespace RepoDb
         /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table. This argument will only be used if the 'isReturnIdentity' argument is 'true'.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkInsertAsync<TEntity>(this SqlConnection connection,
             DataTable dataTable,
@@ -440,7 +454,8 @@ namespace RepoDb
             int? batchSize = null,
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            SqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             return await BulkInsertAsyncInternal(connection: connection,
@@ -455,7 +470,8 @@ namespace RepoDb
                 batchSize: batchSize,
                 isReturnIdentity: isReturnIdentity,
                 usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -473,6 +489,7 @@ namespace RepoDb
         /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table. This argument will only be used if the 'isReturnIdentity' argument is 'true'.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkInsertAsync(this SqlConnection connection,
             string tableName,
@@ -485,7 +502,8 @@ namespace RepoDb
             int? batchSize = null,
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            SqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             return await BulkInsertAsyncInternal(connection: connection,
                 tableName: tableName,
@@ -499,7 +517,8 @@ namespace RepoDb
                 batchSize: batchSize,
                 isReturnIdentity: isReturnIdentity,
                 usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         #endregion
@@ -1187,6 +1206,7 @@ namespace RepoDb
         /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table. This argument will only be used if the 'isReturnIdentity' argument is 'true'.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         internal static async Task<int> BulkInsertAsyncInternal<TEntity>(SqlConnection connection,
             string tableName,
@@ -1199,7 +1219,8 @@ namespace RepoDb
             int? batchSize = null,
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            SqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Variables needed
@@ -1211,7 +1232,7 @@ namespace RepoDb
             if (transaction == null)
             {
                 // Add the transaction if not present
-                transaction = (SqlTransaction)(await connection.EnsureOpenAsync()).BeginTransaction();
+                transaction = (SqlTransaction)(await connection.EnsureOpenAsync(cancellationToken)).BeginTransaction();
             }
             else
             {
@@ -1222,7 +1243,7 @@ namespace RepoDb
             try
             {
                 // Get the DB Fields
-                dbFields = dbFields ?? await DbFieldCache.GetAsync(connection, tableName, transaction, true);
+                dbFields = dbFields ?? await DbFieldCache.GetAsync(connection, tableName, transaction, true, cancellationToken);
 
                 // Variables needed
                 var identityDbField = dbFields?.FirstOrDefault(dbField => dbField.IsIdentity);
@@ -1293,7 +1314,7 @@ namespace RepoDb
                             tempTableName,
                             fields,
                             dbSetting);
-                        await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
+                        await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
                     }
 
                     // Set the destinationtable
@@ -1318,11 +1339,11 @@ namespace RepoDb
                             sqlBulkCopy.ColumnMappings.Add(mapItem.SourceColumn, mapItem.DestinationColumn));
 
                     // Open the connection and do the operation
-                    connection.EnsureOpen();
+                    await connection.EnsureOpenAsync(cancellationToken);
                     using (var reader = new DataEntityDataReader<TEntity>(entities))
                     {
-                        await reader.InitializeAsync();
-                        await sqlBulkCopy.WriteToServerAsync(reader);
+                        await reader.InitializeAsync(cancellationToken);
+                        await sqlBulkCopy.WriteToServerAsync(reader, cancellationToken);
                         recordsAffected = reader.RecordsAffected;
                     }
 
@@ -1338,13 +1359,13 @@ namespace RepoDb
                             dbSetting);
 
                         // Execute the SQL
-                        using (var reader = (DbDataReader)(await connection.ExecuteReaderAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction)))
+                        using (var reader = (DbDataReader)(await connection.ExecuteReaderAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, cancellationToken: cancellationToken)))
                         {
                             var func = Compiler.GetPropertySetterFunc<TEntity>(identityDbField.Name);
                             var list = entities.AsList();
-                            while (await reader.ReadAsync())
+                            while (await reader.ReadAsync(cancellationToken))
                             {
-                                var value = Converter.DbNullToNull(await reader.GetFieldValueAsync<object>(0));
+                                var value = Converter.DbNullToNull(await reader.GetFieldValueAsync<object>(0, cancellationToken));
                                 var entity = list[result];
                                 func(entity, value);
                                 result++;
@@ -1353,7 +1374,7 @@ namespace RepoDb
 
                         // Drop the table after used
                         sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
-                        await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
+                        await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
                     }
                     else
                     {
@@ -1410,6 +1431,7 @@ namespace RepoDb
         /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table. This argument will only be used if the 'isReturnIdentity' argument is 'true'.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         internal static async Task<int> BulkInsertAsyncInternal(SqlConnection connection,
             string tableName,
@@ -1422,7 +1444,8 @@ namespace RepoDb
             int? batchSize = null,
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            SqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             // Variables needed
             var dbSetting = connection.GetDbSetting();
@@ -1433,7 +1456,7 @@ namespace RepoDb
             if (transaction == null)
             {
                 // Add the transaction if not present
-                transaction = (SqlTransaction)(await connection.EnsureOpenAsync()).BeginTransaction();
+                transaction = (SqlTransaction)(await connection.EnsureOpenAsync(cancellationToken)).BeginTransaction();
             }
             else
             {
@@ -1444,7 +1467,7 @@ namespace RepoDb
             try
             {
                 // Get the DB Fields
-                dbFields = dbFields ?? await DbFieldCache.GetAsync(connection, tableName, transaction, true);
+                dbFields = dbFields ?? await DbFieldCache.GetAsync(connection, tableName, transaction, true, cancellationToken);
 
                 // Variables needed
                 var identityDbField = dbFields?.FirstOrDefault(dbField => dbField.IsIdentity);
@@ -1516,7 +1539,7 @@ namespace RepoDb
                             tempTableName,
                             fields,
                             dbSetting);
-                        await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
+                        await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
                     }
 
                     // Set the destinationtable
@@ -1541,8 +1564,8 @@ namespace RepoDb
                             sqlBulkCopy.ColumnMappings.Add(mapItem.SourceColumn, mapItem.DestinationColumn));
 
                     // Open the connection and do the operation
-                    await connection.EnsureOpenAsync();
-                    await sqlBulkCopy.WriteToServerAsync(reader);
+                    await connection.EnsureOpenAsync(cancellationToken);
+                    await sqlBulkCopy.WriteToServerAsync(reader, cancellationToken);
 
                     // Check if this is with pseudo
                     if (withPseudoExecution)
@@ -1556,11 +1579,11 @@ namespace RepoDb
                             dbSetting);
 
                         // Execute the SQL
-                        result = await connection.ExecuteNonQueryAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction);
+                        result = await connection.ExecuteNonQueryAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, cancellationToken: cancellationToken);
 
                         // Drop the table after used
                         sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
-                        await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
+                        await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
                     }
                     else
                     {
@@ -1618,6 +1641,7 @@ namespace RepoDb
         /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table. This argument will only be used if the 'isReturnIdentity' argument is 'true'.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         internal static async Task<int> BulkInsertAsyncInternal(SqlConnection connection,
             string tableName,
@@ -1631,7 +1655,8 @@ namespace RepoDb
             int? batchSize = null,
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            SqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             // Variables needed
             var dbSetting = connection.GetDbSetting();
@@ -1642,7 +1667,7 @@ namespace RepoDb
             if (transaction == null)
             {
                 // Add the transaction if not present
-                transaction = (SqlTransaction)(await connection.EnsureOpenAsync()).BeginTransaction();
+                transaction = (SqlTransaction)(await connection.EnsureOpenAsync(cancellationToken)).BeginTransaction();
             }
             else
             {
@@ -1653,7 +1678,7 @@ namespace RepoDb
             try
             {
                 // Get the DB Fields
-                dbFields = dbFields ?? await DbFieldCache.GetAsync(connection, tableName, transaction, true);
+                dbFields = dbFields ?? await DbFieldCache.GetAsync(connection, tableName, transaction, true, cancellationToken);
 
                 // Variables needed
                 var identityDbField = dbFields?.FirstOrDefault(dbField => dbField.IsIdentity);
@@ -1725,7 +1750,7 @@ namespace RepoDb
                            tempTableName,
                            fields,
                            dbSetting);
-                        await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
+                        await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
                     }
 
                     // Set the destinationtable
@@ -1750,14 +1775,14 @@ namespace RepoDb
                             sqlBulkCopy.ColumnMappings.Add(mapItem.SourceColumn, mapItem.DestinationColumn));
 
                     // Open the connection and do the operation
-                    await connection.EnsureOpenAsync();
+                    await connection.EnsureOpenAsync(cancellationToken);
                     if (rowState.HasValue == true)
                     {
-                        await sqlBulkCopy.WriteToServerAsync(dataTable, rowState.Value);
+                        await sqlBulkCopy.WriteToServerAsync(dataTable, rowState.Value, cancellationToken);
                     }
                     else
                     {
-                        await sqlBulkCopy.WriteToServerAsync(dataTable);
+                        await sqlBulkCopy.WriteToServerAsync(dataTable, cancellationToken);
                     }
 
                     // Check if this is with pseudo
@@ -1777,11 +1802,11 @@ namespace RepoDb
                             // Identify the column
                             if (column?.ReadOnly == false)
                             {
-                                using (var reader = (DbDataReader)(await connection.ExecuteReaderAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction)))
+                                using (var reader = (DbDataReader)(await connection.ExecuteReaderAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, cancellationToken: cancellationToken)))
                                 {
-                                    while (await reader.ReadAsync())
+                                    while (await reader.ReadAsync(cancellationToken))
                                     {
-                                        var value = Converter.DbNullToNull(await reader.GetFieldValueAsync<object>(0));
+                                        var value = Converter.DbNullToNull(await reader.GetFieldValueAsync<object>(0, cancellationToken));
                                         dataTable.Rows[result][column] = value;
                                         result++;
                                     }
@@ -1789,12 +1814,12 @@ namespace RepoDb
                             }
                             else
                             {
-                                result = await connection.ExecuteNonQueryAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction);
+                                result = await connection.ExecuteNonQueryAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, cancellationToken: cancellationToken);
                             }
 
                             // Drop the table after used
                             sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
-                            await connection.ExecuteNonQueryAsync(sql, transaction: transaction);
+                            await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
                         }
                     }
                     else

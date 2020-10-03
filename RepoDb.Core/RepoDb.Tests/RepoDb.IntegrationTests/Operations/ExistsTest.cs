@@ -401,7 +401,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region ExistsAsync(TableName)
 
         [TestMethod]
-        public void TestSqlConnectionExistsViaTableNameAsyncWithoutCondition()
+        public void TestSqlConnectionExistsViaAsyncViaTableNameWithoutCondition()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -421,7 +421,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionExistsViaTableNameAsyncViaDynamic()
+        public void TestSqlConnectionExistsViaAsyncViaTableNameViaDynamic()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -440,7 +440,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionExistsViaTableNameAsyncViaQueryField()
+        public void TestSqlConnectionExistsViaAsyncViaTableNameViaQueryField()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -461,7 +461,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionExistsViaTableNameAsyncViaQueryFields()
+        public void TestSqlConnectionExistsViaAsyncViaTableNameViaQueryFields()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -486,7 +486,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionExistsViaTableNameAsyncViaQueryGroup()
+        public void TestSqlConnectionExistsViaAsyncViaTableNameViaQueryGroup()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);

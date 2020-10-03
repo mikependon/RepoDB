@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RepoDb
@@ -130,11 +131,13 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The cached field definitions of the entity.</returns>
         public static Task<IEnumerable<DbField>> GetAsync(IDbConnection connection,
             string tableName,
-            IDbTransaction transaction) =>
-            GetAsync(connection, tableName, transaction, true);
+            IDbTransaction transaction,
+            CancellationToken cancellationToken = default) =>
+            GetAsync(connection, tableName, transaction, true, cancellationToken);
 
         /// <summary>
         /// Gets the cached list of <see cref="DbField"/> objects of the table based on the data entity mapped name in an asynchronous way.
@@ -143,12 +146,14 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <param name="enableValidation">Enables the validation after retrieving the database fields.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The cached field definitions of the entity.</returns>
         public static Task<IEnumerable<DbField>> GetAsync(IDbConnection connection,
             string tableName,
             IDbTransaction transaction,
-            bool enableValidation) =>
-            GetAsyncInternal(connection, tableName, transaction, enableValidation);
+            bool enableValidation,
+            CancellationToken cancellationToken = default) =>
+            GetAsyncInternal(connection, tableName, transaction, enableValidation, cancellationToken);
 
         /// <summary>
         /// Gets the cached field definitions of the entity in an asychronous way.
@@ -158,11 +163,13 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <param name="enableValidation">Enables the validation after retrieving the database fields.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The cached field definitions of the entity.</returns>
         internal static async Task<IEnumerable<DbField>> GetAsyncInternal<TDbConnection>(TDbConnection connection,
             string tableName,
             IDbTransaction transaction,
-            bool enableValidation)
+            bool enableValidation,
+            CancellationToken cancellationToken = default)
             where TDbConnection : IDbConnection
         {
             var type = connection.GetType();
@@ -186,7 +193,7 @@ namespace RepoDb
             {
                 // Get from DB
                 var dbHelper = DbHelperMapper.Get(type);
-                result = await dbHelper?.GetFieldsAsync(connection, tableName, transaction);
+                result = await dbHelper?.GetFieldsAsync(connection, tableName, transaction, cancellationToken);
 
                 // Validate
                 if (enableValidation)

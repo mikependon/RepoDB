@@ -276,7 +276,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region AverageAllAsync(TableName)
 
         [TestMethod]
-        public void TestSqlConnectionAverageAllTableNameAsync()
+        public void TestSqlConnectionAverageAllAsyncViaTableName()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -296,7 +296,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionAverageAllTableNameAsyncWithHints()
+        public void TestSqlConnectionAverageAllAsyncViaTableNameWithHints()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -317,7 +317,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionAverageAllTypedResultTableNameAsync()
+        public void TestSqlConnectionAverageAllTypedResultAsyncViaTableName()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -337,7 +337,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionAverageAllTypedResultTableNameAsyncWithHints()
+        public void TestSqlConnectionAverageAllTypedResultAsyncViaTableNameWithHints()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);

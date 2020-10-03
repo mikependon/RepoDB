@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RepoDb
@@ -402,6 +403,7 @@ namespace RepoDb
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkUpdateAsync<TEntity>(this DbRepository<SqlConnection> repository,
             IEnumerable<TEntity> entities,
@@ -411,7 +413,8 @@ namespace RepoDb
             string hints = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            SqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Create a connection
@@ -428,7 +431,8 @@ namespace RepoDb
                     bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
                     usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                    transaction: transaction);
+                    transaction: transaction,
+                    cancellationToken: cancellationToken);
             }
             catch
             {
@@ -462,6 +466,7 @@ namespace RepoDb
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkUpdateAsync<TEntity>(this DbRepository<SqlConnection> repository,
             string tableName,
@@ -472,7 +477,8 @@ namespace RepoDb
             string hints = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            SqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Create a connection
@@ -490,7 +496,8 @@ namespace RepoDb
                     bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
                     usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                    transaction: transaction);
+                    transaction: transaction,
+                    cancellationToken: cancellationToken);
             }
             catch
             {
@@ -523,6 +530,7 @@ namespace RepoDb
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkUpdateAsync<TEntity>(this DbRepository<SqlConnection> repository,
             DbDataReader reader,
@@ -532,7 +540,8 @@ namespace RepoDb
             string hints = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            SqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Create a connection
@@ -549,7 +558,8 @@ namespace RepoDb
                     bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
                     usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                    transaction: transaction);
+                    transaction: transaction,
+                    cancellationToken: cancellationToken);
             }
             catch
             {
@@ -586,6 +596,7 @@ namespace RepoDb
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkUpdateAsync(this DbRepository<SqlConnection> repository,
             string tableName,
@@ -596,7 +607,8 @@ namespace RepoDb
             string hints = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            SqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? repository.CreateConnection());
@@ -613,7 +625,8 @@ namespace RepoDb
                     bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
                     usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                    transaction: transaction);
+                    transaction: transaction,
+                    cancellationToken: cancellationToken);
             }
             catch
             {
@@ -647,6 +660,7 @@ namespace RepoDb
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkUpdateAsync<TEntity>(this DbRepository<SqlConnection> repository,
             DataTable dataTable,
@@ -657,7 +671,8 @@ namespace RepoDb
             string hints = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            SqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Create a connection
@@ -675,7 +690,8 @@ namespace RepoDb
                     bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
                     usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                    transaction: transaction);
+                    transaction: transaction,
+                    cancellationToken: cancellationToken);
             }
             catch
             {
@@ -709,6 +725,7 @@ namespace RepoDb
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkUpdateAsync(this DbRepository<SqlConnection> repository,
             string tableName,
@@ -720,7 +737,8 @@ namespace RepoDb
             string hints = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            SqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? repository.CreateConnection());
@@ -738,7 +756,8 @@ namespace RepoDb
                     bulkCopyTimeout: repository.CommandTimeout,
                     batchSize: batchSize,
                     usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                    transaction: transaction);
+                    transaction: transaction,
+                    cancellationToken: cancellationToken);
             }
             catch
             {

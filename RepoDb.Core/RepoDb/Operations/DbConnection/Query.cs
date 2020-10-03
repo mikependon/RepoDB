@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RepoDb
@@ -738,6 +739,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public static async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection,
             string tableName,
@@ -752,13 +754,14 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             return await QueryAsyncInternal<TEntity>(connection: connection,
                 tableName: tableName,
                 fields: fields,
-                where: await WhatToQueryGroupAsync<TEntity>(connection, what, transaction),
+                where: await WhatToQueryGroupAsync<TEntity>(connection, what, transaction, cancellationToken),
                 orderBy: orderBy,
                 top: top,
                 hints: hints,
@@ -768,7 +771,8 @@ namespace RepoDb
                 transaction: transaction,
                 cache: cache,
                 trace: trace,
-                statementBuilder: statementBuilder);
+                statementBuilder: statementBuilder,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -793,6 +797,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public static async Task<IEnumerable<TEntity>> QueryAsync<TEntity, TWhat>(this IDbConnection connection,
             string tableName,
@@ -807,13 +812,14 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             return await QueryAsyncInternal<TEntity>(connection: connection,
                 tableName: tableName,
                 fields: fields,
-                where: await WhatToQueryGroupAsync<TEntity>(connection, what, transaction),
+                where: await WhatToQueryGroupAsync<TEntity>(connection, what, transaction, cancellationToken),
                 orderBy: orderBy,
                 top: top,
                 hints: hints,
@@ -823,7 +829,8 @@ namespace RepoDb
                 transaction: transaction,
                 cache: cache,
                 trace: trace,
-                statementBuilder: statementBuilder);
+                statementBuilder: statementBuilder,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -847,6 +854,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public static async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection,
             string tableName,
@@ -861,7 +869,8 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             return await QueryAsyncInternal<TEntity>(connection: connection,
@@ -877,7 +886,8 @@ namespace RepoDb
                 transaction: transaction,
                 cache: cache,
                 trace: trace,
-                statementBuilder: statementBuilder);
+                statementBuilder: statementBuilder,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -901,6 +911,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public static async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection,
             string tableName,
@@ -915,7 +926,8 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             return await QueryAsyncInternal<TEntity>(connection: connection,
@@ -931,7 +943,8 @@ namespace RepoDb
                 transaction: transaction,
                 cache: cache,
                 trace: trace,
-                statementBuilder: statementBuilder);
+                statementBuilder: statementBuilder,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -955,6 +968,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public static async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection,
             string tableName,
@@ -969,7 +983,8 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             return await QueryAsyncInternal<TEntity>(connection: connection,
@@ -985,7 +1000,8 @@ namespace RepoDb
                 transaction: transaction,
                 cache: cache,
                 trace: trace,
-                statementBuilder: statementBuilder);
+                statementBuilder: statementBuilder,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -1009,6 +1025,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public static async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection,
             string tableName,
@@ -1023,7 +1040,8 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             return await QueryAsyncInternal<TEntity>(connection: connection,
@@ -1039,7 +1057,8 @@ namespace RepoDb
                 transaction: transaction,
                 cache: cache,
                 trace: trace,
-                statementBuilder: statementBuilder);
+                statementBuilder: statementBuilder,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -1062,6 +1081,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public static async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection,
             object what,
@@ -1075,12 +1095,13 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             return await QueryAsyncInternal<TEntity>(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
-                where: await WhatToQueryGroupAsync<TEntity>(connection, what, transaction),
+                where: await WhatToQueryGroupAsync<TEntity>(connection, what, transaction, cancellationToken),
                 fields: fields,
                 orderBy: orderBy,
                 top: top,
@@ -1091,7 +1112,8 @@ namespace RepoDb
                 transaction: transaction,
                 cache: cache,
                 trace: trace,
-                statementBuilder: statementBuilder);
+                statementBuilder: statementBuilder,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -1115,6 +1137,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public static async Task<IEnumerable<TEntity>> QueryAsync<TEntity, TWhat>(this IDbConnection connection,
             TWhat what,
@@ -1128,12 +1151,13 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             return await QueryAsyncInternal<TEntity>(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
-                where: await WhatToQueryGroupAsync<TEntity>(connection, what, transaction),
+                where: await WhatToQueryGroupAsync<TEntity>(connection, what, transaction, cancellationToken),
                 fields: fields,
                 orderBy: orderBy,
                 top: top,
@@ -1144,7 +1168,8 @@ namespace RepoDb
                 transaction: transaction,
                 cache: cache,
                 trace: trace,
-                statementBuilder: statementBuilder);
+                statementBuilder: statementBuilder,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -1167,6 +1192,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection,
             QueryField where,
@@ -1180,7 +1206,8 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             return QueryAsyncInternal<TEntity>(connection: connection,
@@ -1196,7 +1223,8 @@ namespace RepoDb
                 transaction: transaction,
                 cache: cache,
                 trace: trace,
-                statementBuilder: statementBuilder);
+                statementBuilder: statementBuilder,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -1219,6 +1247,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection,
             IEnumerable<QueryField> where,
@@ -1232,7 +1261,8 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             return QueryAsyncInternal<TEntity>(connection: connection,
@@ -1248,7 +1278,8 @@ namespace RepoDb
                 transaction: transaction,
                 cache: cache,
                 trace: trace,
-                statementBuilder: statementBuilder);
+                statementBuilder: statementBuilder,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -1271,6 +1302,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection,
             Expression<Func<TEntity, bool>> where,
@@ -1284,7 +1316,9 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null) where TEntity : class
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
+            where TEntity : class
         {
             return QueryAsyncInternal<TEntity>(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
@@ -1299,7 +1333,8 @@ namespace RepoDb
                 transaction: transaction,
                 cache: cache,
                 trace: trace,
-                statementBuilder: statementBuilder);
+                statementBuilder: statementBuilder,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -1322,6 +1357,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection,
             QueryGroup where,
@@ -1335,7 +1371,8 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             return QueryAsyncInternal<TEntity>(connection: connection,
@@ -1351,7 +1388,8 @@ namespace RepoDb
                 transaction: transaction,
                 cache: cache,
                 trace: trace,
-                statementBuilder: statementBuilder);
+                statementBuilder: statementBuilder,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -1375,6 +1413,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         internal static async Task<IEnumerable<TEntity>> QueryAsyncInternal<TEntity>(this IDbConnection connection,
             string tableName,
@@ -1389,12 +1428,13 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Ensure the fields
             fields = GetQualifiedFields<TEntity>(fields) ??
-                (await DbFieldCache.GetAsync(connection, tableName, transaction))?.AsFields();
+                (await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken))?.AsFields();
 
             // Return
             return await QueryAsyncInternalBase<TEntity>(connection: connection,
@@ -1410,7 +1450,8 @@ namespace RepoDb
                 transaction: transaction,
                 cache: cache,
                 trace: trace,
-                statementBuilder: statementBuilder);
+                statementBuilder: statementBuilder,
+                cancellationToken: cancellationToken);
         }
 
         #endregion
@@ -1755,6 +1796,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of dynamic objects.</returns>
         public static async Task<IEnumerable<dynamic>> QueryAsync<TWhat>(this IDbConnection connection,
             string tableName,
@@ -1769,11 +1811,12 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
         {
             return await QueryAsync(connection: connection,
                 tableName: tableName,
-                where: await WhatToQueryGroupAsync(connection, tableName, what, transaction),
+                where: await WhatToQueryGroupAsync(connection, tableName, what, transaction, cancellationToken),
                 fields: fields,
                 orderBy: orderBy,
                 top: top,
@@ -1784,7 +1827,8 @@ namespace RepoDb
                 transaction: transaction,
                 cache: cache,
                 trace: trace,
-                statementBuilder: statementBuilder);
+                statementBuilder: statementBuilder,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -1807,6 +1851,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of dynamic objects.</returns>
         public static async Task<IEnumerable<dynamic>> QueryAsync(this IDbConnection connection,
             string tableName,
@@ -1821,11 +1866,12 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
         {
             return await QueryAsync(connection: connection,
                 tableName: tableName,
-                where: await WhatToQueryGroupAsync(connection, tableName, what, transaction),
+                where: await WhatToQueryGroupAsync(connection, tableName, what, transaction, cancellationToken),
                 fields: fields,
                 orderBy: orderBy,
                 top: top,
@@ -1836,7 +1882,8 @@ namespace RepoDb
                 transaction: transaction,
                 cache: cache,
                 trace: trace,
-                statementBuilder: statementBuilder);
+                statementBuilder: statementBuilder,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -1859,6 +1906,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of dynamic objects.</returns>
         public static Task<IEnumerable<dynamic>> QueryAsync(this IDbConnection connection,
             string tableName,
@@ -1873,7 +1921,8 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
         {
             return QueryAsync(connection: connection,
                 tableName: tableName,
@@ -1888,7 +1937,8 @@ namespace RepoDb
                 transaction: transaction,
                 cache: cache,
                 trace: trace,
-                statementBuilder: statementBuilder);
+                statementBuilder: statementBuilder,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -1911,6 +1961,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of dynamic objects.</returns>
         public static Task<IEnumerable<dynamic>> QueryAsync(this IDbConnection connection,
             string tableName,
@@ -1925,7 +1976,8 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
         {
             return QueryAsync(connection: connection,
                 tableName: tableName,
@@ -1940,7 +1992,8 @@ namespace RepoDb
                 transaction: transaction,
                 cache: cache,
                 trace: trace,
-                statementBuilder: statementBuilder);
+                statementBuilder: statementBuilder,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -1963,6 +2016,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of dynamic objects.</returns>
         public static Task<IEnumerable<dynamic>> QueryAsync(this IDbConnection connection,
             string tableName,
@@ -1977,7 +2031,8 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
         {
             return QueryAsyncInternal(connection: connection,
                 tableName: tableName,
@@ -1992,7 +2047,8 @@ namespace RepoDb
                 transaction: transaction,
                 cache: cache,
                 trace: trace,
-                statementBuilder: statementBuilder);
+                statementBuilder: statementBuilder,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -2015,6 +2071,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of dynamic objects.</returns>
         internal static Task<IEnumerable<dynamic>> QueryAsyncInternal(this IDbConnection connection,
             string tableName,
@@ -2029,7 +2086,8 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
         {
             return QueryAsyncInternal<dynamic>(connection: connection,
                 tableName: tableName,
@@ -2044,7 +2102,8 @@ namespace RepoDb
                 transaction: transaction,
                 cache: cache,
                 trace: trace,
-                statementBuilder: statementBuilder);
+                statementBuilder: statementBuilder,
+                cancellationToken: cancellationToken);
         }
 
         #endregion
@@ -2196,6 +2255,7 @@ namespace RepoDb
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         internal static async Task<IEnumerable<TEntity>> QueryAsyncInternalBase<TEntity>(this IDbConnection connection,
             string tableName,
@@ -2210,7 +2270,8 @@ namespace RepoDb
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Get Cache
@@ -2272,6 +2333,7 @@ namespace RepoDb
                 cacheItemExpiration: null,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cancellationToken: cancellationToken,
                 cache: null,
                 tableName: tableName,
                 skipCommandArrayParametersCheck: true);

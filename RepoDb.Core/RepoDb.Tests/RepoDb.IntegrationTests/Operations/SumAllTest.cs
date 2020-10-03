@@ -276,7 +276,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region SumAllAsync(TableName)
 
         [TestMethod]
-        public void TestSqlConnectionSumAllTableNameAsync()
+        public void TestSqlConnectionSumAllAsyncViaTableName()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -296,7 +296,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionSumAllTableNameAsyncWithHints()
+        public void TestSqlConnectionSumAllAsyncViaTableNameWithHints()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -317,7 +317,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionSumAllTypedResultTableNameAsync()
+        public void TestSqlConnectionSumAllTypedResultAsyncViaTableName()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -337,7 +337,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionSumAllTypedResultTableNameAsyncWithHints()
+        public void TestSqlConnectionSumAllTypedResultAsyncViaTableNameWithHints()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RepoDb
@@ -103,6 +104,7 @@ namespace RepoDb
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static Task<int> BulkUpdateAsync<TEntity>(this BaseRepository<TEntity, SqlConnection> repository,
             IEnumerable<TEntity> entities,
@@ -112,7 +114,8 @@ namespace RepoDb
             string hints = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            SqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             return repository.DbRepository.BulkUpdateAsync<TEntity>(entities: entities,
@@ -122,7 +125,8 @@ namespace RepoDb
                 hints: hints,
                 batchSize: batchSize,
                 usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -139,6 +143,7 @@ namespace RepoDb
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static Task<int> BulkUpdateAsync<TEntity>(this BaseRepository<TEntity, SqlConnection> repository,
             string tableName,
@@ -149,7 +154,8 @@ namespace RepoDb
             string hints = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            SqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             return repository.DbRepository.BulkUpdateAsync<TEntity>(tableName: tableName,
@@ -160,7 +166,8 @@ namespace RepoDb
                 hints: hints,
                 batchSize: batchSize,
                 usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         #endregion

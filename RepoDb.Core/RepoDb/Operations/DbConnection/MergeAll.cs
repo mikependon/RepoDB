@@ -8,6 +8,7 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Transactions;
 
@@ -432,6 +433,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
         public static Task<int> MergeAllAsync<TEntity>(this IDbConnection connection,
             string tableName,
@@ -442,7 +444,8 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             return MergeAllAsyncInternal<TEntity>(connection: connection,
@@ -455,7 +458,8 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
-                statementBuilder: statementBuilder);
+                statementBuilder: statementBuilder,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -473,6 +477,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
         public static Task<int> MergeAllAsync<TEntity>(this IDbConnection connection,
             string tableName,
@@ -484,7 +489,8 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             return MergeAllAsyncInternal<TEntity>(connection: connection,
@@ -497,7 +503,8 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
-                statementBuilder: statementBuilder);
+                statementBuilder: statementBuilder,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -515,6 +522,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
         public static Task<int> MergeAllAsync<TEntity>(this IDbConnection connection,
             string tableName,
@@ -526,7 +534,8 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             return MergeAllAsyncInternal<TEntity>(connection: connection,
@@ -539,7 +548,8 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
-                statementBuilder: statementBuilder);
+                statementBuilder: statementBuilder,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -557,6 +567,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
         public static Task<int> MergeAllAsync<TEntity>(this IDbConnection connection,
             string tableName,
@@ -568,7 +579,8 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             return MergeAllAsyncInternal<TEntity>(connection: connection,
@@ -581,7 +593,8 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
-                statementBuilder: statementBuilder);
+                statementBuilder: statementBuilder,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -597,6 +610,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
         public static Task<int> MergeAllAsync<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
@@ -606,7 +620,8 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             return MergeAllAsyncInternal<TEntity>(connection: connection,
@@ -619,7 +634,8 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
-                statementBuilder: statementBuilder);
+                statementBuilder: statementBuilder,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -636,6 +652,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
         public static Task<int> MergeAllAsync<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
@@ -646,7 +663,8 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             return MergeAllAsyncInternal<TEntity>(connection: connection,
@@ -659,7 +677,8 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
-                statementBuilder: statementBuilder);
+                statementBuilder: statementBuilder,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -676,6 +695,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
         public static Task<int> MergeAllAsync<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
@@ -686,7 +706,8 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             return MergeAllAsyncInternal<TEntity>(connection: connection,
@@ -699,7 +720,8 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
-                statementBuilder: statementBuilder);
+                statementBuilder: statementBuilder,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -716,6 +738,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
         public static Task<int> MergeAllAsync<TEntity>(this IDbConnection connection,
             IEnumerable<TEntity> entities,
@@ -726,7 +749,8 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             return MergeAllAsyncInternal<TEntity>(connection: connection,
@@ -739,7 +763,8 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
-                statementBuilder: statementBuilder);
+                statementBuilder: statementBuilder,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -757,6 +782,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
         internal static async Task<int> MergeAllAsyncInternal<TEntity>(this IDbConnection connection,
             string tableName,
@@ -768,14 +794,15 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Check the qualifiers
             if (qualifiers?.Any() != true)
             {
                 var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction,
-                    entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity));
+                    entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity), cancellationToken);
                 qualifiers = key.AsField().AsEnumerable();
             }
 
@@ -795,7 +822,8 @@ namespace RepoDb
                     commandTimeout: commandTimeout,
                     transaction: transaction,
                     trace: trace,
-                    statementBuilder: statementBuilder);
+                    statementBuilder: statementBuilder,
+                    cancellationToken: cancellationToken);
             }
             else
             {
@@ -808,7 +836,8 @@ namespace RepoDb
                     commandTimeout: commandTimeout,
                     transaction: transaction,
                     trace: trace,
-                    statementBuilder: statementBuilder);
+                    statementBuilder: statementBuilder,
+                    cancellationToken: cancellationToken);
             }
         }
 
@@ -951,6 +980,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
         public static Task<int> MergeAllAsync(this IDbConnection connection,
             string tableName,
@@ -961,7 +991,8 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
         {
             return MergeAllAsyncInternal<object>(connection: connection,
                 tableName: tableName,
@@ -973,7 +1004,8 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
-                statementBuilder: statementBuilder);
+                statementBuilder: statementBuilder,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -990,6 +1022,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
         public static Task<int> MergeAllAsync(this IDbConnection connection,
             string tableName,
@@ -1001,7 +1034,8 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
         {
             return MergeAllAsyncInternal<object>(connection: connection,
                 tableName: tableName,
@@ -1013,7 +1047,8 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
-                statementBuilder: statementBuilder);
+                statementBuilder: statementBuilder,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -1030,6 +1065,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
         public static Task<int> MergeAllAsync(this IDbConnection connection,
             string tableName,
@@ -1041,7 +1077,8 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
         {
             return MergeAllAsyncInternal<object>(connection: connection,
                 tableName: tableName,
@@ -1053,7 +1090,8 @@ namespace RepoDb
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
-                statementBuilder: statementBuilder);
+                statementBuilder: statementBuilder,
+                cancellationToken: cancellationToken);
         }
 
         #endregion
@@ -1470,6 +1508,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
         internal static async Task<int> MergeAllAsyncInternalBase<TEntity>(this IDbConnection connection,
             string tableName,
@@ -1481,7 +1520,8 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Variables needed
@@ -1502,7 +1542,8 @@ namespace RepoDb
                 fields,
                 hints,
                 transaction,
-                statementBuilder);
+                statementBuilder,
+                cancellationToken);
             var sessionId = Guid.Empty;
 
             // Before Execution
@@ -1535,7 +1576,7 @@ namespace RepoDb
             try
             {
                 // Ensure the connection is open
-                await connection.EnsureOpenAsync();
+                await connection.EnsureOpenAsync(cancellationToken);
 
                 if (hasTransaction == false)
                 {
@@ -1563,7 +1604,7 @@ namespace RepoDb
                             }
 
                             // Actual Execution
-                            var returnValue = Converter.DbNullToNull(await command.ExecuteScalarAsync());
+                            var returnValue = Converter.DbNullToNull(await command.ExecuteScalarAsync(cancellationToken));
 
                             // Set the return value
                             if (returnValue != null)
@@ -1600,7 +1641,8 @@ namespace RepoDb
                                     fields,
                                     hints,
                                     transaction,
-                                    statementBuilder);
+                                    statementBuilder,
+                                    cancellationToken);
 
                                 // Set the command properties
                                 command.CommandText = context.CommandText;
@@ -1626,17 +1668,17 @@ namespace RepoDb
                             if (context.IdentityPropertySetterFunc == null)
                             {
                                 // No identity setters
-                                result += await command.ExecuteNonQueryAsync();
+                                result += await command.ExecuteNonQueryAsync(cancellationToken);
                             }
                             else
                             {
                                 // Set the identity back
-                                using (var reader = await command.ExecuteReaderAsync())
+                                using (var reader = await command.ExecuteReaderAsync(cancellationToken))
                                 {
                                     var index = 0;
                                     do
                                     {
-                                        if (await reader.ReadAsync())
+                                        if (await reader.ReadAsync(cancellationToken))
                                         {
                                             var value = Converter.DbNullToNull(reader.GetValue(0));
                                             context.IdentityPropertySetterFunc.Invoke(batchItems[index], value);
@@ -1644,7 +1686,7 @@ namespace RepoDb
                                         }
                                         index++;
                                     }
-                                    while (await reader.NextResultAsync());
+                                    while (await reader.NextResultAsync(cancellationToken));
                                 }
                             }
                         }
@@ -1704,6 +1746,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
         internal static async Task<int> UpsertAllAsyncInternalBase<TEntity>(this IDbConnection connection,
             string tableName,
@@ -1714,13 +1757,14 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
-            IStatementBuilder statementBuilder = null)
+            IStatementBuilder statementBuilder = null,
+            CancellationToken cancellationToken = default)
             where TEntity : class
         {
             // Variables needed
             var type = entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity);
             var isObjectType = typeof(TEntity) == StaticType.Object;
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction);
+            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
             var primary = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
             var properties = (IEnumerable<ClassProperty>)null;
             var primaryKey = (ClassProperty)null;
@@ -1782,7 +1826,7 @@ namespace RepoDb
             try
             {
                 // Ensure to open the connection
-                await connection.EnsureOpenAsync();
+                await connection.EnsureOpenAsync(cancellationToken);
 
                 // Create a transaction
                 if (hasTransaction == false)
@@ -1802,7 +1846,8 @@ namespace RepoDb
                         commandTimeout,
                         transaction,
                         trace,
-                        statementBuilder);
+                        statementBuilder,
+                        cancellationToken: cancellationToken);
 
                     // Iterate the result
                     if (Converter.DbNullToNull(upsertResult) != null)

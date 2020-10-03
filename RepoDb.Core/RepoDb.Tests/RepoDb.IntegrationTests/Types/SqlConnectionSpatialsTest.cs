@@ -298,7 +298,7 @@ namespace RepoDb.IntegrationTests.Types.Spatials
         }
 
         [TestMethod]
-        public void TestSqlConnectionSpatialsCrudViaTableNameAsync()
+        public void TestSqlConnectionSpatialsCrudViaAsyncViaTableName()
         {
             // Setup
             var entity = new
@@ -326,7 +326,7 @@ namespace RepoDb.IntegrationTests.Types.Spatials
         }
 
         [TestMethod]
-        public void TestSqlConnectionSpatialsNullCrudViaTableNameAsync()
+        public void TestSqlConnectionSpatialsNullCrudViaAsyncViaTableName()
         {
             // Setup
             var entity = new

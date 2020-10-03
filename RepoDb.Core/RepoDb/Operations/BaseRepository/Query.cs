@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RepoDb
@@ -410,6 +411,7 @@ namespace RepoDb
         /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> QueryAsync(string tableName,
             object what,
@@ -418,7 +420,8 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             return DbRepository.QueryAsync<TEntity>(tableName: tableName,
                 what: what,
@@ -427,7 +430,8 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -444,6 +448,7 @@ namespace RepoDb
         /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> QueryAsync<TWhat>(string tableName,
             TWhat what,
@@ -452,7 +457,8 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             return DbRepository.QueryAsync<TEntity, TWhat>(tableName: tableName,
                 what: what,
@@ -461,7 +467,8 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -477,6 +484,7 @@ namespace RepoDb
         /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> QueryAsync(string tableName,
             Expression<Func<TEntity, bool>> where,
@@ -485,7 +493,8 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             return DbRepository.QueryAsync<TEntity>(tableName: tableName,
                 where: where,
@@ -494,7 +503,8 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -510,6 +520,7 @@ namespace RepoDb
         /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> QueryAsync(string tableName,
             QueryField where,
@@ -518,7 +529,8 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             return DbRepository.QueryAsync<TEntity>(tableName: tableName,
                 where: where,
@@ -527,7 +539,8 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -543,6 +556,7 @@ namespace RepoDb
         /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> QueryAsync(string tableName,
             IEnumerable<QueryField> where,
@@ -551,7 +565,8 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             return DbRepository.QueryAsync<TEntity>(tableName: tableName,
                 where: where,
@@ -560,7 +575,8 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -576,6 +592,7 @@ namespace RepoDb
         /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> QueryAsync(string tableName,
             QueryGroup where,
@@ -584,7 +601,8 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             return DbRepository.QueryAsync<TEntity>(tableName: tableName,
                 where: where,
@@ -593,7 +611,8 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -608,6 +627,7 @@ namespace RepoDb
         /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> QueryAsync(object what,
             IEnumerable<Field> fields = null,
@@ -615,7 +635,8 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             return DbRepository.QueryAsync<TEntity>(what: what,
                 fields: fields,
@@ -623,7 +644,8 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -639,6 +661,7 @@ namespace RepoDb
         /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> QueryAsync<TWhat>(TWhat what,
             IEnumerable<Field> fields = null,
@@ -646,7 +669,8 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             return DbRepository.QueryAsync<TEntity, TWhat>(what: what,
                 fields: fields,
@@ -654,7 +678,8 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -669,6 +694,7 @@ namespace RepoDb
         /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> QueryAsync(Expression<Func<TEntity, bool>> where,
             IEnumerable<Field> fields = null,
@@ -676,7 +702,8 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             return DbRepository.QueryAsync<TEntity>(where: where,
                 fields: fields,
@@ -684,7 +711,8 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -699,6 +727,7 @@ namespace RepoDb
         /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> QueryAsync(QueryField where,
             IEnumerable<Field> fields = null,
@@ -706,7 +735,8 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             return DbRepository.QueryAsync<TEntity>(where: where,
                 fields: fields,
@@ -714,7 +744,8 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -729,6 +760,7 @@ namespace RepoDb
         /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> QueryAsync(IEnumerable<QueryField> where,
             IEnumerable<Field> fields = null,
@@ -736,7 +768,8 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             return DbRepository.QueryAsync<TEntity>(where: where,
                 fields: fields,
@@ -744,7 +777,8 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -759,6 +793,7 @@ namespace RepoDb
         /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> QueryAsync(QueryGroup where,
             IEnumerable<Field> fields = null,
@@ -766,7 +801,8 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
         {
             return DbRepository.QueryAsync<TEntity>(where: where,
                 fields: fields,
@@ -774,7 +810,8 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
-                transaction: transaction);
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         #endregion
