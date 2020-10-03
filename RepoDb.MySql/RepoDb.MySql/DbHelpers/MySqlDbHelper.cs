@@ -135,16 +135,16 @@ namespace RepoDb.DbHelpers
             else
             {
                 size = await reader.IsDBNullAsync(5, cancellationToken) ? (int?)null :
-                    await reader.GetFieldValueAsync<int>(5, cancellationToken);
+                    Convert.ToInt32(await reader.GetFieldValueAsync<long>(5, cancellationToken));
             }
             return new DbField(await reader.GetFieldValueAsync<string>(0, cancellationToken),
-                await reader.GetFieldValueAsync<bool>(1, cancellationToken),
-                await reader.GetFieldValueAsync<bool>(2, cancellationToken),
-                await reader.GetFieldValueAsync<bool>(1, cancellationToken),
+                Convert.ToBoolean(await reader.GetFieldValueAsync<int>(1, cancellationToken)),
+                Convert.ToBoolean(await reader.GetFieldValueAsync<int>(2, cancellationToken)),
+                Convert.ToBoolean(await reader.GetFieldValueAsync<int>(1, cancellationToken)),
                 DbTypeResolver.Resolve(columnType),
                 size,
-                await reader.IsDBNullAsync(6, cancellationToken) ? (byte?)null : byte.Parse((await reader.GetFieldValueAsync<int>(6, cancellationToken)).ToString()),
-                await reader.IsDBNullAsync(7, cancellationToken) ? (byte?)null : byte.Parse((await reader.GetFieldValueAsync<int>(7, cancellationToken)).ToString()),
+                await reader.IsDBNullAsync(6, cancellationToken) ? (byte?)null : byte.Parse((await reader.GetFieldValueAsync<ulong>(6, cancellationToken)).ToString()),
+                await reader.IsDBNullAsync(7, cancellationToken) ? (byte?)null : byte.Parse((await reader.GetFieldValueAsync<ulong>(7, cancellationToken)).ToString()),
                 await reader.GetFieldValueAsync<string>(8, cancellationToken));
         }
 
