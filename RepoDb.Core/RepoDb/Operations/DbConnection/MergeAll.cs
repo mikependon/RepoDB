@@ -377,7 +377,8 @@ namespace RepoDb
             // Check the qualifiers
             if (qualifiers?.Any() != true)
             {
-                var key = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction);
+                var key = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction,
+                    entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity));
                 qualifiers = key.AsField().AsEnumerable();
             }
 
@@ -800,7 +801,8 @@ namespace RepoDb
             // Check the qualifiers
             if (qualifiers?.Any() != true)
             {
-                var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction, cancellationToken);
+                var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction,
+                    entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity), cancellationToken);
                 qualifiers = key.AsField().AsEnumerable();
             }
 
@@ -1359,7 +1361,7 @@ namespace RepoDb
             where TEntity : class
         {
             // Variables needed
-            var type = entities?.First()?.GetType() ?? typeof(TEntity);
+            var type = entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity);
             var isObjectType = typeof(TEntity) == StaticType.Object;
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var primary = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
@@ -1760,7 +1762,7 @@ namespace RepoDb
             where TEntity : class
         {
             // Variables needed
-            var type = entities?.First()?.GetType() ?? typeof(TEntity);
+            var type = entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity);
             var isObjectType = typeof(TEntity) == StaticType.Object;
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
             var primary = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);

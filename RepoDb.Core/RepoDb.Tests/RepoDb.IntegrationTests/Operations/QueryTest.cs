@@ -391,6 +391,26 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestSqlConnectionQueryViaExpressionWitNullValue()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var last = tables.Last();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Query<IdentityTable>(c => c.ColumnNVarChar == null);
+
+                // Assert
+                Assert.AreEqual(0, result.Count());
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionQueryViaQueryField()
         {
             // Setup
@@ -1542,6 +1562,26 @@ namespace RepoDb.IntegrationTests.Operations
                 // Assert
                 Assert.AreEqual(1, result.Count());
                 Helper.AssertPropertiesEquality(last, result.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncViaExpressionWithNullValue()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var last = tables.Last();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAsync<IdentityTable>(c => c.ColumnNVarChar == null).Result;
+
+                // Assert
+                Assert.AreEqual(0, result.Count());
             }
         }
 

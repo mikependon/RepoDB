@@ -1514,16 +1514,16 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidQualifiersException))]
+        [TestMethod, ExpectedException(typeof(KeyFieldNotFoundException))]
         public void ThrowExceptionOnSqlConnectionMergeAllIfTheKeyFieldIsNotPresent()
         {
             // Setup
-            var tables = Helper.CreateDynamicIdentityTablesWithoutIdentity(10);
+            var tables = Helper.CreateDynamicNonKeyedTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.MergeAll(ClassMappedNameCache.Get<IdentityTable>(), tables);
+                connection.MergeAll(ClassMappedNameCache.Get<NonKeyedTable>(), tables);
             }
         }
 
@@ -2002,12 +2002,12 @@ namespace RepoDb.IntegrationTests.Operations
         public void ThrowExceptionOnSqlConnectionMergeAllAsyncIfTheKeyFieldIsNotPresent()
         {
             // Setup
-            var tables = Helper.CreateDynamicIdentityTablesWithoutIdentity(10);
+            var tables = Helper.CreateNonKeyedTables(10);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.MergeAllAsync(ClassMappedNameCache.Get<IdentityTable>(), tables).Wait();
+                connection.MergeAllAsync(ClassMappedNameCache.Get<NonKeyedTable>(), tables).Wait();
             }
         }
 
