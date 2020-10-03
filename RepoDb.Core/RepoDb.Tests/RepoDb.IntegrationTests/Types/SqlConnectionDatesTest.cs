@@ -386,7 +386,7 @@ namespace RepoDb.IntegrationTests.Types.Dates
         }
 
         [TestMethod]
-        public void TestSqlConnectionDatesCrudViaTableNameAsync()
+        public void TestSqlConnectionDatesCrudViaAsyncViaTableName()
         {
             // Setup
             var dateTime = new DateTime(1970, 1, 1, 12, 50, 30, DateTimeKind.Utc);
@@ -424,7 +424,7 @@ namespace RepoDb.IntegrationTests.Types.Dates
         }
 
         [TestMethod]
-        public void TestSqlConnectionDatesNullCrudViaTableNameAsync()
+        public void TestSqlConnectionDatesNullCrudViaAsyncViaTableName()
         {
             // Setup
             var entity = new

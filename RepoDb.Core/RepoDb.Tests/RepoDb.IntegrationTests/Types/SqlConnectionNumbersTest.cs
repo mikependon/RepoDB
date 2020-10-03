@@ -458,7 +458,7 @@ namespace RepoDb.IntegrationTests.Types.Numbers
         }
 
         [TestMethod]
-        public void TestSqlConnectionNumbersCrudViaTableNameAsync()
+        public void TestSqlConnectionNumbersCrudViaAsyncViaTableName()
         {
             // Setup
             var entity = new
@@ -502,7 +502,7 @@ namespace RepoDb.IntegrationTests.Types.Numbers
         }
 
         [TestMethod]
-        public void TestSqlConnectionNumbersNullCrudViaTableNameAsync()
+        public void TestSqlConnectionNumbersNullCrudViaAsyncViaTableName()
         {
             // Setup
             var entity = new

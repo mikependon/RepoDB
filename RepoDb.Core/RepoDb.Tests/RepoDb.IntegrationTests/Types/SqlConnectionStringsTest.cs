@@ -383,7 +383,7 @@ namespace RepoDb.IntegrationTests.Types.Strings
         }
 
         [TestMethod]
-        public void TestSqlConnectionStringsCrudViaTableNameAsync()
+        public void TestSqlConnectionStringsCrudViaAsyncViaTableName()
         {
             // Setup
             var text = Helper.GetUnicodeString();
@@ -420,7 +420,7 @@ namespace RepoDb.IntegrationTests.Types.Strings
         }
 
         [TestMethod]
-        public void TestSqlConnectionStringsNullCrudViaTableNameAsync()
+        public void TestSqlConnectionStringsNullCrudViaAsyncViaTableName()
         {
             // Setup
             var entity = new

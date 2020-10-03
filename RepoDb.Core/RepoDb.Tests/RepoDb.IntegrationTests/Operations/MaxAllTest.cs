@@ -276,7 +276,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region MaxAllAsync(TableName)
 
         [TestMethod]
-        public void TestSqlConnectionMaxAllTableNameAsync()
+        public void TestSqlConnectionMaxAllAsyncViaTableName()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -296,7 +296,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMaxAllTableNameAsyncWithHints()
+        public void TestSqlConnectionMaxAllAsyncViaTableNameWithHints()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -317,7 +317,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMaxAllTypedResultTableNameAsync()
+        public void TestSqlConnectionMaxAllTypedResultAsyncViaTableName()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -337,7 +337,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMaxAllTypedResultTableNameAsyncWithHints()
+        public void TestSqlConnectionMaxAllTypedResultAsyncViaTableNameWithHints()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);

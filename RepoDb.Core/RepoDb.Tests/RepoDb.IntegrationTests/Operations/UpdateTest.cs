@@ -1364,7 +1364,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionUpdateViaDynamicTableNameAsyncViaPrimaryKey()
+        public void TestSqlConnectionUpdateViaDynamicAsyncViaTableNameViaPrimaryKey()
         {
             // Setup
             var table = Helper.CreateNonIdentityTable();
@@ -1802,7 +1802,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionUpdateAsyncViaDynamicTableNameAsyncViaPrimaryKey()
+        public void TestSqlConnectionUpdateAsyncViaDynamicAsyncViaTableNameViaPrimaryKey()
         {
             // Setup
             var table = Helper.CreateNonIdentityTable();
@@ -1832,7 +1832,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionUpdateViaTableNameAsyncViaPrimaryKey()
+        public void TestSqlConnectionUpdateViaAsyncViaTableNameViaPrimaryKey()
         {
             // Setup
             var table = Helper.CreateNonIdentityTable();
@@ -1858,7 +1858,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionUpdateViaTableNameAsyncViaDynamic()
+        public void TestSqlConnectionUpdateViaAsyncViaTableNameViaDynamic()
         {
             // Setup
             var table = Helper.CreateIdentityTable();
@@ -1890,7 +1890,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionUpdateViaTableNameAsyncViaQueryField()
+        public void TestSqlConnectionUpdateViaAsyncViaTableNameViaQueryField()
         {
             // Setup
             var table = Helper.CreateIdentityTable();
@@ -1925,7 +1925,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionUpdateViaTableNameAsyncViaQueryFields()
+        public void TestSqlConnectionUpdateViaAsyncViaTableNameViaQueryFields()
         {
             // Setup
             var table = Helper.CreateIdentityTable();
@@ -1965,7 +1965,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionUpdateViaTableNameAsyncViaQueryGroup()
+        public void TestSqlConnectionUpdateViaAsyncViaTableNameViaQueryGroup()
         {
             // Setup
             var table = Helper.CreateIdentityTable();

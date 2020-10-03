@@ -108,7 +108,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region CountAll(TableName)
 
         [TestMethod]
-        public void TestSqlConnectionCountViaAllTaleName()
+        public void TestSqlConnectionCountViaAllTableName()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -127,7 +127,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionCountAllViaTaleNameWithHints()
+        public void TestSqlConnectionCountAllViaTableNameWithHints()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -151,7 +151,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region CountAllAsync(TableName)
 
         [TestMethod]
-        public void TestSqlConnectionCountAllTaleNameAsync()
+        public void TestSqlConnectionCountAllAsyncViaTableName()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -170,7 +170,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionCountAllTaleNameAsyncWithHints()
+        public void TestSqlConnectionCountAllAsyncViaTableNameWithHints()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);

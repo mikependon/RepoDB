@@ -338,7 +338,7 @@ namespace RepoDb.IntegrationTests.Types.Others
         }
 
         [TestMethod]
-        public void TestSqlConnectionOthersCrudViaTableNameAsync()
+        public void TestSqlConnectionOthersCrudViaAsyncViaTableName()
         {
             // Setup
             var entity = new
@@ -370,7 +370,7 @@ namespace RepoDb.IntegrationTests.Types.Others
         }
 
         [TestMethod]
-        public void TestSqlConnectionOthersNullCrudViaTableNameAsync()
+        public void TestSqlConnectionOthersNullCrudViaAsyncViaTableName()
         {
             // Setup
             var entity = new

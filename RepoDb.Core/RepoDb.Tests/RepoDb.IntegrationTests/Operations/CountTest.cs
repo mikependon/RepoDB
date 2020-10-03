@@ -401,7 +401,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region CountAsync(TableName)
 
         [TestMethod]
-        public void TestSqlConnectionCountViaTableNameAsyncWithoutCondition()
+        public void TestSqlConnectionCountViaAsyncViaTableNameWithoutCondition()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -421,7 +421,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionCountViaTableNameAsyncViaDynamic()
+        public void TestSqlConnectionCountViaAsyncViaTableNameViaDynamic()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -440,7 +440,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionCountViaTableNameAsyncViaQueryField()
+        public void TestSqlConnectionCountViaAsyncViaTableNameViaQueryField()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -461,7 +461,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionCountViaTableNameAsyncViaQueryFields()
+        public void TestSqlConnectionCountViaAsyncViaTableNameViaQueryFields()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -486,7 +486,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionCountViaTableNameAsyncViaQueryGroup()
+        public void TestSqlConnectionCountViaAsyncViaTableNameViaQueryGroup()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
