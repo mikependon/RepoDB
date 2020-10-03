@@ -69,16 +69,24 @@
         </member>
         <member name="M:RepoDb.DbHelpers.SqlServerDbHelper.GetCommandText">
             <summary>
-            Returns the command text that is being used to extract schema definitions.
+            
             </summary>
-            <returns>The command text.</returns>
+            <returns></returns>
         </member>
-        <member name="M:RepoDb.DbHelpers.SqlServerDbHelper.ReaderToDbField(System.Data.IDataReader)">
+        <member name="M:RepoDb.DbHelpers.SqlServerDbHelper.ReaderToDbField(System.Data.Common.DbDataReader)">
             <summary>
-            Converts the <see cref="T:System.Data.IDataReader"/> object into <see cref="T:RepoDb.DbField"/> object.
+            
             </summary>
-            <param name="reader">The instance of <see cref="T:System.Data.IDataReader"/> object.</param>
-            <returns>The instance of converted <see cref="T:RepoDb.DbField"/> object.</returns>
+            <param name="reader"></param>
+            <returns></returns>
+        </member>
+        <member name="M:RepoDb.DbHelpers.SqlServerDbHelper.ReaderToDbFieldAsync(System.Data.Common.DbDataReader,System.Threading.CancellationToken)">
+            <summary>
+            
+            </summary>
+            <param name="reader"></param>
+            <param name="cancellationToken"></param>
+            <returns></returns>
         </member>
         <member name="M:RepoDb.DbHelpers.SqlServerDbHelper.GetFields(System.Data.IDbConnection,System.String,System.Data.IDbTransaction)">
             <summary>
@@ -89,13 +97,14 @@
             <param name="transaction">The transaction object that is currently in used.</param>
             <returns>A list of <see cref="T:RepoDb.DbField"/> of the target table.</returns>
         </member>
-        <member name="M:RepoDb.DbHelpers.SqlServerDbHelper.GetFieldsAsync(System.Data.IDbConnection,System.String,System.Data.IDbTransaction)">
+        <member name="M:RepoDb.DbHelpers.SqlServerDbHelper.GetFieldsAsync(System.Data.IDbConnection,System.String,System.Data.IDbTransaction,System.Threading.CancellationToken)">
             <summary>
             Gets the list of <see cref="T:RepoDb.DbField"/> of the table in an asychronous way.
             </summary>
             <param name="connection">The instance of the connection object.</param>
             <param name="tableName">The name of the target table.</param>
             <param name="transaction">The transaction object that is currently in used.</param>
+            <param name="cancellationToken">The <see cref="T:System.Threading.CancellationToken"/> object to be used during the asynchronous operation.</param>
             <returns>A list of <see cref="T:RepoDb.DbField"/> of the target table.</returns>
         </member>
         <member name="M:RepoDb.DbHelpers.SqlServerDbHelper.GetScopeIdentity(System.Data.IDbConnection,System.Data.IDbTransaction)">
@@ -106,12 +115,13 @@
             <param name="transaction">The transaction object that is currently in used.</param>
             <returns>The newly generated identity from the database.</returns>
         </member>
-        <member name="M:RepoDb.DbHelpers.SqlServerDbHelper.GetScopeIdentityAsync(System.Data.IDbConnection,System.Data.IDbTransaction)">
+        <member name="M:RepoDb.DbHelpers.SqlServerDbHelper.GetScopeIdentityAsync(System.Data.IDbConnection,System.Data.IDbTransaction,System.Threading.CancellationToken)">
             <summary>
             Gets the newly generated identity from the database in an asychronous way.
             </summary>
             <param name="connection">The instance of the connection object.</param>
             <param name="transaction">The transaction object that is currently in used.</param>
+            <param name="cancellationToken">The <see cref="T:System.Threading.CancellationToken"/> object to be used during the asynchronous operation.</param>
             <returns>The newly generated identity from the database.</returns>
         </member>
         <member name="T:RepoDb.DbSettings.SqlServerDbSetting">
