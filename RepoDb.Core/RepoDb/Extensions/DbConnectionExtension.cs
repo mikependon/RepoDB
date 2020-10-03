@@ -1577,7 +1577,7 @@ namespace RepoDb
                 dbFields: dbFields,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
             {
-                return Converter.ToType<TResult>(command.ExecuteScalarAsync(cancellationToken));
+                return Converter.ToType<TResult>(await command.ExecuteScalarAsync(cancellationToken));
             }
         }
 
