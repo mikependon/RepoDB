@@ -23,13 +23,9 @@ It is your best alternative ORM to both Dapper and EntityFramework.
 
 ## Latest News
 
-We are announcing the GA of [RepoDB v1.12.0](https://www.nuget.org/packages/RepoDb/1.12.0), one of the biggest release of this library. In this release, we covered the support to [F#](https://fsharp.org/), [Class Handler](https://repodb.net/feature/classhandlers), Advanced and New Enhanced Compiler, [Typed Results](https://repodb.net/operation/executequery#typed-result) and many more.
+We are announcing the [GA](https://github.com/mikependon/RepoDB/releases/tag/v1.12.4) of [RepoDB v1.12.4](https://www.nuget.org/packages/RepoDb/1.12.4) and its extended packages at [v1.1.1](https://www.nuget.org/packages/RepoDb.SqlServer/1.1.1). This release has included the complete support to the [CancellationToken](https://docs.microsoft.com/en-us/dotnet/api/system.threading.cancellationtoken?view=netcore-3.1).
 
-<p align="left">
-	<a href="https://repodb.net/blogs/repodb/2020/09/24/repodb-version-release-fsharp-classhandler.html">
-		<img src="https://github.com/mikependon/RepoDb.Raw/blob/master/Blogs/RepoDB%20v1.12.0.png" height="240px" />
-	</a>
-</p>
+Please also be reminded of the recent [GA](https://github.com/mikependon/RepoDB/releases/tag/v1.12.0) of [RepoDB v1.12.0](https://www.nuget.org/packages/RepoDb/1.12.0), one of the biggest release of this library. In this release, we covered the support to [F#](https://fsharp.org/), [Class Handler](https://repodb.net/feature/classhandlers), Advanced and New Enhanced Compiler, [Typed Results](https://repodb.net/operation/executequery#typed-result) and many more.
 
 Read more from our official blog [release notes](https://repodb.net/blogs/repodb/2020/09/24/repodb-version-release-fsharp-classhandler.html) and/or in the official Github [release](https://github.com/mikependon/RepoDB/releases/tag/v1.12.0) page.
 
