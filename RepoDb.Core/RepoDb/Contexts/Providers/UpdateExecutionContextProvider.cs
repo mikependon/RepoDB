@@ -74,14 +74,21 @@ namespace RepoDb.Contexts.Providers
 
             // Create
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            context = CreateInternal<TEntity>(connection,
-                tableName,
+            var request = new UpdateRequest(tableName,
+                connection,
+                transaction,
                 where,
-                dbFields,
                 fields,
                 hints,
-                transaction,
                 statementBuilder);
+            var commandText = CommandTextCache.GetUpdateText(request);
+
+            // Call
+            context = CreateInternal<TEntity>(connection,
+                tableName,
+                dbFields,
+                fields,
+                commandText);
 
             // Add to cache
             UpdateExecutionContextCache.Add<TEntity>(key, context);
@@ -124,14 +131,21 @@ namespace RepoDb.Contexts.Providers
 
             // Create
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
-            context = CreateInternal<TEntity>(connection,
-                tableName,
+            var request = new UpdateRequest(tableName,
+                connection,
+                transaction,
                 where,
-                dbFields,
                 fields,
                 hints,
-                transaction,
                 statementBuilder);
+            var commandText = await CommandTextCache.GetUpdateTextAsync(request, cancellationToken);
+
+            // Call
+            context = CreateInternal<TEntity>(connection,
+                tableName,
+                dbFields,
+                fields,
+                commandText);
 
             // Add to cache
             UpdateExecutionContextCache.Add<TEntity>(key, context);
@@ -146,21 +160,15 @@ namespace RepoDb.Contexts.Providers
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
-        /// <param name="where"></param>
         /// <param name="dbFields"></param>
         /// <param name="fields"></param>
-        /// <param name="hints"></param>
-        /// <param name="transaction"></param>
-        /// <param name="statementBuilder"></param>
+        /// <param name="commandText"></param>
         /// <returns></returns>
         private static UpdateExecutionContext<TEntity> CreateInternal<TEntity>(IDbConnection connection,
             string tableName,
-            QueryGroup where,
             IEnumerable<DbField> dbFields,
             IEnumerable<Field> fields,
-            string hints = null,
-            IDbTransaction transaction = null,
-            IStatementBuilder statementBuilder = null)
+            string commandText)
             where TEntity : class
         {
             var dbSetting = connection.GetDbSetting();
@@ -173,19 +181,10 @@ namespace RepoDb.Contexts.Providers
                     fields.FirstOrDefault(field => string.Equals(field.Name.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
                 .AsList();
 
-            // Identify the requests
-            var updateRequest = new UpdateRequest(tableName,
-                connection,
-                transaction,
-                where,
-                fields,
-                hints,
-                statementBuilder);
-
             // Return the value
             return new UpdateExecutionContext<TEntity>
             {
-                CommandText = CommandTextCache.GetUpdateText(updateRequest),
+                CommandText = commandText,
                 InputFields = inputFields,
                 ParametersSetterFunc = FunctionCache.GetDataEntityDbParameterSetterCompiledFunction<TEntity>(
                     string.Concat(typeof(TEntity).FullName, StringConstant.Period, tableName, ".Update"),

@@ -75,14 +75,38 @@ namespace RepoDb.Contexts.Providers
 
             // Create
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+            var commandText = (string)null;
+
+            // Create a different kind of requests
+            if (batchSize > 1)
+            {
+                var request = new InsertAllRequest(tableName,
+                    connection,
+                    transaction,
+                    fields,
+                    batchSize,
+                    hints,
+                    statementBuilder);
+                commandText = CommandTextCache.GetInsertAllText(request);
+            }
+            else
+            {
+                var request = new InsertRequest(tableName,
+                    connection,
+                    transaction,
+                    fields,
+                    hints,
+                    statementBuilder);
+                commandText = CommandTextCache.GetInsertText(request);
+            }
+
+            // Call
             context = CreateInternal<TEntity>(connection,
                 tableName,
                 dbFields,
                 batchSize,
                 fields,
-                hints,
-                transaction,
-                statementBuilder);
+                commandText);
 
             // Add to cache
             InsertAllExecutionContextCache.Add<TEntity>(key, context);
@@ -125,14 +149,38 @@ namespace RepoDb.Contexts.Providers
 
             // Create
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
+            var commandText = (string)null;
+
+            // Create a different kind of requests
+            if (batchSize > 1)
+            {
+                var request = new InsertAllRequest(tableName,
+                    connection,
+                    transaction,
+                    fields,
+                    batchSize,
+                    hints,
+                    statementBuilder);
+                commandText = await CommandTextCache.GetInsertAllTextAsync(request, cancellationToken);
+            }
+            else
+            {
+                var request = new InsertRequest(tableName,
+                    connection,
+                    transaction,
+                    fields,
+                    hints,
+                    statementBuilder);
+                commandText = await CommandTextCache.GetInsertTextAsync(request, cancellationToken);
+            }
+
+            // Call
             context = CreateInternal<TEntity>(connection,
                 tableName,
                 dbFields,
                 batchSize,
                 fields,
-                hints,
-                transaction,
-                statementBuilder);
+                commandText);
 
             // Add to cache
             InsertAllExecutionContextCache.Add<TEntity>(key, context);
@@ -150,18 +198,14 @@ namespace RepoDb.Contexts.Providers
         /// <param name="dbFields"></param>
         /// <param name="batchSize"></param>
         /// <param name="fields"></param>
-        /// <param name="hints"></param>
-        /// <param name="transaction"></param>
-        /// <param name="statementBuilder"></param>
+        /// <param name="commandText"></param>
         /// <returns></returns>
         private static InsertAllExecutionContext<TEntity> CreateInternal<TEntity>(IDbConnection connection,
             string tableName,
             IEnumerable<DbField> dbFields,
             int batchSize,
             IEnumerable<Field> fields,
-            string hints = null,
-            IDbTransaction transaction = null,
-            IStatementBuilder statementBuilder = null)
+            string commandText)
             where TEntity : class
         {
             var typeOfEntity = typeof(TEntity);
@@ -219,35 +263,10 @@ namespace RepoDb.Contexts.Providers
                     dbSetting);
             }
 
-            // Identify the requests
-            var insertAllRequest = (InsertAllRequest)null;
-            var insertRequest = (InsertRequest)null;
-
-            // Create a different kind of requests
-            if (batchSize > 1)
-            {
-                insertAllRequest = new InsertAllRequest(tableName,
-                    connection,
-                    transaction,
-                    fields,
-                    batchSize,
-                    hints,
-                    statementBuilder);
-            }
-            else
-            {
-                insertRequest = new InsertRequest(tableName,
-                    connection,
-                    transaction,
-                    fields,
-                    hints,
-                    statementBuilder);
-            }
-
             // Return the value
             return new InsertAllExecutionContext<TEntity>
             {
-                CommandText = batchSize > 1 ? CommandTextCache.GetInsertAllText(insertAllRequest) : CommandTextCache.GetInsertText(insertRequest),
+                CommandText = commandText,
                 InputFields = inputFields,
                 BatchSize = batchSize,
                 SingleDataEntityParametersSetterFunc = singleEntityFunc,

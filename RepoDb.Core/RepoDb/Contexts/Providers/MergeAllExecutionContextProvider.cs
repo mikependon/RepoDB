@@ -83,6 +83,34 @@ namespace RepoDb.Contexts.Providers
 
             // Create
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+            var commandText = (string)null;
+
+            // Create a different kind of requests
+            if (batchSize > 1)
+            {
+                var request = new MergeAllRequest(tableName,
+                    connection,
+                    transaction,
+                    fields,
+                    qualifiers,
+                    batchSize,
+                    hints,
+                    statementBuilder);
+                commandText = CommandTextCache.GetMergeAllText(request);
+            }
+            else
+            {
+                var request = new MergeRequest(tableName,
+                    connection,
+                    transaction,
+                    fields,
+                    qualifiers,
+                    hints,
+                    statementBuilder);
+                commandText = CommandTextCache.GetMergeText(request);
+            }
+
+            // Call
             context = CreateInternal<TEntity>(connection,
                 entities,
                 dbFields,
@@ -90,9 +118,7 @@ namespace RepoDb.Contexts.Providers
                 qualifiers,
                 batchSize,
                 fields,
-                hints,
-                transaction,
-                statementBuilder);
+                commandText);
 
             // Add to cache
             MergeAllExecutionContextCache.Add<TEntity>(key, context);
@@ -139,6 +165,34 @@ namespace RepoDb.Contexts.Providers
 
             // Create
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
+            var commandText = (string)null;
+
+            // Create a different kind of requests
+            if (batchSize > 1)
+            {
+                var request = new MergeAllRequest(tableName,
+                    connection,
+                    transaction,
+                    fields,
+                    qualifiers,
+                    batchSize,
+                    hints,
+                    statementBuilder);
+                commandText = await CommandTextCache.GetMergeAllTextAsync(request, cancellationToken);
+            }
+            else
+            {
+                var request = new MergeRequest(tableName,
+                    connection,
+                    transaction,
+                    fields,
+                    qualifiers,
+                    hints,
+                    statementBuilder);
+                commandText = await CommandTextCache.GetMergeTextAsync(request, cancellationToken);
+            }
+
+            // Call
             context = CreateInternal<TEntity>(connection,
                 entities,
                 dbFields,
@@ -146,9 +200,7 @@ namespace RepoDb.Contexts.Providers
                 qualifiers,
                 batchSize,
                 fields,
-                hints,
-                transaction,
-                statementBuilder);
+                commandText);
 
             // Add to cache
             MergeAllExecutionContextCache.Add<TEntity>(key, context);
@@ -168,9 +220,7 @@ namespace RepoDb.Contexts.Providers
         /// <param name="qualifiers"></param>
         /// <param name="batchSize"></param>
         /// <param name="fields"></param>
-        /// <param name="hints"></param>
-        /// <param name="transaction"></param>
-        /// <param name="statementBuilder"></param>
+        /// <param name="commandText"></param>
         /// <returns></returns>
         private static MergeAllExecutionContext<TEntity> CreateInternal<TEntity>(IDbConnection connection,
             IEnumerable<TEntity> entities,
@@ -179,9 +229,7 @@ namespace RepoDb.Contexts.Providers
             IEnumerable<Field> qualifiers,
             int batchSize,
             IEnumerable<Field> fields,
-            string hints = null,
-            IDbTransaction transaction = null,
-            IStatementBuilder statementBuilder = null)
+            string commandText)
             where TEntity : class
         {
             var typeOfEntity = typeof(TEntity);
@@ -260,37 +308,10 @@ namespace RepoDb.Contexts.Providers
                     dbSetting);
             }
 
-            // Identify the requests
-            var mergeAllRequest = (MergeAllRequest)null;
-            var mergeRequest = (MergeRequest)null;
-
-            // Create a different kind of requests
-            if (batchSize > 1)
-            {
-                mergeAllRequest = new MergeAllRequest(tableName,
-                    connection,
-                    transaction,
-                    fields,
-                    qualifiers,
-                    batchSize,
-                    hints,
-                    statementBuilder);
-            }
-            else
-            {
-                mergeRequest = new MergeRequest(tableName,
-                    connection,
-                    transaction,
-                    fields,
-                    qualifiers,
-                    hints,
-                    statementBuilder);
-            }
-
             // Return the value
             return new MergeAllExecutionContext<TEntity>
             {
-                CommandText = batchSize > 1 ? CommandTextCache.GetMergeAllText(mergeAllRequest) : CommandTextCache.GetMergeText(mergeRequest),
+                CommandText = commandText,
                 InputFields = inputFields,
                 BatchSize = batchSize,
                 SingleDataEntityParametersSetterFunc = singleEntityFunc,

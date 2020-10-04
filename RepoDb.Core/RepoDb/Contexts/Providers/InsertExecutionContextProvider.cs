@@ -68,13 +68,18 @@ namespace RepoDb.Contexts.Providers
 
             // Create
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+            var request = new InsertRequest(tableName,
+                connection,
+                transaction,
+                fields,
+                hints,
+                statementBuilder);
+            var commandText = CommandTextCache.GetInsertText(request);
             context = CreateInternal<TEntity>(connection,
                 dbFields,
                 tableName,
                 fields,
-                hints,
-                transaction,
-                statementBuilder);
+                commandText);
 
             // Add to cache
             InsertExecutionContextCache.Add<TEntity>(key, context);
@@ -115,13 +120,20 @@ namespace RepoDb.Contexts.Providers
 
             // Create
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
+            var request = new InsertRequest(tableName,
+                connection,
+                transaction,
+                fields,
+                hints,
+                statementBuilder);
+            var commandText = await CommandTextCache.GetInsertTextAsync(request, cancellationToken);
+
+            // Call
             context = CreateInternal<TEntity>(connection,
                 dbFields,
                 tableName,
                 fields,
-                hints,
-                transaction,
-                statementBuilder);
+                commandText);
 
             // Add to cache
             InsertExecutionContextCache.Add<TEntity>(key, context);
@@ -138,17 +150,13 @@ namespace RepoDb.Contexts.Providers
         /// <param name="dbFields"></param>
         /// <param name="tableName"></param>
         /// <param name="fields"></param>
-        /// <param name="hints"></param>
-        /// <param name="transaction"></param>
-        /// <param name="statementBuilder"></param>
+        /// <param name="commandText"></param>
         /// <returns></returns>
         private static InsertExecutionContext<TEntity> CreateInternal<TEntity>(IDbConnection connection,
             IEnumerable<DbField> dbFields,
             string tableName,
             IEnumerable<Field> fields,
-            string hints = null,
-            IDbTransaction transaction = null,
-            IStatementBuilder statementBuilder = null)
+            string commandText)
             where TEntity : class
         {
             var typeOfEntity = typeof(TEntity);
@@ -185,18 +193,10 @@ namespace RepoDb.Contexts.Providers
                 identityPropertySetter = FunctionCache.GetDataEntityPropertySetterCompiledFunction<TEntity>(identity);
             }
 
-            // Identify the requests
-            var insertRequest = new InsertRequest(tableName,
-                connection,
-                transaction,
-                fields,
-                hints,
-                statementBuilder);
-
             // Return the value
             return new InsertExecutionContext<TEntity>
             {
-                CommandText = CommandTextCache.GetInsertText(insertRequest),
+                CommandText = commandText,
                 InputFields = inputFields,
                 ParametersSetterFunc = FunctionCache.GetDataEntityDbParameterSetterCompiledFunction<TEntity>(
                     string.Concat(typeof(TEntity).FullName, StringConstant.Period, tableName, ".Insert"),

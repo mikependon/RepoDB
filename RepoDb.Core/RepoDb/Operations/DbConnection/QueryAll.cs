@@ -693,7 +693,7 @@ namespace RepoDb
                 orderBy,
                 hints,
                 statementBuilder);
-            var commandText = CommandTextCache.GetQueryAllText(request);
+            var commandText = await CommandTextCache.GetQueryAllTextAsync(request, cancellationToken);
             var param = (object)null;
             var sessionId = Guid.Empty;
 

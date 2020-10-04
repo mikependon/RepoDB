@@ -2295,7 +2295,7 @@ namespace RepoDb
                 top,
                 hints,
                 statementBuilder);
-            var commandText = CommandTextCache.GetQueryText(request);
+            var commandText = await CommandTextCache.GetQueryTextAsync(request, cancellationToken);
             var param = (object)null;
             var sessionId = Guid.Empty;
 

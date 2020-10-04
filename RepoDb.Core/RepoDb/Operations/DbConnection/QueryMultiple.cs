@@ -1934,7 +1934,7 @@ namespace RepoDb
                 top1,
                 hints1,
                 statementBuilder);
-            var commandText1 = CommandTextCache.GetQueryMultipleText<T1>(request1);
+            var commandText1 = await CommandTextCache.GetQueryMultipleTextAsync<T1>(request1, cancellationToken);
 
             // T2
             var request2 = new QueryMultipleRequest(2,
@@ -1947,7 +1947,7 @@ namespace RepoDb
                 top2,
                 hints2,
                 statementBuilder);
-            var commandText2 = CommandTextCache.GetQueryMultipleText<T2>(request2);
+            var commandText2 = await CommandTextCache.GetQueryMultipleTextAsync<T2>(request2, cancellationToken);
 
             // Shared variables
             var commandText = string.Join(" ", commandText1, commandText2);
@@ -2155,7 +2155,7 @@ namespace RepoDb
                 top1,
                 hints1,
                 statementBuilder);
-            var commandText1 = CommandTextCache.GetQueryMultipleText<T1>(request1);
+            var commandText1 = await CommandTextCache.GetQueryMultipleTextAsync<T1>(request1, cancellationToken);
 
             // T2
             var request2 = new QueryMultipleRequest(2,
@@ -2168,7 +2168,7 @@ namespace RepoDb
                 top2,
                 hints2,
                 statementBuilder);
-            var commandText2 = CommandTextCache.GetQueryMultipleText<T2>(request2);
+            var commandText2 = await CommandTextCache.GetQueryMultipleTextAsync<T2>(request2, cancellationToken);
 
             // T3
             var request3 = new QueryMultipleRequest(3,
@@ -2181,7 +2181,7 @@ namespace RepoDb
                 top3,
                 hints3,
                 statementBuilder);
-            var commandText3 = CommandTextCache.GetQueryMultipleText<T3>(request3);
+            var commandText3 = await CommandTextCache.GetQueryMultipleTextAsync<T3>(request3, cancellationToken);
 
             // Shared variables
             var commandText = string.Join(" ", commandText1, commandText2, commandText3);
@@ -2421,7 +2421,7 @@ namespace RepoDb
                 top1,
                 hints1,
                 statementBuilder);
-            var commandText1 = CommandTextCache.GetQueryMultipleText<T1>(request1);
+            var commandText1 = await CommandTextCache.GetQueryMultipleTextAsync<T1>(request1, cancellationToken);
 
             // T2
             var request2 = new QueryMultipleRequest(2,
@@ -2434,7 +2434,7 @@ namespace RepoDb
                 top2,
                 hints2,
                 statementBuilder);
-            var commandText2 = CommandTextCache.GetQueryMultipleText<T2>(request2);
+            var commandText2 = await CommandTextCache.GetQueryMultipleTextAsync<T2>(request2, cancellationToken);
 
             // T3
             var request3 = new QueryMultipleRequest(3,
@@ -2447,7 +2447,7 @@ namespace RepoDb
                 top3,
                 hints3,
                 statementBuilder);
-            var commandText3 = CommandTextCache.GetQueryMultipleText<T3>(request3);
+            var commandText3 = await CommandTextCache.GetQueryMultipleTextAsync<T3>(request3, cancellationToken);
 
             // T4
             var request4 = new QueryMultipleRequest(4,
@@ -2460,7 +2460,7 @@ namespace RepoDb
                 top4,
                 hints4,
                 statementBuilder);
-            var commandText4 = CommandTextCache.GetQueryMultipleText<T4>(request4);
+            var commandText4 = await CommandTextCache.GetQueryMultipleTextAsync<T4>(request4, cancellationToken);
 
             // Shared variables
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4);
@@ -2730,7 +2730,7 @@ namespace RepoDb
                 top1,
                 hints1,
                 statementBuilder);
-            var commandText1 = CommandTextCache.GetQueryMultipleText<T1>(request1);
+            var commandText1 = await CommandTextCache.GetQueryMultipleTextAsync<T1>(request1, cancellationToken);
 
             // T2
             var request2 = new QueryMultipleRequest(2,
@@ -2743,7 +2743,7 @@ namespace RepoDb
                 top2,
                 hints2,
                 statementBuilder);
-            var commandText2 = CommandTextCache.GetQueryMultipleText<T2>(request2);
+            var commandText2 = await CommandTextCache.GetQueryMultipleTextAsync<T2>(request2, cancellationToken);
 
             // T3
             var request3 = new QueryMultipleRequest(3,
@@ -2756,7 +2756,7 @@ namespace RepoDb
                 top3,
                 hints3,
                 statementBuilder);
-            var commandText3 = CommandTextCache.GetQueryMultipleText<T3>(request3);
+            var commandText3 = await CommandTextCache.GetQueryMultipleTextAsync<T3>(request3, cancellationToken);
 
             // T4
             var request4 = new QueryMultipleRequest(4,
@@ -2769,7 +2769,7 @@ namespace RepoDb
                 top4,
                 hints4,
                 statementBuilder);
-            var commandText4 = CommandTextCache.GetQueryMultipleText<T4>(request4);
+            var commandText4 = await CommandTextCache.GetQueryMultipleTextAsync<T4>(request4, cancellationToken);
 
             // T5
             var request5 = new QueryMultipleRequest(5,
@@ -2782,7 +2782,7 @@ namespace RepoDb
                 top5,
                 hints5,
                 statementBuilder);
-            var commandText5 = CommandTextCache.GetQueryMultipleText<T5>(request5);
+            var commandText5 = await CommandTextCache.GetQueryMultipleTextAsync<T5>(request5, cancellationToken);
 
             // Shared variables
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5);
@@ -3082,7 +3082,7 @@ namespace RepoDb
                 top1,
                 hints1,
                 statementBuilder);
-            var commandText1 = CommandTextCache.GetQueryMultipleText<T1>(request1);
+            var commandText1 = await CommandTextCache.GetQueryMultipleTextAsync<T1>(request1, cancellationToken);
 
             // T2
             var request2 = new QueryMultipleRequest(2,
@@ -3095,7 +3095,7 @@ namespace RepoDb
                 top2,
                 hints2,
                 statementBuilder);
-            var commandText2 = CommandTextCache.GetQueryMultipleText<T2>(request2);
+            var commandText2 = await CommandTextCache.GetQueryMultipleTextAsync<T2>(request2, cancellationToken);
 
             // T3
             var request3 = new QueryMultipleRequest(3,
@@ -3108,7 +3108,7 @@ namespace RepoDb
                 top3,
                 hints3,
                 statementBuilder);
-            var commandText3 = CommandTextCache.GetQueryMultipleText<T3>(request3);
+            var commandText3 = await CommandTextCache.GetQueryMultipleTextAsync<T3>(request3, cancellationToken);
 
             // T4
             var request4 = new QueryMultipleRequest(4,
@@ -3121,7 +3121,7 @@ namespace RepoDb
                 top4,
                 hints4,
                 statementBuilder);
-            var commandText4 = CommandTextCache.GetQueryMultipleText<T4>(request4);
+            var commandText4 = await CommandTextCache.GetQueryMultipleTextAsync<T4>(request4, cancellationToken);
 
             // T5
             var request5 = new QueryMultipleRequest(5,
@@ -3134,7 +3134,7 @@ namespace RepoDb
                 top5,
                 hints5,
                 statementBuilder);
-            var commandText5 = CommandTextCache.GetQueryMultipleText<T5>(request5);
+            var commandText5 = await CommandTextCache.GetQueryMultipleTextAsync<T5>(request5, cancellationToken);
 
             // T6
             var request6 = new QueryMultipleRequest(6,
@@ -3147,7 +3147,7 @@ namespace RepoDb
                 top6,
                 hints6,
                 statementBuilder);
-            var commandText6 = CommandTextCache.GetQueryMultipleText<T6>(request6);
+            var commandText6 = await CommandTextCache.GetQueryMultipleTextAsync<T6>(request6, cancellationToken);
 
             // Shared variables
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5, commandText6);
@@ -3478,7 +3478,7 @@ namespace RepoDb
                 top1,
                 hints1,
                 statementBuilder);
-            var commandText1 = CommandTextCache.GetQueryMultipleText<T1>(request1);
+            var commandText1 = await CommandTextCache.GetQueryMultipleTextAsync<T1>(request1, cancellationToken);
 
             // T2
             var request2 = new QueryMultipleRequest(2,
@@ -3491,7 +3491,7 @@ namespace RepoDb
                 top2,
                 hints2,
                 statementBuilder);
-            var commandText2 = CommandTextCache.GetQueryMultipleText<T2>(request2);
+            var commandText2 = await CommandTextCache.GetQueryMultipleTextAsync<T2>(request2, cancellationToken);
 
             // T3
             var request3 = new QueryMultipleRequest(3,
@@ -3504,7 +3504,7 @@ namespace RepoDb
                 top3,
                 hints3,
                 statementBuilder);
-            var commandText3 = CommandTextCache.GetQueryMultipleText<T3>(request3);
+            var commandText3 = await CommandTextCache.GetQueryMultipleTextAsync<T3>(request3, cancellationToken);
 
             // T4
             var request4 = new QueryMultipleRequest(4,
@@ -3517,7 +3517,7 @@ namespace RepoDb
                 top4,
                 hints4,
                 statementBuilder);
-            var commandText4 = CommandTextCache.GetQueryMultipleText<T4>(request4);
+            var commandText4 = await CommandTextCache.GetQueryMultipleTextAsync<T4>(request4, cancellationToken);
 
             // T5
             var request5 = new QueryMultipleRequest(5,
@@ -3530,7 +3530,7 @@ namespace RepoDb
                 top5,
                 hints5,
                 statementBuilder);
-            var commandText5 = CommandTextCache.GetQueryMultipleText<T5>(request5);
+            var commandText5 = await CommandTextCache.GetQueryMultipleTextAsync<T5>(request5, cancellationToken);
 
             // T6
             var request6 = new QueryMultipleRequest(6,
@@ -3543,7 +3543,7 @@ namespace RepoDb
                 top6,
                 hints6,
                 statementBuilder);
-            var commandText6 = CommandTextCache.GetQueryMultipleText<T6>(request6);
+            var commandText6 = await CommandTextCache.GetQueryMultipleTextAsync<T6>(request6, cancellationToken);
 
             // T7
             var request7 = new QueryMultipleRequest(7,
@@ -3556,7 +3556,7 @@ namespace RepoDb
                 top7,
                 hints7,
                 statementBuilder);
-            var commandText7 = CommandTextCache.GetQueryMultipleText<T7>(request7);
+            var commandText7 = await CommandTextCache.GetQueryMultipleTextAsync<T7>(request7, cancellationToken);
 
             // Shared variables
             var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5, commandText6, commandText7);

@@ -83,6 +83,17 @@ namespace RepoDb.Contexts.Providers
 
             // Create
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+            var request = new UpdateAllRequest(tableName,
+                connection,
+                transaction,
+                fields,
+                qualifiers,
+                batchSize,
+                hints,
+                statementBuilder);
+            var commandText = CommandTextCache.GetUpdateAllText(request);
+
+            // Call
             context = CreateInternal<TEntity>(connection,
                 tableName,
                 entities,
@@ -90,9 +101,7 @@ namespace RepoDb.Contexts.Providers
                 qualifiers,
                 batchSize,
                 fields,
-                hints,
-                transaction,
-                statementBuilder);
+                commandText);
 
             // Add to cache
             UpdateAllExecutionContextCache.Add<TEntity>(key, context);
@@ -139,6 +148,17 @@ namespace RepoDb.Contexts.Providers
 
             // Create
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
+            var request = new UpdateAllRequest(tableName,
+                connection,
+                transaction,
+                fields,
+                qualifiers,
+                batchSize,
+                hints,
+                statementBuilder);
+            var commandText = await CommandTextCache.GetUpdateAllTextAsync(request, cancellationToken);
+
+            // Call
             context = CreateInternal<TEntity>(connection,
                 tableName,
                 entities,
@@ -146,9 +166,7 @@ namespace RepoDb.Contexts.Providers
                 qualifiers,
                 batchSize,
                 fields,
-                hints,
-                transaction,
-                statementBuilder);
+                commandText);
 
             // Add to cache
             UpdateAllExecutionContextCache.Add<TEntity>(key, context);
@@ -168,9 +186,7 @@ namespace RepoDb.Contexts.Providers
         /// <param name="qualifiers"></param>
         /// <param name="batchSize"></param>
         /// <param name="fields"></param>
-        /// <param name="hints"></param>
-        /// <param name="transaction"></param>
-        /// <param name="statementBuilder"></param>
+        /// <param name="commandText"></param>
         /// <returns></returns>
         private static UpdateAllExecutionContext<TEntity> CreateInternal<TEntity>(IDbConnection connection,
             string tableName,
@@ -179,9 +195,7 @@ namespace RepoDb.Contexts.Providers
             IEnumerable<Field> qualifiers,
             int batchSize,
             IEnumerable<Field> fields,
-            string hints = null,
-            IDbTransaction transaction = null,
-            IStatementBuilder statementBuilder = null)
+            string commandText)
             where TEntity : class
         {
             // Variables needed
@@ -235,20 +249,10 @@ namespace RepoDb.Contexts.Providers
                     dbSetting);
             }
 
-            // Identity the requests
-            var updateAllRequest = new UpdateAllRequest(tableName,
-                connection,
-                transaction,
-                fields,
-                qualifiers,
-                batchSize,
-                hints,
-                statementBuilder);
-
             // Return the value
             return new UpdateAllExecutionContext<TEntity>
             {
-                CommandText = CommandTextCache.GetUpdateAllText(updateAllRequest),
+                CommandText = commandText,
                 InputFields = inputFields,
                 SingleDataEntityParametersSetterFunc = singleEntityFunc,
                 MultipleDataEntitiesParametersSetterFunc = multipleEntitiesFunc

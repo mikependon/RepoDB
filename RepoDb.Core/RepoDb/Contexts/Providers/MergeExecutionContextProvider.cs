@@ -74,14 +74,21 @@ namespace RepoDb.Contexts.Providers
 
             // Create
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+            var request = new MergeRequest(tableName,
+                connection,
+                transaction,
+                fields,
+                qualifiers,
+                hints,
+                statementBuilder);
+            var commandText = CommandTextCache.GetMergeText(request);
+
+            // Call
             context = CreateInternal<TEntity>(connection,
                 dbFields,
                 tableName,
-                qualifiers,
                 fields,
-                hints,
-                transaction,
-                statementBuilder);
+                commandText);
 
             // Add to cache
             MergeExecutionContextCache.Add<TEntity>(key, context);
@@ -124,14 +131,21 @@ namespace RepoDb.Contexts.Providers
 
             // Create
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
+            var request = new MergeRequest(tableName,
+                connection,
+                transaction,
+                fields,
+                qualifiers,
+                hints,
+                statementBuilder);
+            var commandText = await CommandTextCache.GetMergeTextAsync(request, cancellationToken);
+
+            // Call
             context = CreateInternal<TEntity>(connection,
                 dbFields,
                 tableName,
-                qualifiers,
                 fields,
-                hints,
-                transaction,
-                statementBuilder);
+                commandText);
 
             // Add to cache
             MergeExecutionContextCache.Add<TEntity>(key, context);
@@ -147,20 +161,14 @@ namespace RepoDb.Contexts.Providers
         /// <param name="connection"></param>
         /// <param name="dbFields"></param>
         /// <param name="tableName"></param>
-        /// <param name="qualifiers"></param>
         /// <param name="fields"></param>
-        /// <param name="hints"></param>
-        /// <param name="transaction"></param>
-        /// <param name="statementBuilder"></param>
+        /// <param name="commandText"></param>
         /// <returns></returns>
         private static MergeExecutionContext<TEntity> CreateInternal<TEntity>(IDbConnection connection,
             IEnumerable<DbField> dbFields,
             string tableName,
-            IEnumerable<Field> qualifiers,
             IEnumerable<Field> fields,
-            string hints = null,
-            IDbTransaction transaction = null,
-            IStatementBuilder statementBuilder = null)
+            string commandText)
             where TEntity : class
         {
             var typeOfEntity = typeof(TEntity);
@@ -195,19 +203,10 @@ namespace RepoDb.Contexts.Providers
                 identityPropertySetter = FunctionCache.GetDataEntityPropertySetterCompiledFunction<TEntity>(identity);
             }
 
-            // Identify the requests
-            var mergeRequest = new MergeRequest(tableName,
-                connection,
-                transaction,
-                fields,
-                qualifiers,
-                hints,
-                statementBuilder);
-
             // Return the value
             return new MergeExecutionContext<TEntity>
             {
-                CommandText = CommandTextCache.GetMergeText(mergeRequest),
+                CommandText = commandText,
                 InputFields = inputFields,
                 ParametersSetterFunc = FunctionCache.GetDataEntityDbParameterSetterCompiledFunction<TEntity>(
                     string.Concat(typeof(TEntity).FullName, StringConstant.Period, tableName, ".Merge"),

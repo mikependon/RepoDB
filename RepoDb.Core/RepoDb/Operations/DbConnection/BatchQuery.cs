@@ -1809,7 +1809,7 @@ namespace RepoDb
                 where,
                 hints,
                 statementBuilder);
-            var commandText = CommandTextCache.GetBatchQueryText(request);
+            var commandText = await CommandTextCache.GetBatchQueryTextAsync(request, cancellationToken);
             var param = (object)null;
             var sessionId = Guid.Empty;
 
