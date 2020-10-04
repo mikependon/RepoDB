@@ -108,6 +108,24 @@ namespace RepoDb
         }
 
         /// <summary>
+        /// Parses an object and creates an enumerable of <see cref="Field"/> objects.
+        /// </summary>
+        /// <param name="obj">An object to be parsed.</param>
+        /// <returns>An enumerable of <see cref="Field"/> objects.</returns>
+        public static IEnumerable<Field> Parse(object obj) =>
+            obj?.GetType().IsDictionaryStringObject() == true ?
+                ParseDictionaryStringObject((IDictionary<string, object>)obj) : Parse(obj?.GetType());
+
+        /// <summary>
+        /// Parses an object and creates an enumerable of <see cref="Field"/> objects.
+        /// </summary>
+        /// <typeparam name="TEntity">The target type.</typeparam>
+        /// <returns>An enumerable of <see cref="Field"/> objects.</returns>
+        public static IEnumerable<Field> Parse<TEntity>()
+            where TEntity : class =>
+            Parse(typeof(TEntity));
+
+        /// <summary>
         /// Parses a type and creates an enumerable of <see cref="Field"/> objects.
         /// </summary>
         /// <returns>An enumerable of <see cref="Field"/> objects.</returns>
@@ -123,22 +141,20 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Parses an object and creates an enumerable of <see cref="Field"/> objects.
+        /// 
         /// </summary>
-        /// <param name="obj">An object to be parsed.</param>
-        /// <returns>An enumerable of <see cref="Field"/> objects.</returns>
-        public static IEnumerable<Field> Parse(object obj) =>
-            Parse(obj?.GetType());
-
-        /// <summary>
-        /// Parses an object and creates an enumerable of <see cref="Field"/> objects.
-        /// </summary>
-        /// <typeparam name="TEntity">The target type.</typeparam>
-        /// <returns>An enumerable of <see cref="Field"/> objects.</returns>
-        public static IEnumerable<Field> Parse<TEntity>()
-            where TEntity : class =>
-            Parse(typeof(TEntity));
-
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        private static IEnumerable<Field> ParseDictionaryStringObject(IDictionary<string, object> obj)
+        {
+            if (obj != null)
+            {
+                foreach (var kvp in obj)
+                {
+                    yield return new Field(kvp.Key, (kvp.Value?.GetType() ?? StaticType.Object));
+                }
+            }
+        }
 
         /// <summary>
         /// Parses a property from the data entity object based on the given <see cref="Expression"/> and converts the result 

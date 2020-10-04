@@ -75,6 +75,8 @@ namespace RepoDb.Contexts.Providers
                 hints,
                 statementBuilder);
             var commandText = CommandTextCache.GetInsertText(request);
+
+            // Call
             context = CreateInternal<TEntity>(connection,
                 dbFields,
                 tableName,
