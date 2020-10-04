@@ -221,7 +221,11 @@ namespace RepoDb.DbHelpers
                 // Iterate the list of the fields
                 while (await reader.ReadAsync(cancellationToken))
                 {
-                    dbFields.Add(await ReaderToDbFieldAsync(reader, cancellationToken));
+                    // The 'ReaderToDbFieldAsync' is having a bad behavior on different versions
+                    // of MySQL for this driver (from Oracle). Also, the 'CAST' and 'CONVERT' is
+                    // not working on our DEVENV.
+                    // dbFields.Add(await ReaderToDbFieldAsync(reader, cancellationToken));
+                    dbFields.Add(ReaderToDbField(reader));
                 }
 
                 // Return the list of fields
