@@ -1,5 +1,6 @@
 ﻿using RepoDb.Contexts.Providers;
 using RepoDb.Exceptions;
+using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -185,15 +186,30 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return InsertInternalBase<TEntity, TResult>(connection: connection,
-                tableName: tableName,
-                entity: entity,
-                fields: GetQualifiedFields<TEntity>(fields, entity),
-                hints: hints,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
+            if (entity?.GetType()?.IsDictionaryStringObject() == true)
+            {
+                return InsertInternalBase<IDictionary<string, object>, TResult>(connection: connection,
+                    tableName: tableName,
+                    entity: (IDictionary<string, object>)entity,
+                    fields: GetQualifiedFields<TEntity>(fields, entity),
+                    hints: hints,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    trace: trace,
+                    statementBuilder: statementBuilder);
+            }
+            else
+            {
+                return InsertInternalBase<TEntity, TResult>(connection: connection,
+                    tableName: tableName,
+                    entity: entity,
+                    fields: GetQualifiedFields<TEntity>(fields, entity),
+                    hints: hints,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    trace: trace,
+                    statementBuilder: statementBuilder);
+            }
         }
 
         #endregion
@@ -382,16 +398,32 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            return InsertAsyncInternalBase<TEntity, TResult>(connection: connection,
-                tableName: tableName,
-                entity: entity,
-                fields: GetQualifiedFields<TEntity>(fields, entity),
-                hints: hints,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder,
-                cancellationToken: cancellationToken);
+            if (entity?.GetType()?.IsDictionaryStringObject() == true)
+            {
+                return InsertAsyncInternalBase<IDictionary<string, object>, TResult>(connection: connection,
+                    tableName: tableName,
+                    entity: (IDictionary<string, object>)entity,
+                    fields: GetQualifiedFields<TEntity>(fields, entity),
+                    hints: hints,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    trace: trace,
+                    statementBuilder: statementBuilder,
+                    cancellationToken: cancellationToken);
+            }
+            else
+            {
+                return InsertAsyncInternalBase<TEntity, TResult>(connection: connection,
+                    tableName: tableName,
+                    entity: entity,
+                    fields: GetQualifiedFields<TEntity>(fields, entity),
+                    hints: hints,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    trace: trace,
+                    statementBuilder: statementBuilder,
+                    cancellationToken: cancellationToken);
+            }
         }
 
         #endregion

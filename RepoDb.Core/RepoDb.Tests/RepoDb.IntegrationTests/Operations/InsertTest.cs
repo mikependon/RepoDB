@@ -556,6 +556,55 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestSqlConnectionInsertViaExpandoObjectTableName()
+        {
+            // Setup
+            var table = Helper.CreateExpandoObjectIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var id = connection.Insert<long>(ClassMappedNameCache.Get<IdentityTable>(),
+                    table);
+
+                // Assert
+                Assert.IsTrue(id > 0);
+
+                // Act
+                var result = connection.Query<IdentityTable>(id)?.FirstOrDefault();
+
+                // Assert
+                Helper.AssertPropertiesEquality(result, table);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionInsertViaExpandoObjectTableNameWithFields()
+        {
+            // Setup
+            var table = Helper.CreateExpandoObjectIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var id = connection.Insert<long>(ClassMappedNameCache.Get<IdentityTable>(),
+                    table,
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar)));
+
+                // Assert
+                Assert.IsTrue(id > 0);
+
+                // Act
+                var result = connection.Query<IdentityTable>(id)?.FirstOrDefault();
+
+                // Assert
+                var entity = (dynamic)table;
+                Assert.AreEqual(entity.RowGuid, result.RowGuid);
+                Assert.AreEqual(entity.ColumnNVarChar, result.ColumnNVarChar);
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionInsertViaTableName()
         {
             // Setup
@@ -842,6 +891,55 @@ namespace RepoDb.IntegrationTests.Operations
                 // Assert
                 Assert.AreEqual(table.RowGuid, result.RowGuid);
                 Assert.AreEqual(table.ColumnNVarChar, result.ColumnNVarChar);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionInsertAsyncViaExpandoObjectTableName()
+        {
+            // Setup
+            var table = Helper.CreateExpandoObjectIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var id = connection.InsertAsync<long>(ClassMappedNameCache.Get<IdentityTable>(),
+                    table).Result;
+
+                // Assert
+                Assert.IsTrue(id > 0);
+
+                // Act
+                var result = connection.Query<IdentityTable>(id)?.FirstOrDefault();
+
+                // Assert
+                Helper.AssertPropertiesEquality(result, table);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionInsertAsyncViaExpandoObjectTableNameWithFields()
+        {
+            // Setup
+            var table = Helper.CreateExpandoObjectIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var id = connection.InsertAsync<long>(ClassMappedNameCache.Get<IdentityTable>(),
+                    table,
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar))).Result;
+
+                // Assert
+                Assert.IsTrue(id > 0);
+
+                // Act
+                var result = connection.Query<IdentityTable>(id)?.FirstOrDefault();
+
+                // Assert
+                var entity = (dynamic)table;
+                Assert.AreEqual(entity.RowGuid, result.RowGuid);
+                Assert.AreEqual(entity.ColumnNVarChar, result.ColumnNVarChar);
             }
         }
 
