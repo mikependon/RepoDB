@@ -82,6 +82,22 @@ namespace RepoDb.Reflection
 
         #endregion
 
+        #region CompileDictionaryStringObjectDbParameterSetter
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="inputFields"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
+        public static Action<DbCommand, TEntity> CompileDictionaryStringObjectDbParameterSetter<TEntity>(IEnumerable<DbField> inputFields,
+            IDbSetting dbSetting = null)
+            where TEntity : class =>
+            Compiler.CompileDictionaryStringObjectDbParameterSetter<TEntity>(inputFields, dbSetting);
+
+        #endregion
+
         #region CompileDbCommandToProperty
 
         /// <summary>
