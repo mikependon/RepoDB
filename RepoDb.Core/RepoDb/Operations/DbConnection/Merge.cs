@@ -662,29 +662,61 @@ namespace RepoDb
             // Return the result
             if (setting.IsUseUpsert == false)
             {
-                return MergeInternalBase<TEntity, TResult>(connection: connection,
-                    tableName: tableName,
-                    entity: entity,
-                    qualifiers: qualifiers,
-                    fields: GetQualifiedFields<TEntity>(fields, entity),
-                    hints: hints,
-                    commandTimeout: commandTimeout,
-                    transaction: transaction,
-                    trace: trace,
-                    statementBuilder: statementBuilder);
+                if (entity?.GetType()?.IsDictionaryStringObject() == true)
+                {
+                    return MergeInternalBase<IDictionary<string, object>, TResult>(connection: connection,
+                        tableName: tableName,
+                        entity: (IDictionary<string, object>)entity,
+                        qualifiers: qualifiers,
+                        fields: GetQualifiedFields<TEntity>(fields, entity),
+                        hints: hints,
+                        commandTimeout: commandTimeout,
+                        transaction: transaction,
+                        trace: trace,
+                        statementBuilder: statementBuilder);
+                }
+                else
+                {
+                    return MergeInternalBase<TEntity, TResult>(connection: connection,
+                        tableName: tableName,
+                        entity: entity,
+                        qualifiers: qualifiers,
+                        fields: GetQualifiedFields<TEntity>(fields, entity),
+                        hints: hints,
+                        commandTimeout: commandTimeout,
+                        transaction: transaction,
+                        trace: trace,
+                        statementBuilder: statementBuilder);
+                }
             }
             else
             {
-                return UpsertInternalBase<TEntity, TResult>(connection: connection,
-                    tableName: tableName,
-                    entity: entity,
-                    qualifiers: qualifiers,
-                    fields: GetQualifiedFields<TEntity>(fields, entity),
-                    hints: hints,
-                    commandTimeout: commandTimeout,
-                    transaction: transaction,
-                    trace: trace,
-                    statementBuilder: statementBuilder);
+                if (entity?.GetType()?.IsDictionaryStringObject() == true)
+                {
+                    return UpsertInternalBase<IDictionary<string, object>, TResult>(connection: connection,
+                        tableName: tableName,
+                        entity: (IDictionary<string, object>)entity,
+                        qualifiers: qualifiers,
+                        fields: GetQualifiedFields<TEntity>(fields, entity),
+                        hints: hints,
+                        commandTimeout: commandTimeout,
+                        transaction: transaction,
+                        trace: trace,
+                        statementBuilder: statementBuilder);
+                }
+                else
+                {
+                    return UpsertInternalBase<TEntity, TResult>(connection: connection,
+                        tableName: tableName,
+                        entity: entity,
+                        qualifiers: qualifiers,
+                        fields: GetQualifiedFields<TEntity>(fields, entity),
+                        hints: hints,
+                        commandTimeout: commandTimeout,
+                        transaction: transaction,
+                        trace: trace,
+                        statementBuilder: statementBuilder);
+                }
             }
         }
 
@@ -1384,31 +1416,65 @@ namespace RepoDb
             // Return the result
             if (setting.IsUseUpsert == false)
             {
-                return await MergeAsyncInternalBase<TEntity, TResult>(connection: connection,
-                    tableName: tableName,
-                    entity: entity,
-                    qualifiers: qualifiers,
-                    fields: GetQualifiedFields<TEntity>(fields, entity),
-                    hints: hints,
-                    commandTimeout: commandTimeout,
-                    transaction: transaction,
-                    trace: trace,
-                    statementBuilder: statementBuilder,
-                    cancellationToken: cancellationToken);
+                if (entity?.GetType()?.IsDictionaryStringObject() == true)
+                {
+                    return await MergeAsyncInternalBase<IDictionary<string, object>, TResult>(connection: connection,
+                        tableName: tableName,
+                        entity: (IDictionary<string, object>)entity,
+                        qualifiers: qualifiers,
+                        fields: GetQualifiedFields<TEntity>(fields, entity),
+                        hints: hints,
+                        commandTimeout: commandTimeout,
+                        transaction: transaction,
+                        trace: trace,
+                        statementBuilder: statementBuilder,
+                        cancellationToken: cancellationToken);
+                }
+                else
+                {
+                    return await MergeAsyncInternalBase<TEntity, TResult>(connection: connection,
+                        tableName: tableName,
+                        entity: entity,
+                        qualifiers: qualifiers,
+                        fields: GetQualifiedFields<TEntity>(fields, entity),
+                        hints: hints,
+                        commandTimeout: commandTimeout,
+                        transaction: transaction,
+                        trace: trace,
+                        statementBuilder: statementBuilder,
+                        cancellationToken: cancellationToken);
+                }
             }
             else
             {
-                return await UpsertAsyncInternalBase<TEntity, TResult>(connection: connection,
-                    tableName: tableName,
-                    entity: entity,
-                    qualifiers: qualifiers,
-                    fields: GetQualifiedFields<TEntity>(fields, entity),
-                    hints: hints,
-                    commandTimeout: commandTimeout,
-                    transaction: transaction,
-                    trace: trace,
-                    statementBuilder: statementBuilder,
-                    cancellationToken: cancellationToken);
+                if (entity?.GetType()?.IsDictionaryStringObject() == true)
+                {
+                    return await UpsertAsyncInternalBase<IDictionary<string, object>, TResult>(connection: connection,
+                        tableName: tableName,
+                        entity: (IDictionary<string, object>)entity,
+                        qualifiers: qualifiers,
+                        fields: GetQualifiedFields<TEntity>(fields, entity),
+                        hints: hints,
+                        commandTimeout: commandTimeout,
+                        transaction: transaction,
+                        trace: trace,
+                        statementBuilder: statementBuilder,
+                        cancellationToken: cancellationToken);
+                }
+                else
+                {
+                    return await UpsertAsyncInternalBase<TEntity, TResult>(connection: connection,
+                        tableName: tableName,
+                        entity: entity,
+                        qualifiers: qualifiers,
+                        fields: GetQualifiedFields<TEntity>(fields, entity),
+                        hints: hints,
+                        commandTimeout: commandTimeout,
+                        transaction: transaction,
+                        trace: trace,
+                        statementBuilder: statementBuilder,
+                        cancellationToken: cancellationToken);
+                }
             }
         }
 
@@ -1917,7 +1983,7 @@ namespace RepoDb
             {
                 var key = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction,
                     entity?.GetType() ?? typeof(TEntity));
-                qualifiers = key.AsField().AsEnumerable();
+                qualifiers = key.AsEnumerable();
             }
 
             // Get the context
@@ -2180,7 +2246,7 @@ namespace RepoDb
             {
                 var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction,
                     entity?.GetType() ?? typeof(TEntity), cancellationToken);
-                qualifiers = key.AsField().AsEnumerable();
+                qualifiers = key.AsEnumerable();
             }
 
             // Get the context
