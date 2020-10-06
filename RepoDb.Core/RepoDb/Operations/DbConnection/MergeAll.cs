@@ -379,7 +379,7 @@ namespace RepoDb
             {
                 var key = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction,
                     entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity));
-                qualifiers = key.AsField().AsEnumerable();
+                qualifiers = key.AsEnumerable();
             }
 
             // Variables needed
@@ -803,7 +803,7 @@ namespace RepoDb
             {
                 var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction,
                     entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity), cancellationToken);
-                qualifiers = key.AsField().AsEnumerable();
+                qualifiers = key.AsEnumerable();
             }
 
             // Variables needed

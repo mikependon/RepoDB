@@ -1161,7 +1161,7 @@ namespace RepoDb.IntegrationTests
         /// Creates a an instance of <see cref="ExpandoObject"/> object for [sc].[IdentityTable].
         /// </summary>
         /// <param name="count">The number of rows.</param>
-        /// <returns>An instance of <see cref="ExpandoObject"/> for [sc].[IdentityTable].</returns>
+        /// <returns>An instance of <see cref="ExpandoObject"/> for [sc].[IdentityTable] table.</returns>
         public static ExpandoObject CreateExpandoObjectIdentityTable()
         {
             var table = new ExpandoObject() as IDictionary<string, object>;
@@ -1181,7 +1181,7 @@ namespace RepoDb.IntegrationTests
         /// Creates a list of <see cref="ExpandoObject"/> objects for [sc].[IdentityTable].
         /// </summary>
         /// <param name="count">The number of rows.</param>
-        /// <returns>A list of <see cref="ExpandoObject"/> objects.</returns>
+        /// <returns>A list of <see cref="ExpandoObject"/> for [sc].[IdentityTable] table.</returns>
         public static List<ExpandoObject> CreateExpandoObjectIdentityTables(int count)
         {
             var tables = new List<ExpandoObject>();
@@ -1197,7 +1197,57 @@ namespace RepoDb.IntegrationTests
                 table.Add("ColumnDecimal", Convert.ToDecimal(1));
                 table.Add("ColumnFloat", Convert.ToDouble(1));
                 table.Add("ColumnInt", 1);
-                table.Add("ColumnNVarChar", $"NVARCHAR{index}");
+                table.Add("ColumnNVarChar", $"NVARCHAR-{index}-{Guid.NewGuid().ToString()}");
+                tables.Add((ExpandoObject)table);
+            }
+            return tables;
+        }
+
+        #endregion
+
+        #region IdentityTable
+
+        /// <summary>
+        /// Creates a an instance of <see cref="ExpandoObject"/> object for [sc].[NonIdentityTable].
+        /// </summary>
+        /// <param name="count">The number of rows.</param>
+        /// <returns>An instance of <see cref="ExpandoObject"/> for [dbo].[NonIdentityTable] table.</returns>
+        public static ExpandoObject CreateExpandoObjectNonIdentityTable()
+        {
+            var table = new ExpandoObject() as IDictionary<string, object>;
+            table.Add("Id", Guid.NewGuid());
+            table.Add("RowGuid", Guid.NewGuid());
+            table.Add("ColumnBit", true);
+            table.Add("ColumnDateTime", EpocDate.AddDays(1));
+            table.Add("ColumnDateTime2", DateTime.UtcNow);
+            table.Add("ColumnDecimal", Convert.ToDecimal(1));
+            table.Add("ColumnFloat", Convert.ToDouble(1));
+            table.Add("ColumnInt", 1);
+            table.Add("ColumnNVarChar", Guid.NewGuid().ToString());
+            return (ExpandoObject)table;
+        }
+
+        /// <summary>
+        /// Creates a list of <see cref="ExpandoObject"/> objects for [dbo].[NonIdentityTable].
+        /// </summary>
+        /// <param name="count">The number of rows.</param>
+        /// <returns>A list of <see cref="ExpandoObject"/> for [dbo].[NonIdentityTable] table.</returns>
+        public static List<ExpandoObject> CreateExpandoObjectNonIdentityTables(int count)
+        {
+            var tables = new List<ExpandoObject>();
+            for (var i = 0; i < count; i++)
+            {
+                var index = i + 1;
+                var table = new ExpandoObject() as IDictionary<string, object>;
+                table.Add("Id", Guid.NewGuid());
+                table.Add("RowGuid", Guid.NewGuid());
+                table.Add("ColumnBit", true);
+                table.Add("ColumnDateTime", EpocDate.AddDays(1));
+                table.Add("ColumnDateTime2", DateTime.UtcNow);
+                table.Add("ColumnDecimal", Convert.ToDecimal(1));
+                table.Add("ColumnFloat", Convert.ToDouble(1));
+                table.Add("ColumnInt", 1);
+                table.Add("ColumnNVarChar", $"NVARCHAR-{index}-{Guid.NewGuid().ToString()}");
                 tables.Add((ExpandoObject)table);
             }
             return tables;
