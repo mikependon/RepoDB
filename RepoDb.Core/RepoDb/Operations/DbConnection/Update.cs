@@ -580,16 +580,32 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return UpdateInternalBase<TEntity>(connection: connection,
-                tableName: tableName,
-                entity: entity,
-                where: where,
-                fields: GetQualifiedFields<TEntity>(fields, entity),
-                hints: hints,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
+            if (entity?.GetType()?.IsDictionaryStringObject() == true)
+            {
+                return UpdateInternalBase<IDictionary<string, object>>(connection: connection,
+                    tableName: tableName,
+                    entity: (IDictionary<string, object>)entity,
+                    where: where,
+                    fields: GetQualifiedFields<TEntity>(fields, entity),
+                    hints: hints,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    trace: trace,
+                    statementBuilder: statementBuilder);
+            }
+            else
+            {
+                return UpdateInternalBase<TEntity>(connection: connection,
+                    tableName: tableName,
+                    entity: entity,
+                    where: where,
+                    fields: GetQualifiedFields<TEntity>(fields, entity),
+                    hints: hints,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    trace: trace,
+                    statementBuilder: statementBuilder);
+            }
         }
 
         #endregion
@@ -1200,17 +1216,34 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            return UpdateAsyncInternalBase<TEntity>(connection: connection,
-                tableName: tableName,
-                entity: entity,
-                where: where,
-                fields: GetQualifiedFields<TEntity>(fields, entity),
-                hints: hints,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder,
-                cancellationToken: cancellationToken);
+            if (entity?.GetType()?.IsDictionaryStringObject() == true)
+            {
+                return UpdateAsyncInternalBase<IDictionary<string, object>>(connection: connection,
+                    tableName: tableName,
+                    entity: (IDictionary<string, object>)entity,
+                    where: where,
+                    fields: GetQualifiedFields<TEntity>(fields, entity),
+                    hints: hints,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    trace: trace,
+                    statementBuilder: statementBuilder,
+                    cancellationToken: cancellationToken);
+            }
+            else
+            {
+                return UpdateAsyncInternalBase<TEntity>(connection: connection,
+                    tableName: tableName,
+                    entity: entity,
+                    where: where,
+                    fields: GetQualifiedFields<TEntity>(fields, entity),
+                    hints: hints,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    trace: trace,
+                    statementBuilder: statementBuilder,
+                    cancellationToken: cancellationToken);
+            }
         }
 
         #endregion

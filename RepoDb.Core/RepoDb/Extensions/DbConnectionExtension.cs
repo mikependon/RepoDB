@@ -2232,7 +2232,7 @@ namespace RepoDb
         internal static QueryGroup ToQueryGroup<TEntity>(Field field,
             TEntity entity)
             where TEntity : class =>
-            ToQueryGroup(PropertyCache.Get<TEntity>(field), entity);
+            ToQueryGroup(PropertyCache.Get<TEntity>(field) ?? PropertyCache.Get(entity?.GetType(), field), entity);
 
         /// <summary>
         /// 
