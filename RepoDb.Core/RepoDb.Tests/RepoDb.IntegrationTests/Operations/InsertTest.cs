@@ -477,7 +477,7 @@ namespace RepoDb.IntegrationTests.Operations
                 var result = connection.Query<IdentityTable>(id)?.FirstOrDefault();
 
                 // Assert
-                Helper.AssertPropertiesEquality((dynamic)table, result);
+                Helper.AssertMembersEquality(result, (dynamic)table);
             }
         }
 
@@ -745,6 +745,55 @@ namespace RepoDb.IntegrationTests.Operations
                 // Assert
                 Assert.AreEqual(table.RowGuid, result.RowGuid);
                 Assert.AreEqual(table.ColumnNVarChar, result.ColumnNVarChar);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionInsertAsyncViaDynamicTableNameAsExpandoObject()
+        {
+            // Setup
+            var table = Helper.CreateExpandoObjectIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var id = connection.InsertAsync<ExpandoObject, long>(ClassMappedNameCache.Get<IdentityTable>(),
+                    table).Result;
+
+                // Assert
+                Assert.IsTrue(id > 0);
+
+                // Act
+                var result = connection.Query<IdentityTable>(id)?.FirstOrDefault();
+
+                // Assert
+                Helper.AssertMembersEquality(result, (dynamic)table);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionInsertAsyncViaDynamicTableNameAsExpandoObjectWithFields()
+        {
+            // Setup
+            var table = Helper.CreateExpandoObjectIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var id = connection.InsertAsync<ExpandoObject, long>(ClassMappedNameCache.Get<IdentityTable>(),
+                    table,
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar))).Result;
+
+                // Assert
+                Assert.IsTrue(id > 0);
+
+                // Act
+                var result = connection.Query<IdentityTable>(id)?.FirstOrDefault();
+
+                // Assert
+                var entity = (dynamic)table;
+                Assert.AreEqual(entity.RowGuid, result.RowGuid);
+                Assert.AreEqual(entity.ColumnNVarChar, result.ColumnNVarChar);
             }
         }
 
