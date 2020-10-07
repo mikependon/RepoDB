@@ -1049,7 +1049,7 @@ namespace RepoDb.IntegrationTests
                 ColumnDateTime = EpocDate.AddDays(1),
                 ColumnDateTime2 = DateTime.UtcNow,
                 ColumnDecimal = Convert.ToDecimal(1),
-                ColumnFloat = Convert.ToSingle(1),
+                ColumnFloat = Convert.ToDouble(1),
                 ColumnInt = 1,
                 ColumnNVarChar = Guid.NewGuid().ToString()
             };
@@ -1073,7 +1073,7 @@ namespace RepoDb.IntegrationTests
                     ColumnDateTime = EpocDate.AddDays(index),
                     ColumnDateTime2 = DateTime.UtcNow,
                     ColumnDecimal = Convert.ToDecimal(index),
-                    ColumnFloat = Convert.ToSingle(index),
+                    ColumnFloat = Convert.ToDouble(index),
                     ColumnInt = index,
                     ColumnNVarChar = $"NVARCHAR{index}"
                 });
