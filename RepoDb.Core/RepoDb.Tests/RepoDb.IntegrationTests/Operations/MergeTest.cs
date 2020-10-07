@@ -44,7 +44,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<IdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<IdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<IdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -69,7 +69,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<IdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<IdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<IdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnNVarChar, queryResult.ColumnNVarChar);
@@ -92,7 +92,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<IdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<IdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<IdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -117,7 +117,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<IdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<IdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<IdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnNVarChar, queryResult.ColumnNVarChar);
@@ -140,7 +140,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<NonIdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -164,7 +164,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<NonIdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnNVarChar, queryResult.ColumnNVarChar);
@@ -188,7 +188,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<IdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<IdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<IdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -212,7 +212,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<NonIdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -236,7 +236,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<IdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<IdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<IdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -260,7 +260,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<NonIdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -283,7 +283,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<IdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<IdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<IdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -306,7 +306,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<NonIdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -330,7 +330,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<IdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<IdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<IdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -354,7 +354,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<NonIdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -378,7 +378,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<IdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<IdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<IdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -402,7 +402,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<NonIdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -428,7 +428,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<IdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<IdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<IdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -454,7 +454,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<NonIdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -481,7 +481,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<IdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<IdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<IdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -508,7 +508,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<NonIdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -535,7 +535,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<IdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<IdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<IdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -562,7 +562,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<NonIdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -588,7 +588,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<IdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<IdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<IdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -614,7 +614,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<NonIdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -641,7 +641,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<IdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<IdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<IdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -668,7 +668,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<NonIdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -695,7 +695,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<IdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<IdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<IdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -722,7 +722,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<NonIdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -745,7 +745,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<IdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<IdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<IdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -772,7 +772,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<WithExtraFieldsIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<WithExtraFieldsIdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<WithExtraFieldsIdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -798,7 +798,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<WithExtraFieldsIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<WithExtraFieldsIdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<WithExtraFieldsIdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -826,7 +826,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<IdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<IdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<IdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -851,7 +851,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<IdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<IdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<IdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnNVarChar, queryResult.ColumnNVarChar);
@@ -874,7 +874,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<IdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<IdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<IdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -898,7 +898,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<IdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<IdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<IdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnNVarChar, queryResult.ColumnNVarChar);
@@ -921,7 +921,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<NonIdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -945,7 +945,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<NonIdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnNVarChar, queryResult.ColumnNVarChar);
@@ -969,7 +969,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<IdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<IdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<IdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -993,7 +993,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<NonIdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -1017,7 +1017,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<IdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<IdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<IdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -1041,7 +1041,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<NonIdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -1064,7 +1064,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<IdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<IdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<IdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -1087,7 +1087,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<NonIdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -1111,7 +1111,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<IdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<IdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<IdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -1135,7 +1135,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<NonIdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -1159,7 +1159,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<IdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<IdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<IdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -1183,7 +1183,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<NonIdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -1209,7 +1209,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<IdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<IdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<IdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -1235,7 +1235,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<NonIdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -1262,7 +1262,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<IdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<IdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<IdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -1289,7 +1289,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<NonIdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -1316,7 +1316,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<IdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<IdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<IdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -1343,7 +1343,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<NonIdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -1369,7 +1369,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<IdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<IdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<IdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -1395,7 +1395,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<NonIdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -1422,7 +1422,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<IdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<IdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<IdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -1449,7 +1449,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<NonIdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -1476,7 +1476,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<IdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<IdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<IdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -1503,7 +1503,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<NonIdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -1526,7 +1526,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<IdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<IdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<IdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -1553,7 +1553,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<WithExtraFieldsIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<WithExtraFieldsIdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<WithExtraFieldsIdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -1579,7 +1579,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<WithExtraFieldsIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query<WithExtraFieldsIdentityTable>(entity.Id).First();
+                var queryResult = connection.Query<WithExtraFieldsIdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -1607,11 +1607,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    (Guid)entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>((Guid)entity.Id).FirstOrDefault();
 
                 // Assert
-                Helper.AssertMembersEquality(entity, queryResult);
+                Helper.AssertMembersEquality(queryResult, entity);
             }
         }
 
@@ -1633,8 +1632,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    (Guid)entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>((Guid)entity.Id).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnNVarChar, queryResult.ColumnNVarChar);
@@ -1658,11 +1656,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    (Guid)entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>((Guid)entity.Id).FirstOrDefault();
 
                 // Assert
-                Helper.AssertMembersEquality(entity, queryResult);
+                Helper.AssertMembersEquality(queryResult, entity);
             }
         }
 
@@ -1684,8 +1681,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    (Guid)entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>((Guid)entity.Id).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnNVarChar, queryResult.ColumnNVarChar);
@@ -1708,11 +1704,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    mergeResult).First();
+                var queryResult = connection.Query<NonIdentityTable>(mergeResult).FirstOrDefault();
 
                 // Assert
-                Helper.AssertMembersEquality((object)queryResult, entity);
+                Helper.AssertMembersEquality(queryResult, entity);
             }
         }
 
@@ -1733,8 +1728,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    mergeResult).First();
+                var queryResult = connection.Query<NonIdentityTable>(mergeResult).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(queryResult.ColumnNVarChar, ((dynamic)entity).ColumnNVarChar);
@@ -1759,11 +1753,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    (Guid)entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>((Guid)entity.Id).FirstOrDefault();
 
                 // Assert
-                Helper.AssertMembersEquality(entity, queryResult);
+                Helper.AssertMembersEquality(queryResult, entity);
             }
         }
 
@@ -1785,11 +1778,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    (Guid)entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>((Guid)entity.Id).FirstOrDefault();
 
                 // Assert
-                Helper.AssertMembersEquality(entity, queryResult);
+                Helper.AssertMembersEquality(queryResult, entity);
             }
         }
 
@@ -1810,11 +1802,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    (Guid)entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>((Guid)entity.Id).FirstOrDefault();
 
                 // Assert
-                Helper.AssertMembersEquality(entity, queryResult);
+                Helper.AssertMembersEquality(queryResult, entity);
             }
         }
 
@@ -1836,11 +1827,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    (Guid)entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>((Guid)entity.Id).FirstOrDefault();
 
                 // Assert
-                Helper.AssertMembersEquality(entity, queryResult);
+                Helper.AssertMembersEquality(queryResult, entity);
             }
         }
 
@@ -1862,11 +1852,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    (Guid)entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>((Guid)entity.Id).FirstOrDefault();
 
                 // Assert
-                Helper.AssertMembersEquality(entity, queryResult);
+                Helper.AssertMembersEquality(queryResult, entity);
             }
         }
 
@@ -1891,11 +1880,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    (Guid)entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>((Guid)entity.Id).FirstOrDefault();
 
                 // Assert
-                Helper.AssertMembersEquality(entity, queryResult);
+                Helper.AssertMembersEquality(queryResult, entity);
             }
         }
 
@@ -1921,11 +1909,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    (Guid)entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>((Guid)entity.Id).FirstOrDefault();
 
                 // Assert
-                Helper.AssertMembersEquality(entity, queryResult);
+                Helper.AssertMembersEquality(queryResult, entity);
             }
         }
 
@@ -1953,11 +1940,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    mergeResult).First();
+                var queryResult = connection.Query<NonIdentityTable>(mergeResult).FirstOrDefault();
 
                 // Assert
-                Helper.AssertMembersEquality((object)queryResult, table);
+                Helper.AssertMembersEquality(queryResult, table);
             }
         }
 
@@ -1986,11 +1972,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    mergeResult).First();
+                var queryResult = connection.Query<NonIdentityTable>(mergeResult).FirstOrDefault();
 
                 // Assert
-                Helper.AssertMembersEquality((object)queryResult, entity);
+                Helper.AssertMembersEquality(queryResult, table);
             }
         }
 
@@ -2016,11 +2001,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    (Guid)entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>((Guid)entity.Id).FirstOrDefault();
 
                 // Assert
-                Helper.AssertMembersEquality(entity, queryResult);
+                Helper.AssertMembersEquality(queryResult, entity);
             }
         }
 
@@ -2045,11 +2029,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    (Guid)entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>((Guid)entity.Id).FirstOrDefault();
 
                 // Assert
-                Helper.AssertMembersEquality(entity, queryResult);
+                Helper.AssertMembersEquality(queryResult, entity);
             }
         }
 
@@ -2075,11 +2058,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    (Guid)entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>((Guid)entity.Id).FirstOrDefault();
 
                 // Assert
-                Helper.AssertMembersEquality(entity, queryResult);
+                Helper.AssertMembersEquality(queryResult, entity);
             }
         }
 
@@ -2105,11 +2087,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    (Guid)entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>((Guid)entity.Id).FirstOrDefault();
 
                 // Assert
-                Helper.AssertMembersEquality(entity, queryResult);
+                Helper.AssertMembersEquality(queryResult, entity);
             }
         }
 
@@ -2130,11 +2111,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    (Guid)entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>((Guid)entity.Id).FirstOrDefault();
 
                 // Assert
-                Helper.AssertMembersEquality(entity, queryResult);
+                Helper.AssertMembersEquality(queryResult, entity);
             }
         }
 
@@ -2156,11 +2136,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    (Guid)entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>((Guid)entity.Id).FirstOrDefault();
 
                 // Assert
-                Helper.AssertMembersEquality(entity, queryResult);
+                Helper.AssertMembersEquality(queryResult, entity);
             }
         }
 
@@ -2198,11 +2177,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    (Guid)entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>((Guid)entity.Id).FirstOrDefault();
 
                 // Assert
-                Helper.AssertMembersEquality(entity, queryResult);
+                Helper.AssertMembersEquality(queryResult, entity);
             }
         }
 
@@ -2224,8 +2202,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    (Guid)entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>((Guid)entity.Id).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnNVarChar, queryResult.ColumnNVarChar);
@@ -2249,11 +2226,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    (Guid)entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>((Guid)entity.Id).FirstOrDefault();
 
                 // Assert
-                Helper.AssertMembersEquality(entity, queryResult);
+                Helper.AssertMembersEquality(queryResult, entity);
             }
         }
 
@@ -2275,8 +2251,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    (Guid)entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>((Guid)entity.Id).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(entity.ColumnNVarChar, queryResult.ColumnNVarChar);
@@ -2299,11 +2274,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    mergeResult).First();
+                var queryResult = connection.Query<NonIdentityTable>(mergeResult).FirstOrDefault();
 
                 // Assert
-                Helper.AssertMembersEquality((object)queryResult, entity);
+                Helper.AssertMembersEquality(queryResult, entity);
             }
         }
 
@@ -2324,8 +2298,7 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    mergeResult).First();
+                var queryResult = connection.Query<NonIdentityTable>(mergeResult).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(queryResult.ColumnNVarChar, ((dynamic)entity).ColumnNVarChar);
@@ -2350,11 +2323,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    (Guid)entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>((Guid)entity.Id).FirstOrDefault();
 
                 // Assert
-                Helper.AssertMembersEquality(entity, queryResult);
+                Helper.AssertMembersEquality(queryResult, entity);
             }
         }
 
@@ -2375,11 +2347,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    (Guid)entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>((Guid)entity.Id).FirstOrDefault();
 
                 // Assert
-                Helper.AssertMembersEquality(entity, queryResult);
+                Helper.AssertMembersEquality(queryResult, entity);
             }
         }
 
@@ -2401,11 +2372,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    (Guid)entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>((Guid)entity.Id).FirstOrDefault();
 
                 // Assert
-                Helper.AssertMembersEquality(entity, queryResult);
+                Helper.AssertMembersEquality(queryResult, entity);
             }
         }
 
@@ -2427,11 +2397,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    (Guid)entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>((Guid)entity.Id).FirstOrDefault();
 
                 // Assert
-                Helper.AssertMembersEquality(entity, queryResult);
+                Helper.AssertMembersEquality(queryResult, entity);
             }
         }
 
@@ -2456,10 +2425,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>((Guid)entity.Id).FirstOrDefault();
 
                 // Assert
-                Helper.AssertMembersEquality(entity, queryResult);
+                Helper.AssertMembersEquality(queryResult, entity);
             }
         }
 
@@ -2485,10 +2454,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>((Guid)entity.Id).FirstOrDefault();
 
                 // Assert
-                Helper.AssertMembersEquality(entity, queryResult);
+                Helper.AssertMembersEquality(queryResult, entity);
             }
         }
 
@@ -2516,11 +2485,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    mergeResult).First();
+                var queryResult = connection.Query<NonIdentityTable>(mergeResult).FirstOrDefault();
 
                 // Assert
-                Helper.AssertMembersEquality((object)queryResult, entity);
+                Helper.AssertMembersEquality(queryResult, table);
             }
         }
 
@@ -2549,11 +2517,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    mergeResult).First();
+                var queryResult = connection.Query<NonIdentityTable>(mergeResult).FirstOrDefault();
 
                 // Assert
-                Helper.AssertMembersEquality((object)queryResult, entity);
+                Helper.AssertMembersEquality(queryResult, table);
             }
         }
 
@@ -2579,10 +2546,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>((Guid)entity.Id).FirstOrDefault();
 
                 // Assert
-                Helper.AssertMembersEquality(entity, queryResult);
+                Helper.AssertMembersEquality(queryResult, entity);
             }
         }
 
@@ -2607,10 +2574,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>((Guid)entity.Id).FirstOrDefault();
 
                 // Assert
-                Helper.AssertMembersEquality(entity, queryResult);
+                Helper.AssertMembersEquality(queryResult, entity);
             }
         }
 
@@ -2636,10 +2603,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>((Guid)entity.Id).FirstOrDefault();
 
                 // Assert
-                Helper.AssertMembersEquality(entity, queryResult);
+                Helper.AssertMembersEquality(queryResult, entity);
             }
         }
 
@@ -2665,10 +2632,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(), (Guid)entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>((Guid)entity.Id).FirstOrDefault();
 
                 // Assert
-                Helper.AssertMembersEquality(entity, queryResult);
+                Helper.AssertMembersEquality(queryResult, entity);
             }
         }
 
@@ -2689,11 +2656,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll(ClassMappedNameCache.Get<NonIdentityTable>()));
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    (Guid)entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>((Guid)entity.Id).FirstOrDefault();
 
                 // Assert
-                Helper.AssertMembersEquality(entity, queryResult);
+                Helper.AssertMembersEquality(queryResult, entity);
             }
         }
 
@@ -2715,11 +2681,10 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    (Guid)entity.Id).First();
+                var queryResult = connection.Query<NonIdentityTable>((Guid)entity.Id).FirstOrDefault();
 
                 // Assert
-                Helper.AssertMembersEquality(entity, queryResult);
+                Helper.AssertMembersEquality(queryResult, entity);
             }
         }
 
