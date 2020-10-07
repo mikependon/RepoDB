@@ -297,7 +297,14 @@ namespace RepoDb
                 var key = GetKey(cacheKey, inputFields, outputFields, batchSize);
                 if (cache.TryGetValue(key, out func) == false)
                 {
-                    func = FunctionFactory.CompileDataEntityListDbParameterSetter<TEntity>(inputFields, outputFields, batchSize, dbSetting);
+                    if (typeof(TEntity).IsDictionaryStringObject())
+                    {
+                        func = FunctionFactory.CompileDictionaryStringObjectListDbParameterSetter<TEntity>(inputFields, batchSize, dbSetting);
+                    }
+                    else
+                    {
+                        func = FunctionFactory.CompileDataEntityListDbParameterSetter<TEntity>(inputFields, outputFields, batchSize, dbSetting);
+                    }
                     cache.TryAdd(key, func);
                 }
                 return func;

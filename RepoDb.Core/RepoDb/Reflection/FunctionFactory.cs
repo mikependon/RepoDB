@@ -98,6 +98,24 @@ namespace RepoDb.Reflection
 
         #endregion
 
+        #region CompileDictionaryStringObjectListDbParameterSetter
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="inputFields"></param>
+        /// <param name="batchSize"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
+        public static Action<DbCommand, IList<TEntity>> CompileDictionaryStringObjectListDbParameterSetter<TEntity>(IEnumerable<DbField> inputFields,
+            int batchSize,
+            IDbSetting dbSetting = null)
+            where TEntity : class =>
+            Compiler.CompileDictionaryStringObjectListDbParameterSetter<TEntity>(inputFields, batchSize, dbSetting);
+
+        #endregion
+
         #region CompileDbCommandToProperty
 
         /// <summary>
