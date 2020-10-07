@@ -1808,10 +1808,17 @@ namespace RepoDb
             {
                 // Primary/Identity
                 var dbField = dbFields?.FirstOrDefault(df => df.IsPrimary == true) ??
-                    dbFields?.FirstOrDefault(df => df.IsPrimary == true);
+                    dbFields?.FirstOrDefault(df => df.IsPrimary == true) ??
+                    dbFields?.FirstOrDefault(df => df.Name == "Id");
 
                 // Set the key
                 key = dbField?.AsField();
+
+                // Return
+                if (key == null)
+                {
+                    throw new KeyFieldNotFoundException($"No primary key and identify found at the target table and also to the given '{entityType.FullName}' object.");
+                }
             }
             else
             {
@@ -1839,17 +1846,16 @@ namespace RepoDb
 
                 // Set the key
                 key = property?.AsField();
+
+                // Return
+                if (key == null)
+                {
+                    throw new KeyFieldNotFoundException($"No primary key and identify found at type '{entityType.FullName}'.");
+                }
             }
 
             // Return
-            if (key != null)
-            {
-                return key;
-            }
-            else
-            {
-                throw new KeyFieldNotFoundException($"No primary key and identify found at type '{entityType.FullName}'.");
-            }
+            return key;
         }
 
         /// <summary>

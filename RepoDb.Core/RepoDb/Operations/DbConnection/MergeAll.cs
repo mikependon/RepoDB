@@ -392,7 +392,7 @@ namespace RepoDb
                 {
                     return MergeAllInternalBase<IDictionary<string, object>>(connection: connection,
                         tableName: tableName,
-                        entities: (IEnumerable<IDictionary<string, object>>)entities,
+                        entities: entities?.OfType<IDictionary<string, object>>(),
                         qualifiers: qualifiers,
                         batchSize: batchSize,
                         fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
@@ -423,7 +423,7 @@ namespace RepoDb
                 {
                     return UpsertAllInternalBase<IDictionary<string, object>>(connection: connection,
                         tableName: tableName,
-                        entities: (IEnumerable<IDictionary<string, object>>)entities,
+                        entities: entities?.OfType<IDictionary<string, object>>(),
                         qualifiers: qualifiers,
                         fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
                         hints: hints,
@@ -849,7 +849,7 @@ namespace RepoDb
                 {
                     return await MergeAllAsyncInternalBase<IDictionary<string, object>>(connection: connection,
                         tableName: tableName,
-                        entities: (IEnumerable<IDictionary<string, object>>)entities,
+                        entities: entities?.OfType<IDictionary<string, object>>(),
                         qualifiers: qualifiers,
                         batchSize: batchSize,
                         fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
@@ -882,7 +882,7 @@ namespace RepoDb
                 {
                     return await UpsertAllAsyncInternalBase<IDictionary<string, object>>(connection: connection,
                         tableName: tableName,
-                        entities: (IEnumerable<IDictionary<string, object>>)entities,
+                        entities: entities?.OfType<IDictionary<string, object>>(),
                         qualifiers: qualifiers,
                         fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
                         hints: hints,
