@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Extensions;
 using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace RepoDb.IntegrationTests.Operations
@@ -26,7 +27,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region UpdateAll<TEntity>
 
         [TestMethod]
-        public void TestSqlConnectionUpdateAllViaDataEntitiesViaEntityTableName()
+        public void TestSqlConnectionUpdateAllViaDataEntitiesViaEntityViaTableName()
         {
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
@@ -341,7 +342,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region UpdateAllAsync<TEntity>
 
         [TestMethod]
-        public void TestSqlConnectionUpdateAllAsyncViaDataEntitiesViaEntityTableName()
+        public void TestSqlConnectionUpdateAllAsyncViaDataEntitiesViaEntityViaTableName()
         {
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
@@ -656,7 +657,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region UpdateAll(TableName)
 
         [TestMethod]
-        public void TestSqlConnectionUpdateAllViaDataEntitiesViaDynamicTableName()
+        public void TestSqlConnectionUpdateAllViaDynamicViaTableName()
         {
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
@@ -700,7 +701,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionUpdateAllViaDataEntitiesViaDynamicTableNameWithFields()
+        public void TestSqlConnectionUpdateAllViaDynamicTableNameWithFields()
         {
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
@@ -740,6 +741,87 @@ namespace RepoDb.IntegrationTests.Operations
                 {
                     var entity = queryAllResult.First(e => e.Id == table.Id);
                     Helper.AssertPropertiesEquality(table, entity);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateAllViaExpandoObjectViaTableName()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Setup
+                var items = Helper.CreateExpandoObjectNonIdentityTables(tables.Count);
+                for (var i = 0; i < tables.Count; i++)
+                {
+                    ((IDictionary<string, object>)items[i])["Id"] = tables[i].Id;
+                }
+
+                // Act
+                var affectedRows = connection.UpdateAll<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    items);
+
+                // Assert
+                Assert.AreEqual(tables.Count, affectedRows);
+
+                // Act
+                var queryAllResult = connection.QueryAll<NonIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryAllResult.Count());
+                items.ForEach(table =>
+                {
+                    var current = (dynamic)table;
+                    var entity = queryAllResult.First(e => e.Id == current.Id);
+                    Helper.AssertMembersEquality(entity, table);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateAllViaExpandoObjectViaTableNameWithFields()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Setup
+                var items = Helper.CreateExpandoObjectNonIdentityTables(tables.Count);
+                for (var i = 0; i < tables.Count; i++)
+                {
+                    ((IDictionary<string, object>)items[i])["Id"] = tables[i].Id;
+                }
+
+                // Act
+                var affectedRows = connection.UpdateAll<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    items,
+                    fields: Field.From(nameof(NonIdentityTable.Id), nameof(NonIdentityTable.ColumnBit), nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal)));
+
+                // Assert
+                Assert.AreEqual(tables.Count, affectedRows);
+
+                // Act
+                var queryAllResult = connection.QueryAll<NonIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryAllResult.Count());
+                items.ForEach(table =>
+                {
+                    var current = (dynamic)table;
+                    var entity = queryAllResult.First(e => e.Id == current.Id);
+                    Assert.AreEqual(entity.ColumnBit, current.ColumnBit);
+                    Assert.AreEqual(entity.ColumnInt, current.ColumnInt);
+                    Assert.AreEqual(entity.ColumnDecimal, current.ColumnDecimal);
                 });
             }
         }
@@ -1018,7 +1100,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region UpdateAllAsync(TableName)
 
         [TestMethod]
-        public void TestSqlConnectionUpdateAllAsyncViaDataEntitiesViaDynamicTableName()
+        public void TestSqlConnectionUpdateAllAsyncViaDynamicViaTableName()
         {
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
@@ -1062,7 +1144,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionUpdateAllAsyncViaDataEntitiesViaDynamicTableNameWithFields()
+        public void TestSqlConnectionUpdateAllAsyncViaDynamicTableNameWithFields()
         {
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
@@ -1102,6 +1184,87 @@ namespace RepoDb.IntegrationTests.Operations
                 {
                     var entity = queryAllResult.First(e => e.Id == table.Id);
                     Helper.AssertPropertiesEquality(table, entity);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateAllAsyncViaExpandoObjectViaTableName()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Setup
+                var items = Helper.CreateExpandoObjectNonIdentityTables(tables.Count);
+                for (var i = 0; i < tables.Count; i++)
+                {
+                    ((IDictionary<string, object>)items[i])["Id"] = tables[i].Id;
+                }
+
+                // Act
+                var affectedRows = connection.UpdateAllAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    items).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, affectedRows);
+
+                // Act
+                var queryAllResult = connection.QueryAll<NonIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryAllResult.Count());
+                items.ForEach(table =>
+                {
+                    var current = (dynamic)table;
+                    var entity = queryAllResult.First(e => e.Id == current.Id);
+                    Helper.AssertMembersEquality(entity, table);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateAllAsyncViaExpandoObjectViaTableNameWithFields()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Setup
+                var items = Helper.CreateExpandoObjectNonIdentityTables(tables.Count);
+                for (var i = 0; i < tables.Count; i++)
+                {
+                    ((IDictionary<string, object>)items[i])["Id"] = tables[i].Id;
+                }
+
+                // Act
+                var affectedRows = connection.UpdateAllAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    items,
+                    fields: Field.From(nameof(NonIdentityTable.Id), nameof(NonIdentityTable.ColumnBit), nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal))).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, affectedRows);
+
+                // Act
+                var queryAllResult = connection.QueryAll<NonIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryAllResult.Count());
+                items.ForEach(table =>
+                {
+                    var current = (dynamic)table;
+                    var entity = queryAllResult.First(e => e.Id == current.Id);
+                    Assert.AreEqual(entity.ColumnBit, current.ColumnBit);
+                    Assert.AreEqual(entity.ColumnInt, current.ColumnInt);
+                    Assert.AreEqual(entity.ColumnDecimal, current.ColumnDecimal);
                 });
             }
         }

@@ -380,17 +380,34 @@ namespace RepoDb
                     entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity));
                 qualifiers = key.AsEnumerable();
             }
-            return UpdateAllInternalBase<TEntity>(connection: connection,
-                tableName: tableName,
-                entities: entities,
-                batchSize: batchSize,
-                fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
-                qualifiers: qualifiers,
-                hints: hints,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
+            if ((entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity)).IsDictionaryStringObject())
+            {
+                return UpdateAllInternalBase<IDictionary<string, object>>(connection: connection,
+                    tableName: tableName,
+                    entities: (IEnumerable<IDictionary<string, object>>)entities,
+                    batchSize: batchSize,
+                    fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
+                    qualifiers: qualifiers,
+                    hints: hints,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    trace: trace,
+                    statementBuilder: statementBuilder);
+            }
+            else
+            {
+                return UpdateAllInternalBase<TEntity>(connection: connection,
+                    tableName: tableName,
+                    entities: entities,
+                    batchSize: batchSize,
+                    fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
+                    qualifiers: qualifiers,
+                    hints: hints,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    trace: trace,
+                    statementBuilder: statementBuilder);
+            }
         }
 
         #endregion
@@ -782,18 +799,36 @@ namespace RepoDb
                     entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity), cancellationToken);
                 qualifiers = key.AsEnumerable();
             }
-            return await UpdateAllAsyncInternalBase<TEntity>(connection: connection,
-                tableName: tableName,
-                entities: entities,
-                batchSize: batchSize,
-                fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
-                qualifiers: qualifiers,
-                hints: hints,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder,
-                cancellationToken: cancellationToken);
+            if ((entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity)).IsDictionaryStringObject())
+            {
+                return await UpdateAllAsyncInternalBase<IDictionary<string, object>>(connection: connection,
+                    tableName: tableName,
+                    entities: (IEnumerable<IDictionary<string, object>>)entities,
+                    batchSize: batchSize,
+                    fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
+                    qualifiers: qualifiers,
+                    hints: hints,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    trace: trace,
+                    statementBuilder: statementBuilder,
+                    cancellationToken: cancellationToken);
+            }
+            else
+            {
+                return await UpdateAllAsyncInternalBase<TEntity>(connection: connection,
+                    tableName: tableName,
+                    entities: entities,
+                    batchSize: batchSize,
+                    fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
+                    qualifiers: qualifiers,
+                    hints: hints,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    trace: trace,
+                    statementBuilder: statementBuilder,
+                    cancellationToken: cancellationToken);
+            }
         }
 
         #endregion
