@@ -2225,14 +2225,34 @@ namespace RepoDb
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="field"></param>
+        /// <param name="dictionary"></param>
+        /// <returns></returns>
+        internal static QueryGroup ToQueryGroup(Field field,
+            IDictionary<string, object> dictionary)
+        {
+            if (!dictionary.ContainsKey(field.Name))
+            {
+                throw new MissingFieldsException($"The field '{field.Name}' is not found from the given dictionary object.");
+            }
+            return ToQueryGroup(new QueryField(field, dictionary[field.Name]));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="field"></param>
         /// <param name="entity"></param>
         /// <returns></returns>
         internal static QueryGroup ToQueryGroup<TEntity>(Field field,
             TEntity entity)
-            where TEntity : class =>
-            ToQueryGroup(PropertyCache.Get<TEntity>(field) ?? PropertyCache.Get(entity?.GetType(), field), entity);
+            where TEntity : class
+        {
+            var type = entity?.GetType() ?? typeof(TEntity);
+            return type.IsDictionaryStringObject() ? ToQueryGroup(field, (IDictionary<string, object>)entity) :
+                ToQueryGroup(PropertyCache.Get<TEntity>(field) ?? PropertyCache.Get(type, field), entity);
+        }
 
         /// <summary>
         /// 
