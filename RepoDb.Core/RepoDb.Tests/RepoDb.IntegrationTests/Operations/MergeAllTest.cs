@@ -324,7 +324,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var mergeAllResult = connection.MergeAll<NonIdentityTable>(tables,
-                    Field.From(nameof(NonIdentityTable.ColumnInt)));
+                    Field.From(nameof(NonIdentityTable.Id)));
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -413,7 +413,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var mergeAllResult = connection.MergeAll<NonIdentityTable>(tables,
-                    Field.From(nameof(NonIdentityTable.ColumnInt)));
+                    Field.From(nameof(NonIdentityTable.Id)));
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -903,7 +903,7 @@ namespace RepoDb.IntegrationTests.Operations
             {
                 // Act
                 var mergeAllResult = connection.MergeAllAsync<NonIdentityTable>(tables,
-                    Field.From(nameof(NonIdentityTable.ColumnInt))).Result;
+                    Field.From(nameof(NonIdentityTable.Id))).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -992,7 +992,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var mergeAllResult = connection.MergeAllAsync<NonIdentityTable>(tables,
-                    Field.From(nameof(NonIdentityTable.ColumnInt))).Result;
+                    Field.From(nameof(NonIdentityTable.Id))).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -1369,7 +1369,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var mergeAllResult = connection.MergeAll(ClassMappedNameCache.Get<NonIdentityTable>(),
                     tables,
-                    Field.From(nameof(NonIdentityTable.ColumnInt)));
+                    Field.From(nameof(NonIdentityTable.Id)));
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -1461,7 +1461,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var mergeAllResult = connection.MergeAll(ClassMappedNameCache.Get<NonIdentityTable>(),
                     tables,
-                    Field.From(nameof(NonIdentityTable.ColumnInt)));
+                    Field.From(nameof(NonIdentityTable.Id)));
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -1475,6 +1475,71 @@ namespace RepoDb.IntegrationTests.Operations
                 {
                     var entity = queryAllResult.First(item => item.Id == table.Id);
                     Helper.AssertPropertiesEquality(table, entity);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllViaTableNameForExpandoObjectNonIdentityNonEmptyTable()
+        {
+            // Setup
+            var tables = Helper.CreateExpandoObjectNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables);
+
+                // Act
+                var mergeAllResult = connection.MergeAll(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryAllResult = connection.QueryAll<NonIdentityTable>();
+
+                // Assert
+                tables.ForEach(table =>
+                {
+                    var current = (dynamic)table;
+                    var entity = queryAllResult.First(item => item.Id == current.Id);
+                    Helper.AssertMembersEquality(entity, table);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllViaTableNameForExpandoObjectNonIdentityNonEmptyTableWithQualifier()
+        {
+            // Setup
+            var tables = Helper.CreateExpandoObjectNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables);
+
+                // Act
+                var mergeAllResult = connection.MergeAll(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    tables,
+                    Field.From(nameof(NonIdentityTable.Id)));
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryAllResult = connection.QueryAll<NonIdentityTable>();
+
+                // Assert
+                tables.ForEach(table =>
+                {
+                    var current = (dynamic)table;
+                    var entity = queryAllResult.First(item => item.Id == current.Id);
+                    Helper.AssertMembersEquality(entity, table);
                 });
             }
         }
@@ -1912,7 +1977,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var mergeAllResult = connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
                     tables,
-                    Field.From(nameof(NonIdentityTable.ColumnInt))).Result;
+                    Field.From(nameof(NonIdentityTable.Id))).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -2004,7 +2069,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var mergeAllResult = connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
                     tables,
-                    Field.From(nameof(NonIdentityTable.ColumnInt))).Result;
+                    Field.From(nameof(NonIdentityTable.Id))).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
@@ -2018,6 +2083,71 @@ namespace RepoDb.IntegrationTests.Operations
                 {
                     var entity = queryAllResult.First(item => item.Id == table.Id);
                     Helper.AssertPropertiesEquality(table, entity);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllAsyncViaTableNameForExpandoObjectNonIdentityNonEmptyTable()
+        {
+            // Setup
+            var tables = Helper.CreateExpandoObjectNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables);
+
+                // Act
+                var mergeAllResult = connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryAllResult = connection.QueryAll<NonIdentityTable>();
+
+                // Assert
+                tables.ForEach(table =>
+                {
+                    var current = (dynamic)table;
+                    var entity = queryAllResult.First(item => item.Id == current.Id);
+                    Helper.AssertMembersEquality(entity,table);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllAsyncViaTableNameForExpandoObjectNonIdentityNonEmptyTableWithQualifier()
+        {
+            // Setup
+            var tables = Helper.CreateExpandoObjectNonIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(ClassMappedNameCache.Get<NonIdentityTable>(), tables);
+
+                // Act
+                var mergeAllResult = connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    tables,
+                    Field.From(nameof(NonIdentityTable.Id))).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, mergeAllResult);
+                Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityTable>());
+
+                // Act
+                var queryAllResult = connection.QueryAll<NonIdentityTable>();
+
+                // Assert
+                tables.ForEach(table =>
+                {
+                    var current = (dynamic)table;
+                    var entity = queryAllResult.First(item => item.Id == current.Id);
+                    Helper.AssertMembersEquality(entity, table);
                 });
             }
         }
