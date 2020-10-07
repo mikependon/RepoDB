@@ -123,16 +123,32 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            return InsertAllInternalBase<TEntity>(connection: connection,
-                tableName: tableName,
-                entities: entities,
-                batchSize: batchSize,
-                fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
-                hints: hints,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder);
+            if ((entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity)).IsDictionaryStringObject())
+            {
+                return InsertAllInternalBase<IDictionary<string, object>>(connection: connection,
+                    tableName: tableName,
+                    entities: (IEnumerable<IDictionary<string, object>>)entities,
+                    batchSize: batchSize,
+                    fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
+                    hints: hints,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    trace: trace,
+                    statementBuilder: statementBuilder);
+            }
+            else
+            {
+                return InsertAllInternalBase<TEntity>(connection: connection,
+                    tableName: tableName,
+                    entities: entities,
+                    batchSize: batchSize,
+                    fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
+                    hints: hints,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    trace: trace,
+                    statementBuilder: statementBuilder);
+            }
         }
 
         #endregion
@@ -250,17 +266,32 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            return InsertAllAsyncInternalBase<TEntity>(connection: connection,
-                tableName: tableName,
-                entities: entities,
-                batchSize: batchSize,
-                fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
-                hints: hints,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                trace: trace,
-                statementBuilder: statementBuilder,
-                cancellationToken: cancellationToken);
+            if ((entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity)).IsDictionaryStringObject())
+            {
+                return InsertAllAsyncInternalBase<IDictionary<string, object>>(connection: connection,
+                    tableName: tableName,
+                    entities: (IEnumerable<IDictionary<string, object>>)entities,
+                    batchSize: batchSize,
+                    fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
+                    hints: hints,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    trace: trace,
+                    statementBuilder: statementBuilder);
+            }
+            else
+            {
+                return InsertAllAsyncInternalBase<TEntity>(connection: connection,
+                    tableName: tableName,
+                    entities: entities,
+                    batchSize: batchSize,
+                    fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
+                    hints: hints,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    trace: trace,
+                    statementBuilder: statementBuilder);
+            }
         }
 
         #endregion
