@@ -4,6 +4,7 @@ using RepoDb.Exceptions;
 using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace RepoDb.IntegrationTests.Operations
@@ -1932,17 +1933,21 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionMergeViaTableNameForExpandoObjectNonIdentityTableForNonEmptyTable()
         {
             // Setup
-            var entity = Helper.CreateExpandoObjectNonIdentityTable();
+            var entity = Helper.CreateNonIdentityTable();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 connection.Insert<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    (object)entity);
+                    entity);
+
+                // Setup
+                var table = Helper.CreateExpandoObjectNonIdentityTable() as IDictionary<string, object>;
+                table["Id"] = entity.Id;
 
                 // Act
                 var mergeResult = connection.Merge<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    (object)entity);
+                    table);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
@@ -1952,7 +1957,7 @@ namespace RepoDb.IntegrationTests.Operations
                     mergeResult).First();
 
                 // Assert
-                Helper.AssertMembersEquality((object)queryResult, entity);
+                Helper.AssertMembersEquality((object)queryResult, table);
             }
         }
 
@@ -1960,18 +1965,22 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionMergeViaTableNameForExpandoObjectNonIdentityTableWithQualifierForNonEmptyTable()
         {
             // Setup
-            var entity = Helper.CreateExpandoObjectNonIdentityTable();
+            var entity = Helper.CreateNonIdentityTable();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 connection.Insert<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    (object)entity);
+                    entity);
+
+                // Setup
+                var table = Helper.CreateExpandoObjectNonIdentityTable() as IDictionary<string, object>;
+                table["Id"] = entity.Id;
 
                 // Act
                 var mergeResult = connection.Merge<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    (object)entity,
-                    qualifiers: Field.From(nameof(NonIdentityTable.ColumnInt)));
+                    table,
+                    qualifiers: Field.From(nameof(NonIdentityTable.Id)));
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
@@ -2487,17 +2496,21 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionMergeAsyncViaTableNameForExpandoObjectNonIdentityTableForNonEmptyTable()
         {
             // Setup
-            var entity = Helper.CreateExpandoObjectNonIdentityTable();
+            var entity = Helper.CreateNonIdentityTable();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 connection.Insert<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    (object)entity);
+                    entity);
+
+                // Setup
+                var table = Helper.CreateExpandoObjectNonIdentityTable() as IDictionary<string, object>;
+                table["Id"] = entity.Id;
 
                 // Act
                 var mergeResult = connection.MergeAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    (object)entity).Result;
+                    table).Result;
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
@@ -2515,18 +2528,22 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionMergeAsyncViaTableNameForExpandoObjectNonIdentityTableWithQualifierForNonEmptyTable()
         {
             // Setup
-            var entity = Helper.CreateExpandoObjectNonIdentityTable();
+            var entity = Helper.CreateNonIdentityTable();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 connection.Insert<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    (object)entity);
+                    entity);
+
+                // Setup
+                var table = Helper.CreateExpandoObjectNonIdentityTable() as IDictionary<string, object>;
+                table["Id"] = entity.Id;
 
                 // Act
                 var mergeResult = connection.MergeAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    (object)entity,
-                    qualifiers: Field.From(nameof(NonIdentityTable.ColumnInt))).Result;
+                    table,
+                    qualifiers: Field.From(nameof(NonIdentityTable.Id))).Result;
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
