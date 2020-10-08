@@ -18,6 +18,8 @@ namespace RepoDb.SqLite.IntegrationTests
             EpocDate = new DateTime(1970, 1, 1, 0, 0, 0);
         }
 
+        #region Properties
+
         /// <summary>
         /// Gets the value of the Epoc date.
         /// </summary>
@@ -27,6 +29,10 @@ namespace RepoDb.SqLite.IntegrationTests
         /// Gets the current <see cref="Random"/> object in used.
         /// </summary>
         public static Random Randomizer => new Random(1);
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Asserts the properties equality of 2 types.
@@ -173,13 +179,15 @@ namespace RepoDb.SqLite.IntegrationTests
             });
         }
 
+        #endregion
+
         #region SdsCompleteTable
 
         /// <summary>
-        /// Creates a list of <see cref="SdsCompleteTable"/> objects.
+        /// 
         /// </summary>
-        /// <param name="count">The number of rows.</param>
-        /// <returns>A list of <see cref="SdsCompleteTable"/> objects.</returns>
+        /// <param name="count"></param>
+        /// <returns></returns>
         public static List<SdsCompleteTable> CreateSdsCompleteTables(int count)
         {
             var tables = new List<SdsCompleteTable>();
@@ -211,9 +219,9 @@ namespace RepoDb.SqLite.IntegrationTests
         }
 
         /// <summary>
-        /// Update the properties of <see cref="SdsCompleteTable"/> instance.
+        /// 
         /// </summary>
-        /// <param name="table">The instance to be updated.</param>
+        /// <param name="table"></param>
         public static void UpdateSdsCompleteTableProperties(SdsCompleteTable table)
         {
             table.ColumnBigInt = long.MaxValue;
@@ -235,10 +243,10 @@ namespace RepoDb.SqLite.IntegrationTests
         }
 
         /// <summary>
-        /// Creates a list of <see cref="SdsCompleteTable"/> objects represented as dynamics.
+        /// 
         /// </summary>
-        /// <param name="count">The number of rows.</param>
-        /// <returns>A list of <see cref="SdsCompleteTable"/> objects represented as dynamics.</returns>
+        /// <param name="count"></param>
+        /// <returns></returns>
         public static List<dynamic> CreateSdsCompleteTablesAsDynamics(int count)
         {
             var tables = new List<dynamic>();
@@ -270,10 +278,10 @@ namespace RepoDb.SqLite.IntegrationTests
         }
 
         /// <summary>
-        /// Update the properties of <see cref="SdsCompleteTable"/> instance represented asy dynamic.
+        /// 
         /// </summary>
-        /// <param name="table">The instance to be updated.</param>
-        /// <returns>The newly updated dynamic object.</returns>
+        /// <param name="table"></param>
+        /// <returns></returns>
         public static dynamic UpdateSdsCompleteTableAsDynamicProperties(dynamic table)
         {
             return new
@@ -298,15 +306,77 @@ namespace RepoDb.SqLite.IntegrationTests
             };
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public static List<ExpandoObject> CreateSdsCompleteTablesAsExpandoObjects(int count)
+        {
+            var tables = new List<ExpandoObject>();
+            for (var i = 0; i < count; i++)
+            {
+                var item = new ExpandoObject() as IDictionary<string, object>;
+                item["Id"] = (long)(i + 1);
+                item["ColumnBigInt"] = (long)i;
+                item["ColumnBlob"] = Encoding.Default.GetBytes($"ColumnBlob:{i}");
+                item["ColumnBoolean"] = true;
+                item["ColumnChar"] = "C";
+                item["ColumnDate"] = EpocDate;
+                item["ColumnDateTime"] = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
+                item["ColumnDecimal"] = Convert.ToDecimal(i);
+                item["ColumnDouble"] = Convert.ToDouble(i);
+                item["ColumnInt"] = i;
+                item["ColumnInteger"] = (long)i;
+                item["ColumnNone"] = "N";
+                item["ColumnNumeric"] = Convert.ToDecimal(i);
+                item["ColumnReal"] = (float)i;
+                item["ColumnString"] = $"ColumnString:{i}";
+                item["ColumnText"] = $"ColumnText:{i}";
+                item["ColumnTime"] = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
+                item["ColumnVarChar"] = $"ColumnVarChar:{i}";
+                tables.Add((ExpandoObject)item);
+            }
+            return tables;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="table"></param>
+        /// <returns></returns>
+        public static ExpandoObject UpdateSdsCompleteTableAsExpandoObjectProperties(ExpandoObject table)
+        {
+            var item = table as IDictionary<string, object>;
+            item["ColumnBigInt"] = long.MaxValue;
+            item["ColumnBlob"] = Encoding.UTF32.GetBytes(Guid.NewGuid().ToString());
+            item["ColumnBoolean"] = true;
+            item["ColumnChar"] = "C";
+            item["ColumnDate"] = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).Date;
+            item["ColumnDateTime"] = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
+            item["ColumnDecimal"] = Convert.ToDecimal(Randomizer.Next(1000000));
+            item["ColumnDouble"] = Convert.ToDouble(Randomizer.Next(1000000));
+            item["ColumnInt"] = Randomizer.Next(1000000);
+            item["ColumnInteger"] = Convert.ToInt64(Randomizer.Next(1000000));
+            item["ColumnNone"] = "N";
+            item["ColumnNumeric"] = Convert.ToDecimal(Randomizer.Next(1000000));
+            item["ColumnReal"] = Convert.ToSingle(Randomizer.Next(1000000));
+            item["ColumnString"] = $"ColumnString:{Guid.NewGuid()}:Updated";
+            item["ColumnText"] = $"ColumnText:{Guid.NewGuid()}:Updated";
+            item["ColumnTime"] = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
+            item["ColumnVarChar"] = $"ColumnVarChar:{Guid.NewGuid()}:Updated";
+            return (ExpandoObject)item;
+        }
+
         #endregion
 
         #region SdsNonIdentityCompleteTable
 
         /// <summary>
-        /// Creates a list of <see cref="SdsNonIdentityCompleteTable"/> objects.
+        /// 
         /// </summary>
-        /// <param name="count">The number of rows.</param>
-        /// <returns>A list of <see cref="SdsNonIdentityCompleteTable"/> objects.</returns>
+        /// <param name="count"></param>
+        /// <returns></returns>
         public static List<SdsNonIdentityCompleteTable> CreateSdsNonIdentityCompleteTables(int count)
         {
             var tables = new List<SdsNonIdentityCompleteTable>();
@@ -338,9 +408,9 @@ namespace RepoDb.SqLite.IntegrationTests
         }
 
         /// <summary>
-        /// Update the properties of <see cref="SdsNonIdentityCompleteTable"/> instance.
+        /// 
         /// </summary>
-        /// <param name="table">The instance to be updated.</param>
+        /// <param name="table"></param>
         public static void UpdateSdsNonIdentityCompleteTableProperties(SdsNonIdentityCompleteTable table)
         {
             table.ColumnBigInt = long.MaxValue;
@@ -362,10 +432,10 @@ namespace RepoDb.SqLite.IntegrationTests
         }
 
         /// <summary>
-        /// Creates a list of <see cref="SdsNonIdentityCompleteTable"/> objects represented as dynamics.
+        /// 
         /// </summary>
-        /// <param name="count">The number of rows.</param>
-        /// <returns>A list of <see cref="SdsNonIdentityCompleteTable"/> objects represented as dynamics.</returns>
+        /// <param name="count"></param>
+        /// <returns></returns>
         public static List<dynamic> CreateSdsNonIdentityCompleteTablesAsDynamics(int count)
         {
             var tables = new List<dynamic>();
@@ -397,10 +467,10 @@ namespace RepoDb.SqLite.IntegrationTests
         }
 
         /// <summary>
-        /// Update the properties of <see cref="SdsNonIdentityCompleteTable"/> instance represented asy dynamic.
+        /// 
         /// </summary>
-        /// <param name="table">The instance to be updated.</param>
-        /// <returns>The newly updated dynamic object.</returns>
+        /// <param name="table"></param>
+        /// <returns></returns>
         public static dynamic UpdateSdsNonIdentityCompleteTableAsDynamicProperties(dynamic table)
         {
             return new
@@ -425,15 +495,77 @@ namespace RepoDb.SqLite.IntegrationTests
             };
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public static List<ExpandoObject> CreateSdsNonIdentityCompleteTablesAsExpandoObjects(int count)
+        {
+            var tables = new List<ExpandoObject>();
+            for (var i = 0; i < count; i++)
+            {
+                var item = new ExpandoObject() as IDictionary<string, object>;
+                item["Id"] = Guid.NewGuid();
+                item["ColumnBigInt"] = (long)i;
+                item["ColumnBlob"] = Encoding.Default.GetBytes($"ColumnBlob:{i}");
+                item["ColumnBoolean"] = true;
+                item["ColumnChar"] = "C";
+                item["ColumnDate"] = EpocDate;
+                item["ColumnDateTime"] = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
+                item["ColumnDecimal"] = Convert.ToDecimal(i);
+                item["ColumnDouble"] = Convert.ToDouble(i);
+                item["ColumnInt"] = i;
+                item["ColumnInteger"] = (long)i;
+                item["ColumnNone"] = "N";
+                item["ColumnNumeric"] = Convert.ToDecimal(i);
+                item["ColumnReal"] = (float)i;
+                item["ColumnString"] = $"ColumnString:{i}";
+                item["ColumnText"] = $"ColumnText:{i}";
+                item["ColumnTime"] = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
+                item["ColumnVarChar"] = $"ColumnVarChar:{i}";
+                tables.Add((ExpandoObject)item);
+            }
+            return tables;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="table"></param>
+        /// <returns></returns>
+        public static ExpandoObject UpdateSdsNonIdentityCompleteTableAsExpandoObjectProperties(ExpandoObject table)
+        {
+            var item = table as IDictionary<string, object>;
+            item["ColumnBigInt"] = long.MaxValue;
+            item["ColumnBlob"] = Encoding.UTF32.GetBytes(Guid.NewGuid().ToString());
+            item["ColumnBoolean"] = true;
+            item["ColumnChar"] = "C";
+            item["ColumnDate"] = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).Date;
+            item["ColumnDateTime"] = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
+            item["ColumnDecimal"] = Convert.ToDecimal(Randomizer.Next(1000000));
+            item["ColumnDouble"] = Convert.ToDouble(Randomizer.Next(1000000));
+            item["ColumnInt"] = Randomizer.Next(1000000);
+            item["ColumnInteger"] = Convert.ToInt64(Randomizer.Next(1000000));
+            item["ColumnNone"] = "N";
+            item["ColumnNumeric"] = Convert.ToDecimal(Randomizer.Next(1000000));
+            item["ColumnReal"] = Convert.ToSingle(Randomizer.Next(1000000));
+            item["ColumnString"] = $"ColumnString:{Guid.NewGuid()}:Updated";
+            item["ColumnText"] = $"ColumnText:{Guid.NewGuid()}:Updated";
+            item["ColumnTime"] = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
+            item["ColumnVarChar"] = $"ColumnVarChar:{Guid.NewGuid()}:Updated";
+            return (ExpandoObject)item;
+        }
+
         #endregion
 
         #region MdsCompleteTable
 
         /// <summary>
-        /// Creates a list of <see cref="MdsCompleteTable"/> objects.
+        /// 
         /// </summary>
-        /// <param name="count">The number of rows.</param>
-        /// <returns>A list of <see cref="MdsCompleteTable"/> objects.</returns>
+        /// <param name="count"></param>
+        /// <returns></returns>
         public static List<MdsCompleteTable> CreateMdsCompleteTables(int count)
         {
             var tables = new List<MdsCompleteTable>();
@@ -465,9 +597,9 @@ namespace RepoDb.SqLite.IntegrationTests
         }
 
         /// <summary>
-        /// Update the properties of <see cref="MdsCompleteTable"/> instance.
+        /// 
         /// </summary>
-        /// <param name="table">The instance to be updated.</param>
+        /// <param name="table"></param>
         public static void UpdateMdsCompleteTableProperties(MdsCompleteTable table)
         {
             table.ColumnBigInt = long.MaxValue;
@@ -489,10 +621,10 @@ namespace RepoDb.SqLite.IntegrationTests
         }
 
         /// <summary>
-        /// Creates a list of <see cref="MdsCompleteTable"/> objects represented as dynamics.
+        /// 
         /// </summary>
-        /// <param name="count">The number of rows.</param>
-        /// <returns>A list of <see cref="MdsCompleteTable"/> objects represented as dynamics.</returns>
+        /// <param name="count"></param>
+        /// <returns></returns>
         public static List<dynamic> CreateMdsCompleteTablesAsDynamics(int count)
         {
             var tables = new List<dynamic>();
@@ -524,10 +656,10 @@ namespace RepoDb.SqLite.IntegrationTests
         }
 
         /// <summary>
-        /// Update the properties of <see cref="MdsCompleteTable"/> instance represented as dynamics.
+        /// 
         /// </summary>
-        /// <param name="table">The instance to be updated.</param>
-        /// <returns>The modified dynamic record.</returns>
+        /// <param name="table"></param>
+        /// <returns></returns>
         public static dynamic UpdateMdsCompleteTableAsDynamicProperties(dynamic table)
         {
             return new
@@ -552,15 +684,77 @@ namespace RepoDb.SqLite.IntegrationTests
             };
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public static List<ExpandoObject> CreateMdsCompleteTablesAsExpandoObjects(int count)
+        {
+            var tables = new List<ExpandoObject>();
+            for (var i = 0; i < count; i++)
+            {
+                var item = new ExpandoObject() as IDictionary<string, object>;
+                item["Id"] = (long)(i + 1);
+                item["ColumnBigInt"] = (long)i;
+                item["ColumnBlob"] = Encoding.Default.GetBytes($"ColumnBlob:{i}");
+                item["ColumnBoolean"] = "true";
+                item["ColumnChar"] = "C";
+                item["ColumnDate"] = EpocDate;
+                item["ColumnDateTime"] = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
+                item["ColumnDecimal"] = Convert.ToInt64(i);
+                item["ColumnDouble"] = Convert.ToDouble(i);
+                item["ColumnInt"] = i;
+                item["ColumnInteger"] = (long)i;
+                item["ColumnNone"] = "N";
+                item["ColumnNumeric"] = Convert.ToDecimal(i);
+                item["ColumnReal"] = (float)i;
+                item["ColumnString"] = $"ColumnString:{i}";
+                item["ColumnText"] = $"ColumnText:{i}";
+                item["ColumnTime"] = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
+                item["ColumnVarChar"] = $"ColumnVarChar:{i}";
+                tables.Add((ExpandoObject)item);
+            }
+            return tables;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="table"></param>
+        /// <returns></returns>
+        public static ExpandoObject UpdateMdsCompleteTableAsExpandoObjectProperties(ExpandoObject table)
+        {
+            var item = table as IDictionary<string, object>;
+            item["ColumnBigInt"] = long.MaxValue;
+            item["ColumnBlob"] = Encoding.UTF32.GetBytes(Guid.NewGuid().ToString());
+            item["ColumnBoolean"] = "true";
+            item["ColumnChar"] = "C";
+            item["ColumnDate"] = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).Date;
+            item["ColumnDateTime"] = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
+            item["ColumnDecimal"] = Convert.ToDecimal(Randomizer.Next(1000000));
+            item["ColumnDouble"] = Convert.ToDouble(Randomizer.Next(1000000));
+            item["ColumnInt"] = Randomizer.Next(1000000);
+            item["ColumnInteger"] = Convert.ToInt64(Randomizer.Next(1000000));
+            item["ColumnNone"] = "N";
+            item["ColumnNumeric"] = Convert.ToDecimal(Randomizer.Next(1000000));
+            item["ColumnReal"] = Convert.ToSingle(Randomizer.Next(1000000));
+            item["ColumnString"] = $"ColumnString:{Guid.NewGuid()}:Updated";
+            item["ColumnText"] = $"ColumnText:{Guid.NewGuid()}:Updated";
+            item["ColumnTime"] = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
+            item["ColumnVarChar"] = $"ColumnVarChar:{Guid.NewGuid()}:Updated";
+            return (ExpandoObject)item;
+        }
+
         #endregion
 
         #region MdsNonIdentityCompleteTable
 
         /// <summary>
-        /// Creates a list of <see cref="MdsNonIdentityCompleteTable"/> objects.
+        /// 
         /// </summary>
-        /// <param name="count">The number of rows.</param>
-        /// <returns>A list of <see cref="MdsNonIdentityCompleteTable"/> objects.</returns>
+        /// <param name="count"></param>
+        /// <returns></returns>
         public static List<MdsNonIdentityCompleteTable> CreateMdsNonIdentityCompleteTables(int count)
         {
             var tables = new List<MdsNonIdentityCompleteTable>();
@@ -592,10 +786,10 @@ namespace RepoDb.SqLite.IntegrationTests
         }
 
         /// <summary>
-        /// Update the properties of <see cref="MdsNonIdentityCompleteTable"/> instance.
+        /// 
         /// </summary>
-        /// <param name="table">The instance to be updated.</param>
-        /// <returns>The newly updated dynamic object.</returns>
+        /// <param name="table"></param>
+        /// <returns></returns>
         public static dynamic UpdateMdsNonIdentityCompleteTableProperties(MdsNonIdentityCompleteTable table)
         {
             return new
@@ -621,10 +815,10 @@ namespace RepoDb.SqLite.IntegrationTests
         }
 
         /// <summary>
-        /// Creates a list of <see cref="MdsNonIdentityCompleteTable"/> objects represented as dynamics.
+        /// 
         /// </summary>
-        /// <param name="count">The number of rows.</param>
-        /// <returns>A list of <see cref="MdsNonIdentityCompleteTable"/> objects represented as dynamics.</returns>
+        /// <param name="count"></param>
+        /// <returns></returns>
         public static List<dynamic> CreateMdsNonIdentityCompleteTablesAsDynamics(int count)
         {
             var tables = new List<dynamic>();
@@ -656,10 +850,10 @@ namespace RepoDb.SqLite.IntegrationTests
         }
 
         /// <summary>
-        /// Update the properties of <see cref="MdsNonIdentityCompleteTable"/> instance represented asy dynamic.
+        /// 
         /// </summary>
-        /// <param name="table">The instance to be updated.</param>
-        /// <returns>The modified dynamic record.</returns>
+        /// <param name="table"></param>
+        /// <returns></returns>
         public static dynamic UpdateMdsNonIdentityCompleteTableAsDynamicProperties(dynamic table)
         {
             return new
@@ -682,6 +876,68 @@ namespace RepoDb.SqLite.IntegrationTests
                 ColumnTime = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
                 ColumnVarChar = $"{table.ColumnVarChar} - Updated with {Guid.NewGuid()}"
             };
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public static List<ExpandoObject> CreateMdsNonIdentityCompleteTablesAsExpandoObjects(int count)
+        {
+            var tables = new List<ExpandoObject>();
+            for (var i = 0; i < count; i++)
+            {
+                var item = new ExpandoObject() as IDictionary<string, object>;
+                item["Id"] = Guid.NewGuid();
+                item["ColumnBigInt"] = (long)i;
+                item["ColumnBlob"] = Encoding.Default.GetBytes($"ColumnBlob:{i}");
+                item["ColumnBoolean"] = "true";
+                item["ColumnChar"] = "C";
+                item["ColumnDate"] = EpocDate;
+                item["ColumnDateTime"] = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
+                item["ColumnDecimal"] = Convert.ToInt64(i);
+                item["ColumnDouble"] = Convert.ToDouble(i);
+                item["ColumnInt"] = i;
+                item["ColumnInteger"] = (long)i;
+                item["ColumnNone"] = "N";
+                item["ColumnNumeric"] = Convert.ToDecimal(i);
+                item["ColumnReal"] = (float)i;
+                item["ColumnString"] = $"ColumnString:{i}";
+                item["ColumnText"] = $"ColumnText:{i}";
+                item["ColumnTime"] = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
+                item["ColumnVarChar"] = $"ColumnVarChar:{i}";
+                tables.Add((ExpandoObject)item);
+            }
+            return tables;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="table"></param>
+        /// <returns></returns>
+        public static ExpandoObject UpdateMdsNonIdentityCompleteTableAsExpandoObjectProperties(ExpandoObject table)
+        {
+            var item = table as IDictionary<string, object>;
+            item["ColumnBigInt"] = long.MaxValue;
+            item["ColumnBlob"] = Encoding.UTF32.GetBytes(Guid.NewGuid().ToString());
+            item["ColumnBoolean"] = "true";
+            item["ColumnChar"] = "C";
+            item["ColumnDate"] = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified).Date;
+            item["ColumnDateTime"] = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
+            item["ColumnDecimal"] = Convert.ToDecimal(Randomizer.Next(1000000));
+            item["ColumnDouble"] = Convert.ToDouble(Randomizer.Next(1000000));
+            item["ColumnInt"] = Randomizer.Next(1000000);
+            item["ColumnInteger"] = Convert.ToInt64(Randomizer.Next(1000000));
+            item["ColumnNone"] = "N";
+            item["ColumnNumeric"] = Convert.ToDecimal(Randomizer.Next(1000000));
+            item["ColumnReal"] = Convert.ToSingle(Randomizer.Next(1000000));
+            item["ColumnString"] = $"ColumnString:{Guid.NewGuid()}:Updated";
+            item["ColumnText"] = $"ColumnText:{Guid.NewGuid()}:Updated";
+            item["ColumnTime"] = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
+            item["ColumnVarChar"] = $"ColumnVarChar:{Guid.NewGuid()}:Updated";
+            return (ExpandoObject)item;
         }
 
         #endregion

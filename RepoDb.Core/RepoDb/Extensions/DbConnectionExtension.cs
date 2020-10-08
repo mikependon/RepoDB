@@ -2383,6 +2383,26 @@ namespace RepoDb
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="dictionary"></param>
+        /// <param name="qualifiers"></param>
+        /// <returns></returns>
+        internal static QueryGroup CreateQueryGroupForUpsert(IDictionary<string, object> dictionary,
+            IEnumerable<Field> qualifiers = null)
+        {
+            var queryFields = new List<QueryField>();
+            foreach (var field in qualifiers)
+            {
+                if (dictionary.ContainsKey(field.Name))
+                {
+                    queryFields.Add(new QueryField(field, dictionary[field.Name]));
+                }
+            }
+            return new QueryGroup(queryFields);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <typeparam name="TResult"></typeparam>
         /// <param name="entities"></param>
@@ -2432,7 +2452,8 @@ namespace RepoDb
         internal static IEnumerable<Field> GetQualifiedFields<TEntity>(IEnumerable<Field> fields,
             TEntity entity)
             where TEntity : class =>
-            fields ?? (typeof(TEntity).IsClassType() == false ? Field.Parse(entity) : FieldCache.Get<TEntity>());
+            //fields ?? (typeof(TEntity).IsClassType() == false ? Field.Parse(entity) : FieldCache.Get<TEntity>());
+            fields ?? GetQualifiedFields(entity);
 
         /// <summary>
         /// 

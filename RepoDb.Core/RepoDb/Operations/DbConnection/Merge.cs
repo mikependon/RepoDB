@@ -2082,21 +2082,12 @@ namespace RepoDb
         {
             // Variables needed
             var type = entity?.GetType() ?? typeof(TEntity);
+            var isDictionaryType = type.IsDictionaryStringObject();
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var primary = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
             var properties = (IEnumerable<ClassProperty>)null;
             var primaryKey = (ClassProperty)null;
             var sessionId = Guid.Empty;
-
-            // Get the properties
-            if (type.IsGenericType == true)
-            {
-                properties = type.GetClassProperties();
-            }
-            else
-            {
-                properties = PropertyCache.Get(type);
-            }
 
             // Check the qualifiers
             if (qualifiers?.Any() != true)
@@ -2111,9 +2102,22 @@ namespace RepoDb
                 qualifiers = primary.AsField().AsEnumerable();
             }
 
-            // Set the primary key
-            primaryKey = properties?.FirstOrDefault(p =>
-                string.Equals(primary?.Name, p.GetMappedName(), StringComparison.OrdinalIgnoreCase));
+            // Get the properties
+            if (isDictionaryType == false)
+            {
+                if (type.IsGenericType == true)
+                {
+                    properties = type.GetClassProperties();
+                }
+                else
+                {
+                    properties = PropertyCache.Get(type);
+                }
+
+                // Set the primary key
+                primaryKey = properties?.FirstOrDefault(p =>
+                    string.Equals(primary?.Name, p.GetMappedName(), StringComparison.OrdinalIgnoreCase));
+            }
 
             // Before Execution
             if (trace != null)
@@ -2133,9 +2137,18 @@ namespace RepoDb
             }
 
             // Expression
-            var where = CreateQueryGroupForUpsert(entity,
-                properties,
-                qualifiers);
+            var where = (QueryGroup)null;
+            if (isDictionaryType)
+            {
+                where = CreateQueryGroupForUpsert((IDictionary<string, object>)entity,
+                    qualifiers);
+            }
+            else
+            {
+                where = CreateQueryGroupForUpsert(entity,
+                    properties,
+                    qualifiers);
+            }
 
             // Validate
             if (where == null)
@@ -2173,10 +2186,20 @@ namespace RepoDb
                 // Check if there is result
                 if (updateResult > 0)
                 {
-                    if (primaryKey != null)
+                    if (isDictionaryType == false)
                     {
-                        // Set the result
-                        result = Converter.ToType<TResult>(primaryKey.PropertyInfo.GetValue(entity));
+                        if (primaryKey != null)
+                        {
+                            result = Converter.ToType<TResult>(primaryKey.PropertyInfo.GetValue(entity));
+                        }
+                    }
+                    else
+                    {
+                        var dictionary = (IDictionary<string, object>)entity;
+                        if (primary != null && dictionary.ContainsKey(primary.Name))
+                        {
+                            result = Converter.ToType<TResult>(dictionary[primary.Name]);
+                        }
                     }
                 }
             }
@@ -2348,21 +2371,12 @@ namespace RepoDb
         {
             // Variables needed
             var type = entity?.GetType() ?? typeof(TEntity);
+            var isDictionaryType = type.IsDictionaryStringObject();
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
             var primary = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
             var properties = (IEnumerable<ClassProperty>)null;
             var primaryKey = (ClassProperty)null;
             var sessionId = Guid.Empty;
-
-            // Get the properties
-            if (type.IsGenericType == true)
-            {
-                properties = type.GetClassProperties();
-            }
-            else
-            {
-                properties = PropertyCache.Get(type);
-            }
 
             // Check the qualifiers
             if (qualifiers?.Any() != true)
@@ -2377,9 +2391,22 @@ namespace RepoDb
                 qualifiers = primary.AsField().AsEnumerable();
             }
 
-            // Set the primary key
-            primaryKey = properties?.FirstOrDefault(p =>
-                string.Equals(primary?.Name, p.GetMappedName(), StringComparison.OrdinalIgnoreCase));
+            // Get the properties
+            if (isDictionaryType == false)
+            {
+                if (type.IsGenericType == true)
+                {
+                    properties = type.GetClassProperties();
+                }
+                else
+                {
+                    properties = PropertyCache.Get(type);
+                }
+
+                // Set the primary key
+                primaryKey = properties?.FirstOrDefault(p =>
+                    string.Equals(primary?.Name, p.GetMappedName(), StringComparison.OrdinalIgnoreCase));
+            }
 
             // Before Execution
             if (trace != null)
@@ -2399,9 +2426,18 @@ namespace RepoDb
             }
 
             // Expression
-            var where = CreateQueryGroupForUpsert(entity,
-                properties,
-                qualifiers);
+            var where = (QueryGroup)null;
+            if (isDictionaryType)
+            {
+                where = CreateQueryGroupForUpsert((IDictionary<string, object>)entity,
+                    qualifiers);
+            }
+            else
+            {
+                where = CreateQueryGroupForUpsert(entity,
+                    properties,
+                    qualifiers);
+            }
 
             // Validate
             if (where == null)
@@ -2441,10 +2477,20 @@ namespace RepoDb
                 // Check if there is result
                 if (updateResult > 0)
                 {
-                    if (primaryKey != null)
+                    if (isDictionaryType == false)
                     {
-                        // Set the result
-                        result = Converter.ToType<TResult>(primaryKey.PropertyInfo.GetValue(entity));
+                        if (primaryKey != null)
+                        {
+                            result = Converter.ToType<TResult>(primaryKey.PropertyInfo.GetValue(entity));
+                        }
+                    }
+                    else
+                    {
+                        var dictionary = (IDictionary<string, object>)entity;
+                        if (primary != null && dictionary.ContainsKey(primary.Name))
+                        {
+                            result = Converter.ToType<TResult>(dictionary[primary.Name]);
+                        }
                     }
                 }
             }
