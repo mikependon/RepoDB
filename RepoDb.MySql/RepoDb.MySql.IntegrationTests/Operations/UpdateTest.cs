@@ -2,6 +2,7 @@
 using MySql.Data.MySqlClient;
 using RepoDb.MySql.IntegrationTests.Models;
 using RepoDb.MySql.IntegrationTests.Setup;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace RepoDb.MySql.IntegrationTests.Operations
@@ -361,6 +362,33 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
+        public void TestMySqlConnectionUpdateViaTableNameViaExpandoObject()
+        {
+            // Setup
+            var table = Database.CreateCompleteTables(1).First();
+
+            using (var connection = new MySqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var entity = Helper.CreateCompleteTablesAsExpandoObjects(1).First();
+                ((IDictionary<string, object>)entity)["Id"] = table.Id;
+
+                // Act
+                var result = connection.Update(ClassMappedNameCache.Get<CompleteTable>(),
+                    entity);
+
+                // Assert
+                Assert.AreEqual(1, result);
+
+                // Act
+                var queryResult = connection.Query<CompleteTable>(table.Id).First();
+
+                // Assert
+                Helper.AssertMembersEquality(queryResult, entity);
+            }
+        }
+
+        [TestMethod]
         public void TestMySqlConnectionUpdateViaTableNameViaDataEntity()
         {
             // Setup
@@ -372,13 +400,14 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = DbConnectionExtension.Update(connection, ClassMappedNameCache.Get<CompleteTable>(), table);
+                var result = connection.Update(ClassMappedNameCache.Get<CompleteTable>(),
+                    table);
 
                 // Assert
                 Assert.AreEqual(1, result);
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<CompleteTable>(), table.Id).First();
+                var queryResult = connection.Query<CompleteTable>(table.Id).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, queryResult);
@@ -397,13 +426,15 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = DbConnectionExtension.Update(connection, ClassMappedNameCache.Get<CompleteTable>(), table, new { table.Id });
+                var result = connection.Update(ClassMappedNameCache.Get<CompleteTable>(),
+                    table,
+                    new { table.Id });
 
                 // Assert
                 Assert.AreEqual(1, result);
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<CompleteTable>(), table.Id).First();
+                var queryResult = connection.Query<CompleteTable>(table.Id).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, queryResult);
@@ -422,13 +453,15 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = DbConnectionExtension.Update(connection, ClassMappedNameCache.Get<CompleteTable>(), table, new QueryField("Id", table.Id));
+                var result = connection.Update(ClassMappedNameCache.Get<CompleteTable>(),
+                    table,
+                    new QueryField("Id", table.Id));
 
                 // Assert
                 Assert.AreEqual(1, result);
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<CompleteTable>(), table.Id).First();
+                var queryResult = connection.Query<CompleteTable>(table.Id).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, queryResult);
@@ -452,13 +485,15 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = DbConnectionExtension.Update(connection, ClassMappedNameCache.Get<CompleteTable>(), table, queryFields);
+                var result = connection.Update(ClassMappedNameCache.Get<CompleteTable>(),
+                    table,
+                    queryFields);
 
                 // Assert
                 Assert.AreEqual(1, result);
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<CompleteTable>(), table.Id).First();
+                var queryResult = connection.Query<CompleteTable>(table.Id).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, queryResult);
@@ -483,13 +518,15 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = DbConnectionExtension.Update(connection, ClassMappedNameCache.Get<CompleteTable>(), table, queryGroup);
+                var result = connection.Update(ClassMappedNameCache.Get<CompleteTable>(),
+                    table,
+                    queryGroup);
 
                 // Assert
                 Assert.AreEqual(1, result);
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<CompleteTable>(), table.Id).First();
+                var queryResult = connection.Query<CompleteTable>(table.Id).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, queryResult);
@@ -499,6 +536,33 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #endregion
 
         #region Async
+
+        [TestMethod]
+        public void TestMySqlConnectionUpdateAsyncViaTableNameViaExpandoObject()
+        {
+            // Setup
+            var table = Database.CreateCompleteTables(1).First();
+
+            using (var connection = new MySqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var entity = Helper.CreateCompleteTablesAsExpandoObjects(1).First();
+                ((IDictionary<string, object>)entity)["Id"] = table.Id;
+
+                // Act
+                var result = connection.UpdateAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    entity).Result;
+
+                // Assert
+                Assert.AreEqual(1, result);
+
+                // Act
+                var queryResult = connection.Query<CompleteTable>(table.Id).First();
+
+                // Assert
+                Helper.AssertMembersEquality(queryResult, entity);
+            }
+        }
 
         [TestMethod]
         public void TestMySqlConnectionUpdateAsyncViaTableNameViaDataEntity()
@@ -518,7 +582,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 Assert.AreEqual(1, result);
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<CompleteTable>(), table.Id).First();
+                var queryResult = connection.Query<CompleteTable>(table.Id).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, queryResult);
@@ -543,7 +607,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 Assert.AreEqual(1, result);
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<CompleteTable>(), table.Id).First();
+                var queryResult = connection.Query<CompleteTable>(table.Id).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, queryResult);
@@ -568,7 +632,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 Assert.AreEqual(1, result);
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<CompleteTable>(), table.Id).First();
+                var queryResult = connection.Query<CompleteTable>(table.Id).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, queryResult);
@@ -598,7 +662,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 Assert.AreEqual(1, result);
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<CompleteTable>(), table.Id).First();
+                var queryResult = connection.Query<CompleteTable>(table.Id).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, queryResult);
@@ -629,7 +693,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 Assert.AreEqual(1, result);
 
                 // Act
-                var queryResult = connection.Query(ClassMappedNameCache.Get<CompleteTable>(), table.Id).First();
+                var queryResult = connection.Query<CompleteTable>(table.Id).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, queryResult);

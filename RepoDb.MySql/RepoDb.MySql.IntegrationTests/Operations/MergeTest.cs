@@ -3,6 +3,7 @@ using MySql.Data.MySqlClient;
 using RepoDb.MySql.IntegrationTests.Models;
 using RepoDb.MySql.IntegrationTests.Setup;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace RepoDb.MySql.IntegrationTests.Operations
@@ -213,6 +214,25 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestMySqlConnectionMergeAsExpandoObjectViaTableNameForIdentityForEmptyTable()
+        {
+            // Setup
+            var table = Helper.CreateCompleteTablesAsExpandoObjects(1).First();
+
+            using (var connection = new MySqlConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.Merge(ClassMappedNameCache.Get<CompleteTable>(),
+                    table);
+                var queryResult = connection.Query<CompleteTable>(result);
+
+                // Assert
+                Assert.AreEqual(1, connection.CountAll<CompleteTable>());
+                Helper.AssertMembersEquality(queryResult.First(), table);
+            }
+        }
+
+        [TestMethod]
         public void TestMySqlConnectionMergeViaTableNameForIdentityForNonEmptyTable()
         {
             // Setup
@@ -236,6 +256,34 @@ namespace RepoDb.MySql.IntegrationTests.Operations
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, queryResult.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestMySqlConnectionMergeAsExpandoObjectViaTableNameForIdentityForNonEmptyTable()
+        {
+            // Setup
+            var table = Database.CreateCompleteTables(1).First();
+
+            using (var connection = new MySqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var entity = Helper.CreateCompleteTablesAsExpandoObjects(1).First();
+                ((IDictionary<string, object>)entity)["Id"] = table.Id;
+
+                // Act
+                var result = connection.Merge<long>(ClassMappedNameCache.Get<CompleteTable>(),
+                    entity);
+
+                // Assert
+                Assert.AreEqual(1, connection.CountAll<CompleteTable>());
+                Assert.AreEqual(table.Id, result);
+
+                // Act
+                var queryResult = connection.Query<CompleteTable>(result);
+
+                // Assert
+                Helper.AssertMembersEquality(queryResult.First(), entity);
             }
         }
 
@@ -380,6 +428,25 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestMySqlConnectionMergeAsyncAsExpandoObjectViaTableNameForIdentityForEmptyTable()
+        {
+            // Setup
+            var table = Helper.CreateCompleteTablesAsExpandoObjects(1).First();
+
+            using (var connection = new MySqlConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    table).Result;
+                var queryResult = connection.Query<CompleteTable>(result);
+
+                // Assert
+                Assert.AreEqual(1, connection.CountAll<CompleteTable>());
+                Helper.AssertMembersEquality(queryResult.First(), table);
+            }
+        }
+
+        [TestMethod]
         public void TestMySqlConnectionMergeAsyncViaTableNameForIdentityForNonEmptyTable()
         {
             // Setup
@@ -403,6 +470,34 @@ namespace RepoDb.MySql.IntegrationTests.Operations
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, queryResult.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestMySqlConnectionMergeAsyncAsExpandoObjectViaTableNameForIdentityForNonEmptyTable()
+        {
+            // Setup
+            var table = Database.CreateCompleteTables(1).First();
+
+            using (var connection = new MySqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var entity = Helper.CreateCompleteTablesAsExpandoObjects(1).First();
+                ((IDictionary<string, object>)entity)["Id"] = table.Id;
+
+                // Act
+                var result = connection.MergeAsync<long>(ClassMappedNameCache.Get<CompleteTable>(),
+                    entity).Result;
+
+                // Assert
+                Assert.AreEqual(1, connection.CountAll<CompleteTable>());
+                Assert.AreEqual(table.Id, result);
+
+                // Act
+                var queryResult = connection.Query<CompleteTable>(result);
+
+                // Assert
+                Helper.AssertMembersEquality(queryResult.First(), entity);
             }
         }
 

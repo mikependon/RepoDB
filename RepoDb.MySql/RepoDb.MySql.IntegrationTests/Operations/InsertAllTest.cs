@@ -181,6 +181,30 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestMySqlConnectionInsertAllViaTableNameAsExpandoObjectsForIdentity()
+        {
+            // Setup
+            var tables = Helper.CreateCompleteTablesAsExpandoObjects(10);
+
+            using (var connection = new MySqlConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.InsertAll(ClassMappedNameCache.Get<CompleteTable>(),
+                    tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
+                Assert.AreEqual(tables.Count, result);
+
+                // Act
+                var queryResult = connection.QueryAll<CompleteTable>();
+
+                // Assert
+                tables.ForEach(table => Helper.AssertMembersEquality(queryResult.First(e => e.Id == ((dynamic)table).Id), table));
+            }
+        }
+
+        [TestMethod]
         public void TestMySqlConnectionInsertAllViaTableNameForNonIdentity()
         {
             // Setup
@@ -225,6 +249,30 @@ namespace RepoDb.MySql.IntegrationTests.Operations
 
                 // Assert
                 tables.ForEach(table => Helper.AssertMembersEquality(table, queryResult.First(e => e.Id == table.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestMySqlConnectionInsertAllViaTableNameAsExpandoObjectsForNonIdentity()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityCompleteTablesAsExpandoObjects(10);
+
+            using (var connection = new MySqlConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.InsertAll(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
+                    tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityCompleteTable>());
+                Assert.AreEqual(tables.Count, result);
+
+                // Act
+                var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
+
+                // Assert
+                tables.ForEach(table => Helper.AssertMembersEquality(queryResult.First(e => e.Id == ((dynamic)table).Id), table));
             }
         }
 
@@ -281,6 +329,30 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestMySqlConnectionInsertAllAsyncViaTableNameAsExpandoObjectsForIdentity()
+        {
+            // Setup
+            var tables = Helper.CreateCompleteTablesAsExpandoObjects(10);
+
+            using (var connection = new MySqlConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.InsertAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
+                Assert.AreEqual(tables.Count, result);
+
+                // Act
+                var queryResult = connection.QueryAll<CompleteTable>();
+
+                // Assert
+                tables.ForEach(table => Helper.AssertMembersEquality(queryResult.First(e => e.Id == ((dynamic)table).Id), table));
+            }
+        }
+
+        [TestMethod]
         public void TestMySqlConnectionInsertAllViaTableNameAsyncForNonIdentity()
         {
             // Setup
@@ -325,6 +397,30 @@ namespace RepoDb.MySql.IntegrationTests.Operations
 
                 // Assert
                 tables.ForEach(table => Helper.AssertMembersEquality(table, queryResult.First(e => e.Id == table.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestMySqlConnectionInsertAllAsyncViaTableNameAsExpandoObjectsForNonIdentity()
+        {
+            // Setup
+            var tables = Helper.CreateNonIdentityCompleteTablesAsExpandoObjects(10);
+
+            using (var connection = new MySqlConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.InsertAllAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
+                    tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityCompleteTable>());
+                Assert.AreEqual(tables.Count, result);
+
+                // Act
+                var queryResult = connection.QueryAll<NonIdentityCompleteTable>();
+
+                // Assert
+                tables.ForEach(table => Helper.AssertMembersEquality(queryResult.First(e => e.Id == ((dynamic)table).Id), table));
             }
         }
 

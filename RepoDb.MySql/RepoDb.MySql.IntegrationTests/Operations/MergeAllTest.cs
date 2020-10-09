@@ -4,6 +4,7 @@ using System.Linq;
 using RepoDb.MySql.IntegrationTests.Setup;
 using MySql.Data.MySqlClient;
 using RepoDb.MySql.IntegrationTests.Models;
+using System.Collections.Generic;
 
 namespace RepoDb.MySql.IntegrationTests.Operations
 {
@@ -393,6 +394,31 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestMySqlConnectionMergeAllAsExpandoObjectViaTableNameForIdentityForEmptyTable()
+        {
+            // Setup
+            var tables = Helper.CreateCompleteTablesAsExpandoObjects(10);
+
+            using (var connection = new MySqlConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.MergeAll(ClassMappedNameCache.Get<CompleteTable>(),
+                    tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
+                Assert.AreEqual(tables.Count, result);
+
+                // Act
+                var queryResult = connection.QueryAll<CompleteTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.ForEach(table => Helper.AssertMembersEquality(queryResult.First(e => e.Id == ((dynamic)table).Id), table));
+            }
+        }
+
+        [TestMethod]
         public void TestMySqlConnectionMergeAllViaTableNameForIdentityForNonEmptyTable()
         {
             // Setup
@@ -416,6 +442,34 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestMySqlConnectionMergeAllAsExpandoObjectViaTableNameForIdentityForNonEmptyTable()
+        {
+            // Setup
+            var entities = Database.CreateCompleteTables(10).AsList();
+
+            using (var connection = new MySqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Helper.CreateCompleteTablesAsExpandoObjects(10).AsList();
+                tables.ForEach(e => ((IDictionary<string, object>)e)["Id"] = entities[tables.IndexOf(e)].Id);
+
+                // Act
+                var result = connection.MergeAll(ClassMappedNameCache.Get<CompleteTable>(),
+                    tables);
+
+                // Assert
+                Assert.AreEqual(entities.Count, connection.CountAll<CompleteTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<CompleteTable>();
+
+                // Assert
+                Assert.AreEqual(entities.Count, queryResult.Count());
+                tables.ForEach(table => Helper.AssertMembersEquality(queryResult.First(e => e.Id == ((dynamic)table).Id), table));
             }
         }
 
@@ -733,6 +787,31 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestMySqlConnectionMergeAllAsyncAsExpandoObjectViaTableNameForIdentityForEmptyTable()
+        {
+            // Setup
+            var tables = Helper.CreateCompleteTablesAsExpandoObjects(10);
+
+            using (var connection = new MySqlConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
+                Assert.AreEqual(tables.Count, result);
+
+                // Act
+                var queryResult = connection.QueryAll<CompleteTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.ForEach(table => Helper.AssertMembersEquality(queryResult.First(e => e.Id == ((dynamic)table).Id), table));
+            }
+        }
+
+        [TestMethod]
         public void TestMySqlConnectionMergeAllViaTableNameAsyncForIdentityForNonEmptyTable()
         {
             // Setup
@@ -756,6 +835,34 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
                 tables.ForEach(table => Helper.AssertMembersEquality(table, queryResult.First(e => e.Id == table.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestMySqlConnectionMergeAllAsyncAsExpandoObjectViaTableNameForIdentityForNonEmptyTable()
+        {
+            // Setup
+            var entities = Database.CreateCompleteTables(10).AsList();
+
+            using (var connection = new MySqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Helper.CreateCompleteTablesAsExpandoObjects(10).AsList();
+                tables.ForEach(e => ((IDictionary<string, object>)e)["Id"] = entities[tables.IndexOf(e)].Id);
+
+                // Act
+                var result = connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    tables).Result;
+
+                // Assert
+                Assert.AreEqual(entities.Count, connection.CountAll<CompleteTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<CompleteTable>();
+
+                // Assert
+                Assert.AreEqual(entities.Count, queryResult.Count());
+                tables.ForEach(table => Helper.AssertMembersEquality(queryResult.First(e => e.Id == ((dynamic)table).Id), table));
             }
         }
 
