@@ -3,6 +3,7 @@ using Npgsql;
 using RepoDb.Extensions;
 using RepoDb.PostgreSql.IntegrationTests.Models;
 using RepoDb.PostgreSql.IntegrationTests.Setup;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace RepoDb.PostgreSql.IntegrationTests.Operations
@@ -117,6 +118,34 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestPostgreSqlConnectionUpdateAllViaTableNameAsExpandoObjects()
+        {
+            // Setup
+            var entities = Database.CreateCompleteTables(10).AsList();
+
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Helper.CreateCompleteTablesAsExpandoObjects(10).AsList();
+                tables.ForEach(e => ((IDictionary<string, object>)e)["Id"] = entities[tables.IndexOf(e)].Id);
+
+                // Act
+                var result = connection.UpdateAll(ClassMappedNameCache.Get<CompleteTable>(),
+                    tables);
+
+                // Assert
+                Assert.AreEqual(10, result);
+
+                // Act
+                var queryResult = connection.QueryAll<CompleteTable>();
+
+                // Assert
+                tables.AsList().ForEach(table =>
+                    Helper.AssertMembersEquality(queryResult.First(e => e.Id == ((dynamic)table).Id), table));
+            }
+        }
+
         #endregion
 
         #region Async
@@ -144,6 +173,34 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 // Assert
                 tables.AsList().ForEach(table =>
                     Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestPostgreSqlConnectionUpdateAllAsyncViaTableNameAsExpandoObjects()
+        {
+            // Setup
+            var entities = Database.CreateCompleteTables(10).AsList();
+
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var tables = Helper.CreateCompleteTablesAsExpandoObjects(10).AsList();
+                tables.ForEach(e => ((IDictionary<string, object>)e)["Id"] = entities[tables.IndexOf(e)].Id);
+
+                // Act
+                var result = connection.UpdateAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    tables).Result;
+
+                // Assert
+                Assert.AreEqual(10, result);
+
+                // Act
+                var queryResult = connection.QueryAll<CompleteTable>();
+
+                // Assert
+                tables.AsList().ForEach(table =>
+                    Helper.AssertMembersEquality(queryResult.First(e => e.Id == ((dynamic)table).Id), table));
             }
         }
 

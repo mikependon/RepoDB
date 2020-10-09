@@ -188,6 +188,31 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestPostgreSqlConnectionInsertViaTableNameAsExpandoObjectForIdentity()
+        {
+            // Setup
+            var table = Helper.CreateCompleteTablesAsExpandoObjects(1).First();
+
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.Insert(ClassMappedNameCache.Get<CompleteTable>(),
+                    table);
+
+                // Assert
+                Assert.AreEqual(1, connection.CountAll<CompleteTable>());
+                Assert.IsTrue(Convert.ToInt64(result) > 0);
+
+                // Act
+                var queryResult = connection.Query<CompleteTable>(result);
+
+                // Assert
+                Assert.AreEqual(1, queryResult?.Count());
+                Helper.AssertMembersEquality(queryResult.First(), table);
+            }
+        }
+
+        [TestMethod]
         public void TestPostgreSqlConnectionInsertViaTableNameForNonIdentity()
         {
             // Setup
@@ -227,6 +252,31 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<NonIdentityCompleteTable>());
                 Assert.AreEqual(table.Id, result);
+
+                // Act
+                var queryResult = connection.Query<NonIdentityCompleteTable>(result);
+
+                // Assert
+                Assert.AreEqual(1, queryResult?.Count());
+                Helper.AssertMembersEquality(queryResult.First(), table);
+            }
+        }
+
+        [TestMethod]
+        public void TestPostgreSqlConnectionInsertViaTableNameAsExpandoObjectForNonIdentity()
+        {
+            // Setup
+            var table = Helper.CreateNonIdentityCompleteTablesAsExpandoObjects(1).First();
+
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.Insert(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
+                    table);
+
+                // Assert
+                Assert.AreEqual(1, connection.CountAll<NonIdentityCompleteTable>());
+                Assert.IsTrue(Convert.ToInt64(result) > 0);
 
                 // Act
                 var queryResult = connection.Query<NonIdentityCompleteTable>(result);
@@ -292,6 +342,31 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestPostgreSqlConnectionInsertAsyncViaTableNameAsExpandoObjectForIdentity()
+        {
+            // Setup
+            var table = Helper.CreateCompleteTablesAsExpandoObjects(1).First();
+
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.InsertAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    table).Result;
+
+                // Assert
+                Assert.AreEqual(1, connection.CountAll<CompleteTable>());
+                Assert.IsTrue(Convert.ToInt64(result) > 0);
+
+                // Act
+                var queryResult = connection.Query<CompleteTable>(result);
+
+                // Assert
+                Assert.AreEqual(1, queryResult?.Count());
+                Helper.AssertMembersEquality(queryResult.First(), table);
+            }
+        }
+
+        [TestMethod]
         public void TestPostgreSqlConnectionInsertViaTableNameAsyncForNonIdentity()
         {
             // Setup
@@ -331,6 +406,31 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<NonIdentityCompleteTable>());
                 Assert.AreEqual(table.Id, result);
+
+                // Act
+                var queryResult = connection.Query<NonIdentityCompleteTable>(result);
+
+                // Assert
+                Assert.AreEqual(1, queryResult?.Count());
+                Helper.AssertMembersEquality(queryResult.First(), table);
+            }
+        }
+
+        [TestMethod]
+        public void TestPostgreSqlConnectionInsertAsyncViaTableNameAsExpandoObjectForNonIdentity()
+        {
+            // Setup
+            var table = Helper.CreateNonIdentityCompleteTablesAsExpandoObjects(1).First();
+
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.InsertAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
+                    table).Result;
+
+                // Assert
+                Assert.AreEqual(1, connection.CountAll<NonIdentityCompleteTable>());
+                Assert.IsTrue(Convert.ToInt64(result) > 0);
 
                 // Act
                 var queryResult = connection.Query<NonIdentityCompleteTable>(result);
