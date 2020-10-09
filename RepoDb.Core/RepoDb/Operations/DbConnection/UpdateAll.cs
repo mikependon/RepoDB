@@ -384,7 +384,7 @@ namespace RepoDb
             {
                 return UpdateAllInternalBase<IDictionary<string, object>>(connection: connection,
                     tableName: tableName,
-                    entities: entities?.OfType<IDictionary<string, object>>(),
+                    entities: entities?.OfTargetType<TEntity, IDictionary<string, object>>(),
                     batchSize: batchSize,
                     fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
                     qualifiers: qualifiers,
@@ -803,7 +803,7 @@ namespace RepoDb
             {
                 return await UpdateAllAsyncInternalBase<IDictionary<string, object>>(connection: connection,
                     tableName: tableName,
-                    entities: entities?.OfType<IDictionary<string, object>>(),
+                    entities: entities?.OfTargetType<TEntity, IDictionary<string, object>>(),
                     batchSize: batchSize,
                     fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
                     qualifiers: qualifiers,

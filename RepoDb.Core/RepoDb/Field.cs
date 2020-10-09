@@ -270,7 +270,7 @@ namespace RepoDb
             {
                 return expression
                     .Members
-                    .OfType<PropertyInfo>()
+                    .OfTargetType<MemberInfo, PropertyInfo>()
                     .Select(e => e.AsField());
             }
             return null;

@@ -52,7 +52,7 @@ namespace RepoDb.Extensions
             value is IEnumerable<TargetType> ? (IEnumerable<TargetType>)value : value.OfType<TargetType>();
 
         /// <summary>
-        /// Converts the <see cref="IEnumerable{T}"/> object into a <see cref="IList{T}"/> object.
+        /// Checks whether the instance of <see cref="IEnumerable{T}"/> is of type <see cref="List{T}"/>, then casts it, otherwise, converts it.
         /// </summary>
         /// <typeparam name="T">The target dynamic type of the enumerable.</typeparam>
         /// <param name="value">The actual enumerable instance.</param>
@@ -61,7 +61,7 @@ namespace RepoDb.Extensions
             value is List<T> ? (List<T>)value : value?.ToList();
 
         /// <summary>
-        /// Converts the <see cref="IEnumerable{T}"/> object into an array of objects.
+        /// Checks whether the instance of <see cref="IEnumerable{T}"/> is an array of <typeparamref name="T"/>, then casts it, otherwise, converts it.
         /// </summary>
         /// <typeparam name="T">The target dynamic type of the enumerable.</typeparam>
         /// <param name="value">The actual enumerable instance.</param>
