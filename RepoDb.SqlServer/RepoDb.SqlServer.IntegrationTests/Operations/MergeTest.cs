@@ -213,6 +213,25 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestSqlConnectionMergeViaTableNameForExpandoObjectIdentityForEmptyTable()
+        {
+            // Setup
+            var table = Helper.CreateCompleteTablesAsExpandoObjects(1).First();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.Merge(ClassMappedNameCache.Get<CompleteTable>(),
+                    table);
+                var queryResult = connection.Query<CompleteTable>(result);
+
+                // Assert
+                Assert.AreEqual(1, connection.CountAll<CompleteTable>());
+                Helper.AssertMembersEquality(queryResult.First(), table);
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionMergeViaTableNameForIdentityForNonEmptyTable()
         {
             // Setup
@@ -236,6 +255,33 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, queryResult.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeViaTableNameForExpandoObjectIdentityForNonEmptyTable()
+        {
+            // Setup
+            Database.CreateCompleteTables(1).First();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var table = Helper.CreateCompleteTablesAsExpandoObjects(1).First();
+                Helper.UpdateCompleteTableAsExpandoObjectProperties(table);
+
+                // Act
+                var result = connection.Merge(ClassMappedNameCache.Get<CompleteTable>(),
+                    table);
+
+                // Assert
+                Assert.AreEqual(1, connection.CountAll<CompleteTable>());
+
+                // Act
+                var queryResult = connection.Query<CompleteTable>(result);
+
+                // Assert
+                Helper.AssertMembersEquality(queryResult.First(), table);
             }
         }
 
@@ -380,6 +426,25 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestSqlConnectionMergeAsyncViaTableNameForExpandoObjectIdentityForEmptyTable()
+        {
+            // Setup
+            var table = Helper.CreateCompleteTablesAsExpandoObjects(1).First();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Act
+                var result = connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    table).Result;
+                var queryResult = connection.Query<CompleteTable>(result);
+
+                // Assert
+                Assert.AreEqual(1, connection.CountAll<CompleteTable>());
+                Helper.AssertMembersEquality(queryResult.First(), table);
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionMergeAsyncViaTableNameForIdentityForNonEmptyTable()
         {
             // Setup
@@ -406,6 +471,32 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestSqlConnectionMergeAsyncViaTableNameForExpandoObjectIdentityForNonEmptyTable()
+        {
+            // Setup
+            Database.CreateCompleteTables(1).First();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var table = Helper.CreateCompleteTablesAsExpandoObjects(1).First();
+                Helper.UpdateCompleteTableAsExpandoObjectProperties(table);
+
+                // Act
+                var result = connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    table).Result;
+
+                // Assert
+                Assert.AreEqual(1, connection.CountAll<CompleteTable>());
+
+                // Act
+                var queryResult = connection.Query<CompleteTable>(result);
+
+                // Assert
+                Helper.AssertMembersEquality(queryResult.First(), table);
+            }
+        }
         [TestMethod]
         public void TestSqlConnectionMergeAsyncViaTableNameForIdentityForNonEmptyTableWithQualifiers()
         {

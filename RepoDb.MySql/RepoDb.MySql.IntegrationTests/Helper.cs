@@ -16,6 +16,8 @@ namespace RepoDb.MySql.IntegrationTests
             EpocDate = new DateTime(1970, 1, 1, 0, 0, 0);
         }
 
+        #region Properties
+
         /// <summary>
         /// Gets the value of the Epoc date.
         /// </summary>
@@ -25,6 +27,10 @@ namespace RepoDb.MySql.IntegrationTests
         /// Gets the current <see cref="Random"/> object in used.
         /// </summary>
         public static Random Randomizer => new Random(1);
+
+        #endregion
+
+        #region Helpers
 
         /// <summary>
         /// Asserts the properties equality of 2 types.
@@ -143,13 +149,15 @@ namespace RepoDb.MySql.IntegrationTests
             });
         }
 
+        #endregion
+
         #region CompleteTable
 
         /// <summary>
-        /// Creates a list of <see cref="CompleteTable"/> objects.
+        /// 
         /// </summary>
-        /// <param name="count">The number of rows.</param>
-        /// <returns>A list of <see cref="CompleteTable"/> objects.</returns>
+        /// <param name="count"></param>
+        /// <returns></returns>
         public static List<CompleteTable> CreateCompleteTables(int count)
         {
             var tables = new List<CompleteTable>();
@@ -207,9 +215,9 @@ namespace RepoDb.MySql.IntegrationTests
         }
 
         /// <summary>
-        /// Update the properties of <see cref="CompleteTable"/> instance.
+        /// 
         /// </summary>
-        /// <param name="table">The instance to be updated.</param>
+        /// <param name="table"></param>
         public static void UpdateCompleteTableProperties(CompleteTable table)
         {
             var now = DateTime.SpecifyKind(
@@ -259,10 +267,10 @@ namespace RepoDb.MySql.IntegrationTests
         }
 
         /// <summary>
-        /// Creates a list of <see cref="CompleteTable"/> objects represented as dynamics.
+        /// 
         /// </summary>
-        /// <param name="count">The number of rows.</param>
-        /// <returns>A list of <see cref="CompleteTable"/> objects represented as dynamics.</returns>
+        /// <param name="count"></param>
+        /// <returns></returns>
         public static List<dynamic> CreateCompleteTablesAsDynamics(int count)
         {
             var tables = new List<dynamic>();
@@ -321,9 +329,9 @@ namespace RepoDb.MySql.IntegrationTests
         }
 
         /// <summary>
-        /// Update the properties of <see cref="CompleteTable"/> instance represented asy dynamic.
+        /// 
         /// </summary>
-        /// <param name="table">The instance to be updated.</param>
+        /// <param name="table"></param>
         public static void UpdateCompleteTableAsDynamicProperties(dynamic table)
         {
             var now = DateTime.SpecifyKind(
@@ -372,15 +380,129 @@ namespace RepoDb.MySql.IntegrationTests
             table.ColumnBit = (UInt64)1;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public static List<ExpandoObject> CreateCompleteTablesAsExpandoObjects(int count)
+        {
+            var tables = new List<ExpandoObject>();
+            var now = DateTime.SpecifyKind(
+                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
+                    DateTimeKind.Unspecified);
+            for (var i = 0; i < count; i++)
+            {
+                var item = new ExpandoObject() as IDictionary<string, object>;
+                item["Id"] = (long)(i + 1);
+                item["ColumnVarchar"] = $"ColumnVarChar:{i}";
+                item["ColumnInt"] = i;
+                item["ColumnDecimal2"] = Convert.ToDecimal(i);
+                item["ColumnDateTime"] = EpocDate;
+                item["ColumnBlob"] = Encoding.Default.GetBytes($"ColumnBlob:{i}");
+                item["ColumnBlobAsArray"] = Encoding.Default.GetBytes($"ColumnBlobAsArray:{i}");
+                item["ColumnBinary"] = Encoding.Default.GetBytes($"ColumnBinary:{i}");
+                item["ColumnLongBlob"] = Encoding.Default.GetBytes($"ColumnLongBlob:{i}");
+                item["ColumnMediumBlob"] = Encoding.Default.GetBytes($"ColumnMediumBlob:{i}");
+                item["ColumnTinyBlob"] = Encoding.Default.GetBytes($"ColumnTinyBlob:{i}");
+                item["ColumnVarBinary"] = Encoding.Default.GetBytes($"ColumnVarBinary:{i}");
+                item["ColumnDate"] = EpocDate;
+                item["ColumnDateTime2"] = now;
+                item["ColumnTime"] = EpocDate.AddHours(5).AddMinutes(7).AddSeconds(12).TimeOfDay;
+                item["ColumnTimeStamp"] = now;
+                item["ColumnYear"] = Convert.ToInt16(now.Year);
+                //item["ColumnGeometry"] = Encoding.Default.GetBytes($"POLYGON ((0 0; 50 0; 50 50; 0 50; 0 0))");
+                //item["ColumnLineString"] = Encoding.Default.GetBytes($"LINESTRING (-122.36 47.656; -122.343 47.656)");
+                //item["ColumnMultiLineString"] = Encoding.Default.GetBytes($"ColumnMultiLineString:{i}");
+                //item["ColumnMultiPoint"] = Encoding.Default.GetBytes($"ColumnMultiPoint:{i}");
+                //item["ColumnMultiPolygon"] = Encoding.Default.GetBytes($"ColumnMultiPolygon:{i}");
+                //item["ColumnPoint"] = Encoding.Default.GetBytes($"ColumnPoint:{i}");
+                //item["ColumnPolygon"] = Encoding.Default.GetBytes($"ColumnPolygon:{i}");
+                item["ColumnBigint"] = Convert.ToInt64(i);
+                item["ColumnDecimal"] = Convert.ToDecimal(i);
+                item["ColumnDouble"] = Convert.ToDouble(i);
+                item["ColumnFloat"] = Convert.ToSingle(i);
+                item["ColumnInt2"] = i;
+                item["ColumnMediumInt"] = i;
+                item["ColumnReal"] = Convert.ToDouble(i);
+                item["ColumnSmallInt"] = Convert.ToInt16(i);
+                item["ColumnTinyInt"] = (SByte)i;
+                item["ColumnChar"] = "C";
+                item["ColumnJson"] = "{\"Field1\": \"Value1\", \"Field2\": \"Value2\"}";
+                item["ColumnNChar"] = "C";
+                item["ColumnNVarChar"] = $"ColumnNVarChar:{i}";
+                item["ColumnLongText"] = $"ColumnLongText:{i}";
+                item["ColumnMediumText"] = $"ColumnMediumText:{i}";
+                item["ColumnText"] = $"ColumText:{i}";
+                item["ColumnTinyText"] = $"ColumnTinyText:{i}";
+                item["ColumnBit"] = (UInt64)1;
+                tables.Add((ExpandoObject)item);
+            }
+            return tables;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="table"></param>
+        public static void UpdateCompleteTableAsExpandoObjectProperties(ExpandoObject table)
+        {
+            var now = DateTime.SpecifyKind(
+                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
+                    DateTimeKind.Unspecified);
+            var item = table as IDictionary<string, object>;
+            item["ColumnVarchar"] = $"ColumnVarChar:{2}";
+            item["ColumnInt"] = 2;
+            item["ColumnDecimal2"] = Convert.ToDecimal(2);
+            item["ColumnDateTime"] = EpocDate;
+            item["ColumnBlob"] = Encoding.Default.GetBytes($"ColumnBlob:{2}");
+            item["ColumnBlobAsArray"] = Encoding.Default.GetBytes($"ColumnBlobAsArray:{2}");
+            item["ColumnBinary"] = Encoding.Default.GetBytes($"ColumnBinary:{2}");
+            item["ColumnLongBlob"] = Encoding.Default.GetBytes($"ColumnLongBlob:{2}");
+            item["ColumnMediumBlob"] = Encoding.Default.GetBytes($"ColumnMediumBlob:{2}");
+            item["ColumnTinyBlob"] = Encoding.Default.GetBytes($"ColumnTinyBlob:{2}");
+            item["ColumnVarBinary"] = Encoding.Default.GetBytes($"ColumnVarBinary:{2}");
+            item["ColumnDate"] = EpocDate;
+            item["ColumnDateTime2"] = now;
+            item["ColumnTime"] = EpocDate.AddHours(5).AddMinutes(7).AddSeconds(12).TimeOfDay;
+            item["ColumnTimeStamp"] = now;
+            item["ColumnYear"] = Convert.ToInt16(now.Year);
+            //item["ColumnGeometry"] = Encoding.Default.GetBytes($"POLYGON ((0 0; 50 0; 50 50; 0 50; 0 0))");
+            //item["ColumnLineString"] = Encoding.Default.GetBytes($"LINESTRING (-122.36 47.656; -122.343 47.656)");
+            //item["ColumnMultiLineString"] = Encoding.Default.GetBytes($"ColumnMultiLineString:{2}");
+            //item["ColumnMultiPoint"] = Encoding.Default.GetBytes($"ColumnMultiPoint:{2}");
+            //item["ColumnMultiPolygon"] = Encoding.Default.GetBytes($"ColumnMultiPolygon:{2}");
+            //item["ColumnPoint"] = Encoding.Default.GetBytes($"ColumnPoint:{2}");
+            //item["ColumnPolygon"] = Encoding.Default.GetBytes($"ColumnPolygon:{2}");
+            item["ColumnBigint"] = Convert.ToInt64(2);
+            item["ColumnDecimal"] = Convert.ToDecimal(2);
+            item["ColumnDouble"] = Convert.ToDouble(2);
+            item["ColumnFloat"] = Convert.ToSingle(2);
+            item["ColumnInt2"] = 2;
+            item["ColumnMediumInt"] = 2;
+            item["ColumnReal"] = Convert.ToDouble(2);
+            item["ColumnSmallInt"] = Convert.ToInt16(2);
+            item["ColumnTinyInt"] = (SByte)2;
+            item["ColumnChar"] = "C";
+            item["ColumnJson"] = "{\"Field1\": \"Value1\", \"Field2\": \"Value2\"}";
+            item["ColumnNChar"] = "C";
+            item["ColumnNVarChar"] = $"ColumnNVarChar:{2}";
+            item["ColumnLongText"] = $"ColumnLongText:{2}";
+            item["ColumnMediumText"] = $"ColumnMediumText:{2}";
+            item["ColumnText"] = $"ColumText:{2}";
+            item["ColumnTinyText"] = $"ColumnTinyText:{2}";
+            item["ColumnBit"] = (UInt64)1;
+        }
+
         #endregion
 
         #region NonIdentityCompleteTable
 
         /// <summary>
-        /// Creates a list of <see cref="NonIdentityCompleteTable"/> objects.
+        /// 
         /// </summary>
-        /// <param name="count">The number of rows.</param>
-        /// <returns>A list of <see cref="NonIdentityCompleteTable"/> objects.</returns>
+        /// <param name="count"></param>
+        /// <returns></returns>
         public static List<NonIdentityCompleteTable> CreateNonIdentityCompleteTables(int count)
         {
             var tables = new List<NonIdentityCompleteTable>();
@@ -439,9 +561,9 @@ namespace RepoDb.MySql.IntegrationTests
         }
 
         /// <summary>
-        /// Update the properties of <see cref="NonIdentityCompleteTable"/> instance.
+        /// 
         /// </summary>
-        /// <param name="table">The instance to be updated.</param>
+        /// <param name="table"></param>
         public static void UpdateNonIdentityCompleteTableProperties(NonIdentityCompleteTable table)
         {
             var now = DateTime.SpecifyKind(
@@ -491,10 +613,10 @@ namespace RepoDb.MySql.IntegrationTests
         }
 
         /// <summary>
-        /// Creates a list of <see cref="NonIdentityCompleteTable"/> objects represented as dynamics.
+        /// 
         /// </summary>
-        /// <param name="count">The number of rows.</param>
-        /// <returns>A list of <see cref="NonIdentityCompleteTable"/> objects represented as dynamics.</returns>
+        /// <param name="count"></param>
+        /// <returns></returns>
         public static List<dynamic> CreateNonIdentityCompleteTablesAsDynamics(int count)
         {
             var tables = new List<dynamic>();
@@ -553,9 +675,9 @@ namespace RepoDb.MySql.IntegrationTests
         }
 
         /// <summary>
-        /// Update the properties of <see cref="NonIdentityCompleteTable"/> instance represented asy dynamic.
+        /// 
         /// </summary>
-        /// <param name="table">The instance to be updated.</param>
+        /// <param name="table"></param>
         public static void UpdateNonIdentityCompleteTableAsDynamicProperties(dynamic table)
         {
             var now = DateTime.SpecifyKind(
@@ -602,6 +724,120 @@ namespace RepoDb.MySql.IntegrationTests
             table.ColumnText = $"ColumText:{1}";
             table.ColumnTinyText = $"ColumnTinyText:{1}";
             table.ColumnBit = (UInt64)1;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public static List<ExpandoObject> CreateNonIdentityCompleteTablesAsExpandoObjects(int count)
+        {
+            var tables = new List<ExpandoObject>();
+            var now = DateTime.SpecifyKind(
+                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
+                    DateTimeKind.Unspecified);
+            for (var i = 0; i < count; i++)
+            {
+                var item = new ExpandoObject() as IDictionary<string, object>;
+                item["Id"] = (long)(i + 1);
+                item["ColumnVarchar"] = $"ColumnVarChar:{i}";
+                item["ColumnInt"] = i;
+                item["ColumnDecimal2"] = Convert.ToDecimal(i);
+                item["ColumnDateTime"] = EpocDate;
+                item["ColumnBlob"] = Encoding.Default.GetBytes($"ColumnBlob:{i}");
+                item["ColumnBlobAsArray"] = Encoding.Default.GetBytes($"ColumnBlobAsArray:{i}");
+                item["ColumnBinary"] = Encoding.Default.GetBytes($"ColumnBinary:{i}");
+                item["ColumnLongBlob"] = Encoding.Default.GetBytes($"ColumnLongBlob:{i}");
+                item["ColumnMediumBlob"] = Encoding.Default.GetBytes($"ColumnMediumBlob:{i}");
+                item["ColumnTinyBlob"] = Encoding.Default.GetBytes($"ColumnTinyBlob:{i}");
+                item["ColumnVarBinary"] = Encoding.Default.GetBytes($"ColumnVarBinary:{i}");
+                item["ColumnDate"] = EpocDate;
+                item["ColumnDateTime2"] = now;
+                item["ColumnTime"] = EpocDate.AddHours(5).AddMinutes(7).AddSeconds(12).TimeOfDay;
+                item["ColumnTimeStamp"] = now;
+                item["ColumnYear"] = Convert.ToInt16(now.Year);
+                //item["ColumnGeometry"] = Encoding.Default.GetBytes($"POLYGON ((0 0; 50 0; 50 50; 0 50; 0 0))");
+                //item["ColumnLineString"] = Encoding.Default.GetBytes($"LINESTRING (-122.36 47.656; -122.343 47.656)");
+                //item["ColumnMultiLineString"] = Encoding.Default.GetBytes($"ColumnMultiLineString:{i}");
+                //item["ColumnMultiPoint"] = Encoding.Default.GetBytes($"ColumnMultiPoint:{i}");
+                //item["ColumnMultiPolygon"] = Encoding.Default.GetBytes($"ColumnMultiPolygon:{i}");
+                //item["ColumnPoint"] = Encoding.Default.GetBytes($"ColumnPoint:{i}");
+                //item["ColumnPolygon"] = Encoding.Default.GetBytes($"ColumnPolygon:{i}");
+                item["ColumnBigint"] = Convert.ToInt64(i);
+                item["ColumnDecimal"] = Convert.ToDecimal(i);
+                item["ColumnDouble"] = Convert.ToDouble(i);
+                item["ColumnFloat"] = Convert.ToSingle(i);
+                item["ColumnInt2"] = i;
+                item["ColumnMediumInt"] = i;
+                item["ColumnReal"] = Convert.ToDouble(i);
+                item["ColumnSmallInt"] = Convert.ToInt16(i);
+                item["ColumnTinyInt"] = (SByte)i;
+                item["ColumnChar"] = "C";
+                item["ColumnJson"] = "{\"Field1\": \"Value1\", \"Field2\": \"Value2\"}";
+                item["ColumnNChar"] = "C";
+                item["ColumnNVarChar"] = $"ColumnNVarChar:{i}";
+                item["ColumnLongText"] = $"ColumnLongText:{i}";
+                item["ColumnMediumText"] = $"ColumnMediumText:{i}";
+                item["ColumnText"] = $"ColumText:{i}";
+                item["ColumnTinyText"] = $"ColumnTinyText:{i}";
+                item["ColumnBit"] = (UInt64)1;
+                tables.Add((ExpandoObject)item);
+            }
+            return tables;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="table"></param>
+        public static void UpdateNonIdentityCompleteTableAsExpandoObjectProperties(ExpandoObject table)
+        {
+            var now = DateTime.SpecifyKind(
+                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
+                    DateTimeKind.Unspecified);
+            var item = table as IDictionary<string, object>;
+            item["ColumnVarchar"] = $"ColumnVarChar:{2}";
+            item["ColumnInt"] = 2;
+            item["ColumnDecimal2"] = Convert.ToDecimal(2);
+            item["ColumnDateTime"] = EpocDate;
+            item["ColumnBlob"] = Encoding.Default.GetBytes($"ColumnBlob:{2}");
+            item["ColumnBlobAsArray"] = Encoding.Default.GetBytes($"ColumnBlobAsArray:{2}");
+            item["ColumnBinary"] = Encoding.Default.GetBytes($"ColumnBinary:{2}");
+            item["ColumnLongBlob"] = Encoding.Default.GetBytes($"ColumnLongBlob:{2}");
+            item["ColumnMediumBlob"] = Encoding.Default.GetBytes($"ColumnMediumBlob:{2}");
+            item["ColumnTinyBlob"] = Encoding.Default.GetBytes($"ColumnTinyBlob:{2}");
+            item["ColumnVarBinary"] = Encoding.Default.GetBytes($"ColumnVarBinary:{2}");
+            item["ColumnDate"] = EpocDate;
+            item["ColumnDateTime2"] = now;
+            item["ColumnTime"] = EpocDate.AddHours(5).AddMinutes(7).AddSeconds(12).TimeOfDay;
+            item["ColumnTimeStamp"] = now;
+            item["ColumnYear"] = Convert.ToInt16(now.Year);
+            //item["ColumnGeometry"] = Encoding.Default.GetBytes($"POLYGON ((0 0; 50 0; 50 50; 0 50; 0 0))");
+            //item["ColumnLineString"] = Encoding.Default.GetBytes($"LINESTRING (-122.36 47.656; -122.343 47.656)");
+            //item["ColumnMultiLineString"] = Encoding.Default.GetBytes($"ColumnMultiLineString:{2}");
+            //item["ColumnMultiPoint"] = Encoding.Default.GetBytes($"ColumnMultiPoint:{2}");
+            //item["ColumnMultiPolygon"] = Encoding.Default.GetBytes($"ColumnMultiPolygon:{2}");
+            //item["ColumnPoint"] = Encoding.Default.GetBytes($"ColumnPoint:{2}");
+            //item["ColumnPolygon"] = Encoding.Default.GetBytes($"ColumnPolygon:{2}");
+            item["ColumnBigint"] = Convert.ToInt64(2);
+            item["ColumnDecimal"] = Convert.ToDecimal(2);
+            item["ColumnDouble"] = Convert.ToDouble(2);
+            item["ColumnFloat"] = Convert.ToSingle(2);
+            item["ColumnInt2"] = 2;
+            item["ColumnMediumInt"] = 2;
+            item["ColumnReal"] = Convert.ToDouble(2);
+            item["ColumnSmallInt"] = Convert.ToInt16(2);
+            item["ColumnTinyInt"] = (SByte)2;
+            item["ColumnChar"] = "C";
+            item["ColumnJson"] = "{\"Field1\": \"Value1\", \"Field2\": \"Value2\"}";
+            item["ColumnNChar"] = "C";
+            item["ColumnNVarChar"] = $"ColumnNVarChar:{2}";
+            item["ColumnLongText"] = $"ColumnLongText:{2}";
+            item["ColumnMediumText"] = $"ColumnMediumText:{2}";
+            item["ColumnText"] = $"ColumText:{2}";
+            item["ColumnTinyText"] = $"ColumnTinyText:{2}";
+            item["ColumnBit"] = (UInt64)1;
         }
 
         #endregion

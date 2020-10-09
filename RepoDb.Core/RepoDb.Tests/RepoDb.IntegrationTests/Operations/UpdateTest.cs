@@ -5,6 +5,7 @@ using RepoDb.Extensions;
 using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace RepoDb.IntegrationTests.Operations
@@ -1271,6 +1272,14 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, affectedRows);
+
+                // Setup
+                var result = connection.Query<NonIdentityTable>(table.Id).FirstOrDefault();
+
+                // Assert
+                Assert.AreEqual(result.ColumnBit, data.ColumnBit);
+                Assert.AreEqual(result.ColumnInt, data.ColumnInt);
+                Assert.AreEqual(result.ColumnDecimal, data.ColumnDecimal);
             }
         }
 
@@ -1301,6 +1310,79 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, affectedRows);
+
+                // Setup
+                var result = connection.Query<NonIdentityTable>(table.Id).FirstOrDefault();
+
+                // Assert
+                var entity = (dynamic)data;
+                Assert.AreEqual(result.ColumnBit, entity.ColumnBit);
+                Assert.AreEqual(result.ColumnInt, entity.ColumnInt);
+                Assert.AreEqual(result.ColumnDecimal, entity.ColumnDecimal);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateViaExpandoObjectTableName()
+        {
+            // Setup
+            var table = Helper.CreateNonIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert(table);
+
+                // Setup
+                var data = Helper.CreateExpandoObjectNonIdentityTable() as IDictionary<string, object>;
+                data["Id"] = table.Id;
+
+                // Act
+                var affectedRows = connection.Update<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    data);
+
+                // Assert
+                Assert.AreEqual(1, affectedRows);
+
+                // Setup
+                var result = connection.Query<NonIdentityTable>(table.Id).FirstOrDefault();
+
+                // Assert
+                Helper.AssertMembersEquality(result, data);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateViaExpandoObjectTableNameWithFields()
+        {
+            // Setup
+            var table = Helper.CreateNonIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert(table);
+
+                // Setup
+                var data = Helper.CreateExpandoObjectNonIdentityTable() as IDictionary<string, object>;
+                data["Id"] = table.Id;
+
+                // Act
+                var affectedRows = connection.Update<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    data,
+                    fields: Field.From(nameof(NonIdentityTable.Id), nameof(NonIdentityTable.ColumnBit), nameof(NonIdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal)));
+
+                // Assert
+                Assert.AreEqual(1, affectedRows);
+
+                // Setup
+                var result = connection.Query<NonIdentityTable>(table.Id).FirstOrDefault();
+
+                // Assert
+                var entity = (dynamic)data;
+                Assert.AreEqual(result.ColumnBit, entity.ColumnBit);
+                Assert.AreEqual(result.ColumnInt, entity.ColumnInt);
+                Assert.AreEqual(result.ColumnDecimal, entity.ColumnDecimal);
             }
         }
 
@@ -1724,6 +1806,14 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, affectedRows);
+
+                // Setup
+                var result = connection.Query<NonIdentityTable>(table.Id).FirstOrDefault();
+
+                // Assert
+                Assert.AreEqual(result.ColumnBit, data.ColumnBit);
+                Assert.AreEqual(result.ColumnInt, data.ColumnInt);
+                Assert.AreEqual(result.ColumnDecimal, data.ColumnDecimal);
             }
         }
 
@@ -1754,6 +1844,79 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, affectedRows);
+
+                // Setup
+                var result = connection.Query<NonIdentityTable>(table.Id).FirstOrDefault();
+
+                // Assert
+                var entity = (dynamic)data;
+                Assert.AreEqual(result.ColumnBit, data.ColumnBit);
+                Assert.AreEqual(result.ColumnInt, data.ColumnInt);
+                Assert.AreEqual(result.ColumnDecimal, data.ColumnDecimal);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateAsyncViaExpandoObjectTableName()
+        {
+            // Setup
+            var table = Helper.CreateNonIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert(table);
+
+                // Setup
+                var data = Helper.CreateExpandoObjectNonIdentityTable() as IDictionary<string, object>;
+                data["Id"] = table.Id;
+
+                // Act
+                var affectedRows = connection.UpdateAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    data).Result;
+
+                // Assert
+                Assert.AreEqual(1, affectedRows);
+
+                // Setup
+                var result = connection.Query<NonIdentityTable>(table.Id).FirstOrDefault();
+
+                // Assert
+                Helper.AssertMembersEquality(result, data);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateAsyncViaExpandoObjectTableNameWithFields()
+        {
+            // Setup
+            var table = Helper.CreateNonIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert(table);
+
+                // Setup
+                var data = Helper.CreateExpandoObjectNonIdentityTable() as IDictionary<string, object>;
+                data["Id"] = table.Id;
+
+                // Act
+                var affectedRows = connection.UpdateAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    data,
+                    fields: Field.From(nameof(NonIdentityTable.Id), nameof(NonIdentityTable.ColumnBit), nameof(NonIdentityTable.ColumnInt), nameof(IdentityTable.ColumnDecimal))).Result;
+
+                // Assert
+                Assert.AreEqual(1, affectedRows);
+
+                // Setup
+                var result = connection.Query<NonIdentityTable>(table.Id).FirstOrDefault();
+
+                // Assert
+                var entity = (dynamic)data;
+                Assert.AreEqual(result.ColumnBit, entity.ColumnBit);
+                Assert.AreEqual(result.ColumnInt, entity.ColumnInt);
+                Assert.AreEqual(result.ColumnDecimal, entity.ColumnDecimal);
             }
         }
 

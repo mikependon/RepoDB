@@ -662,29 +662,61 @@ namespace RepoDb
             // Return the result
             if (setting.IsUseUpsert == false)
             {
-                return MergeInternalBase<TEntity, TResult>(connection: connection,
-                    tableName: tableName,
-                    entity: entity,
-                    qualifiers: qualifiers,
-                    fields: GetQualifiedFields<TEntity>(fields, entity),
-                    hints: hints,
-                    commandTimeout: commandTimeout,
-                    transaction: transaction,
-                    trace: trace,
-                    statementBuilder: statementBuilder);
+                if (entity?.GetType()?.IsDictionaryStringObject() == true)
+                {
+                    return MergeInternalBase<IDictionary<string, object>, TResult>(connection: connection,
+                        tableName: tableName,
+                        entity: (IDictionary<string, object>)entity,
+                        qualifiers: qualifiers,
+                        fields: GetQualifiedFields<TEntity>(fields, entity),
+                        hints: hints,
+                        commandTimeout: commandTimeout,
+                        transaction: transaction,
+                        trace: trace,
+                        statementBuilder: statementBuilder);
+                }
+                else
+                {
+                    return MergeInternalBase<TEntity, TResult>(connection: connection,
+                        tableName: tableName,
+                        entity: entity,
+                        qualifiers: qualifiers,
+                        fields: GetQualifiedFields<TEntity>(fields, entity),
+                        hints: hints,
+                        commandTimeout: commandTimeout,
+                        transaction: transaction,
+                        trace: trace,
+                        statementBuilder: statementBuilder);
+                }
             }
             else
             {
-                return UpsertInternalBase<TEntity, TResult>(connection: connection,
-                    tableName: tableName,
-                    entity: entity,
-                    qualifiers: qualifiers,
-                    fields: GetQualifiedFields<TEntity>(fields, entity),
-                    hints: hints,
-                    commandTimeout: commandTimeout,
-                    transaction: transaction,
-                    trace: trace,
-                    statementBuilder: statementBuilder);
+                if (entity?.GetType()?.IsDictionaryStringObject() == true)
+                {
+                    return UpsertInternalBase<IDictionary<string, object>, TResult>(connection: connection,
+                        tableName: tableName,
+                        entity: (IDictionary<string, object>)entity,
+                        qualifiers: qualifiers,
+                        fields: GetQualifiedFields<TEntity>(fields, entity),
+                        hints: hints,
+                        commandTimeout: commandTimeout,
+                        transaction: transaction,
+                        trace: trace,
+                        statementBuilder: statementBuilder);
+                }
+                else
+                {
+                    return UpsertInternalBase<TEntity, TResult>(connection: connection,
+                        tableName: tableName,
+                        entity: entity,
+                        qualifiers: qualifiers,
+                        fields: GetQualifiedFields<TEntity>(fields, entity),
+                        hints: hints,
+                        commandTimeout: commandTimeout,
+                        transaction: transaction,
+                        trace: trace,
+                        statementBuilder: statementBuilder);
+                }
             }
         }
 
@@ -1384,31 +1416,65 @@ namespace RepoDb
             // Return the result
             if (setting.IsUseUpsert == false)
             {
-                return await MergeAsyncInternalBase<TEntity, TResult>(connection: connection,
-                    tableName: tableName,
-                    entity: entity,
-                    qualifiers: qualifiers,
-                    fields: GetQualifiedFields<TEntity>(fields, entity),
-                    hints: hints,
-                    commandTimeout: commandTimeout,
-                    transaction: transaction,
-                    trace: trace,
-                    statementBuilder: statementBuilder,
-                    cancellationToken: cancellationToken);
+                if (entity?.GetType()?.IsDictionaryStringObject() == true)
+                {
+                    return await MergeAsyncInternalBase<IDictionary<string, object>, TResult>(connection: connection,
+                        tableName: tableName,
+                        entity: (IDictionary<string, object>)entity,
+                        qualifiers: qualifiers,
+                        fields: GetQualifiedFields<TEntity>(fields, entity),
+                        hints: hints,
+                        commandTimeout: commandTimeout,
+                        transaction: transaction,
+                        trace: trace,
+                        statementBuilder: statementBuilder,
+                        cancellationToken: cancellationToken);
+                }
+                else
+                {
+                    return await MergeAsyncInternalBase<TEntity, TResult>(connection: connection,
+                        tableName: tableName,
+                        entity: entity,
+                        qualifiers: qualifiers,
+                        fields: GetQualifiedFields<TEntity>(fields, entity),
+                        hints: hints,
+                        commandTimeout: commandTimeout,
+                        transaction: transaction,
+                        trace: trace,
+                        statementBuilder: statementBuilder,
+                        cancellationToken: cancellationToken);
+                }
             }
             else
             {
-                return await UpsertAsyncInternalBase<TEntity, TResult>(connection: connection,
-                    tableName: tableName,
-                    entity: entity,
-                    qualifiers: qualifiers,
-                    fields: GetQualifiedFields<TEntity>(fields, entity),
-                    hints: hints,
-                    commandTimeout: commandTimeout,
-                    transaction: transaction,
-                    trace: trace,
-                    statementBuilder: statementBuilder,
-                    cancellationToken: cancellationToken);
+                if (entity?.GetType()?.IsDictionaryStringObject() == true)
+                {
+                    return await UpsertAsyncInternalBase<IDictionary<string, object>, TResult>(connection: connection,
+                        tableName: tableName,
+                        entity: (IDictionary<string, object>)entity,
+                        qualifiers: qualifiers,
+                        fields: GetQualifiedFields<TEntity>(fields, entity),
+                        hints: hints,
+                        commandTimeout: commandTimeout,
+                        transaction: transaction,
+                        trace: trace,
+                        statementBuilder: statementBuilder,
+                        cancellationToken: cancellationToken);
+                }
+                else
+                {
+                    return await UpsertAsyncInternalBase<TEntity, TResult>(connection: connection,
+                        tableName: tableName,
+                        entity: entity,
+                        qualifiers: qualifiers,
+                        fields: GetQualifiedFields<TEntity>(fields, entity),
+                        hints: hints,
+                        commandTimeout: commandTimeout,
+                        transaction: transaction,
+                        trace: trace,
+                        statementBuilder: statementBuilder,
+                        cancellationToken: cancellationToken);
+                }
             }
         }
 
@@ -1917,7 +1983,7 @@ namespace RepoDb
             {
                 var key = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction,
                     entity?.GetType() ?? typeof(TEntity));
-                qualifiers = key.AsField().AsEnumerable();
+                qualifiers = key.AsEnumerable();
             }
 
             // Get the context
@@ -2016,21 +2082,12 @@ namespace RepoDb
         {
             // Variables needed
             var type = entity?.GetType() ?? typeof(TEntity);
+            var isDictionaryType = type.IsDictionaryStringObject();
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var primary = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
             var properties = (IEnumerable<ClassProperty>)null;
             var primaryKey = (ClassProperty)null;
             var sessionId = Guid.Empty;
-
-            // Get the properties
-            if (type.IsGenericType == true)
-            {
-                properties = type.GetClassProperties();
-            }
-            else
-            {
-                properties = PropertyCache.Get(type);
-            }
 
             // Check the qualifiers
             if (qualifiers?.Any() != true)
@@ -2045,9 +2102,22 @@ namespace RepoDb
                 qualifiers = primary.AsField().AsEnumerable();
             }
 
-            // Set the primary key
-            primaryKey = properties?.FirstOrDefault(p =>
-                string.Equals(primary?.Name, p.GetMappedName(), StringComparison.OrdinalIgnoreCase));
+            // Get the properties
+            if (isDictionaryType == false)
+            {
+                if (type.IsGenericType == true)
+                {
+                    properties = type.GetClassProperties();
+                }
+                else
+                {
+                    properties = PropertyCache.Get(type);
+                }
+
+                // Set the primary key
+                primaryKey = properties?.FirstOrDefault(p =>
+                    string.Equals(primary?.Name, p.GetMappedName(), StringComparison.OrdinalIgnoreCase));
+            }
 
             // Before Execution
             if (trace != null)
@@ -2067,9 +2137,18 @@ namespace RepoDb
             }
 
             // Expression
-            var where = CreateQueryGroupForUpsert(entity,
-                properties,
-                qualifiers);
+            var where = (QueryGroup)null;
+            if (isDictionaryType)
+            {
+                where = CreateQueryGroupForUpsert((IDictionary<string, object>)entity,
+                    qualifiers);
+            }
+            else
+            {
+                where = CreateQueryGroupForUpsert(entity,
+                    properties,
+                    qualifiers);
+            }
 
             // Validate
             if (where == null)
@@ -2107,10 +2186,20 @@ namespace RepoDb
                 // Check if there is result
                 if (updateResult > 0)
                 {
-                    if (primaryKey != null)
+                    if (isDictionaryType == false)
                     {
-                        // Set the result
-                        result = Converter.ToType<TResult>(primaryKey.PropertyInfo.GetValue(entity));
+                        if (primaryKey != null)
+                        {
+                            result = Converter.ToType<TResult>(primaryKey.PropertyInfo.GetValue(entity));
+                        }
+                    }
+                    else
+                    {
+                        var dictionary = (IDictionary<string, object>)entity;
+                        if (primary != null && dictionary.ContainsKey(primary.Name))
+                        {
+                            result = Converter.ToType<TResult>(dictionary[primary.Name]);
+                        }
                     }
                 }
             }
@@ -2180,7 +2269,7 @@ namespace RepoDb
             {
                 var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction,
                     entity?.GetType() ?? typeof(TEntity), cancellationToken);
-                qualifiers = key.AsField().AsEnumerable();
+                qualifiers = key.AsEnumerable();
             }
 
             // Get the context
@@ -2282,21 +2371,12 @@ namespace RepoDb
         {
             // Variables needed
             var type = entity?.GetType() ?? typeof(TEntity);
+            var isDictionaryType = type.IsDictionaryStringObject();
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
             var primary = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
             var properties = (IEnumerable<ClassProperty>)null;
             var primaryKey = (ClassProperty)null;
             var sessionId = Guid.Empty;
-
-            // Get the properties
-            if (type.IsGenericType == true)
-            {
-                properties = type.GetClassProperties();
-            }
-            else
-            {
-                properties = PropertyCache.Get(type);
-            }
 
             // Check the qualifiers
             if (qualifiers?.Any() != true)
@@ -2311,9 +2391,22 @@ namespace RepoDb
                 qualifiers = primary.AsField().AsEnumerable();
             }
 
-            // Set the primary key
-            primaryKey = properties?.FirstOrDefault(p =>
-                string.Equals(primary?.Name, p.GetMappedName(), StringComparison.OrdinalIgnoreCase));
+            // Get the properties
+            if (isDictionaryType == false)
+            {
+                if (type.IsGenericType == true)
+                {
+                    properties = type.GetClassProperties();
+                }
+                else
+                {
+                    properties = PropertyCache.Get(type);
+                }
+
+                // Set the primary key
+                primaryKey = properties?.FirstOrDefault(p =>
+                    string.Equals(primary?.Name, p.GetMappedName(), StringComparison.OrdinalIgnoreCase));
+            }
 
             // Before Execution
             if (trace != null)
@@ -2333,9 +2426,18 @@ namespace RepoDb
             }
 
             // Expression
-            var where = CreateQueryGroupForUpsert(entity,
-                properties,
-                qualifiers);
+            var where = (QueryGroup)null;
+            if (isDictionaryType)
+            {
+                where = CreateQueryGroupForUpsert((IDictionary<string, object>)entity,
+                    qualifiers);
+            }
+            else
+            {
+                where = CreateQueryGroupForUpsert(entity,
+                    properties,
+                    qualifiers);
+            }
 
             // Validate
             if (where == null)
@@ -2375,10 +2477,20 @@ namespace RepoDb
                 // Check if there is result
                 if (updateResult > 0)
                 {
-                    if (primaryKey != null)
+                    if (isDictionaryType == false)
                     {
-                        // Set the result
-                        result = Converter.ToType<TResult>(primaryKey.PropertyInfo.GetValue(entity));
+                        if (primaryKey != null)
+                        {
+                            result = Converter.ToType<TResult>(primaryKey.PropertyInfo.GetValue(entity));
+                        }
+                    }
+                    else
+                    {
+                        var dictionary = (IDictionary<string, object>)entity;
+                        if (primary != null && dictionary.ContainsKey(primary.Name))
+                        {
+                            result = Converter.ToType<TResult>(dictionary[primary.Name]);
+                        }
                     }
                 }
             }

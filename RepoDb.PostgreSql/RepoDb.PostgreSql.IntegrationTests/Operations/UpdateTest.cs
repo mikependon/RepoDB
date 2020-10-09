@@ -2,6 +2,7 @@
 using Npgsql;
 using RepoDb.PostgreSql.IntegrationTests.Models;
 using RepoDb.PostgreSql.IntegrationTests.Setup;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace RepoDb.PostgreSql.IntegrationTests.Operations
@@ -361,6 +362,33 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
+        public void TestPostgreSqlConnectionUpdateViaTableNameViaExpandoObject()
+        {
+            // Setup
+            var table = Database.CreateCompleteTables(1).First();
+
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var entity = Helper.CreateCompleteTablesAsExpandoObjects(1).First();
+                ((IDictionary<string, object>)entity)["Id"] = table.Id;
+
+                // Act
+                var result = connection.Update(ClassMappedNameCache.Get<CompleteTable>(),
+                    entity);
+
+                // Assert
+                Assert.AreEqual(1, result);
+
+                // Act
+                var queryResult = connection.Query<CompleteTable>(table.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(queryResult, entity);
+            }
+        }
+
+        [TestMethod]
         public void TestPostgreSqlConnectionUpdateViaTableNameViaDataEntity()
         {
             // Setup
@@ -372,7 +400,8 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = DbConnectionExtension.Update(connection, ClassMappedNameCache.Get<CompleteTable>(), table);
+                var result = connection.Update(ClassMappedNameCache.Get<CompleteTable>(),
+                    table);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -397,7 +426,9 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = DbConnectionExtension.Update(connection, ClassMappedNameCache.Get<CompleteTable>(), table, new { table.Id });
+                var result = connection.Update(ClassMappedNameCache.Get<CompleteTable>(),
+                    table,
+                    new { table.Id });
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -422,7 +453,9 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = DbConnectionExtension.Update(connection, ClassMappedNameCache.Get<CompleteTable>(), table, new QueryField("Id", table.Id));
+                var result = connection.Update(ClassMappedNameCache.Get<CompleteTable>(),
+                    table,
+                    new QueryField("Id", table.Id));
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -452,7 +485,9 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = DbConnectionExtension.Update(connection, ClassMappedNameCache.Get<CompleteTable>(), table, queryFields);
+                var result = connection.Update(ClassMappedNameCache.Get<CompleteTable>(),
+                    table,
+                    queryFields);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -483,7 +518,9 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = DbConnectionExtension.Update(connection, ClassMappedNameCache.Get<CompleteTable>(), table, queryGroup);
+                var result = connection.Update(ClassMappedNameCache.Get<CompleteTable>(),
+                    table,
+                    queryGroup);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -499,6 +536,33 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #endregion
 
         #region Async
+
+        [TestMethod]
+        public void TestPostgreSqlConnectionUpdateAsyncViaTableNameViaExpandoObject()
+        {
+            // Setup
+            var table = Database.CreateCompleteTables(1).First();
+
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var entity = Helper.CreateCompleteTablesAsExpandoObjects(1).First();
+                ((IDictionary<string, object>)entity)["Id"] = table.Id;
+
+                // Act
+                var result = connection.UpdateAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    entity).Result;
+
+                // Assert
+                Assert.AreEqual(1, result);
+
+                // Act
+                var queryResult = connection.Query<CompleteTable>(table.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(queryResult, entity);
+            }
+        }
 
         [TestMethod]
         public void TestPostgreSqlConnectionUpdateAsyncViaTableNameViaDataEntity()

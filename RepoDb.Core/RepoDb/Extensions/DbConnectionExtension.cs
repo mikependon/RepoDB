@@ -1676,7 +1676,7 @@ namespace RepoDb
         /// <param name="connection"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        internal static ClassProperty GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(IDbConnection connection,
+        internal static Field GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(IDbConnection connection,
             IDbTransaction transaction)
             where TEntity : class =>
             GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
@@ -1689,7 +1689,7 @@ namespace RepoDb
         /// <param name="tableName"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        internal static ClassProperty GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(IDbConnection connection,
+        internal static Field GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(IDbConnection connection,
             string tableName,
             IDbTransaction transaction)
             where TEntity : class =>
@@ -1701,20 +1701,20 @@ namespace RepoDb
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="transaction"></param>
-        /// <param name="entityType"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        internal static ClassProperty GetAndGuardPrimaryKeyOrIdentityKey(IDbConnection connection,
+        internal static Field GetAndGuardPrimaryKeyOrIdentityKey(IDbConnection connection,
             string tableName,
             IDbTransaction transaction,
-            Type entityType)
+            Type entity)
         {
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var property = GetAndGuardPrimaryKeyOrIdentityKey(entityType, dbFields);
-            if (property == null)
+            var key = GetAndGuardPrimaryKeyOrIdentityKey(entity, dbFields);
+            if (key == null)
             {
-                property = GetPrimaryOrIdentityKey(entityType);
+                key = GetPrimaryOrIdentityKey(entity);
             }
-            return GetAndGuardPrimaryKeyOrIdentityKey(tableName, property);
+            return GetAndGuardPrimaryKeyOrIdentityKey(tableName, key);
         }
 
         /// <summary>
@@ -1725,7 +1725,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        internal static Task<ClassProperty> GetAndGuardPrimaryKeyOrIdentityKeyAsync<TEntity>(IDbConnection connection,
+        internal static Task<Field> GetAndGuardPrimaryKeyOrIdentityKeyAsync<TEntity>(IDbConnection connection,
             IDbTransaction transaction,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
@@ -1740,7 +1740,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        internal static Task<ClassProperty> GetAndGuardPrimaryKeyOrIdentityKeyAsync<TEntity>(IDbConnection connection,
+        internal static Task<Field> GetAndGuardPrimaryKeyOrIdentityKeyAsync<TEntity>(IDbConnection connection,
             string tableName,
             IDbTransaction transaction,
             CancellationToken cancellationToken = default)
@@ -1756,7 +1756,7 @@ namespace RepoDb
         /// <param name="entityType"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        internal static async Task<ClassProperty> GetAndGuardPrimaryKeyOrIdentityKeyAsync(IDbConnection connection,
+        internal static async Task<Field> GetAndGuardPrimaryKeyOrIdentityKeyAsync(IDbConnection connection,
             string tableName,
             IDbTransaction transaction,
             Type entityType,
@@ -1775,16 +1775,16 @@ namespace RepoDb
         /// 
         /// </summary>
         /// <param name="tableName"></param>
-        /// <param name="property"></param>
+        /// <param name="field"></param>
         /// <returns></returns>
-        internal static ClassProperty GetAndGuardPrimaryKeyOrIdentityKey(string tableName,
-            ClassProperty property)
+        internal static Field GetAndGuardPrimaryKeyOrIdentityKey(string tableName,
+            Field field)
         {
-            if (property == null)
+            if (field == null)
             {
                 throw new KeyFieldNotFoundException($"No primary key and identity key found at the table '{tableName}'.");
             }
-            return property;
+            return field;
         }
 
         /// <summary>
@@ -1793,7 +1793,7 @@ namespace RepoDb
         /// <param name="entityType"></param>
         /// <param name="dbFields"></param>
         /// <returns></returns>
-        internal static ClassProperty GetAndGuardPrimaryKeyOrIdentityKey(Type entityType,
+        internal static Field GetAndGuardPrimaryKeyOrIdentityKey(Type entityType,
             IEnumerable<DbField> dbFields)
         {
             if (entityType == null)
@@ -1802,36 +1802,60 @@ namespace RepoDb
             }
 
             // Properties
-            var properties = PropertyCache.Get(entityType) ?? entityType?.GetClassProperties();
-            var key = (ClassProperty)null;
+            var key = (Field)null;
 
-            // Primary
-            if (key == null)
+            if (entityType.IsDictionaryStringObject())
             {
-                var dbField = dbFields?.FirstOrDefault(df => df.IsPrimary == true);
-                key = properties?.FirstOrDefault(p =>
-                     string.Equals(p.GetMappedName(), dbField?.Name, StringComparison.OrdinalIgnoreCase)) ??
-                     PrimaryCache.Get(entityType);
-            }
+                // Primary/Identity
+                var dbField = dbFields?.FirstOrDefault(df => df.IsPrimary == true) ??
+                    dbFields?.FirstOrDefault(df => df.IsPrimary == true) ??
+                    dbFields?.FirstOrDefault(df => df.Name == "Id");
 
-            // Identity
-            if (key == null)
-            {
-                var dbField = dbFields?.FirstOrDefault(df => df.IsIdentity == true);
-                key = properties?.FirstOrDefault(p =>
-                     string.Equals(p.GetMappedName(), dbField?.Name, StringComparison.OrdinalIgnoreCase)) ??
-                     PrimaryCache.Get(entityType);
-            }
+                // Set the key
+                key = dbField?.AsField();
 
-            // Return
-            if (key != null)
-            {
-                return key;
+                // Return
+                if (key == null)
+                {
+                    throw new KeyFieldNotFoundException($"No primary key and identify found at the target table and also to the given '{entityType.FullName}' object.");
+                }
             }
             else
             {
-                throw new KeyFieldNotFoundException($"No primary key and identify found at type '{entityType.FullName}'.");
+                // Properties
+                var properties = PropertyCache.Get(entityType) ?? entityType?.GetClassProperties();
+                var property = (ClassProperty)null;
+
+                // Primary
+                if (property == null)
+                {
+                    var dbField = dbFields?.FirstOrDefault(df => df.IsPrimary == true);
+                    property = properties?.FirstOrDefault(p =>
+                         string.Equals(p.GetMappedName(), dbField?.Name, StringComparison.OrdinalIgnoreCase)) ??
+                         PrimaryCache.Get(entityType);
+                }
+
+                // Identity
+                if (property == null)
+                {
+                    var dbField = dbFields?.FirstOrDefault(df => df.IsIdentity == true);
+                    property = properties?.FirstOrDefault(p =>
+                         string.Equals(p.GetMappedName(), dbField?.Name, StringComparison.OrdinalIgnoreCase)) ??
+                         PrimaryCache.Get(entityType);
+                }
+
+                // Set the key
+                key = property?.AsField();
+
+                // Return
+                if (key == null)
+                {
+                    throw new KeyFieldNotFoundException($"No primary key and identify found at type '{entityType.FullName}'.");
+                }
             }
+
+            // Return
+            return key;
         }
 
         /// <summary>
@@ -1912,8 +1936,8 @@ namespace RepoDb
                 var whatType = what?.GetType();
                 if (whatType.IsClassType() || whatType.IsAnonymousType())
                 {
-                    var classProperty = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction, whatType);
-                    queryGroup = WhatToQueryGroup<T>(classProperty, what);
+                    var field = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction, whatType);
+                    queryGroup = WhatToQueryGroup<T>(field, what);
                 }
                 else
                 {
@@ -1950,8 +1974,8 @@ namespace RepoDb
                 var whatType = what?.GetType();
                 if (whatType.IsClassType() || whatType.IsAnonymousType())
                 {
-                    var classProperty = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction, whatType, cancellationToken);
-                    queryGroup = WhatToQueryGroup<T>(classProperty, what);
+                    var field = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction, whatType, cancellationToken);
+                    queryGroup = WhatToQueryGroup<T>(field, what);
                 }
                 else
                 {
@@ -2059,7 +2083,7 @@ namespace RepoDb
                 .FirstOrDefault(p => string.Equals(p.GetMappedName(), dbField.Name, StringComparison.OrdinalIgnoreCase));
             if (property != null)
             {
-                return WhatToQueryGroup<T>(property, what);
+                return WhatToQueryGroup<T>(property.AsField(), what);
             }
             else
             {
@@ -2071,24 +2095,25 @@ namespace RepoDb
         /// 
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="property"></param>
+        /// <param name="field"></param>
         /// <param name="what"></param>
         /// <returns></returns>
-        internal static QueryGroup WhatToQueryGroup<T>(ClassProperty property,
+        internal static QueryGroup WhatToQueryGroup<T>(Field field,
             T what)
         {
             var type = typeof(T);
-            if (property == null)
+            if (field == null)
             {
                 throw new KeyFieldNotFoundException($"No primary key and identity key found at the type '{type.FullName}'.");
             }
             if (type.IsClassType())
             {
-                return new QueryGroup(property.PropertyInfo.AsQueryField(what));
+                var classProperty = PropertyCache.Get(typeof(T), field);
+                return new QueryGroup(classProperty?.PropertyInfo.AsQueryField(what));
             }
             else
             {
-                return new QueryGroup(new QueryField(property.AsField(), what));
+                return new QueryGroup(new QueryField(field, what));
             }
         }
 
@@ -2206,6 +2231,38 @@ namespace RepoDb
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="field"></param>
+        /// <param name="dictionary"></param>
+        /// <returns></returns>
+        internal static QueryGroup ToQueryGroup(Field field,
+            IDictionary<string, object> dictionary)
+        {
+            if (!dictionary.ContainsKey(field.Name))
+            {
+                throw new MissingFieldsException($"The field '{field.Name}' is not found from the given dictionary object.");
+            }
+            return ToQueryGroup(new QueryField(field, dictionary[field.Name]));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="field"></param>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        internal static QueryGroup ToQueryGroup<TEntity>(Field field,
+            TEntity entity)
+            where TEntity : class
+        {
+            var type = entity?.GetType() ?? typeof(TEntity);
+            return type.IsDictionaryStringObject() ? ToQueryGroup(field, (IDictionary<string, object>)entity) :
+                ToQueryGroup(PropertyCache.Get<TEntity>(field) ?? PropertyCache.Get(type, field), entity);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="property"></param>
         /// <param name="entity"></param>
@@ -2250,8 +2307,8 @@ namespace RepoDb
         /// </summary>
         /// <param name="entityType"></param>
         /// <returns></returns>
-        internal static ClassProperty GetPrimaryOrIdentityKey(Type entityType) =>
-            entityType != null ? (PrimaryCache.Get(entityType) ?? IdentityCache.Get(entityType)) : null;
+        internal static Field GetPrimaryOrIdentityKey(Type entityType) =>
+            entityType != null ? (PrimaryCache.Get(entityType) ?? IdentityCache.Get(entityType))?.AsField() : null;
 
         /// <summary>
         /// 
@@ -2326,6 +2383,26 @@ namespace RepoDb
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="dictionary"></param>
+        /// <param name="qualifiers"></param>
+        /// <returns></returns>
+        internal static QueryGroup CreateQueryGroupForUpsert(IDictionary<string, object> dictionary,
+            IEnumerable<Field> qualifiers = null)
+        {
+            var queryFields = new List<QueryField>();
+            foreach (var field in qualifiers)
+            {
+                if (dictionary.ContainsKey(field.Name))
+                {
+                    queryFields.Add(new QueryField(field, dictionary[field.Name]));
+                }
+            }
+            return new QueryGroup(queryFields);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <typeparam name="TResult"></typeparam>
         /// <param name="entities"></param>
@@ -2375,7 +2452,8 @@ namespace RepoDb
         internal static IEnumerable<Field> GetQualifiedFields<TEntity>(IEnumerable<Field> fields,
             TEntity entity)
             where TEntity : class =>
-            fields ?? (typeof(TEntity).IsClassType() == false ? Field.Parse(entity) : FieldCache.Get<TEntity>());
+            //fields ?? (typeof(TEntity).IsClassType() == false ? Field.Parse(entity) : FieldCache.Get<TEntity>());
+            fields ?? GetQualifiedFields(entity);
 
         /// <summary>
         /// 

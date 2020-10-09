@@ -361,6 +361,55 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
             }
         }
 
+        [TestMethod]
+        public void TestSQLiteConnectionMergeViaTableNameAsExpandoObjectForIdentityForEmptyTable()
+        {
+            using (var connection = new SQLiteConnection(Database.ConnectionStringMDS))
+            {
+                // Setup
+                Database.CreateSdsCompleteTables(1, connection).First();
+                var table = Helper.CreateSdsCompleteTablesAsExpandoObjects(1).First();
+
+                // Act
+                var result = connection.Merge(ClassMappedNameCache.Get<SdsCompleteTable>(),
+                    table);
+
+                // Assert
+                Assert.AreEqual(1, connection.CountAll<SdsCompleteTable>());
+                Assert.IsTrue((long)result > 0);
+
+                // Act
+                var queryResult = connection.Query<SdsCompleteTable>(result);
+
+                // Assert
+                Helper.AssertMembersEquality(queryResult.First(), table);
+            }
+        }
+
+        [TestMethod]
+        public void TestSQLiteConnectionMergeViaTableNameAsExpandoObjectForIdentityForNonEmptyTable()
+        {
+            using (var connection = new SQLiteConnection(Database.ConnectionStringMDS))
+            {
+                // Setup
+                Database.CreateSdsCompleteTables(1, connection).First();
+                var table = Helper.CreateSdsCompleteTablesAsExpandoObjects(1).First();
+
+                // Act
+                var result = connection.Merge(ClassMappedNameCache.Get<SdsCompleteTable>(),
+                    table);
+
+                // Assert
+                Assert.AreEqual(1, connection.CountAll<SdsCompleteTable>());
+
+                // Act
+                var queryResult = connection.Query<SdsCompleteTable>(result);
+
+                // Assert
+                Helper.AssertMembersEquality(queryResult.First(), table);
+            }
+        }
+
         #endregion
 
         #region Async
@@ -522,6 +571,54 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, queryResult.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestSQLiteConnectionMergeAsyncViaTableNameAsExpandoObjectForIdentityForEmptyTable()
+        {
+            using (var connection = new SQLiteConnection(Database.ConnectionStringMDS))
+            {
+                // Setup
+                Database.CreateSdsCompleteTables(1, connection).First();
+                var table = Helper.CreateSdsCompleteTablesAsExpandoObjects(1).First();
+
+                // Act
+                var result = connection.MergeAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
+                    table).Result;
+
+                // Assert
+                Assert.AreEqual(1, connection.CountAll<SdsCompleteTable>());
+
+                // Act
+                var queryResult = connection.Query<SdsCompleteTable>(result);
+
+                // Assert
+                Helper.AssertMembersEquality(queryResult.First(), table);
+            }
+        }
+
+        [TestMethod]
+        public void TestSQLiteConnectionMergeAsyncViaTableNameAsExpandoObjectForIdentityForNonEmptyTable()
+        {
+            using (var connection = new SQLiteConnection(Database.ConnectionStringMDS))
+            {
+                // Setup
+                Database.CreateSdsCompleteTables(1, connection).First();
+                var table = Helper.CreateSdsCompleteTablesAsExpandoObjects(1).First();
+
+                // Act
+                var result = connection.MergeAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
+                    table).Result;
+
+                // Assert
+                Assert.AreEqual(1, connection.CountAll<SdsCompleteTable>());
+
+                // Act
+                var queryResult = connection.Query<SdsCompleteTable>(result);
+
+                // Assert
+                Helper.AssertMembersEquality(queryResult.First(), table);
             }
         }
 

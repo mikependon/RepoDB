@@ -111,6 +111,31 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
             }
         }
 
+        [TestMethod]
+        public void TestSqLiteConnectionUpdateAllAsExpandoObjectViaTableName()
+        {
+            using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
+            {
+                // Setup
+                Database.CreateSdsCompleteTables(10, connection);
+                var tables = Helper.CreateSdsCompleteTablesAsExpandoObjects(10);
+
+                // Act
+                var result = connection.UpdateAll(ClassMappedNameCache.Get<SdsCompleteTable>(),
+                    tables);
+
+                // Assert
+                Assert.AreEqual(10, result);
+
+                // Act
+                var queryResult = connection.QueryAll<SdsCompleteTable>();
+
+                // Assert
+                tables.AsList().ForEach(table =>
+                    Helper.AssertMembersEquality(queryResult.First(e => e.Id == ((dynamic)table).Id), table));
+            }
+        }
+
         #endregion
 
         #region Async
@@ -136,6 +161,31 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
                 // Assert
                 tables.AsList().ForEach(table =>
                     Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqLiteConnectionUpdateAllAsyncAsExpandoObjectViaTableName()
+        {
+            using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
+            {
+                // Setup
+                Database.CreateSdsCompleteTables(10, connection);
+                var tables = Helper.CreateSdsCompleteTablesAsExpandoObjects(10);
+
+                // Act
+                var result = connection.UpdateAllAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
+                    tables).Result;
+
+                // Assert
+                Assert.AreEqual(10, result);
+
+                // Act
+                var queryResult = connection.QueryAll<SdsCompleteTable>();
+
+                // Assert
+                tables.AsList().ForEach(table =>
+                    Helper.AssertMembersEquality(queryResult.First(e => e.Id == ((dynamic)table).Id), table));
             }
         }
 

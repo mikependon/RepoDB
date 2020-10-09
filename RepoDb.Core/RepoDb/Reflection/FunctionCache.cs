@@ -201,8 +201,14 @@ namespace RepoDb
                 var key = GetKey(cacheKey, inputFields, outputFields);
                 if (cache.TryGetValue(key, out func) == false)
                 {
-                    func = FunctionFactory.CompileDataEntityDbParameterSetter<TEntity>(inputFields, outputFields, dbSetting);
-                    cache.TryAdd(key, func);
+                    if (typeof(TEntity).IsDictionaryStringObject())
+                    {
+                        func = FunctionFactory.CompileDictionaryStringObjectDbParameterSetter<TEntity>(inputFields, dbSetting);
+                    }
+                    else
+                    {
+                        func = FunctionFactory.CompileDataEntityDbParameterSetter<TEntity>(inputFields, outputFields, dbSetting);
+                    }
                 }
                 return func;
             }
@@ -291,7 +297,14 @@ namespace RepoDb
                 var key = GetKey(cacheKey, inputFields, outputFields, batchSize);
                 if (cache.TryGetValue(key, out func) == false)
                 {
-                    func = FunctionFactory.CompileDataEntityListDbParameterSetter<TEntity>(inputFields, outputFields, batchSize, dbSetting);
+                    if (typeof(TEntity).IsDictionaryStringObject())
+                    {
+                        func = FunctionFactory.CompileDictionaryStringObjectListDbParameterSetter<TEntity>(inputFields, batchSize, dbSetting);
+                    }
+                    else
+                    {
+                        func = FunctionFactory.CompileDataEntityListDbParameterSetter<TEntity>(inputFields, outputFields, batchSize, dbSetting);
+                    }
                     cache.TryAdd(key, func);
                 }
                 return func;

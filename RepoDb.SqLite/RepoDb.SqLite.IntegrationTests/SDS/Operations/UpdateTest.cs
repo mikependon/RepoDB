@@ -337,6 +337,30 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
         #region Sync
 
         [TestMethod]
+        public void TestSqLiteConnectionUpdateViaTableNameAsExpandoObjectViaDataEntity()
+        {
+            using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
+            {
+                // Setup
+                Database.CreateSdsCompleteTables(1, connection).First();
+                var table = Helper.CreateSdsCompleteTablesAsExpandoObjects(1).First();
+
+                // Act
+                var result = DbConnectionExtension.Update(connection, ClassMappedNameCache.Get<SdsCompleteTable>(),
+                    table);
+
+                // Assert
+                Assert.AreEqual(1, result);
+
+                // Act
+                var queryResult = connection.Query(ClassMappedNameCache.Get<SdsCompleteTable>(), result).First();
+
+                // Assert
+                Helper.AssertMembersEquality(queryResult, table);
+            }
+        }
+
+        [TestMethod]
         public void TestSqLiteConnectionUpdateViaTableNameViaDataEntity()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
@@ -465,6 +489,30 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
         #endregion
 
         #region Async
+
+        [TestMethod]
+        public void TestSqLiteConnectionUpdateAsyncViaTableNameAsExpandoObjectViaDataEntity()
+        {
+            using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
+            {
+                // Setup
+                Database.CreateSdsCompleteTables(1, connection).First();
+                var table = Helper.CreateSdsCompleteTablesAsExpandoObjects(1).First();
+
+                // Act
+                var result = DbConnectionExtension.UpdateAsync(connection, ClassMappedNameCache.Get<SdsCompleteTable>(),
+                    table).Result;
+
+                // Assert
+                Assert.AreEqual(1, result);
+
+                // Act
+                var queryResult = connection.Query(ClassMappedNameCache.Get<SdsCompleteTable>(), result).First();
+
+                // Assert
+                Helper.AssertMembersEquality(queryResult, table);
+            }
+        }
 
         [TestMethod]
         public void TestSqLiteConnectionUpdateAsyncViaTableNameViaDataEntity()

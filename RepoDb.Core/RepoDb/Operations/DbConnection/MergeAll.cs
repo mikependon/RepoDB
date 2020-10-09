@@ -379,7 +379,7 @@ namespace RepoDb
             {
                 var key = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction,
                     entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity));
-                qualifiers = key.AsField().AsEnumerable();
+                qualifiers = key.AsEnumerable();
             }
 
             // Variables needed
@@ -388,30 +388,63 @@ namespace RepoDb
             // Return the result
             if (setting.IsUseUpsert == false)
             {
-                return MergeAllInternalBase<TEntity>(connection: connection,
-                    tableName: tableName,
-                    entities: entities,
-                    qualifiers: qualifiers,
-                    batchSize: batchSize,
-                    fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
-                    hints: hints,
-                    commandTimeout: commandTimeout,
-                    transaction: transaction,
-                    trace: trace,
-                    statementBuilder: statementBuilder);
+                if ((entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity)).IsDictionaryStringObject())
+                {
+                    return MergeAllInternalBase<IDictionary<string, object>>(connection: connection,
+                        tableName: tableName,
+                        entities: entities?.OfTargetType<TEntity, IDictionary<string, object>>(),
+                        qualifiers: qualifiers,
+                        batchSize: batchSize,
+                        fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
+                        hints: hints,
+                        commandTimeout: commandTimeout,
+                        transaction: transaction,
+                        trace: trace,
+                        statementBuilder: statementBuilder);
+                }
+                else
+                {
+                    return MergeAllInternalBase<TEntity>(connection: connection,
+                        tableName: tableName,
+                        entities: entities,
+                        qualifiers: qualifiers,
+                        batchSize: batchSize,
+                        fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
+                        hints: hints,
+                        commandTimeout: commandTimeout,
+                        transaction: transaction,
+                        trace: trace,
+                        statementBuilder: statementBuilder);
+                }
             }
             else
             {
-                return UpsertAllInternalBase<TEntity>(connection: connection,
-                    tableName: tableName,
-                    entities: entities,
-                    qualifiers: qualifiers,
-                    fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
-                    hints: hints,
-                    commandTimeout: commandTimeout,
-                    transaction: transaction,
-                    trace: trace,
-                    statementBuilder: statementBuilder);
+                if ((entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity)).IsDictionaryStringObject())
+                {
+                    return UpsertAllInternalBase<IDictionary<string, object>>(connection: connection,
+                        tableName: tableName,
+                        entities: entities?.OfTargetType<TEntity, IDictionary<string, object>>(),
+                        qualifiers: qualifiers,
+                        fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
+                        hints: hints,
+                        commandTimeout: commandTimeout,
+                        transaction: transaction,
+                        trace: trace,
+                        statementBuilder: statementBuilder);
+                }
+                else
+                {
+                    return UpsertAllInternalBase<TEntity>(connection: connection,
+                        tableName: tableName,
+                        entities: entities,
+                        qualifiers: qualifiers,
+                        fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
+                        hints: hints,
+                        commandTimeout: commandTimeout,
+                        transaction: transaction,
+                        trace: trace,
+                        statementBuilder: statementBuilder);
+                }
             }
         }
 
@@ -803,7 +836,7 @@ namespace RepoDb
             {
                 var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction,
                     entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity), cancellationToken);
-                qualifiers = key.AsField().AsEnumerable();
+                qualifiers = key.AsEnumerable();
             }
 
             // Variables needed
@@ -812,32 +845,67 @@ namespace RepoDb
             // Return the result
             if (setting.IsUseUpsert == false)
             {
-                return await MergeAllAsyncInternalBase<TEntity>(connection: connection,
-                    tableName: tableName,
-                    entities: entities,
-                    qualifiers: qualifiers,
-                    batchSize: batchSize,
-                    fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
-                    hints: hints,
-                    commandTimeout: commandTimeout,
-                    transaction: transaction,
-                    trace: trace,
-                    statementBuilder: statementBuilder,
-                    cancellationToken: cancellationToken);
+                if ((entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity)).IsDictionaryStringObject())
+                {
+                    return await MergeAllAsyncInternalBase<IDictionary<string, object>>(connection: connection,
+                        tableName: tableName,
+                        entities: entities?.OfTargetType<TEntity, IDictionary<string, object>>(),
+                        qualifiers: qualifiers,
+                        batchSize: batchSize,
+                        fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
+                        hints: hints,
+                        commandTimeout: commandTimeout,
+                        transaction: transaction,
+                        trace: trace,
+                        statementBuilder: statementBuilder,
+                        cancellationToken: cancellationToken);
+                }
+                else
+                {
+                    return await MergeAllAsyncInternalBase<TEntity>(connection: connection,
+                        tableName: tableName,
+                        entities: entities,
+                        qualifiers: qualifiers,
+                        batchSize: batchSize,
+                        fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
+                        hints: hints,
+                        commandTimeout: commandTimeout,
+                        transaction: transaction,
+                        trace: trace,
+                        statementBuilder: statementBuilder,
+                        cancellationToken: cancellationToken);
+                }
             }
             else
             {
-                return await UpsertAllAsyncInternalBase<TEntity>(connection: connection,
-                    tableName: tableName,
-                    entities: entities,
-                    qualifiers: qualifiers,
-                    fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
-                    hints: hints,
-                    commandTimeout: commandTimeout,
-                    transaction: transaction,
-                    trace: trace,
-                    statementBuilder: statementBuilder,
-                    cancellationToken: cancellationToken);
+                if ((entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity)).IsDictionaryStringObject())
+                {
+                    return await UpsertAllAsyncInternalBase<IDictionary<string, object>>(connection: connection,
+                        tableName: tableName,
+                        entities: entities?.OfTargetType<TEntity, IDictionary<string, object>>(),
+                        qualifiers: qualifiers,
+                        fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
+                        hints: hints,
+                        commandTimeout: commandTimeout,
+                        transaction: transaction,
+                        trace: trace,
+                        statementBuilder: statementBuilder,
+                        cancellationToken: cancellationToken);
+                }
+                else
+                {
+                    return await UpsertAllAsyncInternalBase<TEntity>(connection: connection,
+                        tableName: tableName,
+                        entities: entities,
+                        qualifiers: qualifiers,
+                        fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
+                        hints: hints,
+                        commandTimeout: commandTimeout,
+                        transaction: transaction,
+                        trace: trace,
+                        statementBuilder: statementBuilder,
+                        cancellationToken: cancellationToken);
+                }
             }
         }
 

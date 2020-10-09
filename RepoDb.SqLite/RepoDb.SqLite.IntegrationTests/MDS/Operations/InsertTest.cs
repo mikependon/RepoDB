@@ -178,6 +178,34 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
+        public void TestSqliteConnectionInsertViaTableNameAsExpandoObjectForIdentity()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            {
+                // Create the tables
+                Database.CreateMdsTables(connection);
+
+                // Setup
+                var table = Helper.CreateMdsCompleteTablesAsExpandoObjects(1).First();
+
+                // Act
+                var result = connection.Insert(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                    table);
+
+                // Assert
+                Assert.AreEqual(1, connection.CountAll<MdsCompleteTable>());
+                Assert.IsTrue(Convert.ToInt64(result) > 0);
+
+                // Act
+                var queryResult = connection.Query<MdsCompleteTable>(result);
+
+                // Assert
+                Assert.AreEqual(1, queryResult?.Count());
+                Helper.AssertMembersEquality(queryResult.First(), table);
+            }
+        }
+
+        [TestMethod]
         public void TestSqLiteConnectionInsertViaTableNameAsDynamicForIdentity()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
@@ -230,6 +258,34 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
                 // Assert
                 Assert.AreEqual(1, queryResult?.Count());
                 Helper.AssertPropertiesEquality(table, queryResult.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqliteConnectionInsertViaTableNameAsExpandoObjectForNonIdentity()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            {
+                // Create the tables
+                Database.CreateMdsTables(connection);
+
+                // Setup
+                var table = Helper.CreateMdsNonIdentityCompleteTablesAsExpandoObjects(1).First();
+
+                // Act
+                var result = connection.Insert(ClassMappedNameCache.Get<MdsNonIdentityCompleteTable>(),
+                    table);
+
+                // Assert
+                Assert.AreEqual(1, connection.CountAll<MdsNonIdentityCompleteTable>());
+                Assert.AreEqual(((dynamic)table).Id.ToString(), result?.ToString(), true);
+
+                // Act
+                var queryResult = connection.Query<MdsNonIdentityCompleteTable>(result);
+
+                // Assert
+                Assert.AreEqual(1, queryResult?.Count());
+                Helper.AssertMembersEquality(queryResult.First(), table);
             }
         }
 
@@ -294,6 +350,34 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
+        public void TestSqLiteConnectionInsertAsyncViaTableNameAsExpandoObjectForIdentity()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            {
+                // Create the tables
+                Database.CreateMdsTables(connection);
+
+                // Setup
+                var table = Helper.CreateMdsCompleteTablesAsExpandoObjects(1).First();
+
+                // Act
+                var result = connection.InsertAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                    table).Result;
+
+                // Assert
+                Assert.AreEqual(1, connection.CountAll<MdsCompleteTable>());
+                Assert.IsTrue(Convert.ToInt64(result) > 0);
+
+                // Act
+                var queryResult = connection.Query<MdsCompleteTable>(result);
+
+                // Assert
+                Assert.AreEqual(1, queryResult?.Count());
+                Helper.AssertMembersEquality(queryResult.First(), table);
+            }
+        }
+
+        [TestMethod]
         public void TestSqLiteConnectionInsertAsyncViaTableNameAsDynamicForIdentity()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
@@ -346,6 +430,34 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
                 // Assert
                 Assert.AreEqual(1, queryResult?.Count());
                 Helper.AssertPropertiesEquality(table, queryResult.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqLiteConnectionInsertAsyncViaTableNameAsExpandoObjectForNonIdentity()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            {
+                // Create the tables
+                Database.CreateMdsTables(connection);
+
+                // Setup
+                var table = Helper.CreateMdsNonIdentityCompleteTablesAsExpandoObjects(1).First();
+
+                // Act
+                var result = connection.InsertAsync(ClassMappedNameCache.Get<MdsNonIdentityCompleteTable>(),
+                    table).Result;
+
+                // Assert
+                Assert.AreEqual(1, connection.CountAll<MdsNonIdentityCompleteTable>());
+                Assert.AreEqual(((dynamic)table).Id.ToString(), result?.ToString(), true);
+
+                // Act
+                var queryResult = connection.Query<MdsNonIdentityCompleteTable>(result);
+
+                // Assert
+                Assert.AreEqual(1, queryResult?.Count());
+                Helper.AssertMembersEquality(queryResult.First(), table);
             }
         }
 

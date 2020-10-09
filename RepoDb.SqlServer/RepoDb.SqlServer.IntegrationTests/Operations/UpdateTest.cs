@@ -361,6 +361,32 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Sync
 
         [TestMethod]
+        public void TestSqlServerConnectionUpdateViaTableNameViaExpandoObject()
+        {
+            // Setup
+            var table = Database.CreateCompleteTables(1).First();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var entity = Helper.CreateCompleteTablesAsExpandoObjects(1).First();
+
+                // Act
+                var result = connection.Update(ClassMappedNameCache.Get<CompleteTable>(),
+                    entity);
+
+                // Assert
+                Assert.AreEqual(1, result);
+
+                // Act
+                var queryResult = connection.Query<CompleteTable>(table.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(queryResult, entity);
+            }
+        }
+
+        [TestMethod]
         public void TestSqlServerConnectionUpdateViaTableNameViaDataEntity()
         {
             // Setup
@@ -372,7 +398,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = DbConnectionExtension.Update(connection, ClassMappedNameCache.Get<CompleteTable>(), table);
+                var result = connection.Update(ClassMappedNameCache.Get<CompleteTable>(),
+                    table);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -397,7 +424,9 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = DbConnectionExtension.Update(connection, ClassMappedNameCache.Get<CompleteTable>(), table, new { table.Id });
+                var result = connection.Update(ClassMappedNameCache.Get<CompleteTable>(),
+                    table,
+                    new { table.Id });
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -422,7 +451,9 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = DbConnectionExtension.Update(connection, ClassMappedNameCache.Get<CompleteTable>(), table, new QueryField("Id", table.Id));
+                var result = connection.Update(ClassMappedNameCache.Get<CompleteTable>(),
+                    table,
+                    new QueryField("Id", table.Id));
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -452,7 +483,9 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = DbConnectionExtension.Update(connection, ClassMappedNameCache.Get<CompleteTable>(), table, queryFields);
+                var result = connection.Update(ClassMappedNameCache.Get<CompleteTable>(),
+                    table,
+                    queryFields);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -483,7 +516,9 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = DbConnectionExtension.Update(connection, ClassMappedNameCache.Get<CompleteTable>(), table, queryGroup);
+                var result = connection.Update(ClassMappedNameCache.Get<CompleteTable>(),
+                    table,
+                    queryGroup);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -499,6 +534,32 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #endregion
 
         #region Async
+
+        [TestMethod]
+        public void TestSqlServerConnectionUpdateAsyncViaTableNameViaExpandoObject()
+        {
+            // Setup
+            var table = Database.CreateCompleteTables(1).First();
+
+            using (var connection = new SqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var entity = Helper.CreateCompleteTablesAsExpandoObjects(1).First();
+
+                // Act
+                var result = connection.UpdateAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    entity).Result;
+
+                // Assert
+                Assert.AreEqual(1, result);
+
+                // Act
+                var queryResult = connection.Query<CompleteTable>(table.Id).First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(queryResult, entity);
+            }
+        }
 
         [TestMethod]
         public void TestSqlServerConnectionUpdateAsyncViaTableNameViaDataEntity()
