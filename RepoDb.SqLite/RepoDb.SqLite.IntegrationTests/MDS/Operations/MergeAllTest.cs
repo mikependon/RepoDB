@@ -172,7 +172,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsNonIdentityCompleteTables(10, connection).AsList();
                 var qualifiers = new[]
                 {
-                    new Field("Id", typeof(long))
+                    new Field("Id", typeof(string))
                 };
 
                 // Setup
@@ -343,7 +343,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsNonIdentityCompleteTables(10, connection).AsList();
                 var qualifiers = new[]
                 {
-                    new Field("Id", typeof(long))
+                    new Field("Id", typeof(string))
                 };
 
                 // Setup
@@ -397,7 +397,35 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
 
                 // Assert
                 Assert.AreEqual(10, queryResult.Count());
-                Helper.AssertMembersEquality(tables.Last(), queryResult.Last());
+                tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqLiteConnectionMergeAllAsExpandoObjectViaTableNameForIdentityForEmptyTable()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            {
+                // Create the tables
+                Database.CreateMdsTables(connection);
+
+                // Setup
+                var tables = Helper.CreateMdsCompleteTablesAsExpandoObjects(10);
+
+                // Act
+                var result = connection.MergeAll(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                    tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, connection.CountAll<MdsCompleteTable>());
+                Assert.AreEqual(tables.Count, result);
+
+                // Act
+                var queryResult = connection.QueryAll<MdsCompleteTable>();
+
+                // Assert
+                Assert.AreEqual(10, queryResult.Count());
+                tables.ForEach(table => Helper.AssertMembersEquality(queryResult.First(e => e.Id == ((dynamic)table).Id), table));
             }
         }
 
@@ -425,6 +453,33 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
 
                 // Assert
                 tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqLiteConnectionMergeAllAsExpandoObjectViaTableNameForIdentityForNonEmptyTable()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            {
+                // Setup
+                Database.CreateMdsCompleteTables(10, connection).AsList();
+
+                // Setup
+                var tables = Helper.CreateMdsCompleteTablesAsExpandoObjects(10);
+
+                // Act
+                var result = connection.MergeAll(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                    tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, connection.CountAll<MdsCompleteTable>());
+                Assert.AreEqual(tables.Count, result);
+
+                // Act
+                var queryResult = connection.QueryAll<MdsCompleteTable>();
+
+                // Assert
+                tables.ForEach(table => Helper.AssertMembersEquality(queryResult.First(e => e.Id == ((dynamic)table).Id), table));
             }
         }
 
@@ -605,7 +660,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsNonIdentityCompleteTables(10, connection).AsList();
                 var qualifiers = new[]
                 {
-                    new Field("Id", typeof(long))
+                    new Field("Id", typeof(string))
                 };
 
                 // Setup
@@ -689,7 +744,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsNonIdentityCompleteTables(10, connection).AsList();
                 var qualifiers = new[]
                 {
-                    new Field("Id", typeof(long))
+                    new Field("Id", typeof(string))
                 };
                 tables.ForEach(table => Helper.UpdateMdsNonIdentityCompleteTableProperties(table));
 
@@ -738,7 +793,35 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
 
                 // Assert
                 Assert.AreEqual(10, queryResult.Count());
-                Helper.AssertMembersEquality(tables.Last(), queryResult.Last());
+                tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqLiteConnectionMergeAllAsyncAsExpandoObjectViaTableNameForIdentityForEmptyTable()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            {
+                // Create the tables
+                Database.CreateMdsTables(connection);
+
+                // Setup
+                var tables = Helper.CreateMdsCompleteTablesAsExpandoObjects(10);
+
+                // Act
+                var result = connection.MergeAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                    tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, connection.CountAll<MdsCompleteTable>());
+                Assert.AreEqual(tables.Count, result);
+
+                // Act
+                var queryResult = connection.QueryAll<MdsCompleteTable>();
+
+                // Assert
+                Assert.AreEqual(10, queryResult.Count());
+                tables.ForEach(table => Helper.AssertMembersEquality(queryResult.First(e => e.Id == ((dynamic)table).Id), table));
             }
         }
 
@@ -766,6 +849,33 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
 
                 // Assert
                 tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqLiteConnectionMergeAllAsyncAsExpandoObjectViaTableNameForIdentityForNonEmptyTable()
+        {
+            using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
+            {
+                // Setup
+                Database.CreateMdsCompleteTables(10, connection).AsList();
+
+                // Setup
+                var tables = Helper.CreateMdsCompleteTablesAsExpandoObjects(10);
+
+                // Act
+                var result = connection.MergeAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                    tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, connection.CountAll<MdsCompleteTable>());
+                Assert.AreEqual(tables.Count, result);
+
+                // Act
+                var queryResult = connection.QueryAll<MdsCompleteTable>();
+
+                // Assert
+                tables.ForEach(table => Helper.AssertMembersEquality(queryResult.First(e => e.Id == ((dynamic)table).Id), table));
             }
         }
 
@@ -946,7 +1056,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsNonIdentityCompleteTables(10, connection).AsList();
                 var qualifiers = new[]
                 {
-                    new Field("Id", typeof(long))
+                    new Field("Id", typeof(string))
                 };
 
                 // Setup
@@ -1030,7 +1140,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsNonIdentityCompleteTables(10, connection).AsList();
                 var qualifiers = new[]
                 {
-                    new Field("Id", typeof(long))
+                    new Field("Id", typeof(string))
                 };
                 tables.ForEach(table => Helper.UpdateMdsNonIdentityCompleteTableProperties(table));
 

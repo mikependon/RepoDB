@@ -397,7 +397,35 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
 
                 // Assert
                 Assert.AreEqual(10, queryResult.Count());
-                Helper.AssertMembersEquality(tables.Last(), queryResult.Last());
+                tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSQLiteConnectionMergeAllAsExpandoObjectViaTableNameForIdentityForEmptyTable()
+        {
+            using (var connection = new SQLiteConnection(Database.ConnectionStringMDS))
+            {
+                // Create the tables
+                Database.CreateSdsTables(connection);
+
+                // Setup
+                var tables = Helper.CreateSdsCompleteTablesAsExpandoObjects(10);
+
+                // Act
+                var result = connection.MergeAll(ClassMappedNameCache.Get<SdsCompleteTable>(),
+                    tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, connection.CountAll<SdsCompleteTable>());
+                Assert.AreEqual(tables.Count, result);
+
+                // Act
+                var queryResult = connection.QueryAll<SdsCompleteTable>();
+
+                // Assert
+                Assert.AreEqual(10, queryResult.Count());
+                tables.ForEach(table => Helper.AssertMembersEquality(queryResult.First(e => e.Id == ((dynamic)table).Id), table));
             }
         }
 
@@ -425,6 +453,33 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
 
                 // Assert
                 tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSQLiteConnectionMergeAllAsExpandoObjectViaTableNameForIdentityForNonEmptyTable()
+        {
+            using (var connection = new SQLiteConnection(Database.ConnectionStringMDS))
+            {
+                // Setup
+                Database.CreateSdsCompleteTables(10, connection).AsList();
+
+                // Setup
+                var tables = Helper.CreateSdsCompleteTablesAsExpandoObjects(10);
+
+                // Act
+                var result = connection.MergeAll(ClassMappedNameCache.Get<SdsCompleteTable>(),
+                    tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, connection.CountAll<SdsCompleteTable>());
+                Assert.AreEqual(tables.Count, result);
+
+                // Act
+                var queryResult = connection.QueryAll<SdsCompleteTable>();
+
+                // Assert
+                tables.ForEach(table => Helper.AssertMembersEquality(queryResult.First(e => e.Id == ((dynamic)table).Id), table));
             }
         }
 
@@ -738,7 +793,35 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
 
                 // Assert
                 Assert.AreEqual(10, queryResult.Count());
-                Helper.AssertMembersEquality(tables.Last(), queryResult.Last());
+                tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSQLiteConnectionMergeAllAsyncAsExpandoObjectViaTableNameForIdentityForEmptyTable()
+        {
+            using (var connection = new SQLiteConnection(Database.ConnectionStringMDS))
+            {
+                // Create the tables
+                Database.CreateSdsTables(connection);
+
+                // Setup
+                var tables = Helper.CreateSdsCompleteTablesAsExpandoObjects(10);
+
+                // Act
+                var result = connection.MergeAllAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
+                    tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, connection.CountAll<SdsCompleteTable>());
+                Assert.AreEqual(tables.Count, result);
+
+                // Act
+                var queryResult = connection.QueryAll<SdsCompleteTable>();
+
+                // Assert
+                Assert.AreEqual(10, queryResult.Count());
+                tables.ForEach(table => Helper.AssertMembersEquality(queryResult.First(e => e.Id == ((dynamic)table).Id), table));
             }
         }
 
@@ -766,6 +849,33 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
 
                 // Assert
                 tables.ForEach(table => Helper.AssertPropertiesEquality(table, queryResult.First(e => e.Id == table.Id)));
+            }
+        }
+
+        [TestMethod]
+        public void TestSQLiteConnectionMergeAllAsyncAsExpandoObjectViaTableNameForIdentityForNonEmptyTable()
+        {
+            using (var connection = new SQLiteConnection(Database.ConnectionStringMDS))
+            {
+                // Setup
+                Database.CreateSdsCompleteTables(10, connection).AsList();
+
+                // Setup
+                var tables = Helper.CreateSdsCompleteTablesAsExpandoObjects(10);
+
+                // Act
+                var result = connection.MergeAllAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
+                    tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, connection.CountAll<SdsCompleteTable>());
+                Assert.AreEqual(tables.Count, result);
+
+                // Act
+                var queryResult = connection.QueryAll<SdsCompleteTable>();
+
+                // Assert
+                tables.ForEach(table => Helper.AssertMembersEquality(queryResult.First(e => e.Id == ((dynamic)table).Id), table));
             }
         }
 
