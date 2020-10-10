@@ -66,7 +66,7 @@ namespace RepoDb
             ExpressionType? unaryNodeType = null)
         {
             var operation = unaryNodeType == ExpressionType.Not ? Operation.NotIn : Operation.In;
-            return new QueryField(fieldName, operation, enumerable.OfType<object>().AsArray());
+            return new QueryField(fieldName, operation, enumerable.WithType<object>().AsArray());
         }
 
         /// <summary>

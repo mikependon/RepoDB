@@ -202,7 +202,7 @@ namespace RepoDb
             if (value is System.Collections.IEnumerable)
             {
                 var items = ((System.Collections.IEnumerable)value)
-                    .OfType<T>()
+                    .WithType<T>()
                     .AsList();
                 list.AddRange(items);
             }

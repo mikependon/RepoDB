@@ -89,7 +89,7 @@ namespace RepoDb
         {
             return DeleteAllInternal(connection: connection,
                 tableName: tableName,
-                keys: keys?.OfType<object>(),
+                keys: keys?.WithType<object>(),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -156,7 +156,7 @@ namespace RepoDb
 
             return DeleteAllInternal(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
-                keys: keys?.OfType<object>(),
+                keys: keys?.WithType<object>(),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -188,7 +188,7 @@ namespace RepoDb
         {
             return DeleteAllInternal(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
-                keys: keys?.OfType<object>(),
+                keys: keys?.WithType<object>(),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -359,7 +359,7 @@ namespace RepoDb
         {
             return await DeleteAllAsyncInternal(connection: connection,
                 tableName: tableName,
-                keys: keys?.OfType<object>(),
+                keys: keys?.WithType<object>(),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -432,7 +432,7 @@ namespace RepoDb
 
             return await DeleteAllAsyncInternal(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
-                keys: keys?.OfType<object>(),
+                keys: keys?.WithType<object>(),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -467,7 +467,7 @@ namespace RepoDb
         {
             return DeleteAllAsyncInternal(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
-                keys: keys?.OfType<object>(),
+                keys: keys?.WithType<object>(),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
