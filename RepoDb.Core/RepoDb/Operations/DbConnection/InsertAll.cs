@@ -127,7 +127,7 @@ namespace RepoDb
             {
                 return InsertAllInternalBase<IDictionary<string, object>>(connection: connection,
                     tableName: tableName,
-                    entities: entities?.OfTargetType<TEntity, IDictionary<string, object>>(),
+                    entities: entities?.WithType<IDictionary<string, object>>(),
                     batchSize: batchSize,
                     fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
                     hints: hints,
@@ -270,7 +270,7 @@ namespace RepoDb
             {
                 return InsertAllAsyncInternalBase<IDictionary<string, object>>(connection: connection,
                     tableName: tableName,
-                    entities: entities?.OfTargetType<TEntity, IDictionary<string, object>>(),
+                    entities: entities?.WithType<IDictionary<string, object>>(),
                     batchSize: batchSize,
                     fields: GetQualifiedFields<TEntity>(fields, entities?.FirstOrDefault()),
                     hints: hints,

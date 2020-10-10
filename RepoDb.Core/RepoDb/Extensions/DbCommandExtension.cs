@@ -464,7 +464,7 @@ namespace RepoDb.Extensions
                 return;
             }
             var values = (queryField.Parameter.Value as System.Collections.IEnumerable)?
-                        .OfType<object>()
+                        .WithType<object>()
                         .AsList();
             if (values.Any() == true)
             {
@@ -515,7 +515,7 @@ namespace RepoDb.Extensions
                 return;
             }
             var values = (queryField.Parameter.Value as System.Collections.IEnumerable)?
-                        .OfType<object>()
+                        .WithType<object>()
                         .AsList();
             if (values?.Count == 2)
             {

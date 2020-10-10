@@ -221,7 +221,7 @@ namespace RepoDb
             {
                 var items = ((System.Collections.IEnumerable)Parameter.Value);
                 hashCode += items
-                    .OfType<object>()
+                    .WithType<object>()
                     .Count()
                     .GetHashCode();
             }

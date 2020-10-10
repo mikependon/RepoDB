@@ -509,7 +509,7 @@ namespace RepoDb
                transaction: transaction,
                cache: null,
                tableName: tableName,
-               skipCommandArrayParametersCheck: skipCommandArrayParametersCheck).OfTargetType<dynamic, TResult>();
+               skipCommandArrayParametersCheck: skipCommandArrayParametersCheck).WithType<TResult>();
 
             // Set Cache
             if (cacheKey != null)
@@ -771,7 +771,7 @@ namespace RepoDb
                cache: null,
                cancellationToken: cancellationToken,
                tableName: tableName,
-               skipCommandArrayParametersCheck: skipCommandArrayParametersCheck)).OfTargetType<dynamic, TResult>();
+               skipCommandArrayParametersCheck: skipCommandArrayParametersCheck)).WithType<TResult>();
 
             // Set Cache
             if (cacheKey != null)
@@ -2968,7 +2968,7 @@ namespace RepoDb
             var values = (System.Collections.IEnumerable)value;
 
             // Return
-            return new CommandArrayParameter(parameterName, values.OfType<object>());
+            return new CommandArrayParameter(parameterName, values.WithType<object>());
         }
 
         /// <summary>
@@ -2990,7 +2990,7 @@ namespace RepoDb
             }
 
             // Items
-            var items = values is IEnumerable<object> ? (IEnumerable<object>)values : values.OfType<object>();
+            var items = values is IEnumerable<object> ? (IEnumerable<object>)values : values.WithType<object>();
             if (items.Any() != true)
             {
                 return commandText;

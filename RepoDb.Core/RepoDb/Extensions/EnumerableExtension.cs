@@ -42,19 +42,32 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// Converts the <see cref="IEnumerable{T}"/> object into a target <see cref="IEnumerable{T}"/> object via <see cref="Enumerable.OfType{TResult}(System.Collections.IEnumerable)"/> method.
+        /// Returns the items of type <typeparamref name="TargetType"/> from the <see cref="IEnumerable{T}"/> object into a target <see cref="IEnumerable{T}"/> object.
         /// </summary>
-        /// <typeparam name="SourceType">The sorrce type.</typeparam>
+        /// <typeparam name="SourceType">The source type.</typeparam>
         /// <typeparam name="TargetType">The target type.</typeparam>
         /// <param name="value">The actual enumerable instance.</param>
-        /// <returns>The converted <see cref="IEnumerable{T}"/> object.</returns>
+        /// <returns>The <see cref="IEnumerable{T}"/> object in which the items are of type <typeparamref name="TargetType"/>.</returns>
+        [Obsolete("Use the 'ForType<T>' method insted.")]
         public static IEnumerable<TargetType> OfTargetType<SourceType, TargetType>(this IEnumerable<SourceType> value) =>
             value is IEnumerable<TargetType> ? (IEnumerable<TargetType>)value : value.OfType<TargetType>();
 
         /// <summary>
-        /// Checks whether the instance of <see cref="IEnumerable{T}"/> is of type <see cref="List{T}"/>, then casts it, otherwise, converts it.
+        /// Checks whether the instance of <see cref="System.Collections.IEnumerable"/> is of type <see cref="IEnumerable{T}"/>, then casts it, otherwise, 
+        /// returns the instance of <see cref="IEnumerable{T}"/> with the specified items. The items that are not of type <typeparamref name="T"/> will be
+        /// eliminated from the result. This method is using the underlying method <see cref="Enumerable.OfType{TResult}(System.Collections.IEnumerable)"/>.
         /// </summary>
-        /// <typeparam name="T">The target dynamic type of the enumerable.</typeparam>
+        /// <typeparam name="T">The target type.</typeparam>
+        /// <param name="value">The actual enumerable instance.</param>
+        /// <returns>The <see cref="IEnumerable{T}"/> object in which the items are of type <typeparamref name="T"/>.</returns>
+        public static IEnumerable<T> WithType<T>(this System.Collections.IEnumerable value) =>
+            value is IEnumerable<T> ? (IEnumerable<T>)value : value.OfType<T>();
+
+        /// <summary>
+        /// Checks whether the instance of <see cref="IEnumerable{T}"/> is of type <see cref="List{T}"/>, then casts it, otherwise, converts it.
+        /// This method is using the underlying method <see cref="Enumerable.ToList{TSource}(IEnumerable{TSource})"/> method.
+        /// </summary>
+        /// <typeparam name="T">The target type.</typeparam>
         /// <param name="value">The actual enumerable instance.</param>
         /// <returns>The converted <see cref="IList{T}"/> object.</returns>
         public static List<T> AsList<T>(this IEnumerable<T> value) =>
@@ -62,11 +75,12 @@ namespace RepoDb.Extensions
 
         /// <summary>
         /// Checks whether the instance of <see cref="IEnumerable{T}"/> is an array of <typeparamref name="T"/>, then casts it, otherwise, converts it.
+        /// This method is using the underlying method <see cref="Enumerable.ToArray{TSource}(IEnumerable{TSource})"/> method.
         /// </summary>
-        /// <typeparam name="T">The target dynamic type of the enumerable.</typeparam>
+        /// <typeparam name="T">The target type.</typeparam>
         /// <param name="value">The actual enumerable instance.</param>
-        /// <returns>The converted <see cref="IList{T}"/> object.</returns>
+        /// <returns>The converted <see cref="Array"/> object.</returns>
         public static T[] AsArray<T>(this IEnumerable<T> value) =>
-            value is T[]? (T[])value : value.ToArray();
+            value is T[]? (T[])value : value?.ToArray();
     }
 }

@@ -154,7 +154,7 @@ namespace RepoDb.Extensions
             int index,
             IDbSetting dbSetting)
         {
-            var enumerable = (queryField.Parameter.Value as System.Collections.IEnumerable)?.OfType<object>();
+            var enumerable = (queryField.Parameter.Value as System.Collections.IEnumerable)?.WithType<object>();
             if (enumerable?.Any() != true)
             {
                 return "1 = 0";
