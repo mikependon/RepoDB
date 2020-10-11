@@ -116,6 +116,20 @@ namespace RepoDb.Reflection
 
         #endregion
 
+        #region CompileDictionaryStringObjectItemSetter
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        public static Action<TEntity, object> CompileDictionaryStringObjectItemSetter<TEntity>(Field field)
+            where TEntity : class =>
+            Compiler.CompileDictionaryStringObjectItemSetter<TEntity>(field);
+
+        #endregion
+
         #region CompileDbCommandToProperty
 
         /// <summary>

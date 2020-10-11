@@ -1165,7 +1165,6 @@ namespace RepoDb.IntegrationTests
         public static ExpandoObject CreateExpandoObjectIdentityTable()
         {
             var table = new ExpandoObject() as IDictionary<string, object>;
-            table.Add("Id", 1);
             table.Add("RowGuid", Guid.NewGuid());
             table.Add("ColumnBit", true);
             table.Add("ColumnDateTime", EpocDate.AddDays(1));
@@ -1189,7 +1188,6 @@ namespace RepoDb.IntegrationTests
             {
                 var index = i + 1;
                 var table = new ExpandoObject() as IDictionary<string, object>;
-                table.Add("Id", 1);
                 table.Add("RowGuid", Guid.NewGuid());
                 table.Add("ColumnBit", true);
                 table.Add("ColumnDateTime", EpocDate.AddDays(1));

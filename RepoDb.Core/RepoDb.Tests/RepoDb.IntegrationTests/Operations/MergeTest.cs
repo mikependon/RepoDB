@@ -1702,6 +1702,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
+                Assert.AreEqual(((dynamic)entity).Id, mergeResult);
 
                 // Act
                 var queryResult = connection.Query<NonIdentityTable>(mergeResult).FirstOrDefault();
@@ -1726,6 +1727,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
+                Assert.AreEqual(((dynamic)entity).Id, mergeResult);
 
                 // Act
                 var queryResult = connection.Query<NonIdentityTable>(mergeResult).FirstOrDefault();
@@ -1938,6 +1940,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
+                Assert.AreEqual(((dynamic)entity).Id, mergeResult);
 
                 // Act
                 var queryResult = connection.Query<NonIdentityTable>(mergeResult).FirstOrDefault();
@@ -1970,6 +1973,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
+                Assert.AreEqual(((dynamic)entity).Id, mergeResult);
 
                 // Act
                 var queryResult = connection.Query<NonIdentityTable>(mergeResult).FirstOrDefault();
@@ -2272,6 +2276,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
+                Assert.AreEqual(((dynamic)entity).Id, mergeResult);
 
                 // Act
                 var queryResult = connection.Query<NonIdentityTable>(mergeResult).FirstOrDefault();
@@ -2296,6 +2301,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
+                Assert.AreEqual(((dynamic)entity).Id, mergeResult);
 
                 // Act
                 var queryResult = connection.Query<NonIdentityTable>(mergeResult).FirstOrDefault();
@@ -2483,6 +2489,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
+                Assert.AreEqual(((dynamic)entity).Id, mergeResult);
 
                 // Act
                 var queryResult = connection.Query<NonIdentityTable>(mergeResult).FirstOrDefault();
@@ -2515,6 +2522,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<NonIdentityTable>());
+                Assert.AreEqual(((dynamic)entity).Id, mergeResult);
 
                 // Act
                 var queryResult = connection.Query<NonIdentityTable>(mergeResult).FirstOrDefault();
