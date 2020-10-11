@@ -48,7 +48,7 @@ namespace RepoDb.Extensions
         /// <typeparam name="TargetType">The target type.</typeparam>
         /// <param name="value">The actual enumerable instance.</param>
         /// <returns>The <see cref="IEnumerable{T}"/> object in which the items are of type <typeparamref name="TargetType"/>.</returns>
-        [Obsolete("Use the 'ForType<T>' method insted.")]
+        [Obsolete("Use the 'WithType<T>' method insted.")]
         public static IEnumerable<TargetType> OfTargetType<SourceType, TargetType>(this IEnumerable<SourceType> value) =>
             value is IEnumerable<TargetType> ? (IEnumerable<TargetType>)value : value.OfType<TargetType>();
 

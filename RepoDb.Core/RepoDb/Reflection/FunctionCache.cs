@@ -439,7 +439,14 @@ namespace RepoDb
                 var func = (Action<TEntity, object>)null;
                 if (cache.TryGetValue(key, out func) == false)
                 {
-                    func = FunctionFactory.CompileDataEntityPropertySetter<TEntity>(field);
+                    if(typeof(TEntity).IsDictionaryStringObject())
+                    {
+                        func = FunctionFactory.CompileDictionaryStringObjectItemSetter<TEntity>(field);
+                    }
+                    else
+                    {
+                        func = FunctionFactory.CompileDataEntityPropertySetter<TEntity>(field);
+                    }
                     cache.TryAdd(key, func);
                 }
                 return func;

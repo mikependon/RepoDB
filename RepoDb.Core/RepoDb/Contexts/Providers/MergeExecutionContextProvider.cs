@@ -178,15 +178,12 @@ namespace RepoDb.Contexts.Providers
             var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
 
             // Set the identity field
-            if (typeOfEntity.IsClassType())
-            {
-                identity = IdentityCache.Get<TEntity>()?.AsField() ??
-                    FieldCache
-                        .Get<TEntity>()?
-                        .FirstOrDefault(field =>
-                            string.Equals(field.Name.AsUnquoted(true, dbSetting), identityDbField?.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) ??
-                    identityDbField?.AsField();
-            }
+            identity = IdentityCache.Get<TEntity>()?.AsField() ??
+                FieldCache
+                    .Get<TEntity>()?
+                    .FirstOrDefault(field =>
+                        string.Equals(field.Name.AsUnquoted(true, dbSetting), identityDbField?.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) ??
+                identityDbField?.AsField();
 
             // Filter the actual properties for input fields
             inputFields = dbFields?
@@ -198,7 +195,7 @@ namespace RepoDb.Contexts.Providers
             var identityPropertySetter = (Action<TEntity, object>)null;
 
             // Get the identity setter
-            if (typeOfEntity.IsClassType() == true && identity != null)
+            if (identity != null)
             {
                 identityPropertySetter = FunctionCache.GetDataEntityPropertySetterCompiledFunction<TEntity>(identity);
             }

@@ -607,6 +607,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll<object>(ClassMappedNameCache.Get<IdentityTable>(),
                     tables);
 
+                // Assert
+                tables.ForEach(table => Assert.IsTrue(((dynamic)table).Id > 0));
+
                 // Act
                 var result = connection.QueryAll<IdentityTable>().AsList();
 
@@ -633,6 +636,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll<object>(ClassMappedNameCache.Get<IdentityTable>(),
                     tables,
                     fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar)));
+
+                // Assert
+                tables.ForEach(table => Assert.IsTrue(((dynamic)table).Id > 0));
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>().AsList();
@@ -1008,6 +1014,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAllAsync<object>(ClassMappedNameCache.Get<IdentityTable>(),
                     tables).Wait();
 
+                // Assert
+                tables.ForEach(table => Assert.IsTrue(((dynamic)table).Id > 0));
+
                 // Act
                 var result = connection.QueryAll<IdentityTable>().AsList();
 
@@ -1034,6 +1043,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAllAsync<object>(ClassMappedNameCache.Get<IdentityTable>(),
                     tables,
                     fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar))).Wait();
+
+                // Assert
+                tables.ForEach(table => Assert.IsTrue(((dynamic)table).Id > 0));
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>().AsList();

@@ -1257,6 +1257,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
                 Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityTable>());
+                tables.ForEach(table => Assert.IsNotNull(((dynamic)table).Id));
 
                 // Act
                 var queryAllResult = connection.QueryAll<NonIdentityTable>();
@@ -1287,6 +1288,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
                 Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityTable>());
+                tables.ForEach(table => Assert.IsNotNull(((dynamic)table).Id));
 
                 // Act
                 var queryAllResult = connection.QueryAll<NonIdentityTable>();
@@ -1497,6 +1499,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
                 Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityTable>());
+                tables.ForEach(table => Assert.IsNotNull(((dynamic)table).Id));
 
                 // Act
                 var queryAllResult = connection.QueryAll<NonIdentityTable>();
@@ -1530,6 +1533,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
                 Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityTable>());
+                tables.ForEach(table => Assert.IsNotNull(((dynamic)table).Id));
 
                 // Act
                 var queryAllResult = connection.QueryAll<NonIdentityTable>();
@@ -1865,6 +1869,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
                 Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityTable>());
+                tables.ForEach(table => Assert.IsNotNull(((dynamic)table).Id));
 
                 // Act
                 var queryAllResult = connection.QueryAll<NonIdentityTable>();
@@ -1895,6 +1900,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
                 Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityTable>());
+                tables.ForEach(table => Assert.IsNotNull(((dynamic)table).Id));
 
                 // Act
                 var queryAllResult = connection.QueryAll<NonIdentityTable>();
@@ -2105,6 +2111,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
                 Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityTable>());
+                tables.ForEach(table => Assert.IsNotNull(((dynamic)table).Id));
 
                 // Act
                 var queryAllResult = connection.QueryAll<NonIdentityTable>();
@@ -2138,6 +2145,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Assert
                 Assert.AreEqual(tables.Count, mergeAllResult);
                 Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityTable>());
+                tables.ForEach(table => Assert.IsNotNull(((dynamic)table).Id));
 
                 // Act
                 var queryAllResult = connection.QueryAll<NonIdentityTable>();

@@ -472,6 +472,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.IsTrue(id > 0);
+                Assert.IsTrue(((dynamic)table).Id == id);
 
                 // Act
                 var result = connection.Query<IdentityTable>(id)?.FirstOrDefault();
@@ -496,6 +497,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.IsTrue(id > 0);
+                Assert.IsTrue(((dynamic)table).Id == id);
 
                 // Act
                 var result = connection.Query<IdentityTable>(id)?.FirstOrDefault();
@@ -569,6 +571,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.IsTrue(id > 0);
+                Assert.IsTrue(((dynamic)table).Id == id);
 
                 // Act
                 var result = connection.Query<IdentityTable>(id)?.FirstOrDefault();
@@ -593,6 +596,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.IsTrue(id > 0);
+                Assert.IsTrue(((dynamic)table).Id == id);
 
                 // Act
                 var result = connection.Query<IdentityTable>(id)?.FirstOrDefault();
@@ -811,6 +815,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.IsTrue(id > 0);
+                Assert.IsTrue(((dynamic)table).Id == id);
 
                 // Act
                 var result = connection.Query<IdentityTable>(id)?.FirstOrDefault();
@@ -835,6 +840,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.IsTrue(id > 0);
+                Assert.IsTrue(((dynamic)table).Id == id);
 
                 // Act
                 var result = connection.Query<IdentityTable>(id)?.FirstOrDefault();
@@ -908,6 +914,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.IsTrue(id > 0);
+                Assert.IsTrue(((dynamic)table).Id == id);
 
                 // Act
                 var result = connection.Query<IdentityTable>(id)?.FirstOrDefault();
@@ -932,6 +939,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.IsTrue(id > 0);
+                Assert.IsTrue(((dynamic)table).Id == id);
 
                 // Act
                 var result = connection.Query<IdentityTable>(id)?.FirstOrDefault();
