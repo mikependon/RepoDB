@@ -21,6 +21,8 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests
             EpocDate = new DateTime(1970, 1, 1, 0, 0, 0);
         }
 
+        #region Properties
+
         /// <summary>
         /// Gets the instance of <see cref="IStatementBuilder"/> object.
         /// </summary>
@@ -30,6 +32,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests
         /// Gets the value of the Epoc date.
         /// </summary>
         public static DateTime EpocDate { get; }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Asserts the properties equality of 2 types.
@@ -148,13 +154,15 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests
             });
         }
 
+        #endregion
+
         #region BulkOperationIdentityTable
 
         /// <summary>
-        /// Creates a list of <see cref="BulkOperationIdentityTable"/> objects.
+        /// 
         /// </summary>
-        /// <param name="count">The number of rows.</param>
-        /// <returns>A list of <see cref="BulkOperationIdentityTable"/> objects.</returns>
+        /// <param name="count"></param>
+        /// <returns></returns>
         public static List<BulkOperationIdentityTable> CreateBulkOperationIdentityTables(int count)
         {
             var tables = new List<BulkOperationIdentityTable>();
@@ -177,9 +185,9 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests
         }
 
         /// <summary>
-        /// Creates an instance of <see cref="BulkOperationIdentityTable"/> object.
+        /// 
         /// </summary>
-        /// <returns>A new created instance of <see cref="BulkOperationIdentityTable"/> object.</returns>
+        /// <returns></returns>
         public static BulkOperationIdentityTable CreateBulkOperationIdentityTable()
         {
             var random = new Random();
@@ -197,8 +205,9 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests
         }
 
         /// <summary>
-        /// Updates a list of <see cref="BulkOperationIdentityTable"/> objects.
+        /// 
         /// </summary>
+        /// <param name="tables"></param>
         public static void UpdateBulkOperationIdentityTables(List<BulkOperationIdentityTable> tables)
         {
             var random = new Random();
@@ -215,15 +224,40 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public static List<ExpandoObject> CreateBulkOperationExpandoObjectIdentityTables(int count)
+        {
+            var tables = new List<ExpandoObject>();
+            for (var i = 0; i < count; i++)
+            {
+                var index = i + 1;
+                var item = new ExpandoObject() as IDictionary<string, object>;
+                item["RowGuid"] = Guid.NewGuid();
+                item["ColumnBit"] = true;
+                item["ColumnDateTime"] = EpocDate.AddDays(index);
+                item["ColumnDateTime2"] = DateTime.UtcNow;
+                item["ColumnDecimal"] = index;
+                item["ColumnFloat"] = index;
+                item["ColumnInt"] = index;
+                item["ColumnNVarChar"] = $"NVARCHAR{index}";
+                tables.Add((ExpandoObject)item);
+            }
+            return tables;
+        }
+
         #endregion
 
         #region WithExtraFieldsBulkOperationIdentityTable
 
         /// <summary>
-        /// Creates a list of <see cref="WithExtraFieldsBulkOperationIdentityTable"/> objects.
+        /// 
         /// </summary>
-        /// <param name="count">The number of rows.</param>
-        /// <returns>A list of <see cref="BulkOperationIdentityTable"/> objects.</returns>
+        /// <param name="count"></param>
+        /// <returns></returns>
         public static List<WithExtraFieldsBulkOperationIdentityTable> CreateWithExtraFieldsBulkOperationIdentityTables(int count)
         {
             var tables = new List<WithExtraFieldsBulkOperationIdentityTable>();
@@ -252,9 +286,9 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests
         }
 
         /// <summary>
-        /// Creates an instance of <see cref="WithExtraFieldsBulkOperationIdentityTable"/> object.
+        /// 
         /// </summary>
-        /// <returns>A new created instance of <see cref="NonIdentityTable"/> object.</returns>
+        /// <returns></returns>
         public static WithExtraFieldsBulkOperationIdentityTable CreateWithExtraFieldsBulkOperationIdentityTable()
         {
             var random = new Random();
@@ -272,8 +306,9 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests
         }
 
         /// <summary>
-        /// Updates a list of <see cref="WithExtraFieldsBulkOperationIdentityTable"/> objects.
+        /// 
         /// </summary>
+        /// <param name="tables"></param>
         public static void UpdateWithExtraFieldsBulkOperationIdentityTables(List<WithExtraFieldsBulkOperationIdentityTable> tables)
         {
             var random = new Random();

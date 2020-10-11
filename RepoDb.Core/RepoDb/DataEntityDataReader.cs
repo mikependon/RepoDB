@@ -20,11 +20,13 @@ namespace RepoDb
     {
         #region Fields
 
+        private string tableName = null;
         private int fieldCount = 0;
         private bool isClosed = false;
         private bool isDisposed = false;
         private int position = -1;
         private int recordsAffected = -1;
+        private bool isDictionaryStringObject = false;
 
         #endregion
 
@@ -33,9 +35,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="entities">The list of the data entity object to be used for manipulation.</param>
         public DataEntityDataReader(IEnumerable<TEntity> entities)
-            : this(entities,
-                null,
-                null)
+            : this(entities, null, null)
         { }
 
         /// <summary>
@@ -45,9 +45,7 @@ namespace RepoDb
         /// <param name="connection">The actual <see cref="IDbConnection"/> object used.</param>
         public DataEntityDataReader(IEnumerable<TEntity> entities,
             IDbConnection connection)
-            : this(entities,
-                  connection,
-                  null)
+            : this(entities, connection, null)
         { }
 
         /// <summary>
@@ -59,6 +57,20 @@ namespace RepoDb
         public DataEntityDataReader(IEnumerable<TEntity> entities,
             IDbConnection connection,
             IDbTransaction transaction)
+            : this(null, entities, connection, transaction)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="DataEntityDataReader{TEntity}"/> object.
+        /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="entities">The list of the data entity object to be used for manipulation.</param>
+        /// <param name="connection">The actual <see cref="IDbConnection"/> object used.</param>
+        /// <param name="transaction">The transaction object that is currently in used.</param>
+        public DataEntityDataReader(string tableName,
+            IEnumerable<TEntity> entities,
+            IDbConnection connection,
+            IDbTransaction transaction)
         {
             if (entities == null)
             {
@@ -66,10 +78,12 @@ namespace RepoDb
             }
 
             // Fields
+            this.tableName = tableName ?? ClassMappedNameCache.Get<TEntity>();
             isClosed = false;
             isDisposed = false;
             position = -1;
             recordsAffected = -1;
+            isDictionaryStringObject = typeof(TEntity).IsDictionaryStringObject();
 
             // DbSetting
             DbSetting = connection?.GetDbSetting();
@@ -93,7 +107,7 @@ namespace RepoDb
             var dbFields = (IEnumerable<DbField>)null;
             if (Connection != null)
             {
-                dbFields = DbFieldCache.Get(Connection, ClassMappedNameCache.Get<TEntity>(), Transaction);
+                dbFields = DbFieldCache.Get(Connection, TableName, Transaction, false);
             }
             InitializeInternal(dbFields);
         }
@@ -111,7 +125,7 @@ namespace RepoDb
             var dbFields = (IEnumerable<DbField>)null;
             if (Connection != null)
             {
-                dbFields = await DbFieldCache.GetAsync(Connection, ClassMappedNameCache.Get<TEntity>(), Transaction, cancellationToken);
+                dbFields = await DbFieldCache.GetAsync(Connection, TableName, Transaction, false, cancellationToken);
             }
             InitializeInternal(dbFields);
         }
@@ -126,17 +140,9 @@ namespace RepoDb
             {
                 return;
             }
-            if (dbFields?.Any() == true)
-            {
-                Properties = PropertyCache.Get<TEntity>()
-                    .Where(p => dbFields.FirstOrDefault(f => string.Equals(f.Name.AsQuoted(DbSetting), p.GetMappedName().AsQuoted(DbSetting), StringComparison.OrdinalIgnoreCase)) != null)
-                    .AsList();
-            }
-            else
-            {
-                Properties = PropertyCache.Get<TEntity>().AsList();
-            }
-            fieldCount = Properties.Count;
+            Properties = GetClassProperties(dbFields).AsList();
+            Fields = GetFields(Entities?.FirstOrDefault() as IDictionary<string, object>, dbFields).AsList();
+            fieldCount = isDictionaryStringObject ? Fields.Count : Properties.Count;
             IsInitialized = true;
         }
 
@@ -178,14 +184,26 @@ namespace RepoDb
         public IEnumerable<TEntity> Entities { get; private set; }
 
         /// <summary>
-        /// Gets the properties of data entity object.
-        /// </summary>
-        public IList<ClassProperty> Properties { get; private set; }
-
-        /// <summary>
         /// Gets the current position of the enumerator.
         /// </summary>
-        public int Position { get { return position; } }
+        public int Position =>
+            position;
+
+        /// <summary>
+        /// Gets the name of the target table.
+        /// </summary>
+        private string TableName =>
+            tableName;
+
+        /// <summary>
+        /// Gets the properties of data entity object.
+        /// </summary>
+        private IList<ClassProperty> Properties { get; set; }
+
+        /// <summary>
+        /// Gets the fields of the dictionary.
+        /// </summary>
+        private IList<Field> Fields { get; set; }
 
         /// <summary>
         /// Gets the current value from the index.
@@ -471,7 +489,16 @@ namespace RepoDb
         public override int GetOrdinal(string name)
         {
             ThrowExceptionIfNotInitializedOrNotAvailable();
-            return Properties.IndexOf(Properties.FirstOrDefault(p => p.GetMappedName() == name));
+            if (isDictionaryStringObject)
+            {
+                return Fields.IndexOf(Fields.FirstOrDefault(f =>
+                    string.Equals(f.Name, name, StringComparison.OrdinalIgnoreCase)));
+            }
+            else
+            {
+                return Properties.IndexOf(Properties.FirstOrDefault(p =>
+                    string.Equals(p.GetMappedName(), name, StringComparison.OrdinalIgnoreCase)));
+            }
         }
 
         /// <summary>
@@ -503,7 +530,15 @@ namespace RepoDb
         public override object GetValue(int i)
         {
             ThrowExceptionIfNotInitializedOrNotAvailable();
-            return Properties[i].PropertyInfo.GetValue(Enumerator.Current);
+            if (isDictionaryStringObject)
+            {
+                var dictionary = Enumerator.Current as IDictionary<string, object>;
+                return dictionary?[Fields[i].Name];
+            }
+            else
+            {
+                return Properties[i].PropertyInfo.GetValue(Enumerator.Current);
+            }
         }
 
         /// <summary>
@@ -564,7 +599,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Throws an exception if the current data reader has not yet been initialized or is not available anymore.
+        /// 
         /// </summary>
         private void ThrowExceptionIfNotInitializedOrNotAvailable()
         {
@@ -579,6 +614,60 @@ namespace RepoDb
             if (IsClosed)
             {
                 throw new InvalidOperationException("The reader is already closed.");
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dbFields"></param>
+        /// <returns></returns>
+        private IEnumerable<ClassProperty> GetClassProperties(IEnumerable<DbField> dbFields)
+        {
+            if (isDictionaryStringObject)
+            {
+                return Enumerable.Empty<ClassProperty>();
+            }
+            if (dbFields?.Any() == true)
+            {
+                return PropertyCache.Get<TEntity>()?
+                    .Where(p => dbFields.FirstOrDefault(f => string.Equals(f.Name.AsQuoted(DbSetting), p.GetMappedName().AsQuoted(DbSetting), StringComparison.OrdinalIgnoreCase)) != null)
+                    .AsList();
+            }
+            else
+            {
+                return PropertyCache.Get<TEntity>()?.AsList();
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dictionary"></param>
+        /// <param name="dbFields"></param>
+        /// <returns></returns>
+        private IEnumerable<Field> GetFields(IDictionary<string, object> dictionary,
+            IEnumerable<DbField> dbFields)
+        {
+            if (dictionary != null)
+            {
+                if (dbFields?.Any() == true)
+                {
+                    foreach (var kvp in dictionary)
+                    {
+                        if (dbFields.Any(e => string.Equals(e.Name.AsUnquoted(DbSetting), kvp.Key.AsUnquoted(DbSetting), StringComparison.OrdinalIgnoreCase)))
+                        {
+                            yield return new Field(kvp.Key, kvp.Value?.GetType());
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (var kvp in dictionary)
+                    {
+                        yield return new Field(kvp.Key, kvp.Value?.GetType());
+                    }
+                }
             }
         }
     }
