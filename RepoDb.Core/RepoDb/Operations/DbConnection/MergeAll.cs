@@ -1502,13 +1502,14 @@ namespace RepoDb
                 }
 
                 // Iterate the entities
+                var immutableFields = fields.AsList(); // Fix for the IDictionary<string, object> object
                 foreach (var entity in entities.AsList())
                 {
                     // Call the upsert
                     var upsertResult = connection.UpsertInternalBase<TEntity, object>(tableName,
                         entity,
                         qualifiers,
-                        fields,
+                        immutableFields,
                         hints,
                         commandTimeout,
                         transaction,
@@ -1903,13 +1904,14 @@ namespace RepoDb
                 }
 
                 // Iterate the entities
+                var immutableFields = fields.AsList(); // Fix for the IDictionary<string, object> object
                 foreach (var entity in entities.AsList())
                 {
                     // Call the upsert
                     var upsertResult = await connection.UpsertAsyncInternalBase<TEntity, object>(tableName,
                         entity,
                         qualifiers,
-                        fields,
+                        immutableFields,
                         hints,
                         commandTimeout,
                         transaction,

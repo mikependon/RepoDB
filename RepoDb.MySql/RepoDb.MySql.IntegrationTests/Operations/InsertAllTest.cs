@@ -195,6 +195,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
                 Assert.AreEqual(tables.Count, result);
+                Assert.IsTrue(tables.All(table => ((dynamic)table).Id > 0));
 
                 // Act
                 var queryResult = connection.QueryAll<CompleteTable>();
@@ -343,6 +344,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
                 Assert.AreEqual(tables.Count, result);
+                Assert.IsTrue(tables.All(table => ((dynamic)table).Id > 0));
 
                 // Act
                 var queryResult = connection.QueryAll<CompleteTable>();

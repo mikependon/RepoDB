@@ -227,6 +227,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
+                Assert.AreEqual(((dynamic)table).Id, result);
                 Helper.AssertMembersEquality(queryResult.First(), table);
             }
         }
@@ -276,6 +277,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
+                Assert.AreEqual(((dynamic)table).Id, result);
 
                 // Act
                 var queryResult = connection.Query<CompleteTable>(result);
@@ -440,6 +442,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
+                Assert.AreEqual(((dynamic)table).Id, result);
                 Helper.AssertMembersEquality(queryResult.First(), table);
             }
         }
@@ -489,6 +492,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
+                Assert.AreEqual(((dynamic)table).Id, result);
 
                 // Act
                 var queryResult = connection.Query<CompleteTable>(result);

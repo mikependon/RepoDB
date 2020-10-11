@@ -1,6 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RepoDb.SqlServer.IntegrationTests;
 using RepoDb.SqlServer.IntegrationTests.Models;
 using RepoDb.SqlServer.IntegrationTests.Setup;
 using System.Linq;
@@ -196,6 +195,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
                 Assert.AreEqual(tables.Count, result);
+                Assert.IsTrue(tables.All(table => ((dynamic)table).Id > 0));
 
                 // Act
                 var queryResult = connection.QueryAll<CompleteTable>();
@@ -344,6 +344,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
                 Assert.AreEqual(tables.Count, result);
+                Assert.IsTrue(tables.All(table => ((dynamic)table).Id > 0));
 
                 // Act
                 var queryResult = connection.QueryAll<CompleteTable>();
