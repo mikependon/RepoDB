@@ -419,6 +419,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<SdsCompleteTable>());
                 Assert.AreEqual(tables.Count, result);
+                Assert.IsTrue(tables.All(table => ((dynamic)table).Id > 0));
 
                 // Act
                 var queryResult = connection.QueryAll<SdsCompleteTable>();
@@ -474,6 +475,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<SdsCompleteTable>());
                 Assert.AreEqual(tables.Count, result);
+                Assert.IsTrue(tables.All(table => ((dynamic)table).Id > 0));
 
                 // Act
                 var queryResult = connection.QueryAll<SdsCompleteTable>();
@@ -815,6 +817,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<SdsCompleteTable>());
                 Assert.AreEqual(tables.Count, result);
+                Assert.IsTrue(tables.All(table => ((dynamic)table).Id > 0));
 
                 // Act
                 var queryResult = connection.QueryAll<SdsCompleteTable>();
@@ -870,6 +873,7 @@ namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<SdsCompleteTable>());
                 Assert.AreEqual(tables.Count, result);
+                Assert.IsTrue(tables.All(table => ((dynamic)table).Id > 0));
 
                 // Act
                 var queryResult = connection.QueryAll<SdsCompleteTable>();

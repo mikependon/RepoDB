@@ -228,6 +228,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
+                Assert.AreEqual(((dynamic)table).Id, result);
                 Helper.AssertMembersEquality(queryResult.First(), table);
             }
         }
@@ -442,6 +443,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
+                Assert.AreEqual(((dynamic)table).Id, result);
                 Helper.AssertMembersEquality(queryResult.First(), table);
             }
         }

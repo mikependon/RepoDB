@@ -228,6 +228,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
+                Assert.IsTrue(((dynamic)table).Id == Convert.ToInt64(result));
                 Helper.AssertMembersEquality(queryResult.First(), table);
             }
         }
@@ -278,6 +279,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
                 Assert.AreEqual(table.Id, result);
+                Assert.AreEqual(((dynamic)table).Id, result);
 
                 // Act
                 var queryResult = connection.Query<CompleteTable>(result);
@@ -442,6 +444,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
+                Assert.IsTrue(((dynamic)table).Id == Convert.ToInt64(result));
                 Helper.AssertMembersEquality(queryResult.First(), table);
             }
         }
@@ -492,6 +495,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
                 Assert.AreEqual(table.Id, result);
+                Assert.AreEqual(((dynamic)table).Id, result);
 
                 // Act
                 var queryResult = connection.Query<CompleteTable>(result);

@@ -2389,7 +2389,13 @@ namespace RepoDb
         internal static QueryGroup CreateQueryGroupForUpsert(IDictionary<string, object> dictionary,
             IEnumerable<Field> qualifiers = null)
         {
+            if (qualifiers?.Any() != true)
+            {
+                throw new MissingFieldsException("No qualifier fields found for the 'Upsert' operation.");
+            }
+
             var queryFields = new List<QueryField>();
+
             foreach (var field in qualifiers)
             {
                 if (dictionary.ContainsKey(field.Name))
@@ -2397,6 +2403,12 @@ namespace RepoDb
                     queryFields.Add(new QueryField(field, dictionary[field.Name]));
                 }
             }
+
+            if (queryFields?.Any() != true)
+            {
+                throw new MissingFieldsException("No qualifier fields defined for the 'Upsert' operation. Please check the items defined at the dictionary object.");
+            }
+
             return new QueryGroup(queryFields);
         }
 

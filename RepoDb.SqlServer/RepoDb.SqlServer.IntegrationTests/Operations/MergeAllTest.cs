@@ -407,6 +407,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
                 Assert.AreEqual(tables.Count, result);
+                Assert.IsTrue(tables.All(table => ((dynamic)table).Id > 0));
 
                 // Act
                 var queryResult = connection.QueryAll<CompleteTable>();
@@ -761,7 +762,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         public void TestSqlConnectionMergeAllAsyncAsExpandoObjectViaTableNameForIdentityForEmptyTable()
         {
             // Setup
-            var tables = Helper.CreateCompleteTables(10);
+            var tables = Helper.CreateCompleteTablesAsExpandoObjects(10);
 
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
@@ -771,13 +772,15 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
+                Assert.AreEqual(tables.Count, result);
+                Assert.IsTrue(tables.All(table => ((dynamic)table).Id > 0));
 
                 // Act
                 var queryResult = connection.QueryAll<CompleteTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.ForEach(table => Helper.AssertMembersEquality(table, queryResult.First(e => e.Id == table.Id)));
+                tables.ForEach(table => Helper.AssertMembersEquality(queryResult.First(e => e.Id == ((dynamic)table).Id), table));
             }
         }
 

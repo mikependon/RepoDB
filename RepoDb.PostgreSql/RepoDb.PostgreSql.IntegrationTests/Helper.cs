@@ -315,7 +315,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
             for (var i = 0; i < count; i++)
             {
                 var item = new ExpandoObject() as IDictionary<string, object>;
-                item["Id"] = (i + 1);
+                item["Id"] = (long)(i + 1);
                 item["ColumnBigInt"] = Convert.ToInt64(i);
                 item["ColumnBigIntAsArray"] = new long[] { 1, 2, 3, 4, 5 };
                 item["ColumnBigSerial"] = Convert.ToInt64(i);
