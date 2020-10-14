@@ -212,6 +212,9 @@ namespace RepoDb.Resolvers
                     return typeof(NpgsqlTypes.NpgsqlCircle);
                 case "date":
                 case "timestamp without time zone":
+                case "timestamp":
+                case "timestamp with time zone":
+                case "timestamptz":
                     return typeof(System.DateTime);
                 case "double precision":
                     return typeof(System.Double);
@@ -221,6 +224,7 @@ namespace RepoDb.Resolvers
                     return typeof(System.Int32);
                 case "interval":
                 case "time without time zone":
+                case "time":
                     return typeof(System.TimeSpan);
                 case "line":
                     return typeof(NpgsqlTypes.NpgsqlLine);
@@ -244,6 +248,7 @@ namespace RepoDb.Resolvers
                     return typeof(System.Int16);
                 case "tid":
                     return typeof(NpgsqlTypes.NpgsqlTid);
+                case "timetz":
                 case "time with time zone":
                     return typeof(System.DateTimeOffset);
                 case "tsquery":

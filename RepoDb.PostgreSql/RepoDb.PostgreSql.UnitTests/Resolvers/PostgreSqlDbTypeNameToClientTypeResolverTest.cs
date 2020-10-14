@@ -532,6 +532,45 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
             // Assert
             Assert.AreEqual(typeof(DateTime), result);
         }
+        
+        [TestMethod]
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForTimestamp()
+        {
+            // Setup
+            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
+
+            // Act
+            var result = resolver.Resolve("TIMESTAMP");
+
+            // Assert
+            Assert.AreEqual(typeof(DateTime), result);
+        }
+        
+        [TestMethod]
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForTimestampWithTimeZone()
+        {
+            // Setup
+            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
+
+            // Act
+            var result = resolver.Resolve("TIMESTAMP WITH TIME ZONE");
+
+            // Assert
+            Assert.AreEqual(typeof(DateTime), result);
+        }
+        
+        [TestMethod]
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForTimestampTz()
+        {
+            // Setup
+            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
+
+            // Act
+            var result = resolver.Resolve("TIMESTAMPTZ");
+
+            // Assert
+            Assert.AreEqual(typeof(DateTime), result);
+        }
 
         [TestMethod]
         public void TestPostgreSqlDbTypeNameToClientTypeResolverForDoublePrecision()
@@ -593,6 +632,19 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
 
             // Act
             var result = resolver.Resolve("TIME WITHOUT TIME ZONE");
+
+            // Assert
+            Assert.AreEqual(typeof(TimeSpan), result);
+        }
+        
+        [TestMethod]
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForTime()
+        {
+            // Setup
+            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
+
+            // Act
+            var result = resolver.Resolve("TIME");
 
             // Assert
             Assert.AreEqual(typeof(TimeSpan), result);
@@ -754,6 +806,19 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
             Assert.AreEqual(typeof(NpgsqlTypes.NpgsqlTid), result);
         }
 
+        [TestMethod]
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForTimeTz()
+        {
+            // Setup
+            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
+
+            // Act
+            var result = resolver.Resolve("TIMETZ");
+
+            // Assert
+            Assert.AreEqual(typeof(System.DateTimeOffset), result);
+        }
+        
         [TestMethod]
         public void TestPostgreSqlDbTypeNameToClientTypeResolverForTimeWithTimeZone()
         {
