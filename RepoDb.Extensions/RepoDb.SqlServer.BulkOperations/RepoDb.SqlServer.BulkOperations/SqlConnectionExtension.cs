@@ -25,9 +25,9 @@ namespace RepoDb
         #region System.Data
 
         /// <summary>
-        /// Gets the <see cref="SqlBulkCopy"/> private variable reflected field.
+        /// 
         /// </summary>
-        /// <returns>The actual field.</returns>
+        /// <returns></returns>
         private static FieldInfo GetRowsCopiedFieldFromSystemDataSqlBulkCopy()
         {
             // Check if the call has made earlier
@@ -52,34 +52,43 @@ namespace RepoDb
         #region Helpers
 
         /// <summary>
-        /// Parses the expression to be an enumerable of <see cref="Field"/> objects.
+        /// 
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <param name="qualifiers">The expression to be parsed.</param>
-        /// <returns>An enumerable of <see cref="Field"/> objects.</returns>
+        /// <param name="dictionary"></param>
+        /// <returns></returns>
+        private static IEnumerable<Field> GetDictionaryStringObjectFields(IDictionary<string, object> dictionary)
+        {
+            foreach (var kvp in dictionary)
+            {
+                yield return new Field(kvp.Key, kvp.Value?.GetType());
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="qualifiers"></param>
+        /// <returns></returns>
         private static IEnumerable<Field> ParseExpression<TEntity>(Expression<Func<TEntity, object>> qualifiers)
-            where TEntity : class
-        {
-            return qualifiers != null ? Field.Parse<TEntity>(qualifiers) : default;
-        }
+            where TEntity : class =>
+            qualifiers != null ? Field.Parse<TEntity>(qualifiers) : default;
 
         /// <summary>
-        /// Gets the actual name of the table from the database.
+        /// 
         /// </summary>
-        /// <param name="tableName">The passed table name.</param>
-        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
-        /// <returns>The actual table name.</returns>
+        /// <param name="tableName"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
         private static string GetTableName(string tableName,
-            IDbSetting dbSetting)
-        {
-            return DataEntityExtension.GetTableName(tableName, dbSetting);
-        }
+            IDbSetting dbSetting) =>
+            DataEntityExtension.GetTableName(tableName, dbSetting);
 
         /// <summary>
-        /// Validates whether the transaction object connection is object is equals to the connection object.
+        /// 
         /// </summary>
-        /// <param name="connection">The connection object to be validated.</param>
-        /// <param name="transaction">The transaction object to compare.</param>
+        /// <param name="connection"></param>
+        /// <param name="transaction"></param>
         private static void ValidateTransactionConnectionObject(this IDbConnection connection,
             IDbTransaction transaction)
         {
@@ -90,10 +99,10 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Returns all the <see cref="DataTable"/> objects of the <see cref="DataTable"/>.
+        /// 
         /// </summary>
-        /// <param name="dataTable">The instance of <see cref="DataTable"/> where the list of <see cref="DataColumn"/> will be extracted.</param>
-        /// <returns>The list of <see cref="DataColumn"/> objects.</returns>
+        /// <param name="dataTable"></param>
+        /// <returns></returns>
         private static IEnumerable<DataColumn> GetDataColumns(DataTable dataTable)
         {
             foreach (var column in dataTable.Columns.OfType<DataColumn>())
@@ -103,11 +112,11 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Returns all the <see cref="DataRow"/> objects of the <see cref="DataTable"/> by state.
+        /// 
         /// </summary>
-        /// <param name="dataTable">The instance of <see cref="DataTable"/> where the list of <see cref="DataRow"/> will be extracted.</param>
-        /// <param name="rowState">The state of the <see cref="DataRow"/> objects to be extracted.</param>
-        /// <returns>The list of <see cref="DataRow"/> objects.</returns>
+        /// <param name="dataTable"></param>
+        /// <param name="rowState"></param>
+        /// <returns></returns>
         private static IEnumerable<DataRow> GetDataRows(DataTable dataTable,
             DataRowState? rowState = null)
         {
@@ -123,10 +132,10 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Gets the equivalent list of <see cref="BulkInsertMapItem"/> from the list of the <see cref="Field"/> objects.
+        /// 
         /// </summary>
-        /// <param name="fields">The list of <see cref="Field"/> objects to extract.</param>
-        /// <returns>The list of <see cref="BulkInsertMapItem"/> objects.</returns>
+        /// <param name="fields"></param>
+        /// <returns></returns>
         private static IEnumerable<BulkInsertMapItem> GetBulkInsertMapItemsFromFields(IEnumerable<Field> fields)
         {
             foreach (var field in fields)
@@ -139,6 +148,14 @@ namespace RepoDb
 
         #region SQL Helpers
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="tempTableName"></param>
+        /// <param name="fields"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
         private static string GetCreateTemporaryTableSqlText(string tableName,
             string tempTableName,
             IEnumerable<Field> fields,
@@ -163,6 +180,13 @@ namespace RepoDb
             return builder.ToString();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tempTableName"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
         private static string GetCreateTemporaryTableClusteredIndexSqlText(string tempTableName,
             IEnumerable<Field> qualifiers,
             IDbSetting dbSetting)
@@ -195,12 +219,25 @@ namespace RepoDb
             return builder.ToString();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tempTableName"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
         private static string GetDropTemporaryTableSqlText(string tempTableName,
-            IDbSetting dbSetting)
-        {
-            return $"DROP TABLE {tempTableName.AsQuoted(dbSetting)};";
-        }
+            IDbSetting dbSetting) =>
+            $"DROP TABLE {tempTableName.AsQuoted(dbSetting)};";
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="tempTableName"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="hints"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
         private static string GetBulkDeleteSqlText(string tableName,
             string tempTableName,
             IEnumerable<Field> qualifiers,
@@ -239,6 +276,16 @@ namespace RepoDb
             return builder.ToString();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="tempTableName"></param>
+        /// <param name="fields"></param>
+        /// <param name="identityField"></param>
+        /// <param name="hints"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
         private static string GetBulkInsertSqlText(string tableName,
             string tempTableName,
             IEnumerable<Field> fields,
@@ -292,6 +339,19 @@ namespace RepoDb
             return builder.ToString();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="tempTableName"></param>
+        /// <param name="fields"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="primaryField"></param>
+        /// <param name="identityField"></param>
+        /// <param name="hints"></param>
+        /// <param name="dbSetting"></param>
+        /// <param name="isReturnIdentity"></param>
+        /// <returns></returns>
         private static string GetBulkMergeSqlText(string tableName,
             string tempTableName,
             IEnumerable<Field> fields,
@@ -389,6 +449,18 @@ namespace RepoDb
             return builder.ToString();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="tempTableName"></param>
+        /// <param name="fields"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="primaryField"></param>
+        /// <param name="identityField"></param>
+        /// <param name="hints"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
         private static string GetBulkUpdateSqlText(string tableName,
             string tempTableName,
             IEnumerable<Field> fields,
@@ -444,6 +516,12 @@ namespace RepoDb
             return builder.ToString();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="field"></param>
+        /// <param name="values"></param>
+        /// <returns></returns>
         private static DataTable CreateDataTableWithSingleColumn(Field field,
             IEnumerable<object> values)
         {
