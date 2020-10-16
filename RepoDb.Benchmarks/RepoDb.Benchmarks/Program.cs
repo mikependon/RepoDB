@@ -8,10 +8,10 @@ namespace RepoDb.Benchmarks
         private static void Main(string[] args)
         {
             var switcher = new BenchmarkSwitcher(typeof(BenchmarkConfig).Assembly);
-            switcher.RunAll(new BenchmarkConfig());
+            //switcher.RunAll(new BenchmarkConfig());
 
             //For single run.
-            //switcher.Run(args, new BenchmarkConfig());
+            switcher.Run(args, new BenchmarkConfig());
         }
     }
 }

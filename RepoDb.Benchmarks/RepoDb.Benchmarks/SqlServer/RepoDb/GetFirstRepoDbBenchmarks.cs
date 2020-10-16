@@ -1,33 +1,14 @@
-﻿using System;
-using System.ComponentModel;
-using System.Data;
+﻿using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using BenchmarkDotNet.Attributes;
 using RepoDb.Benchmarks.Models;
 using RepoDb.Benchmarks.SqlServer.Setup;
 
-namespace RepoDb.Benchmarks.SqlServer
+namespace RepoDb.Benchmarks.SqlServer.RepoDb
 {
-    [Description("RepoDB")]
-    public class RepoDbBenchmarks : BaseBenchmark
+    public class GetFirstRepoDbBenchmarks : RepoDbBaseBenchmarks
     {
-        [GlobalSetup]
-        public void Setup()
-        {
-            SqlServerBootstrap.Initialize();
-            TypeMapper.Add(typeof(DateTime), DbType.DateTime2, true);
-            BaseSetup();
-        }
-
-        public override void Bootstrap()
-        {
-            using IDbConnection connection = new SqlConnection(DatabaseHelper.ConnectionString).EnsureOpen();
-
-            connection.Query<Person>(x => x.Id == CurrentId);
-            connection.QueryAll<Person>();
-        }
-
         [Benchmark]
         public Person QueryLinqFirst()
         {
@@ -41,7 +22,7 @@ namespace RepoDb.Benchmarks.SqlServer
         {
             using IDbConnection connection = new SqlConnection(DatabaseHelper.ConnectionString).EnsureOpen();
 
-            return connection.Query<Person>(new { Id = CurrentId }).First();
+            return connection.Query<Person>(new {Id = CurrentId}).First();
         }
 
         [Benchmark]
