@@ -561,6 +561,34 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestMicrosoftSqlConnectionBulkDeleteForTableNameExpandoObjects()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Setup
+                var entities = Helper.CreateBulkOperationExpandoObjectIdentityTables(10, true);
+
+                // Act
+                var bulkDeleteResult = connection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), entities);
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
+
+                // Act
+                var countResult = connection.CountAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(0, countResult);
+            }
+        }
+
+        [TestMethod]
         public void TestMicrosoftSqlConnectionBulkDeleteForTableNameDataEntities()
         {
             // Setup
@@ -1471,6 +1499,34 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 // Act
                 var bulkDeleteResult = connection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                     primaryKeys: primaryKeys).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
+
+                // Act
+                var countResult = connection.CountAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(0, countResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestMicrosoftSqlConnectionBulkDeleteAsyncForTableNameExpandoObjects()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Setup
+                var entities = Helper.CreateBulkOperationExpandoObjectIdentityTables(10, true);
+
+                // Act
+                var bulkDeleteResult = connection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), entities).Result;
 
                 // Assert
                 Assert.AreEqual(tables.Count, bulkDeleteResult);

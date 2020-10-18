@@ -527,6 +527,38 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         #region BulkUpdate(TableName)
 
         [TestMethod]
+        public void TestMicrosoftSqlConnectionBulkUpdateForTableNameExpandoObjects()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Setup
+                var entities = Helper.CreateBulkOperationExpandoObjectIdentityTables(10, true);
+
+                // Act
+                var bulkUpdateResult = connection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), entities);
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkUpdateResult);
+
+                // Act
+                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                entities.AsList().ForEach(t =>
+                {
+                    Helper.AssertMembersEquality(t, queryResult.ElementAt(entities.IndexOf(t)));
+                });
+            }
+        }
+
+        [TestMethod]
         public void TestMicrosoftSqlConnectionBulkUpdateForTableNameDataEntities()
         {
             // Setup
@@ -534,7 +566,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
-                // Setup
+                // Act
                 connection.InsertAll(tables);
 
                 // Setup
@@ -566,7 +598,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
-                // Setup
+                // Act
                 connection.InsertAll(tables);
 
                 // Setup
@@ -600,7 +632,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
-                // Setup
+                // Act
                 connection.InsertAll(tables);
 
                 // Setup
@@ -1517,6 +1549,38 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         #region BulkUpdateAsync(TableName)
 
         [TestMethod]
+        public void TestMicrosoftSqlConnectionBulkUpdateAsyncForTableNameExpandoObjects()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Setup
+                var entities = Helper.CreateBulkOperationExpandoObjectIdentityTables(10, true);
+
+                // Act
+                var bulkUpdateResult = connection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), entities).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkUpdateResult);
+
+                // Act
+                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                entities.AsList().ForEach(t =>
+                {
+                    Helper.AssertMembersEquality(t, queryResult.ElementAt(entities.IndexOf(t)));
+                });
+            }
+        }
+
+        [TestMethod]
         public void TestMicrosoftSqlConnectionBulkUpdateAsyncForTableNameDataEntities()
         {
             // Setup
@@ -1524,7 +1588,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
-                // Setup
+                // Act
                 connection.InsertAll(tables);
 
                 // Setup
@@ -1556,7 +1620,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
-                // Setup
+                // Act
                 connection.InsertAll(tables);
 
                 // Setup
@@ -1590,7 +1654,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
-                // Setup
+                // Act
                 connection.InsertAll(tables);
 
                 // Setup
