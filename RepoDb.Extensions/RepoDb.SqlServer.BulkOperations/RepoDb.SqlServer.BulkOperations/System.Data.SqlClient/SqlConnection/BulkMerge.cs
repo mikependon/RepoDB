@@ -643,7 +643,10 @@ namespace RepoDb
                 var dbFields = DbFieldCache.Get(connection, tableName, transaction, true);
 
                 // Variables needed
-                var entityFields = FieldCache.Get<TEntity>().Select(f => f.Name);
+                var entityType = entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity);
+                var entityFields = entityType.IsDictionaryStringObject() ?
+                    GetDictionaryStringObjectFields(entities?.FirstOrDefault() as IDictionary<string, object>) :
+                    FieldCache.Get(entityType);
                 var fields = dbFields?.Select(dbField => dbField.AsField());
                 var primaryDbField = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
                 var identityDbField = dbFields?.FirstOrDefault(dbField => dbField.IsIdentity);
@@ -667,7 +670,7 @@ namespace RepoDb
                 {
                     fields = fields
                         .Where(e =>
-                            entityFields.Any(fieldName => string.Equals(fieldName, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
+                            entityFields.Any(f => string.Equals(f.Name, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
                 }
 
                 // Filter the fields (based on the mappings)
@@ -747,14 +750,27 @@ namespace RepoDb
                 {
                     using (var reader = (DbDataReader)connection.ExecuteReader(sql, commandTimeout: bulkCopyTimeout, transaction: transaction))
                     {
-                        var func = Compiler.GetPropertySetterFunc<TEntity>(identityDbField.Name);
                         var list = entities.AsList();
-                        while (reader.Read())
+                        if (entityType.IsDictionaryStringObject())
                         {
-                            var value = Converter.DbNullToNull(reader.GetFieldValue<object>(0));
-                            var entity = list[result];
-                            func(entity, value);
-                            result++;
+                            while (reader.Read())
+                            {
+                                var value = Converter.DbNullToNull(reader.GetFieldValue<object>(0));
+                                var dictionary = (IDictionary<string, object>)list[result];
+                                dictionary[identityDbField.Name] = value;
+                                result++;
+                            }
+                        }
+                        else
+                        {
+                            var func = Compiler.GetPropertySetterFunc<TEntity>(identityDbField.Name);
+                            while (reader.Read())
+                            {
+                                var value = Converter.DbNullToNull(reader.GetFieldValue<object>(0));
+                                var entity = list[result];
+                                func(entity, value);
+                                result++;
+                            }
                         }
                     }
                 }
@@ -1277,7 +1293,10 @@ namespace RepoDb
                 var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, true, cancellationToken);
 
                 // Variables needed
-                var entityFields = FieldCache.Get<TEntity>().Select(f => f.Name);
+                var entityType = entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity);
+                var entityFields = entityType.IsDictionaryStringObject() ?
+                    GetDictionaryStringObjectFields(entities?.FirstOrDefault() as IDictionary<string, object>) :
+                    FieldCache.Get(entityType);
                 var fields = dbFields?.Select(dbField => dbField.AsField());
                 var primaryDbField = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
                 var identityDbField = dbFields?.FirstOrDefault(dbField => dbField.IsIdentity);
@@ -1301,7 +1320,7 @@ namespace RepoDb
                 {
                     fields = fields
                         .Where(e =>
-                            entityFields.Any(fieldName => string.Equals(fieldName, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
+                            entityFields.Any(f => string.Equals(f.Name, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
                 }
 
                 // Filter the fields (based on the mappings)
@@ -1382,14 +1401,27 @@ namespace RepoDb
                 {
                     using (var reader = (DbDataReader)(await connection.ExecuteReaderAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, cancellationToken: cancellationToken)))
                     {
-                        var func = Compiler.GetPropertySetterFunc<TEntity>(identityDbField.Name);
                         var list = entities.AsList();
-                        while (await reader.ReadAsync(cancellationToken))
+                        if (entityType.IsDictionaryStringObject())
                         {
-                            var value = Converter.DbNullToNull(await reader.GetFieldValueAsync<object>(0, cancellationToken));
-                            var entity = list[result];
-                            func(entity, value);
-                            result++;
+                            while (await reader.ReadAsync(cancellationToken))
+                            {
+                                var value = Converter.DbNullToNull(await reader.GetFieldValueAsync<object>(0, cancellationToken));
+                                var dictionary = (IDictionary<string, object>)list[result];
+                                dictionary[identityDbField.Name] = value;
+                                result++;
+                            }
+                        }
+                        else
+                        {
+                            var func = Compiler.GetPropertySetterFunc<TEntity>(identityDbField.Name);
+                            while (await reader.ReadAsync(cancellationToken))
+                            {
+                                var value = Converter.DbNullToNull(await reader.GetFieldValueAsync<object>(0, cancellationToken));
+                                var entity = list[result];
+                                func(entity, value);
+                                result++;
+                            }
                         }
                     }
                 }
@@ -1590,6 +1622,8 @@ namespace RepoDb
                     hints,
                     dbSetting,
                     isReturnIdentity.GetValueOrDefault());
+
+                // Identity if the identity is to return
                 result = await connection.ExecuteNonQueryAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, cancellationToken: cancellationToken);
 
                 // Drop the table after used

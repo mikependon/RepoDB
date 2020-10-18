@@ -229,13 +229,18 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests
         /// </summary>
         /// <param name="count"></param>
         /// <returns></returns>
-        public static List<ExpandoObject> CreateBulkOperationExpandoObjectIdentityTables(int count)
+        public static List<ExpandoObject> CreateBulkOperationExpandoObjectIdentityTables(int count,
+            bool hasId = false)
         {
             var tables = new List<ExpandoObject>();
             for (var i = 0; i < count; i++)
             {
                 var index = i + 1;
                 var item = new ExpandoObject() as IDictionary<string, object>;
+                if (hasId)
+                {
+                    item["Id"] = index;
+                }
                 item["RowGuid"] = Guid.NewGuid();
                 item["ColumnBit"] = true;
                 item["ColumnDateTime"] = EpocDate.AddDays(index);
