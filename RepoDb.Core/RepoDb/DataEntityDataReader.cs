@@ -478,7 +478,14 @@ namespace RepoDb
         public override string GetName(int i)
         {
             ThrowExceptionIfNotInitializedOrNotAvailable();
-            return Properties[i].GetMappedName();
+            if (isDictionaryStringObject)
+            {
+                return Fields[i].Name;
+            }
+            else
+            {
+                return Properties[i].GetMappedName();
+            }
         }
 
         /// <summary>
