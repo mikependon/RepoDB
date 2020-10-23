@@ -11,7 +11,7 @@ namespace RepoDb.Benchmarks
             //switcher.RunAll(new BenchmarkConfig());
 
             //For single run.
-            switcher.Run(args, new BenchmarkConfig());
+            switcher.Run(args, new BenchmarkConfigWitRows());
         }
     }
 }
