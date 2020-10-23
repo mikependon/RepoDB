@@ -780,6 +780,124 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestSystemSqlConnectionBulkMergeForTableNameAnonymousObjectsForEmptyTable()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationAnonymousObjectIdentityTables(10, true);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var bulkMergeResult = connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkMergeResult);
+
+                // Act
+                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    Helper.AssertMembersEquality(queryResult.ElementAt((int)tables.IndexOf(t)), t);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSystemSqlConnectionBulkMergeForTableNameAnonymousObjectsForEmptyTableWithReturnIdentity()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationAnonymousObjectIdentityTables(10, true);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var bulkMergeResult = connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, isReturnIdentity: true);
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkMergeResult);
+                Assert.IsTrue(tables.All(e => ((dynamic)e).Id > 0));
+
+                // Act
+                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    Helper.AssertMembersEquality(queryResult.ElementAt((int)tables.IndexOf(t)), t);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSystemSqlConnectionBulkMergeForTableNameAnonymousObjectsForNonEmptyTable()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll<BulkOperationIdentityTable>(tables);
+
+                // Setup
+                var entities = Helper.CreateBulkOperationAnonymousObjectIdentityTables(10, true);
+
+                // Act
+                var bulkMergeResult = connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), entities);
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkMergeResult);
+
+                // Act
+                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(entities.Count, queryResult.Count());
+                entities.AsList().ForEach(t =>
+                {
+                    Helper.AssertMembersEquality(queryResult.ElementAt((int)entities.IndexOf(t)), t);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSystemSqlConnectionBulkMergeForTableNameAnonymousObjectsForNonEmptyTableWithReturnIdentity()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll<BulkOperationIdentityTable>(tables);
+
+                // Setup
+                var entities = Helper.CreateBulkOperationAnonymousObjectIdentityTables(10, true);
+
+                // Act
+                var bulkMergeResult = connection.BulkMerge(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, isReturnIdentity: true);
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkMergeResult);
+                Assert.IsTrue(tables.All(e => ((dynamic)e).Id > 0));
+
+                // Act
+                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    Helper.AssertMembersEquality(queryResult.ElementAt((int)tables.IndexOf(t)), t);
+                });
+            }
+        }
+
+        [TestMethod]
         public void TestSystemSqlConnectionBulkMergeForTableNameDataEntitiesForEmptyTable()
         {
             // Setup
@@ -2213,6 +2331,124 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 tables.AsList().ForEach(t =>
                 {
                     Helper.AssertMembersEquality(queryResult.ElementAt(tables.IndexOf(t)), t);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSystemSqlConnectionBulkMergeAsyncForTableNameAnonymousObjectsForEmptyTable()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationAnonymousObjectIdentityTables(10, true);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var bulkMergeResult = connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkMergeResult);
+
+                // Act
+                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    Helper.AssertMembersEquality(queryResult.ElementAt((int)tables.IndexOf(t)), t);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSystemSqlConnectionBulkMergeAsyncForTableNameAnonymousObjectsForEmptyTableWithReturnIdentity()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationAnonymousObjectIdentityTables(10, true);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var bulkMergeResult = connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, isReturnIdentity: true).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkMergeResult);
+                Assert.IsTrue(tables.All(e => ((dynamic)e).Id > 0));
+
+                // Act
+                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    Helper.AssertMembersEquality(queryResult.ElementAt((int)tables.IndexOf(t)), t);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSystemSqlConnectionBulkMergeAsyncForTableNameAnonymousObjectsForNonEmptyTable()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll<BulkOperationIdentityTable>(tables);
+
+                // Setup
+                var entities = Helper.CreateBulkOperationAnonymousObjectIdentityTables(10, true);
+
+                // Act
+                var bulkMergeResult = connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), entities).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkMergeResult);
+
+                // Act
+                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(entities.Count, queryResult.Count());
+                entities.AsList().ForEach(t =>
+                {
+                    Helper.AssertMembersEquality(queryResult.ElementAt((int)entities.IndexOf(t)), t);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestSystemSqlConnectionBulkMergeAsyncForTableNameAnonymousObjectsForNonEmptyTableWithReturnIdentity()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll<BulkOperationIdentityTable>(tables);
+
+                // Setup
+                var entities = Helper.CreateBulkOperationAnonymousObjectIdentityTables(10, true);
+
+                // Act
+                var bulkMergeResult = connection.BulkMergeAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables, isReturnIdentity: true).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkMergeResult);
+                Assert.IsTrue(tables.All(e => ((dynamic)e).Id > 0));
+
+                // Act
+                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    Helper.AssertMembersEquality(queryResult.ElementAt((int)tables.IndexOf(t)), t);
                 });
             }
         }

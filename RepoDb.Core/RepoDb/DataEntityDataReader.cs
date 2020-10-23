@@ -83,7 +83,13 @@ namespace RepoDb
             isDisposed = false;
             position = -1;
             recordsAffected = -1;
-            isDictionaryStringObject = typeof(TEntity).IsDictionaryStringObject();
+
+            // Type
+            var entityType = typeof(TEntity);
+            EntityType = entityType == StaticType.Object ?
+                (entities?.FirstOrDefault()?.GetType() ?? entityType) :
+                entityType;
+            isDictionaryStringObject = EntityType.IsDictionaryStringObject();
 
             // DbSetting
             DbSetting = connection?.GetDbSetting();
@@ -188,6 +194,11 @@ namespace RepoDb
         /// </summary>
         public int Position =>
             position;
+
+        /// <summary>
+        /// Gets the type of the entities.
+        /// </summary>
+        private Type EntityType { get; set; }
 
         /// <summary>
         /// Gets the name of the target table.
@@ -637,13 +648,13 @@ namespace RepoDb
             }
             if (dbFields?.Any() == true)
             {
-                return PropertyCache.Get<TEntity>()?
+                return PropertyCache.Get(EntityType)?
                     .Where(p => dbFields.FirstOrDefault(f => string.Equals(f.Name.AsQuoted(DbSetting), p.GetMappedName().AsQuoted(DbSetting), StringComparison.OrdinalIgnoreCase)) != null)
                     .AsList();
             }
             else
             {
-                return PropertyCache.Get<TEntity>()?.AsList();
+                return PropertyCache.Get(EntityType)?.AsList();
             }
         }
 

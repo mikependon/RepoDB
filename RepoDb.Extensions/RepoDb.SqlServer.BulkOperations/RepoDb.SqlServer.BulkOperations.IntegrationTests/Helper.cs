@@ -158,27 +158,35 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests
 
         #region BulkOperationIdentityTable
 
+        /*
+         * Actual Class
+         */
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="count"></param>
+        /// <param name="hasId"></param>
         /// <returns></returns>
-        public static List<BulkOperationIdentityTable> CreateBulkOperationIdentityTables(int count)
+        public static List<BulkOperationIdentityTable> CreateBulkOperationIdentityTables(int count,
+            bool hasId = false)
         {
+            var random = new Random();
             var tables = new List<BulkOperationIdentityTable>();
             for (var i = 0; i < count; i++)
             {
                 var index = i + 1;
                 tables.Add(new BulkOperationIdentityTable
                 {
+                    Id = hasId ? index : 0,
                     RowGuid = Guid.NewGuid(),
                     ColumnBit = true,
-                    ColumnDateTime = EpocDate.AddDays(index),
+                    ColumnDateTime = EpocDate.AddDays(random.Next(100)),
                     ColumnDateTime2 = DateTime.UtcNow,
-                    ColumnDecimal = index,
-                    ColumnFloat = index,
-                    ColumnInt = index,
-                    ColumnNVarChar = $"NVARCHAR{index}"
+                    ColumnDecimal = random.Next(100),
+                    ColumnFloat = random.Next(100),
+                    ColumnInt = random.Next(100),
+                    ColumnNVarChar = $"NVARCHAR{random.Next(100)}"
                 });
             }
             return tables;
@@ -187,19 +195,21 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="hasId"></param>
         /// <returns></returns>
-        public static BulkOperationIdentityTable CreateBulkOperationIdentityTable()
+        public static BulkOperationIdentityTable CreateBulkOperationIdentityTable(bool hasId = false)
         {
             var random = new Random();
             return new BulkOperationIdentityTable
             {
+                Id = hasId ? 1 : 0,
                 RowGuid = Guid.NewGuid(),
                 ColumnBit = true,
                 ColumnDateTime = EpocDate,
                 ColumnDateTime2 = DateTime.UtcNow,
-                ColumnDecimal = Convert.ToDecimal(random.Next(int.MinValue, int.MaxValue)),
-                ColumnFloat = Convert.ToSingle(random.Next(int.MinValue, int.MaxValue)),
-                ColumnInt = random.Next(int.MinValue, int.MaxValue),
+                ColumnDecimal = Convert.ToDecimal(random.Next(100)),
+                ColumnFloat = Convert.ToSingle(random.Next(100)),
+                ColumnInt = random.Next(100),
                 ColumnNVarChar = Guid.NewGuid().ToString()
             };
         }
@@ -217,9 +227,9 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests
                 table.ColumnBit = true;
                 table.ColumnDateTime = EpocDate.AddDays(random.Next(100));
                 table.ColumnDateTime2 = DateTime.UtcNow;
-                table.ColumnDecimal = Convert.ToDecimal(random.Next(int.MinValue, int.MaxValue));
-                table.ColumnFloat = Convert.ToSingle(random.Next(int.MinValue, int.MaxValue));
-                //table.ColumnInt = random.Next(int.MinValue, int.MaxValue);
+                table.ColumnDecimal = Convert.ToDecimal(random.Next(100));
+                table.ColumnFloat = Convert.ToSingle(random.Next(100));
+                //table.ColumnInt = random.Next(100);
                 table.ColumnNVarChar = $"{table.ColumnNVarChar}-Updated";
             }
         }
@@ -227,11 +237,137 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="tables"></param>
+        public static void UpdateBulkOperationIdentityTable(BulkOperationIdentityTable table)
+        {
+            var random = new Random();
+            //table.RowGuid = Guid.NewGuid();
+            table.ColumnBit = true;
+            table.ColumnDateTime = EpocDate.AddDays(random.Next(100));
+            table.ColumnDateTime2 = DateTime.UtcNow;
+            table.ColumnDecimal = Convert.ToDecimal(random.Next(100));
+            table.ColumnFloat = Convert.ToSingle(random.Next(100));
+            //table.ColumnInt = random.Next(100);
+            table.ColumnNVarChar = $"{table.ColumnNVarChar}-Updated";
+        }
+
+        /*
+         * Anonymous Objects
+         */
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="count"></param>
+        /// <param name="hasId"></param>
+        /// <returns></returns>
+        public static List<dynamic> CreateBulkOperationAnonymousObjectIdentityTables(int count,
+            bool hasId = false)
+        {
+            var random = new Random();
+            var tables = new List<dynamic>();
+            for (var i = 0; i < count; i++)
+            {
+                var index = i + 1;
+                tables.Add(new
+                {
+                    Id = hasId ? index : 0,
+                    RowGuid = Guid.NewGuid(),
+                    ColumnBit = true,
+                    ColumnDateTime = EpocDate.AddDays(random.Next(100)),
+                    ColumnDateTime2 = DateTime.UtcNow,
+                    ColumnDecimal = Convert.ToDecimal(random.Next(100)),
+                    ColumnFloat = Convert.ToDouble(random.Next(100)),
+                    ColumnInt = random.Next(100),
+                    ColumnNVarChar = $"NVARCHAR{random.Next(100)}"
+                });
+            }
+            return tables;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="hasId"></param>
+        /// <returns></returns>
+        public static dynamic CreateBulkOperationAnonymousObjectIdentityTable(bool hasId = false)
+        {
+            var random = new Random();
+            return new
+            {
+                Id = hasId ? 1 : 0,
+                RowGuid = Guid.NewGuid(),
+                ColumnBit = true,
+                ColumnDateTime = EpocDate,
+                ColumnDateTime2 = DateTime.UtcNow,
+                ColumnDecimal = Convert.ToDecimal(random.Next(int.MinValue, int.MaxValue)),
+                ColumnFloat = Convert.ToDouble(random.Next(int.MinValue, int.MaxValue)),
+                ColumnInt = random.Next(int.MinValue, int.MaxValue),
+                ColumnNVarChar = Guid.NewGuid().ToString()
+            };
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tables"></param>
+        public static List<dynamic> UpdateBulkOperationAnonymousObjectIdentityTables(List<dynamic> tables)
+        {
+            var random = new Random();
+            var list = new List<dynamic>();
+            foreach (var table in tables)
+            {
+                list.Add(new
+                {
+                    Id = table.Id,
+                    RowGuid = Guid.NewGuid(),
+                    ColumnBit = true,
+                    ColumnDateTime = EpocDate.AddDays(random.Next(100)),
+                    ColumnDateTime2 = DateTime.UtcNow,
+                    ColumnDecimal = Convert.ToDecimal(random.Next(100)),
+                    ColumnFloat = Convert.ToDouble(random.Next(100)),
+                    ColumnInt = random.Next(100),
+                    ColumnNVarChar = $"NVARCHAR{random.Next(100)}-Updated"
+                });
+            }
+            return list;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="table"></param>
+        public static dynamic UpdateBulkOperationAnonymousObjectIdentityTable(dynamic table)
+        {
+            var random = new Random();
+            return new
+            {
+                Id = table.Id,
+                //RowGuid = Guid.NewGuid(),
+                ColumnBit = true,
+                ColumnDateTime = EpocDate.AddDays(random.Next(100)),
+                ColumnDateTime2 = DateTime.UtcNow,
+                ColumnDecimal = Convert.ToDecimal(random.Next(100)),
+                ColumnFloat = Convert.ToDouble(random.Next(100)),
+                //ColumnInt = random.Next(100),
+                ColumnNVarChar = $"NVARCHAR{random.Next(100)}-Updated"
+            };
+        }
+
+        /*
+         * IDictionary<string, object>
+         */
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="count"></param>
+        /// <param name="hasId"></param>
         /// <returns></returns>
         public static List<ExpandoObject> CreateBulkOperationExpandoObjectIdentityTables(int count,
             bool hasId = false)
         {
+            var random = new Random();
             var tables = new List<ExpandoObject>();
             for (var i = 0; i < count; i++)
             {
@@ -243,15 +379,81 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests
                 }
                 item["RowGuid"] = Guid.NewGuid();
                 item["ColumnBit"] = true;
-                item["ColumnDateTime"] = EpocDate.AddDays(index);
+                item["ColumnDateTime"] = EpocDate.AddDays(random.Next(100));
                 item["ColumnDateTime2"] = DateTime.UtcNow;
-                item["ColumnDecimal"] = index;
-                item["ColumnFloat"] = index;
-                item["ColumnInt"] = index;
+                item["ColumnDecimal"] = random.Next(100);
+                item["ColumnFloat"] = random.Next(100);
+                item["ColumnInt"] = random.Next(100);
                 item["ColumnNVarChar"] = $"NVARCHAR{index}";
                 tables.Add((ExpandoObject)item);
             }
             return tables;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tables"></param>
+        /// <returns></returns>
+        public static List<ExpandoObject> UpdateBulkOperationExpandoObjectIdentityTables(List<ExpandoObject> tables)
+        {
+            var random = new Random();
+            foreach (var table in tables)
+            {
+                var item = table as IDictionary<string, object>;
+                //item["RowGuid"] = Guid.NewGuid();
+                item["ColumnBit"] = true;
+                item["ColumnDateTime"] = EpocDate.AddDays(random.Next(100));
+                item["ColumnDateTime2"] = DateTime.UtcNow;
+                item["ColumnDecimal"] = random.Next(100);
+                item["ColumnFloat"] = random.Next(100);
+                //item["ColumnInt"] = random.Next(100);
+                item["ColumnNVarChar"] = $"{item["ColumnNVarChar"]}-Updated";
+                tables.Add((ExpandoObject)item);
+            }
+            return tables;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="hasId"></param>
+        /// <returns></returns>
+        public static ExpandoObject CreateBulkOperationExpandoObjectIdentityTable(bool hasId = false)
+        {
+            var random = new Random();
+            var item = new ExpandoObject() as IDictionary<string, object>;
+            if (hasId)
+            {
+                item["Id"] = 1;
+            }
+            //item["RowGuid"] = Guid.NewGuid();
+            item["ColumnBit"] = true;
+            item["ColumnDateTime"] = EpocDate.AddDays(random.Next(100));
+            item["ColumnDateTime2"] = DateTime.UtcNow;
+            item["ColumnDecimal"] = random.Next(100);
+            item["ColumnFloat"] = random.Next(100);
+            //item["ColumnInt"] = random.Next(100);
+            item["ColumnNVarChar"] = $"NVARCHAR{random.Next(100)}";
+            return (ExpandoObject)item;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="table"></param>
+        public static void UpdateBulkOperationExpandoObjectIdentityTable(ExpandoObject table)
+        {
+            var random = new Random();
+            var item = table as IDictionary<string, object>;
+            //item["RowGuid"] = Guid.NewGuid();
+            item["ColumnBit"] = true;
+            item["ColumnDateTime"] = EpocDate.AddDays(random.Next(100));
+            item["ColumnDateTime2"] = DateTime.UtcNow;
+            item["ColumnDecimal"] = random.Next(100);
+            item["ColumnFloat"] = random.Next(100);
+            //item["ColumnInt"] = random.Next(100);
+            item["ColumnNVarChar"] = $"{item["ColumnNVarChar"]}-Updated";
         }
 
         #endregion
