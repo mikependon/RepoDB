@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace RepoDb.SqlServer.BulkOperations
 {
@@ -31,7 +33,7 @@ namespace RepoDb.SqlServer.BulkOperations
         private static class MethodFuncCache<TEntity, TResult>
             where TEntity : class
         {
-            private static ConcurrentDictionary<int, Func<TEntity, TResult>> m_cache =
+            private static ConcurrentDictionary<int, Func<TEntity, TResult>> cache =
                 new ConcurrentDictionary<int, Func<TEntity, TResult>>();
 
             /// <summary>
@@ -42,16 +44,22 @@ namespace RepoDb.SqlServer.BulkOperations
             public static Func<TEntity, TResult> GetFunc(string methodName)
             {
                 var func = (Func<TEntity, TResult>)null;
-                if (m_cache.TryGetValue(methodName.GetHashCode(), out func) == false)
+                if (cache.TryGetValue(methodName.GetHashCode(), out func) == false)
                 {
                     var typeOfEntity = typeof(TEntity);
                     var method = typeOfEntity.GetMethod(methodName);
-                    var entity = Expression.Parameter(typeOfEntity, "entity");
-                    var body = Expression.Convert(Expression.Call(entity, method), typeof(TResult));
 
-                    func = Expression
-                        .Lambda<Func<TEntity, TResult>>(body, entity)
-                        .Compile();
+                    if (method != null)
+                    {
+                        var entity = Expression.Parameter(typeOfEntity, "entity");
+                        var body = Expression.Convert(Expression.Call(entity, method), typeof(TResult));
+
+                        func = Expression
+                            .Lambda<Func<TEntity, TResult>>(body, entity)
+                            .Compile();
+                    }
+
+                    cache.TryAdd(methodName.GetHashCode(), func);
                 }
                 return func;
             }
@@ -78,7 +86,7 @@ namespace RepoDb.SqlServer.BulkOperations
         private static class VoidMethodFuncCache<TEntity>
             where TEntity : class
         {
-            private static ConcurrentDictionary<int, Action<TEntity>> m_cache =
+            private static ConcurrentDictionary<int, Action<TEntity>> cache =
                 new ConcurrentDictionary<int, Action<TEntity>>();
 
             /// <summary>
@@ -89,16 +97,22 @@ namespace RepoDb.SqlServer.BulkOperations
             public static Action<TEntity> GetFunc(string methodName)
             {
                 var func = (Action<TEntity>)null;
-                if (m_cache.TryGetValue(methodName.GetHashCode(), out func) == false)
+                if (cache.TryGetValue(methodName.GetHashCode(), out func) == false)
                 {
                     var typeOfEntity = typeof(TEntity);
                     var method = typeOfEntity.GetMethod(methodName);
-                    var entity = Expression.Parameter(typeOfEntity, "entity");
-                    var body = Expression.Call(entity, method);
 
-                    func = Expression
-                        .Lambda<Action<TEntity>>(body, entity)
-                        .Compile();
+                    if (method != null)
+                    {
+                        var entity = Expression.Parameter(typeOfEntity, "entity");
+                        var body = Expression.Call(entity, method);
+
+                        func = Expression
+                            .Lambda<Action<TEntity>>(body, entity)
+                            .Compile();
+                    }
+
+                    cache.TryAdd(methodName.GetHashCode(), func);
                 }
                 return func;
             }
@@ -128,7 +142,7 @@ namespace RepoDb.SqlServer.BulkOperations
         private static class ParameterizedMethodFuncCache<TEntity, TResult>
             where TEntity : class
         {
-            private static ConcurrentDictionary<int, Func<TEntity, object[], TResult>> m_cache =
+            private static ConcurrentDictionary<int, Func<TEntity, object[], TResult>> cache =
                 new ConcurrentDictionary<int, Func<TEntity, object[], TResult>>();
 
             /// <summary>
@@ -141,24 +155,31 @@ namespace RepoDb.SqlServer.BulkOperations
                 Type[] types)
             {
                 var func = (Func<TEntity, object[], TResult>)null;
-                if (m_cache.TryGetValue(methodName.GetHashCode(), out func) == false)
+                var key = methodName.GetHashCode() + types?.Sum(e => e.GetHashCode());
+                if (cache.TryGetValue(key.Value, out func) == false)
                 {
                     var typeOfEntity = typeof(TEntity);
                     var method = typeOfEntity.GetMethod(methodName, types);
-                    var entity = Expression.Parameter(typeOfEntity, "entity");
-                    var arguments = Expression.Parameter(typeof(object[]), "arguments");
-                    var parameters = new List<Expression>();
 
-                    for (var index = 0; index < types.Length; index++)
+                    if (method != null)
                     {
-                        parameters.Add(Expression.Convert(Expression.ArrayIndex(arguments, Expression.Constant(index)), types[index]));
+                        var entity = Expression.Parameter(typeOfEntity, "entity");
+                        var arguments = Expression.Parameter(typeof(object[]), "arguments");
+                        var parameters = new List<Expression>();
+
+                        for (var index = 0; index < types.Length; index++)
+                        {
+                            parameters.Add(Expression.Convert(Expression.ArrayIndex(arguments, Expression.Constant(index)), types[index]));
+                        }
+
+                        var body = Expression.Convert(Expression.Call(entity, method, parameters), typeof(TResult));
+
+                        func = Expression
+                            .Lambda<Func<TEntity, object[], TResult>>(body, entity, arguments)
+                            .Compile();
                     }
 
-                    var body = Expression.Convert(Expression.Call(entity, method, parameters), typeof(TResult));
-
-                    func = Expression
-                        .Lambda<Func<TEntity, object[], TResult>>(body, entity, arguments)
-                        .Compile();
+                    cache.TryAdd(key.Value, func);
                 }
                 return func;
             }
@@ -186,7 +207,7 @@ namespace RepoDb.SqlServer.BulkOperations
         private static class ParameterizedVoidMethodFuncCache<TEntity>
             where TEntity : class
         {
-            private static ConcurrentDictionary<int, Action<TEntity, object[]>> m_cache =
+            private static ConcurrentDictionary<int, Action<TEntity, object[]>> cache =
                 new ConcurrentDictionary<int, Action<TEntity, object[]>>();
 
             /// <summary>
@@ -199,24 +220,31 @@ namespace RepoDb.SqlServer.BulkOperations
                 Type[] types)
             {
                 var func = (Action<TEntity, object[]>)null;
-                if (m_cache.TryGetValue(methodName.GetHashCode(), out func) == false)
+                var key = methodName.GetHashCode() + types?.Sum(e => e.GetHashCode());
+                if (cache.TryGetValue(key.Value, out func) == false)
                 {
                     var typeOfEntity = typeof(TEntity);
                     var method = typeOfEntity.GetMethod(methodName, types);
-                    var entity = Expression.Parameter(typeOfEntity, "entity");
-                    var arguments = Expression.Parameter(typeof(object[]), "arguments");
-                    var parameters = new List<Expression>();
 
-                    for (var index = 0; index < types.Length; index++)
+                    if (method != null)
                     {
-                        parameters.Add(Expression.Convert(Expression.ArrayIndex(arguments, Expression.Constant(index)), types[index]));
+                        var entity = Expression.Parameter(typeOfEntity, "entity");
+                        var arguments = Expression.Parameter(typeof(object[]), "arguments");
+                        var parameters = new List<Expression>();
+
+                        for (var index = 0; index < types.Length; index++)
+                        {
+                            parameters.Add(Expression.Convert(Expression.ArrayIndex(arguments, Expression.Constant(index)), types[index]));
+                        }
+
+                        var body = Expression.Call(entity, method, parameters);
+
+                        func = Expression
+                            .Lambda<Action<TEntity, object[]>>(body, entity, arguments)
+                            .Compile();
                     }
 
-                    var body = Expression.Call(entity, method, parameters);
-
-                    func = Expression
-                        .Lambda<Action<TEntity, object[]>>(body, entity, arguments)
-                        .Compile();
+                    cache.TryAdd(key.Value, func);
                 }
                 return func;
             }
@@ -245,7 +273,7 @@ namespace RepoDb.SqlServer.BulkOperations
         private static class PropertyGetterFuncCache<TEntity, TResult>
             where TEntity : class
         {
-            private static ConcurrentDictionary<int, Func<TEntity, TResult>> m_cache =
+            private static ConcurrentDictionary<int, Func<TEntity, TResult>> cache =
                 new ConcurrentDictionary<int, Func<TEntity, TResult>>();
 
             /// <summary>
@@ -256,15 +284,20 @@ namespace RepoDb.SqlServer.BulkOperations
             public static Func<TEntity, TResult> GetFunc(ClassProperty classProperty)
             {
                 var func = (Func<TEntity, TResult>)null;
-                if (m_cache.TryGetValue(classProperty.GetHashCode(), out func) == false)
+                if (cache.TryGetValue(classProperty.GetHashCode(), out func) == false)
                 {
-                    var typeOfEntity = typeof(TEntity);
-                    var entity = Expression.Parameter(typeOfEntity, "entity");
-                    var body = Expression.Convert(Expression.Call(entity, classProperty.PropertyInfo.GetMethod), typeof(TResult));
+                    if (classProperty != null)
+                    {
+                        var typeOfEntity = typeof(TEntity);
+                        var entity = Expression.Parameter(typeOfEntity, "entity");
+                        var body = Expression.Convert(Expression.Call(entity, classProperty.PropertyInfo.GetMethod), typeof(TResult));
 
-                    func = Expression
-                        .Lambda<Func<TEntity, TResult>>(body, entity)
-                        .Compile();
+                        func = Expression
+                            .Lambda<Func<TEntity, TResult>>(body, entity)
+                            .Compile();
+                    }
+
+                    cache.TryAdd(classProperty.GetHashCode(), func);
                 }
                 return func;
             }
@@ -291,30 +324,112 @@ namespace RepoDb.SqlServer.BulkOperations
         private static class PropertySetterFuncCache<TEntity>
             where TEntity : class
         {
-            private static ConcurrentDictionary<int, Action<TEntity, object>> m_cache =
+            private static ConcurrentDictionary<int, Action<TEntity, object>> cache =
                 new ConcurrentDictionary<int, Action<TEntity, object>>();
 
             /// <summary>
             /// 
             /// </summary>
-            /// <param name="property"></param>
+            /// <param name="classProperty"></param>
             /// <returns></returns>
-            public static Action<TEntity, object> GetFunc(ClassProperty property)
+            public static Action<TEntity, object> GetFunc(ClassProperty classProperty)
             {
                 var func = (Action<TEntity, object>)null;
-                if (m_cache.TryGetValue(property.GetHashCode(), out func) == false)
+                if (cache.TryGetValue(classProperty.GetHashCode(), out func) == false)
                 {
-                    var entity = Expression.Parameter(typeof(TEntity), "entity");
-                    var value = Expression.Parameter(typeof(object), "value");
-                    var converted = Expression.Convert(value, property.PropertyInfo.PropertyType);
-                    var body = (Expression)Expression.Call(entity, property.PropertyInfo.SetMethod, converted);
+                    if (classProperty != null)
+                    {
+                        var entity = Expression.Parameter(typeof(TEntity), "entity");
+                        var value = Expression.Parameter(typeof(object), "value");
+                        var converted = Expression.Convert(value, classProperty.PropertyInfo.PropertyType);
+                        var body = (Expression)Expression.Call(entity, classProperty.PropertyInfo.SetMethod, converted);
 
-                    func = Expression
-                        .Lambda<Action<TEntity, object>>(body, entity, value)
-                        .Compile();
+                        func = Expression
+                            .Lambda<Action<TEntity, object>>(body, entity, value)
+                            .Compile();
+                    }
+
+                    cache.TryAdd(classProperty.GetHashCode(), func);
                 }
                 return func;
             }
+        }
+
+        #endregion
+
+        #region GetFieldGetterFunc
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="methodName"></param>
+        /// <returns></returns>
+        public static Func<TEntity, TResult> GetFieldGetterFunc<TEntity, TResult>(string fieldName)
+            where TEntity : class =>
+            FieldGetterFuncCache<TEntity, TResult>.GetFunc(fieldName);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        private static class FieldGetterFuncCache<TEntity, TResult>
+            where TEntity : class
+        {
+            private static ConcurrentDictionary<int, Func<TEntity, TResult>> cache =
+                new ConcurrentDictionary<int, Func<TEntity, TResult>>();
+
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="fieldName"></param>
+            /// <returns></returns>
+            public static Func<TEntity, TResult> GetFunc(string fieldName)
+            {
+                var func = (Func<TEntity, TResult>)null;
+                if (cache.TryGetValue(fieldName.GetHashCode(), out func) == false)
+                {
+                    var typeOfEntity = typeof(TEntity);
+                    var fieldInfo = typeOfEntity
+                        .GetField("_rowsCopied", BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance);
+
+                    if (fieldInfo != null)
+                    {
+                        var entity = Expression.Parameter(typeOfEntity, "entity");
+                        var field = Expression.Field(entity, fieldInfo);
+                        var body = Expression.Convert(field, typeof(TResult));
+
+                        func = Expression
+                            .Lambda<Func<TEntity, TResult>>(body, entity)
+                            .Compile();
+                    }
+
+                    cache.TryAdd(fieldName.GetHashCode(), func);
+                }
+                return func;
+            }
+        }
+
+        #endregion
+
+        #region SetProperty
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="instance"></param>
+        /// <param name="propertyName"></param>
+        /// <param name="value"></param>
+        public static void SetProperty<TEntity>(TEntity instance,
+            string propertyName,
+            object value)
+            where TEntity : class
+        {
+            var propertySetter = Compiler.GetPropertySetterFunc<TEntity>(propertyName);
+            propertySetter?.Invoke(instance, value);
         }
 
         #endregion

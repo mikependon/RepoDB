@@ -1,12 +1,16 @@
 ﻿using Microsoft.Data.SqlClient;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
+using RepoDb.SqlServer.BulkOperations;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace RepoDb
 {
@@ -50,6 +54,113 @@ namespace RepoDb
         #endregion
 
         #region Helpers
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entities"></param>
+        /// <param name="reader"></param>
+        /// <param name="identityDbField"></param>
+        private static int SetIdentityForEntities<TEntity>(IEnumerable<TEntity> entities,
+            DbDataReader reader,
+            DbField identityDbField)
+            where TEntity : class
+        {
+            var entityType = entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity);
+            var list = entities.AsList();
+            var result = 0;
+
+            if (entityType.IsDictionaryStringObject())
+            {
+                while (reader.Read())
+                {
+                    var value = Converter.DbNullToNull(reader.GetFieldValue<object>(0));
+                    var dictionary = (IDictionary<string, object>)list[result];
+                    dictionary[identityDbField.Name] = value;
+                    result++;
+                }
+            }
+            else
+            {
+                var func = Compiler.GetPropertySetterFunc<TEntity>(identityDbField.Name);
+                while (reader.Read())
+                {
+                    var value = Converter.DbNullToNull(reader.GetFieldValue<object>(0));
+                    var entity = list[result];
+                    func(entity, value);
+                    result++;
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entities"></param>
+        /// <param name="reader"></param>
+        /// <param name="identityDbField"></param>
+        /// <param name="cancellationToken"></param>
+        private static async Task<int> SetIdentityForEntitiesAsync<TEntity>(IEnumerable<TEntity> entities,
+            DbDataReader reader,
+            DbField identityDbField,
+            CancellationToken cancellationToken = default)
+            where TEntity : class
+        {
+            var entityType = entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity);
+            var list = entities.AsList();
+            var result = 0;
+
+            if (entityType.IsDictionaryStringObject())
+            {
+                while (await reader.ReadAsync(cancellationToken))
+                {
+                    var value = Converter.DbNullToNull(await reader.GetFieldValueAsync<object>(0, cancellationToken));
+                    var dictionary = (IDictionary<string, object>)list[result];
+                    dictionary[identityDbField.Name] = value;
+                    result++;
+                }
+            }
+            else
+            {
+                var func = Compiler.GetPropertySetterFunc<TEntity>(identityDbField.Name);
+                while (await reader.ReadAsync(cancellationToken))
+                {
+                    var value = Converter.DbNullToNull(await reader.GetFieldValueAsync<object>(0, cancellationToken));
+                    var entity = list[result];
+                    func(entity, value);
+                    result++;
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSqlBulkCopy"></typeparam>
+        /// <typeparam name="TSqlBulkCopyColumnMappingCollection"></typeparam>
+        /// <typeparam name="TSqlBulkCopyColumnMapping"></typeparam>
+        /// <param name="sqlBulkCopy"></param>
+        /// <param name="mappings"></param>
+        private static void AddMappings<TSqlBulkCopy, TSqlBulkCopyColumnMappingCollection, TSqlBulkCopyColumnMapping>(TSqlBulkCopy sqlBulkCopy,
+            IEnumerable<BulkInsertMapItem> mappings)
+            where TSqlBulkCopy : class
+            where TSqlBulkCopyColumnMappingCollection : class
+        {
+            var columnMappingsProperty = Compiler.GetPropertyGetterFunc<TSqlBulkCopy, TSqlBulkCopyColumnMappingCollection>("ColumnMappings");
+            var columnMappingsInstance = columnMappingsProperty(sqlBulkCopy);
+            var types = new[] { typeof(string), typeof(string) };
+            var addMethod = Compiler.GetParameterizedMethodFunc<TSqlBulkCopyColumnMappingCollection, TSqlBulkCopyColumnMapping>("Add", types);
+            mappings
+                .AsList()
+                .ForEach(mapItem =>
+                    addMethod(columnMappingsInstance, new[] { mapItem.SourceColumn, mapItem.DestinationColumn }));
+        }
 
         /// <summary>
         /// 
