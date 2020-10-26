@@ -19,40 +19,6 @@ namespace RepoDb
     /// </summary>
     public static partial class SqlConnectionExtension
     {
-        #region Privates
-
-        private static FieldInfo m_systemDataSqlBulkCopyRowsCopiedField = null;
-        private static bool m_systemDataBulkInsertRowsCopiedFieldHasBeenSet = false;
-
-        #endregion
-
-        #region System.Data
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        private static FieldInfo GetRowsCopiedFieldFromSystemDataSqlBulkCopy()
-        {
-            // Check if the call has made earlier
-            if (m_systemDataBulkInsertRowsCopiedFieldHasBeenSet == true)
-            {
-                return m_systemDataSqlBulkCopyRowsCopiedField;
-            }
-
-            // Set the flag
-            m_systemDataBulkInsertRowsCopiedFieldHasBeenSet = true;
-
-            // Get the field (whether null or not)
-            m_systemDataSqlBulkCopyRowsCopiedField = typeof(System.Data.SqlClient.SqlBulkCopy)
-                .GetField("_rowsCopied", BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance);
-
-            // Return the value
-            return m_systemDataSqlBulkCopyRowsCopiedField;
-        }
-
-        #endregion
-
         #region Helpers
 
         /// <summary>

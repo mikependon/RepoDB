@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -38,8 +37,8 @@ namespace RepoDb
         /// <param name="usePhysicalPseudoTempTable"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static int BulkInsertInternalBase<TEntity, TSqlBulkCopy, TSqlBulkCopyOptions,
-            TSqlBulkCopyColumnMappingCollection, TSqlBulkCopyColumnMapping, TSqlTransaction>(DbConnection connection,
+        private static int BulkInsertInternalBase<TEntity, TSqlBulkCopy, TSqlBulkCopyOptions, TSqlBulkCopyColumnMappingCollection,
+            TSqlBulkCopyColumnMapping, TSqlTransaction>(DbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<DbField> dbFields = null,
@@ -264,8 +263,8 @@ namespace RepoDb
         /// <param name="usePhysicalPseudoTempTable"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        internal static int BulkInsertInternalBase<TSqlBulkCopy, TSqlBulkCopyOptions,
-            TSqlBulkCopyColumnMappingCollection, TSqlBulkCopyColumnMapping, TSqlTransaction>(DbConnection connection,
+        internal static int BulkInsertInternalBase<TSqlBulkCopy, TSqlBulkCopyOptions, TSqlBulkCopyColumnMappingCollection,
+            TSqlBulkCopyColumnMapping, TSqlTransaction>(DbConnection connection,
             string tableName,
             DbDataReader reader,
             IEnumerable<DbField> dbFields = null,
@@ -480,8 +479,8 @@ namespace RepoDb
         /// <param name="usePhysicalPseudoTempTable"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        internal static int BulkInsertInternalBase<TSqlBulkCopy, TSqlBulkCopyOptions,
-            TSqlBulkCopyColumnMappingCollection, TSqlBulkCopyColumnMapping, TSqlTransaction>(DbConnection connection,
+        internal static int BulkInsertInternalBase<TSqlBulkCopy, TSqlBulkCopyOptions, TSqlBulkCopyColumnMappingCollection,
+            TSqlBulkCopyColumnMapping, TSqlTransaction>(DbConnection connection,
             string tableName,
             DataTable dataTable,
             DataRowState? rowState = null,
@@ -726,8 +725,8 @@ namespace RepoDb
         /// <param name="usePhysicalPseudoTempTable"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static async Task<int> BulkInsertAsyncInternalBase<TEntity, TSqlBulkCopy, TSqlBulkCopyOptions,
-            TSqlBulkCopyColumnMappingCollection, TSqlBulkCopyColumnMapping, TSqlTransaction>(DbConnection connection,
+        private static async Task<int> BulkInsertAsyncInternalBase<TEntity, TSqlBulkCopy, TSqlBulkCopyOptions, TSqlBulkCopyColumnMappingCollection,
+            TSqlBulkCopyColumnMapping, TSqlTransaction>(DbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<DbField> dbFields = null,
@@ -954,8 +953,8 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        internal static async Task<int> BulkInsertAsyncInternalBase<TSqlBulkCopy, TSqlBulkCopyOptions,
-            TSqlBulkCopyColumnMappingCollection, TSqlBulkCopyColumnMapping, TSqlTransaction>(DbConnection connection,
+        internal static async Task<int> BulkInsertAsyncInternalBase<TSqlBulkCopy, TSqlBulkCopyOptions, TSqlBulkCopyColumnMappingCollection,
+            TSqlBulkCopyColumnMapping, TSqlTransaction>(DbConnection connection,
             string tableName,
             DbDataReader reader,
             IEnumerable<DbField> dbFields = null,
@@ -1172,8 +1171,8 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        internal static async Task<int> BulkInsertAsyncInternalBase<TSqlBulkCopy, TSqlBulkCopyOptions,
-            TSqlBulkCopyColumnMappingCollection, TSqlBulkCopyColumnMapping, TSqlTransaction>(DbConnection connection,
+        internal static async Task<int> BulkInsertAsyncInternalBase<TSqlBulkCopy, TSqlBulkCopyOptions, TSqlBulkCopyColumnMappingCollection,
+            TSqlBulkCopyColumnMapping, TSqlTransaction>(DbConnection connection,
             string tableName,
             DataTable dataTable,
             DataRowState? rowState = null,
