@@ -1,4 +1,5 @@
 ﻿using RepoDb.Extensions;
+using RepoDb.SqlServer.BulkOperations;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,9 +11,6 @@ using System.Threading.Tasks;
 
 namespace RepoDb
 {
-    /// <summary>
-    /// Contains the extension methods for <see cref="SqlConnection"/> object.
-    /// </summary>
     public static partial class SqlConnectionExtension
     {
         #region BulkDeleteInternalBase
@@ -103,10 +101,8 @@ namespace RepoDb
                 // Do the bulk insertion first
                 using (var dataTable = CreateDataTableWithSingleColumn(primaryOrIdentityField, primaryKeys))
                 {
-                    //var options = primaryOrIdentityDbField?.IsIdentity == true ?
-                    //    SqlBulkCopyOptions.KeepIdentity : SqlBulkCopyOptions.Default;
                     var options = primaryOrIdentityDbField?.IsIdentity == true ?
-                        default(TSqlBulkCopyOptions) : default(TSqlBulkCopyOptions);
+                        Compiler.GetEnumFunc<TSqlBulkCopyOptions>("KeepIdentity")() : default;
                     BulkInsertInternalBase<TSqlBulkCopy, TSqlBulkCopyOptions, TSqlBulkCopyColumnMappingCollection,
                         TSqlBulkCopyColumnMapping, TSqlTransaction>(connection,
                         tempTableName,
@@ -291,13 +287,13 @@ namespace RepoDb
                 connection.ExecuteNonQuery(sql, transaction: transaction);
 
                 // Set the options to KeepIdentity if needed
-                //if (object.Equals(options, default(TSqlBulkCopyOptions)) &&
-                //    identityDbField?.IsIdentity == true &&
-                //    fields?.FirstOrDefault(
-                //        field => string.Equals(field.Name, identityDbField.Name, StringComparison.OrdinalIgnoreCase)) != null)
-                //{
-                //    options = SqlBulkCopyOptions.KeepIdentity;
-                //}
+                if (object.Equals(options, default(TSqlBulkCopyOptions)) &&
+                    identityDbField?.IsIdentity == true &&
+                    fields?.FirstOrDefault(
+                        field => string.Equals(field.Name, identityDbField.Name, StringComparison.OrdinalIgnoreCase)) != null)
+                {
+                    options = Compiler.GetEnumFunc<TSqlBulkCopyOptions>("KeepIdentity")();
+                }
 
                 // If there is no mapping
                 if (mappings?.Any() != true)
@@ -498,13 +494,13 @@ namespace RepoDb
                 connection.ExecuteNonQuery(sql, transaction: transaction);
 
                 // Set the options to KeepIdentity if needed
-                //if (object.Equals(options, default(TSqlBulkCopyOptions)) &&
-                //    identityDbField?.IsIdentity == true &&
-                //    fields?.FirstOrDefault(
-                //        field => string.Equals(field.Name, identityDbField.Name, StringComparison.OrdinalIgnoreCase)) != null)
-                //{
-                //    options = SqlBulkCopyOptions.KeepIdentity;
-                //}
+                if (object.Equals(options, default(TSqlBulkCopyOptions)) &&
+                    identityDbField?.IsIdentity == true &&
+                    fields?.FirstOrDefault(
+                        field => string.Equals(field.Name, identityDbField.Name, StringComparison.OrdinalIgnoreCase)) != null)
+                {
+                    options = Compiler.GetEnumFunc<TSqlBulkCopyOptions>("KeepIdentity")();
+                }
 
                 // If there is no mapping
                 if (mappings?.Any() != true)
@@ -675,10 +671,8 @@ namespace RepoDb
                 // Do the bulk insertion first
                 using (var dataTable = CreateDataTableWithSingleColumn(primaryOrIdentityField, primaryKeys))
                 {
-                    //var options = primaryOrIdentityDbField?.IsIdentity == true ?
-                    //    SqlBulkCopyOptions.KeepIdentity : SqlBulkCopyOptions.Default;
                     var options = primaryOrIdentityDbField?.IsIdentity == true ?
-                        default(TSqlBulkCopyOptions) : default(TSqlBulkCopyOptions);
+                        Compiler.GetEnumFunc<TSqlBulkCopyOptions>("KeepIdentity")() : default;
                     await BulkInsertAsyncInternalBase<TSqlBulkCopy, TSqlBulkCopyOptions, TSqlBulkCopyColumnMappingCollection,
                         TSqlBulkCopyColumnMapping, TSqlTransaction>(connection,
                         tempTableName,
@@ -866,13 +860,13 @@ namespace RepoDb
                 await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
 
                 // Set the options to KeepIdentity if needed
-                //if (object.Equals(options, default(TSqlBulkCopyOptions)) &&
-                //    identityDbField?.IsIdentity == true &&
-                //    fields?.FirstOrDefault(
-                //        field => string.Equals(field.Name, identityDbField.Name, StringComparison.OrdinalIgnoreCase)) != null)
-                //{
-                //    options = SqlBulkCopyOptions.KeepIdentity;
-                //}
+                if (object.Equals(options, default(TSqlBulkCopyOptions)) &&
+                    identityDbField?.IsIdentity == true &&
+                    fields?.FirstOrDefault(
+                        field => string.Equals(field.Name, identityDbField.Name, StringComparison.OrdinalIgnoreCase)) != null)
+                {
+                    options = Compiler.GetEnumFunc<TSqlBulkCopyOptions>("KeepIdentity")();
+                }
 
                 // If there is no mapping
                 if (mappings?.Any() != true)
@@ -1076,13 +1070,13 @@ namespace RepoDb
                 await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
 
                 // Set the options to KeepIdentity if needed
-                //if (object.Equals(options, default(TSqlBulkCopyOptions)) &&
-                //    identityDbField?.IsIdentity == true &&
-                //    fields?.FirstOrDefault(
-                //        field => string.Equals(field.Name, identityDbField.Name, StringComparison.OrdinalIgnoreCase)) != null)
-                //{
-                //    options = SqlBulkCopyOptions.KeepIdentity;
-                //}
+                if (object.Equals(options, default(TSqlBulkCopyOptions)) &&
+                    identityDbField?.IsIdentity == true &&
+                    fields?.FirstOrDefault(
+                        field => string.Equals(field.Name, identityDbField.Name, StringComparison.OrdinalIgnoreCase)) != null)
+                {
+                    options = Compiler.GetEnumFunc<TSqlBulkCopyOptions>("KeepIdentity")();
+                }
 
                 // If there is no mapping
                 if (mappings?.Any() != true)

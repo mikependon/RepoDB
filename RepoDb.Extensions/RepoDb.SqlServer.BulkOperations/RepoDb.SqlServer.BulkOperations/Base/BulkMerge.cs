@@ -1,4 +1,5 @@
 ﻿using RepoDb.Extensions;
+using RepoDb.SqlServer.BulkOperations;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,9 +11,6 @@ using System.Threading.Tasks;
 
 namespace RepoDb
 {
-    /// <summary>
-    /// Contains the extension methods for <see cref="SqlConnection"/> object.
-    /// </summary>
     public static partial class SqlConnectionExtension
     {
         #region BulkMergeInternal
@@ -146,15 +144,15 @@ namespace RepoDb
                 connection.ExecuteNonQuery(sql, transaction: transaction);
 
                 // Set the options to KeepIdentity if needed
-                //if (object.Equals(options, default(TSqlBulkCopyOptions)) &&
-                //    identityDbField?.IsIdentity == true &&
-                //    qualifiers?.Any(
-                //        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true &&
-                //    fields?.Any(
-                //        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true)
-                //{
-                //    options = SqlBulkCopyOptions.KeepIdentity;
-                //}
+                if (object.Equals(options, default(TSqlBulkCopyOptions)) &&
+                    identityDbField?.IsIdentity == true &&
+                    qualifiers?.Any(
+                        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true &&
+                    fields?.Any(
+                        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true)
+                {
+                    options = Compiler.GetEnumFunc<TSqlBulkCopyOptions>("KeepIdentity")();
+                }
 
                 // Filter the DB Fields
                 var filteredDbFields = dbFields?
@@ -366,15 +364,15 @@ namespace RepoDb
                 connection.ExecuteNonQuery(sql, transaction: transaction);
 
                 // Set the options to KeepIdentity if needed
-                //if (object.Equals(options, default(TSqlBulkCopyOptions)) &&
-                //identityDbField?.IsIdentity == true &&
-                //    qualifiers?.Any(
-                //        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true &&
-                //    fields?.Any(
-                //        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true)
-                //{
-                //    options = SqlBulkCopyOptions.KeepIdentity;
-                //}
+                if (object.Equals(options, default(TSqlBulkCopyOptions)) &&
+                    identityDbField?.IsIdentity == true &&
+                    qualifiers?.Any(
+                        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true &&
+                    fields?.Any(
+                        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true)
+                {
+                    options = Compiler.GetEnumFunc<TSqlBulkCopyOptions>("KeepIdentity")();
+                }
 
                 // Filter the DB Fields
                 var filteredDbFields = dbFields?
@@ -575,15 +573,15 @@ namespace RepoDb
                 connection.ExecuteNonQuery(sql, transaction: transaction);
 
                 // Set the options to KeepIdentity if needed
-                //if (object.Equals(options, default(TSqlBulkCopyOptions)) &&
-                //identityDbField?.IsIdentity == true &&
-                //    qualifiers?.Any(
-                //        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true &&
-                //    fields?.Any(
-                //        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true)
-                //{
-                //    options = SqlBulkCopyOptions.KeepIdentity;
-                //}
+                if (object.Equals(options, default(TSqlBulkCopyOptions)) &&
+                    identityDbField?.IsIdentity == true &&
+                    qualifiers?.Any(
+                        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true &&
+                    fields?.Any(
+                        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true)
+                {
+                    options = Compiler.GetEnumFunc<TSqlBulkCopyOptions>("KeepIdentity")();
+                }
 
                 // Filter the DB Fields
                 var filteredDbFields = dbFields?
@@ -811,15 +809,15 @@ namespace RepoDb
                 await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
 
                 // Set the options to KeepIdentity if needed
-                //if (object.Equals(options, default(TSqlBulkCopyOptions)) &&
-                //    identityDbField?.IsIdentity == true &&
-                //    qualifiers?.Any(
-                //        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true &&
-                //    fields?.Any(
-                //        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true)
-                //{
-                //    options = SqlBulkCopyOptions.KeepIdentity;
-                //}
+                if (object.Equals(options, default(TSqlBulkCopyOptions)) &&
+                    identityDbField?.IsIdentity == true &&
+                    qualifiers?.Any(
+                        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true &&
+                    fields?.Any(
+                        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true)
+                {
+                    options = Compiler.GetEnumFunc<TSqlBulkCopyOptions>("KeepIdentity")();
+                }
 
                 // Filter the DB Fields
                 var filteredDbFields = dbFields?
@@ -1035,15 +1033,15 @@ namespace RepoDb
                 await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
 
                 // Set the options to KeepIdentity if needed
-                //if (object.Equals(options, default(TSqlBulkCopyOptions)) &&
-                //identityDbField?.IsIdentity == true &&
-                //    qualifiers?.Any(
-                //        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true &&
-                //    fields?.Any(
-                //        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true)
-                //{
-                //    options = SqlBulkCopyOptions.KeepIdentity;
-                //}
+                if (object.Equals(options, default(TSqlBulkCopyOptions)) &&
+                identityDbField?.IsIdentity == true &&
+                    qualifiers?.Any(
+                        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true &&
+                    fields?.Any(
+                        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true)
+                {
+                    options = Compiler.GetEnumFunc<TSqlBulkCopyOptions>("KeepIdentity")();
+                }
 
                 // Filter the DB Fields
                 var filteredDbFields = dbFields?
@@ -1275,15 +1273,15 @@ namespace RepoDb
                 await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
 
                 // Set the options to KeepIdentity if needed
-                //if (object.Equals(options, default(TSqlBulkCopyOptions)) &&
-                //identityDbField?.IsIdentity == true &&
-                //    qualifiers?.Any(
-                //        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true &&
-                //    fields?.Any(
-                //        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true)
-                //{
-                //    options = SqlBulkCopyOptions.KeepIdentity;
-                //}
+                if (object.Equals(options, default(TSqlBulkCopyOptions)) &&
+                identityDbField?.IsIdentity == true &&
+                    qualifiers?.Any(
+                        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true &&
+                    fields?.Any(
+                        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true)
+                {
+                    options = Compiler.GetEnumFunc<TSqlBulkCopyOptions>("KeepIdentity")();
+                }
 
                 // Merge the actual merge
                 sql = GetBulkMergeSqlText(tableName,

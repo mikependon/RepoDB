@@ -414,6 +414,58 @@ namespace RepoDb.SqlServer.BulkOperations
 
         #endregion
 
+        #region GetEnumFunc
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEnum"></typeparam>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static Func<TEnum> GetEnumFunc<TEnum>(string value)
+            where TEnum : Enum =>
+            EnumFuncCache<TEnum>.GetFunc(value);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEnum"></typeparam>
+        private static class EnumFuncCache<TEnum>
+            where TEnum : Enum
+        {
+            private static ConcurrentDictionary<int, Func<TEnum>> cache =
+                new ConcurrentDictionary<int, Func<TEnum>>();
+
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="value"></param>
+            /// <returns></returns>
+            public static Func<TEnum> GetFunc(string value)
+            {
+                var func = (Func<TEnum>)null;
+                if (cache.TryGetValue(value.GetHashCode(), out func) == false)
+                {
+                    var typeOfEnum = typeof(TEnum);
+                    var fieldInfo = typeOfEnum.GetField(value);
+
+                    if (fieldInfo != null)
+                    {
+                        var body = Expression.Field(null, fieldInfo);
+
+                        func = Expression
+                            .Lambda<Func<TEnum>>(body)
+                            .Compile();
+                    }
+
+                    cache.TryAdd(value.GetHashCode(), func);
+                }
+                return func;
+            }
+        }
+
+        #endregion
+
         #region SetProperty
 
         /// <summary>

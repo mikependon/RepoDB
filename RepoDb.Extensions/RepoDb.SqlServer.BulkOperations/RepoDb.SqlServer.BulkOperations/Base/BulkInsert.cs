@@ -12,9 +12,6 @@ using System.Threading.Tasks;
 
 namespace RepoDb
 {
-    /// <summary>
-    /// Contains the extension methods for <see cref="SqlConnection"/> object.
-    /// </summary>
     public static partial class SqlConnectionExtension
     {
         #region BulkInsertInternalBase
