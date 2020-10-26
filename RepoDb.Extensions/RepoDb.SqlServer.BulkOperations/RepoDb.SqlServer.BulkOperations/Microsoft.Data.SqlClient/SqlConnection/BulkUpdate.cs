@@ -1,10 +1,8 @@
 ﻿using Microsoft.Data.SqlClient;
-using RepoDb.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -592,7 +590,7 @@ namespace RepoDb
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null) =>
             BulkUpdateInternalBase<SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
-            SqlBulkCopyColumnMapping, SqlTransaction>(connection,
+                SqlBulkCopyColumnMapping, SqlTransaction>(connection,
                 tableName,
                 reader,
                 qualifiers,
@@ -634,7 +632,7 @@ namespace RepoDb
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null) =>
             BulkUpdateInternalBase<SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
-            SqlBulkCopyColumnMapping, SqlTransaction>(connection,
+                SqlBulkCopyColumnMapping, SqlTransaction>(connection,
                 tableName,
                 dataTable,
                 qualifiers,
@@ -680,7 +678,7 @@ namespace RepoDb
             SqlTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
             BulkUpdateAsyncInternalBase<SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
-            SqlBulkCopyColumnMapping, SqlTransaction>(connection,
+                SqlBulkCopyColumnMapping, SqlTransaction>(connection,
                 tableName,
                 reader,
                 qualifiers,
@@ -724,7 +722,7 @@ namespace RepoDb
             SqlTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
             BulkUpdateAsyncInternalBase<SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
-            SqlBulkCopyColumnMapping, SqlTransaction>(connection,
+                SqlBulkCopyColumnMapping, SqlTransaction>(connection,
                 tableName,
                 dataTable,
                 qualifiers,

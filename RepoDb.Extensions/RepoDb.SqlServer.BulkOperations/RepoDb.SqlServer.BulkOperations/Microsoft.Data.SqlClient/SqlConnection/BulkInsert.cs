@@ -549,9 +549,8 @@ namespace RepoDb
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null)
-            where TEntity : class
-        {
-            return BulkInsertInternalBase<TEntity, SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
+            where TEntity : class =>
+            BulkInsertInternalBase<TEntity, SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
                 SqlBulkCopyColumnMapping, SqlTransaction>(connection,
                 tableName,
                 entities,
@@ -564,7 +563,6 @@ namespace RepoDb
                 isReturnIdentity,
                 usePhysicalPseudoTempTable,
                 transaction);
-        }
 
         /// <summary>
         /// 
@@ -593,9 +591,8 @@ namespace RepoDb
             int? batchSize = null,
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
-        {
-            return BulkInsertInternalBase<SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
+            SqlTransaction transaction = null) =>
+            BulkInsertInternalBase<SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
                 SqlBulkCopyColumnMapping, SqlTransaction>(connection,
                 tableName,
                 reader,
@@ -608,7 +605,6 @@ namespace RepoDb
                 isReturnIdentity,
                 usePhysicalPseudoTempTable,
                 transaction);
-        }
 
         /// <summary>
         /// Bulk insert an instance of <see cref="DataTable"/> object into the database.
@@ -639,9 +635,8 @@ namespace RepoDb
             int? batchSize = null,
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
-        {
-            return BulkInsertInternalBase<SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
+            SqlTransaction transaction = null) =>
+            BulkInsertInternalBase<SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
                 SqlBulkCopyColumnMapping, SqlTransaction>(connection,
                 tableName,
                 dataTable,
@@ -655,7 +650,6 @@ namespace RepoDb
                 isReturnIdentity,
                 usePhysicalPseudoTempTable,
                 transaction);
-        }
 
         #endregion
 
@@ -692,9 +686,8 @@ namespace RepoDb
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
-            where TEntity : class
-        {
-            return BulkInsertAsyncInternalBase<TEntity, SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
+            where TEntity : class =>
+            BulkInsertAsyncInternalBase<TEntity, SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
                 SqlBulkCopyColumnMapping, SqlTransaction>(connection,
                 tableName,
                 entities,
@@ -708,7 +701,6 @@ namespace RepoDb
                 usePhysicalPseudoTempTable,
                 transaction,
                 cancellationToken);
-        }
 
         /// <summary>
         /// 
@@ -739,9 +731,8 @@ namespace RepoDb
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-        {
-            return BulkInsertAsyncInternalBase<SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
+            CancellationToken cancellationToken = default) =>
+            BulkInsertAsyncInternalBase<SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
                 SqlBulkCopyColumnMapping, SqlTransaction>(connection,
                 tableName,
                 reader,
@@ -755,7 +746,6 @@ namespace RepoDb
                 usePhysicalPseudoTempTable,
                 transaction,
                 cancellationToken);
-        }
 
         /// <summary>
         /// Bulk insert an instance of <see cref="DataTable"/> object into the database in an asynchronous way.
@@ -788,9 +778,8 @@ namespace RepoDb
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-        {
-            return BulkInsertAsyncInternalBase<SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
+            CancellationToken cancellationToken = default) =>
+            BulkInsertAsyncInternalBase<SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
                 SqlBulkCopyColumnMapping, SqlTransaction>(connection,
                 tableName,
                 dataTable,
@@ -805,7 +794,6 @@ namespace RepoDb
                 usePhysicalPseudoTempTable,
                 transaction,
                 cancellationToken);
-        }
 
         #endregion
     }

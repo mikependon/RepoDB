@@ -605,7 +605,7 @@ namespace RepoDb
             SqlTransaction transaction = null)
             where TEntity : class =>
             BulkMergeInternalBase<TEntity, SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
-            SqlBulkCopyColumnMapping, SqlTransaction>(connection,
+                SqlBulkCopyColumnMapping, SqlTransaction>(connection,
                 tableName,
                 entities,
                 qualifiers,
@@ -647,7 +647,7 @@ namespace RepoDb
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null) =>
             BulkMergeInternalBase<SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
-            SqlBulkCopyColumnMapping, SqlTransaction>(connection,
+                SqlBulkCopyColumnMapping, SqlTransaction>(connection,
                 tableName,
                 reader,
                 qualifiers,
@@ -691,7 +691,7 @@ namespace RepoDb
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null) =>
             BulkMergeInternalBase<SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
-            SqlBulkCopyColumnMapping, SqlTransaction>(connection,
+                SqlBulkCopyColumnMapping, SqlTransaction>(connection,
                 tableName,
                 dataTable,
                 qualifiers,
@@ -742,7 +742,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class =>
             BulkMergeAsyncInternalBase<TEntity, SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
-            SqlBulkCopyColumnMapping, SqlTransaction>(connection,
+                SqlBulkCopyColumnMapping, SqlTransaction>(connection,
                 tableName,
                 entities,
                 qualifiers,
@@ -787,7 +787,7 @@ namespace RepoDb
             SqlTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
             BulkMergeAsyncInternalBase<SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
-            SqlBulkCopyColumnMapping, SqlTransaction>(connection,
+                SqlBulkCopyColumnMapping, SqlTransaction>(connection,
                 tableName,
                 reader,
                 qualifiers,
@@ -834,7 +834,7 @@ namespace RepoDb
             SqlTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
             BulkMergeAsyncInternalBase<SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
-            SqlBulkCopyColumnMapping, SqlTransaction>(connection,
+                SqlBulkCopyColumnMapping, SqlTransaction>(connection,
                 tableName,
                 dataTable,
                 qualifiers,
