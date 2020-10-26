@@ -686,7 +686,8 @@ namespace RepoDb
                 bulkCopyTimeout,
                 batchSize,
                 usePhysicalPseudoTempTable,
-                transaction);
+                transaction,
+                cancellationToken);
 
         /// <summary>
         /// 
