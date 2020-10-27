@@ -42,11 +42,7 @@ namespace RepoDb.Resolvers
             if (dbType == null)
             {
                 var underlyingType = propertyInfo.PropertyType.GetUnderlyingType();
-                if (underlyingType.IsEnum == true)
-                {
-                    dbType = DbType.String;
-                }
-                else if (underlyingType == StaticType.ByteArray)
+                if (underlyingType == StaticType.ByteArray)
                 {
                     dbType = DbType.Binary;
                 }

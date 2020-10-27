@@ -31,4 +31,19 @@ namespace RepoDb.IntegrationTests.Models
         public Guid SessionId { get; set; }
         public Continent? ColumnNVarChar { get; set; }
     }
+
+    [Map("[dbo].[CompleteTable]")]
+    public class FlaggedEnumForStringCompleteTable
+    {
+        public Guid SessionId { get; set; }
+        public StorageType? ColumnNVarChar { get; set; }
+    }
+
+    [Map("[dbo].[CompleteTable]")]
+    public class FlaggedEnumForIntCompleteTable
+    {
+        public Guid SessionId { get; set; }
+        [TypeMap(DbType.Int32)]
+        public StorageType? ColumnNVarChar { get; set; }
+    }
 }
