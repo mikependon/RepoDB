@@ -1382,7 +1382,9 @@ namespace RepoDb.Reflection
             {
                 try
                 {
-                    expression = ConvertEnumExpressionToTypeExpression(expression, targetType?.GetUnderlyingType());
+                    var dbType = classProperty.GetDbType();
+                    var toType = dbType.HasValue ? new DbTypeToClientTypeResolver().Resolve(dbType.Value) : targetType?.GetUnderlyingType();
+                    expression = ConvertEnumExpressionToTypeExpression(expression, toType);
                 }
                 catch (Exception ex)
                 {
@@ -1517,16 +1519,48 @@ namespace RepoDb.Reflection
         /// 
         /// </summary>
         /// <param name="parameterVariableExpression"></param>
+        /// <param name="classProperty"></param>
+        /// <param name="dbField"></param>
+        /// <returns></returns>
+        internal static MethodCallExpression GetDbParameterDbTypeAssignmentExpression(ParameterExpression parameterVariableExpression,
+            ClassProperty classProperty,
+            DbField dbField)
+        {
+            var underlyingType = dbField.Type?.GetUnderlyingType();
+            var dbType = classProperty?.GetDbType() ?? TypeMapper.Get(underlyingType) ??
+                new ClientTypeToDbTypeResolver().Resolve(underlyingType);
+
+            // Return the expression
+            return GetDbParameterDbTypeAssignmentExpression(parameterVariableExpression, dbType);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameterVariableExpression"></param>
         /// <param name="dbField"></param>
         /// <returns></returns>
         internal static MethodCallExpression GetDbParameterDbTypeAssignmentExpression(ParameterExpression parameterVariableExpression,
             DbField dbField)
         {
+            var underlyingType = dbField.Type?.GetUnderlyingType();
+            var dbType = TypeMapper.Get(underlyingType) ?? new ClientTypeToDbTypeResolver().Resolve(underlyingType);
+
+            // Return the expression
+            return GetDbParameterDbTypeAssignmentExpression(parameterVariableExpression, dbType);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameterVariableExpression"></param>
+        /// <param name="dbType"></param>
+        /// <returns></returns>
+        internal static MethodCallExpression GetDbParameterDbTypeAssignmentExpression(ParameterExpression parameterVariableExpression,
+            DbType? dbType)
+        {
             var expression = (MethodCallExpression)null;
             var dbParameterDbTypeSetMethod = StaticType.DbParameter.GetProperty("DbType").SetMethod;
-            var underlyingType = dbField.Type?.GetUnderlyingType();
-            var dbType = TypeMapper.Get(underlyingType) ??
-                new ClientTypeToDbTypeResolver().Resolve(underlyingType);
 
             // Set the DB Type
             if (dbType != null)
@@ -1695,7 +1729,7 @@ namespace RepoDb.Reflection
 
             // DbParameter.DbType
             var dbTypeAssignmentExpression = GetDbParameterDbTypeAssignmentExpression(parameterVariableExpression,
-                dbField);
+                classProperty, dbField);
             parameterAssignmentExpressions.AddIfNotNull(dbTypeAssignmentExpression);
 
             // DbParameter.SqlDbType (System)

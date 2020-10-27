@@ -236,10 +236,12 @@ namespace RepoDb.Extensions
                 var name = classProperty.GetMappedName();
                 var dbField = GetDbField(name, dbFields);
                 var value = classProperty.PropertyInfo.GetValue(param);
+                var valueType = value?.GetType();
+                var isEnum = valueType?.IsEnum;
                 var returnType = (Type)null;
 
                 // Propertyhandler
-                var propertyHandler = GetProperyHandler(classProperty, value?.GetType());
+                var propertyHandler = GetProperyHandler(classProperty, valueType);
                 var definition = InvokePropertyHandlerSetMethod(propertyHandler, value, classProperty);
                 if (definition != null)
                 {
@@ -259,6 +261,12 @@ namespace RepoDb.Extensions
                 var dbType = (returnType != null ? clientTypeToDbTypeResolver.Resolve(returnType) : null) ??
                     classProperty.GetDbType() ??
                     value?.GetType()?.GetDbType();
+
+                // Specialized enum
+                if (dbType == null && isEnum.HasValue && isEnum.Value == true)
+                {
+                    dbType = DbType.String;
+                }
 
                 // Add the parameter
                 command.Parameters.Add(command.CreateParameter(name, value, dbType));
@@ -298,8 +306,11 @@ namespace RepoDb.Extensions
                 }
                 else
                 {
-                    valueType = kvp.Value?.GetType()?.GetUnderlyingType();
+                    valueType = value?.GetType()?.GetUnderlyingType();
                 }
+
+                // Variables
+                var isEnum = valueType?.IsEnum;
 
                 // Propertyhandler
                 var propertyHandler = GetProperyHandler(classProperty, valueType);
@@ -322,6 +333,12 @@ namespace RepoDb.Extensions
                 var dbType = (valueType != null ? clientTypeToDbTypeResolver.Resolve(valueType) : null) ??
                     classProperty?.GetDbType() ??
                     value?.GetType()?.GetDbType();
+
+                // Specialized enum
+                if (dbType == null && isEnum.HasValue && isEnum.Value == true)
+                {
+                    dbType = DbType.String;
+                }
 
                 // Add the parameter
                 command.Parameters.Add(command.CreateParameter(kvp.Key, value, dbType));
@@ -421,6 +438,7 @@ namespace RepoDb.Extensions
             var dbField = GetDbField(queryField.Field.Name, dbFields);
             var value = queryField.Parameter.Value;
             var valueType = value?.GetType()?.GetUnderlyingType();
+            var isEnum = valueType?.IsEnum;
 
             // PropertyHandler
             var classProperty = PropertyCache.Get(entityType, queryField.Field);
@@ -444,6 +462,12 @@ namespace RepoDb.Extensions
             var dbType = (valueType != null ? clientTypeToDbTypeResolver.Resolve(valueType) : null) ??
                 classProperty?.GetDbType() ??
                 value?.GetType()?.GetDbType();
+
+            // Specialized enum
+            if (dbType == null && isEnum.HasValue && isEnum == true)
+            {
+                dbType = DbType.String;
+            }
 
             // Add the parameter
             command.Parameters.Add(command.CreateParameter(queryField.Parameter.Name, value, dbType));
@@ -473,6 +497,7 @@ namespace RepoDb.Extensions
                     var name = string.Concat(queryField.Parameter.Name, "_In_", i);
                     var value = values[i];
                     var valueType = value?.GetType()?.GetUnderlyingType();
+                    var isEnum = valueType?.IsEnum;
 
                     // Propertyhandler
                     var properyHandler = GetProperyHandler(null, valueType);
@@ -493,6 +518,12 @@ namespace RepoDb.Extensions
 
                     // DbType
                     var dbType = (valueType != null ? clientTypeToDbTypeResolver.Resolve(valueType) : null);
+
+                    // Specialized enum
+                    if (dbType == null && isEnum.HasValue && isEnum.Value == true)
+                    {
+                        dbType = DbType.String;
+                    }
 
                     // Create
                     command.Parameters.Add(CreateParameter(command, name, values[i], dbType));
@@ -523,6 +554,8 @@ namespace RepoDb.Extensions
                 var rightValue = values[1];
                 var leftValueType = leftValue?.GetType()?.GetUnderlyingType();
                 var rightValueType = rightValue?.GetType()?.GetUnderlyingType();
+                var isLeftEnum = leftValueType?.IsEnum;
+                var isRightEnum = rightValueType?.IsEnum;
 
                 // Propertyhandler (Left)
                 var leftPropertyHandler = GetProperyHandler(null, leftValueType);
@@ -554,6 +587,16 @@ namespace RepoDb.Extensions
                 // DbType
                 var leftDbType = (leftValueType != null ? clientTypeToDbTypeResolver.Resolve(leftValueType) : null);
                 var rightDbType = (rightValueType != null ? clientTypeToDbTypeResolver.Resolve(rightValueType) : null);
+
+                // Specialized enum
+                if (leftDbType == null && isLeftEnum.HasValue && isLeftEnum.Value == true)
+                {
+                    leftDbType = DbType.String;
+                }
+                if (rightDbType == null && isRightEnum.HasValue && isRightEnum.Value == true)
+                {
+                    rightDbType = DbType.String;
+                }
 
                 // Add
                 command.Parameters.Add(
