@@ -469,7 +469,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.SessionId, id);
 
                 // Act
-                var queryResult = connection.Query<FlaggedEnumForIntCompleteTable>(id);
+                var queryResult = connection.Query<EnumCompleteTable>(id);
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult.First());
@@ -517,7 +517,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.SessionId, id);
 
                 // Act
-                var queryResult = connection.Query<FlaggedEnumForIntCompleteTable>(id);
+                var queryResult = connection.Query<EnumAsIntForStringCompleteTable>(id);
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult.First());

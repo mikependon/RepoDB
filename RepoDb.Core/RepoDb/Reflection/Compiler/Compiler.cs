@@ -653,7 +653,7 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static Expression ConvertEnumExpressionToTypeExpressionForString(Expression expression)
         {
-            var method = typeof(Enum).GetMethod("GetName", new[] { StaticType.Type, StaticType.Object });
+            var method = StaticType.Convert.GetMethod("ToString", new[] { StaticType.Object });
 
             // Variables
             var isNullExpression = (Expression)null;
@@ -671,12 +671,8 @@ namespace RepoDb.Reflection
             }
 
             // False
-            var parameters = new Expression[]
-            {
-                Expression.Constant(expression.Type.GetUnderlyingType()),
-                ConvertExpressionToTypeExpression(expression, StaticType.Object)
-            };
-            falseExpression = ConvertExpressionToTypeExpression(Expression.Call(method, parameters), StaticType.String);
+            var methodCallExpression = Expression.Call(method, ConvertExpressionToTypeExpression(expression, StaticType.Object));
+            falseExpression = ConvertExpressionToTypeExpression(methodCallExpression, StaticType.String);
 
             // Call and return
             return isNullExpression == null ? falseExpression :
