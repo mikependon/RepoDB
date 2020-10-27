@@ -804,6 +804,146 @@ namespace RepoDb.IntegrationTests
 
         #endregion
 
+        #region FlaggedEnumForStringCompleteTable
+
+        /// <summary>
+        /// Creates a list of <see cref="FlaggedEnumForStringCompleteTable"/> objects.
+        /// </summary>
+        /// <param name="count">The number of rows.</param>
+        /// <returns>A list of <see cref="FlaggedEnumForStringCompleteTable"/> objects.</returns>
+        public static List<FlaggedEnumForStringCompleteTable> CreateFlaggedEnumForStringCompleteTables(int count)
+        {
+            var tables = new List<FlaggedEnumForStringCompleteTable>();
+            for (var i = 0; i < count; i++)
+            {
+                var index = i + 1;
+                tables.Add(new FlaggedEnumForStringCompleteTable
+                {
+                    SessionId = Guid.NewGuid(),
+                    ColumnNVarChar = StorageType.MemoryStorage | StorageType.InternalStorage | StorageType.Drive
+                });
+            }
+            return tables;
+        }
+
+        /// <summary>
+        /// Creates a list of <see cref="FlaggedEnumForStringCompleteTable"/> objects with null properties.
+        /// </summary>
+        /// <param name="count">The number of rows.</param>
+        /// <returns>A list of <see cref="FlaggedEnumForStringCompleteTable"/> objects.</returns>
+        public static List<FlaggedEnumForStringCompleteTable> CreateFlaggedEnumForStringCompleteTablesAsNull(int count)
+        {
+            var tables = new List<FlaggedEnumForStringCompleteTable>();
+            for (var i = 0; i < count; i++)
+            {
+                var index = i + 1;
+                tables.Add(new FlaggedEnumForStringCompleteTable
+                {
+                    SessionId = Guid.NewGuid(),
+                    ColumnNVarChar = null
+                });
+            }
+            return tables;
+        }
+
+        /// <summary>
+        /// Creates an instance of <see cref="FlaggedEnumForStringCompleteTable"/> object.
+        /// </summary>
+        /// <returns>A new created instance of <see cref="FlaggedEnumForStringCompleteTable"/> object.</returns>
+        public static FlaggedEnumForStringCompleteTable CreateFlaggedEnumForStringCompleteTable()
+        {
+            return new FlaggedEnumForStringCompleteTable
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnNVarChar = StorageType.MemoryStorage | StorageType.InternalStorage | StorageType.Drive
+            };
+        }
+
+        /// <summary>
+        /// Creates an instance of <see cref="FlaggedEnumForStringCompleteTable"/> object with null properties.
+        /// </summary>
+        /// <returns>A new created instance of <see cref="FlaggedEnumForStringCompleteTable"/> object.</returns>
+        public static FlaggedEnumForStringCompleteTable CreateFlaggedEnumForStringCompleteTableAsNull()
+        {
+            return new FlaggedEnumForStringCompleteTable
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnNVarChar = null
+            };
+        }
+
+        #endregion
+
+        #region FlaggedEnumForIntCompleteTable
+
+        /// <summary>
+        /// Creates a list of <see cref="FlaggedEnumForIntCompleteTable"/> objects.
+        /// </summary>
+        /// <param name="count">The number of rows.</param>
+        /// <returns>A list of <see cref="FlaggedEnumForIntCompleteTable"/> objects.</returns>
+        public static List<FlaggedEnumForIntCompleteTable> CreateFlaggedEnumForIntCompleteTables(int count)
+        {
+            var tables = new List<FlaggedEnumForIntCompleteTable>();
+            for (var i = 0; i < count; i++)
+            {
+                var index = i + 1;
+                tables.Add(new FlaggedEnumForIntCompleteTable
+                {
+                    SessionId = Guid.NewGuid(),
+                    ColumnNVarChar = StorageType.MemoryStorage | StorageType.InternalStorage | StorageType.Drive
+                });
+            }
+            return tables;
+        }
+
+        /// <summary>
+        /// Creates a list of <see cref="FlaggedEnumForIntCompleteTable"/> objects with null properties.
+        /// </summary>
+        /// <param name="count">The number of rows.</param>
+        /// <returns>A list of <see cref="FlaggedEnumForIntCompleteTable"/> objects.</returns>
+        public static List<FlaggedEnumForIntCompleteTable> CreateFlaggedEnumForIntCompleteTablesAsNull(int count)
+        {
+            var tables = new List<FlaggedEnumForIntCompleteTable>();
+            for (var i = 0; i < count; i++)
+            {
+                var index = i + 1;
+                tables.Add(new FlaggedEnumForIntCompleteTable
+                {
+                    SessionId = Guid.NewGuid(),
+                    ColumnNVarChar = null
+                });
+            }
+            return tables;
+        }
+
+        /// <summary>
+        /// Creates an instance of <see cref="FlaggedEnumForIntCompleteTable"/> object.
+        /// </summary>
+        /// <returns>A new created instance of <see cref="FlaggedEnumForIntCompleteTable"/> object.</returns>
+        public static FlaggedEnumForIntCompleteTable CreateFlaggedEnumForIntCompleteTable()
+        {
+            return new FlaggedEnumForIntCompleteTable
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnNVarChar = StorageType.MemoryStorage | StorageType.InternalStorage | StorageType.Drive
+            };
+        }
+
+        /// <summary>
+        /// Creates an instance of <see cref="FlaggedEnumForIntCompleteTable"/> object with null properties.
+        /// </summary>
+        /// <returns>A new created instance of <see cref="FlaggedEnumForIntCompleteTable"/> object.</returns>
+        public static FlaggedEnumForIntCompleteTable CreateFlaggedEnumForIntCompleteTableAsNull()
+        {
+            return new FlaggedEnumForIntCompleteTable
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnNVarChar = null
+            };
+        }
+
+        #endregion
+
         #region TypeLevelMappedForStringEnumCompleteTable
 
         /// <summary>

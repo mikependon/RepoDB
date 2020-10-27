@@ -271,7 +271,7 @@ namespace RepoDb.IntegrationTests
                 var queryResult = connection.QueryAll<EnumCompleteTableWithPropertyHandler>().AsList();
 
                 // Assert
-                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.Where(item => item.SessionId == entity.SessionId)));
+                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
             }
         }
 
@@ -288,7 +288,7 @@ namespace RepoDb.IntegrationTests
                 var queryResult = connection.QueryAll<EnumCompleteTableWithPropertyHandler>().AsList();
 
                 // Assert
-                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.Where(item => item.SessionId == entity.SessionId)));
+                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
             }
         }
 
@@ -362,7 +362,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entities.Count, queryResult.Count());
 
                 // Assert
-                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.Where(item => item.SessionId == entity.SessionId)));
+                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
             }
         }
 
@@ -382,7 +382,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entities.Count, queryResult.Count());
 
                 // Assert
-                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.Where(item => item.SessionId == entity.SessionId)));
+                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
             }
         }
 
@@ -402,7 +402,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entities.Count, queryResult.Count());
 
                 // Assert
-                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.Where(item => item.SessionId == entity.SessionId)));
+                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
             }
         }
 
@@ -422,7 +422,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entities.Count, queryResult.Count());
 
                 // Assert
-                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.Where(item => item.SessionId == entity.SessionId)));
+                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
             }
         }
 
@@ -442,11 +442,13 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entities.Count, queryResult.Count());
 
                 // Assert
-                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.Where(item => item.SessionId == entity.SessionId)));
+                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
             }
         }
 
         #endregion
+
+        #region CRUD
 
         #region Insert
 
@@ -465,6 +467,12 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(1, connection.CountAll<EnumCompleteTable>());
                 Assert.AreNotEqual(id, Guid.Empty);
                 Assert.AreEqual(entity.SessionId, id);
+
+                // Act
+                var queryResult = connection.Query<FlaggedEnumForIntCompleteTable>(id);
+
+                // Assert
+                Helper.AssertPropertiesEquality(entity, queryResult.First());
             }
         }
 
@@ -483,6 +491,12 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(1, connection.CountAll<EnumCompleteTable>());
                 Assert.AreNotEqual(id, Guid.Empty);
                 Assert.AreEqual(entity.SessionId, id);
+
+                // Act
+                var queryResult = connection.Query<FlaggedEnumForIntCompleteTable>(id);
+
+                // Assert
+                Helper.AssertPropertiesEquality(entity, queryResult.First());
             }
         }
 
@@ -501,6 +515,12 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(1, connection.CountAll<EnumAsIntForStringCompleteTable>());
                 Assert.AreNotEqual(id, Guid.Empty);
                 Assert.AreEqual(entity.SessionId, id);
+
+                // Act
+                var queryResult = connection.Query<FlaggedEnumForIntCompleteTable>(id);
+
+                // Assert
+                Helper.AssertPropertiesEquality(entity, queryResult.First());
             }
         }
 
@@ -519,6 +539,108 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(1, connection.CountAll<EnumAsIntForStringCompleteTable>());
                 Assert.AreNotEqual(id, Guid.Empty);
                 Assert.AreEqual(entity.SessionId, id);
+
+                // Act
+                var queryResult = connection.Query<FlaggedEnumForIntCompleteTable>(id);
+
+                // Assert
+                Helper.AssertPropertiesEquality(entity, queryResult.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestInsertForFlaggedEnumForString()
+        {
+            // Setup
+            var entity = Helper.CreateFlaggedEnumForStringCompleteTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var id = connection.Insert<FlaggedEnumForStringCompleteTable, Guid>(entity);
+
+                // Assert
+                Assert.AreEqual(1, connection.CountAll<FlaggedEnumForStringCompleteTable>());
+                Assert.AreNotEqual(id, Guid.Empty);
+                Assert.AreEqual(entity.SessionId, id);
+
+                // Act
+                var queryResult = connection.Query<FlaggedEnumForIntCompleteTable>(id);
+
+                // Assert
+                Helper.AssertPropertiesEquality(entity, queryResult.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestInsertForFlaggedEnumForStringAsNull()
+        {
+            // Setup
+            var entity = Helper.CreateFlaggedEnumForStringCompleteTableAsNull();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var id = connection.Insert<FlaggedEnumForStringCompleteTable, Guid>(entity);
+
+                // Assert
+                Assert.AreEqual(1, connection.CountAll<FlaggedEnumForStringCompleteTable>());
+                Assert.AreNotEqual(id, Guid.Empty);
+                Assert.AreEqual(entity.SessionId, id);
+
+                // Act
+                var queryResult = connection.Query<FlaggedEnumForIntCompleteTable>(id);
+
+                // Assert
+                Helper.AssertPropertiesEquality(entity, queryResult.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestInsertForFlaggedEnumForInt()
+        {
+            // Setup
+            var entity = Helper.CreateFlaggedEnumForIntCompleteTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var id = connection.Insert<FlaggedEnumForIntCompleteTable, Guid>(entity);
+
+                // Assert
+                Assert.AreEqual(1, connection.CountAll<FlaggedEnumForIntCompleteTable>());
+                Assert.AreNotEqual(id, Guid.Empty);
+                Assert.AreEqual(entity.SessionId, id);
+
+                // Act
+                var queryResult = connection.Query<FlaggedEnumForIntCompleteTable>(id);
+
+                // Assert
+                Helper.AssertPropertiesEquality(entity, queryResult.First());
+            }
+        }
+
+        [TestMethod]
+        public void TestInsertForFlaggedEnumForIntAsNull()
+        {
+            // Setup
+            var entity = Helper.CreateFlaggedEnumForIntCompleteTableAsNull();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var id = connection.Insert<FlaggedEnumForIntCompleteTable, Guid>(entity);
+
+                // Assert
+                Assert.AreEqual(1, connection.CountAll<FlaggedEnumForIntCompleteTable>());
+                Assert.AreNotEqual(id, Guid.Empty);
+                Assert.AreEqual(entity.SessionId, id);
+
+                // Act
+                var queryResult = connection.Query<FlaggedEnumForIntCompleteTable>(id);
+
+                // Assert
+                Helper.AssertPropertiesEquality(entity, queryResult.First());
             }
         }
 
@@ -542,7 +664,7 @@ namespace RepoDb.IntegrationTests
                 var queryResult = connection.QueryAll<EnumCompleteTable>();
 
                 // Assert
-                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.Where(item => item.SessionId == entity.SessionId)));
+                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
             }
         }
 
@@ -562,7 +684,7 @@ namespace RepoDb.IntegrationTests
                 var queryResult = connection.QueryAll<EnumCompleteTable>();
 
                 // Assert
-                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.Where(item => item.SessionId == entity.SessionId)));
+                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
             }
         }
 
@@ -582,7 +704,7 @@ namespace RepoDb.IntegrationTests
                 var queryResult = connection.QueryAll<EnumAsIntForStringCompleteTable>();
 
                 // Assert
-                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.Where(item => item.SessionId == entity.SessionId)));
+                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
             }
         }
 
@@ -602,7 +724,87 @@ namespace RepoDb.IntegrationTests
                 var queryResult = connection.QueryAll<EnumAsIntForStringCompleteTable>();
 
                 // Assert
-                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.Where(item => item.SessionId == entity.SessionId)));
+                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
+            }
+        }
+
+        [TestMethod]
+        public void TestInsertAllForFlaggedEnumForString()
+        {
+            // Setup
+            var entities = Helper.CreateFlaggedEnumForStringCompleteTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var insertAllResult = connection.InsertAll<FlaggedEnumForStringCompleteTable>(entities);
+
+                // Assert
+                Assert.AreEqual(insertAllResult, connection.CountAll<FlaggedEnumForStringCompleteTable>());
+                var queryResult = connection.QueryAll<FlaggedEnumForStringCompleteTable>();
+
+                // Assert
+                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
+            }
+        }
+
+        [TestMethod]
+        public void TestInsertAllForFlaggedEnumForStringAsNull()
+        {
+            // Setup
+            var entities = Helper.CreateFlaggedEnumForStringCompleteTablesAsNull(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var insertAllResult = connection.InsertAll<FlaggedEnumForStringCompleteTable>(entities);
+
+                // Assert
+                Assert.AreEqual(insertAllResult, connection.CountAll<FlaggedEnumForStringCompleteTable>());
+                var queryResult = connection.QueryAll<FlaggedEnumForStringCompleteTable>();
+
+                // Assert
+                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
+            }
+        }
+
+        [TestMethod]
+        public void TestInsertAllForFlaggedEnumForInt()
+        {
+            // Setup
+            var entities = Helper.CreateFlaggedEnumForIntCompleteTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var insertAllResult = connection.InsertAll<FlaggedEnumForIntCompleteTable>(entities);
+
+                // Assert
+                Assert.AreEqual(insertAllResult, connection.CountAll<FlaggedEnumForIntCompleteTable>());
+                var queryResult = connection.QueryAll<FlaggedEnumForIntCompleteTable>();
+
+                // Assert
+                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
+            }
+        }
+
+        [TestMethod]
+        public void TestInsertAllForFlaggedEnumForIntAsNull()
+        {
+            // Setup
+            var entities = Helper.CreateFlaggedEnumForIntCompleteTablesAsNull(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var insertAllResult = connection.InsertAll<FlaggedEnumForIntCompleteTable>(entities);
+
+                // Assert
+                Assert.AreEqual(insertAllResult, connection.CountAll<FlaggedEnumForIntCompleteTable>());
+                var queryResult = connection.QueryAll<FlaggedEnumForIntCompleteTable>();
+
+                // Assert
+                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
             }
         }
 
@@ -826,6 +1028,102 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        [TestMethod]
+        public void TestMergeForFlaggedEnumForStringCompleteTable()
+        {
+            // Setup
+            var entity = Helper.CreateFlaggedEnumForStringCompleteTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var id = connection.Merge(entity);
+
+                // Assert
+                Assert.AreEqual(1, connection.CountAll<FlaggedEnumForStringCompleteTable>());
+                Assert.AreNotEqual(id, Guid.Empty);
+                Assert.AreEqual(entity.SessionId, id);
+
+                // Act
+                var queryResult = connection.QueryAll<FlaggedEnumForStringCompleteTable>().First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(entity, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestMergeForFlaggedEnumForStringCompleteTableAsNull()
+        {
+            // Setup
+            var entity = Helper.CreateFlaggedEnumForStringCompleteTableAsNull();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var id = connection.Merge(entity);
+
+                // Assert
+                Assert.AreEqual(1, connection.CountAll<FlaggedEnumForStringCompleteTable>());
+                Assert.AreNotEqual(id, Guid.Empty);
+                Assert.AreEqual(entity.SessionId, id);
+
+                // Act
+                var queryResult = connection.QueryAll<FlaggedEnumForStringCompleteTable>().First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(entity, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestMergeForFlaggedEnumForIntCompleteTable()
+        {
+            // Setup
+            var entity = Helper.CreateFlaggedEnumForStringCompleteTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var id = connection.Merge(entity);
+
+                // Assert
+                Assert.AreEqual(1, connection.CountAll<FlaggedEnumForIntCompleteTable>());
+                Assert.AreNotEqual(id, Guid.Empty);
+                Assert.AreEqual(entity.SessionId, id);
+
+                // Act
+                var queryResult = connection.QueryAll<FlaggedEnumForIntCompleteTable>().First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(entity, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestMergeForFlaggedEnumForIntCompleteTableAsNull()
+        {
+            // Setup
+            var entity = Helper.CreateFlaggedEnumForStringCompleteTableAsNull();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var id = connection.Merge(entity);
+
+                // Assert
+                Assert.AreEqual(1, connection.CountAll<FlaggedEnumForIntCompleteTable>());
+                Assert.AreNotEqual(id, Guid.Empty);
+                Assert.AreEqual(entity.SessionId, id);
+
+                // Act
+                var queryResult = connection.QueryAll<FlaggedEnumForIntCompleteTable>().First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(entity, queryResult);
+            }
+        }
+
         #endregion
 
         #region MergeAll
@@ -846,7 +1144,7 @@ namespace RepoDb.IntegrationTests
                 var queryResult = connection.QueryAll<EnumCompleteTable>();
 
                 // Assert
-                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.Where(item => item.SessionId == entity.SessionId)));
+                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
             }
         }
 
@@ -866,7 +1164,7 @@ namespace RepoDb.IntegrationTests
                 var queryResult = connection.QueryAll<EnumCompleteTable>();
 
                 // Assert
-                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.Where(item => item.SessionId == entity.SessionId)));
+                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
             }
         }
 
@@ -901,7 +1199,7 @@ namespace RepoDb.IntegrationTests
                 var queryResult = connection.QueryAll<EnumCompleteTable>();
 
                 // Assert
-                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.Where(item => item.SessionId == entity.SessionId)));
+                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
             }
         }
 
@@ -936,7 +1234,7 @@ namespace RepoDb.IntegrationTests
                 var queryResult = connection.QueryAll<EnumCompleteTable>();
 
                 // Assert
-                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.Where(item => item.SessionId == entity.SessionId)));
+                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
             }
         }
 
@@ -956,7 +1254,7 @@ namespace RepoDb.IntegrationTests
                 var queryResult = connection.QueryAll<EnumAsIntForStringCompleteTable>();
 
                 // Assert
-                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.Where(item => item.SessionId == entity.SessionId)));
+                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
             }
         }
 
@@ -976,7 +1274,7 @@ namespace RepoDb.IntegrationTests
                 var queryResult = connection.QueryAll<EnumAsIntForStringCompleteTable>();
 
                 // Assert
-                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.Where(item => item.SessionId == entity.SessionId)));
+                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
             }
         }
 
@@ -1007,7 +1305,7 @@ namespace RepoDb.IntegrationTests
                 var queryResult = connection.QueryAll<EnumAsIntForStringCompleteTable>();
 
                 // Assert
-                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.Where(item => item.SessionId == entity.SessionId)));
+                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
             }
         }
 
@@ -1038,7 +1336,87 @@ namespace RepoDb.IntegrationTests
                 var queryResult = connection.QueryAll<EnumAsIntForStringCompleteTable>();
 
                 // Assert
-                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.Where(item => item.SessionId == entity.SessionId)));
+                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
+            }
+        }
+
+        [TestMethod]
+        public void TestMergeAllForFlaggedEnumForStringCompleteTable()
+        {
+            // Setup
+            var entities = Helper.CreateFlaggedEnumForStringCompleteTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = connection.MergeAll(entities);
+
+                // Assert
+                Assert.AreEqual(mergeAllResult, connection.CountAll<FlaggedEnumForStringCompleteTable>());
+                var queryResult = connection.QueryAll<FlaggedEnumForStringCompleteTable>();
+
+                // Assert
+                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
+            }
+        }
+
+        [TestMethod]
+        public void TestMergeAllForFlaggedEnumForStringCompleteTableAsNull()
+        {
+            // Setup
+            var entities = Helper.CreateFlaggedEnumForStringCompleteTablesAsNull(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = connection.MergeAll(entities);
+
+                // Assert
+                Assert.AreEqual(mergeAllResult, connection.CountAll<FlaggedEnumForStringCompleteTable>());
+                var queryResult = connection.QueryAll<FlaggedEnumForStringCompleteTable>();
+
+                // Assert
+                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
+            }
+        }
+
+        [TestMethod]
+        public void TestMergeAllForFlaggedEnumForIntCompleteTable()
+        {
+            // Setup
+            var entities = Helper.CreateFlaggedEnumForIntCompleteTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = connection.MergeAll(entities);
+
+                // Assert
+                Assert.AreEqual(mergeAllResult, connection.CountAll<FlaggedEnumForIntCompleteTable>());
+                var queryResult = connection.QueryAll<FlaggedEnumForIntCompleteTable>();
+
+                // Assert
+                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
+            }
+        }
+
+        [TestMethod]
+        public void TestMergeAllForFlaggedEnumForIntCompleteTableAsNull()
+        {
+            // Setup
+            var entities = Helper.CreateFlaggedEnumForIntCompleteTablesAsNull(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllResult = connection.MergeAll(entities);
+
+                // Assert
+                Assert.AreEqual(mergeAllResult, connection.CountAll<FlaggedEnumForIntCompleteTable>());
+                var queryResult = connection.QueryAll<FlaggedEnumForIntCompleteTable>();
+
+                // Assert
+                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
             }
         }
 
@@ -1108,6 +1486,74 @@ namespace RepoDb.IntegrationTests
                 // Act
                 var insertResult = connection.Insert<EnumAsIntForStringCompleteTable, Guid>(entity);
                 var queryResult = connection.QueryAll<EnumAsIntForStringCompleteTable>().First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(entity, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestQueryForFlaggedEnumForStringCompleteTable()
+        {
+            // Setup
+            var entity = Helper.CreateFlaggedEnumForStringCompleteTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var insertResult = connection.Insert<FlaggedEnumForStringCompleteTable, Guid>(entity);
+                var queryResult = connection.QueryAll<FlaggedEnumForStringCompleteTable>().First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(entity, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestQueryForFlaggedEnumForStringCompleteTableAsNull()
+        {
+            // Setup
+            var entity = Helper.CreateFlaggedEnumForStringCompleteTableAsNull();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var insertResult = connection.Insert<FlaggedEnumForStringCompleteTable, Guid>(entity);
+                var queryResult = connection.QueryAll<FlaggedEnumForStringCompleteTable>().First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(entity, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestQueryForFlaggedEnumForIntCompleteTable()
+        {
+            // Setup
+            var entity = Helper.CreateFlaggedEnumForIntCompleteTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var insertResult = connection.Insert<FlaggedEnumForIntCompleteTable, Guid>(entity);
+                var queryResult = connection.QueryAll<FlaggedEnumForIntCompleteTable>().First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(entity, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestQueryForFlaggedEnumForIntCompleteTableAsNull()
+        {
+            // Setup
+            var entity = Helper.CreateFlaggedEnumForIntCompleteTableAsNull();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var insertResult = connection.Insert<FlaggedEnumForIntCompleteTable, Guid>(entity);
+                var queryResult = connection.QueryAll<FlaggedEnumForIntCompleteTable>().First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -1238,6 +1684,118 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        [TestMethod]
+        public void TestUpdateForFlaggedEnumForStringCompleteTable()
+        {
+            // Setup
+            var entity = Helper.CreateFlaggedEnumForStringCompleteTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var id = connection.Insert<FlaggedEnumForStringCompleteTable, Guid>(entity);
+
+                // Setup
+                entity.ColumnNVarChar = StorageType.Drive | StorageType.File | StorageType.MemoryStorage;
+
+                // Act
+                var updateResult = connection.Update(entity);
+
+                // Assert
+                Assert.AreEqual(1, updateResult);
+
+                // Act
+                var queryResult = connection.QueryAll<FlaggedEnumForStringCompleteTable>().First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(entity, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestUpdateForFlaggedEnumForStringCompleteTableAsNull()
+        {
+            // Setup
+            var entity = Helper.CreateFlaggedEnumForStringCompleteTableAsNull();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var id = connection.Insert<FlaggedEnumForStringCompleteTable, Guid>(entity);
+
+                // Setup
+                entity.ColumnNVarChar = null;
+
+                // Act
+                var updateResult = connection.Update(entity);
+
+                // Assert
+                Assert.AreEqual(1, updateResult);
+
+                // Act
+                var queryResult = connection.QueryAll<FlaggedEnumForStringCompleteTable>().First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(entity, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestUpdateForFlaggedEnumForIntCompleteTable()
+        {
+            // Setup
+            var entity = Helper.CreateFlaggedEnumForIntCompleteTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var id = connection.Insert<FlaggedEnumForIntCompleteTable, Guid>(entity);
+
+                // Setup
+                entity.ColumnNVarChar = StorageType.Drive | StorageType.File | StorageType.MemoryStorage;
+
+                // Act
+                var updateResult = connection.Update(entity);
+
+                // Assert
+                Assert.AreEqual(1, updateResult);
+
+                // Act
+                var queryResult = connection.QueryAll<FlaggedEnumForIntCompleteTable>().First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(entity, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestUpdateForFlaggedEnumForIntCompleteTableAsNull()
+        {
+            // Setup
+            var entity = Helper.CreateFlaggedEnumForIntCompleteTableAsNull();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var id = connection.Insert<FlaggedEnumForIntCompleteTable, Guid>(entity);
+
+                // Setup
+                entity.ColumnNVarChar = null;
+
+                // Act
+                var updateResult = connection.Update(entity);
+
+                // Assert
+                Assert.AreEqual(1, updateResult);
+
+                // Act
+                var queryResult = connection.QueryAll<FlaggedEnumForIntCompleteTable>().First();
+
+                // Assert
+                Helper.AssertPropertiesEquality(entity, queryResult);
+            }
+        }
+
         #endregion
 
         #region UpdateAll
@@ -1273,7 +1831,7 @@ namespace RepoDb.IntegrationTests
                 var queryResult = connection.QueryAll<EnumCompleteTable>();
 
                 // Assert
-                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.Where(item => item.SessionId == entity.SessionId)));
+                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
             }
         }
 
@@ -1308,7 +1866,7 @@ namespace RepoDb.IntegrationTests
                 var queryResult = connection.QueryAll<EnumCompleteTable>();
 
                 // Assert
-                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.Where(item => item.SessionId == entity.SessionId)));
+                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
             }
         }
 
@@ -1339,7 +1897,7 @@ namespace RepoDb.IntegrationTests
                 var queryResult = connection.QueryAll<EnumAsIntForStringCompleteTable>();
 
                 // Assert
-                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.Where(item => item.SessionId == entity.SessionId)));
+                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
             }
         }
 
@@ -1370,9 +1928,135 @@ namespace RepoDb.IntegrationTests
                 var queryResult = connection.QueryAll<EnumAsIntForStringCompleteTable>();
 
                 // Assert
-                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.Where(item => item.SessionId == entity.SessionId)));
+                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
             }
         }
+
+        [TestMethod]
+        public void TestUpdateAllForFlaggedEnumForStringForNonEmptyTable()
+        {
+            // Setup
+            var entities = Helper.CreateFlaggedEnumForStringCompleteTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var insertAllResult = connection.InsertAll(entities);
+
+                // Setup
+                entities.ForEach(entity =>
+                {
+                    entity.ColumnNVarChar = StorageType.MemoryStorage | StorageType.Folder | StorageType.Drive;
+                });
+
+                // Act
+                var updateAllResult = connection.UpdateAll(entities);
+
+                // Assert
+                Assert.AreEqual(entities.Count, updateAllResult);
+
+                // Act
+                var queryResult = connection.QueryAll<FlaggedEnumForStringCompleteTable>();
+
+                // Assert
+                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
+            }
+        }
+
+        [TestMethod]
+        public void TestUpdateAllForFlaggedEnumForStringNonEmptyTableAsNull()
+        {
+            // Setup
+            var entities = Helper.CreateFlaggedEnumForStringCompleteTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var insertAllResult = connection.InsertAll(entities);
+
+                // Setup
+                entities.ForEach(entity =>
+                {
+                    entity.ColumnNVarChar = null;
+                });
+
+                // Act
+                var updateAllResult = connection.UpdateAll(entities);
+
+                // Assert
+                Assert.AreEqual(entities.Count, updateAllResult);
+
+                // Act
+                var queryResult = connection.QueryAll<FlaggedEnumForStringCompleteTable>();
+
+                // Assert
+                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
+            }
+        }
+
+        [TestMethod]
+        public void TestUpdateAllForFlaggedEnumForIntForNonEmptyTable()
+        {
+            // Setup
+            var entities = Helper.CreateFlaggedEnumForIntCompleteTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var insertAllResult = connection.InsertAll(entities);
+
+                // Setup
+                entities.ForEach(entity =>
+                {
+                    entity.ColumnNVarChar = StorageType.MemoryStorage | StorageType.Folder | StorageType.Drive;
+                });
+
+                // Act
+                var updateAllResult = connection.UpdateAll(entities);
+
+                // Assert
+                Assert.AreEqual(entities.Count, updateAllResult);
+
+                // Act
+                var queryResult = connection.QueryAll<FlaggedEnumForIntCompleteTable>();
+
+                // Assert
+                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
+            }
+        }
+
+        [TestMethod]
+        public void TestUpdateAllForFlaggedEnumForIntNonEmptyTableAsNull()
+        {
+            // Setup
+            var entities = Helper.CreateFlaggedEnumForIntCompleteTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var insertAllResult = connection.InsertAll(entities);
+
+                // Setup
+                entities.ForEach(entity =>
+                {
+                    entity.ColumnNVarChar = null;
+                });
+
+                // Act
+                var updateAllResult = connection.UpdateAll(entities);
+
+                // Assert
+                Assert.AreEqual(entities.Count, updateAllResult);
+
+                // Act
+                var queryResult = connection.QueryAll<FlaggedEnumForIntCompleteTable>();
+
+                // Assert
+                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
+            }
+        }
+
+        #endregion
 
         #endregion
     }
