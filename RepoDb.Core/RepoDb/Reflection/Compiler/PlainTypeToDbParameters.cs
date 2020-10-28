@@ -2,6 +2,7 @@
 using RepoDb.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
@@ -45,6 +46,10 @@ namespace RepoDb.Reflection
 
                 // DbType
                 var dbType = classProperty.GetDbType();
+                if (dbType == null && classProperty.PropertyInfo.PropertyType.IsEnum)
+                {
+                    dbType = DbType.String;
+                }
                 var dbTypeExpression = dbType == null ? GetNullableTypeExpression(StaticType.DbType) :
                     ConvertExpressionToNullableExpression(Expression.Constant(dbType), StaticType.DbType);
 
