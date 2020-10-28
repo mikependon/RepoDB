@@ -878,7 +878,33 @@ namespace RepoDb
             object param = null,
             CommandType? commandType = null,
             int? commandTimeout = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null) =>
+            ExecuteQueryMultipleInternal(connection,
+                commandText,
+                param,
+                commandType,
+                commandTimeout,
+                transaction,
+                false);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="commandText"></param>
+        /// <param name="param"></param>
+        /// <param name="commandType"></param>
+        /// <param name="commandTimeout"></param>
+        /// <param name="transaction"></param>
+        /// <param name="isDisposeConnection"></param>
+        /// <returns></returns>
+        internal static QueryMultipleExtractor ExecuteQueryMultipleInternal(this IDbConnection connection,
+            string commandText,
+            object param = null,
+            CommandType? commandType = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            bool isDisposeConnection = false)
         {
             // Call
             var reader = ExecuteReaderInternal(connection: connection,
@@ -892,8 +918,12 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: false);
 
             // Return
-            return new QueryMultipleExtractor((DbDataReader)reader);
+            return new QueryMultipleExtractor((DbConnection)connection, (DbDataReader)reader, isDisposeConnection);
         }
+
+        #endregion
+
+        #region ExecuteQueryMultipleAsync(Results)
 
         /// <summary>
         /// Execute the multiple SQL statements from the database in an asynchronous way.
@@ -909,12 +939,41 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An instance of <see cref="QueryMultipleExtractor"/> used to extract the results.</returns>
-        public static async Task<QueryMultipleExtractor> ExecuteQueryMultipleAsync(this IDbConnection connection,
+        public static Task<QueryMultipleExtractor> ExecuteQueryMultipleAsync(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default) =>
+            ExecuteQueryMultipleAsyncInternal(connection,
+                commandText,
+                param,
+                commandType,
+                commandTimeout,
+                transaction,
+                false,
+                cancellationToken);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="commandText"></param>
+        /// <param name="param"></param>
+        /// <param name="commandType"></param>
+        /// <param name="commandTimeout"></param>
+        /// <param name="transaction"></param>
+        /// <param name="isDisposeConnection"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        internal static async Task<QueryMultipleExtractor> ExecuteQueryMultipleAsyncInternal(this IDbConnection connection,
+            string commandText,
+            object param = null,
+            CommandType? commandType = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            bool isDisposeConnection = false,
             CancellationToken cancellationToken = default)
         {
             // Call
@@ -930,7 +989,8 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: false);
 
             // Return
-            return new QueryMultipleExtractor((DbDataReader)reader, cancellationToken);
+            return new QueryMultipleExtractor((DbConnection)connection, (DbDataReader)reader,
+                isDisposeConnection, cancellationToken);
         }
 
         #endregion

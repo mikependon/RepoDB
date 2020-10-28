@@ -18,17 +18,25 @@ namespace RepoDb
          *       we are not passing the values to the DataReader.ToEnumerable() method.
          */
 
+        private DbConnection connection = null;
         private DbDataReader reader = null;
+        private bool isDisposeConnection = false;
 
         /// <summary>
         /// Creates a new instance of <see cref="QueryMultipleExtractor"/> class.
         /// </summary>
-        /// <param name="reader">The <see cref="DbDataReader"/> to be extracted.</param>
+        /// <param name="connection">The instance of the <see cref="DbConnection"/> object that is current in used.</param>
+        /// <param name="reader">The instance of the <see cref="DbDataReader"/> object to be extracted.</param>
+        /// <param name="isDisposeConnection">The flag that is used to define whether the associated <paramref name="connection"/> object will be disposed during the disposition process.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        internal QueryMultipleExtractor(DbDataReader reader,
+        internal QueryMultipleExtractor(DbConnection connection,
+            DbDataReader reader,
+            bool isDisposeConnection = false,
             CancellationToken cancellationToken = default)
         {
+            this.connection = connection;
             this.reader = reader;
+            this.isDisposeConnection = isDisposeConnection;
             Position = 0;
             CancellationToken = cancellationToken;
         }
@@ -36,8 +44,14 @@ namespace RepoDb
         /// <summary>
         /// Disposes the current instance of <see cref="QueryMultipleExtractor"/>.
         /// </summary>
-        public void Dispose() =>
+        public void Dispose()
+        {
             reader?.Dispose();
+            if (isDisposeConnection == true)
+            {
+                connection?.Dispose();
+            }
+        }
 
         #region Properties
 

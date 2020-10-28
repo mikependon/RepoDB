@@ -854,5 +854,89 @@ namespace RepoDb
         }
 
         #endregion
+
+        #region ExecuteQueryMultiple(Results)
+
+        /// <summary>
+        /// Execute the multiple SQL statements from the database.
+        /// </summary>
+        /// <param name="commandText">The command text to be used.</param>
+        /// <param name="param">
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
+        /// </param>
+        /// <param name="commandType">The command type to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <returns>An instance of <see cref="QueryMultipleExtractor"/> used to extract the results.</returns>
+        public QueryMultipleExtractor ExecuteQueryMultiple(string commandText,
+            object param = null,
+            CommandType? commandType = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null)
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+            var isDisposeConnection = (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall);
+
+            /*
+             * Here, the connection object is not being disposed, but it should be wrapped within the QueryMultipleExtractor class.
+             * By disposing that object, it would also dispose the underlying reader and connection.
+             */
+
+            // Call the method
+            return connection.ExecuteQueryMultipleInternal(commandText: commandText,
+                param: param,
+                commandType: commandType,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                isDisposeConnection: isDisposeConnection);
+        }
+
+        #endregion
+
+        #region ExecuteQueryMultipleAsync(Results)
+
+        /// <summary>
+        /// Execute the multiple SQL statements from the database in an asynchronous way.
+        /// </summary>
+        /// <param name="commandText">The command text to be used.</param>
+        /// <param name="param">
+        /// The parameters/values defined in the <see cref="IDbCommand.CommandText"/> property. Supports a dynamic object, <see cref="IDictionary{TKey, TValue}"/>,
+        /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
+        /// </param>
+        /// <param name="commandType">The command type to be used.</param>
+        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        /// <returns>An instance of <see cref="QueryMultipleExtractor"/> used to extract the results.</returns>
+        public async Task<QueryMultipleExtractor> ExecuteQueryMultipleAsync(string commandText,
+            object param = null,
+            CommandType? commandType = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            // Create a connection
+            var connection = (transaction?.Connection ?? CreateConnection());
+            var isDisposeConnection = (transaction == null && ConnectionPersistency == ConnectionPersistency.PerCall);
+
+            /*
+             * Here, the connection object is not being disposed, but it should be wrapped within the QueryMultipleExtractor class.
+             * By disposing that object, it would also dispose the underlying reader and connection.
+             */
+
+            // Call the method
+            return await connection.ExecuteQueryMultipleAsyncInternal(commandText: commandText,
+                param: param,
+                commandType: commandType,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                isDisposeConnection: isDisposeConnection,
+                cancellationToken: cancellationToken);
+        }
+
+        #endregion
+
     }
 }
