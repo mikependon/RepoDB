@@ -86,7 +86,7 @@ namespace RepoDb.IntegrationTests
             var result = default(T);
             fromType.GetProperties().AsList().ForEach(property =>
             {
-                var toProperty = toTypeProperties.FirstOrDefault(p => p.Name == property.Name);
+                var toProperty = toTypeProperties.FirstOrDefault(p => p.GetMappedName() == property.GetMappedName());
                 if (strict)
                 {
                     if (toProperty == null)
@@ -124,7 +124,7 @@ namespace RepoDb.IntegrationTests
                 {
                     return;
                 }
-                var propertyOfType2 = propertiesOfType2.FirstOrDefault(p => p.Name == propertyOfType1.Name);
+                var propertyOfType2 = propertiesOfType2.FirstOrDefault(p => p.GetMappedName() == propertyOfType1.GetMappedName());
                 if (propertyOfType2 == null)
                 {
                     return;
@@ -190,11 +190,11 @@ namespace RepoDb.IntegrationTests
             var properties = obj.GetType().GetProperties();
             properties.AsList().ForEach(property =>
             {
-                if (property.Name == "Id")
+                if (property.GetMappedName() == "Id")
                 {
                     return;
                 }
-                if (dictionary.ContainsKey(property.Name))
+                if (dictionary.ContainsKey(property.GetMappedName()))
                 {
                     var value1 = property.GetValue(obj);
                     var value2 = dictionary[property.Name];
