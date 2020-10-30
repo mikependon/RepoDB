@@ -196,7 +196,7 @@ namespace RepoDb
             GuardPresence(type);
             if (type.IsInterfacedTo(StaticType.IClassHandler) == false)
             {
-                throw new InvalidTypeException($"Type '{type.FullName}' must implement the '{StaticType.IPropertyHandler.FullName}' interface.");
+                throw new InvalidTypeException($"The type '{type.FullName}' must implement the '{StaticType.IClassHandler.FullName}' interface.");
             }
         }
 

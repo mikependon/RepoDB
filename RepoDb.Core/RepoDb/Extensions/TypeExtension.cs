@@ -184,7 +184,7 @@ namespace RepoDb.Extensions
                 .FirstOrDefault(item =>
                     item.Name == interfaceType.Name && item.Namespace == interfaceType.Namespace);
             interfaceType = interfaceType?.MakeGenericTypeFrom(targetInterface);
-            return interfaceType.IsAssignableFrom(currentType);
+            return interfaceType?.IsAssignableFrom(currentType) == true;
         }
 
         /// <summary>

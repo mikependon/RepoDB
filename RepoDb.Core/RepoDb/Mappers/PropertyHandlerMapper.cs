@@ -393,6 +393,7 @@ namespace RepoDb
             // Validate
             ThrowNullReferenceException(propertyInfo, "PropertyInfo");
             ThrowNullReferenceException(propertyHandler, "PropertyHandler");
+            Guard(propertyHandler?.GetType() ?? typeof(TPropertyHandler));
 
             /*
              * Note: The reflected type of the property info if explored via expression is different, therefore, we
