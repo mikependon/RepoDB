@@ -868,10 +868,11 @@ namespace RepoDb.Reflection
             }
 
             // Call
+            var valueExpression = ConvertExpressionToTypeExpression(expression, setParameter.ParameterType);
+            var classPropertyExpression = classProperty != null ? (Expression)Expression.Constant(classProperty) : Expression.Default(StaticType.ClassProperty);
             expression = Expression.Call(Expression.Constant(handlerInstance),
                 setMethod,
-                ConvertExpressionToTypeExpression(expression, setParameter.ParameterType),
-                Expression.Constant(classProperty));
+                new[] { valueExpression, classPropertyExpression });
 
             // Align
             return ConvertExpressionToTypeExpression(expression, setMethod.ReturnType);

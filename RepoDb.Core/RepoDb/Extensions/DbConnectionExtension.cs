@@ -2494,14 +2494,8 @@ namespace RepoDb
         internal static IEnumerable<Field> GetQualifiedFields<TEntity>(TEntity entity)
             where TEntity : class
         {
-            var typeOfEntity = typeof(TEntity);
-            if (typeOfEntity.IsDictionaryStringObject())
-            {
-                return ((IDictionary<string, object>)entity)
-                    .Keys
-                    .Select(key => new Field(key));
-            }
-            return typeOfEntity.IsClassType() == false ? Field.Parse(entity) : FieldCache.Get<TEntity>();
+            var typeOfEntity = entity?.GetType() ?? typeof(TEntity);
+            return typeOfEntity.IsClassType() == false ? Field.Parse(entity) : FieldCache.Get(typeOfEntity);
         }
 
         /// <summary>
