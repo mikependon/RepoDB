@@ -254,7 +254,7 @@ namespace RepoDb.IntegrationTests
 
             public decimal ColumnDecimalNotNull { get; set; } = 0;
 
-            public short ColumnFloatNotNull { get; set; } = 0;
+            public float ColumnFloatNotNull { get; set; } = 0;
         }
 
         #endregion
@@ -298,6 +298,25 @@ namespace RepoDb.IntegrationTests
                 {
                     DateTime = isDateTimeNull ? null : (DateTime?)DateTime.UtcNow.Date,
                     DateTime2 = isDateTimeNull ? null : (DateTime?)DateTime.UtcNow
+                };
+            }
+        }
+
+        private IEnumerable<dynamic> CreateEntityModelForDateTimeKindForAnonymousTypes(int count,
+            bool isDateTimeNull = false)
+        {
+            for (var i = 0; i < count; i++)
+            {
+                yield return new
+                {
+                    Id = (i + 1),
+                    ColumnDateTime = isDateTimeNull ? null : (DateTime?)DateTime.UtcNow.Date,
+                    ColumnDateTimeNotNull = (DateTime?)DateTime.UtcNow.Date,
+                    ColumnDateTime2 = isDateTimeNull ? null : (DateTime?)DateTime.UtcNow,
+                    ColumnDateTime2NotNull = (DateTime?)DateTime.UtcNow.Date,
+                    ColumnIntNotNull = default(int),
+                    ColumnDecimalNotNull = default(decimal),
+                    ColumnFloatNotNull = default(float)
                 };
             }
         }
@@ -734,6 +753,58 @@ namespace RepoDb.IntegrationTests
             {
                 // Act
                 models.ForEach(e => connection.Insert(e));
+
+                // Act
+                var result = connection.QueryAll<EntityModelForDateTimeKind>();
+
+                // Assert
+                models.ForEach(e =>
+                {
+                    var item = result.First(obj => obj.Id == e.Id);
+                    Helper.AssertPropertiesEquality(e, item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestPropertyHandlerForDateTimeKindForAnonymousTypes()
+        {
+            // Setup
+            PropertyHandlerMapper.Add(typeof(DateTime), new DateTimeToUtcKindHandler(), true);
+
+            // Setup
+            var models = CreateEntityModelForDateTimeKindForAnonymousTypes(10).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll("[dbo].[PropertyHandler]", models);
+
+                // Act
+                var result = connection.QueryAll<EntityModelForDateTimeKind>();
+
+                // Assert
+                models.ForEach(e =>
+                {
+                    var item = result.First(obj => obj.Id == e.Id);
+                    Helper.AssertPropertiesEquality(e, item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestPropertyHandlerForDateTimeKindAtomicForAnonymousTypes()
+        {
+            // Setup
+            PropertyHandlerMapper.Add(typeof(DateTime), new DateTimeToUtcKindHandler(), true);
+
+            // Setup
+            var models = CreateEntityModelForDateTimeKindForAnonymousTypes(10).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                models.ForEach(e => connection.Insert<int>("[dbo].[PropertyHandler]", (object)e));
 
                 // Act
                 var result = connection.QueryAll<EntityModelForDateTimeKind>();
