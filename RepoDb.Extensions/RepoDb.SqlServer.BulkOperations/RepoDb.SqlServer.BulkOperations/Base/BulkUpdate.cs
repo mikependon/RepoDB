@@ -52,6 +52,9 @@ namespace RepoDb
             where TSqlBulkCopyColumnMapping : class
             where TSqlTransaction : DbTransaction
         {
+            // Validate
+            ThrowIfNullOrEmpty(reader);
+
             // Variables
             var dbSetting = connection.GetDbSetting();
             var hasTransaction = (transaction != null);
@@ -254,6 +257,9 @@ namespace RepoDb
             where TSqlBulkCopyColumnMapping : class
             where TSqlTransaction : DbTransaction
         {
+            // Validate
+            ThrowIfNullOrEmpty(dataTable);
+
             // Variables
             var dbSetting = connection.GetDbSetting();
             var hasTransaction = (transaction != null);
@@ -463,6 +469,9 @@ namespace RepoDb
             where TSqlBulkCopyColumnMapping : class
             where TSqlTransaction : DbTransaction
         {
+            // Validate
+            ThrowIfNullOrEmpty(reader);
+
             // Variables
             var dbSetting = connection.GetDbSetting();
             var hasTransaction = (transaction != null);
@@ -670,6 +679,9 @@ namespace RepoDb
             where TSqlBulkCopyColumnMapping : class
             where TSqlTransaction : DbTransaction
         {
+            // Validate
+            ThrowIfNullOrEmpty(dataTable);
+
             // Variables
             var dbSetting = connection.GetDbSetting();
             var hasTransaction = (transaction != null);

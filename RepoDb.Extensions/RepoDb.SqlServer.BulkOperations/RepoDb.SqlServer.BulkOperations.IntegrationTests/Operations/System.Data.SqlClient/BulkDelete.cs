@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.IntegrationTests.Setup;
 using RepoDb.SqlServer.BulkOperations.IntegrationTests.Models;
@@ -459,6 +460,44 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         }
                     }
                 }
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        public void ThrowExceptionOnSystemSqlConnectionBulkDeleteForNullEntities()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.BulkDelete((IEnumerable<BulkOperationIdentityTable>)null);
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(EmptyException))]
+        public void ThrowExceptionOnSystemSqlConnectionBulkDeleteForEmptyEntities()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.BulkDelete(Enumerable.Empty<BulkOperationIdentityTable>());
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        public void ThrowExceptionOnSystemSqlConnectionBulkDeleteForNullDataReader()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                    (DbDataReader)null);
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        public void ThrowExceptionOnSystemSqlConnectionBulkDeleteForNullDataTable()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                    (DataTable)null);
             }
         }
 
@@ -1437,6 +1476,44 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         }
                     }
                 }
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionOnSystemSqlConnectionBulkDeleteAsyncForNullEntities()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.BulkDeleteAsync((IEnumerable<BulkOperationIdentityTable>)null).Wait();
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionOnSystemSqlConnectionBulkDeleteAsyncForEmptyEntities()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.BulkDeleteAsync(Enumerable.Empty<BulkOperationIdentityTable>()).Wait();
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionOnSystemSqlConnectionBulkDeleteAsyncForNullDataReader()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                    (DbDataReader)null).Wait();
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionOnSystemSqlConnectionBulkDeleteAsyncForNullDataTable()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                    (DataTable)null).Wait();
             }
         }
 

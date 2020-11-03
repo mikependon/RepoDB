@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Xml.Schema;
 
 namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
 {
@@ -614,6 +615,44 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         }
                     }
                 }
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        public void ThrowExceptionOnSystemSqlConnectionBulkInsertForNullEntities()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.BulkInsert((IEnumerable<BulkOperationIdentityTable>)null);
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(EmptyException))]
+        public void ThrowExceptionOnSystemSqlConnectionBulkInsertForEmptyEntities()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.BulkInsert(Enumerable.Empty<BulkOperationIdentityTable>());
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        public void ThrowExceptionOnSystemSqlConnectionBulkInsertForNullDataReader()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                    (DbDataReader)null);
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        public void ThrowExceptionOnSystemSqlConnectionBulkInsertForNullDataTable()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.BulkInsert(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                    (DataTable)null);
             }
         }
 
@@ -2016,6 +2055,44 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         }
                     }
                 }
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionOnSystemSqlConnectionBulkInsertAsyncForNullEntities()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.BulkInsertAsync((IEnumerable<BulkOperationIdentityTable>)null).Wait();
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionOnSystemSqlConnectionBulkInsertAsyncForEmptyEntities()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.BulkInsertAsync(Enumerable.Empty<BulkOperationIdentityTable>()).Wait();
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionOnSystemSqlConnectionBulkInsertAsyncForNullDataReader()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                    (DbDataReader)null).Wait();
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionOnSystemSqlConnectionBulkInsertAsyncForNullDataTable()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.BulkInsertAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                    (DataTable)null).Wait();
             }
         }
 

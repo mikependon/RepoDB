@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.SqlServer.BulkOperations;
@@ -218,6 +219,56 @@ namespace RepoDb
             foreach (var field in fields)
             {
                 yield return new BulkInsertMapItem(field.Name, field.Name);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader"></param>
+        internal static void ThrowIfNullOrEmpty(DbDataReader reader)
+        {
+            if (reader == null)
+            {
+                throw new NullReferenceException("The reader must not be null.");
+            }
+            if (reader.HasRows == false)
+            {
+                throw new EmptyException("The reader must contain atleast a single row.");
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dataTable"></param>
+        internal static void ThrowIfNullOrEmpty(DataTable dataTable)
+        {
+            if (dataTable == null)
+            {
+                throw new NullReferenceException("The data table must not be null.");
+            }
+            if (dataTable.Rows.Count <= 0)
+            {
+                throw new EmptyException("The data table must contain atleast a single row.");
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entities"></param>
+        internal static void ThrowIfNullOrEmpty<TEntity>(IEnumerable<TEntity> entities)
+            where TEntity : class
+        {
+            if (entities == null)
+            {
+                throw new NullReferenceException("The entities must not be null.");
+            }
+            if (entities.Any() == false)
+            {
+                throw new EmptyException("The entities must not be empty.");
             }
         }
 

@@ -444,6 +444,44 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             }
         }
 
+        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateForNullEntities()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.BulkUpdate((IEnumerable<BulkOperationIdentityTable>)null);
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(EmptyException))]
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateForEmptyEntities()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.BulkUpdate(Enumerable.Empty<BulkOperationIdentityTable>());
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateForNullDataReader()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                    (DbDataReader)null);
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateForNullDataTable()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                    (DataTable)null);
+            }
+        }
+
         #endregion
 
         #region BulkUpdate<TEntity>(Extra Fields)
@@ -1494,6 +1532,44 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         }
                     }
                 }
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateAsyncForNullEntities()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.BulkUpdateAsync((IEnumerable<BulkOperationIdentityTable>)null).Wait();
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateAsyncForEmptyEntities()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.BulkUpdateAsync(Enumerable.Empty<BulkOperationIdentityTable>()).Wait();
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateAsyncForNullDataReader()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                    (DbDataReader)null).Wait();
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateAsyncForNullDataTable()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                connection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                    (DataTable)null).Wait();
             }
         }
 
