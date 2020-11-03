@@ -189,6 +189,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
                     ColumnReal = Convert.ToSingle(i),
                     ColumnSmallInt = Convert.ToInt16(i),
                     ColumnText = $"ColumnText{i}",
+                    ColumnTimestampWithTimeZone = now,
                     ColumnTimestampWithoutTimeZone = now
                 });
             }
@@ -224,6 +225,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
             table.ColumnReal = Convert.ToSingle(2);
             table.ColumnSmallInt = Convert.ToInt16(2);
             table.ColumnText = $"{table.ColumnText} (Updated)";
+            table.ColumnTimestampWithTimeZone = now;
             table.ColumnTimestampWithoutTimeZone = now;
         }
 
@@ -263,6 +265,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
                     ColumnReal = Convert.ToSingle(i),
                     ColumnSmallInt = Convert.ToInt16(i),
                     ColumnText = $"ColumnText{i}",
+                    ColumnTimestampWithTimeZone = now,
                     ColumnTimestampWithoutTimeZone = now
                 });
             }
@@ -298,6 +301,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
             table.ColumnReal = Convert.ToSingle(2);
             table.ColumnSmallInt = Convert.ToInt16(2);
             table.ColumnText = $"{table.ColumnText} (Updated)";
+            table.ColumnTimestampWithTimeZone = now;
             table.ColumnTimestampWithoutTimeZone = now;
         }
 
@@ -336,6 +340,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 item["ColumnReal"] = Convert.ToSingle(i);
                 item["ColumnSmallInt"] = Convert.ToInt16(i);
                 item["ColumnText"] = $"ColumnText{i}";
+                item["ColumnTimestampWithTimeZone"] = now;
                 item["ColumnTimestampWithoutTimeZone"] = now;
                 tables.Add((ExpandoObject)item);
             }
@@ -372,6 +377,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
             item["ColumnReal"] = Convert.ToSingle(2);
             item["ColumnSmallInt"] = Convert.ToInt16(2);
             item["ColumnText"] = $"ColumnText-{Guid.NewGuid()}-Updated";
+            item["ColumnTimestampWithTimeZone"] = now;
             item["ColumnTimestampWithoutTimeZone"] = now;
         }
 
@@ -415,6 +421,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
                     ColumnReal = Convert.ToSingle(i),
                     ColumnSmallInt = Convert.ToInt16(i),
                     ColumnText = $"ColumnText{i}",
+                    ColumnTimestampWithTimeZone = now,
                     ColumnTimestampWithoutTimeZone = now
                 });
             }
@@ -450,6 +457,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
             table.ColumnReal = Convert.ToSingle(2);
             table.ColumnSmallInt = Convert.ToInt16(2);
             table.ColumnText = $"{table.ColumnText} (Updated)";
+            table.ColumnTimestampWithTimeZone = now;
             table.ColumnTimestampWithoutTimeZone = now;
         }
 
@@ -489,6 +497,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
                     ColumnReal = Convert.ToSingle(i),
                     ColumnSmallInt = Convert.ToInt16(i),
                     ColumnText = $"ColumnText{i}",
+                    ColumnTimestampWithTimeZone = now,
                     ColumnTimestampWithoutTimeZone = now
                 });
             }
@@ -524,6 +533,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
             table.ColumnReal = Convert.ToSingle(2);
             table.ColumnSmallInt = Convert.ToInt16(2);
             table.ColumnText = $"{table.ColumnText} (Updated)";
+            table.ColumnTimestampWithTimeZone = now;
             table.ColumnTimestampWithoutTimeZone = now;
         }
 
@@ -562,6 +572,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 item["ColumnReal"] = Convert.ToSingle(i);
                 item["ColumnSmallInt"] = Convert.ToInt16(i);
                 item["ColumnText"] = $"ColumnText{i}";
+                item["ColumnTimestampWithTimeZone"] = now;
                 item["ColumnTimestampWithoutTimeZone"] = now;
                 tables.Add((ExpandoObject)item);
             }
@@ -598,6 +609,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
             item["ColumnReal"] = Convert.ToSingle(2);
             item["ColumnSmallInt"] = Convert.ToInt16(2);
             item["ColumnText"] = $"ColumnText-{Guid.NewGuid()}-Updated";
+            item["ColumnTimestampWithTimeZone"] = now;
             item["ColumnTimestampWithoutTimeZone"] = now;
         }
 
