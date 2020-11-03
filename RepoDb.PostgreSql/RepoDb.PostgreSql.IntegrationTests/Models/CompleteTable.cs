@@ -121,7 +121,7 @@
         //public System.Nullable<System.DateTimeOffset> ColumnTimeWithTimeZone { get; set; }
         //public System.Nullable<System.TimeSpan> ColumnTimeWithoutTimeZone { get; set; }
         //public System.Array ColumnTimeWithoutTimeZoneAsArray { get; set; }
-        //public System.Array ColumnTimestampWithTimeZone { get; set; }
+        public System.Nullable<System.DateTime> ColumnTimestampWithTimeZone { get; set; }
         //public System.Array ColumnTimestampWithTimeZoneAsArray { get; set; }
         public System.Nullable<System.DateTime> ColumnTimestampWithoutTimeZone { get; set; }
         //public System.Array ColumnTimestampWithoutTimeZoneAsArray { get; set; }
