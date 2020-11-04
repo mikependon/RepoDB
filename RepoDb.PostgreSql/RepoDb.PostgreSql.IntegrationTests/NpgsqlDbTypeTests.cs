@@ -23,6 +23,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         [TestCleanup]
         public void Cleanup()
         {
+            Converter.ConversionType = Enumerations.ConversionType.Default;
             Database.Cleanup();
         }
 
@@ -188,6 +189,52 @@ namespace RepoDb.PostgreSql.IntegrationTests
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Setup
+                var entity = GetCompleteTableForDateTimes(1).First();
+
+                // Act
+                connection.Insert(entity);
+
+                // Setup
+                var startDate = DateTime.UtcNow.Date.AddHours(-1);
+                var endDate = DateTime.UtcNow.Date.AddHours(1);
+
+                // Act
+                var queryResult = connection.Query<CompleteTableForDateTime>(e =>
+                    e.ColumnTimestampWithTimeZone >= startDate && e.ColumnTimestampWithTimeZone <= endDate).FirstOrDefault();
+
+                // Assert
+                Helper.AssertPropertiesEquality(entity, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestInsertAndQueryForDateTimeAsWhereExpressionWithAutomaticConversion()
+        {
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                Converter.ConversionType = Enumerations.ConversionType.Automatic;
+                var entity = GetCompleteTableForDateTimes(1).First();
+
+                // Act
+                connection.Insert(entity);
+
+                // Act
+                var queryResult = connection.Query<CompleteTableForDateTime>(e =>
+                    e.ColumnTimestampWithTimeZone >= DateTime.UtcNow.Date.AddHours(-1) && e.ColumnTimestampWithTimeZone <= DateTime.UtcNow.Date.AddHours(1)).FirstOrDefault();
+
+                // Assert
+                Helper.AssertPropertiesEquality(entity, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestInsertAndQueryForDateTimeAsWhereExpressionFromVariableWithAutomaticConversion()
+        {
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                Converter.ConversionType = Enumerations.ConversionType.Automatic;
                 var entity = GetCompleteTableForDateTimes(1).First();
 
                 // Act
