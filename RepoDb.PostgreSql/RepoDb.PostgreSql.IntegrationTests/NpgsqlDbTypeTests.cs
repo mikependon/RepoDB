@@ -40,9 +40,9 @@ namespace RepoDb.PostgreSql.IntegrationTests
         private class CompleteTableForDateTime
         {
             public System.Int64 Id { get; set; }
-            //[NpgsqlTypeMap(NpgsqlDbType.TimestampTz)]
+            [NpgsqlTypeMap(NpgsqlDbType.TimestampTz)]
             public System.DateTime ColumnTimestampWithTimeZone { get; set; }
-            //[NpgsqlTypeMap(NpgsqlDbType.Timestamp)]
+            [NpgsqlTypeMap(NpgsqlDbType.Timestamp)]
             public System.DateTime ColumnTimestampWithoutTimeZone { get; set; }
         }
 
