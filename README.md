@@ -13,6 +13,8 @@
 [![IntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-qksas?style=flat-square&logo=appveyor&label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-qksas/build/tests)
 [![GitterChat](https://img.shields.io/gitter/room/mikependon/RepoDb?style=flat-square&logo=gitter&color=48B293)](https://gitter.im/RepoDb/community)
 
+[![Twitter Follow](https://img.shields.io/twitter/follow/mike_pendon?label=Follow&style=social)](https://twitter.com/mikependon)
+
 # [RepoDB](http://repodb.net) - a hybrid ORM Library for .NET.
 
 RepoDB is an open-source .NET ORM library that bridges the gaps of micro-ORMs and full-ORMs. It helps you simplify the switch-over of when to use the BASIC and ADVANCE operations during the development.
@@ -20,14 +22,6 @@ RepoDB is an open-source .NET ORM library that bridges the gaps of micro-ORMs an
 It is your best alternative ORM to both Dapper and EntityFramework.
 
 :wave: Hey [Scott](https://www.hanselman.com/), thank you for [endorsing](https://twitter.com/shanselman/status/1284990438525464576) RepoDB into the community of .NET.
-
-## Latest News
-
-We are announcing the [GA](https://github.com/mikependon/RepoDB/releases/tag/v1.12.4) of [RepoDB v1.12.4](https://www.nuget.org/packages/RepoDb/1.12.4) and its extended packages at [v1.1.1](https://www.nuget.org/packages/RepoDb.SqlServer/1.1.1). This release has included the complete support to the [CancellationToken](https://docs.microsoft.com/en-us/dotnet/api/system.threading.cancellationtoken?view=netcore-3.1).
-
-Please also be reminded of the recent [GA](https://github.com/mikependon/RepoDB/releases/tag/v1.12.0) of [RepoDB v1.12.0](https://www.nuget.org/packages/RepoDb/1.12.0), one of the biggest release of this library. In this release, we covered the support to [F#](https://fsharp.org/), [Class Handler](https://repodb.net/feature/classhandlers), Advanced and New Enhanced Compiler, [Typed Results](https://repodb.net/operation/executequery#typed-result) and many more.
-
-Read more from our official blog [release notes](https://repodb.net/blogs/repodb/2020/09/24/repodb-version-release-fsharp-classhandler.html) and/or in the official Github [release](https://github.com/mikependon/RepoDB/releases/tag/v1.12.0) page.
 
 ## Benefits/Advantages
 
