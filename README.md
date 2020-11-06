@@ -13,8 +13,6 @@
 [![IntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-qksas?style=flat-square&logo=appveyor&label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-qksas/build/tests)
 [![GitterChat](https://img.shields.io/gitter/room/mikependon/RepoDb?style=flat-square&logo=gitter&color=48B293)](https://gitter.im/RepoDb/community)
 
-[![Twitter Follow](https://img.shields.io/twitter/follow/mike_pendon?label=Follow&style=social)](https://twitter.com/mikependon)
-
 # [RepoDB](http://repodb.net) - a hybrid ORM Library for .NET.
 
 RepoDB is an open-source .NET ORM library that bridges the gaps of micro-ORMs and full-ORMs. It helps you simplify the switch-over of when to use the BASIC and ADVANCE operations during the development.
@@ -22,6 +20,10 @@ RepoDB is an open-source .NET ORM library that bridges the gaps of micro-ORMs an
 It is your best alternative ORM to both Dapper and EntityFramework.
 
 :wave: Hey [Scott](https://www.hanselman.com/), thank you for [endorsing](https://twitter.com/shanselman/status/1284990438525464576) RepoDB into the community of .NET.
+
+To get the latest updates about this library!
+
+[![Twitter Follow](https://img.shields.io/twitter/follow/mike_pendon?label=Follow&style=social)](https://twitter.com/mike_pendon)
 
 ## Benefits/Advantages
 
