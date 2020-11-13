@@ -523,8 +523,8 @@ namespace RepoDb
                 // MERGE T USING S
                 .Merge()
                 .TableNameFrom(tableName, dbSetting)
-                .As("T")
                 .HintsFrom(hints)
+                .As("T")
                 .Using()
                 .OpenParen()
                 .Select()
