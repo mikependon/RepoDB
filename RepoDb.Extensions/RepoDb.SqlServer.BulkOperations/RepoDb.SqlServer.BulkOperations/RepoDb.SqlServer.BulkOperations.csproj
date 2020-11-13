@@ -16,9 +16,9 @@
     <RepositoryType>Github</RepositoryType>
     <PackageTags>orm orm-framework orm-library hybrid-orm bulk bulk-operations</PackageTags>
     <PackageReleaseNotes>http://repodb.net/release/sqlserverbulk</PackageReleaseNotes>
-    <Version>1.1.1</Version>
-    <FileVersion>1.1.1.0</FileVersion>
-    <AssemblyVersion>1.1.1.0</AssemblyVersion>
+    <Version>1.1.2-beta1</Version>
+    <FileVersion>1.1.2.1</FileVersion>
+    <AssemblyVersion>1.1.2.1</AssemblyVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -38,7 +38,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="RepoDb" Version="1.12.4" />
+    <PackageReference Include="RepoDb" Version="1.12.5-beta2" />
     <PackageReference Include="RepoDb.SqlServer" Version="1.1.1" />
   </ItemGroup>
 
