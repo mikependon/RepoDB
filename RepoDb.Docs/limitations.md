@@ -402,7 +402,7 @@ CREATE PROCEDURE [dbo].[sp_InsertPerson]
 (
 	@Name NVARCHAR(128)
 	, @Address NVARCHAR(512)
-    , @Identity INT OUTPUT  
+	, @Identity INT OUTPUT  
 )  
 AS  
 BEGIN
