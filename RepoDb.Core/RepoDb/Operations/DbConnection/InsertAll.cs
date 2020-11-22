@@ -414,7 +414,10 @@ namespace RepoDb
             var dbSetting = connection.GetDbSetting();
 
             // Guard the parameters
-            ThrowIfNullOrEmpty(entities);
+            if (entities?.Any() != true)
+            {
+                return default;
+            }
 
             // Validate the batch size
             batchSize = (dbSetting.IsMultiStatementExecutable == true) ? Math.Min(batchSize, entities.Count()) : 1;
@@ -649,7 +652,10 @@ namespace RepoDb
             var dbSetting = connection.GetDbSetting();
 
             // Guard the parameters
-            ThrowIfNullOrEmpty(entities);
+            if (entities?.Any() != true)
+            {
+                return default;
+            }
 
             // Validate the batch size
             batchSize = (dbSetting.IsMultiStatementExecutable == true) ? Math.Min(batchSize, entities.Count()) : 1;
