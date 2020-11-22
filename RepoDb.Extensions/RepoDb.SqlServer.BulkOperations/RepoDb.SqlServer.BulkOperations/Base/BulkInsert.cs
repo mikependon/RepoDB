@@ -288,7 +288,7 @@ namespace RepoDb
             // Validate
             if (!reader.HasRows)
             {
-                return 0;
+                return default;
             }
 
             // Variables needed
@@ -511,7 +511,7 @@ namespace RepoDb
             // Validate
             if (dataTable?.Rows?.Count <= 0)
             {
-                return 0;
+                return default;
             }
 
             // Variables needed
@@ -765,7 +765,7 @@ namespace RepoDb
             // Validate
             if (entities?.Any() != true)
             {
-                return 0;
+                return default;
             }
 
             // Variables needed
@@ -998,7 +998,7 @@ namespace RepoDb
             // Validate
             if (!reader.HasRows)
             {
-                return 0;
+                return default;
             }
 
             // Variables needed
@@ -1223,7 +1223,7 @@ namespace RepoDb
             // Validate
             if (dataTable?.Rows?.Count <= 0)
             {
-                return 0;
+                return default;
             }
 
             // Variables needed
