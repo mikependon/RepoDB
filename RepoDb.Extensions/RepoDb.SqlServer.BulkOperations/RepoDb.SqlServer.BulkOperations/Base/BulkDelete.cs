@@ -17,6 +17,10 @@ namespace RepoDb
         /// <summary>
         /// 
         /// </summary>
+        /// <typeparam name="TSqlBulkCopy"></typeparam>
+        /// <typeparam name="TSqlBulkCopyOptions"></typeparam>
+        /// <typeparam name="TSqlBulkCopyColumnMappingCollection"></typeparam>
+        /// <typeparam name="TSqlBulkCopyColumnMapping"></typeparam>
         /// <typeparam name="TSqlTransaction"></typeparam>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -43,7 +47,10 @@ namespace RepoDb
             where TSqlTransaction : DbTransaction
         {
             // Validate
-            ThrowIfNullOrEmpty(primaryKeys);
+            if (primaryKeys?.Any() != true)
+            {
+                return 0;
+            }
 
             // Variables
             var dbSetting = connection.GetDbSetting();
@@ -205,7 +212,10 @@ namespace RepoDb
             where TSqlTransaction : DbTransaction
         {
             // Validate
-            ThrowIfNullOrEmpty(reader);
+            if (!reader.HasRows)
+            {
+                return 0;
+            }
 
             // Variables
             var dbSetting = connection.GetDbSetting();
@@ -415,7 +425,10 @@ namespace RepoDb
             where TSqlTransaction : DbTransaction
         {
             // Validate
-            ThrowIfNullOrEmpty(dataTable);
+            if (dataTable?.Rows?.Count <= 0)
+            {
+                return 0;
+            }
 
             // Variables
             var dbSetting = connection.GetDbSetting();
@@ -624,7 +637,10 @@ namespace RepoDb
             where TSqlTransaction : DbTransaction
         {
             // Validate
-            ThrowIfNullOrEmpty(primaryKeys);
+            if (primaryKeys?.Any() != true)
+            {
+                return 0;
+            }
 
             // Variables
             var dbSetting = connection.GetDbSetting();
@@ -787,7 +803,10 @@ namespace RepoDb
             where TSqlTransaction : DbTransaction
         {
             // Validate
-            ThrowIfNullOrEmpty(reader);
+            if (!reader.HasRows)
+            {
+                return 0;
+            }
 
             // Variables
             var dbSetting = connection.GetDbSetting();
@@ -1000,7 +1019,10 @@ namespace RepoDb
             where TSqlTransaction : DbTransaction
         {
             // Validate
-            ThrowIfNullOrEmpty(dataTable);
+            if (dataTable?.Rows?.Count <= 0)
+            {
+                return 0;
+            }
 
             // Variables
             var dbSetting = connection.GetDbSetting();
