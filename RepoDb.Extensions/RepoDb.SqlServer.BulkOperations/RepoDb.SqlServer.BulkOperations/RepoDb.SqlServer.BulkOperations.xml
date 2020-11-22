@@ -37,6 +37,10 @@
             <summary>
             
             </summary>
+            <typeparam name="TSqlBulkCopy"></typeparam>
+            <typeparam name="TSqlBulkCopyOptions"></typeparam>
+            <typeparam name="TSqlBulkCopyColumnMappingCollection"></typeparam>
+            <typeparam name="TSqlBulkCopyColumnMapping"></typeparam>
             <typeparam name="TSqlTransaction"></typeparam>
             <param name="connection"></param>
             <param name="tableName"></param>
@@ -253,6 +257,7 @@
             <param name="isReturnIdentity"></param>
             <param name="usePhysicalPseudoTempTable"></param>
             <param name="transaction"></param>
+            <param name="cancellationToken"></param>
             <returns></returns>
         </member>
         <member name="M:RepoDb.SqlConnectionExtension.BulkInsertAsyncInternalBase``5(System.Data.Common.DbConnection,System.String,System.Data.Common.DbDataReader,System.Collections.Generic.IEnumerable{RepoDb.DbField},System.Collections.Generic.IEnumerable{RepoDb.BulkInsertMapItem},``1,System.String,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Boolean},``4,System.Threading.CancellationToken)">
