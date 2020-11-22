@@ -53,7 +53,10 @@ namespace RepoDb
             where TSqlTransaction : DbTransaction
         {
             // Validate
-            ThrowIfNullOrEmpty(reader);
+            if (!reader.HasRows)
+            {
+                return 0;
+            }
 
             // Variables
             var dbSetting = connection.GetDbSetting();
@@ -258,7 +261,10 @@ namespace RepoDb
             where TSqlTransaction : DbTransaction
         {
             // Validate
-            ThrowIfNullOrEmpty(dataTable);
+            if (dataTable?.Rows?.Count <= 0)
+            {
+                return 0;
+            }
 
             // Variables
             var dbSetting = connection.GetDbSetting();
@@ -470,7 +476,10 @@ namespace RepoDb
             where TSqlTransaction : DbTransaction
         {
             // Validate
-            ThrowIfNullOrEmpty(reader);
+            if (!reader.HasRows)
+            {
+                return 0;
+            }
 
             // Variables
             var dbSetting = connection.GetDbSetting();
@@ -680,7 +689,10 @@ namespace RepoDb
             where TSqlTransaction : DbTransaction
         {
             // Validate
-            ThrowIfNullOrEmpty(dataTable);
+            if (dataTable?.Rows?.Count <= 0)
+            {
+                return 0;
+            }
 
             // Variables
             var dbSetting = connection.GetDbSetting();

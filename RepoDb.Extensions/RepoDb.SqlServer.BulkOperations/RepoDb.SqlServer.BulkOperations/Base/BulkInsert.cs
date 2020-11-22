@@ -58,7 +58,7 @@ namespace RepoDb
             where TSqlTransaction : DbTransaction
         {
             // Validate
-            ThrowIfNullOrEmpty(entities);
+            // ThrowIfNullOrEmpty(entities);
 
             // Variables needed
             var dbSetting = connection.GetDbSetting();
@@ -286,7 +286,10 @@ namespace RepoDb
             where TSqlTransaction : DbTransaction
         {
             // Validate
-            ThrowIfNullOrEmpty(reader);
+            if (!reader.HasRows)
+            {
+                return 0;
+            }
 
             // Variables needed
             var dbSetting = connection.GetDbSetting();
@@ -506,7 +509,10 @@ namespace RepoDb
             where TSqlTransaction : DbTransaction
         {
             // Validate
-            ThrowIfNullOrEmpty(dataTable);
+            if (dataTable?.Rows?.Count <= 0)
+            {
+                return 0;
+            }
 
             // Variables needed
             var dbSetting = connection.GetDbSetting();
@@ -733,6 +739,7 @@ namespace RepoDb
         /// <param name="isReturnIdentity"></param>
         /// <param name="usePhysicalPseudoTempTable"></param>
         /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
         /// <returns></returns>
         private static async Task<int> BulkInsertAsyncInternalBase<TEntity, TSqlBulkCopy, TSqlBulkCopyOptions, TSqlBulkCopyColumnMappingCollection,
             TSqlBulkCopyColumnMapping, TSqlTransaction>(DbConnection connection,
@@ -756,7 +763,10 @@ namespace RepoDb
             where TSqlTransaction : DbTransaction
         {
             // Validate
-            ThrowIfNullOrEmpty(entities);
+            if (entities?.Any() != true)
+            {
+                return 0;
+            }
 
             // Variables needed
             var dbSetting = connection.GetDbSetting();
@@ -986,7 +996,10 @@ namespace RepoDb
             where TSqlTransaction : DbTransaction
         {
             // Validate
-            ThrowIfNullOrEmpty(reader);
+            if (!reader.HasRows)
+            {
+                return 0;
+            }
 
             // Variables needed
             var dbSetting = connection.GetDbSetting();
@@ -1208,7 +1221,10 @@ namespace RepoDb
             where TSqlTransaction : DbTransaction
         {
             // Validate
-            ThrowIfNullOrEmpty(dataTable);
+            if (dataTable?.Rows?.Count <= 0)
+            {
+                return 0;
+            }
 
             // Variables needed
             var dbSetting = connection.GetDbSetting();

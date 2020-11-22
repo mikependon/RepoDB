@@ -472,14 +472,14 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(EmptyException))]
-        public void ThrowExceptionOnSystemSqlConnectionBulkDeleteForEmptyEntities()
-        {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
-            {
-                connection.BulkDelete(Enumerable.Empty<BulkOperationIdentityTable>());
-            }
-        }
+        //[TestMethod, ExpectedException(typeof(EmptyException))]
+        //public void ThrowExceptionOnSystemSqlConnectionBulkDeleteForEmptyEntities()
+        //{
+        //    using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+        //    {
+        //        connection.BulkDelete(Enumerable.Empty<BulkOperationIdentityTable>());
+        //    }
+        //}
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
         public void ThrowExceptionOnSystemSqlConnectionBulkDeleteForNullDataReader()
@@ -1488,14 +1488,14 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnSystemSqlConnectionBulkDeleteAsyncForEmptyEntities()
-        {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
-            {
-                connection.BulkDeleteAsync(Enumerable.Empty<BulkOperationIdentityTable>()).Wait();
-            }
-        }
+        //[TestMethod, ExpectedException(typeof(AggregateException))]
+        //public void ThrowExceptionOnSystemSqlConnectionBulkDeleteAsyncForEmptyEntities()
+        //{
+        //    using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+        //    {
+        //        connection.BulkDeleteAsync(Enumerable.Empty<BulkOperationIdentityTable>()).Wait();
+        //    }
+        //}
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
         public void ThrowExceptionOnSystemSqlConnectionBulkDeleteAsyncForNullDataReader()

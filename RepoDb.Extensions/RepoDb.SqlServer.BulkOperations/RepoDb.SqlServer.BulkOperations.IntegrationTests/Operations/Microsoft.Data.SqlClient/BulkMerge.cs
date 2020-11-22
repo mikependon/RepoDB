@@ -579,23 +579,23 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkMergeForNullEntities()
-        {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
-            {
-                connection.BulkMerge((IEnumerable<BulkOperationIdentityTable>)null);
-            }
-        }
+        //[TestMethod, ExpectedException(typeof(NullReferenceException))]
+        //public void ThrowExceptionOnMicrosoftSqlConnectionBulkMergeForNullEntities()
+        //{
+        //    using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+        //    {
+        //        connection.BulkMerge((IEnumerable<BulkOperationIdentityTable>)null);
+        //    }
+        //}
 
-        [TestMethod, ExpectedException(typeof(EmptyException))]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkMergeForEmptyEntities()
-        {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
-            {
-                connection.BulkMerge(Enumerable.Empty<BulkOperationIdentityTable>());
-            }
-        }
+        //[TestMethod, ExpectedException(typeof(EmptyException))]
+        //public void ThrowExceptionOnMicrosoftSqlConnectionBulkMergeForEmptyEntities()
+        //{
+        //    using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+        //    {
+        //        connection.BulkMerge(Enumerable.Empty<BulkOperationIdentityTable>());
+        //    }
+        //}
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
         public void ThrowExceptionOnMicrosoftSqlConnectionBulkMergeForNullDataReader()
@@ -2172,23 +2172,23 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkMergeAsyncForNullEntities()
-        {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
-            {
-                connection.BulkInsertAsync((IEnumerable<BulkOperationIdentityTable>)null).Wait();
-            }
-        }
+        //[TestMethod, ExpectedException(typeof(AggregateException))]
+        //public void ThrowExceptionOnMicrosoftSqlConnectionBulkMergeAsyncForNullEntities()
+        //{
+        //    using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+        //    {
+        //        connection.BulkInsertAsync((IEnumerable<BulkOperationIdentityTable>)null).Wait();
+        //    }
+        //}
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkMergeAsyncForEmptyEntities()
-        {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
-            {
-                connection.BulkInsertAsync(Enumerable.Empty<BulkOperationIdentityTable>()).Wait();
-            }
-        }
+        //[TestMethod, ExpectedException(typeof(AggregateException))]
+        //public void ThrowExceptionOnMicrosoftSqlConnectionBulkMergeAsyncForEmptyEntities()
+        //{
+        //    using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+        //    {
+        //        connection.BulkInsertAsync(Enumerable.Empty<BulkOperationIdentityTable>()).Wait();
+        //    }
+        //}
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
         public void ThrowExceptionOnMicrosoftSqlConnectionBulkMergeAsyncForNullDataReader()
