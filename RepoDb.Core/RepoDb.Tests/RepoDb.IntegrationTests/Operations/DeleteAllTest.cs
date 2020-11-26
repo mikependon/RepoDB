@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using System.Collections.Generic;
+using Microsoft.Data.SqlClient;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
@@ -38,6 +39,26 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 var result = connection.DeleteAll<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
                     tables);
+
+                // Assert
+                Assert.AreEqual(10, result);
+                Assert.AreEqual(0, connection.CountAll<IdentityTable>());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionDeleteAllViaEntityTableNameWithDifferentGeneric()
+        {
+            // Setup
+            var tables = Helper.CreateNonMappedIdentityTable(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(ClassMappedNameCache.Get<IdentityTable>(), tables);
+
+                // Act
+                var result = connection.DeleteAll(ClassMappedNameCache.Get<IdentityTable>(), tables);
 
                 // Assert
                 Assert.AreEqual(10, result);
@@ -298,6 +319,28 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(0, connection.CountAll<IdentityTable>());
             }
         }
+
+
+        [TestMethod]
+        public void TestSqlConnectionDeleteAllAsyncWithDifferentGeneric()
+        {
+            // Setup
+            var tables = Helper.CreateNonMappedIdentityTable(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(ClassMappedNameCache.Get<IdentityTable>(), tables);
+
+                // Act
+                var result = connection.DeleteAllAsync(ClassMappedNameCache.Get<IdentityTable>(), tables).Result;
+
+                // Assert
+                Assert.AreEqual(10, result);
+                Assert.AreEqual(0, connection.CountAll<IdentityTable>());
+            }
+        }
+
 
         [TestMethod]
         public void TestSqlConnectionDeleteAllAsyncWithPrimaryKeys()

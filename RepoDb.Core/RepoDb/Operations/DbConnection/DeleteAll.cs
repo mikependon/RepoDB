@@ -50,7 +50,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var key = GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, transaction);
+            var key = GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, tableName, transaction);
             var keys = ExtractPropertyValues<TEntity, object>(entities, PropertyCache.Get<TEntity>(key)).AsList();
 
             return DeleteAllInternal(connection: connection,
@@ -317,7 +317,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync<TEntity>(connection, transaction, cancellationToken);
+            var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync<TEntity>(connection, tableName, transaction, cancellationToken);
             var keys = ExtractPropertyValues<TEntity, object>(entities, PropertyCache.Get<TEntity>(key)).AsList();
 
             return await DeleteAllAsyncInternal(connection: connection,
