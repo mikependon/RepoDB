@@ -21,9 +21,7 @@ It is your best alternative ORM to both Dapper and EntityFramework.
 
 :wave: Hey [Scott](https://www.hanselman.com/), thank you for [endorsing](https://twitter.com/shanselman/status/1284990438525464576) RepoDB into the community of .NET.
 
-To get the latest updates about this library!
-
-[![Twitter Follow](https://img.shields.io/twitter/follow/mike_pendon?label=Follow&style=social)](https://twitter.com/mike_pendon)
+To get the latest updates about this library, follow us on [Twitter](https://twitter.com/mike_pendon)!
 
 ## Benefits/Advantages
 
@@ -129,6 +127,12 @@ RepoDb.Converter.ConversionType = ConversionType.Automatic;
 ```
 
 **Note:** The exception that is being thrown is dependent to what the underlying ADO.NET coercion exception. If the [Automatic](https://repodb.net/enumeration/conversiontype) conversion is used, the extracted value will always be evaluated and an additional conversion logic will be used (if needed). The conversion logic is through the AOT compilation of [System.Linq.Expressions.Expression.Convert](https://docs.microsoft.com/en-us/dotnet/api/system.linq.expressions.expression.convert?view=netcore-3.1) and/or [System.Convert](https://docs.microsoft.com/en-us/dotnet/api/system.convert?view=netcore-3.1).
+
+## Exception Handling
+
+As part of the standard when writing code in RepoDB, respect the default exception handling of .NET and ensure an unharmonized exception when bubbling up the message back to the caller and/or the users of the library, therefore, RepoDB itself does not contain a single code that catches any exception (i.e.: try-catch statement).
+
+Any exception that will happen to the library whether it is an ADO.NET exception and/or whatever will be bubble up natively back to the caller and/or the users of the library.
 
 ## Library Limitations
 
