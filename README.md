@@ -132,7 +132,7 @@ RepoDb.Converter.ConversionType = ConversionType.Automatic;
 
 As part of the standard when writing code in RepoDB, respect the default exception handling of .NET and ensure an unharmonized exception when bubbling up the message back to the caller and/or the users of the library. Therefore, RepoDB itself does not contain a single code that catches any exception (try-catch statement).
 
-Any exception that will happen to the library whether it is an ADO.NET exception and/or whatever will be bubble up natively back to the caller and/or the users of the library.
+Any exception happens within the library whether it is an ADO.NET exception and/or whatever will be bubble up natively back to the caller and/or the users of the library.
 
 ## Library Limitations
 
