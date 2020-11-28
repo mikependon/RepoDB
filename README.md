@@ -173,7 +173,7 @@ Please get in touch with us via:
 - [Twitter](https://twitter.com/search?q=%23repodb) - for the latest news.
 - [Gitter Chat](https://gitter.im/RepoDb/community) - for direct and live Q&A.
 
-Or, visit our [Support Policy](https://github.com/mikependon/RepoDB/blob/master/RepoDb.Docs/building-the-solutions.md) for more details.
+Or, visit our [Support Policy](https://github.com/mikependon/RepoDB/blob/master/RepoDb.Docs/support-policy.md) for more details.
 
 ### Hints
 
