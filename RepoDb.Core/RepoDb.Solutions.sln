@@ -33,6 +33,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Docs", "RepoDb.Docs"
 		..\RepoDb.Docs\issuing-a-pull-request.md = ..\RepoDb.Docs\issuing-a-pull-request.md
 		..\RepoDb.Docs\limitations.md = ..\RepoDb.Docs\limitations.md
 		..\RepoDb.Docs\reporting-an-issue.md = ..\RepoDb.Docs\reporting-an-issue.md
+		..\RepoDb.Docs\support-policy.md = ..\RepoDb.Docs\support-policy.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "READMEs", "READMEs", "{5EA323B8-B4B6-4083-97A3-018C9423B20A}"
