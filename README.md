@@ -130,9 +130,9 @@ RepoDb.Converter.ConversionType = ConversionType.Automatic;
 
 ## Exception Handling
 
-As part of the standard when writing code in RepoDB, respect the default exception handling of .NET and ensure an unharmonized exception when bubbling up the message back to the caller and/or the users of the library. Therefore, RepoDB itself does not contain a single code that catches any exception (try-catch statement).
+As the compiler exception is a bit low-level and is not descriptive for the native language, therefore, when compiling the process of hydration from/to the database and the application, a customized exception is being thrown to provide a detailed exception messages to the callers.
 
-Any exception happens within the library whether it is an ADO.NET exception and/or whatever will be bubble up natively back to the caller and/or the users of the library.
+On the other hand, as part of the standard when writing code in RepoDB (i.e.: respect the default exception handling of .NET, ensure an unharmonized exception when bubbling up the exception messages), RepoDB does not contain a single line of code that catches and rethrowing any exception (try-catch statement). Any exception happens within the library whether it is an ADO.NET exception and/or whatever will be bubble up natively back to the callers.
 
 ## Library Limitations
 
@@ -173,7 +173,7 @@ Please get in touch with us via:
 - [Twitter](https://twitter.com/search?q=%23repodb) - for the latest news.
 - [Gitter Chat](https://gitter.im/RepoDb/community) - for direct and live Q&A.
 
-Or, visit our [Support Policy](https://github.com/mikependon/RepoDB/blob/master/RepoDb.Docs/support-policy.md) for more details.
+Ensure to visit our [Support Policy](https://github.com/mikependon/RepoDB/blob/master/RepoDb.Docs/support-policy.md) to get more details about our policies when handling the operational support for this library.
 
 ### Hints
 

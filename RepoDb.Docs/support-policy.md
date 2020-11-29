@@ -1,13 +1,39 @@
 # Our Support Policy
 
-It is important to note, RepoDB is maintained by a single entity and this entity is a person and not an organization. We will not enforce any monetray contributions from the other party, all support will always be free.
+RepoDB is maintained by a single entity and this entity is a person and not an organization. When doing an operational support, we will not enforce any monetray contributions from the other party as all kind of support is always free.
 
-### Our Rights
+### Support Process
 
-- The maintainer will do any kind of support within the Central European Time (CET) timezone.
-- The maintainer will do the inquiry support to the .NET community anytime except for the night time (from 10pm to 5am) of the mentioned timezone.
-- The maintainer will do the development, enhancement and the implementation support (in between 5am to 7am and/or 10pm to 12pm) of the mentioned timezone.
-- The maintainer has the rights to say NO to any kind of support during the work hours (from 7am to 4pm CET) of the mentioned timezone.
+#### Kind of Support
+
+- Inquiry - operational support
+- Development
+- Implementation 
+- Pull-Requests
+- Enhancement
+- Debugging/Tracing
+- Bug Fixing
+- Deployment
+
+#### Daily Support
+
+- All kind of operational support must be within the Central European Time (CET) timezone.
+- The inquiry support can be anytime except from 10pm to 5am (CET) daily.
+- The other kind of support will be done in between 5am to 7am and/or 10pm to 12pm (CET) daily.
+
+#### Weekend Support
+
+- All kind of operational support must be within the Central European Time (CET) timezone.
+- The inquiry support can be anytime except from 10pm to 5am (CET) daily.
+- The other kind of support will be done in between 5am to 7am, 1pm to 3pm and/or 10pm to 12pm (CET) daily.
+
+#### Disclaimer
+
+The maintainer has the rights to say NO to any kind of support during the work hours (weekdays) from 7am to 4pm (CET) of the mentioned timezone.
+
+### Consultancy
+
+In the event of consultancy, as needed by the other party, a schedule can be defined in advance by collaborating directly to the author. You can directly reach the author's [Twitter](https://twitter.com/mike_pendon) account and/or send a direct [email](mailto:michael.c.pendon@outlook.com).
 
 ### Channels
 
