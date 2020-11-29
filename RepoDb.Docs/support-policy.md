@@ -43,4 +43,4 @@ We strongly recommend to the .NET community to always reach our proper [channels
 
 ### Governance
 
-Until the proper governance and entitlement of the library in the legal/trademark (conflict of interests, taxation, etc), the support will remain as it is.
+Until the proper governance and entitlement of the library in the legal/trademark (conflict of interests, taxation, etc) is defined, the support will remain as it is.
