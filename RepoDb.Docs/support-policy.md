@@ -1,6 +1,8 @@
 # Our Support Policy
 
-RepoDB is maintained by a single entity and this entity is a person and not an organization. When doing an operational support, we will not enforce any monetray contributions from the other party as all kind of support is always free.
+RepoDB is primarily maintained by a single entity and this entity is a person and not an organization. Though, the open community can help support the library in an open-source context.
+
+When doing an operational support, we will not enforce any monetray contributions from the other party as all kind of support is always free.
 
 ### Support Process
 
@@ -9,8 +11,8 @@ RepoDB is maintained by a single entity and this entity is a person and not an o
 - Inquiry - operational support
 - Development
 - Implementation 
-- Pull-Requests
-- Enhancement
+- Pull-Requests and Reviews
+- Enhancements
 - Debugging/Tracing
 - Bug Fixing
 - Deployment
@@ -29,7 +31,7 @@ RepoDB is maintained by a single entity and this entity is a person and not an o
 
 #### Disclaimer
 
-The maintainer has the rights to say NO to any kind of support during the work hours (weekdays) from 7am to 4pm (CET) of the mentioned timezone.
+The maintainer has the rights to say NO to any kind of support during the work hours (weekdays) from 7am to 4pm (CET) of the mentioned timezone. However, an open-source community has the rights to support the library (anytime, anywhere).
 
 ### Consultancy
 
