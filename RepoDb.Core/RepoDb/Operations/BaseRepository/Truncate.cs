@@ -38,6 +38,16 @@ namespace RepoDb
         /// <summary>
         /// Truncates a table from the database in an asynchronous way.
         /// </summary>
+        /// <returns>The number of rows affected.</returns>
+        public Task<int> TruncateAsync()
+        {
+            return DbRepository.TruncateAsync<TEntity>(transaction: null,
+                cancellationToken: CancellationToken.None);
+        }
+
+        /// <summary>
+        /// Truncates a table from the database in an asynchronous way.
+        /// </summary>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected.</returns>
         public Task<int> TruncateAsync(CancellationToken cancellationToken = default)
