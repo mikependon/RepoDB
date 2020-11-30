@@ -278,6 +278,62 @@ namespace RepoDb.IntegrationTests.Caches
 
         #endregion
 
+        #region ExecuteScalar
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteScalarCache()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Setup
+                var cache = new MemoryCache();
+                var cacheKey = "ServerDateTimeUtc";
+                var cacheItemExpiration = 60;
+
+                // Act
+                var result = connection.ExecuteScalar<DateTime>("SELECT GETUTCDATE();",
+                    cacheKey: cacheKey,
+                    cacheItemExpiration: cacheItemExpiration,
+                    cache: cache);
+                var item = cache.Get<DateTime>(cacheKey);
+
+                // Assert
+                Assert.IsNotNull(result);
+                Assert.IsNotNull(item);
+                Assert.AreEqual(result, item.Value);
+            }
+        }
+
+        #endregion
+
+        #region ExecuteScalarAsync
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteScalarAsyncCache()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Setup
+                var cache = new MemoryCache();
+                var cacheKey = "ServerDateTimeUtc";
+                var cacheItemExpiration = 60;
+
+                // Act
+                var result = connection.ExecuteScalarAsync<DateTime>("SELECT GETUTCDATE();",
+                    cacheKey: cacheKey,
+                    cacheItemExpiration: cacheItemExpiration,
+                    cache: cache).Result;
+                var item = cache.Get<DateTime>(cacheKey);
+
+                // Assert
+                Assert.IsNotNull(result);
+                Assert.IsNotNull(item);
+                Assert.AreEqual(result, item.Value);
+            }
+        }
+
+        #endregion
+
         #region Query
 
         #region TEntity
