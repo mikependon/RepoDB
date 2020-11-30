@@ -438,16 +438,22 @@ namespace RepoDb
         /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the <see cref="Cache"/> property is set.
+        /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
         public object ExecuteScalar(string commandText,
             object param = null,
             CommandType? commandType = null,
+            string cacheKey = null,
             IDbTransaction transaction = null)
         {
             return DbRepository.ExecuteScalar(commandText: commandText,
                 param: param,
                 commandType: commandType,
+                cacheKey: cacheKey,
                 transaction: transaction);
         }
 
@@ -465,18 +471,24 @@ namespace RepoDb
         /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the <see cref="Cache"/> property is set.
+        /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
         public Task<object> ExecuteScalarAsync(string commandText,
             object param = null,
             CommandType? commandType = null,
+            string cacheKey = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.ExecuteScalarAsync(commandText: commandText,
                 param: param,
                 commandType: commandType,
+                cacheKey: cacheKey,
                 transaction: transaction,
                 cancellationToken: cancellationToken);
         }
@@ -496,16 +508,22 @@ namespace RepoDb
         /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the <see cref="Cache"/> property is set.
+        /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A first occurence value (first column of first row) of the execution.</returns>
         public TResult ExecuteScalar<TResult>(string commandText,
             object param = null,
             CommandType? commandType = null,
+            string cacheKey = null,
             IDbTransaction transaction = null)
         {
             return DbRepository.ExecuteScalar<TResult>(commandText: commandText,
                 param: param,
                 commandType: commandType,
+                cacheKey: cacheKey,
                 transaction: transaction);
         }
 
@@ -524,18 +542,24 @@ namespace RepoDb
         /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the <see cref="Cache"/> property is set.
+        /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A first occurence value (first column of first row) of the execution.</returns>
         public Task<TResult> ExecuteScalarAsync<TResult>(string commandText,
             object param = null,
             CommandType? commandType = null,
+            string cacheKey = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.ExecuteScalarAsync<TResult>(commandText: commandText,
                 param: param,
                 commandType: commandType,
+                cacheKey: cacheKey,
                 transaction: transaction,
                 cancellationToken: cancellationToken);
         }

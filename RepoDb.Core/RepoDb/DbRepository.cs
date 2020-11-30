@@ -679,11 +679,16 @@ namespace RepoDb
         /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the <see cref="Cache"/> property is set.
+        /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
         public object ExecuteScalar(string commandText,
             object param = null,
             CommandType? commandType = null,
+            string cacheKey = null,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -695,8 +700,11 @@ namespace RepoDb
                 return connection.ExecuteScalar(commandText: commandText,
                     param: param,
                     commandType: commandType,
+                    cacheKey: cacheKey,
+                    cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction);
+                    transaction: transaction,
+                    cache: Cache);
             }
             catch
             {
@@ -724,12 +732,17 @@ namespace RepoDb
         /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the <see cref="Cache"/> property is set.
+        /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
         public async Task<object> ExecuteScalarAsync(string commandText,
             object param = null,
             CommandType? commandType = null,
+            string cacheKey = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -743,7 +756,10 @@ namespace RepoDb
                     param: param,
                     commandType: commandType,
                     commandTimeout: CommandTimeout,
+                    cacheKey: cacheKey,
+                    cacheItemExpiration: CacheItemExpiration,
                     transaction: transaction,
+                    cache: Cache,
                     cancellationToken: cancellationToken);
             }
             catch
@@ -773,11 +789,16 @@ namespace RepoDb
         /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the <see cref="Cache"/> property is set.
+        /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>A first occurence value (first column of first row) of the execution.</returns>
         public TResult ExecuteScalar<TResult>(string commandText,
             object param = null,
             CommandType? commandType = null,
+            string cacheKey = null,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -789,8 +810,11 @@ namespace RepoDb
                 return connection.ExecuteScalar<TResult>(commandText: commandText,
                     param: param,
                     commandType: commandType,
+                    cacheKey: cacheKey,
+                    cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction);
+                    transaction: transaction,
+                    cache: Cache);
             }
             catch
             {
@@ -819,12 +843,17 @@ namespace RepoDb
         /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the <see cref="Cache"/> property is set.
+        /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A first occurence value (first column of first row) of the execution.</returns>
         public async Task<TResult> ExecuteScalarAsync<TResult>(string commandText,
             object param = null,
             CommandType? commandType = null,
+            string cacheKey = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -837,8 +866,11 @@ namespace RepoDb
                 return await connection.ExecuteScalarAsync<TResult>(commandText: commandText,
                     param: param,
                     commandType: commandType,
+                    cacheKey: cacheKey,
+                    cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
+                    cache: Cache,
                     cancellationToken: cancellationToken);
             }
             catch
@@ -937,6 +969,5 @@ namespace RepoDb
         }
 
         #endregion
-
     }
 }
