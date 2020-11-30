@@ -85,6 +85,38 @@ namespace RepoDb
         /// Truncates a table from the database in an asynchronous way.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <returns>The number of rows affected.</returns>
+        public async Task<int> TruncateAsync<TEntity>()
+            where TEntity : class
+        {
+            // Create a connection
+            var connection = CreateConnection();
+
+            try
+            {
+                // Call the method
+                return await connection.TruncateAsync<TEntity>(commandTimeout: CommandTimeout,
+                    transaction: null,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder,
+                    cancellationToken: CancellationToken.None);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection);
+            }
+        }
+
+        /// <summary>
+        /// Truncates a table from the database in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected.</returns>
         public async Task<int> TruncateAsync<TEntity>(CancellationToken cancellationToken = default)
@@ -220,6 +252,38 @@ namespace RepoDb
         #endregion
 
         #region TruncateAsync(TableName)
+
+        /// <summary>
+        /// Truncates a table from the database in an asynchronous way.
+        /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <returns>The number of rows affected.</returns>
+        public async Task<int> TruncateAsync(string tableName)
+        {
+            // Create a connection
+            var connection = CreateConnection();
+
+            try
+            {
+                // Call the method
+                return await connection.TruncateAsync(tableName: tableName,
+                    commandTimeout: CommandTimeout,
+                    transaction: null,
+                    trace: Trace,
+                    statementBuilder: StatementBuilder,
+                    cancellationToken: CancellationToken.None);
+            }
+            catch
+            {
+                // Throw back the error
+                throw;
+            }
+            finally
+            {
+                // Dispose the connection
+                DisposeConnectionForPerCall(connection);
+            }
+        }
 
         /// <summary>
         /// Truncates a table from the database in an asynchronous way.

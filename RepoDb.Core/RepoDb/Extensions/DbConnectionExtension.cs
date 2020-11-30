@@ -1355,6 +1355,7 @@ namespace RepoDb
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cache">The cache object to be used.</param>
         /// <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
         public static object ExecuteScalar(this IDbConnection connection,
             string commandText,
@@ -1363,7 +1364,8 @@ namespace RepoDb
             string cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            ICache cache = null)
         {
             return ExecuteScalarInternal<object>(connection: connection,
                 commandText: commandText,
@@ -1373,7 +1375,7 @@ namespace RepoDb
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
-                cache: null,
+                cache: cache,
                 entityType: null,
                 dbFields: null,
                 skipCommandArrayParametersCheck: false);

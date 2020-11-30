@@ -37,20 +37,20 @@ namespace RepoDb.Extensions
             type == StaticType.Object;
 
         /// <summary>
-        /// Checks whether the current type is of type class.
+        /// Checks whether the current type is a class.
         /// </summary>
         /// <param name="type">The current type.</param>
         /// <returns>Returns true if the current type is a class.</returns>
         public static bool IsClassType(this Type type) =>
             type.IsClass &&
-            type.IsObjectType() == false &&
+            type.IsObjectType() != true &&
             StaticType.IEnumerable.IsAssignableFrom(type) != true;
 
         /// <summary>
-        /// Checks whether the current type is of type class.
+        /// Checks whether the current type is an anonymous type.
         /// </summary>
         /// <param name="type">The current type.</param>
-        /// <returns>Returns true if the current type is a class.</returns>
+        /// <returns>Returns true if the current type is an anonymous class.</returns>
         public static bool IsAnonymousType(this Type type) =>
             type.FullName.StartsWith("<>f__AnonymousType");
 
@@ -58,35 +58,27 @@ namespace RepoDb.Extensions
         /// Checks whether the current type is of type <see cref="IDictionary{TKey, TValue}"/> (with string/object key-value-pair).
         /// </summary>
         /// <param name="type">The current type.</param>
-        /// <returns>Returns true if the current type is a class.</returns>
+        /// <returns>Returns true if the current type is of type <see cref="IDictionary{TKey, TValue}"/> (with string/object key-value-pair).</returns>
         public static bool IsDictionaryStringObject(this Type type) =>
             type == StaticType.IDictionaryStringObject || type == StaticType.ExpandoObject;
 
         /// <summary>
-        /// Checks whether the current type is wrapped within <see cref="Nullable{T}"/> object.
+        /// Checks whether the current type is wrapped within a <see cref="Nullable{T}"/> object.
         /// </summary>
         /// <param name="type">The current type.</param>
-        /// <returns>Returns true if the current type is wrapped within <see cref="Nullable{T}"/> object.</returns>
+        /// <returns>Returns true if the current type is wrapped within a <see cref="Nullable{T}"/> object.</returns>
         public static bool IsNullable(this Type type) =>
             Nullable.GetUnderlyingType(type) != null;
-
-        /// <summary>
-        /// Checks whether the current type is a common .NET CLR type.
-        /// </summary>
-        /// <param name="type">The current type.</param>
-        /// <returns>Returns true if the current type is a common .NET CLR type.</returns>
-        internal static bool IsCommonType(this Type type) =>
-            (StaticType.String == type || (type?.IsClassType() != true && type?.IsAnonymousType() != true));
 
         /// <summary>
         /// Checks whether the current type is a plain class type.
         /// </summary>
         /// <param name="type">The current type.</param>
         /// <returns>Returns true if the current type is a plain class type.</returns>
-        internal static bool IsPlainType(this Type type) =>
+        public static bool IsPlainType(this Type type) =>
             (IsClassType(type) || IsAnonymousType(type)) &&
             IsQueryObjectType(type) != true &&
-            IsDictionaryStringObject(type) == false &&
+            IsDictionaryStringObject(type) != true &&
             GetEnumerableClassProperties(type).Any() != true;
 
         /// <summary>
@@ -94,7 +86,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="type">The curren type.</param>
         /// <returns>Returns true if the current type is of type <see cref="QueryField"/> or <see cref="QueryGroup"/>.</returns>
-        internal static bool IsQueryObjectType(this Type type) =>
+        public static bool IsQueryObjectType(this Type type) =>
             type == StaticType.QueryField || type == StaticType.QueryGroup;
 
         /// <summary>
@@ -110,7 +102,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="type">The current type.</param>
         /// <returns>The list of the enumerable <see cref="ClassProperty"/> objects.</returns>
-        internal static IEnumerable<ClassProperty> GetEnumerableClassProperties(this Type type) =>
+        public static IEnumerable<ClassProperty> GetEnumerableClassProperties(this Type type) =>
             PropertyCache.Get(type).Where(classProperty =>
                 StaticType.IEnumerable.IsAssignableFrom(classProperty.PropertyInfo.PropertyType));
 
