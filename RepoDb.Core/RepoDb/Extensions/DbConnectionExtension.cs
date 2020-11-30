@@ -1348,6 +1348,11 @@ namespace RepoDb
         /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
@@ -1355,55 +1360,23 @@ namespace RepoDb
             string commandText,
             object param = null,
             CommandType? commandType = null,
+            string cacheKey = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null)
         {
-            return ExecuteScalarInternal(connection: connection,
+            return ExecuteScalarInternal<object>(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
+                cacheKey: cacheKey,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: null,
                 entityType: null,
                 dbFields: null,
                 skipCommandArrayParametersCheck: false);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="commandText"></param>
-        /// <param name="param"></param>
-        /// <param name="commandType"></param>
-        /// <param name="commandTimeout"></param>
-        /// <param name="transaction"></param>
-        /// <param name="entityType"></param>
-        /// <param name="dbFields"></param>
-        /// <param name="skipCommandArrayParametersCheck"></param>
-        /// <returns></returns>
-        internal static object ExecuteScalarInternal(this IDbConnection connection,
-            string commandText,
-            object param,
-            CommandType? commandType,
-            int? commandTimeout,
-            IDbTransaction transaction,
-            Type entityType,
-            IEnumerable<DbField> dbFields,
-            bool skipCommandArrayParametersCheck)
-        {
-            using (var command = CreateDbCommandForExecution(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: commandType,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                entityType: entityType,
-                dbFields: dbFields,
-                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
-            {
-                return Converter.DbNullToNull(command.ExecuteScalar());
-            }
         }
 
         #endregion
@@ -1421,68 +1394,40 @@ namespace RepoDb
         /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cache">The cache object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
         public static Task<object> ExecuteScalarAsync(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
+            string cacheKey = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
+            ICache cache = null,
             CancellationToken cancellationToken = default)
         {
-            return ExecuteScalarAsyncInternal(connection: connection,
+            return ExecuteScalarAsyncInternal<object>(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
+                cacheKey: cacheKey,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 cancellationToken: cancellationToken,
                 entityType: null,
                 dbFields: null,
                 skipCommandArrayParametersCheck: false);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="commandText"></param>
-        /// <param name="param"></param>
-        /// <param name="commandType"></param>
-        /// <param name="commandTimeout"></param>
-        /// <param name="transaction"></param>
-        /// <param name="cancellationToken"></param>
-        /// <param name="entityType"></param>
-        /// <param name="dbFields"></param>
-        /// <param name="skipCommandArrayParametersCheck"></param>
-        /// <returns></returns>
-        internal static async Task<object> ExecuteScalarAsyncInternal(this IDbConnection connection,
-            string commandText,
-            object param,
-            CommandType? commandType,
-            int? commandTimeout,
-            IDbTransaction transaction,
-            CancellationToken cancellationToken,
-            Type entityType,
-            IEnumerable<DbField> dbFields,
-            bool skipCommandArrayParametersCheck)
-        {
-            using (var command = await CreateDbCommandForExecutionAsync(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: commandType,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                cancellationToken: cancellationToken,
-                entityType: entityType,
-                dbFields: dbFields,
-                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
-            {
-                return Converter.DbNullToNull(await command.ExecuteScalarAsync(cancellationToken));
-            }
         }
 
         #endregion
@@ -1501,22 +1446,34 @@ namespace RepoDb
         /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cache">The cache object to be used.</param>
         /// <returns>A first occurence value (first column of first row) of the execution.</returns>
         public static TResult ExecuteScalar<TResult>(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
+            string cacheKey = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            ICache cache = null)
         {
             return ExecuteScalarInternal<TResult>(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
+                cacheKey: cacheKey,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 entityType: null,
                 dbFields: null,
                 skipCommandArrayParametersCheck: false);
@@ -1530,8 +1487,11 @@ namespace RepoDb
         /// <param name="commandText"></param>
         /// <param name="param"></param>
         /// <param name="commandType"></param>
+        /// <param name="cacheKey"></param>
+        /// <param name="cacheItemExpiration"></param>
         /// <param name="commandTimeout"></param>
         /// <param name="transaction"></param>
+        /// <param name="cache"></param>
         /// <param name="entityType"></param>
         /// <param name="dbFields"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
@@ -1540,12 +1500,25 @@ namespace RepoDb
             string commandText,
             object param,
             CommandType? commandType,
+            string cacheKey,
+            int? cacheItemExpiration,
             int? commandTimeout,
             IDbTransaction transaction,
+            ICache cache,
             Type entityType,
             IEnumerable<DbField> dbFields,
             bool skipCommandArrayParametersCheck)
         {
+            // Get Cache
+            if (cacheKey != null)
+            {
+                var item = cache?.Get<TResult>(cacheKey, false);
+                if (item != null)
+                {
+                    return item.Value;
+                }
+            }
+
             using (var command = CreateDbCommandForExecution(connection: connection,
                 commandText: commandText,
                 param: param,
@@ -1556,7 +1529,16 @@ namespace RepoDb
                 dbFields: dbFields,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
             {
-                return Converter.ToType<TResult>(command.ExecuteScalar());
+                var result = Converter.ToType<TResult>(command.ExecuteScalar());
+
+                // Set Cache
+                if (cacheKey != null)
+                {
+                    cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
+                }
+
+                // Return
+                return result;
             }
         }
 
@@ -1576,24 +1558,36 @@ namespace RepoDb
         /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cache">The cache object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A first occurence value (first column of first row) of the execution.</returns>
         public static Task<TResult> ExecuteScalarAsync<TResult>(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
+            string cacheKey = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
+            ICache cache = null,
             CancellationToken cancellationToken = default)
         {
             return ExecuteScalarAsyncInternal<TResult>(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
+                cacheKey: cacheKey,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 cancellationToken: cancellationToken,
                 entityType: null,
                 dbFields: null,
@@ -1608,8 +1602,11 @@ namespace RepoDb
         /// <param name="commandText"></param>
         /// <param name="param"></param>
         /// <param name="commandType"></param>
+        /// <param name="cacheKey"></param>
+        /// <param name="cacheItemExpiration"></param>
         /// <param name="commandTimeout"></param>
         /// <param name="transaction"></param>
+        /// <param name="cache"></param>
         /// <param name="cancellationToken"></param>
         /// <param name="entityType"></param>
         /// <param name="dbFields"></param>
@@ -1619,13 +1616,26 @@ namespace RepoDb
             string commandText,
             object param,
             CommandType? commandType,
+            string cacheKey,
+            int? cacheItemExpiration,
             int? commandTimeout,
             IDbTransaction transaction,
+            ICache cache,
             CancellationToken cancellationToken,
             Type entityType,
             IEnumerable<DbField> dbFields,
             bool skipCommandArrayParametersCheck)
         {
+            // Get Cache
+            if (cacheKey != null)
+            {
+                var item = cache?.Get<TResult>(cacheKey, false);
+                if (item != null)
+                {
+                    return item.Value;
+                }
+            }
+
             using (var command = await CreateDbCommandForExecutionAsync(connection: connection,
                 commandText: commandText,
                 param: param,
@@ -1637,7 +1647,16 @@ namespace RepoDb
                 dbFields: dbFields,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
             {
-                return Converter.ToType<TResult>(await command.ExecuteScalarAsync(cancellationToken));
+                var result = Converter.ToType<TResult>(await command.ExecuteScalarAsync(cancellationToken));
+
+                // Set Cache
+                if (cacheKey != null)
+                {
+                    cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
+                }
+
+                // Return
+                return result;
             }
         }
 
