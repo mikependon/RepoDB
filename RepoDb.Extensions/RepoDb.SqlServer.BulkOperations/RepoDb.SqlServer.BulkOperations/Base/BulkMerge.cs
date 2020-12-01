@@ -127,12 +127,13 @@ namespace RepoDb
                             entityFields.Any(f => string.Equals(f.Name, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
                 }
 
-                // Filter the fields (based on the mappings)
+                // Filter the fields (based on the mappings and qualifiers)
                 if (mappings?.Any() == true)
                 {
                     fields = fields
                         .Where(e =>
-                            mappings.Any(m => string.Equals(m.SourceColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
+                            mappings.Any(m => string.Equals(m.SourceColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true ||
+                            qualifiers.Any(q => string.Equals(q.Name, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
                 }
 
                 // Throw an error if there are no fields
@@ -353,12 +354,13 @@ namespace RepoDb
                             readerFields.Any(fieldName => string.Equals(fieldName, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
                 }
 
-                // Filter the fields (based on the mappings)
+                // Filter the fields (based on the mappings and qualifiers)
                 if (mappings?.Any() == true)
                 {
                     fields = fields
                         .Where(e =>
-                            mappings.Any(m => string.Equals(m.SourceColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
+                            mappings.Any(m => string.Equals(m.SourceColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true ||
+                            qualifiers.Any(q => string.Equals(q.Name, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
                 }
 
                 // Throw an error if there are no fields
@@ -568,12 +570,13 @@ namespace RepoDb
                             tableFields.Any(fieldName => string.Equals(fieldName, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
                 }
 
-                // Filter the fields (based on the mappings)
+                // Filter the fields (based on the mappings and qualifiers)
                 if (mappings?.Any() == true)
                 {
                     fields = fields
                         .Where(e =>
-                            mappings.Any(m => string.Equals(m.SourceColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
+                            mappings.Any(m => string.Equals(m.SourceColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true ||
+                            qualifiers.Any(q => string.Equals(q.Name, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
                 }
 
                 // Throw an error if there are no fields
@@ -810,12 +813,13 @@ namespace RepoDb
                             entityFields.Any(f => string.Equals(f.Name, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
                 }
 
-                // Filter the fields (based on the mappings)
+                // Filter the fields (based on the mappings and qualifiers)
                 if (mappings?.Any() == true)
                 {
                     fields = fields
                         .Where(e =>
-                            mappings.Any(m => string.Equals(m.SourceColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
+                            mappings.Any(m => string.Equals(m.SourceColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true ||
+                            qualifiers.Any(q => string.Equals(q.Name, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
                 }
 
                 // Throw an error if there are no fields
@@ -1040,12 +1044,13 @@ namespace RepoDb
                             readerFields.Any(fieldName => string.Equals(fieldName, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
                 }
 
-                // Filter the fields (based on the mappings)
+                // Filter the fields (based on the mappings and qualifiers)
                 if (mappings?.Any() == true)
                 {
                     fields = fields
                         .Where(e =>
-                            mappings.Any(m => string.Equals(m.SourceColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
+                            mappings.Any(m => string.Equals(m.SourceColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true ||
+                            qualifiers.Any(q => string.Equals(q.Name, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
                 }
 
                 // Throw an error if there are no fields
@@ -1258,12 +1263,13 @@ namespace RepoDb
                             tableFields.Any(fieldName => string.Equals(fieldName, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
                 }
 
-                // Filter the fields (based on the mappings)
+                // Filter the fields (based on the mappings and qualifiers)
                 if (mappings?.Any() == true)
                 {
                     fields = fields
                         .Where(e =>
-                            mappings.Any(m => string.Equals(m.SourceColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
+                            mappings.Any(m => string.Equals(m.SourceColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true ||
+                            qualifiers.Any(q => string.Equals(q.Name, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
                 }
 
                 // Throw an error if there are no fields
