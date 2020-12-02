@@ -75,7 +75,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="type">The current type.</param>
         /// <returns>Returns true if the current type is a plain class type.</returns>
-        public static bool IsPlainType(this Type type) =>
+        internal static bool IsPlainType(this Type type) =>
             (IsClassType(type) || IsAnonymousType(type)) &&
             IsQueryObjectType(type) != true &&
             IsDictionaryStringObject(type) != true &&
@@ -86,7 +86,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="type">The curren type.</param>
         /// <returns>Returns true if the current type is of type <see cref="QueryField"/> or <see cref="QueryGroup"/>.</returns>
-        public static bool IsQueryObjectType(this Type type) =>
+        internal static bool IsQueryObjectType(this Type type) =>
             type == StaticType.QueryField || type == StaticType.QueryGroup;
 
         /// <summary>
@@ -102,9 +102,16 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="type">The current type.</param>
         /// <returns>The list of the enumerable <see cref="ClassProperty"/> objects.</returns>
-        public static IEnumerable<ClassProperty> GetEnumerableClassProperties(this Type type) =>
-            PropertyCache.Get(type).Where(classProperty =>
-                StaticType.IEnumerable.IsAssignableFrom(classProperty.PropertyInfo.PropertyType));
+        internal static IEnumerable<ClassProperty> GetEnumerableClassProperties(this Type type) =>
+            PropertyCache.Get(type).Where(classProperty => 
+            {
+                var propType = classProperty.PropertyInfo.PropertyType;
+                return
+                    propType != StaticType.String &&
+                    propType != StaticType.CharArray &&
+                    propType != StaticType.ByteArray &&
+                    StaticType.IEnumerable.IsAssignableFrom(propType);
+            });
 
         /// <summary>
         /// Converts all properties of the type into an array of <see cref="ClassProperty"/> objects.

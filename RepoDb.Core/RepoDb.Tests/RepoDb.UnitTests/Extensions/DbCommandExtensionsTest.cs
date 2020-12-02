@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.UnitTests.CustomObjects;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace RepoDb.UnitTests.Extensions
 {
@@ -200,5 +200,16 @@ namespace RepoDb.UnitTests.Extensions
         #endregion
 
         #endregion
+
+        [TestMethod]
+        public void TestIsPlainTypeForAnoynmousType()
+        {
+            var type = (new { Property = "ABC" }).GetType();
+            Assert.IsTrue(type.IsPlainType());
+            Assert.IsTrue(type.IsAnonymousType());
+            Assert.IsFalse(type.IsQueryObjectType());
+            Assert.IsFalse(type.IsDictionaryStringObject());
+            Assert.IsFalse(type.GetEnumerableClassProperties().Any());
+        }
     }
 }
