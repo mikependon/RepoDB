@@ -341,13 +341,16 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlConnectionExecuteQueryConversionFromDateTimeToString()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var cultureScope = new CultureScope("en-US"))
             {
-                // Act Query
-                var data = connection.ExecuteQuery<string>("SELECT CONVERT(DATETIME2(5), '1970-01-01') AS Value;").First();
+                using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+                {
+                    // Act Query
+                    var data = connection.ExecuteQuery<string>("SELECT CONVERT(DATETIME2(5), '1970-01-01') AS Value;").First();
 
-                // Assert
-                Assert.AreEqual("1/1/1970 12:00:00 AM", data);
+                    // Assert
+                    Assert.AreEqual("1/1/1970 12:00:00 AM", data);
+                }
             }
         }
 
@@ -790,23 +793,26 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlConnectionInsertAndQueryConversionFromStringToDate()
         {
-            // Setup
-            var entity = new StringToDateClass
+            using (var cultureScope = new CultureScope("en-US"))
             {
-                SessionId = Guid.NewGuid(),
-                ColumnDate = "1970-01-01"
-            };
+                // Setup
+                var entity = new StringToDateClass
+                {
+                    SessionId = Guid.NewGuid(),
+                    ColumnDate = "1970-01-01"
+                };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
-            {
-                // Act Insert
-                var id = connection.Insert(entity);
+                using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+                {
+                    // Act Insert
+                    var id = connection.Insert(entity);
 
-                // Act Query
-                var data = connection.Query<StringToDateClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
+                    // Act Query
+                    var data = connection.Query<StringToDateClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
 
-                // Assert
-                Assert.AreEqual("1/1/1970 12:00:00 AM", data.ColumnDate);
+                    // Assert
+                    Assert.AreEqual("1/1/1970 12:00:00 AM", data.ColumnDate);
+                }
             }
         }
 
@@ -825,23 +831,26 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlConnectionInsertAndQueryConversionFromStringToDateTime()
         {
-            // Setup
-            var entity = new StringToDateTimeClass
+            using (var cultureScope = new CultureScope("en-US"))
             {
-                SessionId = Guid.NewGuid(),
-                ColumnDateTime = "1970-01-01 11:30 AM"
-            };
+                // Setup
+                var entity = new StringToDateTimeClass
+                {
+                    SessionId = Guid.NewGuid(),
+                    ColumnDateTime = "1970-01-01 11:30 AM"
+                };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
-            {
-                // Act Insert
-                var id = connection.Insert(entity);
+                using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+                {
+                    // Act Insert
+                    var id = connection.Insert(entity);
 
-                // Act Query
-                var data = connection.Query<StringToDateTimeClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
+                    // Act Query
+                    var data = connection.Query<StringToDateTimeClass>(e => e.SessionId == (Guid)id).FirstOrDefault();
 
-                // Assert
-                Assert.AreEqual("1/1/1970 11:30:00 AM", data.ColumnDateTime);
+                    // Assert
+                    Assert.AreEqual("1/1/1970 11:30:00 AM", data.ColumnDateTime);
+                }
             }
         }
 
@@ -860,23 +869,26 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlConnectionInsertAndQueryConversionFromStringToDateTime2()
         {
-            // Setup
-            var entity = new StringToDateTime2Class
+            using (var cultureScope = new CultureScope("en-US"))
             {
-                SessionId = Guid.NewGuid(),
-                ColumnDateTime2 = "2019-03-03 15:22:10.0500000"
-            };
+                // Setup
+                var entity = new StringToDateTime2Class
+                {
+                    SessionId = Guid.NewGuid(),
+                    ColumnDateTime2 = "2019-03-03 15:22:10.0500000"
+                };
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
-            {
-                // Act Insert
-                var id = connection.Insert(entity);
+                using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+                {
+                    // Act Insert
+                    var id = connection.Insert(entity);
 
-                // Act Query
-                var data = connection.Query<StringToDateTime2Class>(e => e.SessionId == (Guid)id).FirstOrDefault();
+                    // Act Query
+                    var data = connection.Query<StringToDateTime2Class>(e => e.SessionId == (Guid)id).FirstOrDefault();
 
-                // Assert
-                Assert.AreEqual("3/3/2019 3:22:10 PM", data.ColumnDateTime2);
+                    // Assert
+                    Assert.AreEqual("3/3/2019 3:22:10 PM", data.ColumnDateTime2);
+                }
             }
         }
 
