@@ -6,9 +6,6 @@ using System.Threading.Tasks;
 
 namespace RepoDb
 {
-    /// <averagemary>
-    /// A base object for all entity-based repositories.
-    /// </averagemary>
     public abstract partial class BaseRepository<TEntity, TDbConnection> : IDisposable
     {
         #region AverageAll<TEntity>

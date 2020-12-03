@@ -6,9 +6,6 @@ using System.Threading.Tasks;
 
 namespace RepoDb
 {
-    /// <summary>
-    /// A base object for all entity-based repositories.
-    /// </summary>
     public abstract partial class BaseRepository<TEntity, TDbConnection> : IDisposable
     {
         #region DeleteAll<TEntity>

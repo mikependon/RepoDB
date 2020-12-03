@@ -3,7 +3,7 @@
 namespace RepoDb
 {
     /// <summary>
-    /// A tracing log object used in the tracing operations.
+    /// A class that holds the information of the tracing operations.
     /// </summary>
     public class TraceLog
     {

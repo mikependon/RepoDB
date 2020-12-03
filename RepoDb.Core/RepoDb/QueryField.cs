@@ -1,17 +1,15 @@
 ﻿using RepoDb.Attributes;
 using RepoDb.Enumerations;
-using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using System;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
 
 namespace RepoDb
 {
     /// <summary>
-    /// A class that is used to define a field expression for the query operations. It holds the instances of field <see cref="RepoDb.Field"/>,
-    /// parameter <see cref="RepoDb.Parameter"/> and the target operation <see cref="RepoDb.Enumerations.Operation"/> of the query expression.
+    /// A class that is used to define a field expression for the query operation. It holds the instances of the <see cref="RepoDb.Field"/>,
+    /// <see cref="RepoDb.Parameter"/> and the <see cref="Enumerations.Operation"/> objects of the query expression.
     /// </summary>
     public partial class QueryField : IEquatable<QueryField>
     {

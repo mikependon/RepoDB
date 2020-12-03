@@ -11,7 +11,7 @@ using System.Threading;
 namespace RepoDb
 {
     /// <summary>
-    /// A base object for all entity-based repositories.
+    /// A base class for all entity-based repositories. It is designed to only allow the given operations work with single data entity object.
     /// </summary>
     /// <typeparam name="TEntity">The type of data entity object to be mapped on this repository.</typeparam>
     /// <typeparam name="TDbConnection">The type of the <see cref="DbConnection"/> object.</typeparam>

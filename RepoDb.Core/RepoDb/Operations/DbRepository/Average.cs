@@ -8,9 +8,6 @@ using System.Threading.Tasks;
 
 namespace RepoDb
 {
-    /// <averagemary>
-    /// A base object for all shared-based repositories.
-    /// </averagemary>
     public partial class DbRepository<TDbConnection> : IDisposable
         where TDbConnection : DbConnection
     {

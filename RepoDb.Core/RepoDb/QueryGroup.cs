@@ -10,8 +10,8 @@ using RepoDb.Interfaces;
 namespace RepoDb
 {
     /// <summary>
-    /// A widely-used object for defining the groupings for the query expression. This object is used by most of the repository operations
-    /// to define the filtering and query expressions for the actual execution.
+    /// A widely-used class for defining the groupings when composing the query expression. This object is used by most operations
+    /// to define the filters and expressions on the actual execution.
     /// </summary>
     public partial class QueryGroup : IEquatable<QueryGroup>
     {
