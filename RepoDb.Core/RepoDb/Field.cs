@@ -9,7 +9,7 @@ using RepoDb.Exceptions;
 namespace RepoDb
 {
     /// <summary>
-    /// An object that signifies as data field in the query statement.
+    /// An object that is used to signify a field in the query statement. It is also used as a common object in relation to the context of field object.
     /// </summary>
     public class Field : IEquatable<Field>
     {

@@ -11,7 +11,7 @@ using System.Reflection;
 namespace RepoDb
 {
     /// <summary>
-    /// An object that holds a field for ordering the query resultsets.
+    /// A class that holds a field that is used to order the results of the query operation.
     /// </summary>
     public class OrderField
     {

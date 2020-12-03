@@ -12,7 +12,7 @@ using System.Threading;
 namespace RepoDb
 {
     /// <summary>
-    /// A data reader object used to manipulate the enumerable list of data entity objects.
+    /// A data reader object that is used to manipulate the enumerable list of data entity objects.
     /// </summary>
     /// <typeparam name="TEntity">The type of the data entity</typeparam>
     public class DataEntityDataReader<TEntity> : DbDataReader

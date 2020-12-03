@@ -11,7 +11,7 @@ using System.Threading;
 namespace RepoDb
 {
     /// <summary>
-    /// A base object for all shared-based repositories.
+    /// A base class for all shared-based repositories. It is designed to allow the given operations work with multiple data entity objects.
     /// </summary>
     /// <typeparam name="TDbConnection">The type of the <see cref="DbConnection"/> object.</typeparam>
     public partial class DbRepository<TDbConnection> : IDisposable

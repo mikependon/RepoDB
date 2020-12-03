@@ -7,7 +7,7 @@ using RepoDb.Interfaces;
 namespace RepoDb
 {
     /// <summary>
-    /// An object used to compose a SQL Query Statement.
+    /// A class used to compose a SQL Query Statement.
     /// </summary>
     public class QueryBuilder
     {

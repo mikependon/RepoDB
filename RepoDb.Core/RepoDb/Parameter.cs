@@ -4,7 +4,7 @@ using System;
 namespace RepoDb
 {
     /// <summary>
-    /// An object that holds the value of the field parameter.
+    /// A class that holds the value of the field parameter.
     /// </summary>
     public sealed class Parameter : IEquatable<Parameter>
     {
