@@ -39,6 +39,11 @@ namespace RepoDb.Reflection
             public ParameterInfo ParameterInfo { get; set; }
 
             /// <summary>
+            /// Gets the instance of <see cref="RepoDb.ClassProperty"/> object that is mapped to the current <see cref="ParameterInfo"/>.
+            /// </summary>
+            public ClassProperty ParameterInfoMappedClassProperty { get; set; }
+
+            /// <summary>
             /// Gets the target type.
             /// </summary>
             public Type TargetType { get; set; }
@@ -1153,35 +1158,40 @@ namespace RepoDb.Reflection
             // Class properties
             var classProperties = PropertyCache
                 .Get(typeOfResult)?
-                .Where(property => property.PropertyInfo.CanWrite)
+                //.Where(property => property.PropertyInfo.CanWrite)
                 .Where(property =>
                     readerFieldsName?.FirstOrDefault(field =>
                         string.Equals(field.AsUnquoted(true, dbSetting), property.GetMappedName().AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
                 .AsList();
 
             // ParameterInfos
-            parameterInfos?.ForEach(parameterInfo =>
-            {
-                var classProperty = classProperties?.
-                    FirstOrDefault(item =>
-                        string.Equals(item.PropertyInfo.Name, parameterInfo.Name, StringComparison.OrdinalIgnoreCase));
-                list.Add(new ClassPropertyParameterInfo
+            parameterInfos?
+                .ForEach(parameterInfo =>
                 {
-                    ClassProperty = classProperty,
-                    ParameterInfo = parameterInfo
+                    var classProperty = classProperties?.
+                        FirstOrDefault(property =>
+                            string.Equals(property.PropertyInfo.Name, parameterInfo.Name, StringComparison.OrdinalIgnoreCase));
+                    list.Add(new ClassPropertyParameterInfo
+                    {
+                        ClassProperty = classProperty.PropertyInfo.CanWrite ? classProperty : null,
+                        ParameterInfo = parameterInfo,
+                        ParameterInfoMappedClassProperty = classProperty
+                    });
                 });
-            });
 
             // ClassProperties
-            classProperties.ForEach(classProperty =>
-            {
-                var listItem = list.FirstOrDefault(item => item.ClassProperty == classProperty);
-                if (listItem != null)
+            classProperties
+                .Where(property => property.PropertyInfo.CanWrite)
+                .AsList()
+                .ForEach(property =>
                 {
-                    return;
-                }
-                list.Add(new ClassPropertyParameterInfo { ClassProperty = classProperty });
-            });
+                    var listItem = list.FirstOrDefault(item => item.ClassProperty == property);
+                    if (listItem != null)
+                    {
+                        return;
+                    }
+                    list.Add(new ClassPropertyParameterInfo { ClassProperty = property });
+                });
 
             // Return the list
             return list;
@@ -1215,7 +1225,8 @@ namespace RepoDb.Reflection
             // Iterate each properties
             foreach (var classPropertyParameterInfo in classPropertyParameterInfos)
             {
-                var mappedName = classPropertyParameterInfo.ParameterInfo?.Name.AsUnquoted(true, dbSetting) ??
+                var mappedName = classPropertyParameterInfo.ParameterInfoMappedClassProperty?.GetMappedName().AsUnquoted(true, dbSetting) ??
+                    classPropertyParameterInfo.ParameterInfo?.Name.AsUnquoted(true, dbSetting) ??
                     classPropertyParameterInfo.ClassProperty?.GetMappedName().AsUnquoted(true, dbSetting);
 
                 // Skip if not found
