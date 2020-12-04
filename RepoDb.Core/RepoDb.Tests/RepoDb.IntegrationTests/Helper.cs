@@ -698,6 +698,52 @@ namespace RepoDb.IntegrationTests
 
         #endregion
 
+        #region MappedPropertiesImmutableIdentityTable
+
+        /// <summary>
+        /// Creates a list of <see cref="MappedPropertiesImmutableIdentityTable"/> objects.
+        /// </summary>
+        /// <param name="count">The number of rows.</param>
+        /// <returns>A list of <see cref="MappedPropertiesImmutableIdentityTable"/> objects.</returns>
+        public static List<MappedPropertiesImmutableIdentityTable> CreateMappedPropertiesImmutableIdentityTables(int count)
+        {
+            var tables = new List<MappedPropertiesImmutableIdentityTable>();
+            for (var i = 0; i < count; i++)
+            {
+                var index = i + 1;
+                tables.Add(new MappedPropertiesImmutableIdentityTable(0,
+                    Guid.NewGuid(),
+                    true,
+                    EpocDate,
+                    DateTime.UtcNow,
+                    index,
+                    index,
+                    index,
+                    $"NVARCHAR{index}-Ctor"));
+            }
+            return tables;
+        }
+
+        /// <summary>
+        /// Creates an instance of <see cref="MappedPropertiesImmutableIdentityTable"/> object.
+        /// </summary>
+        /// <returns>A new created instance of <see cref="MappedPropertiesImmutableIdentityTable"/> object.</returns>
+        public static MappedPropertiesImmutableIdentityTable CreateMappedPropertiesImmutableIdentityTable()
+        {
+            var random = new Random();
+            return new MappedPropertiesImmutableIdentityTable(0,
+                Guid.NewGuid(),
+                true,
+                EpocDate,
+                DateTime.UtcNow,
+                Convert.ToDecimal(random.Next(100)),
+                Convert.ToSingle(random.Next(100)),
+                random.Next(100),
+                $"NVARCHAR-{Guid.NewGuid()}-Ctor");
+        }
+
+        #endregion
+
         #region EnumCompleteTable
 
         /// <summary>

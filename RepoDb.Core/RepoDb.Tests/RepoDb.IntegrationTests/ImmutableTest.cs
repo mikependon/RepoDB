@@ -67,6 +67,19 @@ namespace RepoDb.IntegrationTests
             };
         }
 
+        private MappedPropertiesImmutableIdentityTable ToMappedPropertiesImmutableIdentityTable(IdentityTable entity)
+        {
+            return new MappedPropertiesImmutableIdentityTable(entity.Id,
+                entity.RowGuid,
+                entity.ColumnBit,
+                entity.ColumnDateTime,
+                entity.ColumnDateTime2,
+                entity.ColumnDecimal,
+                entity.ColumnFloat,
+                entity.ColumnInt,
+                entity.ColumnNVarChar);
+        }
+
         #endregion
 
         #region ImmutableIdentityTable
@@ -190,7 +203,7 @@ namespace RepoDb.IntegrationTests
                 Assert.IsTrue(entity.Id == 0);
 
                 // Act
-                var queryResult = connection.Query<IdentityTable>(mergeResult).FirstOrDefault();
+                var queryResult = connection.Query<ImmutableIdentityTable>(mergeResult).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -261,7 +274,7 @@ namespace RepoDb.IntegrationTests
                 Assert.IsTrue(entities.All(e => e.Id == 0));
 
                 // Act
-                var queryResult = connection.QueryAll<IdentityTable>().AsList();
+                var queryResult = connection.QueryAll<ImmutableIdentityTable>().AsList();
 
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());
@@ -297,10 +310,10 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(entities.Count, mergeAllResult);
-                Assert.AreEqual(entities.Count, connection.CountAll<IdentityTable>());
+                Assert.AreEqual(entities.Count, connection.CountAll<ImmutableIdentityTable>());
 
                 // Act
-                var queryResult = connection.QueryAll<IdentityTable>().AsList();
+                var queryResult = connection.QueryAll<ImmutableIdentityTable>().AsList();
 
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());
@@ -402,7 +415,7 @@ namespace RepoDb.IntegrationTests
                 Assert.IsTrue(updateResult > 0);
 
                 // Act
-                var queryResult = connection.Query<IdentityTable>(newEntity.Id).FirstOrDefault();
+                var queryResult = connection.Query<ImmutableIdentityTable>(newEntity.Id).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(queryResult);
@@ -443,7 +456,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entities.Count, updateAllResult);
 
                 // Act
-                var queryResult = connection.QueryAll<IdentityTable>().AsList();
+                var queryResult = connection.QueryAll<ImmutableIdentityTable>().AsList();
 
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());
@@ -577,7 +590,7 @@ namespace RepoDb.IntegrationTests
                 Assert.IsTrue(entity.Id == 0);
 
                 // Act
-                var queryResult = connection.Query<IdentityTable>(mergeResult).FirstOrDefault();
+                var queryResult = connection.Query<ImmutableWithFewerCtorArgumentsIdentityTable>(mergeResult).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -650,7 +663,7 @@ namespace RepoDb.IntegrationTests
                 Assert.IsTrue(entities.All(e => e.Id == 0));
 
                 // Act
-                var queryResult = connection.QueryAll<IdentityTable>().AsList();
+                var queryResult = connection.QueryAll<ImmutableWithFewerCtorArgumentsIdentityTable>().AsList();
 
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());
@@ -688,10 +701,10 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(entities.Count, mergeAllResult);
-                Assert.AreEqual(entities.Count, connection.CountAll<IdentityTable>());
+                Assert.AreEqual(entities.Count, connection.CountAll<ImmutableWithFewerCtorArgumentsIdentityTable>());
 
                 // Act
-                var queryResult = connection.QueryAll<IdentityTable>().AsList();
+                var queryResult = connection.QueryAll<ImmutableWithFewerCtorArgumentsIdentityTable>().AsList();
 
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());
@@ -758,7 +771,7 @@ namespace RepoDb.IntegrationTests
                 Assert.IsTrue(updateResult > 0);
 
                 // Act
-                var queryResult = connection.Query<IdentityTable>(newEntity.Id).FirstOrDefault();
+                var queryResult = connection.Query<ImmutableWithFewerCtorArgumentsIdentityTable>(newEntity.Id).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(queryResult);
@@ -797,7 +810,7 @@ namespace RepoDb.IntegrationTests
                 Assert.IsTrue(updateResult > 0);
 
                 // Act
-                var queryResult = connection.Query<IdentityTable>(newEntity.Id).FirstOrDefault();
+                var queryResult = connection.Query<ImmutableWithFewerCtorArgumentsIdentityTable>(newEntity.Id).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(queryResult);
@@ -840,7 +853,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entities.Count, updateAllResult);
 
                 // Act
-                var queryResult = connection.QueryAll<IdentityTable>().AsList();
+                var queryResult = connection.QueryAll<ImmutableWithFewerCtorArgumentsIdentityTable>().AsList();
 
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());
@@ -966,7 +979,7 @@ namespace RepoDb.IntegrationTests
                 Assert.IsTrue(entity.Id == 1);
 
                 // Act
-                var queryResult = connection.Query<IdentityTable>(mergeResult).FirstOrDefault();
+                var queryResult = connection.Query<ImmutableWithWritablePropertiesIdentityTable>(mergeResult).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -1046,7 +1059,7 @@ namespace RepoDb.IntegrationTests
                 Assert.IsTrue(entities.All(e => e.Id > 0));
 
                 // Act
-                var queryResult = connection.QueryAll<IdentityTable>().AsList();
+                var queryResult = connection.QueryAll<ImmutableWithWritablePropertiesIdentityTable>().AsList();
 
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());
@@ -1093,10 +1106,10 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.AreEqual(entities.Count, mergeAllResult);
-                Assert.AreEqual(entities.Count, connection.CountAll<IdentityTable>());
+                Assert.AreEqual(entities.Count, connection.CountAll<ImmutableWithWritablePropertiesIdentityTable>());
 
                 // Act
-                var queryResult = connection.QueryAll<IdentityTable>().AsList();
+                var queryResult = connection.QueryAll<ImmutableWithWritablePropertiesIdentityTable>().AsList();
 
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());
@@ -1172,7 +1185,7 @@ namespace RepoDb.IntegrationTests
                 Assert.IsTrue(updateResult > 0);
 
                 // Act
-                var queryResult = connection.Query<IdentityTable>(newEntity.Id).FirstOrDefault();
+                var queryResult = connection.Query<ImmutableWithWritablePropertiesIdentityTable>(newEntity.Id).FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(queryResult);
@@ -1272,7 +1285,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entities.Count, updateAllResult);
 
                 // Act
-                var queryResult = connection.QueryAll<IdentityTable>().AsList();
+                var queryResult = connection.QueryAll<ImmutableWithWritablePropertiesIdentityTable>().AsList();
 
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());
@@ -1284,5 +1297,380 @@ namespace RepoDb.IntegrationTests
         #endregion
 
         #endregion
+
+        #region MappedPropertiesImmutableIdentityTable
+
+        #region Delete
+
+        [TestMethod]
+        public void TestSqlConnectionDeleteForMappedPropertiesImmutableViaDataEntity()
+        {
+            // Setup
+            var entity = Helper.CreateIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert<IdentityTable>(entity);
+
+                // Act
+                var deleteResult = connection.Delete<MappedPropertiesImmutableIdentityTable>(
+                    ToMappedPropertiesImmutableIdentityTable(entity));
+
+                // Assert
+                Assert.IsTrue(deleteResult == 1);
+                Assert.AreEqual(0, connection.CountAll<IdentityTable>());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionDeleteForMappedPropertiesImmutableViaPrimary()
+        {
+            // Setup
+            var entity = Helper.CreateIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert<IdentityTable>(entity);
+
+                // Act
+                var deleteResult = connection.Delete<MappedPropertiesImmutableIdentityTable>(entity.Id);
+
+                // Assert
+                Assert.IsTrue(deleteResult == 1);
+                Assert.AreEqual(0, connection.CountAll<IdentityTable>());
+            }
+        }
+
+        #endregion
+
+        #region Insert
+
+        [TestMethod]
+        public void TestSqlConnectionInsertForMappedPropertiesImmutable()
+        {
+            // Setup
+            var entity = Helper.CreateMappedPropertiesImmutableIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var insertResult = connection.Insert<MappedPropertiesImmutableIdentityTable, long>(entity);
+
+                // Assert
+                Assert.IsTrue(insertResult > 0);
+                Assert.AreEqual(insertResult, entity.Id);
+            }
+        }
+
+        #endregion
+
+        #region InsertAll
+
+        [TestMethod]
+        public void TestSqlConnectionInsertAllForMappedPropertiesImmutable()
+        {
+            // Setup
+            var entities = Helper.CreateMappedPropertiesImmutableIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var insertAllResult = connection.InsertAll<MappedPropertiesImmutableIdentityTable>(entities);
+
+                // Assert
+                Assert.AreEqual(entities.Count, insertAllResult);
+                Assert.AreEqual(entities.Count, connection.CountAll<MappedPropertiesImmutableIdentityTable>());
+
+                // Assert
+                Assert.IsTrue(entities.All(e => e.Id > 0));
+            }
+        }
+
+        #endregion
+
+        #region Merge
+
+        [TestMethod]
+        public void TestSqlConnectionMergeForMappedPropertiesImmutable()
+        {
+            // Setup
+            var entity = Helper.CreateMappedPropertiesImmutableIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeResult = connection.Merge<MappedPropertiesImmutableIdentityTable, long>(entity);
+
+                // Assert
+                Assert.IsTrue(mergeResult > 0);
+                Assert.AreEqual(1, connection.CountAll<MappedPropertiesImmutableIdentityTable>());
+
+                // Act
+                var queryResult = connection.Query<MappedPropertiesImmutableIdentityTable>(mergeResult).FirstOrDefault();
+
+                // Assert
+                Helper.AssertPropertiesEquality(entity, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeForMappedPropertiesImmutableWithNonEmptyTable()
+        {
+            // Setup
+            var entity = Helper.CreateIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var insertResult = connection.Insert<IdentityTable, long>(entity);
+
+                // Setup
+                var newEntity = new MappedPropertiesImmutableIdentityTable(entity.Id,
+                    entity.RowGuid,
+                    false,
+                    entity.ColumnDateTime,
+                    DateTime.UtcNow,
+                    entity.ColumnDecimal,
+                    entity.ColumnFloat,
+                    entity.ColumnInt,
+                    entity.ColumnNVarChar);
+
+                // Act
+                var mergeResult = connection.Merge<MappedPropertiesImmutableIdentityTable, long>(newEntity);
+
+                // The ID could not be set back to the entities, so it should be 0
+
+                // Assert
+                Assert.IsTrue(mergeResult > 0);
+                Assert.AreEqual(insertResult, mergeResult);
+
+                // Act
+                var queryResult = connection.Query<MappedPropertiesImmutableIdentityTable>(newEntity.Id).FirstOrDefault();
+
+                // Assert
+                Helper.AssertPropertiesEquality(newEntity, queryResult);
+            }
+        }
+
+        #endregion
+
+        #region MergeAll
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllForMappedPropertiesImmutable()
+        {
+            // Setup
+            var entities = Helper.CreateMappedPropertiesImmutableIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var mergeAllRequest = connection.MergeAll<MappedPropertiesImmutableIdentityTable>(entities);
+
+                // Assert
+                Assert.AreEqual(entities.Count, mergeAllRequest);
+                Assert.AreEqual(entities.Count, connection.CountAll<MappedPropertiesImmutableIdentityTable>());
+
+                // Assert
+                Assert.IsTrue(entities.All(e => e.Id > 0));
+
+                // Act
+                var queryResult = connection.QueryAll<MappedPropertiesImmutableIdentityTable>().AsList();
+
+                // Assert
+                Assert.AreEqual(entities.Count, queryResult.Count());
+                entities.ForEach(entity =>
+                    Helper.AssertPropertiesEquality(entity, queryResult[entities.IndexOf(entity)]));
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionMergeAllForMappedPropertiesImmutableWithNonEmptyTables()
+        {
+            // Setup
+            var entities = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var insertAllResult = connection.InsertAll<IdentityTable>(entities);
+
+                // Setup
+                var newEntities = entities.Select(entity => new MappedPropertiesImmutableIdentityTable(entity.Id,
+                    entity.RowGuid,
+                    false,
+                    entity.ColumnDateTime,
+                    DateTime.UtcNow,
+                    entity.ColumnDecimal,
+                    entity.ColumnFloat,
+                    entity.ColumnInt,
+                    entity.ColumnNVarChar)).AsList();
+
+                // Act
+                var mergeAllResult = connection.MergeAll<MappedPropertiesImmutableIdentityTable>(newEntities);
+
+                // Assert
+                Assert.AreEqual(entities.Count, mergeAllResult);
+                Assert.AreEqual(entities.Count, connection.CountAll<MappedPropertiesImmutableIdentityTable>());
+
+                // Act
+                var queryResult = connection.QueryAll<MappedPropertiesImmutableIdentityTable>().AsList();
+
+                // Assert
+                Assert.AreEqual(entities.Count, queryResult.Count());
+                newEntities.ForEach(entity =>
+                    Helper.AssertPropertiesEquality(entity, queryResult[newEntities.IndexOf(entity)]));
+            }
+        }
+
+        #endregion
+
+        #region Query
+
+        [TestMethod]
+        public void TestSqlConnectionQueryForMappedPropertiesImmutable()
+        {
+            // Setup
+            var entity = Helper.CreateIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var insertResult = connection.Insert<IdentityTable, long>(entity);
+
+                // Act
+                var queryResult = connection.Query<MappedPropertiesImmutableIdentityTable>(insertResult).FirstOrDefault();
+
+                // Assert
+                Helper.AssertPropertiesEquality(entity, queryResult);
+            }
+        }
+
+        #endregion
+
+        #region Update
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateForMappedPropertiesImmutableViaDataEntity()
+        {
+            // Setup
+            var entity = Helper.CreateIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert<IdentityTable, long>(entity);
+
+                // Setup
+                var newEntity = new MappedPropertiesImmutableIdentityTable(entity.Id,
+                    entity.RowGuid,
+                    false,
+                    entity.ColumnDateTime,
+                    DateTime.UtcNow,
+                    entity.ColumnDecimal,
+                    entity.ColumnFloat,
+                    entity.ColumnInt,
+                    entity.ColumnNVarChar);
+
+                // Act
+                var updateResult = connection.Update<MappedPropertiesImmutableIdentityTable>(newEntity);
+
+                // Assert
+                Assert.IsTrue(updateResult > 0);
+
+                // Act
+                var queryResult = connection.Query<MappedPropertiesImmutableIdentityTable>(newEntity.Id).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(queryResult);
+                Helper.AssertPropertiesEquality(newEntity, queryResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateForMappedPropertiesImmutableViaPrimaryKey()
+        {
+            // Setup
+            var entity = Helper.CreateIdentityTable();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.Insert<IdentityTable>(entity);
+
+                // Setup
+                var newEntity = new MappedPropertiesImmutableIdentityTable(entity.Id,
+                    entity.RowGuid,
+                    false,
+                    entity.ColumnDateTime,
+                    DateTime.UtcNow,
+                    entity.ColumnDecimal,
+                    entity.ColumnFloat,
+                    entity.ColumnInt,
+                    entity.ColumnNVarChar);
+
+                // Act
+                var updateResult = connection.Update<MappedPropertiesImmutableIdentityTable>(newEntity, newEntity.Id);
+
+                // Assert
+                Assert.IsTrue(updateResult > 0);
+
+                // Act
+                var queryResult = connection.Query<MappedPropertiesImmutableIdentityTable>(newEntity.Id).FirstOrDefault();
+
+                // Assert
+                Assert.IsNotNull(queryResult);
+                Helper.AssertPropertiesEquality(newEntity, queryResult);
+            }
+        }
+
+        #endregion
+
+        #region UpdateAll
+
+        [TestMethod]
+        public void TestSqlConnectionUpdateAllForMappedPropertiesImmutable()
+        {
+            // Setup
+            var entities = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll<IdentityTable>(entities);
+
+                // Setup
+                var newEntities = entities.Select(entity => new MappedPropertiesImmutableIdentityTable(entity.Id,
+                    entity.RowGuid,
+                    false,
+                    entity.ColumnDateTime,
+                    DateTime.UtcNow,
+                    entity.ColumnDecimal,
+                    entity.ColumnFloat,
+                    entity.ColumnInt,
+                    entity.ColumnNVarChar)).AsList();
+
+                // Act
+                var updateAllResult = connection.UpdateAll<MappedPropertiesImmutableIdentityTable>(newEntities);
+
+                // Assert
+                Assert.AreEqual(entities.Count, updateAllResult);
+
+                // Act
+                var queryResult = connection.QueryAll<MappedPropertiesImmutableIdentityTable>().AsList();
+
+                // Assert
+                Assert.AreEqual(entities.Count, queryResult.Count());
+                newEntities.ForEach(entity =>
+                    Helper.AssertPropertiesEquality(entity, queryResult[newEntities.IndexOf(entity)]));
+            }
+        }
+
+        #endregion
+
+        #endregion
+
     }
 }
