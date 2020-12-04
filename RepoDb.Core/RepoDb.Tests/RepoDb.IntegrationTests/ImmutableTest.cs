@@ -1360,7 +1360,6 @@ namespace RepoDb.IntegrationTests
 
                 // Assert
                 Assert.IsTrue(insertResult > 0);
-                Assert.AreEqual(insertResult, entity.Id);
             }
         }
 
@@ -1382,9 +1381,6 @@ namespace RepoDb.IntegrationTests
                 // Assert
                 Assert.AreEqual(entities.Count, insertAllResult);
                 Assert.AreEqual(entities.Count, connection.CountAll<MappedPropertiesImmutableIdentityTable>());
-
-                // Assert
-                Assert.IsTrue(entities.All(e => e.Id > 0));
             }
         }
 
@@ -1472,9 +1468,6 @@ namespace RepoDb.IntegrationTests
                 // Assert
                 Assert.AreEqual(entities.Count, mergeAllRequest);
                 Assert.AreEqual(entities.Count, connection.CountAll<MappedPropertiesImmutableIdentityTable>());
-
-                // Assert
-                Assert.IsTrue(entities.All(e => e.Id > 0));
 
                 // Act
                 var queryResult = connection.QueryAll<MappedPropertiesImmutableIdentityTable>().AsList();
