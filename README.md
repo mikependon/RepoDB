@@ -25,7 +25,7 @@ To get the latest updates about this library, follow us on [Twitter](https://twi
 
 ## Benefits/Advantages
 
-Like with any other ORMs, RepoDB does provide the preliminary [methods](https://repodb.net/docs#operations) needed for your basic operations (i.e.: CRUD). The good thing is, RepoDB also does provide the operations that is needed to cater your edge-cases like [2nd-Layer Cache](https://repodb.net/feature/caching), [Tracing](https://repodb.net/feature/tracing), [Repositories](https://repodb.net/feature/repositories), [Property Handlers](https://repodb.net/feature/propertyhandlers) and [Batch](https://repodb.net/feature/batchoperations)/[Bulk Operations](https://repodb.net/feature/bulkoperations).
+Like with any other ORMs, RepoDB does provide the preliminary [methods](https://repodb.net/docs#operations) needed for your basic operations. The good thing is, it also does provide the operations that is needed to cater your edge-cases like [2nd-Layer Cache](https://repodb.net/feature/caching), [Tracing](https://repodb.net/feature/tracing), [Repositories](https://repodb.net/feature/repositories), [Property Handlers](https://repodb.net/feature/propertyhandlers) and [Batch](https://repodb.net/feature/batchoperations)/[Bulk Operations](https://repodb.net/feature/bulkoperations).
 
 If you are to use [RepoDB](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/development-experience.md#repodb), your [development experience](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/development-experience.md) is as simple as [Dapper](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/development-experience.md#dapper) when opening a connection and is as simple as [Entity Framework](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/development-experience.md#entity-framework) when executing an operation. It is the reason that makes this library the simpliest ORM to use.
 
@@ -118,7 +118,7 @@ You can always target the version when installing the library, even it is on a s
 
 By default, RepoDB does not do the automatic .NET CLR Type conversion during the serialization and deserialization process. The coercion support is completely dependent to the ADO.NET coercion capability.
 
-It is in purpose to strictly notify you (as a library user) the design and/or the implementation problem of the Model if being compared to its corresponding database Table.
+It is in purpose to strictly notify you (as a library user) the design and/or the implementation problem of the entity model if being compared to its corresponding database table/view.
 
 If you wish to have an automatic conversion, simply set the [Converter.ConversionType](https://repodb.net/class/converter) property to [Automatic](https://repodb.net/enumeration/conversiontype).
 
@@ -142,9 +142,17 @@ It is very important for you and to the community of .NET to learn the things th
 
 The benchmark result shown on this section is the result of the community-approved ORM bencher tool, the [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) tool.
 
-Below is the actual recent official execution [result](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20200924_netcore31.txt).
+Below is the actual recent official execution [result](https://github.com/FransBouma/RawDataAccessBencher/blob/master/Results/20201112_net5_ef5.txt).
 
 <img src="https://raw.githubusercontent.com/mikependon/RepoDb.NET/master/assets/backgrounds/statistics.png" />
+
+RepoDB shows an impressive performance in both speed and efficiency if being compared to the other ORMs that is available in .NET space/market. RepoDB positioned itself just right behind the hand-coded materializer for both .NET Core and .NET Framework. However, RepoDB is the fastest and the most-efficient ORM if being benchmark with .NET 5, even beating the hand-code materializer.
+
+### Important Note
+
+If you are to materialize RepoDB, ensure to eliminate the first call in your benchmarking as RepoDB is doing the AOT compilation (IL/Expression) of all the models/table based on its projection.
+
+The AOT compilation (IL/Expression) has some degree of performance impact, even just for milliseconds, therefore, it is highly recommended to elimate the first execution. To avoid the bias, you as well should do that with the other ORMs that is part of the materializations.
 
 ## Contributions
 
