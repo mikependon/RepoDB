@@ -146,13 +146,13 @@ Below is the actual recent official execution [result](https://github.com/FransB
 
 <img src="https://raw.githubusercontent.com/mikependon/RepoDb.NET/master/assets/backgrounds/statistics.png" />
 
-RepoDB shows an impressive performance in both speed and efficiency if being compared to the other ORMs that is available in .NET space/market. RepoDB positioned itself just right behind the hand-coded materializer for both .NET Core and .NET Framework. However, RepoDB is the fastest and the most-efficient ORM if being benchmark with .NET 5, even beating the hand-code materializer.
+RepoDB shows an impressive performance in both speed and efficiency if being compared to the other ORMs that is available in .NET space/market. RepoDB positioned itself just right behind the hand-coded materializer for both .NET Core and .NET Framework. However, RepoDB is the fastest and the most-efficient ORM if being benchmark with .NET 5, even beating the hand-coded materializer.
 
 ### Important Note
 
-If you are to materialize RepoDB, ensure to eliminate the first call in your benchmarking as RepoDB is doing the AOT compilation (IL/Expression) of all the models/table based on its projection.
+The AOT compilation (IL/Expression) has some degree of performance impact, even just for milliseconds, therefore, if you are to materialize RepoDB, it is highly recommended to elimate the first execution.
 
-The AOT compilation (IL/Expression) has some degree of performance impact, even just for milliseconds, therefore, it is highly recommended to elimate the first execution. To avoid the bias, you as well should do that with the other ORMs that is part of the materializations.
+To avoid the bias, you as well should exclude the first execution of the other ORMs during the benchmarking.
 
 ## Contributions
 
