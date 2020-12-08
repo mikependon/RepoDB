@@ -146,7 +146,7 @@ Below is the actual recent official execution [result](https://github.com/FransB
 
 <img src="https://raw.githubusercontent.com/mikependon/RepoDb.NET/master/assets/backgrounds/statistics.png" />
 
-RepoDB shows an impressive performance in both speed and efficiency if being compared to the other ORMs that is available in .NET space/market. RepoDB positioned itself just right behind the hand-coded materializer for both .NET Core and .NET Framework. However, RepoDB is the fastest and the most-efficient ORM if being benchmark with .NET 5, even beating the hand-coded materializer.
+RepoDB shows an impressive performance and memory-efficiency if being compared with the other ORMs available in .NET space. RepoDB positioned itself just right behind the hand-coded materializer for both .NET Core and .NET Framework. However, RepoDB is the fastest and the most-efficient ORM if being benchmark with .NET 5, even beating the hand-coded materializer.
 
 ### Important Note
 
