@@ -172,6 +172,148 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestMicrosoftSqlConnectionBulkUpdateForMappedEntities()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Setup
+                Helper.UpdateBulkOperationMappedIdentityTables(tables);
+
+                // Act
+                var bulkUpdateResult = connection.BulkUpdate(tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkUpdateResult);
+
+                // Act
+                var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestMicrosoftSqlConnectionBulkUpdateForMappedEntitiesWithQualifiers()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Setup
+                Helper.UpdateBulkOperationMappedIdentityTables(tables);
+
+                // Act
+                var bulkUpdateResult = connection.BulkUpdate(tables,
+                    qualifiers: e => new { e.RowGuidMapped, e.ColumnIntMapped });
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkUpdateResult);
+
+                // Act
+                var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestMicrosoftSqlConnectionBulkUpdateForMappedEntitiesWithUsePhysicalPseudoTempTable()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Setup
+                Helper.UpdateBulkOperationMappedIdentityTables(tables);
+
+                // Act
+                var bulkUpdateResult = connection.BulkUpdate(tables,
+                    usePhysicalPseudoTempTable: true);
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkUpdateResult);
+
+                // Act
+                var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestMicrosoftSqlConnectionBulkUpdateForMappedEntitiesWithMappings()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
+            var mappings = new List<BulkInsertMapItem>();
+
+            // Add the mappings
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Setup
+                Helper.UpdateBulkOperationMappedIdentityTables(tables);
+
+                // Act
+                var bulkUpdateResult = connection.BulkUpdate(tables, mappings: mappings);
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkUpdateResult);
+
+                // Act
+                var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                });
+            }
+        }
+
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
         public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateForEntitiesIfTheMappingsAreInvalid()
         {
@@ -1243,6 +1385,148 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
 
                 // Act
                 var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestMicrosoftSqlConnectionBulkUpdateAsyncForMappedEntities()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Setup
+                Helper.UpdateBulkOperationMappedIdentityTables(tables);
+
+                // Act
+                var bulkUpdateResult = connection.BulkUpdateAsync(tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkUpdateResult);
+
+                // Act
+                var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestMicrosoftSqlConnectionBulkUpdateAsyncForMappedEntitiesWithQualifiers()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Setup
+                Helper.UpdateBulkOperationMappedIdentityTables(tables);
+
+                // Act
+                var bulkUpdateResult = connection.BulkUpdateAsync(tables,
+                    qualifiers: e => new { e.RowGuidMapped, e.ColumnIntMapped }).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkUpdateResult);
+
+                // Act
+                var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestMicrosoftSqlConnectionBulkUpdateAsyncForMappedEntitiesWithUsePhysicalPseudoTempTable()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Setup
+                Helper.UpdateBulkOperationMappedIdentityTables(tables);
+
+                // Act
+                var bulkUpdateResult = connection.BulkUpdateAsync(tables,
+                    usePhysicalPseudoTempTable: true).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkUpdateResult);
+
+                // Act
+                var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(tables.Count, queryResult.Count());
+                tables.AsList().ForEach(t =>
+                {
+                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestMicrosoftSqlConnectionBulkUpdateAsyncForMappedEntitiesWithMappings()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
+            var mappings = new List<BulkInsertMapItem>();
+
+            // Add the mappings
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Setup
+                Helper.UpdateBulkOperationMappedIdentityTables(tables);
+
+                // Act
+                var bulkUpdateResult = connection.BulkUpdateAsync(tables, mappings: mappings).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkUpdateResult);
+
+                // Act
+                var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count, queryResult.Count());
