@@ -285,7 +285,7 @@ namespace RepoDb
                 {
                     fields = fields
                         .Where(e =>
-                            mappings.Any(m => string.Equals(m.SourceColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
+                            mappings.Any(m => string.Equals(m.DestinationColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
                 }
 
                 // Throw an error if there are no fields
@@ -498,7 +498,7 @@ namespace RepoDb
                 {
                     fields = fields
                         .Where(e =>
-                            mappings.Any(m => string.Equals(m.SourceColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
+                            mappings.Any(m => string.Equals(m.DestinationColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
                 }
 
                 // Throw an error if there are no fields
@@ -876,7 +876,7 @@ namespace RepoDb
                 {
                     fields = fields
                         .Where(e =>
-                            mappings.Any(m => string.Equals(m.SourceColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
+                            mappings.Any(m => string.Equals(m.DestinationColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
                 }
 
                 // Throw an error if there are no fields
@@ -1092,7 +1092,7 @@ namespace RepoDb
                 {
                     fields = fields
                         .Where(e =>
-                            mappings.Any(m => string.Equals(m.SourceColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
+                            mappings.Any(m => string.Equals(m.DestinationColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
                 }
 
                 // Throw an error if there are no fields

@@ -119,7 +119,7 @@ namespace RepoDb
                     }
                 }
 
-                // Filter the fields (based on the data reader)
+                // Filter the fields (based on the data entity)
                 if (entityFields?.Any() == true)
                 {
                     fields = fields
@@ -132,7 +132,7 @@ namespace RepoDb
                 {
                     fields = fields
                         .Where(e =>
-                            mappings.Any(m => string.Equals(m.SourceColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true ||
+                            mappings.Any(m => string.Equals(m.DestinationColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true ||
                             qualifiers.Any(q => string.Equals(q.Name, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
                 }
 
@@ -359,7 +359,7 @@ namespace RepoDb
                 {
                     fields = fields
                         .Where(e =>
-                            mappings.Any(m => string.Equals(m.SourceColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true ||
+                            mappings.Any(m => string.Equals(m.DestinationColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true ||
                             qualifiers.Any(q => string.Equals(q.Name, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
                 }
 
@@ -575,7 +575,7 @@ namespace RepoDb
                 {
                     fields = fields
                         .Where(e =>
-                            mappings.Any(m => string.Equals(m.SourceColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true ||
+                            mappings.Any(m => string.Equals(m.DestinationColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true ||
                             qualifiers.Any(q => string.Equals(q.Name, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
                 }
 
@@ -805,7 +805,7 @@ namespace RepoDb
                     }
                 }
 
-                // Filter the fields (based on the data reader)
+                // Filter the fields (based on the data entity)
                 if (entityFields?.Any() == true)
                 {
                     fields = fields
@@ -818,7 +818,7 @@ namespace RepoDb
                 {
                     fields = fields
                         .Where(e =>
-                            mappings.Any(m => string.Equals(m.SourceColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true ||
+                            mappings.Any(m => string.Equals(m.DestinationColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true ||
                             qualifiers.Any(q => string.Equals(q.Name, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
                 }
 
@@ -1049,7 +1049,7 @@ namespace RepoDb
                 {
                     fields = fields
                         .Where(e =>
-                            mappings.Any(m => string.Equals(m.SourceColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true ||
+                            mappings.Any(m => string.Equals(m.DestinationColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true ||
                             qualifiers.Any(q => string.Equals(q.Name, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
                 }
 
@@ -1268,7 +1268,7 @@ namespace RepoDb
                 {
                     fields = fields
                         .Where(e =>
-                            mappings.Any(m => string.Equals(m.SourceColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true ||
+                            mappings.Any(m => string.Equals(m.DestinationColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true ||
                             qualifiers.Any(q => string.Equals(q.Name, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
                 }
 
