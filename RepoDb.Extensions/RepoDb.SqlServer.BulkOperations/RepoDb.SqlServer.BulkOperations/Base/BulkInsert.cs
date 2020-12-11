@@ -93,7 +93,7 @@ namespace RepoDb
                 // Before Execution Time
                 var beforeExecutionTime = DateTime.UtcNow;
 
-                // Filter the fields (based on the data reader)
+                // Filter the fields (based on the data entity)
                 if (entityFields?.Any() == true)
                 {
                     fields = fields
@@ -110,12 +110,6 @@ namespace RepoDb
                             string.Equals(ef.Name, f.Name, StringComparison.OrdinalIgnoreCase));
                         return new BulkInsertMapItem(field.Name ?? f.Name, f.Name);
                     });
-                }
-                else
-                {
-                    fields = fields
-                        .Where(e =>
-                            mappings.Any(m => string.Equals(m.SourceColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
                 }
 
                 // Throw an error if there are no fields

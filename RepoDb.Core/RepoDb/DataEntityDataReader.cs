@@ -514,8 +514,9 @@ namespace RepoDb
             }
             else
             {
-                return Properties.IndexOf(Properties.FirstOrDefault(p =>
-                    string.Equals(p.GetMappedName(), name, StringComparison.OrdinalIgnoreCase)));
+                var property = Properties.FirstOrDefault(p => string.Equals(p.GetMappedName(), name, StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(p.PropertyInfo.Name, name, StringComparison.OrdinalIgnoreCase));
+                return Properties.IndexOf(property);
             }
         }
 
