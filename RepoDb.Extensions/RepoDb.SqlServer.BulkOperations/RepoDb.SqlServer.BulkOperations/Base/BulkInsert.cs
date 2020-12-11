@@ -93,12 +93,18 @@ namespace RepoDb
                 // Before Execution Time
                 var beforeExecutionTime = DateTime.UtcNow;
 
-                // Filter the fields (based on the data reader)
+                // Filter the fields (based on the data entity)
                 if (entityFields?.Any() == true)
                 {
                     fields = fields
                         .Where(e =>
                             entityFields.Any(f => string.Equals(f.Name, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
+                }
+                else
+                {
+                    fields = fields
+                        .Where(e =>
+                            mappings.Any(m => string.Equals(m.DestinationColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
                 }
 
                 // Ensure to have the mappings
@@ -110,12 +116,6 @@ namespace RepoDb
                             string.Equals(ef.Name, f.Name, StringComparison.OrdinalIgnoreCase));
                         return new BulkInsertMapItem(field.Name ?? f.Name, f.Name);
                     });
-                }
-                else
-                {
-                    fields = fields
-                        .Where(e =>
-                            mappings.Any(m => string.Equals(m.SourceColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
                 }
 
                 // Throw an error if there are no fields
@@ -345,7 +345,7 @@ namespace RepoDb
                 {
                     fields = fields
                         .Where(e =>
-                            mappings.Any(m => string.Equals(m.SourceColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
+                            mappings.Any(m => string.Equals(m.DestinationColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
                 }
 
                 // Throw an error if there are no fields
@@ -545,7 +545,7 @@ namespace RepoDb
                 // Before Execution Time
                 var beforeExecutionTime = DateTime.UtcNow;
 
-                // Filter the fields (based on the data reader)
+                // Filter the fields (based on the data table)
                 if (tableFields?.Any() == true)
                 {
                     fields = fields
@@ -567,7 +567,7 @@ namespace RepoDb
                 {
                     fields = fields
                         .Where(e =>
-                            mappings.Any(m => string.Equals(m.SourceColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
+                            mappings.Any(m => string.Equals(m.DestinationColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
                 }
 
                 // Throw an error if there are no fields
@@ -716,7 +716,7 @@ namespace RepoDb
 
         #endregion
 
-        #region BulkInsertAsyncInternal
+        #region BulkInsertAsyncInternalBase
 
         /// <summary>
         /// 
@@ -801,7 +801,7 @@ namespace RepoDb
                 // Before Execution Time
                 var beforeExecutionTime = DateTime.UtcNow;
 
-                // Filter the fields (based on the data reader)
+                // Filter the fields (based on the data entity)
                 if (entityFields?.Any() == true)
                 {
                     fields = fields
@@ -823,7 +823,7 @@ namespace RepoDb
                 {
                     fields = fields
                         .Where(e =>
-                            mappings.Any(m => string.Equals(m.SourceColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
+                            mappings.Any(m => string.Equals(m.DestinationColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
                 }
 
                 // Throw an error if there are no fields
@@ -1055,7 +1055,7 @@ namespace RepoDb
                 {
                     fields = fields
                         .Where(e =>
-                            mappings.Any(m => string.Equals(m.SourceColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
+                            mappings.Any(m => string.Equals(m.DestinationColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
                 }
 
                 // Throw an error if there are no fields
@@ -1257,7 +1257,7 @@ namespace RepoDb
                 // Before Execution Time
                 var beforeExecutionTime = DateTime.UtcNow;
 
-                // Filter the fields (based on the data reader)
+                // Filter the fields (based on the data table)
                 if (tableFields?.Any() == true)
                 {
                     fields = fields
@@ -1279,7 +1279,7 @@ namespace RepoDb
                 {
                     fields = fields
                         .Where(e =>
-                            mappings.Any(m => string.Equals(m.SourceColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
+                            mappings.Any(m => string.Equals(m.DestinationColumn, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
                 }
 
                 // Throw an error if there are no fields

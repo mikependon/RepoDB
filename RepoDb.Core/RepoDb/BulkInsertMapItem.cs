@@ -8,8 +8,8 @@
         /// <summary>
         /// Creates a new instance of <see cref="BulkInsertMapItem"/> object.
         /// </summary>
-        /// <param name="sourceColumn">The name of the source column.</param>
-        /// <param name="destinationColumn">The name of the destination column.</param>
+        /// <param name="sourceColumn">The name of the source column or property. This respects the mapping of the properties if the source type is an entity model.</param>
+        /// <param name="destinationColumn">The name of the destination column in the database.</param>
         public BulkInsertMapItem(string sourceColumn,
             string destinationColumn)
         {
