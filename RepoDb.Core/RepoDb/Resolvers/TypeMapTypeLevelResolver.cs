@@ -5,7 +5,7 @@ using System.Data;
 namespace RepoDb.Resolvers
 {
     /// <summary>
-    /// A class that is used to resolve the equivalent <see cref="DbType"/> object of the .NET CLR type.
+    /// A class that is being used to resolve the equivalent <see cref="DbType"/> object of the .NET CLR type.
     /// </summary>
     public class TypeMapTypeLevelResolver : IResolver<Type, DbType?>
     {

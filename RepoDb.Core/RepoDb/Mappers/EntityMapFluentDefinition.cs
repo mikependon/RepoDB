@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 namespace RepoDb
 {
     /// <summary>
-    /// A class that is used to define a data entity level mappings (ie: Table, Column, Primary, Identity, DB Type and Property Handler).
+    /// A class that is being used to define a data entity level mappings (ie: Table, Column, Primary, Identity, DB Type and Property Handler).
     /// Use this class if you wish to define the mappings in a fluent manner and avoid the models be decorated by the attributes.
     /// </summary>
     /// <typeparam name="TEntity">The type of the data entity.</typeparam>

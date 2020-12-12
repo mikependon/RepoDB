@@ -5,7 +5,7 @@ using System.Linq;
 namespace RepoDb.Resolvers
 {
     /// <summary>
-    /// A class that is used to resolve the identity property of the data entity type.
+    /// A class that is being used to resolve the identity property of the data entity type.
     /// </summary>
     public class IdentityResolver : IResolver<Type, ClassProperty>
     {

@@ -5,7 +5,7 @@ using System.Data;
 namespace RepoDb
 {
     /// <summary>
-    /// A class that is used to define a type-level mappings (ie: DB Type and Property Handler). Use this class if you wish to define the mappings in a fluent manner and avoid the models be decorated by the attributes.
+    /// A class that is being used to define a type-level mappings (ie: DB Type and Property Handler). Use this class if you wish to define the mappings in a fluent manner and avoid the models be decorated by the attributes.
     /// </summary>
     /// <typeparam name="TType">The target .NET CLR type to be mapped.</typeparam>
     public class TypeMapFluentDefinition<TType>

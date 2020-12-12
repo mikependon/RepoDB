@@ -7,7 +7,7 @@ using System.Collections.Concurrent;
 namespace RepoDb
 {
     /// <summary>
-    /// A class that is used to map a .NET CLR type into a <see cref="IClassHandler{TEntity}"/> object.
+    /// A class that is being used to map a .NET CLR type into a <see cref="IClassHandler{TEntity}"/> object.
     /// </summary>
     public static class ClassHandlerMapper
     {

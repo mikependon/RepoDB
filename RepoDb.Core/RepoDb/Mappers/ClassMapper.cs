@@ -6,7 +6,7 @@ using System.Collections.Concurrent;
 namespace RepoDb
 {
     /// <summary>
-    /// A class that is used to map a class into its equivalent database object (ie: Table, View). This is an alternative class to <see cref="MapAttribute"/> object for class mapping.
+    /// A class that is being used to map a class into its equivalent database object (ie: Table, View). This is an alternative class to <see cref="MapAttribute"/> object for class mapping.
     /// </summary>
     public static class ClassMapper
     {

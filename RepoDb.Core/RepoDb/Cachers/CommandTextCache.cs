@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace RepoDb
 {
     /// <summary>
-    /// A class that is used to cache the already-built command texts.
+    /// A class that is being used to cache the already-built command texts.
     /// </summary>
     public static class CommandTextCache
     {

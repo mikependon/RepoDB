@@ -1,7 +1,7 @@
 ﻿namespace RepoDb
 {
     /// <summary>
-    /// A class that is used to define the mappings for the target data entity or .NET CLR type in a fluent manner.
+    /// A class that is being used to define the mappings for the target data entity or .NET CLR type in a fluent manner.
     /// </summary>
     public static class FluentMapper
     {

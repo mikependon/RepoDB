@@ -9,7 +9,7 @@ using System.Reflection;
 namespace RepoDb
 {
     /// <summary>
-    /// A class that is used to map a .NET CLR type or a class property into a <see cref="IPropertyHandler{TInput, TResult}"/> object.
+    /// A class that is being used to map a .NET CLR type or a class property into a <see cref="IPropertyHandler{TInput, TResult}"/> object.
     /// </summary>
     public static class PropertyHandlerMapper
     {

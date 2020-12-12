@@ -1,7 +1,7 @@
 ﻿namespace RepoDb
 {
     /// <summary>
-    /// A class that is used to handle the extracted value of the class property. It is referencing the instance of the <see cref="ClassProperty"/> object.
+    /// A class that is being used to handle the extracted value of the class property. It is referencing the instance of the <see cref="ClassProperty"/> object.
     /// </summary>
     public class PropertyValue
     {

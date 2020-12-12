@@ -6,7 +6,7 @@ using System.Reflection;
 namespace RepoDb.Resolvers
 {
     /// <summary>
-    /// A class that is used to resolve the equivalent <see cref="IPropertyHandler{TInput, TResult}"/> object of the property.
+    /// A class that is being used to resolve the equivalent <see cref="IPropertyHandler{TInput, TResult}"/> object of the property.
     /// </summary>
     public class PropertyHandlerPropertyLevelResolver : IResolver<Type, PropertyInfo, object>
     {

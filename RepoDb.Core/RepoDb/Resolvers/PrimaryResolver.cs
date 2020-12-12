@@ -6,7 +6,7 @@ using System.Linq;
 namespace RepoDb.Resolvers
 {
     /// <summary>
-    /// A class that is used to resolve the primary property of the data entity type.
+    /// A class that is being used to resolve the primary property of the data entity type.
     /// </summary>
     public class PrimaryResolver : IResolver<Type, ClassProperty>
     {

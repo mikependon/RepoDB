@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace RepoDb
 {
     /// <summary>
-    /// A class that is used to cache the list of <see cref="DbField"/> objects of the table.
+    /// A class that is being used to cache the list of <see cref="DbField"/> objects of the table.
     /// </summary>
     public static class DbFieldCache
     {

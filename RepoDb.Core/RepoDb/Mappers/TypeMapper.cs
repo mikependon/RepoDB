@@ -9,7 +9,7 @@ using RepoDb.Extensions;
 namespace RepoDb
 {
     /// <summary>
-    /// A class that is used to map a .NET CLR type or class property into its equivalent <see cref="DbType"/> object.
+    /// A class that is being used to map a .NET CLR type or class property into its equivalent <see cref="DbType"/> object.
     /// </summary>
     public static class TypeMapper
     {
