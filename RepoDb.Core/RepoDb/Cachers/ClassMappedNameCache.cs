@@ -7,7 +7,7 @@ using System.Collections.Concurrent;
 namespace RepoDb
 {
     /// <summary>
-    /// A class that is used to cache the database object name mappings of the data entity type.
+    /// A class that is being used to cache the database object name mappings of the data entity type.
     /// </summary>
     public static class ClassMappedNameCache
     {

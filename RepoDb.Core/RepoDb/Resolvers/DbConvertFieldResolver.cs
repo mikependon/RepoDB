@@ -6,7 +6,7 @@ using System.Data;
 namespace RepoDb.Resolvers
 {
     /// <summary>
-    /// A class that is used to resolve the <see cref="Field"/> name conversion.
+    /// A class that is being used to resolve the <see cref="Field"/> name conversion.
     /// </summary>
     public class DbConvertFieldResolver : IResolver<Field, IDbSetting, string>
     {

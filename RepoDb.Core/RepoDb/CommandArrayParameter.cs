@@ -3,7 +3,7 @@
 namespace RepoDb
 {
     /// <summary>
-    /// A class that is used to handle the array value of the parameter.
+    /// A class that is being used to handle the array value of the parameter.
     /// </summary>
     internal class CommandArrayParameter
     {

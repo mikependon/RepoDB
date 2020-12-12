@@ -7,7 +7,7 @@ using System.Linq;
 namespace RepoDb
 {
     /// <summary>
-    /// A class that is used to cache the list of <see cref="Field"/> objects of the data entity.
+    /// A class that is being used to cache the list of <see cref="Field"/> objects of the data entity.
     /// </summary>
     public static class FieldCache
     {

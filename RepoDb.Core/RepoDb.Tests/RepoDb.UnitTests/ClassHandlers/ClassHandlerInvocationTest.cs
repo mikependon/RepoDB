@@ -42,7 +42,6 @@ namespace RepoDb.UnitTests.ClassHandlers
                 {
                     new ClassHandlerTestClass { Id = 1, Name = "James Doe" }
                 });
-                reader.Initialize();
                 return reader;
             }
         }

@@ -33,31 +33,31 @@ namespace RepoDb.IntegrationTests
         private static void Setup()
         {
             // MappedCompleteTable
-            ClassMapper.Add<MappedCompleteTable>("[dbo].[COMPLETETABLE]");
-            PrimaryMapper.Add<MappedCompleteTable>(e => e.SessionIdMapped);
-            PropertyMapper.Add<MappedCompleteTable>(e => e.SessionIdMapped, "SESSIONID");
-            PropertyMapper.Add<MappedCompleteTable>(e => e.ColumnBigIntMapped, "COLUMNBIGINT");
-            PropertyMapper.Add<MappedCompleteTable>(e => e.ColumnBitMapped, "COLUMNBIT");
-            PropertyMapper.Add<MappedCompleteTable>(e => e.ColumnIntMapped, "COLUMNINT");
-            PropertyMapper.Add<MappedCompleteTable>(e => e.ColumnDateTimeMapped, "COLUMNDATETIME");
-            PropertyMapper.Add<MappedCompleteTable>(e => e.ColumnDateTime2Mapped, "COLUMNDATETIME2");
-            PropertyMapper.Add<MappedCompleteTable>(e => e.ColumnNVarCharMapped, "COLUMNNVARCHAR");
+            ClassMapper.Add<MappedCompleteTable>("[dbo].[COMPLETETABLE]", true);
+            PrimaryMapper.Add<MappedCompleteTable>(e => e.SessionIdMapped, true);
+            PropertyMapper.Add<MappedCompleteTable>(e => e.SessionIdMapped, "SESSIONID", true);
+            PropertyMapper.Add<MappedCompleteTable>(e => e.ColumnBigIntMapped, "COLUMNBIGINT", true);
+            PropertyMapper.Add<MappedCompleteTable>(e => e.ColumnBitMapped, "COLUMNBIT", true);
+            PropertyMapper.Add<MappedCompleteTable>(e => e.ColumnIntMapped, "COLUMNINT", true);
+            PropertyMapper.Add<MappedCompleteTable>(e => e.ColumnDateTimeMapped, "COLUMNDATETIME", true);
+            PropertyMapper.Add<MappedCompleteTable>(e => e.ColumnDateTime2Mapped, "COLUMNDATETIME2", true);
+            PropertyMapper.Add<MappedCompleteTable>(e => e.ColumnNVarCharMapped, "COLUMNNVARCHAR", true);
 
             // MappedCompleteTable
-            ClassMapper.Add<MappedIdentityTable>("[sc].[IDENTITYTABLE]");
-            PrimaryMapper.Add<MappedIdentityTable>(e => e.IdMapped);
-            PropertyMapper.Add<MappedIdentityTable>(e => e.IdMapped, "ID");
-            PropertyMapper.Add<MappedIdentityTable>(e => e.RowGuidMapped, "ROWGUID");
-            PropertyMapper.Add<MappedIdentityTable>(e => e.ColumnBitMapped, "COLUMNBIT");
-            PropertyMapper.Add<MappedIdentityTable>(e => e.ColumnIntMapped, "COLUMNINT");
-            PropertyMapper.Add<MappedIdentityTable>(e => e.ColumnDateTimeMapped, "COLUMNDATETIME");
-            PropertyMapper.Add<MappedIdentityTable>(e => e.ColumnDateTime2Mapped, "COLUMNDATETIME2");
-            PropertyMapper.Add<MappedIdentityTable>(e => e.ColumnFloatMapped, "COLUMNFLOAT");
-            PropertyMapper.Add<MappedIdentityTable>(e => e.ColumnNVarCharMapped, "COLUMNNVARCHAR");
+            ClassMapper.Add<MappedIdentityTable>("[sc].[IDENTITYTABLE]", true);
+            PrimaryMapper.Add<MappedIdentityTable>(e => e.IdMapped, true);
+            PropertyMapper.Add<MappedIdentityTable>(e => e.IdMapped, "ID", true);
+            PropertyMapper.Add<MappedIdentityTable>(e => e.RowGuidMapped, "ROWGUID", true);
+            PropertyMapper.Add<MappedIdentityTable>(e => e.ColumnBitMapped, "COLUMNBIT", true);
+            PropertyMapper.Add<MappedIdentityTable>(e => e.ColumnIntMapped, "COLUMNINT", true);
+            PropertyMapper.Add<MappedIdentityTable>(e => e.ColumnDateTimeMapped, "COLUMNDATETIME", true);
+            PropertyMapper.Add<MappedIdentityTable>(e => e.ColumnDateTime2Mapped, "COLUMNDATETIME2", true);
+            PropertyMapper.Add<MappedIdentityTable>(e => e.ColumnFloatMapped, "COLUMNFLOAT", true);
+            PropertyMapper.Add<MappedIdentityTable>(e => e.ColumnNVarCharMapped, "COLUMNNVARCHAR", true);
 
             // MappedCompleteTableForKey
-            ClassMapper.Add<MappedCompleteTableForKey>("[dbo].[COMPLETETABLE]");
-            PropertyMapper.Add<MappedCompleteTableForKey>(e => e.IdMapped, "SESSIONID");
+            ClassMapper.Add<MappedCompleteTableForKey>("[dbo].[COMPLETETABLE]", true);
+            PropertyMapper.Add<MappedCompleteTableForKey>(e => e.IdMapped, "SESSIONID", true);
         }
 
         #region SubClasses

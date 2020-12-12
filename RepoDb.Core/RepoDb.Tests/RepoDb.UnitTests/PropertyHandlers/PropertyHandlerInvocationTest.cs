@@ -43,7 +43,6 @@ namespace RepoDb.UnitTests.PropertyHandlers
                 {
                     new PropertyHandlerQueryTestClass { Id = 1, Name = "John Doe" }
                 });
-                reader.Initialize();
                 return reader;
             }
         }

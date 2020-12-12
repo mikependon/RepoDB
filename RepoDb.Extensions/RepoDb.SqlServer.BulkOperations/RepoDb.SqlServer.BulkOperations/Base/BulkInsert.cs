@@ -179,7 +179,6 @@ namespace RepoDb
                     connection.EnsureOpen();
                     using (var reader = new DataEntityDataReader<TEntity>(tableName, entities, connection, transaction))
                     {
-                        reader.Initialize();
                         var writeToServerMethod = Compiler.GetParameterizedVoidMethodFunc<TSqlBulkCopy>("WriteToServer", new[] { typeof(DbDataReader) });
                         writeToServerMethod(sqlBulkCopy, new[] { reader });
                         recordsAffected = reader.RecordsAffected;
@@ -887,7 +886,6 @@ namespace RepoDb
                     await connection.EnsureOpenAsync(cancellationToken);
                     using (var reader = new DataEntityDataReader<TEntity>(tableName, entities, connection, transaction))
                     {
-                        await reader.InitializeAsync(cancellationToken);
                         var writeToServerMethod = Compiler.GetParameterizedMethodFunc<TSqlBulkCopy, Task>("WriteToServerAsync", new[] { typeof(DbDataReader), typeof(CancellationToken) });
                         await writeToServerMethod(sqlBulkCopy, new object[] { reader, cancellationToken });
                         recordsAffected = reader.RecordsAffected;

@@ -6,7 +6,7 @@ using System.Reflection;
 namespace RepoDb.Resolvers
 {
     /// <summary>
-    /// A class that is used to resolve the equivalent <see cref="IClassHandler{TEntity}"/> object of the .NET CLR type.
+    /// A class that is being used to resolve the equivalent <see cref="IClassHandler{TEntity}"/> object of the .NET CLR type.
     /// </summary>
     public class ClassHandlerResolver : IResolver<Type, object>
     {

@@ -46,7 +46,7 @@ namespace RepoDb.UnitTests.Resolvers
             var resolver = new PropertyMappedNameResolver();
 
             // Act
-            var result = resolver.Resolve(typeof(EntityModel).GetProperty("Id"));
+            var result = resolver.Resolve(typeof(EntityModel).GetProperty("Id"), null);
             var expected = "Id";
 
             // Assert
@@ -64,7 +64,7 @@ namespace RepoDb.UnitTests.Resolvers
             var resolver = new PropertyMappedNameResolver();
 
             // Act
-            var result = resolver.Resolve(typeof(EntityModelWithMapAttribute).GetProperty("Id"));
+            var result = resolver.Resolve(typeof(EntityModelWithMapAttribute).GetProperty("Id"), null);
             var expected = "[PrimaryId]";
 
             // Assert
@@ -78,7 +78,7 @@ namespace RepoDb.UnitTests.Resolvers
             var resolver = new PropertyMappedNameResolver();
 
             // Act
-            var result = resolver.Resolve(typeof(EntityModelWithColumnAttribute).GetProperty("Id"));
+            var result = resolver.Resolve(typeof(EntityModelWithColumnAttribute).GetProperty("Id"), null);
             var expected = "[PrimaryId]";
 
             // Assert
@@ -92,7 +92,7 @@ namespace RepoDb.UnitTests.Resolvers
             var resolver = new PropertyMappedNameResolver();
 
             // Act
-            var result = resolver.Resolve(typeof(EntityModelWithMapAndColumnAttribute).GetProperty("Id"));
+            var result = resolver.Resolve(typeof(EntityModelWithMapAndColumnAttribute).GetProperty("Id"), null);
             var expected = "[MapId]";
 
             // Assert
@@ -113,7 +113,7 @@ namespace RepoDb.UnitTests.Resolvers
                 .Column(e => e.Id, "[MapId]");
 
             // Act
-            var result = resolver.Resolve(typeof(EntityModelWithMapAttribute).GetProperty("Id"));
+            var result = resolver.Resolve(typeof(EntityModelWithMapAttribute).GetProperty("Id"), null);
             var expected = "[PrimaryId]";
 
             // Assert
@@ -130,7 +130,7 @@ namespace RepoDb.UnitTests.Resolvers
                 .Column(e => e.Id, "[ColumnId]");
 
             // Act
-            var result = resolver.Resolve(typeof(EntityModelWithColumnAttribute).GetProperty("Id"));
+            var result = resolver.Resolve(typeof(EntityModelWithColumnAttribute).GetProperty("Id"), null);
             var expected = "[PrimaryId]";
 
             // Assert

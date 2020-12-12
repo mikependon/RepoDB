@@ -4,7 +4,7 @@ using System.Collections.Concurrent;
 namespace RepoDb.Contexts.Cachers
 {
     /// <summary>
-    /// A class that is used to cache the execution context of the MergeAll operation.
+    /// A class that is being used to cache the execution context of the MergeAll operation.
     /// </summary>
     public static class InsertAllExecutionContextCache
     {

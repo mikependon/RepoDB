@@ -3,7 +3,7 @@
 namespace RepoDb
 {
     /// <summary>
-    /// A class that is used to handle the field definition of the data reader.
+    /// A class that is being used to handle the field definition of the data reader.
     /// </summary>
     internal class DataReaderField
     {

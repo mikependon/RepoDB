@@ -49,7 +49,6 @@ namespace RepoDb.UnitTests.ClassHandlers
                 {
                     new ClassHandlerTestClass { Id = 1, Name = "James Doe" }
                 });
-                reader.Initialize();
                 return reader;
             }
         }
@@ -70,7 +69,6 @@ namespace RepoDb.UnitTests.ClassHandlers
                 {
                     new ClassHandlerTestClassWithAttribute { Id = 1, Name = "James Doe" }
                 });
-                reader.Initialize();
                 return reader;
             }
         }
