@@ -42,12 +42,22 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="property">The property where the mapped name will be retrieved.</param>
         /// <returns>A string containing the mapped name.</returns>
-        public static string GetMappedName(this PropertyInfo property)
+        public static string GetMappedName(this PropertyInfo property) =>
+            GetMappedName(property, property.DeclaringType);
+
+        /// <summary>
+        /// Gets the mapped name of the propery.
+        /// </summary>
+        /// <param name="property">The property where the mapped name will be retrieved.</param>
+        /// <param name="declaringType">The declaring type of the property.</param>
+        /// <returns>A string containing the mapped name.</returns>
+        internal static string GetMappedName(this PropertyInfo property,
+            Type declaringType)
         {
             var attributeName = ((MapAttribute)GetCustomAttribute(property, StaticType.MapAttribute))?.Name ??
                 ((ColumnAttribute)GetCustomAttribute(property, StaticType.ColumnAttribute))?.Name;
             return attributeName ??
-                PropertyMapper.Get(property) ??
+                PropertyMapper.Get(declaringType, property) ??
                 property.Name;
         }
 
@@ -130,12 +140,8 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="property">The instance of the <see cref="PropertyInfo"/> object.</param>
         /// <returns>The generated hashcode.</returns>
-        internal static int GenerateCustomizedHashCode(this PropertyInfo property)
-        {
-            return (property.DeclaringType.GetHashCode() ^
-                property.GetHashCode() ^
-                property.PropertyType.GetHashCode());
-        }
+        internal static int GenerateCustomizedHashCode(this PropertyInfo property) =>
+            property.DeclaringType.GetHashCode() ^ property.Name.GetHashCode() ^ property.PropertyType.GetHashCode();
 
         /// <summary>
         /// Converts an instance of <see cref="PropertyInfo"/> object into <see cref="Field"/> object.

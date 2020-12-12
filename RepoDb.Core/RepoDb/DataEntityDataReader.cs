@@ -137,17 +137,22 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Initializes the current instance of <see cref="DataEntityDataReader{TEntity}"/> object.
+        /// 
         /// </summary>
-        /// <param name="dbFields">The list of the <see cref="DbField"/> objects.</param>
+        /// <param name="dbFields"></param>
         private void InitializeInternal(IEnumerable<DbField> dbFields)
         {
+            /*
+             * TODO: The usage of 'dbFields' has removed due to some reported issues. Please keep it here for now until the
+             * library is stable. Then, propose to remove the 'Initialize()' and 'InitializeAsync()' method if possible
+             */
+
             if (IsInitialized)
             {
                 return;
             }
-            Properties = GetClassProperties(dbFields).AsList();
-            Fields = GetFields(Entities?.FirstOrDefault() as IDictionary<string, object>, dbFields).AsList();
+            Properties = GetClassProperties().AsList();
+            Fields = GetFields(Entities?.FirstOrDefault() as IDictionary<string, object>).AsList();
             fieldCount = isDictionaryStringObject ? Fields.Count : Properties.Count;
             IsInitialized = true;
         }
@@ -639,53 +644,28 @@ namespace RepoDb
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="dbFields"></param>
         /// <returns></returns>
-        private IEnumerable<ClassProperty> GetClassProperties(IEnumerable<DbField> dbFields)
+        private IEnumerable<ClassProperty> GetClassProperties()
         {
             if (isDictionaryStringObject)
             {
                 return Enumerable.Empty<ClassProperty>();
             }
-            if (dbFields?.Any() == true)
-            {
-                return PropertyCache.Get(EntityType)?
-                    .Where(p => dbFields.FirstOrDefault(f => string.Equals(f.Name.AsQuoted(DbSetting), p.GetMappedName().AsQuoted(DbSetting), StringComparison.OrdinalIgnoreCase)) != null)
-                    .AsList();
-            }
-            else
-            {
-                return PropertyCache.Get(EntityType)?.AsList();
-            }
+            return PropertyCache.Get(EntityType)?.AsList();
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="dictionary"></param>
-        /// <param name="dbFields"></param>
         /// <returns></returns>
-        private IEnumerable<Field> GetFields(IDictionary<string, object> dictionary,
-            IEnumerable<DbField> dbFields)
+        private IEnumerable<Field> GetFields(IDictionary<string, object> dictionary)
         {
             if (dictionary != null)
             {
-                if (dbFields?.Any() == true)
+                foreach (var kvp in dictionary)
                 {
-                    foreach (var kvp in dictionary)
-                    {
-                        if (dbFields.Any(e => string.Equals(e.Name.AsUnquoted(DbSetting), kvp.Key.AsUnquoted(DbSetting), StringComparison.OrdinalIgnoreCase)))
-                        {
-                            yield return new Field(kvp.Key, kvp.Value?.GetType());
-                        }
-                    }
-                }
-                else
-                {
-                    foreach (var kvp in dictionary)
-                    {
-                        yield return new Field(kvp.Key, kvp.Value?.GetType());
-                    }
+                    yield return new Field(kvp.Key, kvp.Value?.GetType());
                 }
             }
         }
