@@ -2810,7 +2810,9 @@ namespace RepoDb
             // CommandArrayParameters
             foreach (var property in param.GetType().GetProperties())
             {
-                if (property.PropertyType == StaticType.String ||
+                var propertyHandler = PropertyHandlerMapper.Get<object>(property.DeclaringType, property);
+                if (propertyHandler != null ||
+                    property.PropertyType == StaticType.String ||
                     StaticType.IEnumerable.IsAssignableFrom(property.PropertyType) == false)
                 {
                     continue;
@@ -3045,7 +3047,9 @@ namespace RepoDb
         private static CommandArrayParameter GetCommandArrayParameter(string parameterName,
             object value)
         {
-            if (value == null || value is string || value is System.Collections.IEnumerable == false)
+            var valueType = value?.GetType();
+            var propertyHandler = valueType != null ? PropertyHandlerMapper.Get<object>(valueType) : null;
+            if (value == null || propertyHandler != null || value is string || value is System.Collections.IEnumerable == false)
             {
                 return null;
             }
