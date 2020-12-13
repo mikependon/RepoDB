@@ -1,5 +1,6 @@
 ﻿using RepoDb.Enumerations;
 using System;
+using System.Data;
 using System.Data.Common;
 
 namespace RepoDb
@@ -16,6 +17,12 @@ namespace RepoDb
         /// The default value is <see cref="ConversionType.Default"/>.
         /// </summary>
         public static ConversionType ConversionType { get; set; } = ConversionType.Default;
+
+        /// <summary>
+        /// Gets or sets the default equivalent database type (of type <see cref="DbType"/>) of an enumeration if it is being used as a parameter to the 
+        /// execution of any non-entity-based operations.
+        /// </summary>
+        public static DbType EnumDefaultDatabaseType { get; set; } = DbType.String;
 
         #endregion
 
