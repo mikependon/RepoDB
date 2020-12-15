@@ -265,7 +265,7 @@ namespace RepoDb.Extensions
                 // Specialized enum
                 if (dbType == null && isEnum.HasValue && isEnum.Value == true)
                 {
-                    dbType = DbType.String;
+                    dbType = Converter.EnumDefaultDatabaseType;
                 }
 
                 // Add the parameter
@@ -337,7 +337,7 @@ namespace RepoDb.Extensions
                 // Specialized enum
                 if (dbType == null && isEnum.HasValue && isEnum.Value == true)
                 {
-                    dbType = DbType.String;
+                    dbType = Converter.EnumDefaultDatabaseType;
                 }
 
                 // Add the parameter
@@ -466,7 +466,7 @@ namespace RepoDb.Extensions
             // Specialized enum
             if (dbType == null && isEnum.HasValue && isEnum == true)
             {
-                dbType = DbType.String;
+                dbType = Converter.EnumDefaultDatabaseType;
             }
 
             // Add the parameter
@@ -522,7 +522,7 @@ namespace RepoDb.Extensions
                     // Specialized enum
                     if (dbType == null && isEnum.HasValue && isEnum.Value == true)
                     {
-                        dbType = DbType.String;
+                        dbType = Converter.EnumDefaultDatabaseType;
                     }
 
                     // Create
@@ -591,11 +591,11 @@ namespace RepoDb.Extensions
                 // Specialized enum
                 if (leftDbType == null && isLeftEnum.HasValue && isLeftEnum.Value == true)
                 {
-                    leftDbType = DbType.String;
+                    leftDbType = Converter.EnumDefaultDatabaseType;
                 }
                 if (rightDbType == null && isRightEnum.HasValue && isRightEnum.Value == true)
                 {
-                    rightDbType = DbType.String;
+                    rightDbType = Converter.EnumDefaultDatabaseType;
                 }
 
                 // Add
