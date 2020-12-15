@@ -48,7 +48,7 @@ namespace RepoDb.Reflection
                 var dbType = classProperty.GetDbType();
                 if (dbType == null && classProperty.PropertyInfo.PropertyType.IsEnum)
                 {
-                    dbType = DbType.String;
+                    dbType = Converter.EnumDefaultDatabaseType;
                 }
                 var dbTypeExpression = dbType == null ? GetNullableTypeExpression(StaticType.DbType) :
                     ConvertExpressionToNullableExpression(Expression.Constant(dbType), StaticType.DbType);
