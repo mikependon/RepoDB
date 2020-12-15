@@ -17,4 +17,11 @@ The issues that were labelled as [for-grabs](https://github.com/mikependon/RepoD
 - By not following the [coding-standards](https://github.com/mikependon/RepoDb/blob/master/RepoDb.Docs/coding-standards.md).
 - By not issuing a Unit Tests and/or Integration Tests (this can be discussed).
 
+
+### Policy
+
+When the PR is merged successfully, the underlying incident that has been linked to that specific PR will automatically be closed. The fixes can only be verified on the next release/pre-release version.
+
+### Important Note
+
 Again, it is highly recommended that you contact us before working on the issue you wish to grab, otherwise, the PR may be declined.

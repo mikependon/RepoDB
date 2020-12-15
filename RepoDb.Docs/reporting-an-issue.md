@@ -48,11 +48,11 @@ We are not requiring a strict template. However, in order to minimize the round-
 
 We are thanking you for this!
 
-**Deploying**
+**Deployment**
 
-Before deploying, if there are existing collaborations (ie: [GitHub](https://github.com/mikependon/RepoDb/issues) or [Gitter](https://gitter.im/RepoDb/community)), we will contact you (the reporter) first. Otherwise, we will proceed with the deployment.
+Before the deployment, if there are existing collaborations (ie: [GitHub](https://github.com/mikependon/RepoDb/issues) or [Gitter](https://gitter.im/RepoDb/community)), we will contact you (the reporter) first. Otherwise, we will proceed with the deployment.
 
-After the deployment, we will leave the bug open for the next few days (not yet defined) and we will place a [deployed](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3Adeployed) label. The label will be placed even the fix is deployed in a pre-release versions.
+After the deployment, we will place a [deployed](https://github.com/mikependon/RepoDb/issues?q=is%3Aissue+is%3Aopen+label%3Adeployed) label. The label will be placed even the fix is deployed in a pre-release versions.
 
 ### Request
 
