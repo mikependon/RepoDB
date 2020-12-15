@@ -1,15 +1,15 @@
 ---
 name: Report a Bug
-about: Reporting an issue or a bug.
-title: ''
-labels: ''
-assignees: ''
+about: Report an issue or a bug.
+title: 'Bug: Title of your bug'
+labels: bug
+assignees: mikependon
 
 ---
 
 ### Bug Description
 
-A clear and concise description of what the issue is. If the issue is a bug, please give us the details below for fast replication and resolution. The more informative the more weight to be fixed ASAP.
+A clear and concise description of what the issue is. Please give us the details below for fast replication and resolution. The more informative the more weight to be fixed ASAP.
 
 **Exception Message:**
 
