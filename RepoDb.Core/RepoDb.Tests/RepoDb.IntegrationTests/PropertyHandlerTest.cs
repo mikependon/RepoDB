@@ -155,6 +155,30 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// A class used to handle the property transformation of <see cref="IDictionary{TKey, TValue}" /> property.
+        /// </summary>
+        public class DictionaryPropertyHandlerForString : IPropertyHandler<string, IDictionary<string, string>>
+        {
+            public IDictionary<string, string> Get(string input, ClassProperty property)
+            {
+                if (input == null)
+                {
+                    return null;
+                }
+                return new Dictionary<string, string>() { { "MyKey", input } };
+            }
+
+            public string Set(IDictionary<string, string> input, ClassProperty property)
+            {
+                if (input == null)
+                {
+                    return null;
+                }
+                return input.First().Value;
+            }
+        }
+
         #endregion
 
         #region Classes
@@ -257,6 +281,14 @@ namespace RepoDb.IntegrationTests
             public float ColumnFloatNotNull { get; set; } = 0;
         }
 
+        [Map("[dbo].[CompleteTable]")]
+        public class CompleteTableWithPropertyHandlerForDictionary
+        {
+            public Guid SessionId { get; set; }
+            [PropertyHandler(typeof(DictionaryPropertyHandlerForString))]
+            public IDictionary<string, string> ColumnNVarChar { get; set; }
+        }
+
         #endregion
 
         #region Helpers
@@ -330,6 +362,27 @@ namespace RepoDb.IntegrationTests
                 {
                     DecimalAsLong = isIntNull ? null : (long?)100,
                     FloatAsLong = isIntNull ? null : (long?)200
+                };
+            }
+        }
+
+        public CompleteTableWithPropertyHandlerForDictionary CreateCompleteTableWithPropertyHandlerForDictionary()
+        {
+            return new CompleteTableWithPropertyHandlerForDictionary
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnNVarChar = new Dictionary<string, string>() { { "MyKey", $"Value-{Guid.NewGuid()}" } }
+            };
+        }
+
+        public IEnumerable<CompleteTableWithPropertyHandlerForDictionary> CreateompleteTableWithPropertyHandlerForDictionaries(int count = 0)
+        {
+            for (var i = 0; i < count; i++)
+            {
+                yield return new CompleteTableWithPropertyHandlerForDictionary
+                {
+                    SessionId = Guid.NewGuid(),
+                    ColumnNVarChar = new Dictionary<string, string>() { { $"Key-{i}", $"Value-{Guid.NewGuid()}" } }
                 };
             }
         }
@@ -451,6 +504,32 @@ namespace RepoDb.IntegrationTests
                     var item = result.First(obj => obj.Id == e.Id);
                     Assert.IsNull(item.NVarCharAsClass.Value);
                 });
+            }
+        }
+
+        #endregion
+
+        #region PropertyToDictionary
+
+        [TestMethod]
+        public void TestPropertyHandlerWithPropertyToDictionary()
+        {
+            // Setup
+            var entity = CreateCompleteTableWithPropertyHandlerForDictionary();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var id = connection.ExecuteScalar<Guid>("INSERT INTO [dbo].[CompleteTable] " +
+                    "(SessionId, ColumnNVarChar) " +
+                    "VALUES " +
+                    "(@SessionId, @ColumnNVarChar); " +
+                    "SELECT CONVERT(UNIQUEIDENTIFIER, @SessionId);", entity);
+
+                // Assert
+                Assert.AreEqual(1, connection.CountAll<CompleteTableWithPropertyHandlerForDictionary>());
+                Assert.AreNotEqual(id, Guid.Empty);
+                Assert.AreEqual(entity.SessionId, id);
             }
         }
 

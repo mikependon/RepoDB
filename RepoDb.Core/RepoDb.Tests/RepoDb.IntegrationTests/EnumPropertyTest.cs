@@ -142,6 +142,32 @@ namespace RepoDb.IntegrationTests
 
         #region EnumProperties (PropertyHandler)
 
+        #region ExecuteScalar
+
+        [TestMethod]
+        public void TestExecuteScalarForEnumWithPropertyHandlerFor()
+        {
+            // Setup
+            var entity = CreateEnumCompleteTableWithPropertyHandler();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var id = connection.ExecuteScalar<Guid>("INSERT INTO [dbo].[CompleteTable] " +
+                    "(SessionId, ColumnBit, ColumnNVarChar) " +
+                    "VALUES " +
+                    "(@SessionId, @ColumnBit, @ColumnNVarChar); " +
+                    "SELECT CONVERT(UNIQUEIDENTIFIER, @SessionId);", entity);
+
+                // Assert
+                Assert.AreEqual(1, connection.CountAll<EnumCompleteTableWithPropertyHandler>());
+                Assert.AreNotEqual(id, Guid.Empty);
+                Assert.AreEqual(entity.SessionId, id);
+            }
+        }
+
+        #endregion
+
         #region Insert
 
         [TestMethod]
