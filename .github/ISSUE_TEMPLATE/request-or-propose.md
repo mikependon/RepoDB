@@ -16,17 +16,17 @@ A clear and concise description of what the request/proposal is.
 If you have something you wish to be implemented or embedded within the library.
 
 ```csharp
-Please provide a code if necessary.
+Please provide a code proposal if necessary.
 ```
 
 ### Do you have an alternative?
 
 ```csharp
-If you have an alternative to the request or proposal that you think we cannot implement within the library.
+If you have an alternative to the request or proposal described above.
 ```
 
 Please provide a code if necessary.
 
 ### Additional Context
 
-If you have more information in relation to this request/proposal in general. The more informative, the better.
+Please describe if you have more information in relation to this request/proposal in general. The more informative, the better.
