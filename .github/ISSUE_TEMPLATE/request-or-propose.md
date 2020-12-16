@@ -1,7 +1,7 @@
 ---
 name: Request or Propose
 about: Suggest a new feature.
-title: 'Request: You request title'
+title: 'Request: <Your request title>'
 labels: request
 assignees: mikependon
 

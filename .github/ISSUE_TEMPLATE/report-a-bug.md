@@ -1,7 +1,7 @@
 ---
 name: Report a Bug
 about: Report an issue or a bug.
-title: 'Bug: Title of your bug'
+title: 'Bug: <Your bug/issue title>'
 labels: bug
 assignees: mikependon
 

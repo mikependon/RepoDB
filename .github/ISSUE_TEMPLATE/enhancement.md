@@ -1,7 +1,7 @@
 ---
 name: Enhancement
 about: Enhancement to the existing feature.
-title: 'Enhancement: Title of the enhancement'
+title: 'Enhancement: <Your enhancement title>'
 labels: enhancement
 assignees: mikependon
 

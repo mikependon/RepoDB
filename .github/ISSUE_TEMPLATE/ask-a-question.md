@@ -1,8 +1,8 @@
 ---
 name: Ask a Question
 about: Ask a question or make a request.
-title: ''
-labels: ''
+title: 'Question: <What is your question?>'
+labels: question
 assignees: ''
 
 ---
