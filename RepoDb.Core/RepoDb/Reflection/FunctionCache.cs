@@ -439,7 +439,7 @@ namespace RepoDb
                 var func = (Action<TEntity, object>)null;
                 if (cache.TryGetValue(key, out func) == false)
                 {
-                    if(typeof(TEntity).IsDictionaryStringObject())
+                    if (typeof(TEntity).IsDictionaryStringObject())
                     {
                         func = FunctionFactory.CompileDictionaryStringObjectItemSetter<TEntity>(field);
                     }
@@ -462,12 +462,14 @@ namespace RepoDb
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="type"></param>
+        /// <param name="paramType"></param>
+        /// <param name="entityType"></param>
         /// <param name="dbFields"></param>
         /// <returns></returns>
-        internal static Action<DbCommand, object> GetPlainTypeToDbParametersCompiledFunction(Type type,
+        internal static Action<DbCommand, object> GetPlainTypeToDbParametersCompiledFunction(Type paramType,
+            Type entityType,
             IEnumerable<DbField> dbFields = null) =>
-            PlainTypeToDbParametersCompiledFunctionCache.Get(type, dbFields);
+            PlainTypeToDbParametersCompiledFunctionCache.Get(paramType, entityType, dbFields);
 
         #region PlainTypeToDbParametersCompiledFunctionCache
 
@@ -481,23 +483,25 @@ namespace RepoDb
             /// <summary>
             /// 
             /// </summary>
-            /// <param name="type"></param>
+            /// <param name="paramType"></param>
+            /// <param name="entityType"></param>
             /// <param name="dbFields"></param>
             /// <returns></returns>
-            internal static Action<DbCommand, object> Get(Type type,
-            IEnumerable<DbField> dbFields = null)
+            internal static Action<DbCommand, object> Get(Type paramType,
+                Type entityType,
+                IEnumerable<DbField> dbFields = null)
             {
-                if (type == null)
+                if (paramType == null)
                 {
                     return null;
                 }
-                var key = type.GetHashCode();
+                var key = paramType.GetHashCode() + Convert.ToInt32(entityType?.GetHashCode());
                 var func = (Action<DbCommand, object>)null;
                 if (cache.TryGetValue(key, out func) == false)
                 {
-                    if (type.IsPlainType())
+                    if (paramType.IsPlainType())
                     {
-                        func = FunctionFactory.GetPlainTypeToDbParametersCompiledFunction(type, dbFields);
+                        func = FunctionFactory.GetPlainTypeToDbParametersCompiledFunction(paramType, entityType, dbFields);
                     }
                     cache.TryAdd(key, func);
                 }

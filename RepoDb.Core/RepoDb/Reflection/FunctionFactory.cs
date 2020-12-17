@@ -169,12 +169,14 @@ namespace RepoDb.Reflection
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="type"></param>
+        /// <param name="paramType"></param>
+        /// <param name="entityType"></param>
         /// <param name="dbFields"></param>
         /// <returns></returns>
-        public static Action<DbCommand, object> GetPlainTypeToDbParametersCompiledFunction(Type type,
+        public static Action<DbCommand, object> GetPlainTypeToDbParametersCompiledFunction(Type paramType,
+            Type entityType,
             IEnumerable<DbField> dbFields = null) =>
-            Compiler.GetPlainTypeToDbParametersCompiledFunction(type, dbFields);
+            Compiler.GetPlainTypeToDbParametersCompiledFunction(paramType, entityType, dbFields);
 
         #endregion
     }
