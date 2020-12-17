@@ -44,6 +44,11 @@ namespace RepoDb.Reflection
                         dbField.Type.GetUnderlyingType());
                 }
 
+                //// DbType
+                //var dbType = (returnType != null ? clientTypeToDbTypeResolver.Resolve(returnType) : null) ??
+                //    classProperty.GetDbType() ??
+                //    value?.GetType()?.GetDbType();
+
                 // DbType
                 var dbType = classProperty.GetDbType();
                 if (dbType == null && classProperty.PropertyInfo.PropertyType.IsEnum)
