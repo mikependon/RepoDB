@@ -2690,7 +2690,7 @@ namespace RepoDb
             // Func
             if (param != null)
             {
-                var func = FunctionCache.GetPlainTypeToDbParametersCompiledFunction(param?.GetType(), dbFields);
+                var func = FunctionCache.GetPlainTypeToDbParametersCompiledFunction(param?.GetType(), entityType, dbFields);
                 if (func != null)
                 {
                     var cmd = (DbCommand)command;

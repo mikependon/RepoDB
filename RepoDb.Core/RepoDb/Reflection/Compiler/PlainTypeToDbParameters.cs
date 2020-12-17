@@ -14,28 +14,38 @@ namespace RepoDb.Reflection
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="type"></param>
+        /// <param name="paramType"></param>
+        /// <param name="entityType"></param>
         /// <param name="dbFields"></param>
         /// <returns></returns>
-        internal static Action<DbCommand, object> GetPlainTypeToDbParametersCompiledFunction(Type type,
+        internal static Action<DbCommand, object> GetPlainTypeToDbParametersCompiledFunction(Type paramType,
+            Type entityType,
             IEnumerable<DbField> dbFields = null)
         {
             var commandParameterExpression = Expression.Parameter(StaticType.DbCommand, "command");
             var entityParameterExpression = Expression.Parameter(StaticType.Object, "entity");
-            var entityExpression = ConvertExpressionToTypeExpression(entityParameterExpression, type);
+            var entityExpression = ConvertExpressionToTypeExpression(entityParameterExpression, paramType);
             var methodInfo = GetDbCommandCreateParameterMethod();
             var callExpressions = new List<Expression>();
+            var paramProperties = PropertyCache.Get(paramType);
+            var entityProperties = PropertyCache.Get(entityType);
 
             // Iterate
-            foreach (var classProperty in PropertyCache.Get(type))
+            foreach (var paramProperty in paramProperties)
             {
+                // Ensure it matching any params
+                var entityProperty = entityProperties?.FirstOrDefault(e =>
+                    string.Equals(e.GetMappedName(), paramProperty.GetMappedName(), StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(e.PropertyInfo.Name, paramProperty.PropertyInfo.Name, StringComparison.OrdinalIgnoreCase));
+
+                // Variables
                 var dbField = dbFields?.FirstOrDefault(df =>
-                    string.Equals(df.Name, classProperty.GetMappedName(), StringComparison.OrdinalIgnoreCase));
-                var valueExpression = (Expression)Expression.Property(entityExpression, classProperty.PropertyInfo);
+                    string.Equals(df.Name, paramProperty.GetMappedName(), StringComparison.OrdinalIgnoreCase));
+                var valueExpression = (Expression)Expression.Property(entityExpression, paramProperty.PropertyInfo);
 
                 // PropertyHandler
                 valueExpression = ConvertExpressionToPropertyHandlerSetExpression(valueExpression,
-                    classProperty, classProperty.PropertyInfo.PropertyType);
+                    paramProperty, paramProperty.PropertyInfo.PropertyType);
 
                 // Automatic
                 if (Converter.ConversionType == ConversionType.Automatic && dbField?.Type != null)
@@ -44,14 +54,9 @@ namespace RepoDb.Reflection
                         dbField.Type.GetUnderlyingType());
                 }
 
-                //// DbType
-                //var dbType = (returnType != null ? clientTypeToDbTypeResolver.Resolve(returnType) : null) ??
-                //    classProperty.GetDbType() ??
-                //    value?.GetType()?.GetDbType();
-
                 // DbType
-                var dbType = classProperty.GetDbType();
-                if (dbType == null && classProperty.PropertyInfo.PropertyType.IsEnum)
+                var dbType = (entityProperty ?? paramProperty).GetDbType();
+                if (dbType == null && paramProperty.PropertyInfo.PropertyType.IsEnum)
                 {
                     dbType = Converter.EnumDefaultDatabaseType;
                 }
@@ -62,8 +67,8 @@ namespace RepoDb.Reflection
                 var expression = Expression.Call(methodInfo, new Expression[]
                 {
                     commandParameterExpression,
-                    Expression.Constant(classProperty.GetMappedName()),
-                    ConvertExpressionToTypeExpression( valueExpression, StaticType.Object),
+                    Expression.Constant(paramProperty.GetMappedName()),
+                    ConvertExpressionToTypeExpression(valueExpression, StaticType.Object),
                     dbTypeExpression
                 });
 

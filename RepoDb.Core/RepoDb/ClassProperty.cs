@@ -298,7 +298,7 @@ namespace RepoDb
         /// </summary>
         /// <returns>The hash code value.</returns>
         public override int GetHashCode() =>
-            GetDeclaringType().GetHashCode() ^ PropertyInfo.GenerateCustomizedHashCode();
+            GetDeclaringType().GetHashCode() ^ PropertyInfo.GenerateCustomizedHashCode(GetDeclaringType());
 
         /// <summary>
         /// Compare the current instance to the other object instance.
