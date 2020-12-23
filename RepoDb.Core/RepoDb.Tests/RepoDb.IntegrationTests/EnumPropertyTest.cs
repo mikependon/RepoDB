@@ -2085,5 +2085,141 @@ namespace RepoDb.IntegrationTests
         #endregion
 
         #endregion
+
+        #region custom enum mapping
+        private static CustomedMappingEnumPropertyHandler<TDbType, TEnum> CreateCustomedMappingEnumPropertyHandler<TEnum, TDbType>(
+            Dictionary<TEnum, TDbType> mapping)
+            => new CustomedMappingEnumPropertyHandler<TDbType, TEnum>(mapping);
+
+        public class CustomedMappingEnumPropertyHandler<TDbType, TEnum> : IPropertyHandler<TDbType, TEnum>
+        {
+            private readonly Dictionary<TDbType, TEnum> dbToEnum;
+            private readonly Dictionary<TEnum, TDbType> enumToDb;
+
+            public CustomedMappingEnumPropertyHandler(Dictionary<TEnum, TDbType> mapping)
+            {
+                enumToDb = mapping;
+                dbToEnum = mapping.ToDictionary(n => n.Value, n => n.Key);
+            }
+
+            public TEnum Get(TDbType input, ClassProperty property)
+                => input == null || !dbToEnum.TryGetValue(input, out var v) ? default(TEnum) : v;
+
+            public TDbType Set(TEnum input, ClassProperty property)
+                => input == null || !enumToDb.TryGetValue(input, out var v) ? default(TDbType) : v;
+        }
+
+        public class CustomedEnumModel<TEnum> where TEnum : struct
+        {
+            public TEnum? Value { get; set; }
+        }
+
+
+        public enum CustomedStringEnum { A, B }
+        private CustomedMappingEnumPropertyHandler<string, CustomedStringEnum?> customedStringEnumHandler =
+            CreateCustomedMappingEnumPropertyHandler(new Dictionary<CustomedStringEnum?, string>
+            {
+                [CustomedStringEnum.A] = "Special-A",
+                [CustomedStringEnum.B] = "Special-B"
+            });
+
+        public enum CustomedDecimalEnum { A, B }
+        private CustomedMappingEnumPropertyHandler<decimal?, CustomedDecimalEnum?> customedDecimalEnumHandler =
+            CreateCustomedMappingEnumPropertyHandler(new Dictionary<CustomedDecimalEnum?, decimal?>
+            {
+                [CustomedDecimalEnum.A] = 5.1m,
+                [CustomedDecimalEnum.B] = 6.2m
+            });
+
+        public enum CustomedFloatEnum { A, B }
+        private CustomedMappingEnumPropertyHandler<float?, CustomedFloatEnum?> customedFloatEnumHandler =
+            CreateCustomedMappingEnumPropertyHandler(new Dictionary<CustomedFloatEnum?, float?>
+            {
+                [CustomedFloatEnum.A] = 3.1f,
+                [CustomedFloatEnum.B] = 4.2f
+            });
+
+        private void EnsureCustomedMappingEnumPropertyHandler<TEnum>(object propertyHandler)
+        {
+            if (PropertyHandlerMapper.Get<object>(typeof(TEnum)) == null)
+            {
+                PropertyHandlerMapper.Add(typeof(TEnum), propertyHandler);
+            }
+        }
+
+        [TestMethod]
+        public void TestEnumGetFromStringWithPropertyHandler()
+        {
+            EnsureCustomedMappingEnumPropertyHandler<CustomedStringEnum>(customedStringEnumHandler);
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                var enumValue = connection.ExecuteQuery<CustomedStringEnum>("select 'Special-B'").First();
+                Assert.AreEqual(CustomedStringEnum.B, enumValue);
+
+                var nullEnumValue = connection.ExecuteQuery<CustomedStringEnum?>("select convert(varchar, null)").First();
+                Assert.IsNull(nullEnumValue);
+
+                var entry = connection.ExecuteQuery<CustomedEnumModel<CustomedStringEnum>>("select 'Special-B' Value").First();
+                Assert.AreEqual(CustomedStringEnum.B, entry.Value);
+
+                var nullEntry = connection.ExecuteQuery<CustomedEnumModel<CustomedStringEnum>>("select convert(varchar, null) Value").First();
+                Assert.IsNull(nullEntry.Value);
+            }
+        }
+
+        [TestMethod]
+        public void TestEnumSetFromStringWithPropertyHandler()
+        {
+            EnsureCustomedMappingEnumPropertyHandler<CustomedStringEnum>(customedStringEnumHandler);
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                var entry = new CustomedEnumModel<CustomedStringEnum> { Value = CustomedStringEnum.B };
+                var stringValue = connection.ExecuteQuery<string>("select @Value", entry).First();
+                Assert.AreEqual("Special-B", stringValue);
+
+                var nullEntry = new CustomedEnumModel<CustomedStringEnum> { Value = null };
+                var nullStringValue = connection.ExecuteQuery<string>("select @Value", nullEntry).First();
+                Assert.IsNull(nullStringValue);
+            }
+        }
+
+        [TestMethod]
+        public void TestEnumGetFromDecimalWithPropertyHandler()
+        {
+            EnsureCustomedMappingEnumPropertyHandler<CustomedDecimalEnum>(customedDecimalEnumHandler);
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                var enumValue = connection.ExecuteQuery<CustomedDecimalEnum>("select convert(decimal(8,3), 6.2)").First();
+                Assert.AreEqual(CustomedDecimalEnum.B, enumValue);
+
+                var nullEnumValue = connection.ExecuteQuery<CustomedDecimalEnum?>("select convert(decimal(8,3), null)").First();
+                Assert.IsNull(nullEnumValue);
+
+                var entry = connection.ExecuteQuery<CustomedEnumModel<CustomedDecimalEnum>>("select convert(decimal(8,3), 6.2) Value").First();
+                Assert.AreEqual(CustomedDecimalEnum.B, entry.Value);
+
+                var nullEntry = connection.ExecuteQuery<CustomedEnumModel<CustomedDecimalEnum>>("select convert(decimal(8,3), null) Value").First();
+                Assert.IsNull(nullEntry.Value);
+            }
+        }
+
+        [TestMethod]
+        public void TestEnumSetFromDecimalWithPropertyHandler()
+        {
+            EnsureCustomedMappingEnumPropertyHandler<CustomedDecimalEnum>(customedDecimalEnumHandler);
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                var entry = new CustomedEnumModel<CustomedDecimalEnum> { Value = CustomedDecimalEnum.B };
+                var decimalValue = connection.ExecuteQuery<decimal>("select @Value", entry).First();
+                Assert.AreEqual(6.2m, decimalValue);
+
+                var nullEntry = new CustomedEnumModel<CustomedDecimalEnum> { Value = null };
+                var nullDecimalValue = connection.ExecuteQuery<decimal?>("select convert(decimal, @Value)", nullEntry).First();
+                Assert.IsNull(nullDecimalValue);
+            }
+        }
+
+        #endregion
+
     }
 }
