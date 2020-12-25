@@ -849,7 +849,7 @@ namespace RepoDb.Reflection
         internal static Expression ConvertExpressionToPropertyHandlerSetExpression(Expression expression,
             ClassProperty classProperty,
             Type targetType)
-            => ConvertExpressionToPropertyHandlerSetExpression(expression, classProperty, targetType, out _);
+            => ConvertExpressionToPropertyHandlerSetExpressionTuple(expression, classProperty, targetType).convertedExpression;
 
         /// <summary>
         /// 
@@ -857,12 +857,10 @@ namespace RepoDb.Reflection
         /// <param name="expression"></param>
         /// <param name="classProperty"></param>
         /// <param name="targetType"></param>
-        /// <param name="handlerSetType">handler set return's Type</param>
         /// <returns></returns>
-        internal static Expression ConvertExpressionToPropertyHandlerSetExpression(Expression expression,
+        internal static (Expression convertedExpression, Type handlerSetType) ConvertExpressionToPropertyHandlerSetExpressionTuple(Expression expression,
             ClassProperty classProperty,
-            Type targetType, 
-            out Type handlerSetType)
+            Type targetType)
         {
             var handlerInstance = classProperty?.GetPropertyHandler() ??
                 PropertyHandlerCache.Get<object>(targetType);
@@ -870,14 +868,12 @@ namespace RepoDb.Reflection
             // Check
             if (handlerInstance == null)
             {
-                handlerSetType = null;
-                return expression;
+                return (expression, null);
             }
 
             // Variables
             var setMethod = GetPropertyHandlerSetMethod(handlerInstance);
             var setParameter = GetPropertyHandlerSetParameter(setMethod);
-            handlerSetType = setMethod.ReturnType;
 
             // Nullable
             if (Nullable.GetUnderlyingType(setParameter.ParameterType) != null)
@@ -893,7 +889,7 @@ namespace RepoDb.Reflection
                 new[] { valueExpression, classPropertyExpression });
 
             // Align
-            return ConvertExpressionToTypeExpression(expression, setMethod.ReturnType);
+            return (ConvertExpressionToTypeExpression(expression, setMethod.ReturnType), setMethod.ReturnType);
         }
 
         /// <summary>
@@ -1027,7 +1023,7 @@ namespace RepoDb.Reflection
 
             // get handler on class property or type level. for detect default value type and convert 
             var handlerInstance = GetHandlerInstance(classPropertyParameterInfo, readerField) ?? PropertyHandlerCache.Get<object>(classPropertyParameterInfo.GetTargetType());
-            
+
             // default value expression
             var valueType = handlerInstance == null ?
                 parameterType ?? classPropertyParameterInfoType :
