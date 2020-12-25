@@ -38,13 +38,17 @@ RepoDB also does support the different way-of-executions (the [atomic](https://g
 
 <p>
 
-**Easy-to-use** - the operations were all implemented as extension methods of your IDbConnection object. For as long your connection is open, any operations can then be called against your database.
+**Easy to Use** - the operations were all implemented as extension methods of your IDbConnection object. For as long your connection is open, any operations can then be called against your database.
 
-**High performant** - it caches the already-generated compiled expressions for future reusabilities and executions. It understands your schema to create the most optimal compiled expression AOT.
+**High Performant** - it caches the already-generated compiled expressions for future reusabilities and executions. It understands your schema to create the most optimal compiled expression AOT.
 
-**Memory efficient** - it extracts and caches your object properties, execution contexts, object mappings and SQL statements. It is reusing them all throughout the process of transformations and executions.
+**Memory Efficient** - it extracts and caches your object properties, execution contexts, object mappings and SQL statements. It is reusing them all throughout the process of transformations and executions.
 
-**High quality** - it is a high-quality micro-ORM supported by 10K+ real-life Unit and Integration Tests. It is highly tested and is used by various critical systems that are running in the Production environment.
+**Dynamic and Hybrid** - it provides some advance features of the full-fledged ORMs. It significantly help the developers to simplify the experience when context-switching during the development.
+
+**Open-Source Software** - it is an open-source software and will always be free. It is authored to further improve the .NET data access experiences and solutions, together with the collective ideas of the community.
+
+**High Quality** - it is a high-quality micro-ORM supported by 10K+ real-life Unit and Integration Tests. It is highly tested and is used by various critical systems that are running in the Production environment.
 
 </p>
 
@@ -100,7 +104,7 @@ Whereas the fluent methods below only support the [SQL Server](https://www.nuget
 - [Delete](http://repodb.net/operation/delete)
 - [Update](http://repodb.net/operation/update)
  
-Click [here](http://repodb.net/docs#operations) to see all the operations.
+Click [here](http://repodb.net/operation) to see all the operations.
 
 ## Package Referencing
 
