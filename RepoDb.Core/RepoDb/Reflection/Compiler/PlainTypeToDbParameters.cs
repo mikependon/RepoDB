@@ -44,7 +44,8 @@ namespace RepoDb.Reflection
                 var valueExpression = (Expression)Expression.Property(entityExpression, paramProperty.PropertyInfo);
 
                 // PropertyHandler
-                valueExpression = ConvertExpressionToPropertyHandlerSetExpression(valueExpression,
+                var handlerSetType = (Type)null;
+                (valueExpression, handlerSetType) = ConvertExpressionToPropertyHandlerSetExpressionTuple(valueExpression,
                     paramProperty, paramProperty.PropertyInfo.PropertyType);
 
                 // Automatic
@@ -55,11 +56,16 @@ namespace RepoDb.Reflection
                 }
 
                 // DbType
-                var dbType = (entityProperty ?? paramProperty).GetDbType();
-                if (dbType == null && paramProperty.PropertyInfo.PropertyType.IsEnum)
+                var dbType = (DbType?)null;
+                if (handlerSetType == null)
                 {
-                    dbType = Converter.EnumDefaultDatabaseType;
+                    dbType = (entityProperty ?? paramProperty).GetDbType();
+                    if (dbType == null && paramProperty.PropertyInfo.PropertyType.IsEnum)
+                    {
+                        dbType = Converter.EnumDefaultDatabaseType;
+                    }
                 }
+
                 var dbTypeExpression = dbType == null ? GetNullableTypeExpression(StaticType.DbType) :
                     ConvertExpressionToNullableExpression(Expression.Constant(dbType), StaticType.DbType);
 
