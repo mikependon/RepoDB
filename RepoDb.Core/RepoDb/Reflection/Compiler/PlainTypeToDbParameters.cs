@@ -44,8 +44,9 @@ namespace RepoDb.Reflection
                 var valueExpression = (Expression)Expression.Property(entityExpression, paramProperty.PropertyInfo);
 
                 // PropertyHandler
-                valueExpression = ConvertExpressionToPropertyHandlerSetExpression(valueExpression,
-                    paramProperty, paramProperty.PropertyInfo.PropertyType, out var handlerSetType);
+                var handlerSetType = (Type)null;
+                (valueExpression, handlerSetType) = ConvertExpressionToPropertyHandlerSetExpressionTuple(valueExpression,
+                    paramProperty, paramProperty.PropertyInfo.PropertyType);
 
                 // Automatic
                 if (Converter.ConversionType == ConversionType.Automatic && dbField?.Type != null)
