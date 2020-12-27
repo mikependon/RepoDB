@@ -204,10 +204,10 @@ And also, thanks to these awesome OSS projects.
 - [GitHub](https://github.com/) - for hosting this project.
 - [Gitter](https://gitter.im/) - for the community engagements.
 - [Jekyll](https://github.com/jekyll/jekyll) - for powering our website.
+- [Just-the-Docs](https://github.com/pmarsceill/just-the-docs) - for being the awesome library documentation template.
 - [Moq](https://github.com/moq/moq4) - for being the tests mocking framework.
 - [Nuget](https://www.nuget.org/) - for the package deliveries.
 - [RawDataAccessBencher](https://github.com/FransBouma/RawDataAccessBencher) - for measuring the performance and efficiency.
-- [ReadTheDocs](https://readthedocs.org/) - for the library documentations.
 - [SharpLab](https://sharplab.io/) - for helping us on our IL coding.
 - [Shields](https://shields.io/) - for the awesome badges.
 - [StackEdit](https://stackedit.io) - for being the markdown file editor.
