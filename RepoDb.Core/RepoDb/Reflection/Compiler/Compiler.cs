@@ -1021,14 +1021,14 @@ namespace RepoDb.Reflection
             var parameterType = GetPropertyHandlerGetParameter(classPropertyParameterInfo)?.ParameterType;
             var classPropertyParameterInfoType = classPropertyParameterInfo.GetTargetType();
 
-            // get handler on class property or type level. for detect default value type and convert 
+            // Get handler on class property or type level.
             var handlerInstance = GetHandlerInstance(classPropertyParameterInfo, readerField) ?? PropertyHandlerCache.Get<object>(classPropertyParameterInfo.GetTargetType());
             
-            // default value expression
+            // Default value expression
             var valueType = handlerInstance == null ?
                 parameterType ?? classPropertyParameterInfoType :
                 GetPropertyHandlerGetParameter(GetPropertyHandlerGetMethod(handlerInstance)).ParameterType;
-            Expression valueExpression = Expression.Default(valueType);
+            var valueExpression = (Expression)Expression.Default(valueType);
 
             // Property Handler
             try
@@ -1100,13 +1100,13 @@ namespace RepoDb.Reflection
                 // Enumerations
                 if (targetTypeUnderlyingType.IsEnum)
                 {
-                    // if has PropertyHandler and parameter's type match, skip auto conversion.
+                    // If the property handler and the parameter type has match, then skip auto conversion
                     var autoConvertEnum = true;
                     if (handlerInstance != null)
                     {
                         var getMethod = GetPropertyHandlerGetMethod(handlerInstance);
                         var getParameter = GetPropertyHandlerGetParameter(getMethod);
-                        autoConvertEnum = !(getParameter.ParameterType.GetUnderlyingType() == readerField.Type);
+                        autoConvertEnum = (getParameter.ParameterType.GetUnderlyingType() != readerField.Type);
                     }
                     if (autoConvertEnum)
                     {
@@ -1119,7 +1119,6 @@ namespace RepoDb.Reflection
                             throw new InvalidOperationException($"Compiler.DataReader.IsDbNull.FalseExpression: Failed to convert the value expression into enum type '{targetType.GetUnderlyingType()}'. " +
                                 $"{classPropertyParameterInfo.GetDescriptiveContextString()}", ex);
                         }
-
                     }
                 }
             }
