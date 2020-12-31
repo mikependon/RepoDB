@@ -66,6 +66,12 @@ namespace RepoDb.Reflection
                     }
                 }
 
+                // DbType fallback
+                if (dbType == null)
+                {
+                    dbType = TypeMapper.GetFallback(handlerSetType ?? paramProperty.PropertyInfo.PropertyType);
+                }
+
                 var dbTypeExpression = dbType == null ? GetNullableTypeExpression(StaticType.DbType) :
                     ConvertExpressionToNullableExpression(Expression.Constant(dbType), StaticType.DbType);
 

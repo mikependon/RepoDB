@@ -268,6 +268,12 @@ namespace RepoDb.Extensions
                     dbType = Converter.EnumDefaultDatabaseType;
                 }
 
+                // DbType fallback
+                if (dbType == null)
+                {
+                    dbType = TypeMapper.GetFallback(classProperty.PropertyInfo.PropertyType);
+                }
+
                 // Add the parameter
                 command.Parameters.Add(command.CreateParameter(name, value, dbType));
             }
@@ -338,6 +344,12 @@ namespace RepoDb.Extensions
                 if (dbType == null && isEnum.HasValue && isEnum.Value == true)
                 {
                     dbType = Converter.EnumDefaultDatabaseType;
+                }
+
+                // DbType fallback
+                if (dbType == null)
+                {
+                    dbType = TypeMapper.GetFallback(classProperty.PropertyInfo.PropertyType);
                 }
 
                 // Add the parameter
@@ -467,6 +479,12 @@ namespace RepoDb.Extensions
             if (dbType == null && isEnum.HasValue && isEnum == true)
             {
                 dbType = Converter.EnumDefaultDatabaseType;
+            }
+
+            // DbType fallback
+            if (dbType == null)
+            {
+                dbType = TypeMapper.GetFallback(classProperty.PropertyInfo.PropertyType);
             }
 
             // Add the parameter
