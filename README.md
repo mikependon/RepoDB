@@ -1,11 +1,3 @@
-<p align="center">
-	<a href="http://repodb.net">
-		<img src="https://raw.githubusercontent.com/mikependon/RepoDb.Raw/master/Icons/RepoDb-64x64.png" height="64px" />
-	</a>
-</p>
-
------------------
-
 [![SolutionBuilds](https://img.shields.io/appveyor/ci/mikependon/repodb-h87g9?style=flat-square&logo=appveyor&label=sln%20builds)](https://ci.appveyor.com/project/mikependon/repodb-h87g9)
 [![Version](https://img.shields.io/nuget/v/RepoDb?style=flat-square&logo=nuget)](https://www.nuget.org/packages/RepoDb)
 [![Releases](https://img.shields.io/badge/releases-core-important?style=flat-square&logo=nuget)](http://repodb.net/release/core)
