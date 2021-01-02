@@ -55,21 +55,13 @@ namespace RepoDb.Reflection
                         dbField.Type.GetUnderlyingType());
                 }
 
-                // DbType
-                var dbType = (DbType?)null;
-                if (handlerSetType == null)
+                // DbType. PropertyHandler first
+                var dbType = handlerSetType != null ?
+                    GetDbType(null, handlerSetType) :
+                    GetDbType(entityProperty ?? paramProperty, (entityProperty ?? paramProperty).PropertyInfo.PropertyType);
+                if (dbType == null && paramProperty.PropertyInfo.PropertyType.IsEnum)
                 {
-                    dbType = (entityProperty ?? paramProperty).GetDbType();
-                    if (dbType == null && paramProperty.PropertyInfo.PropertyType.IsEnum)
-                    {
-                        dbType = Converter.EnumDefaultDatabaseType;
-                    }
-                }
-
-                // DbType fallback
-                if (dbType == null)
-                {
-                    dbType = TypeMapper.GetFallback(handlerSetType ?? paramProperty.PropertyInfo.PropertyType);
+                    dbType = Converter.EnumDefaultDatabaseType;
                 }
 
                 var dbTypeExpression = dbType == null ? GetNullableTypeExpression(StaticType.DbType) :

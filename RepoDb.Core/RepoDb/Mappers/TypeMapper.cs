@@ -20,28 +20,6 @@ namespace RepoDb
 
         private static readonly ConcurrentDictionary<int, DbType?> maps = new ConcurrentDictionary<int, DbType?>();
 
-        private static readonly ReadOnlyDictionary<int, DbType> fallbackMaps = new ReadOnlyDictionary<int, DbType>(new Dictionary<Type, DbType>
-        {
-            [typeof(byte)] = DbType.Byte,
-            [typeof(sbyte)] = DbType.SByte,
-            [typeof(short)] = DbType.Int16,
-            [typeof(ushort)] = DbType.UInt16,
-            [typeof(int)] = DbType.Int32,
-            [typeof(uint)] = DbType.UInt32,
-            [typeof(long)] = DbType.Int64,
-            [typeof(ulong)] = DbType.UInt64,
-            [typeof(float)] = DbType.Single,
-            [typeof(double)] = DbType.Double,
-            [typeof(decimal)] = DbType.Decimal,
-            [typeof(bool)] = DbType.Boolean,
-            [typeof(string)] = DbType.String,
-            [typeof(char)] = DbType.StringFixedLength,
-            [typeof(Guid)] = DbType.Guid,
-            [typeof(DateTime)] = DbType.DateTime,
-            [typeof(DateTimeOffset)] = DbType.DateTimeOffset,
-            [typeof(TimeSpan)] = DbType.Time,
-        }.ToDictionary(n => TypeExtension.GenerateHashCode(n.Key), n => n.Value));
-
         #endregion
 
         #region Type Level
@@ -508,14 +486,6 @@ namespace RepoDb
                 throw new NullReferenceException($"The argument '{argument}' cannot be null.");
             }
         }
-
-        /// <summary>
-        /// Type Level: Gets the fallback mapped <see cref="DbType"/> object of the .NET CLR type.
-        /// </summary>
-        /// <param name="type">The .NET CLR type used for mapping.</param>
-        /// <returns>The instance of the fallback mapped <see cref="DbType"/> object.</returns>
-        internal static DbType? GetFallback(Type type)
-            => fallbackMaps.TryGetValue(TypeExtension.GenerateHashCode(type), out var dbType) ? dbType : (DbType?)null;
 
         #endregion
     }

@@ -1547,6 +1547,17 @@ namespace RepoDb.Reflection
             return Expression.Call(parameterVariableExpression, GetDbParameterValueSetMethod(), expression);
         }
 
+        private static DbType? GetDbType(ClassProperty classProperty, Type dbFieldType)
+        {
+            var dbType = classProperty?.GetDbType();
+            if (dbType == null)
+            {
+                var underlyingType = dbFieldType?.GetUnderlyingType();
+                dbType = TypeMapper.Get(underlyingType) ?? new ClientTypeToDbTypeResolver().Resolve(underlyingType);
+            }
+            return dbType;
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -1557,14 +1568,7 @@ namespace RepoDb.Reflection
         internal static MethodCallExpression GetDbParameterDbTypeAssignmentExpression(ParameterExpression parameterVariableExpression,
             ClassProperty classProperty,
             DbField dbField)
-        {
-            var underlyingType = dbField.Type?.GetUnderlyingType();
-            var dbType = classProperty?.GetDbType() ?? TypeMapper.Get(underlyingType) ??
-                new ClientTypeToDbTypeResolver().Resolve(underlyingType);
-
-            // Return the expression
-            return GetDbParameterDbTypeAssignmentExpression(parameterVariableExpression, dbType);
-        }
+            => GetDbParameterDbTypeAssignmentExpression(parameterVariableExpression, GetDbType(classProperty, dbField.Type));
 
         /// <summary>
         /// 
@@ -1574,13 +1578,7 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static MethodCallExpression GetDbParameterDbTypeAssignmentExpression(ParameterExpression parameterVariableExpression,
             DbField dbField)
-        {
-            var underlyingType = dbField.Type?.GetUnderlyingType();
-            var dbType = TypeMapper.Get(underlyingType) ?? new ClientTypeToDbTypeResolver().Resolve(underlyingType);
-
-            // Return the expression
-            return GetDbParameterDbTypeAssignmentExpression(parameterVariableExpression, dbType);
-        }
+            => GetDbParameterDbTypeAssignmentExpression(parameterVariableExpression, GetDbType(null, dbField.Type));
 
         /// <summary>
         /// 
