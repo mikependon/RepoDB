@@ -262,6 +262,12 @@ namespace RepoDb.Extensions
                     classProperty.GetDbType() ??
                     value?.GetType()?.GetDbType();
 
+                // Try get fallback dbType by classProperty to avoid being mistaken as string when value is null.
+                if (dbType == null && classProperty != null)
+                {
+                    dbType = clientTypeToDbTypeResolver.Resolve(classProperty.PropertyInfo.PropertyType);
+                }
+
                 // Specialized enum
                 if (dbType == null && isEnum.HasValue && isEnum.Value == true)
                 {
@@ -333,6 +339,12 @@ namespace RepoDb.Extensions
                 var dbType = (valueType != null ? clientTypeToDbTypeResolver.Resolve(valueType) : null) ??
                     classProperty?.GetDbType() ??
                     value?.GetType()?.GetDbType();
+
+                // Try get fallback dbType by classProperty to avoid being mistaken as string when value is null.
+                if (dbType == null && classProperty != null)
+                {
+                    dbType = clientTypeToDbTypeResolver.Resolve(classProperty.PropertyInfo.PropertyType);
+                }
 
                 // Specialized enum
                 if (dbType == null && isEnum.HasValue && isEnum.Value == true)
@@ -462,6 +474,12 @@ namespace RepoDb.Extensions
             var dbType = (valueType != null ? clientTypeToDbTypeResolver.Resolve(valueType) : null) ??
                 classProperty?.GetDbType() ??
                 value?.GetType()?.GetDbType();
+
+            // Try get fallback dbType by classProperty to avoid being mistaken as string when value is null.
+            if (dbType == null && classProperty != null)
+            {
+                dbType = clientTypeToDbTypeResolver.Resolve(classProperty.PropertyInfo.PropertyType);
+            }
 
             // Specialized enum
             if (dbType == null && isEnum.HasValue && isEnum == true)

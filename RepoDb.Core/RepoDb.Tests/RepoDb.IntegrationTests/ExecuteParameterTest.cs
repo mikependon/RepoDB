@@ -202,6 +202,19 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryWithParameterAsNullDecimal()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            {
+                // Act Query
+                var data = connection.ExecuteQuery<decimal?>("select @value", new { value = (decimal?)null }).First();
+
+                // Assert
+                Assert.IsNull(data);
+            }
+        }
+
         #endregion
 
         #region ExecuteQueryAsync
