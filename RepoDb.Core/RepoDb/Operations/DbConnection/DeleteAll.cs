@@ -346,7 +346,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
-        public static async Task<int> DeleteAllAsync<TEntity, TKey>(this IDbConnection connection,
+        public static Task<int> DeleteAllAsync<TEntity, TKey>(this IDbConnection connection,
             string tableName,
             IEnumerable<TKey> keys,
             string hints = null,
@@ -357,7 +357,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            return await DeleteAllAsyncInternal(connection: connection,
+            return DeleteAllAsyncInternal(connection: connection,
                 tableName: tableName,
                 keys: keys?.WithType<object>(),
                 hints: hints,
@@ -382,7 +382,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been deleted from the table.</returns>
-        public static async Task<int> DeleteAllAsync<TEntity>(this IDbConnection connection,
+        public static Task<int> DeleteAllAsync<TEntity>(this IDbConnection connection,
             string tableName,
             IEnumerable<object> keys,
             string hints = null,
@@ -393,7 +393,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            return await DeleteAllAsyncInternal(connection: connection,
+            return DeleteAllAsyncInternal(connection: connection,
                 tableName: tableName,
                 keys: keys,
                 hints: hints,

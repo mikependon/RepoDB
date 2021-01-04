@@ -355,7 +355,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static async Task<int> BulkDeleteAsync<TEntity>(this SqlConnection connection,
+        public static Task<int> BulkDeleteAsync<TEntity>(this SqlConnection connection,
             IEnumerable<object> primaryKeys,
             string hints = null,
             int? bulkCopyTimeout = null,
@@ -365,7 +365,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            return await BulkDeleteAsyncInternal(connection: connection,
+            return BulkDeleteAsyncInternal(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 primaryKeys: primaryKeys,
                 hints: hints,
@@ -486,7 +486,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static async Task<int> BulkDeleteAsync<TEntity>(this SqlConnection connection,
+        public static Task<int> BulkDeleteAsync<TEntity>(this SqlConnection connection,
             DbDataReader reader,
             Expression<Func<TEntity, object>> qualifiers = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
@@ -499,7 +499,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            return await BulkDeleteAsyncInternal(connection: connection,
+            return BulkDeleteAsyncInternal(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 reader: reader,
                 qualifiers: ParseExpression(qualifiers),
@@ -530,7 +530,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static async Task<int> BulkDeleteAsync<TEntity>(this SqlConnection connection,
+        public static Task<int> BulkDeleteAsync<TEntity>(this SqlConnection connection,
             DataTable dataTable,
             Expression<Func<TEntity, object>> qualifiers = null,
             DataRowState? rowState = null,
@@ -544,7 +544,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            return await BulkDeleteAsyncInternal(connection: connection,
+            return BulkDeleteAsyncInternal(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 dataTable: dataTable,
                 qualifiers: ParseExpression(qualifiers),
@@ -576,7 +576,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static async Task<int> BulkDeleteAsync(this SqlConnection connection,
+        public static Task<int> BulkDeleteAsync(this SqlConnection connection,
             string tableName,
             IEnumerable<object> primaryKeys,
             string hints = null,
@@ -586,7 +586,7 @@ namespace RepoDb
             SqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            return await BulkDeleteAsyncInternal(connection: connection,
+            return BulkDeleteAsyncInternal(connection: connection,
                 tableName: tableName,
                 primaryKeys: primaryKeys,
                 hints: hints,
@@ -613,7 +613,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static async Task<int> BulkDeleteAsync(this SqlConnection connection,
+        public static Task<int> BulkDeleteAsync(this SqlConnection connection,
             string tableName,
             DbDataReader reader,
             IEnumerable<Field> qualifiers = null,
@@ -626,7 +626,7 @@ namespace RepoDb
             SqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            return await BulkDeleteAsyncInternal(connection: connection,
+            return BulkDeleteAsyncInternal(connection: connection,
                 tableName: tableName,
                 reader: reader,
                 qualifiers: qualifiers,
@@ -657,7 +657,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static async Task<int> BulkDeleteAsync(this SqlConnection connection,
+        public static Task<int> BulkDeleteAsync(this SqlConnection connection,
             string tableName,
             DataTable dataTable,
             IEnumerable<Field> qualifiers = null,
@@ -671,7 +671,7 @@ namespace RepoDb
             SqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            return await BulkDeleteAsyncInternal(connection: connection,
+            return BulkDeleteAsyncInternal(connection: connection,
                 tableName: tableName,
                 dataTable: dataTable,
                 qualifiers: qualifiers,

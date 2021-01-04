@@ -320,7 +320,7 @@ namespace RepoDb
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static async Task<int> BulkInsertAsync<TEntity>(this SqlConnection connection,
+        public static Task<int> BulkInsertAsync<TEntity>(this SqlConnection connection,
             DbDataReader reader,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = SqlBulkCopyOptions.Default,
@@ -329,7 +329,7 @@ namespace RepoDb
             SqlTransaction transaction = null)
             where TEntity : class
         {
-            return await BulkInsertAsyncInternal(connection: connection,
+            return BulkInsertAsyncInternal(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 reader: reader,
                 mappings: mappings,
@@ -351,7 +351,7 @@ namespace RepoDb
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static async Task<int> BulkInsertAsync(this SqlConnection connection,
+        public static Task<int> BulkInsertAsync(this SqlConnection connection,
             string tableName,
             DbDataReader reader,
             IEnumerable<BulkInsertMapItem> mappings = null,
@@ -360,7 +360,7 @@ namespace RepoDb
             int? batchSize = null,
             SqlTransaction transaction = null)
         {
-            return await BulkInsertAsyncInternal(connection: connection,
+            return BulkInsertAsyncInternal(connection: connection,
                 tableName: tableName,
                 reader: reader,
                 mappings: mappings,
@@ -383,7 +383,7 @@ namespace RepoDb
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static async Task<int> BulkInsertAsync<TEntity>(this SqlConnection connection,
+        public static Task<int> BulkInsertAsync<TEntity>(this SqlConnection connection,
             DataTable dataTable,
             DataRowState rowState = DataRowState.Unchanged,
             IEnumerable<BulkInsertMapItem> mappings = null,
@@ -393,7 +393,7 @@ namespace RepoDb
             SqlTransaction transaction = null)
             where TEntity : class
         {
-            return await BulkInsertAsyncInternal(connection: connection,
+            return BulkInsertAsyncInternal(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 dataTable: dataTable,
                 rowState: rowState,
@@ -417,7 +417,7 @@ namespace RepoDb
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static async Task<int> BulkInsertAsync(this SqlConnection connection,
+        public static Task<int> BulkInsertAsync(this SqlConnection connection,
             string tableName,
             DataTable dataTable,
             DataRowState rowState = DataRowState.Unchanged,
@@ -427,7 +427,7 @@ namespace RepoDb
             int? batchSize = null,
             SqlTransaction transaction = null)
         {
-            return await BulkInsertAsyncInternal(connection: connection,
+            return BulkInsertAsyncInternal(connection: connection,
                 tableName: tableName,
                 dataTable: dataTable,
                 rowState: rowState,

@@ -242,11 +242,11 @@ namespace RepoDb.DbHelpers
         /// <param name="connection">The instance of the connection object.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>The newly generated identity from the database.</returns>
-        public async Task<object> GetScopeIdentityAsync<TDbConnection>(TDbConnection connection,
+        public Task<object> GetScopeIdentityAsync<TDbConnection>(TDbConnection connection,
             IDbTransaction transaction = null)
             where TDbConnection : IDbConnection
         {
-            return await connection.ExecuteScalarAsync("SELECT @@IDENTITY;");
+            return connection.ExecuteScalarAsync("SELECT @@IDENTITY;");
         }
 
         #endregion

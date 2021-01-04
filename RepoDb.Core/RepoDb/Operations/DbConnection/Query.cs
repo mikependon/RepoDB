@@ -856,7 +856,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public static async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection,
+        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection,
             string tableName,
             Expression<Func<TEntity, bool>> where,
             IEnumerable<Field> fields = null,
@@ -873,7 +873,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            return await QueryAsyncInternal<TEntity>(connection: connection,
+            return QueryAsyncInternal<TEntity>(connection: connection,
                 tableName: tableName,
                 fields: fields,
                 where: ToQueryGroup(where),
@@ -913,7 +913,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public static async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection,
+        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection,
             string tableName,
             QueryField where,
             IEnumerable<Field> fields = null,
@@ -930,7 +930,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            return await QueryAsyncInternal<TEntity>(connection: connection,
+            return QueryAsyncInternal<TEntity>(connection: connection,
                 tableName: tableName,
                 fields: fields,
                 where: ToQueryGroup(where),
@@ -970,7 +970,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public static async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection,
+        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection,
             string tableName,
             IEnumerable<QueryField> where,
             IEnumerable<Field> fields = null,
@@ -987,7 +987,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            return await QueryAsyncInternal<TEntity>(connection: connection,
+            return QueryAsyncInternal<TEntity>(connection: connection,
                 tableName: tableName,
                 fields: fields,
                 where: ToQueryGroup(where),
@@ -1027,7 +1027,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
-        public static async Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection,
+        public static Task<IEnumerable<TEntity>> QueryAsync<TEntity>(this IDbConnection connection,
             string tableName,
             QueryGroup where,
             IEnumerable<Field> fields = null,
@@ -1044,7 +1044,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            return await QueryAsyncInternal<TEntity>(connection: connection,
+            return QueryAsyncInternal<TEntity>(connection: connection,
                 tableName: tableName,
                 fields: fields,
                 where: where,
