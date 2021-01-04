@@ -331,7 +331,7 @@ namespace RepoDb
         #region TruncateAsyncInternalBase
 
         /// <summary>
-        /// Truncates a table from the database in an asychronous way.
+        /// Truncates a table from the database in an asynchronous way.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="request">The actual <see cref="TruncateRequest"/> object.</param>

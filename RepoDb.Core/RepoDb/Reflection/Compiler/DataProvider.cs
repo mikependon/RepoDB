@@ -56,7 +56,7 @@ namespace RepoDb.Reflection
         /// <summary>
         /// Gets the SystemSqlServerTypeMapAttribute if present.
         /// </summary>
-        /// <param name="property">The instance of propery to inspect.</param>
+        /// <param name="property">The instance of property to inspect.</param>
         /// <returns>The instance of SystemSqlServerTypeMapAttribute.</returns>
         internal static Attribute GetSystemSqlServerTypeMapAttribute(ClassProperty property)
         {
@@ -150,7 +150,7 @@ namespace RepoDb.Reflection
         /// <summary>
         /// Gets the MicrosoftSqlServerTypeMapAttribute if present.
         /// </summary>
-        /// <param name="property">The instance of propery to inspect.</param>
+        /// <param name="property">The instance of property to inspect.</param>
         /// <returns>The instance of MicrosoftSqlServerTypeMapAttribute.</returns>
         internal static Attribute GetMicrosoftSqlServerTypeMapAttribute(ClassProperty property)
         {
@@ -244,7 +244,7 @@ namespace RepoDb.Reflection
         /// <summary>
         /// Gets the MySqlTypeMapAttribute if present.
         /// </summary>
-        /// <param name="property">The instance of propery to inspect.</param>
+        /// <param name="property">The instance of property to inspect.</param>
         /// <returns>The instance of MySqlTypeMapAttribute.</returns>
         internal static Attribute GetMySqlDbTypeTypeMapAttribute(ClassProperty property)
         {
@@ -338,7 +338,7 @@ namespace RepoDb.Reflection
         /// <summary>
         /// Gets the NpgsqlDbTypeMapAttribute if present.
         /// </summary>
-        /// <param name="property">The instance of propery to inspect.</param>
+        /// <param name="property">The instance of property to inspect.</param>
         /// <returns>The instance of NpgsqlDbTypeMapAttribute.</returns>
         internal static Attribute GetNpgsqlDbTypeTypeMapAttribute(ClassProperty property)
         {

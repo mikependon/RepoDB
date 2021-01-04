@@ -38,7 +38,7 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// Gets the mapped name of the propery.
+        /// Gets the mapped name of the property.
         /// </summary>
         /// <param name="property">The property where the mapped name will be retrieved.</param>
         /// <returns>A string containing the mapped name.</returns>
@@ -46,7 +46,7 @@ namespace RepoDb.Extensions
             GetMappedName(property, property.DeclaringType);
 
         /// <summary>
-        /// Gets the mapped name of the propery.
+        /// Gets the mapped name of the property.
         /// </summary>
         /// <param name="property">The property where the mapped name will be retrieved.</param>
         /// <param name="declaringType">The declaring type of the property.</param>

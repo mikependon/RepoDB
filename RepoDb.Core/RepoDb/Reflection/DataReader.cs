@@ -42,7 +42,7 @@ namespace RepoDb.Reflection
         #region ToEnumerableAsync<TResult>
 
         /// <summary>
-        /// Converts the <see cref="DbDataReader"/> into an enumerable of data entity objects in aysnchronous way.
+        /// Converts the <see cref="DbDataReader"/> into an enumerable of data entity objects in asynchronous way.
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="reader">The <see cref="DbDataReader"/> to be converted.</param>

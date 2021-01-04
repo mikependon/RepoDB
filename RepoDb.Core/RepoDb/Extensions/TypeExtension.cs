@@ -82,9 +82,9 @@ namespace RepoDb.Extensions
             GetEnumerableClassProperties(type).Any() != true;
 
         /// <summary>
-        /// Checks whether the curren type is of type <see cref="QueryField"/> or <see cref="QueryGroup"/>.
+        /// Checks whether the current type is of type <see cref="QueryField"/> or <see cref="QueryGroup"/>.
         /// </summary>
-        /// <param name="type">The curren type.</param>
+        /// <param name="type">The current type.</param>
         /// <returns>Returns true if the current type is of type <see cref="QueryField"/> or <see cref="QueryGroup"/>.</returns>
         internal static bool IsQueryObjectType(this Type type) =>
             type == StaticType.QueryField || type == StaticType.QueryGroup;

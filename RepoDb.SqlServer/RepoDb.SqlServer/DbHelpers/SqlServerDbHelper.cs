@@ -43,7 +43,7 @@ namespace RepoDb.DbHelpers
         #region Helpers
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         private string GetCommandText()
@@ -96,7 +96,7 @@ namespace RepoDb.DbHelpers
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
@@ -114,7 +114,7 @@ namespace RepoDb.DbHelpers
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="reader"></param>
         /// <param name="cancellationToken"></param>
@@ -176,7 +176,7 @@ namespace RepoDb.DbHelpers
         }
 
         /// <summary>
-        /// Gets the list of <see cref="DbField"/> of the table in an asychronous way.
+        /// Gets the list of <see cref="DbField"/> of the table in an asynchronous way.
         /// </summary>
         /// <param name="connection">The instance of the connection object.</param>
         /// <param name="tableName">The name of the target table.</param>
@@ -232,7 +232,7 @@ namespace RepoDb.DbHelpers
         }
 
         /// <summary>
-        /// Gets the newly generated identity from the database in an asychronous way.
+        /// Gets the newly generated identity from the database in an asynchronous way.
         /// </summary>
         /// <param name="connection">The instance of the connection object.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>

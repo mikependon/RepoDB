@@ -144,7 +144,7 @@ namespace RepoDb
         /// Insert the multiple dynamic objects (as new rows) or update the existing rows in the table. By default, the table fields are used unless the 'fields' argument is explicitly defined.
         /// </summary>
         /// <param name="entities">The list of entity objects to be merged.</param>
-        /// <param name="qualifiers">The expression for the qualifer fields.</param>
+        /// <param name="qualifiers">The expression for the qualifier fields.</param>
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>

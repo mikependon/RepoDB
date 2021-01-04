@@ -95,7 +95,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         internal struct FieldDirection
         {
@@ -137,7 +137,7 @@ namespace RepoDb.Reflection
         #region Methods
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="fields"></param>
         /// <returns></returns>
@@ -156,7 +156,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="fields"></param>
         /// <returns></returns>
@@ -175,7 +175,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="fromType"></param>
         /// <param name="toType"></param>
@@ -186,7 +186,7 @@ namespace RepoDb.Reflection
                 new[] { fromType.GetUnderlyingType() });
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="conversionType"></param>
         /// <returns></returns>
@@ -195,7 +195,7 @@ namespace RepoDb.Reflection
                 new[] { StaticType.Object, conversionType.GetUnderlyingType() });
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
@@ -203,7 +203,7 @@ namespace RepoDb.Reflection
             ClassHandlerCache.Get<object>(type);
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="handlerInstance"></param>
         /// <returns></returns>
@@ -211,7 +211,7 @@ namespace RepoDb.Reflection
             handlerInstance?.GetType().GetMethod("Get");
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="handlerInstance"></param>
         /// <param name="types"></param>
@@ -220,7 +220,7 @@ namespace RepoDb.Reflection
             handlerInstance?.GetType().GetMethod("Set", types);
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="handlerInstance"></param>
         /// <returns></returns>
@@ -228,7 +228,7 @@ namespace RepoDb.Reflection
             handlerInstance?.GetType().GetMethod("Get");
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         internal static MethodInfo GetDbCommandCreateParameterMethod() =>
@@ -241,14 +241,14 @@ namespace RepoDb.Reflection
             });
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         internal static MethodInfo GetDbParameterCollectionAddMethod() =>
             StaticType.DbParameterCollection.GetMethod("Add");
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="handlerInstance"></param>
         /// <returns></returns>
@@ -256,7 +256,7 @@ namespace RepoDb.Reflection
             handlerInstance?.GetType().GetMethod("Set");
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="classPropertyParameterInfo"></param>
         /// <returns></returns>
@@ -264,7 +264,7 @@ namespace RepoDb.Reflection
             GetPropertyHandlerGetParameter(classPropertyParameterInfo?.ClassProperty);
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="classProperty"></param>
         /// <returns></returns>
@@ -272,7 +272,7 @@ namespace RepoDb.Reflection
             GetPropertyHandlerGetParameter(classProperty?.GetPropertyHandler());
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="handlerInstance"></param>
         /// <returns></returns>
@@ -280,7 +280,7 @@ namespace RepoDb.Reflection
             GetPropertyHandlerGetParameter(GetPropertyHandlerGetMethod(handlerInstance));
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="getMethod"></param>
         /// <returns></returns>
@@ -288,7 +288,7 @@ namespace RepoDb.Reflection
             getMethod?.GetParameters()?.First();
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="handlerInstance"></param>
         /// <returns></returns>
@@ -296,7 +296,7 @@ namespace RepoDb.Reflection
             GetPropertyHandlerSetParameter(GetPropertyHandlerSetMethod(handlerInstance));
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="setMethod"></param>
         /// <returns></returns>
@@ -304,7 +304,7 @@ namespace RepoDb.Reflection
             setMethod?.GetParameters()?.First();
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="reader"></param>
         /// <param name="dbSetting"></param>
@@ -314,7 +314,7 @@ namespace RepoDb.Reflection
             GetDataReaderFields(reader, null, dbSetting);
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="reader"></param>
         /// <param name="dbFields"></param>
@@ -336,7 +336,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="classPropertyParameterInfo"></param>
         /// <param name="readerField"></param>
@@ -346,7 +346,7 @@ namespace RepoDb.Reflection
             GetHandlerInstance(classPropertyParameterInfo.ClassProperty, readerField);
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="classProperty"></param>
         /// <param name="readerField"></param>
@@ -368,7 +368,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="readerField"></param>
         /// <returns></returns>
@@ -376,7 +376,7 @@ namespace RepoDb.Reflection
             GetDbReaderGetValueMethod(readerField.Type);
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="targetType"></param>
         /// <returns></returns>
@@ -384,14 +384,14 @@ namespace RepoDb.Reflection
             StaticType.DbDataReader.GetMethod(string.Concat("Get", targetType?.Name));
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         internal static MethodInfo GetDbReaderGetValueMethod() =>
             StaticType.DbDataReader.GetMethod("GetValue");
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="readerField"></param>
         /// <returns></returns>
@@ -399,7 +399,7 @@ namespace RepoDb.Reflection
             GetDbReaderGetValueOrDefaultMethod(readerField.Type);
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="targetType"></param>
         /// <returns></returns>
@@ -407,42 +407,42 @@ namespace RepoDb.Reflection
             GetDbReaderGetValueMethod(targetType) ?? GetDbReaderGetValueMethod();
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         internal static MethodInfo GetDbParameterValueSetMethod() =>
             StaticType.DbParameter.GetProperty("Value").SetMethod;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         internal static PropertyInfo GetTimeSpanTicksProperty() =>
             StaticType.TimeSpan.GetProperty("Ticks");
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         internal static MethodInfo GetTimeSpanTicksPropertyGetMethod() =>
             GetTimeSpanTicksProperty().GetMethod;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         internal static PropertyInfo GetDateTimeTimeOfDayProperty() =>
             StaticType.DateTime.GetProperty("TimeOfDay");
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         internal static MethodInfo GetDateTimeTimeOfDayPropertyGetMethod() =>
             GetDateTimeTimeOfDayProperty().GetMethod;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
@@ -458,7 +458,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
@@ -472,7 +472,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
@@ -480,7 +480,7 @@ namespace RepoDb.Reflection
             Expression.Call(ConvertExpressionToNullableGetValueOrDefaultExpression(expression), StaticType.Guid.GetMethod("ToString", new Type[0]));
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
@@ -488,7 +488,7 @@ namespace RepoDb.Reflection
             Expression.New(StaticType.Guid.GetConstructor(new[] { StaticType.String }), ConvertExpressionToNullableGetValueOrDefaultExpression(expression));
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
@@ -497,7 +497,7 @@ namespace RepoDb.Reflection
                 ConvertExpressionToNullableGetValueOrDefaultExpression(ConvertExpressionToTimeSpanTicksExpression(expression)));
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
@@ -505,7 +505,7 @@ namespace RepoDb.Reflection
             ConvertExpressionToNullableGetValueOrDefaultExpression(ConvertExpressionToDateTimeTimeOfDayExpression(expression));
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
@@ -513,7 +513,7 @@ namespace RepoDb.Reflection
             Expression.Call(expression, GetTimeSpanTicksPropertyGetMethod());
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
@@ -521,7 +521,7 @@ namespace RepoDb.Reflection
             Expression.Call(expression, GetDateTimeTimeOfDayPropertyGetMethod());
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="expression"></param>
         /// <param name="toType"></param>
@@ -564,7 +564,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="expression"></param>
         /// <param name="toType"></param>
@@ -574,7 +574,7 @@ namespace RepoDb.Reflection
             (expression.Type != toType) ? Expression.Convert(expression, toType) : expression;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="expression"></param>
         /// <param name="fromType"></param>
@@ -588,7 +588,7 @@ namespace RepoDb.Reflection
                     ConvertExpressionToEnumExpressionForNonString(expression, toEnumType);
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="expression"></param>
         /// <param name="toEnumType"></param>
@@ -611,7 +611,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="expression"></param>
         /// <param name="toEnumType"></param>
@@ -633,7 +633,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="expression"></param>
         /// <param name="toType"></param>
@@ -652,7 +652,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
@@ -685,7 +685,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="expression"></param>
         /// <param name="toType"></param>
@@ -722,7 +722,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="expression"></param>
         /// <param name="propertyName"></param>
@@ -734,13 +734,13 @@ namespace RepoDb.Reflection
             var valueIsNull = Expression.Equal(valueVariable, Expression.Constant(null));
             var dbNullValue = ConvertExpressionToTypeExpression(Expression.Constant(DBNull.Value), StaticType.Object);
 
-            // Set the propert value
+            // Set the property value
             return Expression.Block(new[] { valueVariable }, Expression.Assign(valueVariable, expression),
                 Expression.Condition(valueIsNull, dbNullValue, valueVariable));
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="expression"></param>
         /// <param name="targetNullableType"></param>
@@ -763,7 +763,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="expression"></param>
         /// <param name="handlerInstance"></param>
@@ -795,7 +795,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="expression"></param>
         /// <param name="toType"></param>
@@ -840,7 +840,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="expression"></param>
         /// <param name="classProperty"></param>
@@ -852,7 +852,7 @@ namespace RepoDb.Reflection
             => ConvertExpressionToPropertyHandlerSetExpressionTuple(expression, classProperty, targetType).convertedExpression;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="expression"></param>
         /// <param name="classProperty"></param>
@@ -893,7 +893,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TResult"></typeparam>
         /// <param name="entityExpression"></param>
@@ -927,7 +927,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TResult"></typeparam>
         /// <param name="entityOrEntitiesExpression"></param>
@@ -977,7 +977,7 @@ namespace RepoDb.Reflection
         #region Common
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="readerParameterExpression"></param>
         /// <param name="classPropertyParameterInfo"></param>
@@ -1010,7 +1010,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="classPropertyParameterInfo"></param>
         /// <param name="readerField"></param>
@@ -1021,7 +1021,7 @@ namespace RepoDb.Reflection
             var parameterType = GetPropertyHandlerGetParameter(classPropertyParameterInfo)?.ParameterType;
             var classPropertyParameterInfoType = classPropertyParameterInfo.GetTargetType();
 
-            // get handler on class property or type level. for detect default value type and convert 
+            // get handler on class property or type level. for detect default value type and convert
             var handlerInstance = GetHandlerInstance(classPropertyParameterInfo, readerField) ?? PropertyHandlerCache.Get<object>(classPropertyParameterInfo.GetTargetType());
 
             // default value expression
@@ -1057,7 +1057,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="readerParameterExpression"></param>
         /// <param name="classPropertyParameterInfo"></param>
@@ -1151,7 +1151,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="targetType"></param>
         /// <returns></returns>
@@ -1159,7 +1159,7 @@ namespace RepoDb.Reflection
             Expression.New(StaticType.Nullable.MakeGenericType(targetType.GetUnderlyingType()));
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TResult"></typeparam>
         /// <param name="readerFieldsName"></param>
@@ -1288,7 +1288,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="readerParameterExpression"></param>
         /// <param name="ordinal"></param>
@@ -1298,7 +1298,7 @@ namespace RepoDb.Reflection
             GetDbNullExpression(readerParameterExpression, Expression.Constant(ordinal));
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="readerParameterExpression"></param>
         /// <param name="ordinalExpression"></param>
@@ -1308,7 +1308,7 @@ namespace RepoDb.Reflection
             Expression.Call(readerParameterExpression, StaticType.DbDataReader.GetMethod("IsDBNull"), ordinalExpression);
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="readerParameterExpression"></param>
         /// <param name="readerGetValueMethod"></param>
@@ -1320,7 +1320,7 @@ namespace RepoDb.Reflection
             GetDbReaderGetValueExpression(readerParameterExpression, readerGetValueMethod, Expression.Constant(ordinal));
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="readerParameterExpression"></param>
         /// <param name="readerGetValueMethod"></param>
@@ -1374,7 +1374,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="entityInstanceExpression"></param>
         /// <param name="classProperty"></param>
@@ -1442,7 +1442,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="propertyExpression"></param>
         /// <param name="objectInstanceExpression"></param>
@@ -1464,7 +1464,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="dictionaryInstanceExpression"></param>
         /// <param name="dbField"></param>
@@ -1484,7 +1484,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="parameterVariableExpression"></param>
         /// <param name="entityExpression"></param>
@@ -1523,7 +1523,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="parameterVariableExpression"></param>
         /// <param name="dictionaryInstanceExpression"></param>
@@ -1547,7 +1547,7 @@ namespace RepoDb.Reflection
             return Expression.Call(parameterVariableExpression, GetDbParameterValueSetMethod(), expression);
         }
 
-        private static DbType? GetDbType(ClassProperty classProperty, 
+        private static DbType? GetDbType(ClassProperty classProperty,
             Type dbFieldType)
         {
             var dbType = classProperty?.GetDbType();
@@ -1560,7 +1560,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="parameterVariableExpression"></param>
         /// <param name="classProperty"></param>
@@ -1572,7 +1572,7 @@ namespace RepoDb.Reflection
             => GetDbParameterDbTypeAssignmentExpression(parameterVariableExpression, GetDbType(classProperty, dbField.Type));
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="parameterVariableExpression"></param>
         /// <param name="dbField"></param>
@@ -1582,7 +1582,7 @@ namespace RepoDb.Reflection
             => GetDbParameterDbTypeAssignmentExpression(parameterVariableExpression, GetDbType(null, dbField.Type));
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="parameterVariableExpression"></param>
         /// <param name="dbType"></param>
@@ -1604,7 +1604,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="commandParameterExpression"></param>
         /// <returns></returns>
@@ -1615,25 +1615,25 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
-        /// <param name="parameterVariableExpresion"></param>
+        /// <param name="parameterVariableExpression"></param>
         /// <param name="dbField"></param>
         /// <param name="entityIndex"></param>
         /// <param name="dbSetting"></param>
-        internal static MethodCallExpression GetDbParameterNameAssignmentExpression(ParameterExpression parameterVariableExpresion,
+        internal static MethodCallExpression GetDbParameterNameAssignmentExpression(ParameterExpression parameterVariableExpression,
             DbField dbField,
             int entityIndex,
             IDbSetting dbSetting)
         {
             var parameterName = dbField.Name.AsUnquoted(true, dbSetting).AsAlphaNumeric();
             var dbParameterParameterNameSetMethod = StaticType.DbParameter.GetProperty("ParameterName").SetMethod;
-            return Expression.Call(parameterVariableExpresion, dbParameterParameterNameSetMethod,
+            return Expression.Call(parameterVariableExpression, dbParameterParameterNameSetMethod,
                 Expression.Constant(entityIndex > 0 ? string.Concat(parameterName, "_", entityIndex) : parameterName));
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="parameterVariableExpression"></param>
         /// <param name="direction"></param>
@@ -1646,7 +1646,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="parameterVariableExpression"></param>
         /// <param name="size"></param>
@@ -1659,7 +1659,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="parameterVariableExpression"></param>
         /// <param name="precision"></param>
@@ -1672,7 +1672,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="parameterVariableExpression"></param>
         /// <param name="scale"></param>
@@ -1685,7 +1685,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="commandParameterExpression"></param>
         /// <param name="parameterVariable"></param>
@@ -1700,7 +1700,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="dbParameterCollectionExpression"></param>
         /// <returns></returns>
@@ -1711,7 +1711,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="commandParameterExpression"></param>
         /// <param name="entityIndex"></param>
@@ -1820,7 +1820,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="commandParameterExpression"></param>
         /// <param name="entityIndex"></param>
@@ -1898,7 +1898,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="commandParameterExpression"></param>
         /// <param name="entityExpression"></param>
@@ -1973,7 +1973,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="commandParameterExpression"></param>
         /// <returns></returns>
@@ -1985,7 +1985,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="entitiesParameterExpression"></param>
         /// <param name="typeOfListEntity"></param>
@@ -2001,7 +2001,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TResult"></typeparam>
         /// <param name="expression"></param>
@@ -2015,7 +2015,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TResult"></typeparam>
         /// <param name="commandParameterExpression"></param>

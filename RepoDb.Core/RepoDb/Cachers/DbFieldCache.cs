@@ -156,7 +156,7 @@ namespace RepoDb
             GetAsyncInternal(connection, tableName, transaction, enableValidation, cancellationToken);
 
         /// <summary>
-        /// Gets the cached field definitions of the entity in an asychronous way.
+        /// Gets the cached field definitions of the entity in an asynchronous way.
         /// </summary>
         /// <typeparam name="TDbConnection">The type of <see cref="IDbConnection"/> object.</typeparam>
         /// <param name="connection">The instance of the <see cref="IDbConnection"/> object.</param>

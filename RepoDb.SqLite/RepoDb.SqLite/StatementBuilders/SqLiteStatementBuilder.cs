@@ -310,7 +310,7 @@ namespace RepoDb.StatementBuilders
             //    throw new NullReferenceException($"The list of fields cannot be null or empty.");
             //}
 
-            //// Check the primay field
+            //// Check the primary field
             //if (primaryField == null)
             //{
             //    throw new PrimaryFieldNotFoundException($"SqLite is using the primary key as qualifier for (INSERT or REPLACE) operation.");
@@ -421,7 +421,7 @@ namespace RepoDb.StatementBuilders
             //    throw new NullReferenceException($"The list of fields cannot be null or empty.");
             //}
 
-            //// Check the primay field
+            //// Check the primary field
             //if (primaryField == null)
             //{
             //    throw new PrimaryFieldNotFoundException($"SqLite is using the primary key as qualifier for (INSERT or REPLACE) operation.");

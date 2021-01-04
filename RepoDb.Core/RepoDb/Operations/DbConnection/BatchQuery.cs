@@ -1709,7 +1709,7 @@ namespace RepoDb
             var param = (object)null;
             var sessionId = Guid.Empty;
 
-            // Converts to propery mapped object
+            // Converts to property mapped object
             if (where != null)
             {
                 param = QueryGroup.AsMappedObject(new[] { where.MapTo<TEntity>() });
@@ -1813,7 +1813,7 @@ namespace RepoDb
             var param = (object)null;
             var sessionId = Guid.Empty;
 
-            // Converts to propery mapped object
+            // Converts to property mapped object
             if (where != null)
             {
                 param = QueryGroup.AsMappedObject(new[] { where.MapTo<TEntity>() });

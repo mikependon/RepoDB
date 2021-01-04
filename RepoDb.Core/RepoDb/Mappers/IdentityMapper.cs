@@ -217,7 +217,7 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Removes the exising mapped identity property of the data entity type.
+        /// Removes the existing mapped identity property of the data entity type.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         public static void Remove<TEntity>()
@@ -225,7 +225,7 @@ namespace RepoDb
             Remove(typeof(TEntity));
 
         /// <summary>
-        /// Removes the exising mapped identity property of the data entity type.
+        /// Removes the existing mapped identity property of the data entity type.
         /// </summary>
         /// <param name="entityType">The target type.</param>
         public static void Remove(Type entityType)
