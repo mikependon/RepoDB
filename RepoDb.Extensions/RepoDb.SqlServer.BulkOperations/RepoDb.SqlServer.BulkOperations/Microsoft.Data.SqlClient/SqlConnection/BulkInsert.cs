@@ -576,8 +576,6 @@ namespace RepoDb
         /// <param name="hints"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
-        /// <param name="isReturnIdentity"></param>
-        /// <param name="usePhysicalPseudoTempTable"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
         internal static int BulkInsertInternal(SqlConnection connection,
@@ -589,8 +587,6 @@ namespace RepoDb
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? isReturnIdentity = null,
-            bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null) =>
             BulkInsertInternalBase<SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
                 SqlBulkCopyColumnMapping, SqlTransaction>(connection,
@@ -602,8 +598,6 @@ namespace RepoDb
                 hints,
                 bulkCopyTimeout,
                 batchSize,
-                isReturnIdentity,
-                usePhysicalPseudoTempTable,
                 transaction);
 
         /// <summary>
@@ -728,8 +722,6 @@ namespace RepoDb
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? isReturnIdentity = null,
-            bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
             BulkInsertAsyncInternalBase<SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
@@ -742,8 +734,6 @@ namespace RepoDb
                 hints,
                 bulkCopyTimeout,
                 batchSize,
-                isReturnIdentity,
-                usePhysicalPseudoTempTable,
                 transaction,
                 cancellationToken);
 

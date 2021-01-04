@@ -1,10 +1,8 @@
 ﻿using Microsoft.Data.SqlClient;
-using RepoDb.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -142,7 +140,6 @@ namespace RepoDb
                 hints: hints,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
-                isReturnIdentity: false,
                 usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                 transaction: transaction);
         }
@@ -187,7 +184,6 @@ namespace RepoDb
                 hints: hints,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
-                isReturnIdentity: false,
                 usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                 transaction: transaction);
         }
@@ -420,7 +416,6 @@ namespace RepoDb
                 hints: hints,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
-                isReturnIdentity: false,
                 usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                 transaction: transaction,
                 cancellationToken: cancellationToken);
@@ -468,7 +463,6 @@ namespace RepoDb
                 hints: hints,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
-                isReturnIdentity: false,
                 usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                 transaction: transaction,
                 cancellationToken: cancellationToken);
@@ -632,7 +626,6 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
@@ -646,7 +639,6 @@ namespace RepoDb
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null) =>
             BulkMergeInternalBase<SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
@@ -659,7 +651,6 @@ namespace RepoDb
                 hints,
                 bulkCopyTimeout,
                 batchSize,
-                isReturnIdentity,
                 usePhysicalPseudoTempTable,
                 transaction);
 
@@ -772,7 +763,6 @@ namespace RepoDb
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
         /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
@@ -786,7 +776,6 @@ namespace RepoDb
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
@@ -800,7 +789,6 @@ namespace RepoDb
                 hints,
                 bulkCopyTimeout,
                 batchSize,
-                isReturnIdentity,
                 usePhysicalPseudoTempTable,
                 transaction,
                 cancellationToken);

@@ -104,7 +104,8 @@ namespace RepoDb
                 var sql = GetCreateTemporaryTableSqlText(tableName,
                     tempTableName,
                     primaryOrIdentityField.AsEnumerable(),
-                    dbSetting);
+                    dbSetting,
+                    false);
                 connection.ExecuteNonQuery(sql, transaction: transaction);
 
                 // Do the bulk insertion first
@@ -298,7 +299,8 @@ namespace RepoDb
                 var sql = GetCreateTemporaryTableSqlText(tableName,
                     tempTableName,
                     fields,
-                    dbSetting);
+                    dbSetting,
+                    false);
                 connection.ExecuteNonQuery(sql, transaction: transaction);
 
                 // Set the options to KeepIdentity if needed
@@ -332,8 +334,6 @@ namespace RepoDb
                     null,
                     bulkCopyTimeout,
                     batchSize,
-                    false,
-                    false,
                     transaction);
 
                 // Create the clustered index
@@ -511,7 +511,8 @@ namespace RepoDb
                 var sql = GetCreateTemporaryTableSqlText(tableName,
                     tempTableName,
                     fields,
-                    dbSetting);
+                    dbSetting,
+                    false);
                 connection.ExecuteNonQuery(sql, transaction: transaction);
 
                 // Set the options to KeepIdentity if needed
@@ -692,7 +693,8 @@ namespace RepoDb
                 var sql = GetCreateTemporaryTableSqlText(tableName,
                     tempTableName,
                     primaryOrIdentityField.AsEnumerable(),
-                    dbSetting);
+                    dbSetting,
+                    false);
                 await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
 
                 // Do the bulk insertion first
@@ -889,7 +891,8 @@ namespace RepoDb
                 var sql = GetCreateTemporaryTableSqlText(tableName,
                     tempTableName,
                     fields,
-                    dbSetting);
+                    dbSetting,
+                    false);
                 await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
 
                 // Set the options to KeepIdentity if needed
@@ -923,8 +926,6 @@ namespace RepoDb
                     hints,
                     bulkCopyTimeout,
                     batchSize,
-                    false,
-                    false,
                     transaction,
                     cancellationToken);
 
@@ -1105,7 +1106,8 @@ namespace RepoDb
                 var sql = GetCreateTemporaryTableSqlText(tableName,
                     tempTableName,
                     fields,
-                    dbSetting);
+                    dbSetting,
+                    false);
                 await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
 
                 // Set the options to KeepIdentity if needed

@@ -146,7 +146,8 @@ namespace RepoDb
                 var sql = GetCreateTemporaryTableSqlText(tableName,
                     tempTableName,
                     fields,
-                    dbSetting);
+                    dbSetting,
+                    false);
                 connection.ExecuteNonQuery(sql, transaction: transaction);
 
                 // Set the options to KeepIdentity if needed
@@ -262,7 +263,6 @@ namespace RepoDb
         /// <param name="hints"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
-        /// <param name="isReturnIdentity"></param>
         /// <param name="usePhysicalPseudoTempTable"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
@@ -276,7 +276,6 @@ namespace RepoDb
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
             TSqlTransaction transaction = null)
             where TSqlBulkCopy : class, IDisposable
@@ -373,7 +372,8 @@ namespace RepoDb
                 var sql = GetCreateTemporaryTableSqlText(tableName,
                     tempTableName,
                     fields,
-                    dbSetting);
+                    dbSetting,
+                    false);
                 connection.ExecuteNonQuery(sql, transaction: transaction);
 
                 // Set the options to KeepIdentity if needed
@@ -403,8 +403,6 @@ namespace RepoDb
                     null,
                     bulkCopyTimeout,
                     batchSize,
-                    false,
-                    false,
                     transaction);
 
                 // Create the clustered index
@@ -422,7 +420,7 @@ namespace RepoDb
                     identityDbField?.AsField(),
                     hints,
                     dbSetting,
-                    isReturnIdentity.GetValueOrDefault());
+                    false);
                 result = connection.ExecuteNonQuery(sql, commandTimeout: bulkCopyTimeout, transaction: transaction);
 
                 // Drop the table after used
@@ -589,7 +587,8 @@ namespace RepoDb
                 var sql = GetCreateTemporaryTableSqlText(tableName,
                     tempTableName,
                     fields,
-                    dbSetting);
+                    dbSetting,
+                    false);
                 connection.ExecuteNonQuery(sql, transaction: transaction);
 
                 // Set the options to KeepIdentity if needed
@@ -832,7 +831,8 @@ namespace RepoDb
                 var sql = GetCreateTemporaryTableSqlText(tableName,
                     tempTableName,
                     fields,
-                    dbSetting);
+                    dbSetting,
+                    false);
                 await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
 
                 // Set the options to KeepIdentity if needed
@@ -950,7 +950,6 @@ namespace RepoDb
         /// <param name="hints"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
-        /// <param name="isReturnIdentity"></param>
         /// <param name="usePhysicalPseudoTempTable"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
@@ -965,7 +964,6 @@ namespace RepoDb
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
             TSqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
@@ -1063,7 +1061,8 @@ namespace RepoDb
                 var sql = GetCreateTemporaryTableSqlText(tableName,
                     tempTableName,
                     fields,
-                    dbSetting);
+                    dbSetting,
+                    false);
                 await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
 
                 // Set the options to KeepIdentity if needed
@@ -1093,8 +1092,6 @@ namespace RepoDb
                     null,
                     bulkCopyTimeout,
                     batchSize,
-                    false,
-                    false,
                     transaction,
                     cancellationToken);
 
@@ -1113,7 +1110,7 @@ namespace RepoDb
                     identityDbField?.AsField(),
                     hints,
                     dbSetting,
-                    isReturnIdentity.GetValueOrDefault());
+                    false);
                 result = await connection.ExecuteNonQueryAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, cancellationToken: cancellationToken);
 
                 // Drop the table after used
@@ -1282,7 +1279,8 @@ namespace RepoDb
                 var sql = GetCreateTemporaryTableSqlText(tableName,
                     tempTableName,
                     fields,
-                    dbSetting);
+                    dbSetting,
+                    false);
                 await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
 
                 // Filter the DB Fields
