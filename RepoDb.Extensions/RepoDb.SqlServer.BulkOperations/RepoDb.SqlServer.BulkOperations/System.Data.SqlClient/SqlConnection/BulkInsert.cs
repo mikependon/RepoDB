@@ -274,7 +274,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static async Task<int> BulkInsertAsync<TEntity>(this SqlConnection connection,
+        public static Task<int> BulkInsertAsync<TEntity>(this SqlConnection connection,
             IEnumerable<TEntity> entities,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions? options = null,
@@ -287,7 +287,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            return await BulkInsertAsyncInternal(connection: connection,
+            return BulkInsertAsyncInternal(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entities: entities,
                 dbFields: null,
@@ -319,7 +319,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static async Task<int> BulkInsertAsync<TEntity>(this SqlConnection connection,
+        public static Task<int> BulkInsertAsync<TEntity>(this SqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<BulkInsertMapItem> mappings = null,
@@ -333,7 +333,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            return await BulkInsertAsyncInternal(connection: connection,
+            return BulkInsertAsyncInternal(connection: connection,
                 tableName: tableName,
                 entities: entities,
                 dbFields: null,
@@ -361,7 +361,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static async Task<int> BulkInsertAsync<TEntity>(this SqlConnection connection,
+        public static Task<int> BulkInsertAsync<TEntity>(this SqlConnection connection,
             DbDataReader reader,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions? options = null,
@@ -371,7 +371,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            return await BulkInsertAsyncInternal(connection: connection,
+            return BulkInsertAsyncInternal(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 reader: reader,
                 dbFields: null,
@@ -400,7 +400,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static async Task<int> BulkInsertAsync(this SqlConnection connection,
+        public static Task<int> BulkInsertAsync(this SqlConnection connection,
             string tableName,
             DbDataReader reader,
             IEnumerable<BulkInsertMapItem> mappings = null,
@@ -410,7 +410,7 @@ namespace RepoDb
             SqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            return await BulkInsertAsyncInternal(connection: connection,
+            return BulkInsertAsyncInternal(connection: connection,
                 tableName: tableName,
                 reader: reader,
                 dbFields: null,
@@ -439,7 +439,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static async Task<int> BulkInsertAsync<TEntity>(this SqlConnection connection,
+        public static Task<int> BulkInsertAsync<TEntity>(this SqlConnection connection,
             DataTable dataTable,
             DataRowState? rowState = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
@@ -453,7 +453,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            return await BulkInsertAsyncInternal(connection: connection,
+            return BulkInsertAsyncInternal(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 dataTable: dataTable,
                 rowState: rowState,
@@ -486,7 +486,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static async Task<int> BulkInsertAsync(this SqlConnection connection,
+        public static Task<int> BulkInsertAsync(this SqlConnection connection,
             string tableName,
             DataTable dataTable,
             DataRowState? rowState = null,
@@ -500,7 +500,7 @@ namespace RepoDb
             SqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            return await BulkInsertAsyncInternal(connection: connection,
+            return BulkInsertAsyncInternal(connection: connection,
                 tableName: tableName,
                 dataTable: dataTable,
                 rowState: rowState,

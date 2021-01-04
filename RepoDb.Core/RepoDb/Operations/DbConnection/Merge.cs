@@ -1397,7 +1397,7 @@ namespace RepoDb
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
-        internal static async Task<TResult> MergeAsyncInternal<TEntity, TResult>(this IDbConnection connection,
+        internal static Task<TResult> MergeAsyncInternal<TEntity, TResult>(this IDbConnection connection,
             string tableName,
             TEntity entity,
             IEnumerable<Field> qualifiers,
@@ -1418,7 +1418,7 @@ namespace RepoDb
             {
                 if (entity?.GetType()?.IsDictionaryStringObject() == true)
                 {
-                    return await MergeAsyncInternalBase<IDictionary<string, object>, TResult>(connection: connection,
+                    return MergeAsyncInternalBase<IDictionary<string, object>, TResult>(connection: connection,
                         tableName: tableName,
                         entity: (IDictionary<string, object>)entity,
                         qualifiers: qualifiers,
@@ -1432,7 +1432,7 @@ namespace RepoDb
                 }
                 else
                 {
-                    return await MergeAsyncInternalBase<TEntity, TResult>(connection: connection,
+                    return MergeAsyncInternalBase<TEntity, TResult>(connection: connection,
                         tableName: tableName,
                         entity: entity,
                         qualifiers: qualifiers,
@@ -1449,7 +1449,7 @@ namespace RepoDb
             {
                 if (entity?.GetType()?.IsDictionaryStringObject() == true)
                 {
-                    return await UpsertAsyncInternalBase<IDictionary<string, object>, TResult>(connection: connection,
+                    return UpsertAsyncInternalBase<IDictionary<string, object>, TResult>(connection: connection,
                         tableName: tableName,
                         entity: (IDictionary<string, object>)entity,
                         qualifiers: qualifiers,
@@ -1463,7 +1463,7 @@ namespace RepoDb
                 }
                 else
                 {
-                    return await UpsertAsyncInternalBase<TEntity, TResult>(connection: connection,
+                    return UpsertAsyncInternalBase<TEntity, TResult>(connection: connection,
                         tableName: tableName,
                         entity: entity,
                         qualifiers: qualifiers,

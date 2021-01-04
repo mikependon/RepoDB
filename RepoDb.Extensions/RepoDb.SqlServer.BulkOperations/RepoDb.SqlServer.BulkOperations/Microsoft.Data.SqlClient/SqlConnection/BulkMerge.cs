@@ -305,7 +305,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static async Task<int> BulkMergeAsync<TEntity>(this SqlConnection connection,
+        public static Task<int> BulkMergeAsync<TEntity>(this SqlConnection connection,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
@@ -319,7 +319,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            return await BulkMergeAsyncInternal(connection: connection,
+            return BulkMergeAsyncInternal(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entities: entities,
                 qualifiers: ParseExpression(qualifiers),
@@ -352,7 +352,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static async Task<int> BulkMergeAsync<TEntity>(this SqlConnection connection,
+        public static Task<int> BulkMergeAsync<TEntity>(this SqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
@@ -367,7 +367,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            return await BulkMergeAsyncInternal(connection: connection,
+            return BulkMergeAsyncInternal(connection: connection,
                 tableName: tableName,
                 entities: entities,
                 qualifiers: ParseExpression(qualifiers),
@@ -398,7 +398,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static async Task<int> BulkMergeAsync<TEntity>(this SqlConnection connection,
+        public static Task<int> BulkMergeAsync<TEntity>(this SqlConnection connection,
             DbDataReader reader,
             Expression<Func<TEntity, object>> qualifiers = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
@@ -411,7 +411,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            return await BulkMergeAsyncInternal(connection: connection,
+            return BulkMergeAsyncInternal(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 reader: reader,
                 qualifiers: ParseExpression(qualifiers),
@@ -446,7 +446,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static async Task<int> BulkMergeAsync(this SqlConnection connection,
+        public static Task<int> BulkMergeAsync(this SqlConnection connection,
             string tableName,
             DbDataReader reader,
             IEnumerable<Field> qualifiers = null,
@@ -459,7 +459,7 @@ namespace RepoDb
             SqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            return await BulkMergeAsyncInternal(connection: connection,
+            return BulkMergeAsyncInternal(connection: connection,
                 tableName: tableName,
                 reader: reader,
                 qualifiers: qualifiers,
@@ -492,7 +492,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static async Task<int> BulkMergeAsync<TEntity>(this SqlConnection connection,
+        public static Task<int> BulkMergeAsync<TEntity>(this SqlConnection connection,
             DataTable dataTable,
             IEnumerable<Field> qualifiers = null,
             DataRowState? rowState = null,
@@ -507,7 +507,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            return await BulkMergeAsyncInternal(connection: connection,
+            return BulkMergeAsyncInternal(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 dataTable: dataTable,
                 qualifiers: qualifiers,
@@ -541,7 +541,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
-        public static async Task<int> BulkMergeAsync(this SqlConnection connection,
+        public static Task<int> BulkMergeAsync(this SqlConnection connection,
             string tableName,
             DataTable dataTable,
             IEnumerable<Field> qualifiers = null,
@@ -556,7 +556,7 @@ namespace RepoDb
             SqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            return await BulkMergeAsyncInternal(connection: connection,
+            return BulkMergeAsyncInternal(connection: connection,
                 tableName: tableName,
                 dataTable: dataTable,
                 qualifiers: qualifiers,

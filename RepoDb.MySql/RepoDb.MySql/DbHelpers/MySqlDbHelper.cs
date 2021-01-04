@@ -256,11 +256,11 @@ namespace RepoDb.DbHelpers
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The newly generated identity from the database.</returns>
-        public async Task<object> GetScopeIdentityAsync(IDbConnection connection,
+        public Task<object> GetScopeIdentityAsync(IDbConnection connection,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            return await connection.ExecuteScalarAsync("SELECT LAST_INSERT_ID();", transaction: transaction,
+            return connection.ExecuteScalarAsync("SELECT LAST_INSERT_ID();", transaction: transaction,
                 cancellationToken: cancellationToken);
         }
 
