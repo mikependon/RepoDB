@@ -80,13 +80,13 @@ namespace RepoDb.StatementBuilders
             // Validate the page
             if (page == null || page < 0)
             {
-                throw new ArgumentOutOfRangeException("The page must be equals or greater than 0.");
+                throw new ArgumentOutOfRangeException(nameof(page), "The page must be equals or greater than 0.");
             }
 
             // Validate the page
             if (rowsPerBatch == null || rowsPerBatch < 1)
             {
-                throw new ArgumentOutOfRangeException($"The rows per batch must be equals or greater than 1.");
+                throw new ArgumentOutOfRangeException(nameof(rowsPerBatch), "The rows per batch must be equals or greater than 1.");
             }
 
             // Skipping variables

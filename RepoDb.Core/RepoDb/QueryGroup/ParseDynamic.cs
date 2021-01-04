@@ -27,7 +27,7 @@ namespace RepoDb
             // Check for value
             if (obj == null)
             {
-                throw new ArgumentNullException("Parameter 'obj' cannot be null.");
+                throw new ArgumentNullException(nameof(obj));
             }
 
             // Type of the object

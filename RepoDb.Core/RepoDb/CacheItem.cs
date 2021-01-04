@@ -33,7 +33,7 @@ namespace RepoDb
         {
             if (cacheItemExpiration < 0)
             {
-                throw new ArgumentOutOfRangeException("Expiration in minutes must not be negative values.");
+                throw new ArgumentOutOfRangeException(nameof(cacheItemExpiration), "Expiration in minutes must not be negative values.");
             }
             Key = key;
             Value = value;
