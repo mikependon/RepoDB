@@ -1547,7 +1547,8 @@ namespace RepoDb.Reflection
             return Expression.Call(parameterVariableExpression, GetDbParameterValueSetMethod(), expression);
         }
 
-        private static DbType? GetDbType(ClassProperty classProperty, Type dbFieldType)
+        private static DbType? GetDbType(ClassProperty classProperty, 
+            Type dbFieldType)
         {
             var dbType = classProperty?.GetDbType();
             if (dbType == null)

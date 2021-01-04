@@ -257,22 +257,19 @@ namespace RepoDb.Extensions
                     returnType = underlyingType;
                 }
 
-                // DbType
+                /*
+                 * DbType, Decide in the following logical order
+                 *   1. PropertyHandler.Set method's ReturnType, use Primitive mapping.
+                 *   2. Property Type, use TypeMapCache.
+                 *   3. Property value's Type, use TypeMapCache.
+                 *   4. Property Type, use Primitive mapping.
+                 *   5. Specialized enum, use Converter.EnumDefaultDatabaseType.
+                 */
                 var dbType = (returnType != null ? clientTypeToDbTypeResolver.Resolve(returnType) : null) ??
                     classProperty.GetDbType() ??
-                    value?.GetType()?.GetDbType();
-
-                // Try get fallback dbType by classProperty to avoid being mistaken as string when value is null.
-                if (dbType == null && classProperty != null)
-                {
-                    dbType = clientTypeToDbTypeResolver.Resolve(classProperty.PropertyInfo.PropertyType);
-                }
-
-                // Specialized enum
-                if (dbType == null && isEnum.HasValue && isEnum.Value == true)
-                {
-                    dbType = Converter.EnumDefaultDatabaseType;
-                }
+                    value?.GetType()?.GetDbType() ??
+                    (classProperty != null ? clientTypeToDbTypeResolver.Resolve(classProperty.PropertyInfo.PropertyType) : null) ??
+                    (isEnum == true ? Converter.EnumDefaultDatabaseType : (DbType?)null);
 
                 // Add the parameter
                 command.Parameters.Add(command.CreateParameter(name, value, dbType));
