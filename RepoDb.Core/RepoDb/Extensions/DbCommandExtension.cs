@@ -24,7 +24,7 @@ namespace RepoDb.Extensions
         #region SubClasses
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         private class PropertyHandlerSetReturnDefinition
         {
@@ -70,7 +70,7 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="parameter"></param>
         private static void EnsureTableValueParameter(IDbDataParameter parameter)
@@ -91,7 +91,7 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="command"></param>
         /// <param name="commandArrayParameters"></param>
@@ -110,7 +110,7 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="command"></param>
         /// <param name="commandArrayParameter"></param>
@@ -149,7 +149,7 @@ namespace RepoDb.Extensions
             CreateParameters(command, param, null, entityType, null);
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="command"></param>
         /// <param name="param"></param>
@@ -200,7 +200,7 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="command"></param>
         /// <param name="param"></param>
@@ -241,7 +241,7 @@ namespace RepoDb.Extensions
                 var returnType = (Type)null;
 
                 // Propertyhandler
-                var propertyHandler = GetProperyHandler(classProperty, valueType);
+                var propertyHandler = GetPropertyHandler(classProperty, valueType);
                 var definition = InvokePropertyHandlerSetMethod(propertyHandler, value, classProperty);
                 if (definition != null)
                 {
@@ -277,7 +277,7 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="command"></param>
         /// <param name="dictionary"></param>
@@ -316,7 +316,7 @@ namespace RepoDb.Extensions
                 var isEnum = valueType?.IsEnum;
 
                 // Propertyhandler
-                var propertyHandler = GetProperyHandler(classProperty, valueType);
+                var propertyHandler = GetPropertyHandler(classProperty, valueType);
                 var definition = InvokePropertyHandlerSetMethod(propertyHandler, value, classProperty);
                 if (definition != null)
                 {
@@ -355,7 +355,7 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="command"></param>
         /// <param name="queryGroup"></param>
@@ -376,7 +376,7 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="command"></param>
         /// <param name="queryFields"></param>
@@ -419,7 +419,7 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="command"></param>
         /// <param name="queryField"></param>
@@ -451,7 +451,7 @@ namespace RepoDb.Extensions
 
             // PropertyHandler
             var classProperty = PropertyCache.Get(entityType, queryField.Field);
-            var propertyHandler = GetProperyHandler(classProperty, valueType);
+            var propertyHandler = GetPropertyHandler(classProperty, valueType);
             var definition = InvokePropertyHandlerSetMethod(propertyHandler, value, classProperty);
             if (definition != null)
             {
@@ -489,7 +489,7 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="command"></param>
         /// <param name="queryField"></param>
@@ -515,7 +515,7 @@ namespace RepoDb.Extensions
                     var isEnum = valueType?.IsEnum;
 
                     // Propertyhandler
-                    var propertyHandler = GetProperyHandler(null, valueType);
+                    var propertyHandler = GetPropertyHandler(null, valueType);
                     var definition = InvokePropertyHandlerSetMethod(propertyHandler, value, null);
                     if (definition != null)
                     {
@@ -547,7 +547,7 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="command"></param>
         /// <param name="queryField"></param>
@@ -573,7 +573,7 @@ namespace RepoDb.Extensions
                 var isRightEnum = rightValueType?.IsEnum;
 
                 // Propertyhandler (Left)
-                var leftPropertyHandler = GetProperyHandler(null, leftValueType);
+                var leftPropertyHandler = GetPropertyHandler(null, leftValueType);
                 var leftdefinition = InvokePropertyHandlerSetMethod(leftPropertyHandler, leftValue, null);
                 if (leftdefinition != null)
                 {
@@ -582,7 +582,7 @@ namespace RepoDb.Extensions
                 }
 
                 // Propertyhandler (Right)
-                var rightPropertyHandler = GetProperyHandler(null, rightValueType);
+                var rightPropertyHandler = GetPropertyHandler(null, rightValueType);
                 var rightDefinition = InvokePropertyHandlerSetMethod(rightPropertyHandler, rightValue, null);
                 if (rightDefinition != null)
                 {
@@ -626,7 +626,7 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="dbField"></param>
         /// <returns></returns>
@@ -639,7 +639,7 @@ namespace RepoDb.Extensions
             dbField?.Type != null;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="fieldName"></param>
         /// <param name="dbFields"></param>
@@ -664,7 +664,7 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="propertyHandler"></param>
         /// <param name="value"></param>
@@ -687,7 +687,7 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="value"></param>
         /// <param name="fromType"></param>
@@ -721,7 +721,7 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
@@ -738,7 +738,7 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
@@ -748,12 +748,12 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="classProperty"></param>
         /// <param name="targetType"></param>
         /// <returns></returns>
-        private static object GetProperyHandler(ClassProperty classProperty,
+        private static object GetPropertyHandler(ClassProperty classProperty,
             Type targetType)
         {
             var propertyHandler = classProperty?.GetPropertyHandler();

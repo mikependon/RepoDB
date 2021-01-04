@@ -1617,18 +1617,18 @@ namespace RepoDb.Reflection
         /// <summary>
         ///
         /// </summary>
-        /// <param name="parameterVariableExpresion"></param>
+        /// <param name="parameterVariableExpression"></param>
         /// <param name="dbField"></param>
         /// <param name="entityIndex"></param>
         /// <param name="dbSetting"></param>
-        internal static MethodCallExpression GetDbParameterNameAssignmentExpression(ParameterExpression parameterVariableExpresion,
+        internal static MethodCallExpression GetDbParameterNameAssignmentExpression(ParameterExpression parameterVariableExpression,
             DbField dbField,
             int entityIndex,
             IDbSetting dbSetting)
         {
             var parameterName = dbField.Name.AsUnquoted(true, dbSetting).AsAlphaNumeric();
             var dbParameterParameterNameSetMethod = StaticType.DbParameter.GetProperty("ParameterName").SetMethod;
-            return Expression.Call(parameterVariableExpresion, dbParameterParameterNameSetMethod,
+            return Expression.Call(parameterVariableExpression, dbParameterParameterNameSetMethod,
                 Expression.Constant(entityIndex > 0 ? string.Concat(parameterName, "_", entityIndex) : parameterName));
         }
 
