@@ -322,7 +322,7 @@ namespace RepoDb
             // Validate the presence
             if (qualifiers?.Any() != true)
             {
-                throw new MissingFieldException("There is no qualifer field(s) defined.");
+                throw new MissingFieldException("There is no qualifier field(s) defined.");
             }
 
             // Variables needed
@@ -375,7 +375,7 @@ namespace RepoDb
             // Validate the presence
             if (qualifiers?.Any() != true)
             {
-                throw new MissingFieldException("There is no qualifer field(s) defined.");
+                throw new MissingFieldException("There is no qualifier field(s) defined.");
             }
 
             // Variables needed
@@ -498,7 +498,7 @@ namespace RepoDb
 
             if (qualifiers?.Any() != true)
             {
-                throw new MissingFieldException("There is no qualifer field(s) defined.");
+                throw new MissingFieldException("There is no qualifier field(s) defined.");
             }
 
             // Variables needed
@@ -606,7 +606,7 @@ namespace RepoDb
 
             if (qualifiers?.Any() != true)
             {
-                throw new MissingFieldException("There is no qualifer field(s) defined.");
+                throw new MissingFieldException("There is no qualifier field(s) defined.");
             }
 
             // Variables needed

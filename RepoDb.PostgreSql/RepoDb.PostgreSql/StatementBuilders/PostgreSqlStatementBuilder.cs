@@ -326,7 +326,7 @@ namespace RepoDb.StatementBuilders
                 throw new NullReferenceException($"The list of fields cannot be null or empty.");
             }
 
-            // Check the primay field
+            // Check the primary field
             if (primaryField == null)
             {
                 throw new PrimaryFieldNotFoundException($"PostgreSql is using the primary key as qualifier for (INSERT or REPLACE) operation.");
@@ -352,7 +352,7 @@ namespace RepoDb.StatementBuilders
             // Initialize the builder
             var builder = queryBuilder ?? new QueryBuilder();
 
-            // Remove the qualifers from the fields
+            // Remove the qualifiers from the fields
             var updatableFields = fields
                 .Where(f =>
                     qualifiers?.Any(qf => string.Equals(qf.Name, f.Name, StringComparison.OrdinalIgnoreCase)) != true)

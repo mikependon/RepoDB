@@ -229,7 +229,7 @@ namespace RepoDb
                 statementBuilder);
             var param = (object)null;
 
-            // Converts to propery mapped object
+            // Converts to property mapped object
             if (where != null)
             {
                 param = QueryGroup.AsMappedObject(new[] { where.MapTo<TEntity>() });
@@ -479,7 +479,7 @@ namespace RepoDb
                 statementBuilder);
             var param = (object)null;
 
-            // Converts to propery mapped object
+            // Converts to property mapped object
             if (where != null)
             {
                 param = QueryGroup.AsMappedObject(new[] { where.MapTo<TEntity>() });
@@ -685,7 +685,7 @@ namespace RepoDb
                 statementBuilder);
             var param = (object)null;
 
-            // Converts to propery mapped object
+            // Converts to property mapped object
             if (where != null)
             {
                 param = QueryGroup.AsMappedObject(new[] { where.MapTo(null) });
@@ -907,7 +907,7 @@ namespace RepoDb
                 statementBuilder);
             var param = (object)null;
 
-            // Converts to propery mapped object
+            // Converts to property mapped object
             if (where != null)
             {
                 param = QueryGroup.AsMappedObject(new[] { where.MapTo(null) });

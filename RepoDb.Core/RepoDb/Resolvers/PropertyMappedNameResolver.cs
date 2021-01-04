@@ -6,7 +6,7 @@ using System.Reflection;
 namespace RepoDb.Resolvers
 {
     /// <summary>
-    /// A class that is being used to resolve the database object name mappingss of the data entity type.
+    /// A class that is being used to resolve the database object name mappings of the data entity type.
     /// </summary>
     public class PropertyMappedNameResolver : IResolver<PropertyInfo, Type, string>
     {

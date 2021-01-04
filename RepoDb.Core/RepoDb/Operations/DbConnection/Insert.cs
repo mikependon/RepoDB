@@ -655,7 +655,7 @@ namespace RepoDb
                 // Actual Execution
                 result = Converter.ToType<TResult>(command.ExecuteScalar());
 
-                // Get explicity if needed
+                // Get explicitly if needed
                 if (Equals(result, default(TResult)) == true && dbSetting.IsMultiStatementExecutable == false)
                 {
                     result = Converter.ToType<TResult>(connection.GetDbHelper().GetScopeIdentity(connection, transaction));
@@ -761,7 +761,7 @@ namespace RepoDb
                 // Actual Execution
                 result = Converter.ToType<TResult>(await command.ExecuteScalarAsync(cancellationToken));
 
-                // Get explicity if needed
+                // Get explicitly if needed
                 if (Equals(result, default(TResult)) == true && dbSetting.IsMultiStatementExecutable == false)
                 {
                     result = Converter.ToType<TResult>(await connection.GetDbHelper().GetScopeIdentityAsync(connection, transaction, cancellationToken));

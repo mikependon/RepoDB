@@ -394,7 +394,7 @@ namespace RepoDb.StatementBuilders
                 throw new NullReferenceException($"The list of fields cannot be null or empty.");
             }
 
-            // Check the primay field
+            // Check the primary field
             if (primaryField == null)
             {
                 throw new PrimaryFieldNotFoundException($"MySql is using the primary key as qualifier for merge operation.");
@@ -497,7 +497,7 @@ namespace RepoDb.StatementBuilders
                 throw new NullReferenceException($"The list of fields cannot be null or empty.");
             }
 
-            // Check the primay field
+            // Check the primary field
             if (primaryField == null)
             {
                 throw new PrimaryFieldNotFoundException($"MySql is using the primary key as qualifier for merge operation.");

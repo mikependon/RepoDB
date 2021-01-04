@@ -23,7 +23,7 @@ namespace RepoDb
         #region SubClasses
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         internal class CommandArrayParametersText
         {
@@ -148,7 +148,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="commandText"></param>
@@ -268,7 +268,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="commandText"></param>
@@ -389,7 +389,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TResult"></typeparam>
         /// <param name="connection"></param>
@@ -461,7 +461,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TResult"></typeparam>
         /// <param name="connection"></param>
@@ -522,7 +522,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TResult"></typeparam>
         /// <param name="connection"></param>
@@ -644,7 +644,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TResult"></typeparam>
         /// <param name="connection"></param>
@@ -720,7 +720,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TResult"></typeparam>
         /// <param name="connection"></param>
@@ -784,7 +784,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TResult"></typeparam>
         /// <param name="connection"></param>
@@ -888,7 +888,7 @@ namespace RepoDb
                 false);
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="commandText"></param>
@@ -956,7 +956,7 @@ namespace RepoDb
                 cancellationToken);
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="commandText"></param>
@@ -1030,7 +1030,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="commandText"></param>
@@ -1124,7 +1124,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="commandText"></param>
@@ -1218,7 +1218,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="commandText"></param>
@@ -1294,7 +1294,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="commandText"></param>
@@ -1339,7 +1339,7 @@ namespace RepoDb
 
         /// <summary>
         /// Executes a SQL statement from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
-        /// returns the first occurence value (first column of first row) of the execution.
+        /// returns the first occurrence value (first column of first row) of the execution.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="commandText">The command text to be used.</param>
@@ -1356,7 +1356,7 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
-        /// <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
+        /// <returns>An object that holds the first occurrence value (first column of first row) of the execution.</returns>
         public static object ExecuteScalar(this IDbConnection connection,
             string commandText,
             object param = null,
@@ -1387,7 +1387,7 @@ namespace RepoDb
 
         /// <summary>
         /// Executes a SQL statement from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
-        /// returns the first occurence value (first column of first row) of the execution.
+        /// returns the first occurrence value (first column of first row) of the execution.
         /// </summary>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="commandText">The command text to be used.</param>
@@ -1405,7 +1405,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        /// <returns>An object that holds the first occurence value (first column of first row) of the execution.</returns>
+        /// <returns>An object that holds the first occurrence value (first column of first row) of the execution.</returns>
         public static Task<object> ExecuteScalarAsync(this IDbConnection connection,
             string commandText,
             object param = null,
@@ -1438,7 +1438,7 @@ namespace RepoDb
 
         /// <summary>
         /// Executes a SQL statement from the database. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
-        /// returns the first occurence value (first column of first row) of the execution.
+        /// returns the first occurrence value (first column of first row) of the execution.
         /// </summary>
         /// <typeparam name="TResult">The target return type.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -1456,7 +1456,7 @@ namespace RepoDb
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
-        /// <returns>A first occurence value (first column of first row) of the execution.</returns>
+        /// <returns>A first occurrence value (first column of first row) of the execution.</returns>
         public static TResult ExecuteScalar<TResult>(this IDbConnection connection,
             string commandText,
             object param = null,
@@ -1482,7 +1482,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TResult"></typeparam>
         /// <param name="connection"></param>
@@ -1550,7 +1550,7 @@ namespace RepoDb
 
         /// <summary>
         /// Executes a SQL statement from the database in an asynchronous way. It uses the underlying method of <see cref="IDbCommand.ExecuteScalar"/> and
-        /// returns the first occurence value (first column of first row) of the execution.
+        /// returns the first occurrence value (first column of first row) of the execution.
         /// </summary>
         /// <typeparam name="TResult">The target return type.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
@@ -1569,7 +1569,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        /// <returns>A first occurence value (first column of first row) of the execution.</returns>
+        /// <returns>A first occurrence value (first column of first row) of the execution.</returns>
         public static Task<TResult> ExecuteScalarAsync<TResult>(this IDbConnection connection,
             string commandText,
             object param = null,
@@ -1597,7 +1597,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TResult"></typeparam>
         /// <param name="connection"></param>
@@ -1751,7 +1751,7 @@ namespace RepoDb
         #region GetAndGuardPrimaryKeyOrIdentityKey
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -1763,7 +1763,7 @@ namespace RepoDb
             GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -1777,7 +1777,7 @@ namespace RepoDb
             GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction, typeof(TEntity));
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -1799,7 +1799,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -1813,7 +1813,7 @@ namespace RepoDb
             GetAndGuardPrimaryKeyOrIdentityKeyAsync<TEntity>(connection, ClassMappedNameCache.Get<TEntity>(), transaction, cancellationToken);
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -1829,7 +1829,7 @@ namespace RepoDb
             GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction, typeof(TEntity), cancellationToken);
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -1853,7 +1853,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="tableName"></param>
         /// <param name="field"></param>
@@ -1869,7 +1869,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="entityType"></param>
         /// <param name="dbFields"></param>
@@ -1940,7 +1940,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -1956,7 +1956,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -1974,7 +1974,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="tableName"></param>
         /// <param name="dbField"></param>
@@ -1994,7 +1994,7 @@ namespace RepoDb
         #region WhatToQueryGroup
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="connection"></param>
@@ -2030,7 +2030,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="connection"></param>
@@ -2068,7 +2068,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="tableName"></param>
@@ -2091,7 +2091,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -2117,7 +2117,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -2145,7 +2145,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="dbField"></param>
@@ -2173,7 +2173,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="field"></param>
@@ -2199,7 +2199,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="what"></param>
@@ -2238,7 +2238,7 @@ namespace RepoDb
         #region ToQueryGroup
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
@@ -2260,7 +2260,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="dbField"></param>
         /// <param name="entity"></param>
@@ -2294,7 +2294,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="where"></param>
@@ -2310,7 +2310,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="field"></param>
         /// <param name="dictionary"></param>
@@ -2326,7 +2326,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="field"></param>
@@ -2342,7 +2342,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="property"></param>
@@ -2354,7 +2354,7 @@ namespace RepoDb
             ToQueryGroup(property.PropertyInfo.AsQueryField(entity));
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="queryField"></param>
         /// <returns></returns>
@@ -2368,7 +2368,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="queryFields"></param>
         /// <returns></returns>
@@ -2384,7 +2384,7 @@ namespace RepoDb
         #endregion
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="entityType"></param>
         /// <returns></returns>
@@ -2392,7 +2392,7 @@ namespace RepoDb
             entityType != null ? (PrimaryCache.Get(entityType) ?? IdentityCache.Get(entityType))?.AsField() : null;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="entities"></param>
@@ -2410,7 +2410,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="transaction"></param>
@@ -2424,7 +2424,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="command"></param>
         /// <param name="where"></param>
@@ -2437,7 +2437,7 @@ namespace RepoDb
             DbCommandExtension.CreateParameters(command, where, null, entityType, dbFields);
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="properties"></param>
@@ -2462,7 +2462,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="dictionary"></param>
         /// <param name="qualifiers"></param>
@@ -2494,7 +2494,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <typeparam name="TResult"></typeparam>
@@ -2507,7 +2507,7 @@ namespace RepoDb
             ClassExpression.GetEntitiesPropertyValues<TEntity, TResult>(entities, property);
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="entity"></param>
@@ -2520,7 +2520,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="fields"></param>
@@ -2530,7 +2530,7 @@ namespace RepoDb
             fields ?? (typeof(TEntity).IsDictionaryStringObject() == false ? FieldCache.Get<TEntity>() : null);
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="fields"></param>
@@ -2542,7 +2542,7 @@ namespace RepoDb
             fields ?? GetQualifiedFields(entity);
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="commandText"></param>
         /// <param name="parameterName"></param>
@@ -2577,7 +2577,7 @@ namespace RepoDb
         #region CreateDbCommandForExecution
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="commandText"></param>
@@ -2618,7 +2618,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="commandText"></param>
@@ -2661,7 +2661,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="commandText"></param>
@@ -2736,7 +2736,7 @@ namespace RepoDb
         #region GetCommandArrayParameters
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="commandText"></param>
         /// <param name="param"></param>
@@ -2789,7 +2789,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="commandText"></param>
         /// <param name="param"></param>
@@ -2856,7 +2856,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="commandText"></param>
         /// <param name="dictionary"></param>
@@ -2915,7 +2915,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="commandText"></param>
         /// <param name="queryField"></param>
@@ -2962,7 +2962,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="commandText"></param>
         /// <param name="queryFields"></param>
@@ -3027,7 +3027,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="commandText"></param>
         /// <param name="queryGroup"></param>
@@ -3039,7 +3039,7 @@ namespace RepoDb
             GetCommandArrayParametersText(commandText, queryGroup.GetFields(true), dbSetting);
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="parameterName"></param>
         /// <param name="value"></param>
@@ -3062,7 +3062,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="commandText"></param>
         /// <param name="parameterName"></param>
@@ -3095,7 +3095,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="commandText"></param>
         /// <param name="queryField"></param>
