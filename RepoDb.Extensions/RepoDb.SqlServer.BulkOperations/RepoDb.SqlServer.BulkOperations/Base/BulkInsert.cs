@@ -16,7 +16,7 @@ namespace RepoDb
         #region BulkInsertInternalBase
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <typeparam name="TSqlBulkCopy"></typeparam>
@@ -166,7 +166,7 @@ namespace RepoDb
                         Compiler.SetProperty<TSqlBulkCopy>(sqlBulkCopy, "BulkCopyTimeout", bulkCopyTimeout.Value);
                     }
 
-                    // Set the batch szie
+                    // Set the batch size
                     if (batchSize.HasValue)
                     {
                         Compiler.SetProperty<TSqlBulkCopy>(sqlBulkCopy, "BatchSize", batchSize.Value);
@@ -245,7 +245,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TSqlBulkCopy"></typeparam>
         /// <typeparam name="TSqlBulkCopyOptions"></typeparam>
@@ -394,7 +394,7 @@ namespace RepoDb
                         Compiler.SetProperty<TSqlBulkCopy>(sqlBulkCopy, "BulkCopyTimeout", bulkCopyTimeout.Value);
                     }
 
-                    // Set the batch szie
+                    // Set the batch size
                     if (batchSize.HasValue)
                     {
                         Compiler.SetProperty<TSqlBulkCopy>(sqlBulkCopy, "BatchSize", batchSize.Value);
@@ -466,7 +466,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TSqlBulkCopy"></typeparam>
         /// <typeparam name="TSqlBulkCopyOptions"></typeparam>
@@ -617,7 +617,7 @@ namespace RepoDb
                         Compiler.SetProperty<TSqlBulkCopy>(sqlBulkCopy, "BulkCopyTimeout", bulkCopyTimeout.Value);
                     }
 
-                    // Set the batch szie
+                    // Set the batch size
                     if (batchSize.HasValue)
                     {
                         Compiler.SetProperty<TSqlBulkCopy>(sqlBulkCopy, "BatchSize", batchSize.Value);
@@ -718,7 +718,7 @@ namespace RepoDb
         #region BulkInsertAsyncInternalBase
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <typeparam name="TSqlBulkCopy"></typeparam>
@@ -873,7 +873,7 @@ namespace RepoDb
                         Compiler.SetProperty<TSqlBulkCopy>(sqlBulkCopy, "BulkCopyTimeout", bulkCopyTimeout.Value);
                     }
 
-                    // Set the batch szie
+                    // Set the batch size
                     if (batchSize.HasValue)
                     {
                         Compiler.SetProperty<TSqlBulkCopy>(sqlBulkCopy, "BatchSize", batchSize.Value);
@@ -952,7 +952,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TSqlBulkCopy"></typeparam>
         /// <typeparam name="TSqlBulkCopyOptions"></typeparam>
@@ -1103,7 +1103,7 @@ namespace RepoDb
                         Compiler.SetProperty<TSqlBulkCopy>(sqlBulkCopy, "BulkCopyTimeout", bulkCopyTimeout.Value);
                     }
 
-                    // Set the batch szie
+                    // Set the batch size
                     if (batchSize.HasValue)
                     {
                         Compiler.SetProperty<TSqlBulkCopy>(sqlBulkCopy, "BatchSize", batchSize.Value);
@@ -1175,7 +1175,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TSqlBulkCopy"></typeparam>
         /// <typeparam name="TSqlBulkCopyOptions"></typeparam>
@@ -1328,7 +1328,7 @@ namespace RepoDb
                         Compiler.SetProperty<TSqlBulkCopy>(sqlBulkCopy, "BulkCopyTimeout", bulkCopyTimeout.Value);
                     }
 
-                    // Set the batch szie
+                    // Set the batch size
                     if (batchSize.HasValue)
                     {
                         Compiler.SetProperty<TSqlBulkCopy>(sqlBulkCopy, "BatchSize", batchSize.Value);

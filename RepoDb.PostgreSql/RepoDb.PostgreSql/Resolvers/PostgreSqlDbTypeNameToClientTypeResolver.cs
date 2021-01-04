@@ -79,9 +79,9 @@ namespace RepoDb.Resolvers
             ColumnMacAddrAsArray = System.Array
             ColumnMacAddr8 = System.Net.NetworkInformation.PhysicalAddress
             ColumnMacAddr8AsArray = System.Array
-            ColumMoney = System.Decimal
+            ColumnMoney = System.Decimal
             ColumnMoneyAsArray = System.Array
-            ColumName = System.String
+            ColumnName = System.String
             ColumnNameAsArray = System.Array
             ColumnNumeric = System.Decimal
             ColumnNumericAsArray = System.Array

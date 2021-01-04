@@ -62,7 +62,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The object to be merged.</param>
-        /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
+        /// <param name="qualifier">The qualifier field to be used during merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
@@ -109,7 +109,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The object to be merged.</param>
-        /// <param name="qualifiers">The list of qualifer fields to be used.</param>
+        /// <param name="qualifiers">The list of qualifier fields to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
@@ -156,7 +156,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The object to be merged.</param>
-        /// <param name="qualifiers">The expression for the qualifer fields.</param>
+        /// <param name="qualifiers">The expression for the qualifier fields.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -249,7 +249,7 @@ namespace RepoDb
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The object to be merged.</param>
-        /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
+        /// <param name="qualifier">The qualifier field to be used during merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
@@ -297,7 +297,7 @@ namespace RepoDb
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The object to be merged.</param>
-        /// <param name="qualifiers">The list of qualifer fields to be used.</param>
+        /// <param name="qualifiers">The list of qualifier fields to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
@@ -345,7 +345,7 @@ namespace RepoDb
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The object to be merged.</param>
-        /// <param name="qualifiers">The expression for the qualifer fields.</param>
+        /// <param name="qualifiers">The expression for the qualifier fields.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -431,7 +431,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The object to be merged.</param>
-        /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
+        /// <param name="qualifier">The qualifier field to be used during merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
@@ -475,7 +475,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The object to be merged.</param>
-        /// <param name="qualifiers">The list of qualifer fields to be used.</param>
+        /// <param name="qualifiers">The list of qualifier fields to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
@@ -519,7 +519,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The object to be merged.</param>
-        /// <param name="qualifiers">The expression for the qualifer fields.</param>
+        /// <param name="qualifiers">The expression for the qualifier fields.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -606,7 +606,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="entity">The object to be merged.</param>
-        /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
+        /// <param name="qualifier">The qualifier field to be used during merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
@@ -651,7 +651,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="entity">The object to be merged.</param>
-        /// <param name="qualifiers">The list of qualifer fields to be used.</param>
+        /// <param name="qualifiers">The list of qualifier fields to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
@@ -696,7 +696,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="entity">The object to be merged.</param>
-        /// <param name="qualifiers">The expression for the qualifer fields.</param>
+        /// <param name="qualifiers">The expression for the qualifier fields.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -792,7 +792,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The object to be merged.</param>
-        /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
+        /// <param name="qualifier">The qualifier field to be used during merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
@@ -842,7 +842,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The object to be merged.</param>
-        /// <param name="qualifiers">The list of qualifer fields to be used.</param>
+        /// <param name="qualifiers">The list of qualifier fields to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
@@ -892,7 +892,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The object to be merged.</param>
-        /// <param name="qualifiers">The expression for the qualifer fields.</param>
+        /// <param name="qualifiers">The expression for the qualifier fields.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -991,7 +991,7 @@ namespace RepoDb
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The object to be merged.</param>
-        /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
+        /// <param name="qualifier">The qualifier field to be used during merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
@@ -1042,7 +1042,7 @@ namespace RepoDb
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The object to be merged.</param>
-        /// <param name="qualifiers">The list of qualifer fields to be used.</param>
+        /// <param name="qualifiers">The list of qualifier fields to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
@@ -1093,7 +1093,7 @@ namespace RepoDb
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The object to be merged.</param>
-        /// <param name="qualifiers">The expression for the qualifer fields.</param>
+        /// <param name="qualifiers">The expression for the qualifier fields.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -1186,7 +1186,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The object to be merged.</param>
-        /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
+        /// <param name="qualifier">The qualifier field to be used during merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
@@ -1233,7 +1233,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The object to be merged.</param>
-        /// <param name="qualifiers">The list of qualifer fields to be used.</param>
+        /// <param name="qualifiers">The list of qualifier fields to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
@@ -1280,7 +1280,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="entity">The object to be merged.</param>
-        /// <param name="qualifiers">The expression for the qualifer fields.</param>
+        /// <param name="qualifiers">The expression for the qualifier fields.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -1373,7 +1373,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="entity">The object to be merged.</param>
-        /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
+        /// <param name="qualifier">The qualifier field to be used during merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
@@ -1421,7 +1421,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="entity">The object to be merged.</param>
-        /// <param name="qualifiers">The list of qualifer fields to be used.</param>
+        /// <param name="qualifiers">The list of qualifier fields to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
@@ -1469,7 +1469,7 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="entity">The object to be merged.</param>
-        /// <param name="qualifiers">The expression for the qualifer fields.</param>
+        /// <param name="qualifiers">The expression for the qualifier fields.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -1562,7 +1562,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be merged.</param>
-        /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
+        /// <param name="qualifier">The qualifier field to be used during merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
@@ -1607,7 +1607,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be merged.</param>
-        /// <param name="qualifiers">The list of qualifer fields to be used.</param>
+        /// <param name="qualifiers">The list of qualifier fields to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
@@ -1696,7 +1696,7 @@ namespace RepoDb
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be merged.</param>
-        /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
+        /// <param name="qualifier">The qualifier field to be used during merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
@@ -1742,7 +1742,7 @@ namespace RepoDb
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be merged.</param>
-        /// <param name="qualifiers">The list of qualifer fields to be used.</param>
+        /// <param name="qualifiers">The list of qualifier fields to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
@@ -1836,7 +1836,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be merged.</param>
-        /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
+        /// <param name="qualifier">The qualifier field to be used during merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
@@ -1884,7 +1884,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be merged.</param>
-        /// <param name="qualifiers">The list of qualifer fields to be used.</param>
+        /// <param name="qualifiers">The list of qualifier fields to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
@@ -1979,7 +1979,7 @@ namespace RepoDb
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be merged.</param>
-        /// <param name="qualifier">The qualifer field to be used during merge operation.</param>
+        /// <param name="qualifier">The qualifier field to be used during merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
@@ -2028,7 +2028,7 @@ namespace RepoDb
         /// <typeparam name="TResult">The target type of the result.</typeparam>
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="entity">The dynamic object to be merged.</param>
-        /// <param name="qualifiers">The list of qualifer fields to be used.</param>
+        /// <param name="qualifiers">The list of qualifier fields to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>

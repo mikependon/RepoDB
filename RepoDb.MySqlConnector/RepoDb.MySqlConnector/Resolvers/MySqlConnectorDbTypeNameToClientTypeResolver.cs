@@ -59,7 +59,7 @@ namespace RepoDb.Resolvers
             ColumnNVarChar (System.String)
             ColumnLongText (System.String)
             ColumnMediumText (System.String)
-            ColumText (System.String)
+            ColumnText (System.String)
             ColumnTinyText (System.String)
             ColumnBit (System.UInt64)
              */

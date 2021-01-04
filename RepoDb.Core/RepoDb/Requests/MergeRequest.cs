@@ -110,7 +110,7 @@ namespace RepoDb.Requests
             }
 
             // Get the qualifier <see cref="Field"/> objects
-            if (Qualifiers != null) // Much faster than Qualifers?.<Methods|Properties>
+            if (Qualifiers != null) // Much faster than Qualifiers?.<Methods|Properties>
             {
                 foreach (var field in Qualifiers)
                 {

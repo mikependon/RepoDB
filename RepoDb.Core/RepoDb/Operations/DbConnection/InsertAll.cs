@@ -491,7 +491,7 @@ namespace RepoDb
                             // Actual Execution
                             var returnValue = Converter.DbNullToNull(command.ExecuteScalar());
 
-                            // Get explicity if needed
+                            // Get explicitly if needed
                             if (Equals(returnValue, null) == true && dbSetting.IsMultiStatementExecutable == false)
                             {
                                 returnValue = Converter.DbNullToNull(connection.GetDbHelper().GetScopeIdentity(connection, transaction));
@@ -730,7 +730,7 @@ namespace RepoDb
                             // Actual Execution
                             var returnValue = Converter.DbNullToNull(await command.ExecuteScalarAsync(cancellationToken));
 
-                            // Get explicity if needed
+                            // Get explicitly if needed
                             if (Equals(returnValue, null) == true && dbSetting.IsMultiStatementExecutable == false)
                             {
                                 returnValue = Converter.DbNullToNull(await connection.GetDbHelper().GetScopeIdentityAsync(connection, transaction, cancellationToken));

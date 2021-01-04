@@ -515,8 +515,8 @@ namespace RepoDb.Extensions
                     var isEnum = valueType?.IsEnum;
 
                     // Propertyhandler
-                    var properyHandler = GetProperyHandler(null, valueType);
-                    var definition = InvokePropertyHandlerSetMethod(properyHandler, value, null);
+                    var propertyHandler = GetProperyHandler(null, valueType);
+                    var definition = InvokePropertyHandlerSetMethod(propertyHandler, value, null);
                     if (definition != null)
                     {
                         valueType = definition.ReturnType.GetUnderlyingType();
