@@ -5,9 +5,6 @@ using System.Data.Common;
 using System.Linq;
 using System.Collections;
 using RepoDb.Extensions;
-using RepoDb.Interfaces;
-using System.Threading.Tasks;
-using System.Threading;
 
 namespace RepoDb
 {
@@ -71,6 +68,22 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             IDbConnection connection,
             IDbTransaction transaction)
+            : this(tableName, entities, connection, transaction, false)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="DataEntityDataReader{TEntity}"/> object.
+        /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="entities">The list of the data entity object to be used for manipulation.</param>
+        /// <param name="transaction">The transaction object that is currently in used.</param>
+        /// <param name="connection">The actual <see cref="IDbConnection"/> object used.</param>
+        /// <param name="hasOrderingColumn">The value that signifies whether the ordering column will be defined.</param>
+        public DataEntityDataReader(string tableName,
+            IEnumerable<TEntity> entities,
+            IDbConnection connection,
+            IDbTransaction transaction,
+            bool hasOrderingColumn)
         {
             if (entities == null)
             {
@@ -91,12 +104,10 @@ namespace RepoDb
                 entityType;
             isDictionaryStringObject = EntityType.IsDictionaryStringObject();
 
-            // DbSetting
-            DbSetting = connection?.GetDbSetting();
-
             // Properties
             Connection = connection;
             Transaction = transaction;
+            HasOrderingColumn = hasOrderingColumn;
             Enumerator = entities.GetEnumerator();
             Entities = entities;
             Properties = GetClassProperties().AsList();
@@ -127,11 +138,6 @@ namespace RepoDb
         public bool IsInitialized { get; private set; }
 
         /// <summary>
-        /// Returns the database setting that is currently in used.
-        /// </summary>
-        private IDbSetting DbSetting { get; }
-
-        /// <summary>
         /// Gets the instance of enumerator that iterates through a collection of data entity objects.
         /// </summary>
         public IEnumerator<TEntity> Enumerator { get; private set; }
@@ -153,12 +159,6 @@ namespace RepoDb
         private Type EntityType { get; set; }
 
         /// <summary>
-        /// Gets the name of the target table.
-        /// </summary>
-        private string TableName =>
-            tableName;
-
-        /// <summary>
         /// Gets the properties of data entity object.
         /// </summary>
         private IList<ClassProperty> Properties { get; set; }
@@ -167,6 +167,11 @@ namespace RepoDb
         /// Gets the fields of the dictionary.
         /// </summary>
         private IList<Field> Fields { get; set; }
+
+        /// <summary>
+        /// Gets a value that indicates whether the ordering column is defined.
+        /// </summary>
+        private bool HasOrderingColumn { get; }
 
         /// <summary>
         /// Gets the current value from the index.
@@ -438,17 +443,37 @@ namespace RepoDb
         /// </summary>
         /// <param name="i">The index of the property.</param>
         /// <returns>The name from the property index.</returns>
-        public override string GetName(int i)
+        public override string GetName(int i) =>
+            isDictionaryStringObject ? GetNameForDictionaryStringObject(i) : GetNameForEntities(i);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="i"></param>
+        /// <returns></returns>
+        private string GetNameForEntities(int i)
         {
             ThrowExceptionIfNotAvailable();
-            if (isDictionaryStringObject)
+            if (i == Properties.Count)
             {
-                return Fields[i].Name;
+                return "__RepoDb_OrderColumn";
             }
-            else
+            return Properties[i].GetMappedName();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="i"></param>
+        /// <returns></returns>
+        private string GetNameForDictionaryStringObject(int i)
+        {
+            ThrowExceptionIfNotAvailable();
+            if (i == Fields.Count)
             {
-                return Properties[i].GetMappedName();
+                return "__RepoDb_OrderColumn";
             }
+            return Fields[i].Name;
         }
 
         /// <summary>
@@ -456,19 +481,45 @@ namespace RepoDb
         /// </summary>
         /// <param name="name">The index of the property.</param>
         /// <returns>The index of the property from property name.</returns>
-        public override int GetOrdinal(string name)
+        public override int GetOrdinal(string name) =>
+            isDictionaryStringObject ? GetOrdinalForDictionaryStringObject(name) : GetOrdinalForEntities(name);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        private int GetOrdinalForEntities(string name)
         {
             ThrowExceptionIfNotAvailable();
-            if (isDictionaryStringObject)
+            if (HasOrderingColumn && string.Equals(name, "__RepoDb_OrderColumn", StringComparison.OrdinalIgnoreCase))
             {
-                return Fields.IndexOf(Fields.FirstOrDefault(f =>
-                    string.Equals(f.Name, name, StringComparison.OrdinalIgnoreCase)));
+                return Properties.Count;
             }
             else
             {
                 var property = Properties.FirstOrDefault(p => string.Equals(p.GetMappedName(), name, StringComparison.OrdinalIgnoreCase) ||
                     string.Equals(p.PropertyInfo.Name, name, StringComparison.OrdinalIgnoreCase));
                 return Properties.IndexOf(property);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        private int GetOrdinalForDictionaryStringObject(string name)
+        {
+            ThrowExceptionIfNotAvailable();
+            if (HasOrderingColumn && string.Equals(name, "__RepoDb_OrderColumn", StringComparison.OrdinalIgnoreCase))
+            {
+                return Fields.Count;
+            }
+            else
+            {
+                return Fields.IndexOf(Fields.FirstOrDefault(f =>
+                    string.Equals(f.Name, name, StringComparison.OrdinalIgnoreCase)));
             }
         }
 
@@ -498,17 +549,43 @@ namespace RepoDb
         /// </summary>
         /// <param name="i">The index of the property.</param>
         /// <returns>The value from the property index.</returns>
-        public override object GetValue(int i)
+        public override object GetValue(int i) =>
+            isDictionaryStringObject ? GetValueForDictionaryStringObject(i) : GetValueForEntities(i);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="i"></param>
+        /// <returns></returns>
+        public object GetValueForEntities(int i)
         {
             ThrowExceptionIfNotAvailable();
-            if (isDictionaryStringObject)
+            if (i == Properties.Count)
             {
-                var dictionary = Enumerator.Current as IDictionary<string, object>;
-                return dictionary?[Fields[i].Name];
+                return position;
             }
             else
             {
                 return Properties[i].PropertyInfo.GetValue(Enumerator.Current);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="i"></param>
+        /// <returns></returns>
+        public object GetValueForDictionaryStringObject(int i)
+        {
+            ThrowExceptionIfNotAvailable();
+            if (i == Fields.Count)
+            {
+                return position;
+            }
+            else
+            {
+                var dictionary = Enumerator.Current as IDictionary<string, object>;
+                return dictionary?[Fields[i].Name];
             }
         }
 

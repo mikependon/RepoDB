@@ -140,7 +140,6 @@ namespace RepoDb
                 hints: hints,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
-                isReturnIdentity: false,
                 usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                 transaction: transaction);
         }
@@ -185,7 +184,6 @@ namespace RepoDb
                 hints: hints,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
-                isReturnIdentity: false,
                 usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                 transaction: transaction);
         }
@@ -418,7 +416,6 @@ namespace RepoDb
                 hints: hints,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
-                isReturnIdentity: false,
                 usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                 transaction: transaction,
                 cancellationToken: cancellationToken);
@@ -466,7 +463,6 @@ namespace RepoDb
                 hints: hints,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
-                isReturnIdentity: false,
                 usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                 transaction: transaction,
                 cancellationToken: cancellationToken);
@@ -630,7 +626,6 @@ namespace RepoDb
         /// <param name="hints"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
-        /// <param name="isReturnIdentity"></param>
         /// <param name="usePhysicalPseudoTempTable"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
@@ -643,7 +638,6 @@ namespace RepoDb
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null) =>
             BulkMergeInternalBase<SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
@@ -656,7 +650,6 @@ namespace RepoDb
                 hints,
                 bulkCopyTimeout,
                 batchSize,
-                isReturnIdentity,
                 usePhysicalPseudoTempTable,
                 transaction);
 
@@ -768,7 +761,6 @@ namespace RepoDb
         /// <param name="hints"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
-        /// <param name="isReturnIdentity"></param>
         /// <param name="usePhysicalPseudoTempTable"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
@@ -782,7 +774,6 @@ namespace RepoDb
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
@@ -796,7 +787,6 @@ namespace RepoDb
                 hints,
                 bulkCopyTimeout,
                 batchSize,
-                isReturnIdentity,
                 usePhysicalPseudoTempTable,
                 transaction,
                 cancellationToken);

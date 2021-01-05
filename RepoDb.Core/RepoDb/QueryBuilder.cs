@@ -999,6 +999,24 @@ namespace RepoDb
         }
 
         /// <summary>
+        /// Appends a word ASC to the SQL Query Statement.
+        /// </summary>
+        /// <returns>The current instance.</returns>
+        public QueryBuilder Ascending()
+        {
+            return Append("ASC");
+        }
+
+        /// <summary>
+        /// Appends a word DESC to the SQL Query Statement.
+        /// </summary>
+        /// <returns>The current instance.</returns>
+        public QueryBuilder Descending()
+        {
+            return Append("DESC");
+        }
+
+        /// <summary>
         /// Appends a word AVG and the field to the SQL Query Statement, otherwise an empty string.
         /// </summary>
         /// <param name="field">The target field.</param>

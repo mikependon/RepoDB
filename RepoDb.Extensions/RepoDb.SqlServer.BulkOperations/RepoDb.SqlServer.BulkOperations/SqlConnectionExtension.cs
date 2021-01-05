@@ -283,18 +283,29 @@ namespace RepoDb
         /// <param name="tempTableName"></param>
         /// <param name="fields"></param>
         /// <param name="dbSetting"></param>
+        /// <param name="isReturnIdentity"></param>
         /// <returns></returns>
         private static string GetCreateTemporaryTableSqlText(string tableName,
             string tempTableName,
             IEnumerable<Field> fields,
-            IDbSetting dbSetting)
+            IDbSetting dbSetting,
+            bool isReturnIdentity)
         {
             var builder = new QueryBuilder();
 
             // Compose the statement
             builder
                 .Clear()
-                .Select()
+                .Select();
+
+            // Return Identity
+            if (isReturnIdentity)
+            {
+                builder.WriteText("CONVERT(INT, NULL) AS [__RepoDb_OrderColumn],");
+            }
+
+            // Continuation
+            builder
                 .FieldsFrom(fields, dbSetting)
                 .Into()
                 .WriteText(tempTableName.AsQuoted(dbSetting))
@@ -413,13 +424,15 @@ namespace RepoDb
         /// <param name="identityField"></param>
         /// <param name="hints"></param>
         /// <param name="dbSetting"></param>
+        /// <param name="withPseudoExecution"></param>
         /// <returns></returns>
         private static string GetBulkInsertSqlText(string tableName,
             string tempTableName,
             IEnumerable<Field> fields,
             Field identityField,
             string hints,
-            IDbSetting dbSetting)
+            IDbSetting dbSetting,
+            bool withPseudoExecution)
         {
             // Validate the presence
             if (fields?.Any() != true)
@@ -448,11 +461,11 @@ namespace RepoDb
                 .CloseParen();
 
             // Set the output
-            if (identityField != null)
+            if (withPseudoExecution && identityField != null)
             {
                 builder
                     .WriteText(string.Concat("OUTPUT INSERTED.", identityField.Name.AsField(dbSetting)))
-                    .As("[Result]");
+                        .As("[Result]");
             }
 
             // Continuation
@@ -460,8 +473,19 @@ namespace RepoDb
                 .Select()
                 .FieldsFrom(insertableFields, dbSetting)
                 .From()
-                .TableNameFrom(tempTableName, dbSetting)
-                .End();
+                .TableNameFrom(tempTableName, dbSetting);
+
+            // Ordering
+            if (withPseudoExecution)
+            {
+                builder
+                    .OrderBy()
+                    .WriteText("[__RepoDb_OrderColumn]")
+                    .Ascending();
+            }
+
+            // End
+            builder.End();
 
             // Return the sql
             return builder.ToString();
@@ -563,7 +587,7 @@ namespace RepoDb
                 .FieldsAndAliasFieldsFrom(updateableFields, "T", "S", dbSetting);
 
             // Set the output
-            if (isReturnIdentity && identityField != null)
+            if (isReturnIdentity == true && identityField != null)
             {
                 builder
                     .WriteText(string.Concat("OUTPUT INSERTED.", identityField.Name.AsField(dbSetting)))
@@ -672,6 +696,18 @@ namespace RepoDb
 
             // Return the table
             return table;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="mappings"></param>
+        private static IEnumerable<BulkInsertMapItem> AddOrderColumnMapping(IEnumerable<BulkInsertMapItem> mappings)
+        {
+            var list = mappings.AsList();
+            //list.Insert(0, new BulkInsertMapItem("__RepoDb_OrderColumn", "__RepoDb_OrderColumn"));
+            list.Add(new BulkInsertMapItem("__RepoDb_OrderColumn", "__RepoDb_OrderColumn"));
+            return list;
         }
 
         #endregion
