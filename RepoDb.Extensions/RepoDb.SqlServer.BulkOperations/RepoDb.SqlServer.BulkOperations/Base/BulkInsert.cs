@@ -855,7 +855,7 @@ namespace RepoDb
 
                     // Open the connection and do the operation
                     await connection.EnsureOpenAsync(cancellationToken);
-                    using (var reader = new DataEntityDataReader<TEntity>(tableName, entities, connection, transaction))
+                    using (var reader = new DataEntityDataReader<TEntity>(tableName, entities, connection, transaction, true))
                     {
                         var writeToServerMethod = Compiler.GetParameterizedMethodFunc<TSqlBulkCopy, Task>("WriteToServerAsync", new[] { typeof(DbDataReader), typeof(CancellationToken) });
                         await writeToServerMethod(sqlBulkCopy, new object[] { reader, cancellationToken });
