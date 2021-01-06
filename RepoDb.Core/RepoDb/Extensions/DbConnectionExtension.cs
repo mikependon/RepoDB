@@ -3083,7 +3083,8 @@ namespace RepoDb
             var items = values is IEnumerable<object> ? (IEnumerable<object>)values : values.WithType<object>();
             if (items.Any() != true)
             {
-                return commandText;
+                var parameter = parameterName.AsParameter(dbSetting);
+                return commandText.Replace(parameter, string.Concat("(SELECT ", parameter, " WHERE 1 = 0)"));
             }
 
             // Get the variables needed

@@ -121,10 +121,17 @@ namespace RepoDb.Extensions
         {
             var values = commandArrayParameter.Values.AsArray();
 
-            for (var i = 0; i < values.Length; i++)
+            if (values.Length == 0)
             {
-                var name = string.Concat(commandArrayParameter.ParameterName, i).AsParameter(dbSetting);
-                command.Parameters.Add(command.CreateParameter(name, values[i], null));
+                command.Parameters.Add(command.CreateParameter(commandArrayParameter.ParameterName.AsParameter(dbSetting), null, null));
+            }
+            else
+            {
+                for (var i = 0; i < values.Length; i++)
+                {
+                    var name = string.Concat(commandArrayParameter.ParameterName, i).AsParameter(dbSetting);
+                    command.Parameters.Add(command.CreateParameter(name, values[i], null));
+                }
             }
         }
 
