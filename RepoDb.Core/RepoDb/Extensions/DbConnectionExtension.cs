@@ -3084,7 +3084,7 @@ namespace RepoDb
             if (items.Any() != true)
             {
                 var parameter = parameterName.AsParameter(dbSetting);
-                return commandText.Replace(parameter, string.Concat("(select ", parameter, " where 1 = 0)"));
+                return commandText.Replace(parameter, string.Concat("(SELECT ", parameter, " WHERE 1 = 0)"));
             }
 
             // Get the variables needed

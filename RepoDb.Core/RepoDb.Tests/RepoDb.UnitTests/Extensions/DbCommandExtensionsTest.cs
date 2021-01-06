@@ -243,11 +243,11 @@ where id in (@normalArray)
                 var expectedSql = @"
 select * from someTable
 where id in (@normalArray0, @normalArray1)
-  and id in ((select @emptyArray where 1 = 0))
+  and id in ((SELECT @emptyArray WHERE 1 = 0))
   and id in (@nullArray)
   and id in (@concat1ArrayA0, @concat1ArrayA1, @concat1ArrayB0, @concat1ArrayB1)
-  and id in ((select @concat2ArrayA where 1 = 0), @concat2ArrayB0, @concat2ArrayB1)
-  and id in ((select @concat3ArrayA where 1 = 0), (select @concat3ArrayB where 1 = 0))";
+  and id in ((SELECT @concat2ArrayA WHERE 1 = 0), @concat2ArrayB0, @concat2ArrayB1)
+  and id in ((SELECT @concat3ArrayA WHERE 1 = 0), (SELECT @concat3ArrayB WHERE 1 = 0))";
                 Assert.AreEqual(expectedSql, command.CommandText);
                 Assert.AreEqual(13, command.Parameters.Count);
                 Assert.AreEqual(5, command.Parameters["@normalArray0"].Value);
