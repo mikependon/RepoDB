@@ -26,5 +26,12 @@
         /// Gets the name of the destination column.
         /// </summary>
         public string DestinationColumn { get; }
+
+        /// <summary>
+        /// Returns the string representation of the current object.
+        /// </summary>
+        /// <returns>The string representation of the current object.</returns>
+        public override string ToString() =>
+            $"Source: {SourceColumn} = Destination: {DestinationColumn}";
     }
 }
