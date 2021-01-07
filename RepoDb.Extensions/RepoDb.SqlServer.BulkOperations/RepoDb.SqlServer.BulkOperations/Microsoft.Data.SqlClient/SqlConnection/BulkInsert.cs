@@ -573,7 +573,6 @@ namespace RepoDb
         /// <param name="dbFields"></param>
         /// <param name="mappings"></param>
         /// <param name="options"></param>
-        /// <param name="hints"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="transaction"></param>
@@ -584,7 +583,6 @@ namespace RepoDb
             IEnumerable<DbField> dbFields = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions? options = null,
-            string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             SqlTransaction transaction = null) =>
@@ -595,7 +593,6 @@ namespace RepoDb
                 dbFields,
                 mappings,
                 options.GetValueOrDefault(),
-                hints,
                 bulkCopyTimeout,
                 batchSize,
                 transaction);
@@ -705,7 +702,6 @@ namespace RepoDb
         /// <param name="dbFields"></param>
         /// <param name="mappings"></param>
         /// <param name="options"></param>
-        /// <param name="hints"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="isReturnIdentity"></param>
@@ -719,7 +715,6 @@ namespace RepoDb
             IEnumerable<DbField> dbFields = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions? options = null,
-            string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             SqlTransaction transaction = null,
@@ -731,7 +726,6 @@ namespace RepoDb
                 dbFields,
                 mappings,
                 options.GetValueOrDefault(),
-                hints,
                 bulkCopyTimeout,
                 batchSize,
                 transaction,

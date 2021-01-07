@@ -1919,7 +1919,7 @@
             <param name="dbSetting"></param>
             <returns></returns>
         </member>
-        <member name="M:RepoDb.SqlConnectionExtension.ValidateTransactionConnectionObject(System.Data.IDbConnection,System.Data.IDbTransaction)">
+        <member name="M:RepoDb.ValidateTransactionConnectionObject(System.Data.IDbConnection,System.Data.IDbTransaction)">
             <summary>
             
             </summary>
