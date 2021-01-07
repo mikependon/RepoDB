@@ -202,7 +202,7 @@ namespace RepoDb
                     isReturnIdentity.GetValueOrDefault());
 
                 // Identity if the identity is to return
-                if (isReturnIdentity != true || entityType.IsAnonymousType())
+                if (hasOrderingColumn != true || entityType.IsAnonymousType())
                 {
                     result = connection.ExecuteNonQuery(sql, commandTimeout: bulkCopyTimeout, transaction: transaction);
                 }
@@ -898,7 +898,7 @@ namespace RepoDb
                     isReturnIdentity.GetValueOrDefault());
 
                 // Identity if the identity is to return
-                if (isReturnIdentity != true || entityType.IsAnonymousType())
+                if (hasOrderingColumn != true || entityType.IsAnonymousType())
                 {
                     result = await connection.ExecuteNonQueryAsync(sql, commandTimeout: bulkCopyTimeout,
                         transaction: transaction, cancellationToken: cancellationToken);
