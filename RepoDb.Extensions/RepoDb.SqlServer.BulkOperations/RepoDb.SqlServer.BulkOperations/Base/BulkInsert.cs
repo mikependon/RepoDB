@@ -130,96 +130,66 @@ namespace RepoDb
                     throw new MissingMappingException("There are no mapping(s) found for this operation.");
                 }
 
-                // Actual Execution
-                using (var sqlBulkCopy = (TSqlBulkCopy)Activator.CreateInstance(typeof(TSqlBulkCopy), connection, options, transaction))
+                // Pseudo temp table
+                var withPseudoExecution = (isReturnIdentity == true && identityDbField != null);
+                var tempTableName = (string)null;
+
+                // Create the temp table if necessary
+                if (withPseudoExecution)
                 {
-                    var withPseudoExecution = (isReturnIdentity == true && identityDbField != null);
-                    var tempTableName = (string)null;
-                    var recordsAffected = 0;
+                    // Must be fixed name so the RepoDb.Core caches will not be bloated
+                    tempTableName = string.Concat("_RepoDb_BulkInsert_", GetTableName(tableName, dbSetting));
 
-                    // Create the temp table if necessary
-                    if (withPseudoExecution)
+                    // Add a # prefix if not physical
+                    if (usePhysicalPseudoTempTable != true)
                     {
-                        // Must be fixed name so the RepoDb.Core caches will not be bloated
-                        tempTableName = string.Concat("_RepoDb_BulkInsert_", GetTableName(tableName, dbSetting));
-
-                        // Add a # prefix if not physical
-                        if (usePhysicalPseudoTempTable != true)
-                        {
-                            tempTableName = string.Concat("#", tempTableName);
-                        }
-
-                        // Create a temporary table
-                        var sql = GetCreateTemporaryTableSqlText(tableName,
-                            tempTableName,
-                            fields,
-                            dbSetting,
-                            true);
-                        connection.ExecuteNonQuery(sql, transaction: transaction);
+                        tempTableName = string.Concat("#", tempTableName);
                     }
 
-                    // Set the destinationtable
-                    Compiler.SetProperty<TSqlBulkCopy>(sqlBulkCopy, "DestinationTableName", (tempTableName ?? tableName));
+                    // Create a temporary table
+                    var sql = GetCreateTemporaryTableSqlText(tableName,
+                        tempTableName,
+                        fields,
+                        dbSetting,
+                        true);
+                    connection.ExecuteNonQuery(sql, transaction: transaction);
+                }
 
-                    // Set the timeout
-                    if (bulkCopyTimeout.HasValue)
+                // WriteToServer
+                var hasOrderingColumn = (isReturnIdentity == true && identityDbField != null);
+                result = WriteToServer<TEntity, TSqlBulkCopy, TSqlBulkCopyOptions, TSqlBulkCopyColumnMappingCollection,
+                    TSqlBulkCopyColumnMapping, TSqlTransaction>(connection,
+                    (tempTableName ?? tableName),
+                    entities,
+                    dbFields,
+                    mappings,
+                    options,
+                    bulkCopyTimeout,
+                    batchSize,
+                    hasOrderingColumn,
+                    transaction);
+
+                // Check if this is with pseudo
+                if (withPseudoExecution)
+                {
+                    // Merge the actual data
+                    var sql = GetBulkInsertSqlText(tableName,
+                        tempTableName,
+                        fields,
+                        identityDbField?.AsField(),
+                        hints,
+                        dbSetting,
+                        withPseudoExecution);
+
+                    // Execute the SQL
+                    using (var reader = (DbDataReader)connection.ExecuteReader(sql, commandTimeout: bulkCopyTimeout, transaction: transaction))
                     {
-                        Compiler.SetProperty<TSqlBulkCopy>(sqlBulkCopy, "BulkCopyTimeout", bulkCopyTimeout.Value);
+                        result = SetIdentityForEntities<TEntity>(entities, reader, identityDbField);
                     }
 
-                    // Set the batch size
-                    if (batchSize.HasValue)
-                    {
-                        Compiler.SetProperty<TSqlBulkCopy>(sqlBulkCopy, "BatchSize", batchSize.Value);
-                    }
-
-                    // Add the order column
-                    if (withPseudoExecution)
-                    {
-                        mappings = AddOrderColumnMapping(mappings);
-                    }
-
-                    // Add the mappings
-                    AddMappings<TSqlBulkCopy, TSqlBulkCopyColumnMappingCollection, TSqlBulkCopyColumnMapping>(sqlBulkCopy, mappings);
-
-                    // Open the connection and do the operation
-                    connection.EnsureOpen();
-                    using (var reader = new DataEntityDataReader<TEntity>(tableName, entities, connection, transaction, withPseudoExecution))
-                    {
-                        var writeToServerMethod = Compiler.GetParameterizedVoidMethodFunc<TSqlBulkCopy>("WriteToServer", new[] { typeof(DbDataReader) });
-                        writeToServerMethod(sqlBulkCopy, new[] { reader });
-                        recordsAffected = reader.RecordsAffected;
-                    }
-
-                    // Check if this is with pseudo
-                    if (withPseudoExecution)
-                    {
-                        // Merge the actual data
-                        var sql = GetBulkInsertSqlText(tableName,
-                            tempTableName,
-                            fields,
-                            identityDbField?.AsField(),
-                            hints,
-                            dbSetting,
-                            withPseudoExecution);
-
-                        // Execute the SQL
-                        using (var reader = (DbDataReader)connection.ExecuteReader(sql, commandTimeout: bulkCopyTimeout, transaction: transaction))
-                        {
-                            result = SetIdentityForEntities<TEntity>(entities, reader, identityDbField);
-                        }
-
-                        // Drop the table after used
-                        sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
-                        connection.ExecuteNonQuery(sql, transaction: transaction);
-                    }
-                    else
-                    {
-                        // Set the return value
-                        var rowsCopiedFieldOrProperty = Compiler.GetFieldGetterFunc<TSqlBulkCopy, int>("_rowsCopied") ??
-                            Compiler.GetPropertyGetterFunc<TSqlBulkCopy, int>("RowsCopied");
-                        result = rowsCopiedFieldOrProperty != null ? rowsCopiedFieldOrProperty(sqlBulkCopy) : recordsAffected;
-                    }
+                    // Drop the table after used
+                    sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
+                    connection.ExecuteNonQuery(sql, transaction: transaction);
                 }
 
                 // Commit the transaction
@@ -801,96 +771,67 @@ namespace RepoDb
                     throw new MissingMappingException("There are no mapping(s) found for this operation.");
                 }
 
-                // Actual Execution
-                using (var sqlBulkCopy = (TSqlBulkCopy)Activator.CreateInstance(typeof(TSqlBulkCopy), connection, options, transaction))
+                var withPseudoExecution = (isReturnIdentity == true && identityDbField != null);
+                var tempTableName = (string)null;
+                var recordsAffected = 0;
+
+                // Create the temp table if necessary
+                if (withPseudoExecution)
                 {
-                    var withPseudoExecution = (isReturnIdentity == true && identityDbField != null);
-                    var tempTableName = (string)null;
-                    var recordsAffected = 0;
+                    // Must be fixed name so the RepoDb.Core caches will not be bloated
+                    tempTableName = string.Concat("_RepoDb_BulkInsert_", GetTableName(tableName, dbSetting));
 
-                    // Create the temp table if necessary
-                    if (withPseudoExecution)
+                    // Add a # prefix if not physical
+                    if (usePhysicalPseudoTempTable != true)
                     {
-                        // Must be fixed name so the RepoDb.Core caches will not be bloated
-                        tempTableName = string.Concat("_RepoDb_BulkInsert_", GetTableName(tableName, dbSetting));
-
-                        // Add a # prefix if not physical
-                        if (usePhysicalPseudoTempTable != true)
-                        {
-                            tempTableName = string.Concat("#", tempTableName);
-                        }
-
-                        // Create a temporary table
-                        var sql = GetCreateTemporaryTableSqlText(tableName,
-                            tempTableName,
-                            fields,
-                            dbSetting,
-                            true);
-                        await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
+                        tempTableName = string.Concat("#", tempTableName);
                     }
 
-                    // Set the destinationtable
-                    Compiler.SetProperty<TSqlBulkCopy>(sqlBulkCopy, "DestinationTableName", (tempTableName ?? tableName));
+                    // Create a temporary table
+                    var sql = GetCreateTemporaryTableSqlText(tableName,
+                        tempTableName,
+                        fields,
+                        dbSetting,
+                        true);
+                    await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
+                }
 
-                    // Set the timeout
-                    if (bulkCopyTimeout.HasValue)
+                // WriteToServer
+                var hasOrderingColumn = (isReturnIdentity == true && identityDbField != null);
+                result = await WriteToServerAsync<TEntity, TSqlBulkCopy, TSqlBulkCopyOptions, TSqlBulkCopyColumnMappingCollection,
+                    TSqlBulkCopyColumnMapping, TSqlTransaction>(connection,
+                    (tempTableName ?? tableName),
+                    entities,
+                    dbFields,
+                    mappings,
+                    options,
+                    bulkCopyTimeout,
+                    batchSize,
+                    hasOrderingColumn,
+                    transaction,
+                    cancellationToken);
+
+                // Check if this is with pseudo
+                if (withPseudoExecution)
+                {
+                    // Merge the actual data
+                    var sql = GetBulkInsertSqlText(tableName,
+                        tempTableName,
+                        fields,
+                        identityDbField?.AsField(),
+                        hints,
+                        dbSetting,
+                        withPseudoExecution);
+
+                    // Execute the SQL
+                    using (var reader = (DbDataReader)(await connection.ExecuteReaderAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction)))
                     {
-                        Compiler.SetProperty<TSqlBulkCopy>(sqlBulkCopy, "BulkCopyTimeout", bulkCopyTimeout.Value);
+                        result = await SetIdentityForEntitiesAsync<TEntity>(entities, reader, identityDbField, cancellationToken);
                     }
 
-                    // Set the batch size
-                    if (batchSize.HasValue)
-                    {
-                        Compiler.SetProperty<TSqlBulkCopy>(sqlBulkCopy, "BatchSize", batchSize.Value);
-                    }
-
-                    // Add the order column
-                    if (withPseudoExecution)
-                    {
-                        mappings = AddOrderColumnMapping(mappings);
-                    }
-
-                    // Add the mappings
-                    AddMappings<TSqlBulkCopy, TSqlBulkCopyColumnMappingCollection, TSqlBulkCopyColumnMapping>(sqlBulkCopy, mappings);
-
-                    // Open the connection and do the operation
-                    await connection.EnsureOpenAsync(cancellationToken);
-                    using (var reader = new DataEntityDataReader<TEntity>(tableName, entities, connection, transaction, true))
-                    {
-                        var writeToServerMethod = Compiler.GetParameterizedMethodFunc<TSqlBulkCopy, Task>("WriteToServerAsync", new[] { typeof(DbDataReader), typeof(CancellationToken) });
-                        await writeToServerMethod(sqlBulkCopy, new object[] { reader, cancellationToken });
-                        recordsAffected = reader.RecordsAffected;
-                    }
-
-                    // Check if this is with pseudo
-                    if (withPseudoExecution)
-                    {
-                        // Merge the actual data
-                        var sql = GetBulkInsertSqlText(tableName,
-                            tempTableName,
-                            fields,
-                            identityDbField?.AsField(),
-                            hints,
-                            dbSetting,
-                            withPseudoExecution);
-
-                        // Execute the SQL
-                        using (var reader = (DbDataReader)(await connection.ExecuteReaderAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction)))
-                        {
-                            result = await SetIdentityForEntitiesAsync<TEntity>(entities, reader, identityDbField, cancellationToken);
-                        }
-
-                        // Drop the table after used
-                        sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
-                        await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
-                    }
-                    else
-                    {
-                        // Set the return value
-                        var rowsCopiedFieldOrProperty = Compiler.GetFieldGetterFunc<TSqlBulkCopy, int>("_rowsCopied") ??
-                            Compiler.GetPropertyGetterFunc<TSqlBulkCopy, int>("RowsCopied");
-                        result = rowsCopiedFieldOrProperty != null ? rowsCopiedFieldOrProperty(sqlBulkCopy) : recordsAffected;
-                    }
+                    // Drop the table after used
+                    sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
+                    await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
                 }
 
                 // Commit the transaction
