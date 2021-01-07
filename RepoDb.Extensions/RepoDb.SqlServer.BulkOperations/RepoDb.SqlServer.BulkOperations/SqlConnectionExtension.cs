@@ -1,5 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
-using RepoDb.Exceptions;
+﻿using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.SqlServer.BulkOperations;
@@ -9,7 +8,6 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -101,6 +99,52 @@ namespace RepoDb
                     func(entity, value);
                     result++;
                 }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dataTable"></param>
+        /// <param name="reader"></param>
+        /// <param name="identityColumn"></param>
+        /// <returns></returns>
+        private static int SetIdentityForEntities(DataTable dataTable,
+            DbDataReader reader,
+            DataColumn identityColumn)
+        {
+            var result = 0;
+            while (reader.Read())
+            {
+                var value = Converter.DbNullToNull(reader.GetFieldValue<object>(0));
+                dataTable.Rows[result][identityColumn] = value;
+                result++;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dataTable"></param>
+        /// <param name="reader"></param>
+        /// <param name="identityColumn"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        private static async Task<int> SetIdentityForEntitiesAsync(DataTable dataTable,
+            DbDataReader reader,
+            DataColumn identityColumn,
+            CancellationToken cancellationToken = default)
+        {
+            var result = 0;
+            while (await reader.ReadAsync(cancellationToken))
+            {
+                var value = Converter.DbNullToNull(await reader.GetFieldValueAsync<object>(0, cancellationToken));
+                dataTable.Rows[result][identityColumn] = value;
+                result++;
             }
 
             return result;
@@ -212,6 +256,36 @@ namespace RepoDb
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="dataTable"></param>
+        /// <returns></returns>
+        private static void AddOrderColumn(DataTable dataTable)
+        {
+            if (dataTable == null)
+            {
+                return;
+            }
+            var column = new DataColumn("__RepoDb_OrderColumn", typeof(int));
+            dataTable.Columns.Add(column);
+            for (var i = 0; i < dataTable.Rows.Count; i++)
+            {
+                dataTable.Rows[i][column] = i;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="mappings"></param>
+        private static IEnumerable<BulkInsertMapItem> AddOrderColumnMapping(IEnumerable<BulkInsertMapItem> mappings)
+        {
+            var list = mappings.AsList();
+            list.Add(new BulkInsertMapItem("__RepoDb_OrderColumn", "__RepoDb_OrderColumn"));
+            return list;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="fields"></param>
         /// <returns></returns>
         private static IEnumerable<BulkInsertMapItem> GetBulkInsertMapItemsFromFields(IEnumerable<Field> fields)
@@ -296,17 +370,17 @@ namespace RepoDb
             // Compose the statement
             builder
                 .Clear()
-                .Select();
+                .Select()
+                .FieldsFrom(fields, dbSetting);
 
             // Return Identity
             if (isReturnIdentity)
             {
-                builder.WriteText("CONVERT(INT, NULL) AS [__RepoDb_OrderColumn],");
-            }
+                builder.WriteText(", CONVERT(INT, NULL) AS [__RepoDb_OrderColumn]");
+            };
 
             // Continuation
             builder
-                .FieldsFrom(fields, dbSetting)
                 .Into()
                 .WriteText(tempTableName.AsQuoted(dbSetting))
                 .From()
@@ -552,9 +626,23 @@ namespace RepoDb
                 .Using()
                 .OpenParen()
                 .Select()
+                .Top()
+                .WriteText("100 PERCENT")
                 .FieldsFrom(fields, dbSetting)
                 .From()
-                .TableNameFrom(tempTableName, dbSetting)
+                .TableNameFrom(tempTableName, dbSetting);
+
+            // Return Identity
+            if (isReturnIdentity && identityField != null)
+            {
+                builder
+                    .OrderBy()
+                    .WriteText("[__RepoDb_OrderColumn]")
+                    .Ascending();
+            }
+
+            // Continuation
+            builder
                 .CloseParen()
                 .As("S")
                 // QUALIFIERS
@@ -591,7 +679,7 @@ namespace RepoDb
             {
                 builder
                     .WriteText(string.Concat("OUTPUT INSERTED.", identityField.Name.AsField(dbSetting)))
-                    .As("[Result]");
+                        .As("[Result]");
             }
 
             // End the builder
@@ -696,18 +784,6 @@ namespace RepoDb
 
             // Return the table
             return table;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="mappings"></param>
-        private static IEnumerable<BulkInsertMapItem> AddOrderColumnMapping(IEnumerable<BulkInsertMapItem> mappings)
-        {
-            var list = mappings.AsList();
-            //list.Insert(0, new BulkInsertMapItem("__RepoDb_OrderColumn", "__RepoDb_OrderColumn"));
-            list.Add(new BulkInsertMapItem("__RepoDb_OrderColumn", "__RepoDb_OrderColumn"));
-            return list;
         }
 
         #endregion
