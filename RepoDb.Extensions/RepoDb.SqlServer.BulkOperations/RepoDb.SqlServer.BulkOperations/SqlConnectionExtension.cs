@@ -41,7 +41,8 @@ namespace RepoDb
                 while (reader.Read())
                 {
                     var value = Converter.DbNullToNull(reader.GetFieldValue<object>(0));
-                    var dictionary = (IDictionary<string, object>)list[result];
+                    var index = reader.GetFieldValue<int>(1);
+                    var dictionary = (IDictionary<string, object>)list[index < 0 ? result : index];
                     dictionary[identityDbField.Name] = value;
                     result++;
                 }
@@ -52,7 +53,8 @@ namespace RepoDb
                 while (reader.Read())
                 {
                     var value = Converter.DbNullToNull(reader.GetFieldValue<object>(0));
-                    var entity = list[result];
+                    var index = reader.GetFieldValue<int>(1);
+                    var entity = list[(index < 0 ? result : index)];
                     func(entity, value);
                     result++;
                 }
@@ -84,7 +86,8 @@ namespace RepoDb
                 while (await reader.ReadAsync(cancellationToken))
                 {
                     var value = Converter.DbNullToNull(await reader.GetFieldValueAsync<object>(0, cancellationToken));
-                    var dictionary = (IDictionary<string, object>)list[result];
+                    var index = await reader.GetFieldValueAsync<int>(1, cancellationToken);
+                    var dictionary = (IDictionary<string, object>)list[(index < 0 ? result : index)];
                     dictionary[identityDbField.Name] = value;
                     result++;
                 }
@@ -95,7 +98,8 @@ namespace RepoDb
                 while (await reader.ReadAsync(cancellationToken))
                 {
                     var value = Converter.DbNullToNull(await reader.GetFieldValueAsync<object>(0, cancellationToken));
-                    var entity = list[result];
+                    var index = await reader.GetFieldValueAsync<int>(1, cancellationToken);
+                    var entity = list[(index < 0 ? result : index)];
                     func(entity, value);
                     result++;
                 }
@@ -498,7 +502,7 @@ namespace RepoDb
         /// <param name="identityField"></param>
         /// <param name="hints"></param>
         /// <param name="dbSetting"></param>
-        /// <param name="withPseudoExecution"></param>
+        /// <param name="isReturnIdentity"></param>
         /// <returns></returns>
         private static string GetBulkInsertSqlText(string tableName,
             string tempTableName,
@@ -506,7 +510,7 @@ namespace RepoDb
             Field identityField,
             string hints,
             IDbSetting dbSetting,
-            bool withPseudoExecution)
+            bool isReturnIdentity)
         {
             // Validate the presence
             if (fields?.Any() != true)
@@ -526,36 +530,61 @@ namespace RepoDb
 
             // Compose the statement
             builder.Clear()
-                .Insert()
-                .Into()
+                // MERGE T USING S
+                .Merge()
                 .TableNameFrom(tableName, dbSetting)
                 .HintsFrom(hints)
+                .As("T")
+                .Using()
                 .OpenParen()
-                .FieldsFrom(insertableFields, dbSetting)
-                .CloseParen();
-
-            // Set the output
-            if (withPseudoExecution && identityField != null)
-            {
-                builder
-                    .WriteText(string.Concat("OUTPUT INSERTED.", identityField.Name.AsField(dbSetting)))
-                        .As("[Result]");
-            }
-
-            // Continuation
-            builder
                 .Select()
-                .FieldsFrom(insertableFields, dbSetting)
+                .Top()
+                .WriteText("100 PERCENT")
+                //.FieldsFrom(fields, dbSetting)
+                .WriteText("*") // Including the [__RepoDb_OrderColumn]
                 .From()
                 .TableNameFrom(tempTableName, dbSetting);
 
-            // Ordering
-            if (withPseudoExecution)
+            // Return Identity
+            if (isReturnIdentity && identityField != null)
             {
                 builder
                     .OrderBy()
                     .WriteText("[__RepoDb_OrderColumn]")
                     .Ascending();
+            }
+
+            // Continuation
+            builder
+                .CloseParen()
+                .As("S")
+                // QUALIFIERS
+                .On()
+                .OpenParen()
+                .WriteText("1 = 0")
+                .CloseParen()
+                // WHEN NOT MATCHED THEN INSERT VALUES
+                .When()
+                .Not()
+                .Matched()
+                .Then()
+                .Insert()
+                .OpenParen()
+                .FieldsFrom(insertableFields, dbSetting)
+                .CloseParen()
+                .Values()
+                .OpenParen()
+                .AsAliasFieldsFrom(insertableFields, "S", dbSetting)
+                .CloseParen();
+
+            // Set the output
+            if (isReturnIdentity == true && identityField != null)
+            {
+                builder
+                    .WriteText(string.Concat("OUTPUT INSERTED.", identityField.Name.AsField(dbSetting)))
+                        .As("[Result],")
+                    .WriteText("S.[__RepoDb_OrderColumn]")
+                        .As("[OrderColumn]");
             }
 
             // End
@@ -628,7 +657,8 @@ namespace RepoDb
                 .Select()
                 .Top()
                 .WriteText("100 PERCENT")
-                .FieldsFrom(fields, dbSetting)
+                //.FieldsFrom(fields, dbSetting)
+                .WriteText("*") // Including the [__RepoDb_OrderColumn]
                 .From()
                 .TableNameFrom(tempTableName, dbSetting);
 
@@ -679,7 +709,9 @@ namespace RepoDb
             {
                 builder
                     .WriteText(string.Concat("OUTPUT INSERTED.", identityField.Name.AsField(dbSetting)))
-                        .As("[Result]");
+                        .As("[Result],")
+                    .WriteText("S.[__RepoDb_OrderColumn]")
+                        .As("[OrderColumn]");
             }
 
             // End the builder
