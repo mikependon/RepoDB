@@ -367,9 +367,9 @@ namespace RepoDb.PostgreSql.UnitTests
                 3,
                 null,
                 new DbField("Id", false, true, false, typeof(int), null, null, null, null));
-            var expected = "INSERT INTO \"Table\" ( \"Name\", \"Address\" ) VALUES ( @Name, @Address ) RETURNING CAST(\"Id\" AS INTEGER) AS \"Result\" ; " +
-                "INSERT INTO \"Table\" ( \"Name\", \"Address\" ) VALUES ( @Name_1, @Address_1 ) RETURNING CAST(\"Id\" AS INTEGER) AS \"Result\" ; " +
-                "INSERT INTO \"Table\" ( \"Name\", \"Address\" ) VALUES ( @Name_2, @Address_2 ) RETURNING CAST(\"Id\" AS INTEGER) AS \"Result\" ;";
+            var expected = "INSERT INTO \"Table\" ( \"Name\", \"Address\" ) VALUES ( @Name, @Address ) RETURNING CAST(\"Id\" AS INTEGER) AS \"Id\", @__RepoDb_OrderColumn_0 AS \"OrderColumn\" ; " +
+                "INSERT INTO \"Table\" ( \"Name\", \"Address\" ) VALUES ( @Name_1, @Address_1 ) RETURNING CAST(\"Id\" AS INTEGER) AS \"Id\", @__RepoDb_OrderColumn_1 AS \"OrderColumn\" ; " +
+                "INSERT INTO \"Table\" ( \"Name\", \"Address\" ) VALUES ( @Name_2, @Address_2 ) RETURNING CAST(\"Id\" AS INTEGER) AS \"Id\", @__RepoDb_OrderColumn_2 AS \"OrderColumn\" ;";
 
             // Assert
             Assert.AreEqual(expected, query);
@@ -711,9 +711,9 @@ namespace RepoDb.PostgreSql.UnitTests
                 3,
                 new DbField("Id", true, false, false, typeof(int), null, null, null, null),
                 null);
-            var expected = "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( @Id, @Name, @Address ) ON CONFLICT (\"Id\") DO UPDATE SET \"Name\" = @Name, \"Address\" = @Address RETURNING @Id AS \"Result\" ; " +
-                "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( @Id_1, @Name_1, @Address_1 ) ON CONFLICT (\"Id\") DO UPDATE SET \"Name\" = @Name_1, \"Address\" = @Address_1 RETURNING @Id AS \"Result\" ; " +
-                "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( @Id_2, @Name_2, @Address_2 ) ON CONFLICT (\"Id\") DO UPDATE SET \"Name\" = @Name_2, \"Address\" = @Address_2 RETURNING @Id AS \"Result\" ;";
+            var expected = "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( @Id, @Name, @Address ) ON CONFLICT (\"Id\") DO UPDATE SET \"Name\" = @Name, \"Address\" = @Address RETURNING @Id AS \"Id\", @__RepoDb_OrderColumn_0 AS \"OrderColumn\" ; " +
+                "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( @Id_1, @Name_1, @Address_1 ) ON CONFLICT (\"Id\") DO UPDATE SET \"Name\" = @Name_1, \"Address\" = @Address_1 RETURNING @Id AS \"Id\", @__RepoDb_OrderColumn_1 AS \"OrderColumn\" ; " +
+                "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( @Id_2, @Name_2, @Address_2 ) ON CONFLICT (\"Id\") DO UPDATE SET \"Name\" = @Name_2, \"Address\" = @Address_2 RETURNING @Id AS \"Id\", @__RepoDb_OrderColumn_2 AS \"OrderColumn\" ;";
 
             // Assert
             Assert.AreEqual(expected, query);
@@ -733,9 +733,9 @@ namespace RepoDb.PostgreSql.UnitTests
                 3,
                 new DbField("Id", true, false, false, typeof(int), null, null, null, null),
                 null);
-            var expected = "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( @Id, @Name, @Address ) ON CONFLICT (\"Id\") DO UPDATE SET \"Name\" = @Name, \"Address\" = @Address RETURNING @Id AS \"Result\" ; " +
-                "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( @Id_1, @Name_1, @Address_1 ) ON CONFLICT (\"Id\") DO UPDATE SET \"Name\" = @Name_1, \"Address\" = @Address_1 RETURNING @Id AS \"Result\" ; " +
-                "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( @Id_2, @Name_2, @Address_2 ) ON CONFLICT (\"Id\") DO UPDATE SET \"Name\" = @Name_2, \"Address\" = @Address_2 RETURNING @Id AS \"Result\" ;";
+            var expected = "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( @Id, @Name, @Address ) ON CONFLICT (\"Id\") DO UPDATE SET \"Name\" = @Name, \"Address\" = @Address RETURNING @Id AS \"Id\", @__RepoDb_OrderColumn_0 AS \"OrderColumn\" ; " +
+                "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( @Id_1, @Name_1, @Address_1 ) ON CONFLICT (\"Id\") DO UPDATE SET \"Name\" = @Name_1, \"Address\" = @Address_1 RETURNING @Id AS \"Id\", @__RepoDb_OrderColumn_1 AS \"OrderColumn\" ; " +
+                "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( @Id_2, @Name_2, @Address_2 ) ON CONFLICT (\"Id\") DO UPDATE SET \"Name\" = @Name_2, \"Address\" = @Address_2 RETURNING @Id AS \"Id\", @__RepoDb_OrderColumn_2 AS \"OrderColumn\" ;";
 
             // Assert
             Assert.AreEqual(expected, query);
@@ -755,9 +755,9 @@ namespace RepoDb.PostgreSql.UnitTests
                 3,
                 new DbField("Id", true, false, false, typeof(int), null, null, null, null),
                 new DbField("Id", false, true, false, typeof(int), null, null, null, null));
-            var expected = "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) OVERRIDING SYSTEM VALUE VALUES ( @Id, @Name, @Address ) ON CONFLICT (\"Id\") DO UPDATE SET \"Name\" = @Name, \"Address\" = @Address RETURNING CAST(\"Id\" AS INTEGER) AS \"Result\" ; " +
-                "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) OVERRIDING SYSTEM VALUE VALUES ( @Id_1, @Name_1, @Address_1 ) ON CONFLICT (\"Id\") DO UPDATE SET \"Name\" = @Name_1, \"Address\" = @Address_1 RETURNING CAST(\"Id\" AS INTEGER) AS \"Result\" ; " +
-                "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) OVERRIDING SYSTEM VALUE VALUES ( @Id_2, @Name_2, @Address_2 ) ON CONFLICT (\"Id\") DO UPDATE SET \"Name\" = @Name_2, \"Address\" = @Address_2 RETURNING CAST(\"Id\" AS INTEGER) AS \"Result\" ;";
+            var expected = "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) OVERRIDING SYSTEM VALUE VALUES ( @Id, @Name, @Address ) ON CONFLICT (\"Id\") DO UPDATE SET \"Name\" = @Name, \"Address\" = @Address RETURNING CAST(\"Id\" AS INTEGER) AS \"Id\", @__RepoDb_OrderColumn_0 AS \"OrderColumn\" ; " +
+                "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) OVERRIDING SYSTEM VALUE VALUES ( @Id_1, @Name_1, @Address_1 ) ON CONFLICT (\"Id\") DO UPDATE SET \"Name\" = @Name_1, \"Address\" = @Address_1 RETURNING CAST(\"Id\" AS INTEGER) AS \"Id\", @__RepoDb_OrderColumn_1 AS \"OrderColumn\" ; " +
+                "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) OVERRIDING SYSTEM VALUE VALUES ( @Id_2, @Name_2, @Address_2 ) ON CONFLICT (\"Id\") DO UPDATE SET \"Name\" = @Name_2, \"Address\" = @Address_2 RETURNING CAST(\"Id\" AS INTEGER) AS \"Id\", @__RepoDb_OrderColumn_2 AS \"OrderColumn\" ;";
 
             // Assert
             Assert.AreEqual(expected, query);

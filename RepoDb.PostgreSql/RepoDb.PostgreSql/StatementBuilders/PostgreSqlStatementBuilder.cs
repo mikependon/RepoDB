@@ -280,7 +280,8 @@ namespace RepoDb.StatementBuilders
                             identityField.Name.AsQuoted(DbSetting) :
                                 string.Concat($"CAST({identityField.Name.AsQuoted(DbSetting)} AS {databaseType})") :
                                     primaryField != null ? primaryField.Name.AsQuoted(DbSetting) : "NULL";
-                    commandTexts.Add(string.Concat(line, " RETURNING ", returnValue, " AS ", "Result".AsQuoted(DbSetting), " ;"));
+                    commandTexts.Add(string.Concat(line, " RETURNING ", returnValue, " AS ", "Id".AsQuoted(DbSetting), ", ",
+                        $"{DbSetting.ParameterPrefix}__RepoDb_OrderColumn_{index} AS ", "OrderColumn".AsQuoted(DbSetting), " ;"));
                 }
 
                 // Set the command text
@@ -545,7 +546,8 @@ namespace RepoDb.StatementBuilders
                 if (!string.IsNullOrEmpty(result))
                 {
                     // Get the string
-                    var sql = string.Concat("RETURNING ", result, " AS ", "Result".AsQuoted(DbSetting));
+                    var sql = string.Concat("RETURNING ", result, " AS ", "Id".AsQuoted(DbSetting), ", ",
+                        $"{DbSetting.ParameterPrefix}__RepoDb_OrderColumn_{index}", " AS ", "OrderColumn".AsQuoted(DbSetting));
 
                     // Set the result
                     builder
