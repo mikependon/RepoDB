@@ -287,9 +287,9 @@ namespace RepoDb.SqLite.UnitTests
                 3,
                 null,
                 new DbField("Id", false, true, false, typeof(int), null, null, null, null));
-            var expected = "INSERT INTO [Table] ( [Name], [Address] ) VALUES ( @Name, @Address ) ; SELECT CAST(last_insert_rowid() AS INT) ; " +
-                "INSERT INTO [Table] ( [Name], [Address] ) VALUES ( @Name_1, @Address_1 ) ; SELECT CAST(last_insert_rowid() AS INT) ; " +
-                "INSERT INTO [Table] ( [Name], [Address] ) VALUES ( @Name_2, @Address_2 ) ; SELECT CAST(last_insert_rowid() AS INT) ;";
+            var expected = "INSERT INTO [Table] ( [Name], [Address] ) VALUES ( @Name, @Address ) ; SELECT CAST(last_insert_rowid() AS INT) AS [Id], @__RepoDb_OrderColumn_0 AS [OrderColumn] ; " +
+                "INSERT INTO [Table] ( [Name], [Address] ) VALUES ( @Name_1, @Address_1 ) ; SELECT CAST(last_insert_rowid() AS INT) AS [Id], @__RepoDb_OrderColumn_1 AS [OrderColumn] ; " +
+                "INSERT INTO [Table] ( [Name], [Address] ) VALUES ( @Name_2, @Address_2 ) ; SELECT CAST(last_insert_rowid() AS INT) AS [Id], @__RepoDb_OrderColumn_2 AS [OrderColumn] ;";
 
             // Assert
             Assert.AreEqual(expected, query);
@@ -1058,9 +1058,9 @@ namespace RepoDb.SqLite.UnitTests
                 3,
                 null,
                 new DbField("Id", false, true, false, typeof(int), null, null, null, null));
-            var expected = "INSERT INTO [Table] ( [Name], [Address] ) VALUES ( @Name, @Address ) ; SELECT CAST(last_insert_rowid() AS INT) ; " +
-                "INSERT INTO [Table] ( [Name], [Address] ) VALUES ( @Name_1, @Address_1 ) ; SELECT CAST(last_insert_rowid() AS INT) ; " +
-                "INSERT INTO [Table] ( [Name], [Address] ) VALUES ( @Name_2, @Address_2 ) ; SELECT CAST(last_insert_rowid() AS INT) ;";
+            var expected = "INSERT INTO [Table] ( [Name], [Address] ) VALUES ( @Name, @Address ) ; SELECT CAST(last_insert_rowid() AS INT) AS [Id], @__RepoDb_OrderColumn_0 AS [OrderColumn] ; " +
+                "INSERT INTO [Table] ( [Name], [Address] ) VALUES ( @Name_1, @Address_1 ) ; SELECT CAST(last_insert_rowid() AS INT) AS [Id], @__RepoDb_OrderColumn_1 AS [OrderColumn] ; " +
+                "INSERT INTO [Table] ( [Name], [Address] ) VALUES ( @Name_2, @Address_2 ) ; SELECT CAST(last_insert_rowid() AS INT) AS [Id], @__RepoDb_OrderColumn_2 AS [OrderColumn] ;";
 
             // Assert
             Assert.AreEqual(expected, query);
