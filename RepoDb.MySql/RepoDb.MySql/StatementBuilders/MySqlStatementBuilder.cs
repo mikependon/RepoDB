@@ -292,8 +292,8 @@ namespace RepoDb.StatementBuilders
                 for (var index = 0; index < splitted.Length; index++)
                 {
                     var line = splitted[index].Trim();
-                    var returnValue = "SELECT LAST_INSERT_ID()";
-                    commandTexts.Add(string.Concat(line, " ; ", returnValue, " ;"));
+                    commandTexts.Add(string.Concat(line, " ; SELECT LAST_INSERT_ID() AS ", "Id".AsQuoted(DbSetting), ", ",
+                        $"@__RepoDb_OrderColumn_{index} AS ", "OrderColumn".AsQuoted(DbSetting), " ;"));
                 }
 
                 // Set the command text
@@ -560,10 +560,13 @@ namespace RepoDb.StatementBuilders
                     // Set the result
                     builder
                         .Select()
-                        .WriteText(result)
-                        .As("Result".AsQuoted(DbSetting))
-                        .End();
+                        .WriteText(string.Concat(result, " AS ", "Id".AsQuoted(DbSetting), ","))
+                        .WriteText(string.Concat($"{DbSetting.ParameterPrefix}__RepoDb_OrderColumn_{index}", " AS ", "OrderColumn".AsQuoted(DbSetting)));
                 }
+
+                // End the builder
+                builder
+                    .End();
             }
 
             // Return the query

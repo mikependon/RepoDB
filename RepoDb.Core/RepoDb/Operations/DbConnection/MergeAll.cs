@@ -1328,6 +1328,7 @@ namespace RepoDb
                             else
                             {
                                 context.MultipleDataEntitiesParametersSetterFunc?.Invoke(command, batchItems);
+                                AddOrderColumnParameters(command, batchItems);
                             }
 
                             // Prepare the command
@@ -1347,16 +1348,18 @@ namespace RepoDb
                                 // Set the identity back
                                 using (var reader = command.ExecuteReader())
                                 {
-                                    var index = 0;
+                                    // Get the results
+                                    var position = 0;
                                     do
                                     {
                                         if (reader.Read())
                                         {
                                             var value = Converter.DbNullToNull(reader.GetValue(0));
+                                            var index = batchItems.Count > 1 && reader.FieldCount > 1 ? reader.GetInt32(1) : position;
                                             context.IdentityPropertySetterFunc.Invoke(batchItems[index], value);
                                             result++;
                                         }
-                                        index++;
+                                        position++;
                                     }
                                     while (reader.NextResult());
                                 }
@@ -1731,6 +1734,7 @@ namespace RepoDb
                             else
                             {
                                 context.MultipleDataEntitiesParametersSetterFunc?.Invoke(command, batchItems);
+                                AddOrderColumnParameters<TEntity>(command, batchItems);
                             }
 
                             // Prepare the command
@@ -1750,16 +1754,19 @@ namespace RepoDb
                                 // Set the identity back
                                 using (var reader = await command.ExecuteReaderAsync(cancellationToken))
                                 {
-                                    var index = 0;
+                                    // Get the results
+                                    var position = 0;
                                     do
                                     {
                                         if (await reader.ReadAsync(cancellationToken))
                                         {
+                                            // No need to use async on this level (await reader.GetFieldValueAsync<object>(0, cancellationToken))
                                             var value = Converter.DbNullToNull(reader.GetValue(0));
+                                            var index = batchItems.Count > 1 && reader.FieldCount > 1 ? reader.GetInt32(1) : position;
                                             context.IdentityPropertySetterFunc.Invoke(batchItems[index], value);
                                             result++;
                                         }
-                                        index++;
+                                        position++;
                                     }
                                     while (await reader.NextResultAsync(cancellationToken));
                                 }

@@ -262,8 +262,8 @@ namespace RepoDb.StatementBuilders
                     var line = splitted[index].Trim();
                     var returnValue = string.IsNullOrEmpty(databaseType) ?
                         "SELECT last_insert_rowid()" :
-                        $"SELECT CAST(last_insert_rowid() AS {databaseType})";
-                    commandTexts.Add(string.Concat(line, " ; ", returnValue, " ;"));
+                        $"SELECT CAST(last_insert_rowid() AS {databaseType}) AS [Id]";
+                    commandTexts.Add(string.Concat(line, " ; ", returnValue, $", {DbSetting.ParameterPrefix}__RepoDb_OrderColumn_{index} AS [OrderColumn] ;"));
                 }
 
                 // Set the command text
@@ -409,6 +409,7 @@ namespace RepoDb.StatementBuilders
             string hints = null)
         {
             throw new NotImplementedException("The merge statement is not supported in SQLite. SQLite is using the 'Upsert (Insert/Update)' operation.");
+            
             //// Ensure with guards
             //GuardTableName(tableName);
             //GuardHints(hints);
