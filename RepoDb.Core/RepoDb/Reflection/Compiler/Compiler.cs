@@ -1626,10 +1626,12 @@ namespace RepoDb.Reflection
             int entityIndex,
             IDbSetting dbSetting)
         {
-            var parameterName = dbField.Name.AsUnquoted(true, dbSetting).AsAlphaNumeric();
             var dbParameterParameterNameSetMethod = StaticType.DbParameter.GetProperty("ParameterName").SetMethod;
+            var parameterName = dbField.Name.AsUnquoted(true, dbSetting).AsAlphaNumeric();
+            parameterName = entityIndex > 0 ? string.Concat(dbSetting.ParameterPrefix, parameterName, "_", entityIndex) :
+                string.Concat(dbSetting.ParameterPrefix, parameterName);
             return Expression.Call(parameterVariableExpression, dbParameterParameterNameSetMethod,
-                Expression.Constant(entityIndex > 0 ? string.Concat(parameterName, "_", entityIndex) : parameterName));
+                Expression.Constant(parameterName));
         }
 
         /// <summary>

@@ -323,9 +323,9 @@ namespace RepoDb.StatementBuilders
                 {
                     var line = splitted[index].Trim();
                     var returnValue = string.IsNullOrEmpty(databaseType) ?
-                            "SELECT SCOPE_IDENTITY()" :
-                            $"SELECT CONVERT({databaseType}, SCOPE_IDENTITY())";
-                    commandTexts.Add(string.Concat(line, " ; ", returnValue, " ;"));
+                        "SELECT SCOPE_IDENTITY()" :
+                        $"SELECT CONVERT({databaseType}, SCOPE_IDENTITY()) AS [Id]";
+                    commandTexts.Add(string.Concat(line, " ; ", returnValue, $", {DbSetting.ParameterPrefix}__RepoDb_OrderColumn_{index} AS [OrderColumn] ;"));
                 }
 
                 // Set the command text
@@ -649,7 +649,9 @@ namespace RepoDb.StatementBuilders
                 {
                     builder
                         .WriteText(string.Concat("OUTPUT INSERTED.", outputField.Name.AsField(DbSetting)))
-                        .As("[Result]");
+                            .As("[Id],")
+                        .WriteText($"{DbSetting.ParameterPrefix}__RepoDb_OrderColumn_{index}")
+                            .As("[OrderColumn]");
                 }
 
                 // End the builder

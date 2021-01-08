@@ -57,8 +57,9 @@ namespace RepoDb.Extensions
             parameter.Value = value ?? DBNull.Value;
 
             // The DB Type is auto set when setting the values (so check properly Time/DateTime problem)
-            if (dbType != null && parameter.DbType != dbType.Value)
+            if (dbType != null) // && parameter.DbType != dbType.Value)
             {
+                // Prepare() requires an explicit assignment, weird Microsoft
                 parameter.DbType = dbType.Value;
             }
 

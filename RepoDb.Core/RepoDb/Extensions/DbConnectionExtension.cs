@@ -1748,6 +1748,33 @@ namespace RepoDb
 
         #region Helper Methods
 
+        #region Order Columns
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="command"></param>
+        /// <param name="entities"></param>
+        private static void AddOrderColumnParameters<TEntity>(DbCommand command,
+            IEnumerable<TEntity> entities)
+            where TEntity : class
+        {
+            var index = 0;
+            foreach (var item in entities)
+            {
+                var parameter = command.CreateParameter($"__RepoDb_OrderColumn_{index}", index, DbType.Int32);
+                parameter.Direction = ParameterDirection.Input;
+                parameter.Size = 4;
+                parameter.Precision = 10;
+                parameter.Scale = 0;
+                command.Parameters.Add(parameter);
+                index++;
+            }
+        }
+
+        #endregion
+
         #region GetAndGuardPrimaryKeyOrIdentityKey
 
         /// <summary>
