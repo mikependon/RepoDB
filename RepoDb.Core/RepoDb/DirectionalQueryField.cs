@@ -18,6 +18,19 @@ namespace RepoDb
         /// Creates a new instance of <see cref="DirectionalQueryField"/> object.
         /// </summary>
         /// <param name="fieldName">The name of the field for the query expression.</param>
+        /// <param name="direction">The direction to be used for the parameter object.</param>
+        public DirectionalQueryField(string fieldName,
+            ParameterDirection direction = default)
+            : this(fieldName,
+                  Operation.Equal,
+                  null,
+                  direction)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="DirectionalQueryField"/> object.
+        /// </summary>
+        /// <param name="fieldName">The name of the field for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
         /// <param name="direction">The direction to be used for the parameter object.</param>
         public DirectionalQueryField(string fieldName,

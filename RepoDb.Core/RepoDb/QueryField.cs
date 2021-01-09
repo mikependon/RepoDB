@@ -89,7 +89,7 @@ namespace RepoDb
             : this(new Field(fieldName),
                   operation,
                   value,
-                  false)
+                  appendUnderscore)
         { }
 
         /// <summary>
