@@ -91,14 +91,6 @@ namespace RepoDb
                 // Before Execution Time
                 var beforeExecutionTime = DateTime.UtcNow;
 
-                // Filter the fields (based on the data entity)
-                if (entityFields?.Any() == true)
-                {
-                    fields = fields?
-                        .Where(e =>
-                            entityFields.Any(f => string.Equals(f.Name, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
-                }
-
                 // Filter the fields (based on mappings)
                 if (mappings?.Any() == true)
                 {
@@ -108,6 +100,15 @@ namespace RepoDb
                 }
                 else
                 {
+                    // Filter the fields (based on the data entity)
+                    if (entityFields?.Any() == true)
+                    {
+                        fields = fields?
+                            .Where(e =>
+                                entityFields.Any(f => string.Equals(f.Name, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
+                    }
+
+                    // Explicitly define the mappings
                     mappings = fields?
                         .Select(e =>
                             new BulkInsertMapItem(e.Name, e.Name));
@@ -171,7 +172,9 @@ namespace RepoDb
                     // Execute the SQL
                     using (var reader = (DbDataReader)connection.ExecuteReader(sql, commandTimeout: bulkCopyTimeout, transaction: transaction))
                     {
-                        result = SetIdentityForEntities<TEntity>(entities, reader, identityDbField);
+                        var mapping = mappings?.FirstOrDefault(e => string.Equals(e.DestinationColumn, identityDbField.Name, StringComparison.OrdinalIgnoreCase));
+                        var identityField = mapping != null ? new Field(mapping.SourceColumn) : identityDbField.AsField();
+                        result = SetIdentityForEntities<TEntity>(entities, reader, identityField);
                     }
 
                     // Drop the table after used
@@ -283,14 +286,6 @@ namespace RepoDb
                 // Before Execution Time
                 var beforeExecutionTime = DateTime.UtcNow;
 
-                // Filter the fields (based on the data reader)
-                if (readerFields?.Any() == true)
-                {
-                    fields = fields?
-                        .Where(e =>
-                            readerFields.Any(fieldName => string.Equals(fieldName, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
-                }
-
                 // Filter the fields (based on mappings)
                 if (mappings?.Any() == true)
                 {
@@ -300,6 +295,15 @@ namespace RepoDb
                 }
                 else
                 {
+                    // Filter the fields (based on the data reader)
+                    if (readerFields?.Any() == true)
+                    {
+                        fields = fields?
+                            .Where(e =>
+                                readerFields.Any(fieldName => string.Equals(fieldName, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
+                    }
+
+                    // Explicitly define the mappings
                     mappings = fields?
                         .Select(e =>
                             new BulkInsertMapItem(e.Name, e.Name));
@@ -431,14 +435,6 @@ namespace RepoDb
                 // Before Execution Time
                 var beforeExecutionTime = DateTime.UtcNow;
 
-                // Filter the fields (based on the data table)
-                if (tableFields?.Any() == true)
-                {
-                    fields = fields?
-                        .Where(e =>
-                            tableFields.Any(fieldName => string.Equals(fieldName, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
-                }
-
                 // Filter the fields (based on mappings)
                 if (mappings?.Any() == true)
                 {
@@ -448,6 +444,15 @@ namespace RepoDb
                 }
                 else
                 {
+                    // Filter the fields (based on the data table)
+                    if (tableFields?.Any() == true)
+                    {
+                        fields = fields?
+                            .Where(e =>
+                                tableFields.Any(fieldName => string.Equals(fieldName, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
+                    }
+
+                    // Explicitly define the mappings
                     mappings = fields?
                         .Select(e =>
                             new BulkInsertMapItem(e.Name, e.Name));
@@ -648,14 +653,6 @@ namespace RepoDb
                 // Before Execution Time
                 var beforeExecutionTime = DateTime.UtcNow;
 
-                // Filter the fields (based on the data entity)
-                if (entityFields?.Any() == true)
-                {
-                    fields = fields?
-                        .Where(e =>
-                            entityFields.Any(f => string.Equals(f.Name, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
-                }
-
                 // Filter the fields (based on mappings)
                 if (mappings?.Any() == true)
                 {
@@ -665,6 +662,15 @@ namespace RepoDb
                 }
                 else
                 {
+                    // Filter the fields (based on the data entity)
+                    if (entityFields?.Any() == true)
+                    {
+                        fields = fields?
+                            .Where(e =>
+                                entityFields.Any(f => string.Equals(f.Name, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
+                    }
+
+                    // Explicitly define the mappings
                     mappings = fields?
                         .Select(e =>
                             new BulkInsertMapItem(e.Name, e.Name));
@@ -842,14 +848,6 @@ namespace RepoDb
                 // Before Execution Time
                 var beforeExecutionTime = DateTime.UtcNow;
 
-                // Filter the fields (based on the data reader)
-                if (readerFields?.Any() == true)
-                {
-                    fields = fields?
-                        .Where(e =>
-                            readerFields.Any(fieldName => string.Equals(fieldName, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
-                }
-
                 // Filter the fields (based on mappings)
                 if (mappings?.Any() == true)
                 {
@@ -859,6 +857,15 @@ namespace RepoDb
                 }
                 else
                 {
+                    // Filter the fields (based on the data reader)
+                    if (readerFields?.Any() == true)
+                    {
+                        fields = fields?
+                            .Where(e =>
+                                readerFields.Any(fieldName => string.Equals(fieldName, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
+                    }
+
+                    // Explicitly define the mappings
                     mappings = fields?
                         .Select(e =>
                             new BulkInsertMapItem(e.Name, e.Name));
@@ -993,14 +1000,6 @@ namespace RepoDb
                 // Before Execution Time
                 var beforeExecutionTime = DateTime.UtcNow;
 
-                // Filter the fields (based on the data table)
-                if (tableFields?.Any() == true)
-                {
-                    fields = fields?
-                        .Where(e =>
-                            tableFields.Any(fieldName => string.Equals(fieldName, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
-                }
-
                 // Filter the fields (based on mappings)
                 if (mappings?.Any() == true)
                 {
@@ -1010,6 +1009,15 @@ namespace RepoDb
                 }
                 else
                 {
+                    // Filter the fields (based on the data table)
+                    if (tableFields?.Any() == true)
+                    {
+                        fields = fields?
+                            .Where(e =>
+                                tableFields.Any(fieldName => string.Equals(fieldName, e.Name, StringComparison.OrdinalIgnoreCase)) == true);
+                    }
+
+                    // Explicitly define the mappings
                     mappings = fields?
                         .Select(e =>
                             new BulkInsertMapItem(e.Name, e.Name));

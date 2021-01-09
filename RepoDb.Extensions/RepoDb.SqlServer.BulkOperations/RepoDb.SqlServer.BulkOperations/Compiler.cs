@@ -334,6 +334,10 @@ namespace RepoDb.SqlServer.BulkOperations
             /// <returns></returns>
             public static Action<TEntity, object> GetFunc(ClassProperty classProperty)
             {
+                if (classProperty == null)
+                {
+                    return null;
+                }
                 var func = (Action<TEntity, object>)null;
                 if (cache.TryGetValue(classProperty.GetHashCode(), out func) == false)
                 {

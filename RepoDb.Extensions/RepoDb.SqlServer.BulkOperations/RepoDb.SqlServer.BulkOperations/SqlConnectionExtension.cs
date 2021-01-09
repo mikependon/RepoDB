@@ -26,10 +26,10 @@ namespace RepoDb
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="entities"></param>
         /// <param name="reader"></param>
-        /// <param name="identityDbField"></param>
+        /// <param name="identityField"></param>
         private static int SetIdentityForEntities<TEntity>(IEnumerable<TEntity> entities,
             DbDataReader reader,
-            DbField identityDbField)
+            Field identityField)
             where TEntity : class
         {
             var entityType = entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity);
@@ -43,20 +43,23 @@ namespace RepoDb
                     var value = Converter.DbNullToNull(reader.GetFieldValue<object>(0));
                     var index = reader.GetFieldValue<int>(1);
                     var dictionary = (IDictionary<string, object>)list[index < 0 ? result : index];
-                    dictionary[identityDbField.Name] = value;
+                    dictionary[identityField.Name] = value;
                     result++;
                 }
             }
             else
             {
-                var func = Compiler.GetPropertySetterFunc<TEntity>(identityDbField.Name);
-                while (reader.Read())
+                var func = Compiler.GetPropertySetterFunc<TEntity>(identityField.Name);
+                if (func != null)
                 {
-                    var value = Converter.DbNullToNull(reader.GetFieldValue<object>(0));
-                    var index = reader.GetFieldValue<int>(1);
-                    var entity = list[(index < 0 ? result : index)];
-                    func(entity, value);
-                    result++;
+                    while (reader.Read())
+                    {
+                        var value = Converter.DbNullToNull(reader.GetFieldValue<object>(0));
+                        var index = reader.GetFieldValue<int>(1);
+                        var entity = list[(index < 0 ? result : index)];
+                        func(entity, value);
+                        result++;
+                    }
                 }
             }
 
