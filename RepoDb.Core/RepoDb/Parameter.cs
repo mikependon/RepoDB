@@ -29,6 +29,7 @@ namespace RepoDb
             // Set the properties
             OriginalName = name.AsAlphaNumeric();
             Name = OriginalName;
+            OriginalValue = value;
             Value = value;
             if (prependUnderscore)
             {
@@ -51,7 +52,12 @@ namespace RepoDb
         /// <summary>
         /// Gets the value of the parameter.
         /// </summary>
-        public object Value { get; }
+        public object Value { get; private set; }
+
+        /// <summary>
+        /// Gets the original value of the parameter.
+        /// </summary>
+        private object OriginalValue { get; }
 
         #endregion
 
@@ -76,6 +82,23 @@ namespace RepoDb
             Name = name;
 
         /// <summary>
+        /// Set the value of the parameter.
+        /// </summary>
+        /// <param name="value">The new value.</param>
+        internal void SetValue(object value) =>
+            Value = value;
+
+        /// <summary>
+        /// Resets the <see cref="Parameter"/> object back to its default state (as is newly instantiated).
+        /// </summary>
+        public void Reset()
+        {
+            Name = OriginalName;
+            Value = OriginalValue;
+            hashCode = null;
+        }
+
+        /// <summary>
         /// Stringify the current object. Will return the format of <b>Name (Value)</b> text.
         /// </summary>
         /// <returns></returns>
@@ -97,13 +120,8 @@ namespace RepoDb
                 return this.hashCode.Value;
             }
 
-            var hashCode = 0;
-
-            // Set the hashcode
-            hashCode = OriginalName.GetHashCode();
-
             // Set and return the hashcode
-            return (this.hashCode = hashCode).Value;
+            return (this.hashCode = OriginalName.GetHashCode()).Value;
         }
 
         /// <summary>
