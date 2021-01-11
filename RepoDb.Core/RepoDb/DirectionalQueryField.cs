@@ -18,14 +18,18 @@ namespace RepoDb
         /// Creates a new instance of <see cref="DirectionalQueryField"/> object.
         /// </summary>
         /// <param name="fieldName">The name of the field for the query expression.</param>
+        /// <param name="type">The type of the parameter object.</param>
         /// <param name="direction">The direction to be used for the parameter object.</param>
         public DirectionalQueryField(string fieldName,
-            ParameterDirection direction = default)
+            Type type,
+            ParameterDirection direction)
             : this(fieldName,
                   Operation.Equal,
                   null,
                   direction)
-        { }
+        {
+            Type = type;
+        }
 
         /// <summary>
         /// Creates a new instance of <see cref="DirectionalQueryField"/> object.
@@ -35,7 +39,7 @@ namespace RepoDb
         /// <param name="direction">The direction to be used for the parameter object.</param>
         public DirectionalQueryField(string fieldName,
             object value,
-            ParameterDirection direction = default)
+            ParameterDirection direction)
             : this(fieldName,
                   Operation.Equal,
                   value,
@@ -52,7 +56,7 @@ namespace RepoDb
         public DirectionalQueryField(string fieldName,
             Operation operation,
             object value,
-            ParameterDirection direction = default)
+            ParameterDirection direction)
             : this(fieldName,
                   operation,
                   value,
@@ -68,7 +72,7 @@ namespace RepoDb
         /// <param name="direction">The direction to be used for the parameter object.</param>
         public DirectionalQueryField(Field field,
             object value,
-            ParameterDirection direction = default)
+            ParameterDirection direction)
             : this(field,
                   Operation.Equal,
                   value,
@@ -86,7 +90,7 @@ namespace RepoDb
         public DirectionalQueryField(Field field,
             Operation operation,
             object value,
-            ParameterDirection direction = default)
+            ParameterDirection direction)
             : this(field,
                   operation,
                   value,
@@ -106,7 +110,7 @@ namespace RepoDb
             Operation operation,
             object value,
             bool appendUnderscore,
-            ParameterDirection direction = default)
+            ParameterDirection direction)
             : this(new Field(fieldName),
                   operation,
                   value,
@@ -126,7 +130,7 @@ namespace RepoDb
             Operation operation,
             object value,
             bool appendUnderscore,
-            ParameterDirection direction = default)
+            ParameterDirection direction)
             : base(field, operation, value, appendUnderscore)
         {
             Direction = direction;
@@ -140,6 +144,11 @@ namespace RepoDb
         /// Gets the the value of the parameter direction currently in used.
         /// </summary>
         public ParameterDirection Direction { get; }
+
+        /// <summary>
+        /// Gets the type of the parameter.
+        /// </summary>
+        internal Type Type { get; }
 
         #endregion
 

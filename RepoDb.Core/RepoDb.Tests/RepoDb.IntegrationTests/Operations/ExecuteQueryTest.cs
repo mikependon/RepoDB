@@ -262,7 +262,7 @@ namespace RepoDb.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var output = new DirectionalQueryField("Output", ParameterDirection.Output);
+            var output = new DirectionalQueryField("Output", typeof(int), ParameterDirection.Output);
             var param = new[]
             {
                 new QueryField("Value1", 100),
@@ -546,7 +546,7 @@ namespace RepoDb.IntegrationTests.Operations
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
-            var output = new DirectionalQueryField("Output", ParameterDirection.Output);
+            var output = new DirectionalQueryField("Output", typeof(int), ParameterDirection.Output);
             var param = new[]
             {
                 new QueryField("Value1", 100),

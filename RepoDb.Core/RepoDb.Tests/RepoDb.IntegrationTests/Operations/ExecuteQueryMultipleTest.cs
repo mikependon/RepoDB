@@ -969,7 +969,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryMultipleForScalarAsTypedResultWithSimpleScalaredValueFollowedByMultipleStoredProceduresWithOutputParameter()
         {
             // Setup
-            var output = new DirectionalQueryField("Output", ParameterDirection.Output);
+            var output = new DirectionalQueryField("Output", typeof(int), ParameterDirection.Output);
             var param = new[]
             {
                 new QueryField("Value1", DateTime.UtcNow.Date),
@@ -983,7 +983,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 using (var result = connection.ExecuteQueryMultiple(@"SELECT @Value1;
                     EXEC [dbo].[sp_get_database_date_time];
-                    EXEC [dbo].[sp_multiply_with_output] @Value2, @Value3, @Output;", param))
+                    EXEC [dbo].[sp_multiply_with_output] @Value2, @Value3, @Output OUT;", param))
                 {
                     // Index
                     var index = result.Position + 1;
@@ -997,10 +997,10 @@ namespace RepoDb.IntegrationTests.Operations
                     var value2 = result.Scalar<DateTime>();
                     Assert.IsNotNull(value2);
                     Assert.AreEqual(typeof(DateTime), value2.GetType());
-
-                    // Assert
-                    Assert.AreEqual(6, output.Parameter.Value);
                 }
+
+                // Assert
+                Assert.AreEqual(6, output.Parameter.Value);
             }
         }
 
@@ -1304,7 +1304,7 @@ namespace RepoDb.IntegrationTests.Operations
         public void TestSqlConnectionExecuteQueryMultipleAsyncForScalarAsTypedResultWithSimpleScalaredValueFollowedByMultipleStoredProceduresWithOutputParameter()
         {
             // Setup
-            var output = new DirectionalQueryField("Output", ParameterDirection.Output);
+            var output = new DirectionalQueryField("Output", typeof(int), ParameterDirection.Output);
             var param = new[]
             {
                 new QueryField("Value1", DateTime.UtcNow.Date),
@@ -1318,7 +1318,7 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT @Value1;
                     EXEC [dbo].[sp_get_database_date_time];
-                    EXEC [dbo].[sp_multiply_with_output] @Value2, @Value3, @Output;", param).Result)
+                    EXEC [dbo].[sp_multiply_with_output] @Value2, @Value3, @Output OUT;", param).Result)
                 {
                     // Index
                     var index = result.Position + 1;
@@ -1332,10 +1332,10 @@ namespace RepoDb.IntegrationTests.Operations
                     var value2 = result.Scalar<DateTime>();
                     Assert.IsNotNull(value2);
                     Assert.AreEqual(typeof(DateTime), value2.GetType());
-
-                    // Assert
-                    Assert.AreEqual(6, output.Parameter.Value);
                 }
+
+                // Assert
+                Assert.AreEqual(6, output.Parameter.Value);
             }
         }
 

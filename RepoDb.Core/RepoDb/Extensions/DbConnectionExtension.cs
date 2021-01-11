@@ -199,19 +199,25 @@ namespace RepoDb
                 dbFields: dbFields,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
             {
+                var result = (IEnumerable<dynamic>)null;
+
+                // Execute
                 using (var reader = command.ExecuteReader())
                 {
-                    var result = DataReader.ToEnumerable(reader, dbFields, connection.GetDbSetting()).AsList();
+                    result = DataReader.ToEnumerable(reader, dbFields, connection.GetDbSetting()).AsList();
 
                     // Set Cache
                     if (cacheKey != null)
                     {
                         cache?.Add(cacheKey, (IEnumerable<dynamic>)result, cacheItemExpiration.GetValueOrDefault(), false);
                     }
-
-                    // Return
-                    return result;
                 }
+
+                // Set the ouput parameters
+                SetOutputParameters(param);
+
+                // Return
+                return result;
             }
         }
 
@@ -322,19 +328,25 @@ namespace RepoDb
                 dbFields: dbFields,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
             {
+                var result = (IEnumerable<dynamic>)null;
+
+                // Execute
                 using (var reader = await command.ExecuteReaderAsync(cancellationToken))
                 {
-                    var result = await DataReader.ToEnumerableAsync(reader, dbFields, connection.GetDbSetting());
+                    result = (await DataReader.ToEnumerableAsync(reader, dbFields, connection.GetDbSetting())).AsList();
 
                     // Set Cache
                     if (cacheKey != null)
                     {
                         cache?.Add(cacheKey, (IEnumerable<dynamic>)result, cacheItemExpiration.GetValueOrDefault(), false);
                     }
-
-                    // Return
-                    return result;
                 }
+
+                // Set the ouput parameters
+                SetOutputParameters(param);
+
+                // Return
+                return result;
             }
         }
 
@@ -517,6 +529,9 @@ namespace RepoDb
                 cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
             }
 
+            // Set the ouput parameters
+            SetOutputParameters(param);
+
             // Return
             return result;
         }
@@ -574,19 +589,25 @@ namespace RepoDb
                 dbFields: dbFields,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
             {
+                var result = (IEnumerable<TResult>)null;
+
+                // Execute
                 using (var reader = command.ExecuteReader())
                 {
-                    var result = DataReader.ToEnumerable<TResult>(reader, dbFields, connection.GetDbSetting()).AsList();
+                    result = DataReader.ToEnumerable<TResult>(reader, dbFields, connection.GetDbSetting()).AsList();
 
                     // Set Cache
                     if (cacheKey != null)
                     {
                         cache?.Add(cacheKey, (IEnumerable<TResult>)result, cacheItemExpiration.GetValueOrDefault(), false);
                     }
-
-                    // Return
-                    return result;
                 }
+
+                // Set the ouput parameters
+                SetOutputParameters(param);
+
+                // Return
+                return result;
             }
         }
 
@@ -779,6 +800,9 @@ namespace RepoDb
                 cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
             }
 
+            // Set the ouput parameters
+            SetOutputParameters(param);
+
             // Return
             return result;
         }
@@ -839,20 +863,26 @@ namespace RepoDb
                 dbFields: dbFields,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
             {
+                var result = (IEnumerable<TResult>)null;
+
+                // Execute
                 using (var reader = await command.ExecuteReaderAsync(cancellationToken))
                 {
-                    var result = await DataReader.ToEnumerableAsync<TResult>(reader, dbFields,
-                        connection.GetDbSetting());
+                    result = (await DataReader.ToEnumerableAsync<TResult>(reader, dbFields,
+                        connection.GetDbSetting())).AsList();
 
                     // Set Cache
                     if (cacheKey != null)
                     {
                         cache?.Add(cacheKey, (IEnumerable<TResult>)result, cacheItemExpiration.GetValueOrDefault(), false);
                     }
-
-                    // Return
-                    return result;
                 }
+
+                // Set the ouput parameters
+                SetOutputParameters(param);
+
+                // Return
+                return result;
             }
         }
 
@@ -918,7 +948,7 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: false);
 
             // Return
-            return new QueryMultipleExtractor((DbConnection)connection, (DbDataReader)reader, isDisposeConnection);
+            return new QueryMultipleExtractor((DbConnection)connection, (DbDataReader)reader, isDisposeConnection, param);
         }
 
         #endregion
@@ -990,7 +1020,7 @@ namespace RepoDb
 
             // Return
             return new QueryMultipleExtractor((DbConnection)connection, (DbDataReader)reader,
-                isDisposeConnection, cancellationToken);
+                isDisposeConnection, param, cancellationToken);
         }
 
         #endregion
@@ -1068,7 +1098,13 @@ namespace RepoDb
             // Ensure the DbCommand disposal
             try
             {
-                return command.ExecuteReader();
+                var reader = command.ExecuteReader();
+
+                // Set the ouput parameters
+                SetOutputParameters(param);
+
+                // Return
+                return reader;
             }
             catch
             {
@@ -1165,7 +1201,13 @@ namespace RepoDb
             // Ensure the DbCommand disposal
             try
             {
-                return await command.ExecuteReaderAsync(cancellationToken);
+                var reader = await command.ExecuteReaderAsync(cancellationToken);
+
+                // Set the ouput parameters
+                SetOutputParameters(param);
+
+                // Return
+                return reader;
             }
             catch
             {
@@ -1250,7 +1292,13 @@ namespace RepoDb
                 dbFields: dbFields,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
             {
-                return command.ExecuteNonQuery();
+                var result = command.ExecuteNonQuery();
+
+                // Set the ouput parameters
+                SetOutputParameters(param);
+
+                // Return
+                return result;
             }
         }
 
@@ -1329,7 +1377,13 @@ namespace RepoDb
                 dbFields: dbFields,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
             {
-                return await command.ExecuteNonQueryAsync(cancellationToken);
+                var result = await command.ExecuteNonQueryAsync(cancellationToken);
+
+                // Set the ouput parameters
+                SetOutputParameters(param);
+
+                // Return
+                return result;
             }
         }
 
@@ -1539,6 +1593,9 @@ namespace RepoDb
                     cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
                 }
 
+                // Set the ouput parameters
+                SetOutputParameters(param);
+
                 // Return
                 return result;
             }
@@ -1657,6 +1714,9 @@ namespace RepoDb
                     cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
                 }
 
+                // Set the ouput parameters
+                SetOutputParameters(param);
+
                 // Return
                 return result;
             }
@@ -1747,6 +1807,66 @@ namespace RepoDb
         #endregion
 
         #region Helper Methods
+
+        #region DbParameters
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="param"></param>
+        internal static void SetOutputParameters(object param)
+        {
+            if (param is QueryGroup)
+            {
+                SetOutputParameters((QueryGroup)param);
+            }
+            else if (param is IEnumerable<QueryField>)
+            {
+                SetOutputParameters((IEnumerable<QueryField>)param);
+            }
+            else if (param is QueryField)
+            {
+                SetOutputParameter((QueryField)param);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="queryGroup"></param>
+        internal static void SetOutputParameters(QueryGroup queryGroup) =>
+            SetOutputParameters(queryGroup.GetFields(true));
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="queryFields"></param>
+        internal static void SetOutputParameters(IEnumerable<QueryField> queryFields)
+        {
+            if (queryFields?.Any() != true)
+            {
+                return;
+            }
+            foreach (var queryField in queryFields.Where(e => e.DbParameter?.Direction != ParameterDirection.Input))
+            {
+                SetOutputParameter(queryField);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="queryField"></param>
+        internal static void SetOutputParameter(QueryField queryField)
+        {
+            if (queryField == null)
+            {
+                return;
+            }
+            queryField.Parameter.SetValue(queryField.GetValue());
+        }
+
+        #endregion
 
         #region Order Columns
 
