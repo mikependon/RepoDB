@@ -966,6 +966,45 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleForScalarAsTypedResultWithSimpleScalaredValueFollowedByMultipleStoredProceduresWithOutputParameter()
+        {
+            // Setup
+            var output = new DirectionalQueryField("Output", typeof(int), ParameterDirection.Output);
+            var param = new[]
+            {
+                new QueryField("Value1", DateTime.UtcNow.Date),
+                new QueryField("Value2", 2),
+                new QueryField("Value3", 3),
+                output
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                using (var result = connection.ExecuteQueryMultiple(@"SELECT @Value1;
+                    EXEC [dbo].[sp_get_database_date_time];
+                    EXEC [dbo].[sp_multiply_with_output] @Value2, @Value3, @Output OUT;", param))
+                {
+                    // Index
+                    var index = result.Position + 1;
+
+                    // Assert
+                    var value1 = result.Scalar<DateTime>();
+                    Assert.IsNotNull(value1);
+                    Assert.AreEqual(param[0].Parameter.Value, value1);
+
+                    // Assert
+                    var value2 = result.Scalar<DateTime>();
+                    Assert.IsNotNull(value2);
+                    Assert.AreEqual(typeof(DateTime), value2.GetType());
+                }
+
+                // Assert
+                Assert.AreEqual(6, output.Parameter.Value);
+            }
+        }
+
+        [TestMethod]
         public void TestSqlConnectionExecuteQueryMultipleForScalarAsTypedResultWithoutParametersAndWithManualNextResultCall()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
@@ -1258,6 +1297,45 @@ namespace RepoDb.IntegrationTests.Operations
                     Assert.IsNotNull(value3);
                     Assert.AreEqual(6, value3);
                 }
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleAsyncForScalarAsTypedResultWithSimpleScalaredValueFollowedByMultipleStoredProceduresWithOutputParameter()
+        {
+            // Setup
+            var output = new DirectionalQueryField("Output", typeof(int), ParameterDirection.Output);
+            var param = new[]
+            {
+                new QueryField("Value1", DateTime.UtcNow.Date),
+                new QueryField("Value2", 2),
+                new QueryField("Value3", 3),
+                output
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT @Value1;
+                    EXEC [dbo].[sp_get_database_date_time];
+                    EXEC [dbo].[sp_multiply_with_output] @Value2, @Value3, @Output OUT;", param).Result)
+                {
+                    // Index
+                    var index = result.Position + 1;
+
+                    // Assert
+                    var value1 = result.Scalar<DateTime>();
+                    Assert.IsNotNull(value1);
+                    Assert.AreEqual(param[0].Parameter.Value, value1);
+
+                    // Assert
+                    var value2 = result.Scalar<DateTime>();
+                    Assert.IsNotNull(value2);
+                    Assert.AreEqual(typeof(DateTime), value2.GetType());
+                }
+
+                // Assert
+                Assert.AreEqual(6, output.Parameter.Value);
             }
         }
 

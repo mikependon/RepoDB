@@ -60,7 +60,7 @@ namespace RepoDb.IntegrationTests.Setup
         /// <summary>
         /// Creates a test database for RepoDb.
         /// </summary>
-        public static void CreateDatabase()
+        private static void CreateDatabase()
         {
             var commandText = @"IF (NOT EXISTS(SELECT * FROM sys.databases WHERE name = 'RepoDb'))
                 BEGIN
@@ -75,7 +75,7 @@ namespace RepoDb.IntegrationTests.Setup
         /// <summary>
         /// Create the necessary schemas for testing.
         /// </summary>
-        public static void CreateSchemas()
+        private static void CreateSchemas()
         {
             CreateScSchema();
         }
@@ -83,7 +83,7 @@ namespace RepoDb.IntegrationTests.Setup
         /// <summary>
         /// Create the necessary types for testing.
         /// </summary>
-        public static void CreateTypes()
+        private static void CreateTypes()
         {
             CreateIdentityTableType();
         }
@@ -91,7 +91,7 @@ namespace RepoDb.IntegrationTests.Setup
         /// <summary>
         /// Create the necessary tables for testing.
         /// </summary>
-        public static void CreateTables()
+        private static void CreateTables()
         {
             CreateCompleteTable();
             CreateIdentityTable();
@@ -105,11 +105,12 @@ namespace RepoDb.IntegrationTests.Setup
         /// <summary>
         /// Create the necessary stored procedures for testing.
         /// </summary>
-        public static void CreateStoredProcedures()
+        private static void CreateStoredProcedures()
         {
             CreateGetIdentityTablesStoredProcedure();
             CreateGetIdentityTableByIdStoredProcedure();
             CreateMultiplyStoredProcedure();
+            CreateMultiplyWithOutputStoredProcedure();
             CreateGetDatabaseDateTimeStoredProcedure();
             CreateIdentityTableTypeStoredProcedure();
         }
@@ -138,7 +139,7 @@ namespace RepoDb.IntegrationTests.Setup
         /// <summary>
         /// Creates the 'sc' schema.
         /// </summary>
-        public static void CreateScSchema()
+        private static void CreateScSchema()
         {
             using (var connection = new SqlConnection(ConnectionStringForRepoDb).EnsureOpen())
             {
@@ -157,7 +158,7 @@ namespace RepoDb.IntegrationTests.Setup
         /// <summary>
         /// Creates the 'IdentityTableType' type.
         /// </summary>
-        public static void CreateIdentityTableType()
+        private static void CreateIdentityTableType()
         {
             using (var connection = new SqlConnection(ConnectionStringForRepoDb).EnsureOpen())
             {
@@ -187,7 +188,7 @@ namespace RepoDb.IntegrationTests.Setup
         /// <summary>
         /// Creates an identity table that has some important fields. All fields are nullable.
         /// </summary>
-        public static void CreateIdentityTable()
+        private static void CreateIdentityTable()
         {
             var commandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'IdentityTable'))
                 BEGIN
@@ -213,7 +214,7 @@ namespace RepoDb.IntegrationTests.Setup
         /// <summary>
         /// Creates an non-identity table that has some important fields. All fields are nullable.
         /// </summary>
-        public static void CreateNonIdentityTable()
+        private static void CreateNonIdentityTable()
         {
             var commandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'NonIdentityTable'))
                 BEGIN
@@ -242,7 +243,7 @@ namespace RepoDb.IntegrationTests.Setup
         /// <summary>
         /// Creates an unorganized table that has some non-alphanumeric fields. All fields are nullable.
         /// </summary>
-        public static void CreateUnorganizedTable()
+        private static void CreateUnorganizedTable()
         {
             var commandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'Unorganized Table'))
                 BEGIN
@@ -264,7 +265,7 @@ namespace RepoDb.IntegrationTests.Setup
         /// <summary>
         /// Creates a dotted table that has some dots on the name. All fields are nullable.
         /// </summary>
-        public static void CreateDottedTable()
+        private static void CreateDottedTable()
         {
             var commandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'Dotted.Table'))
                 BEGIN
@@ -286,7 +287,7 @@ namespace RepoDb.IntegrationTests.Setup
         /// <summary>
         /// Creates a table that has a complete fields. All fields are nullable.
         /// </summary>
-        public static void CreateCompleteTable()
+        private static void CreateCompleteTable()
         {
             var commandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'CompleteTable'))
                 BEGIN
@@ -342,7 +343,7 @@ namespace RepoDb.IntegrationTests.Setup
         /// <summary>
         /// Creates a table that has a complete fields. All fields are nullable.
         /// </summary>
-        public static void CreatePropertyHandlerTable()
+        private static void CreatePropertyHandlerTable()
         {
             var commandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'PropertyHandler'))
                 BEGIN
@@ -375,7 +376,7 @@ namespace RepoDb.IntegrationTests.Setup
         /// <summary>
         /// Creates a table that has no keys.
         /// </summary>
-        public static void CreateNonKeyedTable()
+        private static void CreateNonKeyedTable()
         {
             var commandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'NonKeyedTable'))
                 BEGIN
@@ -399,7 +400,7 @@ namespace RepoDb.IntegrationTests.Setup
         /// <summary>
         /// Create a stored procedure that is used to return all records from IdentityTable.
         /// </summary>
-        public static void CreateGetIdentityTablesStoredProcedure()
+        private static void CreateGetIdentityTablesStoredProcedure()
         {
             using (var connection = new SqlConnection(ConnectionStringForRepoDb).EnsureOpen())
             {
@@ -419,7 +420,7 @@ namespace RepoDb.IntegrationTests.Setup
         /// <summary>
         /// Create a stored procedure that is used to return a IdentityTable record by id.
         /// </summary>
-        public static void CreateGetIdentityTableByIdStoredProcedure()
+        private static void CreateGetIdentityTableByIdStoredProcedure()
         {
             using (var connection = new SqlConnection(ConnectionStringForRepoDb).EnsureOpen())
             {
@@ -442,7 +443,7 @@ namespace RepoDb.IntegrationTests.Setup
         /// <summary>
         /// Create a stored procedure that will return a scalar value of date time.
         /// </summary>
-        public static void CreateGetDatabaseDateTimeStoredProcedure()
+        private static void CreateGetDatabaseDateTimeStoredProcedure()
         {
             using (var connection = new SqlConnection(ConnectionStringForRepoDb).EnsureOpen())
             {
@@ -462,7 +463,7 @@ namespace RepoDb.IntegrationTests.Setup
         /// <summary>
         /// Create a stored procedure that is used for multiplication.
         /// </summary>
-        public static void CreateMultiplyStoredProcedure()
+        private static void CreateMultiplyStoredProcedure()
         {
             using (var connection = new SqlConnection(ConnectionStringForRepoDb).EnsureOpen())
             {
@@ -484,9 +485,35 @@ namespace RepoDb.IntegrationTests.Setup
         }
 
         /// <summary>
+        /// Create a stored procedure that is used for multiplication.
+        /// </summary>
+        private static void CreateMultiplyWithOutputStoredProcedure()
+        {
+            using (var connection = new SqlConnection(ConnectionStringForRepoDb).EnsureOpen())
+            {
+                var exists = connection.ExecuteScalar("SELECT 1 FROM [sys].[objects] WHERE type = 'P' AND name = 'sp_multiply_with_output';");
+                if (exists == null)
+                {
+                    var commandText = @"CREATE PROCEDURE [dbo].[sp_multiply_with_output]
+                        (
+                            @Value1 INT,
+                            @Value2 INT,
+                            @Output INT OUTPUT
+                        )
+	                    AS
+                        BEGIN
+                            SET @Output = (@Value1 * @Value2);
+                            SELECT @Output;
+                        END";
+                    connection.ExecuteNonQuery(commandText);
+                }
+            }
+        }
+
+        /// <summary>
         /// Creates the 'IdentityTableType' type.
         /// </summary>
-        public static void CreateIdentityTableTypeStoredProcedure()
+        private static void CreateIdentityTableTypeStoredProcedure()
         {
             using (var connection = new SqlConnection(ConnectionStringForRepoDb).EnsureOpen())
             {

@@ -172,6 +172,31 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestSqlConnectionExecuteScalarByExecutingAStoredProcedureWithMultipleParametersAndWithOuputParameter()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Setup
+                var output = new DirectionalQueryField("Output", typeof(int), ParameterDirection.Output);
+                var param = new[]
+                {
+                    new QueryField("Value1", 100),
+                    new QueryField("Value2", 200),
+                    output
+                };
+
+                // Act
+                var result = connection.ExecuteScalar("[dbo].[sp_multiply_with_output]",
+                    param: param,
+                    commandType: CommandType.StoredProcedure);
+
+                // Assert
+                Assert.AreEqual(20000, result);
+                Assert.AreEqual(20000, output.Parameter.Value);
+            }
+        }
+
         [TestMethod, ExpectedException(typeof(SqlException))]
         public void ThrowExceptionOnTestSqlConnectionExecuteScalarIfTheParametersAreNotDefined()
         {
@@ -340,6 +365,31 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Assert
                 Assert.AreEqual(20000, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteScalarAsyncByExecutingAStoredProcedureWithMultipleParametersAndWithOuputParameter()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Setup
+                var output = new DirectionalQueryField("Output", typeof(int), ParameterDirection.Output);
+                var param = new[]
+                {
+                    new QueryField("Value1", 100),
+                    new QueryField("Value2", 200),
+                    output
+                };
+
+                // Act
+                var result = connection.ExecuteScalarAsync("[dbo].[sp_multiply_with_output]",
+                    param: param,
+                    commandType: CommandType.StoredProcedure).Result;
+
+                // Assert
+                Assert.AreEqual(20000, result);
+                Assert.AreEqual(20000, output.Parameter.Value);
             }
         }
 

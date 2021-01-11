@@ -47,7 +47,23 @@ namespace RepoDb.Extensions
         public static IDbDataParameter CreateParameter(this IDbCommand command,
             string name,
             object value,
-            DbType? dbType)
+            DbType? dbType) =>
+            CreateParameter(command, name, value, dbType, null);
+
+        /// <summary>
+        /// Creates a parameter for a command object.
+        /// </summary>
+        /// <param name="command">The command object instance to be used.</param>
+        /// <param name="name">The name of the parameter.</param>
+        /// <param name="value">The value of the parameter.</param>
+        /// <param name="dbType">The database type of the parameter.</param>
+        /// <param name="parameterDirection">The direction of the parameter.</param>
+        /// <returns>An instance of the newly created parameter object.</returns>
+        public static IDbDataParameter CreateParameter(this IDbCommand command,
+            string name,
+            object value,
+            DbType? dbType,
+            ParameterDirection? parameterDirection)
         {
             // Create the parameter
             var parameter = command.CreateParameter();
@@ -61,6 +77,12 @@ namespace RepoDb.Extensions
             {
                 // Prepare() requires an explicit assignment, weird Microsoft
                 parameter.DbType = dbType.Value;
+            }
+
+            // Set the direction
+            if (parameterDirection != null)
+            {
+                parameter.Direction = parameterDirection.Value;
             }
 
             // Table-Valued Parameter
@@ -492,8 +514,26 @@ namespace RepoDb.Extensions
                 dbType = Converter.EnumDefaultDatabaseType;
             }
 
+            // Direction
+            var parameterDirection = (ParameterDirection?)null;
+            if (queryField is DirectionalQueryField)
+            {
+                var directionalQueryField = (DirectionalQueryField)queryField;
+                parameterDirection = directionalQueryField.Direction;
+
+                // Ensure the DB type
+                if (dbType == null && directionalQueryField.Type != null)
+                {
+                    dbType = clientTypeToDbTypeResolver.Resolve(directionalQueryField.Type);
+                }
+            }
+
             // Add the parameter
-            command.Parameters.Add(command.CreateParameter(queryField.Parameter.Name, value, dbType));
+            var parameter = command.CreateParameter(queryField.Parameter.Name, value, dbType, parameterDirection);
+            command.Parameters.Add(parameter);
+
+            // Set the parameter
+            queryField.DbParameter = parameter;
         }
 
         /// <summary>

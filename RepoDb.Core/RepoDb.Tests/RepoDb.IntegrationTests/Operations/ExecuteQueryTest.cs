@@ -257,6 +257,39 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryViaDynamicsWithStoredProcedureWithMultipleParametersAndWithOuputParameter()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var output = new DirectionalQueryField("Output", typeof(int), ParameterDirection.Output);
+            var param = new[]
+            {
+                new QueryField("Value1", 100),
+                new QueryField("Value2", 200),
+                output
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.ExecuteQuery("[dbo].[sp_multiply_with_output]",
+                    param: param,
+                    commandType: CommandType.StoredProcedure).FirstOrDefault();
+
+                // Assert
+                var kvp = result as IDictionary<string, object>;
+                Assert.IsNotNull(result);
+                Assert.AreEqual(20000, kvp.First().Value);
+
+                // Assert
+                Assert.AreEqual(20000, output.Parameter.Value);
+            }
+        }
+
         [TestMethod, ExpectedException(typeof(SqlException))]
         public void ThrowExceptionOnTestSqlConnectionExecuteQueryViaDynamicsIfTheParametersAreNotDefined()
         {
@@ -505,6 +538,39 @@ namespace RepoDb.IntegrationTests.Operations
                 var kvp = result as IDictionary<string, object>;
                 Assert.IsNotNull(result);
                 Assert.AreEqual(20000, kvp.First().Value);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryAsyncViaDynamicsWithStoredProcedureWithMultipleParametersAndWithOuputParameter()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+            var output = new DirectionalQueryField("Output", typeof(int), ParameterDirection.Output);
+            var param = new[]
+            {
+                new QueryField("Value1", 100),
+                new QueryField("Value2", 200),
+                output
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.ExecuteQueryAsync("[dbo].[sp_multiply_with_output]",
+                    param: param,
+                    commandType: CommandType.StoredProcedure).Result.FirstOrDefault();
+
+                // Assert
+                var kvp = result as IDictionary<string, object>;
+                Assert.IsNotNull(result);
+                Assert.AreEqual(20000, kvp.First().Value);
+
+                // Assert
+                Assert.AreEqual(20000, output.Parameter.Value);
             }
         }
 

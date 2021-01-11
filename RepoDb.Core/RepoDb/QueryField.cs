@@ -2,6 +2,8 @@
 using RepoDb.Enumerations;
 using RepoDb.Extensions;
 using System;
+using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Reflection;
 
@@ -89,7 +91,7 @@ namespace RepoDb
             : this(new Field(fieldName),
                   operation,
                   value,
-                  false)
+                  appendUnderscore)
         { }
 
         /// <summary>
@@ -128,6 +130,11 @@ namespace RepoDb
         /// </summary>
         public Parameter Parameter { get; }
 
+        /// <summary>
+        /// Gets the in-used instance of database parameter object.
+        /// </summary>
+        public IDbDataParameter DbParameter { get; set; }
+
         #endregion
 
         #region Methods
@@ -139,6 +146,31 @@ namespace RepoDb
         {
             Parameter?.PrependAnUnderscore();
         }
+
+        /// <summary>
+        /// Returns the name of the <see cref="Field"/> object current in used.
+        /// </summary>
+        public string GetName() =>
+            Field?.Name;
+
+        /// <summary>
+        /// Returns the value of the <see cref="Parameter"/> object currently in used. However, if this instance of object has already been used as a database parameter 
+        /// with <see cref="DbParameter.Direction"/> equals to <see cref="System.Data.ParameterDirection.Output"/> via <see cref="DirectionalQueryField"/> 
+        /// object, then the value of the in-used <see cref="IDbDataParameter"/> object will be returned.
+        /// </summary>
+        /// <returns>The value of the <see cref="Parameter"/> object.</returns>
+        public object GetValue() =>
+            GetValue<object>();
+
+        /// <summary>
+        /// Returns the value of the <see cref="Parameter"/> object currently in used. However, if this instance of object has already been used as a database parameter 
+        /// with <see cref="DbParameter.Direction"/> equals to <see cref="System.Data.ParameterDirection.Output"/> via <see cref="DirectionalQueryField"/> 
+        /// object, then the value of the in-used <see cref="IDbDataParameter"/> object will be returned.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns>The value of the converted <see cref="Parameter"/> object.</returns>
+        public T GetValue<T>() =>
+            Converter.ToType<T>(DbParameter?.Value ?? Parameter?.Value);
 
         /// <summary>
         /// Make the current instance of <see cref="QueryField"/> object to become an expression for 'Update' operations.
@@ -153,7 +185,8 @@ namespace RepoDb
         /// </summary>
         public void Reset()
         {
-            Parameter?.SetName(Field.Name);
+            Parameter?.Reset();
+            DbParameter = null;
             operationTextAttribute = null;
             hashCode = null;
         }
