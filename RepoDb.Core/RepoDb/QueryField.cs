@@ -141,6 +141,24 @@ namespace RepoDb
         }
 
         /// <summary>
+        /// Gets the name of the <see cref="Field"/> object current in used.
+        /// </summary>
+        public string GetName() =>
+            Field?.Name;
+
+        /// <summary>
+        /// Gets the value of the <see cref="Parameter"/> object current in used.
+        /// </summary>
+        public virtual object GetValue() =>
+            GetValue<object>();
+
+        /// <summary>
+        /// Gets the value of the <see cref="Parameter"/> object current in used.
+        /// </summary>
+        public virtual T GetValue<T>() =>
+            Converter.ToType<T>(Parameter?.Value);
+
+        /// <summary>
         /// Make the current instance of <see cref="QueryField"/> object to become an expression for 'Update' operations.
         /// </summary>
         public void IsForUpdate()
