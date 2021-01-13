@@ -75,9 +75,6 @@ namespace RepoDb
                 ValidateTransactionConnectionObject(connection, transaction);
             }
 
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
-
             // Must be fixed name so the RepoDb.Core caches will not be bloated
             var tempTableName = string.Concat("_RepoDb_BulkUpdate_", GetTableName(tableName, dbSetting));
 
@@ -287,9 +284,6 @@ namespace RepoDb
                 // Validate the objects
                 ValidateTransactionConnectionObject(connection, transaction);
             }
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
 
             // Must be fixed name so the RepoDb.Core caches will not be bloated
             var tempTableName = string.Concat("_RepoDb_BulkUpdate_", GetTableName(tableName, dbSetting));
@@ -509,9 +503,6 @@ namespace RepoDb
                 ValidateTransactionConnectionObject(connection, transaction);
             }
 
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
-
             // Must be fixed name so the RepoDb.Core caches will not be bloated
             var tempTableName = string.Concat("_RepoDb_BulkUpdate_", GetTableName(tableName, dbSetting));
 
@@ -726,9 +717,6 @@ namespace RepoDb
                 // Validate the objects
                 ValidateTransactionConnectionObject(connection, transaction);
             }
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
 
             // Must be fixed name so the RepoDb.Core caches will not be bloated
             var tempTableName = string.Concat("_RepoDb_BulkUpdate_", GetTableName(tableName, dbSetting));
