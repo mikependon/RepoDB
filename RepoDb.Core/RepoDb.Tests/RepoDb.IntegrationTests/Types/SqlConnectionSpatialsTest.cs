@@ -266,8 +266,8 @@ namespace RepoDb.IntegrationTests.Types.Spatials
 
                 // Assert
                 Assert.IsNotNull(data);
-                Assert.AreEqual(entity.ColumnGeography.ToString(), data.ColumnGeography?.ToString());
-                Assert.AreEqual(entity.ColumnGeometry.ToString(), data.ColumnGeometry?.ToString());
+                Assert.AreEqual(entity.ColumnGeography, data.ColumnGeography?.ToString());
+                Assert.AreEqual(entity.ColumnGeometry, data.ColumnGeometry?.ToString());
             }
         }
 
@@ -320,8 +320,8 @@ namespace RepoDb.IntegrationTests.Types.Spatials
 
                 // Assert
                 Assert.IsNotNull(data);
-                Assert.AreEqual(entity.ColumnGeography.ToString(), data.ColumnGeography?.ToString());
-                Assert.AreEqual(entity.ColumnGeometry.ToString(), data.ColumnGeometry?.ToString());
+                Assert.AreEqual(entity.ColumnGeography, data.ColumnGeography?.ToString());
+                Assert.AreEqual(entity.ColumnGeometry, data.ColumnGeometry?.ToString());
             }
         }
 

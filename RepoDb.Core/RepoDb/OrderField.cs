@@ -97,7 +97,7 @@ namespace RepoDb
             {
                 return Parse<TEntity>(expression.Body.ToBinary(), order);
             }
-            throw new InvalidExpressionException($"Expression '{expression.ToString()}' is invalid.");
+            throw new InvalidExpressionException($"Expression '{expression}' is invalid.");
         }
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace RepoDb
             {
                 return Parse<TEntity>(expression.Operand.ToBinary(), order);
             }
-            throw new InvalidExpressionException($"Expression '{expression.ToString()}' is invalid.");
+            throw new InvalidExpressionException($"Expression '{expression}' is invalid.");
         }
 
         /// <summary>
