@@ -10,11 +10,6 @@ namespace RepoDb.Resolvers
     public class TypeMapTypeLevelResolver : IResolver<Type, DbType?>
     {
         /// <summary>
-        /// Creates a new instance of <see cref="TypeMapTypeLevelResolver"/> object.
-        /// </summary>
-        public TypeMapTypeLevelResolver() { }
-
-        /// <summary>
         /// Resolves the equivalent <see cref="DbType"/> object of the .NET CLR type.
         /// </summary>
         /// <param name="type">The .NET CLR type.</param>

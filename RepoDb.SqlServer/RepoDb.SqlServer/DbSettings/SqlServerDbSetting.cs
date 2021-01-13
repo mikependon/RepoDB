@@ -9,7 +9,6 @@
         /// Creates a new instance of <see cref="SqlServerDbSetting"/> class.
         /// </summary>
         public SqlServerDbSetting()
-            : base()
         {
             AreTableHintsSupported = true;
             AverageableType = typeof(double);

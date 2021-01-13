@@ -11,11 +11,6 @@ namespace RepoDb.Resolvers
     public class ClassHandlerResolver : IResolver<Type, object>
     {
         /// <summary>
-        /// Creates a new instance of <see cref="ClassHandlerResolver"/> object.
-        /// </summary>
-        public ClassHandlerResolver() { }
-
-        /// <summary>
         /// Resolves the equivalent <see cref="IClassHandler{TEntity}"/> object of the .NET CLR type.
         /// </summary>
         /// <param name="type">The .NET CLR type</param>

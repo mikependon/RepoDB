@@ -12,15 +12,7 @@ namespace RepoDb
     /// </summary>
     public class MemoryCache : ICache
     {
-        private readonly ConcurrentDictionary<string, object> cache;
-
-        /// <summary>
-        /// Creates a new instance <see cref="MemoryCache"/> object.
-        /// </summary>
-        public MemoryCache()
-        {
-            cache = new ConcurrentDictionary<string, object>();
-        }
+        private readonly ConcurrentDictionary<string, object> cache = new();
 
         /// <summary>
         /// Adds a cache item value.

@@ -10,11 +10,6 @@ namespace RepoDb.Resolvers
     public class IdentityResolver : IResolver<Type, ClassProperty>
     {
         /// <summary>
-        /// Creates a new instance of <see cref="IdentityResolver"/> object.
-        /// </summary>
-        public IdentityResolver() { }
-
-        /// <summary>
         /// Resolves the identity <see cref="ClassProperty"/> of the data entity type.
         /// </summary>
         /// <param name="entityType">The type of the data entity.</param>

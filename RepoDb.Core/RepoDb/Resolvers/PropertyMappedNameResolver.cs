@@ -11,11 +11,6 @@ namespace RepoDb.Resolvers
     public class PropertyMappedNameResolver : IResolver<PropertyInfo, Type, string>
     {
         /// <summary>
-        /// Creates a new instance of <see cref="PropertyMappedNameResolver"/> object.
-        /// </summary>
-        public PropertyMappedNameResolver() { }
-
-        /// <summary>
         /// Resolves the cached column name mappings of the property.
         /// </summary>
         /// <param name="propertyInfo">The target property.</param>
