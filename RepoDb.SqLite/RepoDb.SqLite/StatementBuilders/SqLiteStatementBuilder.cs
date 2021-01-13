@@ -98,7 +98,7 @@ namespace RepoDb.StatementBuilders
                 .End();
 
             // Return the query
-            return queryBuilder.GetString();
+            return builder.GetString();
         }
 
         #endregion
@@ -409,7 +409,7 @@ namespace RepoDb.StatementBuilders
             string hints = null)
         {
             throw new NotImplementedException("The merge statement is not supported in SQLite. SQLite is using the 'Upsert (Insert/Update)' operation.");
-            
+
             //// Ensure with guards
             //GuardTableName(tableName);
             //GuardHints(hints);
