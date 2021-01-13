@@ -2,37 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Authors>Michael Camara Pendon</Authors>
     <Version>1.1.3</Version>
-    <Company>RepoDb</Company>
-    <Product>RepoDb</Product>
-    <Description>A hybrid .NET ORM library for MySql.</Description>
-    <Copyright>Copyright © 2020</Copyright>
-    <PackageLicenseUrl></PackageLicenseUrl>
-    <PackageProjectUrl>https://repodb.net/</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.MySql</RepositoryUrl>
-    <RepositoryType>Github</RepositoryType>
-    <PackageTags>orm orm-framework orm-library hybrid-orm mysql mysql-orm</PackageTags>
-    <PackageReleaseNotes>http://repodb.net/release/mysql</PackageReleaseNotes>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
     <AssemblyVersion>1.1.3.0</AssemblyVersion>
     <FileVersion>1.1.3.0</FileVersion>
-    <PackageIconUrl></PackageIconUrl>
-    <PackageLicenseExpression></PackageLicenseExpression>
-    <PackageIcon></PackageIcon>
-    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>bin\Release\netstandard2.0\RepoDb.MySql.xml</DocumentationFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DefineConstants>TRACE;DEBUG;NETSTANDARD;NETSTANDARD2_0</DefineConstants>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-    <Optimize>false</Optimize>
-    <DocumentationFile>bin\Debug\netstandard2.0\RepoDb.MySql.xml</DocumentationFile>
+    <Description>A hybrid .NET ORM library for MySql.</Description>
+    <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.MySql</RepositoryUrl>
+    <PackageReleaseNotes>http://repodb.net/release/mysql</PackageReleaseNotes>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
@@ -42,13 +18,6 @@
   <ItemGroup>
     <PackageReference Include="MySql.Data" Version="8.0.22" />
     <PackageReference Include="RepoDb" Version="1.12.5" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
   </ItemGroup>
 

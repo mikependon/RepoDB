@@ -3,26 +3,13 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Authors>Michael Camara Pendon</Authors>
-    <Company>RepoDb</Company>
-    <Product>RepoDb</Product>
     <Description>An extension library that contains the official Bulk Operations of RepoDb for SQL Server.</Description>
-    <Copyright>Copyright © 2020</Copyright>
-    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-    <PackageProjectUrl>https://repodb.net/</PackageProjectUrl>
-    <PackageIcon></PackageIcon>
-    <PackageIconUrl />
     <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations</RepositoryUrl>
-    <RepositoryType>Github</RepositoryType>
     <PackageTags>orm orm-framework orm-library hybrid-orm bulk bulk-operations</PackageTags>
     <PackageReleaseNotes>http://repodb.net/release/sqlserverbulk</PackageReleaseNotes>
     <Version>1.1.2</Version>
     <FileVersion>1.1.2.5</FileVersion>
     <AssemblyVersion>1.1.2.5</AssemblyVersion>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>C:\Users\MichaelP\Source\Repos\GitHub\RepoDb\RepoDb.Extensions\RepoDb.SqlServer.BulkOperations\RepoDb.SqlServer.BulkOperations\RepoDb.SqlServer.BulkOperations.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
