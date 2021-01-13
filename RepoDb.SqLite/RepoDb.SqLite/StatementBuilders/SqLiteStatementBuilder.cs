@@ -189,7 +189,7 @@ namespace RepoDb.StatementBuilders
 
             // Set the return value
             var result = identityField != null ?
-                string.Concat($"CAST(last_insert_rowid() AS {databaseType})") :
+                $"CAST(last_insert_rowid() AS {databaseType})" :
                     primaryField != null ? primaryField.Name.AsParameter(DbSetting) : "NULL";
 
             builder
