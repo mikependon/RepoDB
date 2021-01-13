@@ -4,6 +4,7 @@
     <Authors>Michael Camara Pendon</Authors>
     <Company>RepoDb</Company>
     <Product>RepoDb</Product>
+    <LangVersion>9.0</LangVersion>
     <Copyright>Copyright © 2020</Copyright>
     <PackageProjectUrl>https://repodb.net/</PackageProjectUrl>
     <RepositoryType>Github</RepositoryType>
