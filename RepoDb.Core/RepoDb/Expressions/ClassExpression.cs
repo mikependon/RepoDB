@@ -210,10 +210,7 @@ namespace RepoDb
             /// <returns></returns>
             public static IEnumerable<ClassProperty> Do()
             {
-                if (func == null)
-                {
-                    func = GetFunc();
-                }
+                func ??= GetFunc();
                 return func();
             }
         }
@@ -287,10 +284,7 @@ namespace RepoDb
             /// <returns></returns>
             public static IEnumerable<PropertyValue> Do(TEntity obj)
             {
-                if (func == null)
-                {
-                    func = GetFunc();
-                }
+                func ??= GetFunc();
                 return func(obj);
             }
         }

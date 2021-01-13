@@ -686,13 +686,10 @@ namespace RepoDb
         /// <returns>A string instance containing the value of the <see cref="TextAttribute"/> text property.</returns>
         public string GetConjunctionText()
         {
-            if (conjuctionTextAttribute == null)
-            {
-                conjuctionTextAttribute = typeof(Conjunction)
-                    .GetMembers()
-                    .First(member => string.Equals(member.Name, Conjunction.ToString(), StringComparison.OrdinalIgnoreCase))
-                    .GetCustomAttribute<TextAttribute>();
-            }
+            conjuctionTextAttribute ??= typeof(Conjunction)
+                .GetMembers()
+                .First(member => string.Equals(member.Name, Conjunction.ToString(), StringComparison.OrdinalIgnoreCase))
+                .GetCustomAttribute<TextAttribute>();
             return conjuctionTextAttribute.Text;
         }
 

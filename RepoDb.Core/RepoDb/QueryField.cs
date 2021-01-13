@@ -197,13 +197,10 @@ namespace RepoDb
         /// <returns>A string instance containing the value of the <see cref="TextAttribute"/> text property.</returns>
         public string GetOperationText()
         {
-            if (operationTextAttribute == null)
-            {
-                operationTextAttribute = StaticType.Operation
-                    .GetMembers()
-                    .First(member => string.Equals(member.Name, Operation.ToString(), StringComparison.OrdinalIgnoreCase))
-                    .GetCustomAttribute<TextAttribute>();
-            }
+            operationTextAttribute ??= StaticType.Operation
+                .GetMembers()
+                .First(member => string.Equals(member.Name, Operation.ToString(), StringComparison.OrdinalIgnoreCase))
+                .GetCustomAttribute<TextAttribute>();
             return operationTextAttribute.Text;
         }
 
