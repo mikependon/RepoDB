@@ -15,7 +15,7 @@ namespace RepoDb
         #region BulkMergeInternal
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <typeparam name="TSqlBulkCopy"></typeparam>
@@ -168,11 +168,6 @@ namespace RepoDb
                     options = Compiler.GetEnumFunc<TSqlBulkCopyOptions>("KeepIdentity")();
                 }
 
-                // Filter the DB Fields
-                var filteredDbFields = dbFields?
-                    .Where(dbField =>
-                        fields?.Any(field => string.Equals(field.Name, dbField.Name, StringComparison.OrdinalIgnoreCase)) == true);
-
                 // WriteToServer
                 WriteToServerInternal<TEntity, TSqlBulkCopy, TSqlBulkCopyOptions, TSqlBulkCopyColumnMappingCollection,
                     TSqlBulkCopyColumnMapping, TSqlTransaction>(connection,
@@ -252,7 +247,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TSqlBulkCopy"></typeparam>
         /// <typeparam name="TSqlBulkCopyOptions"></typeparam>
@@ -399,11 +394,6 @@ namespace RepoDb
                     options = Compiler.GetEnumFunc<TSqlBulkCopyOptions>("KeepIdentity")();
                 }
 
-                // Filter the DB Fields
-                var filteredDbFields = dbFields?
-                    .Where(dbField =>
-                        fields?.Any(field => string.Equals(field.Name, dbField.Name, StringComparison.OrdinalIgnoreCase)) == true);
-
                 // WriteToServer
                 WriteToServerInternal<TSqlBulkCopy, TSqlBulkCopyOptions, TSqlBulkCopyColumnMappingCollection,
                     TSqlBulkCopyColumnMapping, TSqlTransaction>(connection,
@@ -468,7 +458,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TSqlBulkCopy"></typeparam>
         /// <typeparam name="TSqlBulkCopyOptions"></typeparam>
@@ -620,11 +610,6 @@ namespace RepoDb
                     options = Compiler.GetEnumFunc<TSqlBulkCopyOptions>("KeepIdentity")();
                 }
 
-                // Filter the DB Fields
-                var filteredDbFields = dbFields?
-                    .Where(dbField =>
-                        fields?.Any(field => string.Equals(field.Name, dbField.Name, StringComparison.OrdinalIgnoreCase)) == true);
-
                 // WriteToServer
                 WriteToServerInternal<TSqlBulkCopy, TSqlBulkCopyOptions, TSqlBulkCopyColumnMappingCollection,
                     TSqlBulkCopyColumnMapping, TSqlTransaction>(connection,
@@ -713,7 +698,7 @@ namespace RepoDb
         #region BulkMergeAsyncInternal
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <typeparam name="TSqlBulkCopy"></typeparam>
@@ -868,11 +853,6 @@ namespace RepoDb
                     options = Compiler.GetEnumFunc<TSqlBulkCopyOptions>("KeepIdentity")();
                 }
 
-                // Filter the DB Fields
-                var filteredDbFields = dbFields?
-                    .Where(dbField =>
-                        fields?.Any(field => string.Equals(field.Name, dbField.Name, StringComparison.OrdinalIgnoreCase)) == true);
-
                 // WriteToServer
                 await WriteToServerAsyncInternal<TEntity, TSqlBulkCopy, TSqlBulkCopyOptions, TSqlBulkCopyColumnMappingCollection,
                     TSqlBulkCopyColumnMapping, TSqlTransaction>(connection,
@@ -953,7 +933,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TSqlBulkCopy"></typeparam>
         /// <typeparam name="TSqlBulkCopyOptions"></typeparam>
@@ -1102,11 +1082,6 @@ namespace RepoDb
                     options = Compiler.GetEnumFunc<TSqlBulkCopyOptions>("KeepIdentity")();
                 }
 
-                // Filter the DB Fields
-                var filteredDbFields = dbFields?
-                    .Where(dbField =>
-                        fields?.Any(field => string.Equals(field.Name, dbField.Name, StringComparison.OrdinalIgnoreCase)) == true);
-
                 // WriteToServer
                 await WriteToServerAsyncInternal<TSqlBulkCopy, TSqlBulkCopyOptions, TSqlBulkCopyColumnMappingCollection,
                     TSqlBulkCopyColumnMapping, TSqlTransaction>(connection,
@@ -1172,7 +1147,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TSqlBulkCopy"></typeparam>
         /// <typeparam name="TSqlBulkCopyOptions"></typeparam>
@@ -1314,11 +1289,6 @@ namespace RepoDb
                     dbSetting,
                     hasOrderingColumn);
                 await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
-
-                // Filter the DB Fields
-                var filteredDbFields = dbFields?
-                    .Where(dbField =>
-                        fields?.Any(field => string.Equals(field.Name, dbField.Name, StringComparison.OrdinalIgnoreCase)) == true);
 
                 // WriteToServer
                 await WriteToServerAsyncInternal<TSqlBulkCopy, TSqlBulkCopyOptions, TSqlBulkCopyColumnMappingCollection,
