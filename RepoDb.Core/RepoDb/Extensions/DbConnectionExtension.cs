@@ -333,7 +333,7 @@ namespace RepoDb
                 // Execute
                 using (var reader = await command.ExecuteReaderAsync(cancellationToken))
                 {
-                    result = (await DataReader.ToEnumerableAsync(reader, dbFields, connection.GetDbSetting())).AsList();
+                    result = (await DataReader.ToEnumerableAsync(reader, dbFields, connection.GetDbSetting(), cancellationToken)).AsList();
 
                     // Set Cache
                     if (cacheKey != null)
@@ -869,7 +869,7 @@ namespace RepoDb
                 using (var reader = await command.ExecuteReaderAsync(cancellationToken))
                 {
                     result = (await DataReader.ToEnumerableAsync<TResult>(reader, dbFields,
-                        connection.GetDbSetting())).AsList();
+                        connection.GetDbSetting(), cancellationToken)).AsList();
 
                     // Set Cache
                     if (cacheKey != null)

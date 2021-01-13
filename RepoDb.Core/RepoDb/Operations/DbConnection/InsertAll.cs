@@ -277,7 +277,8 @@ namespace RepoDb
                     commandTimeout: commandTimeout,
                     transaction: transaction,
                     trace: trace,
-                    statementBuilder: statementBuilder);
+                    statementBuilder: statementBuilder,
+                    cancellationToken: cancellationToken);
             }
             else
             {
@@ -290,7 +291,8 @@ namespace RepoDb
                     commandTimeout: commandTimeout,
                     transaction: transaction,
                     trace: trace,
-                    statementBuilder: statementBuilder);
+                    statementBuilder: statementBuilder,
+                    cancellationToken: cancellationToken);
             }
         }
 

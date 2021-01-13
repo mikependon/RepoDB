@@ -370,7 +370,7 @@ namespace RepoDb
                 AddMappings<TSqlBulkCopy, TSqlBulkCopyColumnMappingCollection, TSqlBulkCopyColumnMapping>(sqlBulkCopy, mappings);
 
                 // Open the connection and do the operation
-                await connection.EnsureOpenAsync();
+                await connection.EnsureOpenAsync(cancellationToken: cancellationToken);
                 using (var reader = new DataEntityDataReader<TEntity>(tableName, entities, connection, transaction, hasOrderingColumn))
                 {
                     var writeToServerMethod = Compiler.GetParameterizedMethodFunc<TSqlBulkCopy, Task>("WriteToServerAsync", new[] { typeof(DbDataReader), typeof(CancellationToken) });

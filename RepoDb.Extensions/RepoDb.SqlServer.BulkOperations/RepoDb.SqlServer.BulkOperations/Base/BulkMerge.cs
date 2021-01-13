@@ -1283,7 +1283,8 @@ namespace RepoDb
                     bulkCopyTimeout,
                     batchSize,
                     hasOrderingColumn,
-                    transaction);
+                    transaction,
+                    cancellationToken);
 
                 // Create the clustered index
                 sql = GetCreateTemporaryTableClusteredIndexSqlText(tempTableName,
