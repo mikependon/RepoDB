@@ -30,7 +30,7 @@ namespace RepoDb.Extensions
                 var array = new IEnumerable<T>[batchCount];
                 for (var i = 0; i < batchCount; i++)
                 {
-                    array[i] = list.Where((item, index) =>
+                    array[i] = list.Where((_, index) =>
                         {
                             return index >= (sizePerSplit * i) &&
                                 index < (sizePerSplit * i) + sizePerSplit;
