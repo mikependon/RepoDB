@@ -84,9 +84,9 @@ namespace RepoDb.DbHelpers
         private DbField ReaderToDbField(DbDataReader reader)
         {
             return new DbField(reader.GetString(0),
-                reader.IsDBNull(1) ? false : reader.GetBoolean(1),
-                reader.IsDBNull(2) ? false : reader.GetBoolean(2),
-                reader.IsDBNull(3) ? false : reader.GetBoolean(3),
+                !reader.IsDBNull(1) && reader.GetBoolean(1),
+                !reader.IsDBNull(2) && reader.GetBoolean(2),
+                !reader.IsDBNull(3) && reader.GetBoolean(3),
                 reader.IsDBNull(4) ? DbTypeResolver.Resolve("text") : DbTypeResolver.Resolve(reader.GetString(4)),
                 null,
                 null,
@@ -104,9 +104,9 @@ namespace RepoDb.DbHelpers
             CancellationToken cancellationToken = default)
         {
             return new DbField(await reader.GetFieldValueAsync<string>(0, cancellationToken),
-                await reader.IsDBNullAsync(1, cancellationToken) ? false : await reader.GetFieldValueAsync<bool>(1, cancellationToken),
-                await reader.IsDBNullAsync(2, cancellationToken) ? false : await reader.GetFieldValueAsync<bool>(2, cancellationToken),
-                await reader.IsDBNullAsync(3, cancellationToken) ? false : await reader.GetFieldValueAsync<bool>(3, cancellationToken),
+                !await reader.IsDBNullAsync(1, cancellationToken) && await reader.GetFieldValueAsync<bool>(1, cancellationToken),
+                !await reader.IsDBNullAsync(2, cancellationToken) && await reader.GetFieldValueAsync<bool>(2, cancellationToken),
+                !await reader.IsDBNullAsync(3, cancellationToken) && await reader.GetFieldValueAsync<bool>(3, cancellationToken),
                 await reader.IsDBNullAsync(4, cancellationToken) ? DbTypeResolver.Resolve("text") : DbTypeResolver.Resolve(await reader.GetFieldValueAsync<string>(4, cancellationToken)),
                 null,
                 null,
