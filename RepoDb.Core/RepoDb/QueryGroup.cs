@@ -756,7 +756,7 @@ namespace RepoDb
             var queryFields = new List<QueryField>();
 
             // Logic for traverse
-            explore = new Action<QueryGroup>(queryGroup =>
+            explore = queryGroup =>
             {
                 // Check child fields
                 if (queryGroup.QueryFields?.Any() == true)
@@ -772,7 +772,7 @@ namespace RepoDb
                         explore(qg);
                     }
                 }
-            });
+            };
 
             // Explore
             explore(this);
