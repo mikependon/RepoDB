@@ -10,6 +10,7 @@
     <PackageTags>orm orm-framework orm-library hybrid-orm mysql mysql-orm mysqlconnector</PackageTags>
     <PackageReleaseNotes>http://repodb.net/release/mysqlconnector</PackageReleaseNotes>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

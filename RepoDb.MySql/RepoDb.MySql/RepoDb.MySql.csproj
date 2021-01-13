@@ -9,6 +9,7 @@
     <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.MySql</RepositoryUrl>
     <PackageReleaseNotes>http://repodb.net/release/mysql</PackageReleaseNotes>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

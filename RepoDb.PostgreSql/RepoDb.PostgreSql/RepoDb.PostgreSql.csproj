@@ -10,6 +10,7 @@
     <PackageTags>orm orm-framework orm-library hybrid-orm npgsql npgsql-orm postgresql postgresql-orm</PackageTags>
     <PackageReleaseNotes>http://repodb.net/release/postgresql</PackageReleaseNotes>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
