@@ -50,7 +50,7 @@ namespace RepoDb.Extensions
         /// <returns>The <see cref="IEnumerable{T}"/> object in which the items are of type <typeparamref name="TargetType"/>.</returns>
         [Obsolete("Use the 'WithType<T>' method insted.")]
         public static IEnumerable<TargetType> OfTargetType<SourceType, TargetType>(this IEnumerable<SourceType> value) =>
-            value is IEnumerable<TargetType> ? (IEnumerable<TargetType>)value : value.OfType<TargetType>();
+            value is IEnumerable<TargetType> types ? types : value.OfType<TargetType>();
 
         /// <summary>
         /// Checks whether the instance of <see cref="System.Collections.IEnumerable"/> is of type <see cref="IEnumerable{T}"/>, then casts it, otherwise, 
@@ -61,7 +61,7 @@ namespace RepoDb.Extensions
         /// <param name="value">The actual enumerable instance.</param>
         /// <returns>The <see cref="IEnumerable{T}"/> object in which the items are of type <typeparamref name="T"/>.</returns>
         public static IEnumerable<T> WithType<T>(this System.Collections.IEnumerable value) =>
-            value is IEnumerable<T> ? (IEnumerable<T>)value : value.OfType<T>();
+            value is IEnumerable<T> enumerable ? enumerable : value.OfType<T>();
 
         /// <summary>
         /// Checks whether the instance of <see cref="IEnumerable{T}"/> is of type <see cref="List{T}"/>, then casts it, otherwise, converts it.
@@ -71,7 +71,7 @@ namespace RepoDb.Extensions
         /// <param name="value">The actual enumerable instance.</param>
         /// <returns>The converted <see cref="IList{T}"/> object.</returns>
         public static List<T> AsList<T>(this IEnumerable<T> value) =>
-            value is List<T> ? (List<T>)value : value?.ToList();
+            value is List<T> list ? list : value?.ToList();
 
         /// <summary>
         /// Checks whether the instance of <see cref="IEnumerable{T}"/> is an array of <typeparamref name="T"/>, then casts it, otherwise, converts it.
@@ -81,6 +81,6 @@ namespace RepoDb.Extensions
         /// <param name="value">The actual enumerable instance.</param>
         /// <returns>The converted <see cref="Array"/> object.</returns>
         public static T[] AsArray<T>(this IEnumerable<T> value) =>
-            value is T[]? (T[])value : value?.ToArray();
+            value is T[] array ? array : value?.ToArray();
     }
 }

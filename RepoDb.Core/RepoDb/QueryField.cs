@@ -2,6 +2,7 @@
 using RepoDb.Enumerations;
 using RepoDb.Extensions;
 using System;
+using System.Collections;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
@@ -245,9 +246,9 @@ namespace RepoDb
             }
             // The parameter's length affects the uniqueness of the object
             else if ((Operation == Operation.In || Operation == Operation.NotIn) &&
-                Parameter.Value != null && Parameter.Value is System.Collections.IEnumerable)
+                Parameter.Value != null && Parameter.Value is IEnumerable enumerable)
             {
-                var items = ((System.Collections.IEnumerable)Parameter.Value);
+                var items = enumerable;
                 hashCode += items
                     .WithType<object>()
                     .Count()

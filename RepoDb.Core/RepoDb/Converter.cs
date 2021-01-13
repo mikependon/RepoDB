@@ -44,9 +44,9 @@ namespace RepoDb
         /// <returns>The converted value.</returns>
         public static T ToType<T>(object value)
         {
-            if (value is T)
+            if (value is T t)
             {
-                return (T)value;
+                return t;
             }
             return value == null || DbNullToNull(value) == null ? default(T) :
                 (T)Convert.ChangeType(value, typeof(T));

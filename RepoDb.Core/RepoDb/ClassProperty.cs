@@ -307,9 +307,9 @@ namespace RepoDb
         /// <returns>True if the two instance is the same.</returns>
         public override bool Equals(object obj)
         {
-            if (obj is ClassProperty)
+            if (obj is ClassProperty property)
             {
-                return PropertyInfo.Equals(((ClassProperty)obj).PropertyInfo);
+                return PropertyInfo.Equals(property.PropertyInfo);
             }
             return Equals(obj);
         }
