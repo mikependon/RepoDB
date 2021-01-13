@@ -15,7 +15,7 @@ namespace RepoDb
         #region BulkMergeInternal
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <typeparam name="TSqlBulkCopy"></typeparam>
@@ -78,9 +78,6 @@ namespace RepoDb
                 // Validate the objects
                 ValidateTransactionConnectionObject(connection, transaction);
             }
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
 
             // Must be fixed name so the RepoDb.Core caches will not be bloated
             var tempTableName = string.Concat("_RepoDb_BulkMerge_", GetTableName(tableName, dbSetting));
@@ -252,7 +249,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TSqlBulkCopy"></typeparam>
         /// <typeparam name="TSqlBulkCopyOptions"></typeparam>
@@ -311,9 +308,6 @@ namespace RepoDb
                 // Validate the objects
                 ValidateTransactionConnectionObject(connection, transaction);
             }
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
 
             // Must be fixed name so the RepoDb.Core caches will not be bloated
             var tempTableName = string.Concat("_RepoDb_BulkMerge_", GetTableName(tableName, dbSetting));
@@ -468,7 +462,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TSqlBulkCopy"></typeparam>
         /// <typeparam name="TSqlBulkCopyOptions"></typeparam>
@@ -531,9 +525,6 @@ namespace RepoDb
                 // Validate the objects
                 ValidateTransactionConnectionObject(connection, transaction);
             }
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
 
             // Must be fixed name so the RepoDb.Core caches will not be bloated
             var tempTableName = string.Concat("_RepoDb_BulkMerge_", GetTableName(tableName, dbSetting));
@@ -713,7 +704,7 @@ namespace RepoDb
         #region BulkMergeAsyncInternal
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <typeparam name="TSqlBulkCopy"></typeparam>
@@ -778,9 +769,6 @@ namespace RepoDb
                 // Validate the objects
                 ValidateTransactionConnectionObject(connection, transaction);
             }
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
 
             // Must be fixed name so the RepoDb.Core caches will not be bloated
             var tempTableName = string.Concat("_RepoDb_BulkMerge_", GetTableName(tableName, dbSetting));
@@ -953,7 +941,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TSqlBulkCopy"></typeparam>
         /// <typeparam name="TSqlBulkCopyOptions"></typeparam>
@@ -1014,9 +1002,6 @@ namespace RepoDb
                 // Validate the objects
                 ValidateTransactionConnectionObject(connection, transaction);
             }
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
 
             // Must be fixed name so the RepoDb.Core caches will not be bloated
             var tempTableName = string.Concat("_RepoDb_BulkMerge_", GetTableName(tableName, dbSetting));
@@ -1172,7 +1157,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TSqlBulkCopy"></typeparam>
         /// <typeparam name="TSqlBulkCopyOptions"></typeparam>
@@ -1237,9 +1222,6 @@ namespace RepoDb
                 // Validate the objects
                 ValidateTransactionConnectionObject(connection, transaction);
             }
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
 
             // Must be fixed name so the RepoDb.Core caches will not be bloated
             var tempTableName = string.Concat("_RepoDb_BulkMerge_", GetTableName(tableName, dbSetting));
