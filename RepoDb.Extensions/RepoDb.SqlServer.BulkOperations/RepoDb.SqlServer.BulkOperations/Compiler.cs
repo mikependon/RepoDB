@@ -283,19 +283,15 @@ namespace RepoDb.SqlServer.BulkOperations
             /// <returns></returns>
             public static Func<TEntity, TResult> GetFunc(ClassProperty classProperty)
             {
-                var func = (Func<TEntity, TResult>)null;
-                if (cache.TryGetValue(classProperty.GetHashCode(), out func) == false)
+                if (cache.TryGetValue(classProperty.GetHashCode(), out var func) == false)
                 {
-                    if (classProperty != null)
-                    {
-                        var typeOfEntity = typeof(TEntity);
-                        var entity = Expression.Parameter(typeOfEntity, "entity");
-                        var body = Expression.Convert(Expression.Call(entity, classProperty.PropertyInfo.GetMethod), typeof(TResult));
+                    var typeOfEntity = typeof(TEntity);
+                    var entity = Expression.Parameter(typeOfEntity, "entity");
+                    var body = Expression.Convert(Expression.Call(entity, classProperty.PropertyInfo.GetMethod), typeof(TResult));
 
-                        func = Expression
-                            .Lambda<Func<TEntity, TResult>>(body, entity)
-                            .Compile();
-                    }
+                    func = Expression
+                        .Lambda<Func<TEntity, TResult>>(body, entity)
+                        .Compile();
 
                     cache.TryAdd(classProperty.GetHashCode(), func);
                 }

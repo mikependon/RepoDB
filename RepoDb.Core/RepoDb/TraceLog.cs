@@ -25,7 +25,7 @@ namespace RepoDb
             Statement = statement;
             Parameter = parameter;
             Result = result;
-            if (executionTime != null && executionTime.HasValue)
+            if (executionTime != null)
             {
                 ExecutionTime = executionTime.Value;
             }
