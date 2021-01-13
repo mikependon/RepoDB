@@ -70,10 +70,9 @@ namespace RepoDb
 
             // Variables
             var key = GenerateHashCode(type);
-            var value = (DbType?)null;
 
             // Try get the cache
-            if (maps.TryGetValue(key, out value))
+            if (maps.TryGetValue(key, out var value))
             {
                 if (force)
                 {
@@ -116,11 +115,10 @@ namespace RepoDb
             ThrowNullReferenceException(type, "Type");
 
             // Variables
-            var value = (DbType?)null;
             var key = GenerateHashCode(type);
 
             // Try get the value
-            maps.TryGetValue(key, out value);
+            maps.TryGetValue(key, out var value);
 
             // Return the value
             return value;
@@ -298,10 +296,9 @@ namespace RepoDb
 
             // Variables
             var key = GenerateHashCode(entityType, propertyInfo);
-            var value = (DbType?)null;
 
             // Try get the cache
-            if (maps.TryGetValue(key, out value))
+            if (maps.TryGetValue(key, out var value))
             {
                 if (force)
                 {
@@ -369,10 +366,9 @@ namespace RepoDb
 
             // Variables
             var key = GenerateHashCode(entityType, propertyInfo);
-            var value = (DbType?)null;
 
             // Try get the value
-            maps.TryGetValue(key, out value);
+            maps.TryGetValue(key, out var value);
 
             // Return the value
             return value;

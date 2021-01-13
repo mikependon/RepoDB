@@ -150,11 +150,10 @@ namespace RepoDb
                 Guard(property);
 
                 // Variables needed
-                var func = (Func<TEntity, TResult>)null;
                 var key = property.GetHashCode();
 
                 // Get from the cache
-                if (cache.TryGetValue(key, out func) == false)
+                if (cache.TryGetValue(key, out var func) == false)
                 {
                     func = GetFunc(property);
                 }

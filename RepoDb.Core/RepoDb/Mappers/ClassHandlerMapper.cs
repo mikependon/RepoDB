@@ -62,10 +62,9 @@ namespace RepoDb
 
             // Variables for cache
             var key = GenerateHashCode(type);
-            var value = (object)null;
 
             // Try get the mappings
-            if (maps.TryGetValue(key, out value))
+            if (maps.TryGetValue(key, out var value))
             {
                 if (force)
                 {
@@ -109,11 +108,8 @@ namespace RepoDb
             // Check the presence
             GuardPresence(type);
 
-            // Variables for the cache
-            var value = (object)null;
-
             // get the value
-            maps.TryGetValue(GenerateHashCode(type), out value);
+            maps.TryGetValue(GenerateHashCode(type), out var value);
 
             // Check the result
             if (value == null || value is TClassHandler)
