@@ -59,7 +59,7 @@ namespace RepoDb
                 connection?.Dispose();
             }
 
-            // Set the ouput parameters
+            // Set the output parameters
             DbConnectionExtension.SetOutputParameters(param);
         }
 

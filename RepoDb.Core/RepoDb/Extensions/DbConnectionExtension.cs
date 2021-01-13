@@ -213,7 +213,7 @@ namespace RepoDb
                     }
                 }
 
-                // Set the ouput parameters
+                // Set the output parameters
                 SetOutputParameters(param);
 
                 // Return
@@ -342,7 +342,7 @@ namespace RepoDb
                     }
                 }
 
-                // Set the ouput parameters
+                // Set the output parameters
                 SetOutputParameters(param);
 
                 // Return
@@ -529,7 +529,7 @@ namespace RepoDb
                 cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
             }
 
-            // Set the ouput parameters
+            // Set the output parameters
             SetOutputParameters(param);
 
             // Return
@@ -603,7 +603,7 @@ namespace RepoDb
                     }
                 }
 
-                // Set the ouput parameters
+                // Set the output parameters
                 SetOutputParameters(param);
 
                 // Return
@@ -800,7 +800,7 @@ namespace RepoDb
                 cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
             }
 
-            // Set the ouput parameters
+            // Set the output parameters
             SetOutputParameters(param);
 
             // Return
@@ -878,7 +878,7 @@ namespace RepoDb
                     }
                 }
 
-                // Set the ouput parameters
+                // Set the output parameters
                 SetOutputParameters(param);
 
                 // Return
@@ -1100,7 +1100,7 @@ namespace RepoDb
             {
                 var reader = command.ExecuteReader();
 
-                // Set the ouput parameters
+                // Set the output parameters
                 SetOutputParameters(param);
 
                 // Return
@@ -1203,7 +1203,7 @@ namespace RepoDb
             {
                 var reader = await command.ExecuteReaderAsync(cancellationToken);
 
-                // Set the ouput parameters
+                // Set the output parameters
                 SetOutputParameters(param);
 
                 // Return
@@ -1294,7 +1294,7 @@ namespace RepoDb
             {
                 var result = command.ExecuteNonQuery();
 
-                // Set the ouput parameters
+                // Set the output parameters
                 SetOutputParameters(param);
 
                 // Return
@@ -1379,7 +1379,7 @@ namespace RepoDb
             {
                 var result = await command.ExecuteNonQueryAsync(cancellationToken);
 
-                // Set the ouput parameters
+                // Set the output parameters
                 SetOutputParameters(param);
 
                 // Return
@@ -1593,7 +1593,7 @@ namespace RepoDb
                     cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
                 }
 
-                // Set the ouput parameters
+                // Set the output parameters
                 SetOutputParameters(param);
 
                 // Return
@@ -1714,7 +1714,7 @@ namespace RepoDb
                     cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
                 }
 
-                // Set the ouput parameters
+                // Set the output parameters
                 SetOutputParameters(param);
 
                 // Return

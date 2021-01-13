@@ -10,10 +10,10 @@ namespace RepoDb.Resolvers
     public class ClientTypeToAverageableClientTypeResolver : IResolver<Type, Type>
     {
         /// <summary>
-        /// Returns the avergeable .NET CLR type.
+        /// Returns the averageable .NET CLR type.
         /// </summary>
         /// <param name="type">The .NET CLR type.</param>
-        /// <returns>The avergeable .NET CLR type.</returns>
+        /// <returns>The averageable .NET CLR type.</returns>
         public Type Resolve(Type type)
         {
             if (type == null)

@@ -51,7 +51,7 @@ namespace RepoDb
         /// Creates a new instance of <see cref="QueryGroup"/> object.
         /// </summary>
         /// <param name="queryField">The field to be grouped for the query expression.</param>
-        /// <param name="conjunction">The conjunction to be used for every group seperation.</param>
+        /// <param name="conjunction">The conjunction to be used for every group separation.</param>
         public QueryGroup(QueryField queryField,
             Conjunction conjunction) :
             this(queryField?.AsEnumerable(),
@@ -77,7 +77,7 @@ namespace RepoDb
         /// Creates a new instance of <see cref="QueryGroup"/> object.
         /// </summary>
         /// <param name="queryField">The field to be grouped for the query expression.</param>
-        /// <param name="conjunction">The conjunction to be used for every group seperation.</param>
+        /// <param name="conjunction">The conjunction to be used for every group separation.</param>
         /// <param name="isNot">The prefix to be added whether the field value is in opposite state.</param>
         public QueryGroup(QueryField queryField,
             Conjunction conjunction,
@@ -118,7 +118,7 @@ namespace RepoDb
         /// Creates a new instance of <see cref="QueryGroup"/> object.
         /// </summary>
         /// <param name="queryFields">The list of fields to be grouped for the query expression.</param>
-        /// <param name="conjunction">The conjunction to be used for every group seperation.</param>
+        /// <param name="conjunction">The conjunction to be used for every group separation.</param>
         public QueryGroup(IEnumerable<QueryField> queryFields,
             Conjunction conjunction) :
             this(queryFields,
@@ -144,7 +144,7 @@ namespace RepoDb
         /// Creates a new instance of <see cref="QueryGroup"/> object.
         /// </summary>
         /// <param name="queryFields">The list of fields to be grouped for the query expression.</param>
-        /// <param name="conjunction">The conjunction to be used for every group seperation.</param>
+        /// <param name="conjunction">The conjunction to be used for every group separation.</param>
         /// <param name="isNot">The prefix to be added whether the field value is in opposite state.</param>
         public QueryGroup(IEnumerable<QueryField> queryFields,
             Conjunction conjunction,
@@ -172,7 +172,7 @@ namespace RepoDb
         /// Creates a new instance of <see cref="QueryGroup"/> object.
         /// </summary>
         /// <param name="queryGroup">The child query group to be grouped for the query expression.</param>
-        /// <param name="conjunction">The conjunction to be used for every group seperation.</param>
+        /// <param name="conjunction">The conjunction to be used for every group separation.</param>
         public QueryGroup(QueryGroup queryGroup,
             Conjunction conjunction) :
             this((IEnumerable<QueryField>)null,
@@ -198,7 +198,7 @@ namespace RepoDb
         /// Creates a new instance of <see cref="QueryGroup"/> object.
         /// </summary>
         /// <param name="queryGroup">The child query group to be grouped for the query expression.</param>
-        /// <param name="conjunction">The conjunction to be used for every group seperation.</param>
+        /// <param name="conjunction">The conjunction to be used for every group separation.</param>
         /// <param name="isNot">The prefix to be added whether the field value is in opposite state.</param>
         public QueryGroup(QueryGroup queryGroup,
             Conjunction conjunction,
@@ -226,7 +226,7 @@ namespace RepoDb
         /// Creates a new instance of <see cref="QueryGroup"/> object.
         /// </summary>
         /// <param name="queryGroups">The child query groups to be grouped for the query expression.</param>
-        /// <param name="conjunction">The conjunction to be used for every group seperation.</param>
+        /// <param name="conjunction">The conjunction to be used for every group separation.</param>
         public QueryGroup(IEnumerable<QueryGroup> queryGroups,
             Conjunction conjunction) :
             this((IEnumerable<QueryField>)null,
@@ -252,7 +252,7 @@ namespace RepoDb
         /// Creates a new instance of <see cref="QueryGroup"/> object.
         /// </summary>
         /// <param name="queryGroups">The child query groups to be grouped for the query expression.</param>
-        /// <param name="conjunction">The conjunction to be used for every group seperation.</param>
+        /// <param name="conjunction">The conjunction to be used for every group separation.</param>
         /// <param name="isNot">The prefix to be added whether the field value is in opposite state.</param>
         public QueryGroup(IEnumerable<QueryGroup> queryGroups,
             Conjunction conjunction,
@@ -270,7 +270,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="queryField">The field to be grouped for the query expression.</param>
         /// <param name="queryGroup">The child query group to be grouped for the query expression.</param>
-        /// <param name="conjunction">The conjunction to be used for every group seperation.</param>
+        /// <param name="conjunction">The conjunction to be used for every group separation.</param>
         public QueryGroup(QueryField queryField,
             QueryGroup queryGroup,
             Conjunction conjunction) :
@@ -300,7 +300,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="queryField">The field to be grouped for the query expression.</param>
         /// <param name="queryGroup">The child query group to be grouped for the query expression.</param>
-        /// <param name="conjunction">The conjunction to be used for every group seperation.</param>
+        /// <param name="conjunction">The conjunction to be used for every group separation.</param>
         /// <param name="isNot">The prefix to be added whether the field value is in opposite state.</param>
         public QueryGroup(QueryField queryField,
             QueryGroup queryGroup,
@@ -332,7 +332,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="queryField">The field to be grouped for the query expression.</param>
         /// <param name="queryGroups">The child query groups to be grouped for the query expression.</param>
-        /// <param name="conjunction">The conjunction to be used for every group seperation.</param>
+        /// <param name="conjunction">The conjunction to be used for every group separation.</param>
         public QueryGroup(QueryField queryField,
             IEnumerable<QueryGroup> queryGroups,
             Conjunction conjunction) :
@@ -362,7 +362,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="queryField">The field to be grouped for the query expression.</param>
         /// <param name="queryGroups">The child query groups to be grouped for the query expression.</param>
-        /// <param name="conjunction">The conjunction to be used for every group seperation.</param>
+        /// <param name="conjunction">The conjunction to be used for every group separation.</param>
         /// <param name="isNot">The prefix to be added whether the field value is in opposite state.</param>
         public QueryGroup(QueryField queryField,
             IEnumerable<QueryGroup> queryGroups,
@@ -381,7 +381,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="queryFields">The list of fields to be grouped for the query expression.</param>
         /// <param name="queryGroup">The child query group to be grouped for the query expression.</param>
-        /// <param name="conjunction">The conjunction to be used for every group seperation.</param>
+        /// <param name="conjunction">The conjunction to be used for every group separation.</param>
         public QueryGroup(IEnumerable<QueryField> queryFields,
             QueryGroup queryGroup,
             Conjunction conjunction) :
@@ -411,7 +411,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="queryFields">The list of fields to be grouped for the query expression.</param>
         /// <param name="queryGroup">The child query group to be grouped for the query expression.</param>
-        /// <param name="conjunction">The conjunction to be used for every group seperation.</param>
+        /// <param name="conjunction">The conjunction to be used for every group separation.</param>
         /// <param name="isNot">The prefix to be added whether the field value is in opposite state.</param>
         public QueryGroup(IEnumerable<QueryField> queryFields,
             QueryGroup queryGroup,
@@ -443,7 +443,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="queryFields">The list of fields to be grouped for the query expression.</param>
         /// <param name="queryGroups">The child query groups to be grouped for the query expression.</param>
-        /// <param name="conjunction">The conjunction to be used for every group seperation.</param>
+        /// <param name="conjunction">The conjunction to be used for every group separation.</param>
         public QueryGroup(IEnumerable<QueryField> queryFields,
             IEnumerable<QueryGroup> queryGroups,
             Conjunction conjunction) :
@@ -473,7 +473,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="queryFields">The list of fields to be grouped for the query expression.</param>
         /// <param name="queryGroups">The child query groups to be grouped for the query expression.</param>
-        /// <param name="conjunction">The conjunction to be used for every group seperation.</param>
+        /// <param name="conjunction">The conjunction to be used for every group separation.</param>
         /// <param name="isNot">The prefix to be added whether the field value is in opposite state.</param>
         public QueryGroup(IEnumerable<QueryField> queryFields,
             IEnumerable<QueryGroup> queryGroups,

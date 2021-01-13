@@ -77,7 +77,7 @@ namespace RepoDb.Extensions
         /// <param name="property">The instance of <see cref="PropertyInfo"/> to be converted.</param>
         /// <param name="entity">The entity object where the value of the property will be retrieved.</param>
         /// <returns>An instance of query field object that holds the converted name and values of the property.</returns>
-        /// <param name="appendUnderscore">The value to identify whether the underscope prefix will be appended to the parameter name.</param>
+        /// <param name="appendUnderscore">The value to identify whether the underscore prefix will be appended to the parameter name.</param>
         internal static QueryField AsQueryField(this PropertyInfo property,
             object entity,
             bool appendUnderscore) =>
