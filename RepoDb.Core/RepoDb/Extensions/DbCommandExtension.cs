@@ -205,21 +205,21 @@ namespace RepoDb.Extensions
             }
 
             // QueryField
-            else if (param is QueryField)
+            else if (param is QueryField field)
             {
-                CreateParameters(command, (QueryField)param, propertiesToSkip, entityType, dbFields);
+                CreateParameters(command, field, propertiesToSkip, entityType, dbFields);
             }
 
             // IEnumerable<QueryField>
-            else if (param is IEnumerable<QueryField>)
+            else if (param is IEnumerable<QueryField> fields)
             {
-                CreateParameters(command, (IEnumerable<QueryField>)param, propertiesToSkip, entityType, dbFields);
+                CreateParameters(command, fields, propertiesToSkip, entityType, dbFields);
             }
 
             // QueryGroup
-            else if (param is QueryGroup)
+            else if (param is QueryGroup group)
             {
-                CreateParameters(command, (QueryGroup)param, propertiesToSkip, entityType, dbFields);
+                CreateParameters(command, group, propertiesToSkip, entityType, dbFields);
             }
 
             // Other
@@ -330,9 +330,8 @@ namespace RepoDb.Extensions
                 var valueType = (Type)null;
 
                 // CommandParameter
-                if (kvp.Value is CommandParameter)
+                if (kvp.Value is CommandParameter commandParameter)
                 {
-                    var commandParameter = (CommandParameter)kvp.Value;
                     classProperty = PropertyCache.Get(commandParameter.MappedToType, kvp.Key);
                     value = commandParameter.Value;
                     valueType = value?.GetType()?.GetUnderlyingType();
@@ -516,9 +515,8 @@ namespace RepoDb.Extensions
 
             // Direction
             var parameterDirection = (ParameterDirection?)null;
-            if (queryField is DirectionalQueryField)
+            if (queryField is DirectionalQueryField directionalQueryField)
             {
-                var directionalQueryField = (DirectionalQueryField)queryField;
                 parameterDirection = directionalQueryField.Direction;
 
                 // Ensure the DB type

@@ -1811,34 +1811,34 @@ namespace RepoDb
         #region DbParameters
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="param"></param>
         internal static void SetOutputParameters(object param)
         {
-            if (param is QueryGroup)
+            if (param is QueryGroup group)
             {
-                SetOutputParameters((QueryGroup)param);
+                SetOutputParameters(group);
             }
-            else if (param is IEnumerable<QueryField>)
+            else if (param is IEnumerable<QueryField> fields)
             {
-                SetOutputParameters((IEnumerable<QueryField>)param);
+                SetOutputParameters(fields);
             }
-            else if (param is QueryField)
+            else if (param is QueryField field)
             {
-                SetOutputParameter((QueryField)param);
+                SetOutputParameter(field);
             }
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="queryGroup"></param>
         internal static void SetOutputParameters(QueryGroup queryGroup) =>
             SetOutputParameters(queryGroup.GetFields(true));
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="queryFields"></param>
         internal static void SetOutputParameters(IEnumerable<QueryField> queryFields)
@@ -1854,7 +1854,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="queryField"></param>
         internal static void SetOutputParameter(QueryField queryField)
@@ -1871,7 +1871,7 @@ namespace RepoDb
         #region Order Columns
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="command"></param>
@@ -2357,17 +2357,17 @@ namespace RepoDb
             {
                 return null;
             }
-            else if (what is QueryField)
+            else if (what is QueryField field)
             {
-                return ToQueryGroup(what as QueryField);
+                return ToQueryGroup(field);
             }
-            else if (what is IEnumerable<QueryField>)
+            else if (what is IEnumerable<QueryField> fields)
             {
-                return ToQueryGroup(what as IEnumerable<QueryField>);
+                return ToQueryGroup(fields);
             }
-            else if (what is QueryGroup)
+            else if (what is QueryGroup group)
             {
-                return what as QueryGroup;
+                return group;
             }
             else
             {
@@ -2901,28 +2901,28 @@ namespace RepoDb
             // ExpandoObject
             if (param is ExpandoObject || param is System.Collections.IDictionary)
             {
-                if (param is IDictionary<string, object>)
+                if (param is IDictionary<string, object> objects)
                 {
-                    return GetCommandArrayParametersText(commandText, (IDictionary<string, object>)param, dbSetting);
+                    return GetCommandArrayParametersText(commandText, objects, dbSetting);
                 }
             }
 
             // QueryField
-            else if (param is QueryField)
+            else if (param is QueryField field)
             {
-                return GetCommandArrayParametersText(commandText, (QueryField)param, dbSetting);
+                return GetCommandArrayParametersText(commandText, field, dbSetting);
             }
 
             // QueryFields
-            else if (param is IEnumerable<QueryField>)
+            else if (param is IEnumerable<QueryField> fields)
             {
-                return GetCommandArrayParametersText(commandText, (IEnumerable<QueryField>)param, dbSetting);
+                return GetCommandArrayParametersText(commandText, fields, dbSetting);
             }
 
             // QueryGroup
-            else if (param is QueryGroup)
+            else if (param is QueryGroup group)
             {
-                return GetCommandArrayParametersText(commandText, (QueryGroup)param, dbSetting);
+                return GetCommandArrayParametersText(commandText, group, dbSetting);
             }
 
             // Others
@@ -3227,7 +3227,7 @@ namespace RepoDb
             }
 
             // Items
-            var items = values is IEnumerable<object> ? (IEnumerable<object>)values : values.WithType<object>();
+            var items = values is IEnumerable<object> objects ? objects : values.WithType<object>();
             if (items.Any() != true)
             {
                 var parameter = parameterName.AsParameter(dbSetting);

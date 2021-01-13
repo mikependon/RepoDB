@@ -28,9 +28,9 @@ namespace RepoDb.Extensions
             {
                 foreach (var value in array)
                 {
-                    if (value is T)
+                    if (value is T t)
                     {
-                        yield return (T)value;
+                        yield return t;
                     }
                 }
             }

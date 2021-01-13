@@ -1,4 +1,5 @@
-﻿using RepoDb.Enumerations;
+﻿using System.Collections;
+using RepoDb.Enumerations;
 using RepoDb.Extensions;
 using System.Collections.Generic;
 using System.Dynamic;
@@ -199,9 +200,9 @@ namespace RepoDb
         {
             var list = new List<T>();
 
-            if (value is System.Collections.IEnumerable)
+            if (value is IEnumerable enumerable)
             {
-                var items = ((System.Collections.IEnumerable)value)
+                var items = enumerable
                     .WithType<T>()
                     .AsList();
                 list.AddRange(items);
