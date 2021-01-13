@@ -1,32 +1,16 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Version>1.1.2</Version>
-    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-    <PackageIcon></PackageIcon>
-    <PackageIconUrl />
-    <Description>A hybrid .NET ORM library for SqlServer.</Description>
-    <Product>RepoDb</Product>
-    <Company>RepoDb</Company>
-    <Authors>Michael Camara Pendon</Authors>
-    <Copyright>Copyright © 2020</Copyright>
-    <PackageProjectUrl>https://repodb.net/</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.SqlServer</RepositoryUrl>
-    <RepositoryType>Github</RepositoryType>
-    <PackageTags>orm orm-framework orm-library hybrid-orm sqlserver sqlserver-orm</PackageTags>
-    <PackageReleaseNotes>http://repodb.net/release/sqlserver</PackageReleaseNotes>
     <AssemblyVersion>1.1.2.0</AssemblyVersion>
     <FileVersion>1.1.2.0</FileVersion>
+    <Description>A hybrid .NET ORM library for SqlServer.</Description>
+    <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.SqlServer</RepositoryUrl>
+    <PackageTags>orm orm-framework orm-library hybrid-orm sqlserver sqlserver-orm</PackageTags>
+    <PackageReleaseNotes>http://repodb.net/release/sqlserver</PackageReleaseNotes>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile></DocumentationFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>C:\Users\MichaelP\Source\Repos\GitHub\RepoDb\RepoDb.SqlServer\RepoDb.SqlServer\RepoDb.SqlServer.xml</DocumentationFile>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

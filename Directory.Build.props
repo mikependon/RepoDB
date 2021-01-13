@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <PropertyGroup>
+    <Authors>Michael Camara Pendon</Authors>
+    <Company>RepoDb</Company>
+    <Product>RepoDb</Product>
+    <Copyright>Copyright © 2020</Copyright>
+    <PackageProjectUrl>https://repodb.net/</PackageProjectUrl>
+    <RepositoryType>Github</RepositoryType>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+  </PropertyGroup>
+</Project>

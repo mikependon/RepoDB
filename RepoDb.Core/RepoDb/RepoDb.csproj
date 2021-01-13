@@ -2,40 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Authors>Michael Camara Pendon</Authors>
     <Version>1.12.5</Version>
-    <Company>RepoDb</Company>
-    <Product>RepoDb</Product>
-    <Description>A hybrid ORM library for .NET.</Description>
-    <Copyright>Copyright © 2019</Copyright>
-    <PackageTags>orm orm-framework orm-library hybrid-orm</PackageTags>
-    <PackageReleaseNotes>http://repodb.net/release/core</PackageReleaseNotes>
-    <PackageProjectUrl>https://repodb.net/</PackageProjectUrl>
-    <PackageLicenseUrl></PackageLicenseUrl>
-    <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core</RepositoryUrl>
-    <RepositoryType>Github</RepositoryType>
-    <NeutralLanguage></NeutralLanguage>
-    <PostBuildEvent></PostBuildEvent>
-    <PreBuildEvent></PreBuildEvent>
     <AssemblyVersion>1.12.5.7</AssemblyVersion>
     <FileVersion>1.12.5.7</FileVersion>
+    <Description>A hybrid ORM library for .NET.</Description>
+    <PackageReleaseNotes>http://repodb.net/release/core</PackageReleaseNotes>
+    <PackageProjectUrl>https://repodb.net/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core</RepositoryUrl>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-    <PackageIconUrl></PackageIconUrl>
-    <PackageLicenseExpression></PackageLicenseExpression>
-    <PackageIcon></PackageIcon>
-    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>bin\Release\netstandard1.5\RepoDb.xml</DocumentationFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\netstandard1.5\.xml</DocumentationFile>
-    <Optimize>false</Optimize>
-    <DebugType>portable</DebugType>
-    <DebugSymbols>true</DebugSymbols>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -82,17 +57,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="..\..\LICENSE.txt">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
     <None Include="..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
       <_Parameter1>RepoDb.UnitTests</_Parameter1>
