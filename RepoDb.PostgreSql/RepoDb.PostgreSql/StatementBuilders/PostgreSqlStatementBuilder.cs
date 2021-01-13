@@ -201,7 +201,7 @@ namespace RepoDb.StatementBuilders
             var result = identityField != null ?
                 string.IsNullOrEmpty(databaseType) ?
                     identityField.Name.AsQuoted(DbSetting) :
-                        string.Concat($"CAST({identityField.Name.AsQuoted(DbSetting)} AS {databaseType})") :
+                        $"CAST({identityField.Name.AsQuoted(DbSetting)} AS {databaseType})" :
                             primaryField != null ? primaryField.Name.AsQuoted(DbSetting) : "NULL";
 
             // Get the string
@@ -276,7 +276,7 @@ namespace RepoDb.StatementBuilders
                 var returnValue = identityField != null ?
                     string.IsNullOrEmpty(databaseType) ?
                         identityField.Name.AsQuoted(DbSetting) :
-                        string.Concat($"CAST({identityField.Name.AsQuoted(DbSetting)} AS {databaseType})") :
+                        $"CAST({identityField.Name.AsQuoted(DbSetting)} AS {databaseType})" :
                     primaryField != null ? primaryField.Name.AsQuoted(DbSetting) : "NULL";
                 commandTexts.Add(string.Concat(line, " RETURNING ", returnValue, " AS ", "Id".AsQuoted(DbSetting), ", ",
                     $"{DbSetting.ParameterPrefix}__RepoDb_OrderColumn_{index} AS ", "OrderColumn".AsQuoted(DbSetting), " ;"));
@@ -398,7 +398,7 @@ namespace RepoDb.StatementBuilders
             // Set the return value
             var result = identityField == null ? primaryField.Name.AsParameter(DbSetting) :
                 string.IsNullOrEmpty(databaseType) ? identityField.Name.AsQuoted(DbSetting) :
-                string.Concat($"CAST({identityField.Name.AsQuoted(DbSetting)} AS {databaseType})");
+                $"CAST({identityField.Name.AsQuoted(DbSetting)} AS {databaseType})";
 
             if (!string.IsNullOrEmpty(result))
             {
@@ -502,7 +502,7 @@ namespace RepoDb.StatementBuilders
             // Set the return value
             var result = identityField == null ? primaryField.Name.AsParameter(DbSetting) :
                 string.IsNullOrEmpty(databaseType) ? identityField.Name.AsQuoted(DbSetting) :
-                string.Concat($"CAST({identityField.Name.AsQuoted(DbSetting)} AS {databaseType})");
+                $"CAST({identityField.Name.AsQuoted(DbSetting)} AS {databaseType})";
 
             // Clear the builder
             builder.Clear();

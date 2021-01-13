@@ -234,7 +234,7 @@ namespace RepoDb.StatementBuilders
 
             // Set the return value
             var result = identityField != null ?
-                string.Concat($"LAST_INSERT_ID()") :
+                "LAST_INSERT_ID()" :
                     primaryField != null ? primaryField.Name.AsParameter(DbSetting) : "NULL";
 
             builder
@@ -420,13 +420,13 @@ namespace RepoDb.StatementBuilders
             // Check both primary and identity
             if (identityField != null && !string.Equals(identityField.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase))
             {
-                result = string.Concat($"(CASE WHEN {identityField.Name.AsParameter(DbSetting)} > 0 THEN " +
+                result = $"(CASE WHEN {identityField.Name.AsParameter(DbSetting)} > 0 THEN " +
                     $"{identityField.Name.AsParameter(DbSetting)} ELSE " +
-                    $"{primaryField.Name.AsParameter(DbSetting)} END)");
+                    $"{primaryField.Name.AsParameter(DbSetting)} END)";
             }
             else
             {
-                result = string.Concat($"COALESCE({primaryField.Name.AsParameter(DbSetting)}, LAST_INSERT_ID())");
+                result = $"COALESCE({primaryField.Name.AsParameter(DbSetting)}, LAST_INSERT_ID())";
             }
 
             // Build the query
@@ -546,13 +546,13 @@ namespace RepoDb.StatementBuilders
                 // Check both primary and identity
                 if (identityField != null && !string.Equals(identityField.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase))
                 {
-                    result = string.Concat($"(CASE WHEN {identityField.Name.AsParameter(index, DbSetting)} > 0 THEN " +
+                    result = $"(CASE WHEN {identityField.Name.AsParameter(index, DbSetting)} > 0 THEN " +
                         $"{identityField.Name.AsParameter(index, DbSetting)} ELSE " +
-                        $"{primaryField.Name.AsParameter(index, DbSetting)} END)");
+                        $"{primaryField.Name.AsParameter(index, DbSetting)} END)";
                 }
                 else
                 {
-                    result = string.Concat($"COALESCE({primaryField.Name.AsParameter(index, DbSetting)}, LAST_INSERT_ID())");
+                    result = $"COALESCE({primaryField.Name.AsParameter(index, DbSetting)}, LAST_INSERT_ID())";
                 }
 
                 if (!string.IsNullOrEmpty(result))
