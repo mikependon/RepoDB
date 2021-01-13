@@ -175,11 +175,14 @@ namespace RepoDb.DbHelpers
         /// </summary>
         /// <param name="field"></param>
         /// <returns></returns>
-        private bool IsIdentity(string field) =>
-            field.ToUpper().Contains("AUTOINCREMENT") ||
-            field.ToUpper().Contains("INTEGER PRIMARY KEY") ||
-            (field.ToUpper().Contains("INTEGER") && field.ToUpper().Contains("PRIMARY KEY")) ||
-            (field.ToUpper().Contains("INTEGER") && field.ToUpper().Contains("PRIMARY") && field.ToUpper().Contains("KEY"));
+        private bool IsIdentity(string field)
+        {
+            var upper = field.ToUpper();
+            return upper.Contains("AUTOINCREMENT") ||
+                   upper.Contains("INTEGER PRIMARY KEY") ||
+                   (upper.Contains("INTEGER") && upper.Contains("PRIMARY KEY")) ||
+                   (upper.Contains("INTEGER") && upper.Contains("PRIMARY") && upper.Contains("KEY"));
+        }
 
         /// <summary>
         /// 
