@@ -263,28 +263,27 @@ namespace RepoDb.StatementBuilders
                 }
             }
 
-            if (identityField != null)
+            // Variables needed
+            var commandTexts = new List<string>();
+            var splitted = commandText.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+
+            // Iterate the indexes
+            for (var index = 0; index < splitted.Length; index++)
             {
-                // Variables needed
-                var commandTexts = new List<string>();
-                var splitted = commandText.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                var line = splitted[index].Trim();
 
-                // Iterate the indexes
-                for (var index = 0; index < splitted.Length; index++)
-                {
-                    var line = splitted[index].Trim();
-
-                    // Set the return value
-                    var returnValue = string.IsNullOrEmpty(databaseType) ?
+                // Set the return value
+                var returnValue = identityField != null ?
+                    string.IsNullOrEmpty(databaseType) ?
                         identityField.Name.AsQuoted(DbSetting) :
-                        string.Concat($"CAST({identityField.Name.AsQuoted(DbSetting)} AS {databaseType})");
-                    commandTexts.Add(string.Concat(line, " RETURNING ", returnValue, " AS ", "Id".AsQuoted(DbSetting), ", ",
-                        $"{DbSetting.ParameterPrefix}__RepoDb_OrderColumn_{index} AS ", "OrderColumn".AsQuoted(DbSetting), " ;"));
-                }
-
-                // Set the command text
-                commandText = commandTexts.Join(" ");
+                        string.Concat($"CAST({identityField.Name.AsQuoted(DbSetting)} AS {databaseType})") :
+                    primaryField != null ? primaryField.Name.AsQuoted(DbSetting) : "NULL";
+                commandTexts.Add(string.Concat(line, " RETURNING ", returnValue, " AS ", "Id".AsQuoted(DbSetting), ", ",
+                    $"{DbSetting.ParameterPrefix}__RepoDb_OrderColumn_{index} AS ", "OrderColumn".AsQuoted(DbSetting), " ;"));
             }
+
+            // Set the command text
+            commandText = commandTexts.Join(" ");
 
             // Return the query
             return commandText;
