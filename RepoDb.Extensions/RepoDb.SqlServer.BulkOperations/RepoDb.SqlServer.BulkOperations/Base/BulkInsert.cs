@@ -88,9 +88,6 @@ namespace RepoDb
                     FieldCache.Get(entityType);
                 var fields = dbFields?.Select(dbField => dbField.AsField());
 
-                // Before Execution Time
-                var beforeExecutionTime = DateTime.UtcNow;
-
                 // Filter the fields (based on mappings)
                 if (mappings?.Any() == true)
                 {
@@ -283,9 +280,6 @@ namespace RepoDb
                     .Select((index) => reader.GetName(index));
                 var fields = dbFields?.Select(dbField => dbField.AsField());
 
-                // Before Execution Time
-                var beforeExecutionTime = DateTime.UtcNow;
-
                 // Filter the fields (based on mappings)
                 if (mappings?.Any() == true)
                 {
@@ -431,9 +425,6 @@ namespace RepoDb
                 var tableFields = GetDataColumns(dataTable)
                     .Select(column => column.ColumnName);
                 var fields = dbFields?.Select(dbField => dbField.AsField());
-
-                // Before Execution Time
-                var beforeExecutionTime = DateTime.UtcNow;
 
                 // Filter the fields (based on mappings)
                 if (mappings?.Any() == true)
@@ -650,9 +641,6 @@ namespace RepoDb
                     FieldCache.Get(entityType);
                 var fields = dbFields?.Select(dbField => dbField.AsField());
 
-                // Before Execution Time
-                var beforeExecutionTime = DateTime.UtcNow;
-
                 // Filter the fields (based on mappings)
                 if (mappings?.Any() == true)
                 {
@@ -845,9 +833,6 @@ namespace RepoDb
                     .Select((index) => reader.GetName(index));
                 var fields = dbFields?.Select(dbField => dbField.AsField());
 
-                // Before Execution Time
-                var beforeExecutionTime = DateTime.UtcNow;
-
                 // Filter the fields (based on mappings)
                 if (mappings?.Any() == true)
                 {
@@ -996,9 +981,6 @@ namespace RepoDb
                 var tableFields = GetDataColumns(dataTable)
                     .Select(column => column.ColumnName);
                 var fields = dbFields?.Select(dbField => dbField.AsField());
-
-                // Before Execution Time
-                var beforeExecutionTime = DateTime.UtcNow;
 
                 // Filter the fields (based on mappings)
                 if (mappings?.Any() == true)
