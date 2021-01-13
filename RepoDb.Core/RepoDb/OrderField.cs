@@ -59,13 +59,10 @@ namespace RepoDb
         /// <returns>The string containing the text value of the ordering direction.</returns>
         public string GetOrderText()
         {
-            if (orderTextAttribute == null)
-            {
-                orderTextAttribute = typeof(Order)
-                    .GetMembers()
-                    .First(member => string.Equals(member.Name, Order.ToString(), StringComparison.OrdinalIgnoreCase))
-                    .GetCustomAttribute<TextAttribute>();
-            }
+            orderTextAttribute ??= typeof(Order)
+                .GetMembers()
+                .First(member => string.Equals(member.Name, Order.ToString(), StringComparison.OrdinalIgnoreCase))
+                .GetCustomAttribute<TextAttribute>();
             return orderTextAttribute.Text;
         }
 
