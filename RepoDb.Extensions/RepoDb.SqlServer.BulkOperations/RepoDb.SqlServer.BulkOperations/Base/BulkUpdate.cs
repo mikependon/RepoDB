@@ -159,11 +159,6 @@ namespace RepoDb
                     options = Compiler.GetEnumFunc<TSqlBulkCopyOptions>("KeepIdentity")();
                 }
 
-                // Filter the DB Fields
-                var filteredDbFields = dbFields?
-                    .Where(dbField =>
-                        fields?.Any(field => string.Equals(field.Name, dbField.Name, StringComparison.OrdinalIgnoreCase)) == true);
-
                 // WriteToServer
                 WriteToServerInternal<TSqlBulkCopy, TSqlBulkCopyOptions, TSqlBulkCopyColumnMappingCollection,
                     TSqlBulkCopyColumnMapping, TSqlTransaction>(connection,
@@ -366,11 +361,6 @@ namespace RepoDb
                 {
                     options = Compiler.GetEnumFunc<TSqlBulkCopyOptions>("KeepIdentity")();
                 }
-
-                // Filter the DB Fields
-                var filteredDbFields = dbFields?
-                    .Where(dbField =>
-                        fields?.Any(field => string.Equals(field.Name, dbField.Name, StringComparison.OrdinalIgnoreCase)) == true);
 
                 // WriteToServer
                 WriteToServerInternal<TSqlBulkCopy, TSqlBulkCopyOptions, TSqlBulkCopyColumnMappingCollection,
@@ -585,11 +575,6 @@ namespace RepoDb
                     options = Compiler.GetEnumFunc<TSqlBulkCopyOptions>("KeepIdentity")();
                 }
 
-                // Filter the DB Fields
-                var filteredDbFields = dbFields?
-                    .Where(dbField =>
-                        fields?.Any(field => string.Equals(field.Name, dbField.Name, StringComparison.OrdinalIgnoreCase)) == true);
-
                 // WriteToServer
                 await WriteToServerAsyncInternal<TSqlBulkCopy, TSqlBulkCopyOptions, TSqlBulkCopyColumnMappingCollection,
                     TSqlBulkCopyColumnMapping, TSqlTransaction>(connection,
@@ -799,11 +784,6 @@ namespace RepoDb
                 {
                     options = Compiler.GetEnumFunc<TSqlBulkCopyOptions>("KeepIdentity")();
                 }
-
-                // Filter the DB Fields
-                var filteredDbFields = dbFields?
-                    .Where(dbField =>
-                        fields?.Any(field => string.Equals(field.Name, dbField.Name, StringComparison.OrdinalIgnoreCase)) == true);
 
                 // WriteToServer
                 await WriteToServerAsyncInternal<TSqlBulkCopy, TSqlBulkCopyOptions, TSqlBulkCopyColumnMappingCollection,
