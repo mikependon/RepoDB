@@ -755,23 +755,23 @@ namespace RepoDb
 
             // Variables
             // Logic for traverse
-            Action<QueryGroup> explore = new Action<QueryGroup>(queryGroup =>
-             {
+            Action<QueryGroup> explore = queryGroup =>
+            {
                 // Check child fields
                 if (queryGroup.QueryFields?.Any() == true)
-                 {
-                     queryFields.AddRange(queryGroup.QueryFields);
-                 }
+                {
+                    queryFields.AddRange(queryGroup.QueryFields);
+                }
 
                 // Check child groups
-                if (traverse == true && queryGroup.QueryGroups?.Any() == true)
-                 {
-                     foreach (var qg in queryGroup.QueryGroups)
-                     {
-                         explore(qg);
-                     }
-                 }
-             });
+                if (traverse && queryGroup.QueryGroups?.Any() == true)
+                {
+                    foreach (var qg in queryGroup.QueryGroups)
+                    {
+                        explore(qg);
+                    }
+                }
+            };
 
             // Explore
             explore(this);
