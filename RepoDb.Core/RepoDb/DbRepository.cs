@@ -382,11 +382,6 @@ namespace RepoDb
                     transaction: transaction,
                     cache: Cache);
             }
-            catch
-            {
-                // Throw back the error
-                throw;
-            }
             finally
             {
                 // Dispose the connection
@@ -441,11 +436,6 @@ namespace RepoDb
                     cache: Cache,
                     cancellationToken: cancellationToken);
             }
-            catch
-            {
-                // Throw back the error
-                throw;
-            }
             finally
             {
                 // Dispose the connection
@@ -498,11 +488,6 @@ namespace RepoDb
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     cache: Cache);
-            }
-            catch
-            {
-                // Throw back the error
-                throw;
             }
             finally
             {
@@ -560,11 +545,6 @@ namespace RepoDb
                     cache: Cache,
                     cancellationToken: cancellationToken);
             }
-            catch
-            {
-                // Throw back the error
-                throw;
-            }
             finally
             {
                 // Dispose the connection
@@ -604,11 +584,6 @@ namespace RepoDb
                     commandType: commandType,
                     commandTimeout: CommandTimeout,
                     transaction: transaction);
-            }
-            catch
-            {
-                // Throw back the error
-                throw;
             }
             finally
             {
@@ -652,11 +627,6 @@ namespace RepoDb
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     cancellationToken: cancellationToken);
-            }
-            catch
-            {
-                // Throw back the error
-                throw;
             }
             finally
             {
@@ -705,11 +675,6 @@ namespace RepoDb
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     cache: Cache);
-            }
-            catch
-            {
-                // Throw back the error
-                throw;
             }
             finally
             {
@@ -762,11 +727,6 @@ namespace RepoDb
                     cache: Cache,
                     cancellationToken: cancellationToken);
             }
-            catch
-            {
-                // Throw back the error
-                throw;
-            }
             finally
             {
                 // Dispose the connection
@@ -815,11 +775,6 @@ namespace RepoDb
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     cache: Cache);
-            }
-            catch
-            {
-                // Throw back the error
-                throw;
             }
             finally
             {
@@ -872,11 +827,6 @@ namespace RepoDb
                     transaction: transaction,
                     cache: Cache,
                     cancellationToken: cancellationToken);
-            }
-            catch
-            {
-                // Throw back the error
-                throw;
             }
             finally
             {
