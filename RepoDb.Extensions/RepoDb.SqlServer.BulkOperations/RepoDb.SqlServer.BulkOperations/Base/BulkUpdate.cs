@@ -236,7 +236,6 @@ namespace RepoDb
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         internal static int BulkUpdateInternalBase<TSqlBulkCopy, TSqlBulkCopyOptions, TSqlBulkCopyColumnMappingCollection,
             TSqlBulkCopyColumnMapping, TSqlTransaction>(DbConnection connection,

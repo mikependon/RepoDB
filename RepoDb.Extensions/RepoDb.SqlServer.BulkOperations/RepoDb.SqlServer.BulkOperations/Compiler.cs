@@ -259,7 +259,7 @@ namespace RepoDb.SqlServer.BulkOperations
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <typeparam name="TResult"></typeparam>
-        /// <param name="methodName"></param>
+        /// <param name="propertyName"></param>
         /// <returns></returns>
         public static Func<TEntity, TResult> GetPropertyGetterFunc<TEntity, TResult>(string propertyName)
             where TEntity : class =>
@@ -364,7 +364,7 @@ namespace RepoDb.SqlServer.BulkOperations
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <typeparam name="TResult"></typeparam>
-        /// <param name="methodName"></param>
+        /// <param name="fieldName"></param>
         /// <returns></returns>
         public static Func<TEntity, TResult> GetFieldGetterFunc<TEntity, TResult>(string fieldName)
             where TEntity : class =>
