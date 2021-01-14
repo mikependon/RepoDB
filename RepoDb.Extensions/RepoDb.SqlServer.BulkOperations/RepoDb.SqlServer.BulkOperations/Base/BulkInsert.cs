@@ -720,7 +720,7 @@ namespace RepoDb
                         withPseudoExecution);
 
                     // Execute the SQL
-                    using (var reader = (DbDataReader)(await connection.ExecuteReaderAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction)))
+                    using (var reader = (DbDataReader)(await connection.ExecuteReaderAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, cancellationToken: cancellationToken)))
                     {
                         result = await SetIdentityForEntitiesAsync<TEntity>(entities, reader, identityDbField, cancellationToken);
                     }
@@ -1070,7 +1070,7 @@ namespace RepoDb
                         {
                             using (var reader = (DbDataReader)(await connection.ExecuteReaderAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, cancellationToken: cancellationToken)))
                             {
-                                result = await SetIdentityForEntitiesAsync(dataTable, reader, column);
+                                result = await SetIdentityForEntitiesAsync(dataTable, reader, column, cancellationToken);
                             }
                         }
                         else

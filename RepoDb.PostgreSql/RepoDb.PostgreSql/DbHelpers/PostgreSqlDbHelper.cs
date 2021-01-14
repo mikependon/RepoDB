@@ -111,7 +111,7 @@ namespace RepoDb.DbHelpers
                 null,
                 null,
                 null,
-                await reader.IsDBNullAsync(4) ? "text" : reader.GetString(4));
+                await reader.IsDBNullAsync(4, cancellationToken) ? "text" : reader.GetString(4));
         }
 
         #endregion
@@ -185,7 +185,7 @@ namespace RepoDb.DbHelpers
                 // Iterate the list of the fields
                 while (await reader.ReadAsync(cancellationToken))
                 {
-                    dbFields.Add(await ReaderToDbFieldAsync(reader));
+                    dbFields.Add(await ReaderToDbFieldAsync(reader, cancellationToken));
                 }
 
                 // Return the list of fields
