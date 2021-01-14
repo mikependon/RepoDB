@@ -5,7 +5,6 @@
     /// </summary>
     public sealed class SqLiteDbSetting : BaseDbSetting
     {
-
         /// <summary>
         /// Creates a new instance of <see cref="SqLiteDbSetting"/> class.
         /// </summary>
@@ -17,7 +16,6 @@
         /// Creates a new instance of <see cref="SqLiteDbSetting"/> class.
         /// </summary>
         public SqLiteDbSetting(bool isExecuteReaderDisposable)
-            : base()
         {
             AreTableHintsSupported = false;
             AverageableType = typeof(double);

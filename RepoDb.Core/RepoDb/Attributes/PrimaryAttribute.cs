@@ -7,9 +7,5 @@ namespace RepoDb.Attributes
     /// </summary>
     public class PrimaryAttribute : Attribute
     {
-        /// <summary>
-        /// Creates a new instance of <see cref="PrimaryAttribute"/> class.
-        /// </summary>
-        public PrimaryAttribute() { }
     }
 }

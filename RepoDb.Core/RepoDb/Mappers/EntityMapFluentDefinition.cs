@@ -13,20 +13,12 @@ namespace RepoDb
     public class EntityMapFluentDefinition<TEntity>
         where TEntity : class
     {
-        /// <summary>
-        /// Creates a new instance of <see cref="EntityMapFluentDefinition{TType}"/> object.
-        /// </summary>
-        public EntityMapFluentDefinition()
-        {
-            EntityType = typeof(TEntity);
-        }
-
         #region Properties
 
         /// <summary>
         /// Gets the current type of the data entity.
         /// </summary>
-        public Type EntityType { get; }
+        public Type EntityType { get; } = typeof(TEntity);
 
         #endregion
 

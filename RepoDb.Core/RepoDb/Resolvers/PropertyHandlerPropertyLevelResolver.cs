@@ -11,11 +11,6 @@ namespace RepoDb.Resolvers
     public class PropertyHandlerPropertyLevelResolver : IResolver<Type, PropertyInfo, object>
     {
         /// <summary>
-        /// Creates a new instance of <see cref="PropertyHandlerPropertyLevelResolver"/> object.
-        /// </summary>
-        public PropertyHandlerPropertyLevelResolver() { }
-
-        /// <summary>
         /// Resolves the equivalent <see cref="IPropertyHandler{TInput, TResult}"/> object of the property.
         /// </summary>
         /// <param name="entityType">The type of the data entity.</param>

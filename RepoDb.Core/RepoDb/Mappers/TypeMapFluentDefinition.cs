@@ -10,20 +10,12 @@ namespace RepoDb
     /// <typeparam name="TType">The target .NET CLR type to be mapped.</typeparam>
     public class TypeMapFluentDefinition<TType>
     {
-        /// <summary>
-        /// Creates a new instance of <see cref="TypeMapFluentDefinition{TType}"/> object.
-        /// </summary>
-        public TypeMapFluentDefinition()
-        {
-            Type = typeof(TType);
-        }
-
         #region Properties
 
         /// <summary>
         /// Gets the current .NET CLR type.
         /// </summary>
-        public Type Type { get; }
+        public Type Type { get; } = typeof(TType);
 
         #endregion
 

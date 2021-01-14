@@ -12,11 +12,6 @@ namespace RepoDb.Resolvers
     public class TypeMapPropertyLevelResolver : IResolver<PropertyInfo, DbType?>
     {
         /// <summary>
-        /// Creates a new instance of <see cref="TypeMapPropertyLevelResolver"/> object.
-        /// </summary>
-        public TypeMapPropertyLevelResolver() { }
-
-        /// <summary>
         /// Resolves the equivalent <see cref="DbType"/> object of the property.
         /// </summary>
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/> to be resolved.</param>

@@ -10,11 +10,6 @@ namespace RepoDb.Resolvers
     public class ClassMappedNameResolver : IResolver<Type, string>
     {
         /// <summary>
-        /// Creates a new instance of <see cref="ClassMappedNameResolver"/> object.
-        /// </summary>
-        public ClassMappedNameResolver() { }
-
-        /// <summary>
         /// Resolves the mapped database object name mappings of the data entity type.
         /// </summary>
         /// <param name="entityType">The type of the data entity.</param>
