@@ -43,8 +43,7 @@ namespace RepoDb.SqlServer.BulkOperations
             /// <returns></returns>
             public static Func<TEntity, TResult> GetFunc(string methodName)
             {
-                var func = (Func<TEntity, TResult>)null;
-                if (cache.TryGetValue(methodName.GetHashCode(), out func) == false)
+                if (cache.TryGetValue(methodName.GetHashCode(), out var func) == false)
                 {
                     var typeOfEntity = typeof(TEntity);
                     var method = typeOfEntity.GetMethod(methodName);
@@ -96,8 +95,7 @@ namespace RepoDb.SqlServer.BulkOperations
             /// <returns></returns>
             public static Action<TEntity> GetFunc(string methodName)
             {
-                var func = (Action<TEntity>)null;
-                if (cache.TryGetValue(methodName.GetHashCode(), out func) == false)
+                if (cache.TryGetValue(methodName.GetHashCode(), out var func) == false)
                 {
                     var typeOfEntity = typeof(TEntity);
                     var method = typeOfEntity.GetMethod(methodName);
@@ -154,9 +152,8 @@ namespace RepoDb.SqlServer.BulkOperations
             public static Func<TEntity, object[], TResult> GetFunc(string methodName,
                 Type[] types)
             {
-                var func = (Func<TEntity, object[], TResult>)null;
                 var key = methodName.GetHashCode() + types?.Sum(e => e.GetHashCode());
-                if (cache.TryGetValue(key.Value, out func) == false)
+                if (cache.TryGetValue(key.Value, out var func) == false)
                 {
                     var typeOfEntity = typeof(TEntity);
                     var method = typeOfEntity.GetMethod(methodName, types);
@@ -219,9 +216,8 @@ namespace RepoDb.SqlServer.BulkOperations
             public static Action<TEntity, object[]> GetFunc(string methodName,
                 Type[] types)
             {
-                var func = (Action<TEntity, object[]>)null;
                 var key = methodName.GetHashCode() + types?.Sum(e => e.GetHashCode());
-                if (cache.TryGetValue(key.Value, out func) == false)
+                if (cache.TryGetValue(key.Value, out var func) == false)
                 {
                     var typeOfEntity = typeof(TEntity);
                     var method = typeOfEntity.GetMethod(methodName, types);
@@ -334,8 +330,8 @@ namespace RepoDb.SqlServer.BulkOperations
                 {
                     return null;
                 }
-                var func = (Action<TEntity, object>)null;
-                if (cache.TryGetValue(classProperty.GetHashCode(), out func) == false)
+
+                if (cache.TryGetValue(classProperty.GetHashCode(), out var func) == false)
                 {
                     if (classProperty != null)
                     {
@@ -388,8 +384,7 @@ namespace RepoDb.SqlServer.BulkOperations
             /// <returns></returns>
             public static Func<TEntity, TResult> GetFunc(string fieldName)
             {
-                var func = (Func<TEntity, TResult>)null;
-                if (cache.TryGetValue(fieldName.GetHashCode(), out func) == false)
+                if (cache.TryGetValue(fieldName.GetHashCode(), out var func) == false)
                 {
                     var typeOfEntity = typeof(TEntity);
                     var fieldInfo = typeOfEntity
@@ -443,8 +438,7 @@ namespace RepoDb.SqlServer.BulkOperations
             /// <returns></returns>
             public static Func<TEnum> GetFunc(string value)
             {
-                var func = (Func<TEnum>)null;
-                if (cache.TryGetValue(value.GetHashCode(), out func) == false)
+                if (cache.TryGetValue(value.GetHashCode(), out var func) == false)
                 {
                     var typeOfEnum = typeof(TEnum);
                     var fieldInfo = typeOfEnum.GetField(value);

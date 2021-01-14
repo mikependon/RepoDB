@@ -37,11 +37,10 @@ namespace RepoDb
             }
 
             // Variables
-            var result = (IEnumerable<Field>)null;
             var key = GenerateHashCode(entityType);
 
             // Try get the value
-            if (cache.TryGetValue(key, out result) == false)
+            if (cache.TryGetValue(key, out var result) == false)
             {
                 result = entityType.AsFields();
                 cache.TryAdd(key, result);

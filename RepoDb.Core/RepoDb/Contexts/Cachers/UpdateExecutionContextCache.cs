@@ -36,8 +36,7 @@ namespace RepoDb.Contexts.Cachers
         internal static UpdateExecutionContext<TEntity> Get<TEntity>(string key)
             where TEntity : class
         {
-            var result = (object)null;
-            if (cache.TryGetValue(key, out result))
+            if (cache.TryGetValue(key, out var result))
             {
                 return result as UpdateExecutionContext<TEntity>;
             }

@@ -46,8 +46,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static Operation GetOperation(ExpressionType expressionType)
         {
-            var value = default(Operation);
-            if (Enum.TryParse(expressionType.ToString(), out value))
+            if (Enum.TryParse(expressionType.ToString(), out Operation value))
             {
                 return value;
             }

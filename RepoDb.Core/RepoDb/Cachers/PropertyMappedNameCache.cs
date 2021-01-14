@@ -85,10 +85,9 @@ namespace RepoDb
 
             // Variables
             var key = GenerateHashCode(entityType, propertyInfo);
-            var result = (string)null;
 
             // Try get the value
-            if (cache.TryGetValue(key, out result) == false)
+            if (cache.TryGetValue(key, out var result) == false)
             {
                 result = resolver.Resolve(propertyInfo, entityType);
                 cache.TryAdd(key, result);

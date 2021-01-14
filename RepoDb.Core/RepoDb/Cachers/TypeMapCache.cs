@@ -46,10 +46,9 @@ namespace RepoDb
 
             // Variables
             var key = GenerateHashCode(type);
-            var result = (DbType?)null;
 
             // Try get the value
-            if (cache.TryGetValue(key, out result) == false)
+            if (cache.TryGetValue(key, out var result) == false)
             {
                 result = typeLevelResolver.Resolve(type);
                 cache.TryAdd(key, result);
@@ -117,10 +116,9 @@ namespace RepoDb
 
             // Variables
             var key = GenerateHashCode(entityType, propertyInfo);
-            var result = (DbType?)null;
 
             // Try get the value
-            if (cache.TryGetValue(key, out result) == false)
+            if (cache.TryGetValue(key, out var result) == false)
             {
                 result = propertyLevelResolver.Resolve(propertyInfo);
                 cache.TryAdd(key, result);

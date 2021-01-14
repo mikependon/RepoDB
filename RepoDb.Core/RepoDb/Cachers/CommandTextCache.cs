@@ -21,14 +21,13 @@ namespace RepoDb
         #region GetAverageText
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
         internal static string GetAverageText(AverageRequest request)
         {
-            var commandText = (string)null;
-            if (cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out var commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateAverage(new QueryBuilder(),
@@ -46,14 +45,13 @@ namespace RepoDb
         #region GetAverageAllText
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
         internal static string GetAverageAllText(AverageAllRequest request)
         {
-            var commandText = (string)null;
-            if (cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out var commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateAverageAll(new QueryBuilder(),
@@ -70,14 +68,13 @@ namespace RepoDb
         #region GetBatchQueryText
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
         internal static string GetBatchQueryText(BatchQueryRequest request)
         {
-            var commandText = (string)null;
-            if (cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out var commandText) == false)
             {
                 var fields = GetActualFields(request.Connection,
                     request.Name,
@@ -90,7 +87,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
@@ -98,8 +95,7 @@ namespace RepoDb
         internal static async Task<string> GetBatchQueryTextAsync(BatchQueryRequest request,
             CancellationToken cancellationToken = default)
         {
-            var commandText = (string)null;
-            if (cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out var commandText) == false)
             {
                 var fields = await GetActualFieldsAsync(request.Connection,
                     request.Name,
@@ -113,7 +109,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="request"></param>
         /// <param name="fields"></param>
@@ -137,14 +133,13 @@ namespace RepoDb
         #region GetCountText
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
         internal static string GetCountText(CountRequest request)
         {
-            var commandText = (string)null;
-            if (cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out var commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateCount(new QueryBuilder(),
@@ -161,14 +156,13 @@ namespace RepoDb
         #region GetCountAllText
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
         internal static string GetCountAllText(CountAllRequest request)
         {
-            var commandText = (string)null;
-            if (cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out var commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateCountAll(new QueryBuilder(),
@@ -184,14 +178,13 @@ namespace RepoDb
         #region GetDeleteText
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
         internal static string GetDeleteText(DeleteRequest request)
         {
-            var commandText = (string)null;
-            if (cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out var commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateDelete(new QueryBuilder(),
@@ -208,14 +201,13 @@ namespace RepoDb
         #region GetDeleteAllText
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
         internal static string GetDeleteAllText(DeleteAllRequest request)
         {
-            var commandText = (string)null;
-            if (cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out var commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateDeleteAll(new QueryBuilder(),
@@ -231,14 +223,13 @@ namespace RepoDb
         #region GetExistsText
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
         internal static string GetExistsText(ExistsRequest request)
         {
-            var commandText = (string)null;
-            if (cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out var commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateExists(new QueryBuilder(),
@@ -255,14 +246,13 @@ namespace RepoDb
         #region GetInsertText
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
         internal static string GetInsertText(InsertRequest request)
         {
-            var commandText = (string)null;
-            if (cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out var commandText) == false)
             {
                 var fields = GetActualFields(request.Connection,
                     request.Name,
@@ -275,7 +265,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
@@ -283,8 +273,7 @@ namespace RepoDb
         internal static async Task<string> GetInsertTextAsync(InsertRequest request,
             CancellationToken cancellationToken = default)
         {
-            var commandText = (string)null;
-            if (cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out var commandText) == false)
             {
                 var fields = await GetActualFieldsAsync(request.Connection,
                     request.Name,
@@ -298,7 +287,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="request"></param>
         /// <param name="fields"></param>
@@ -322,14 +311,13 @@ namespace RepoDb
         #region GetInsertAllText
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
         internal static string GetInsertAllText(InsertAllRequest request)
         {
-            var commandText = (string)null;
-            if (cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out var commandText) == false)
             {
                 var fields = GetActualFields(request.Connection,
                     request.Name,
@@ -342,7 +330,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
@@ -350,8 +338,7 @@ namespace RepoDb
         internal static async Task<string> GetInsertAllTextAsync(InsertAllRequest request,
             CancellationToken cancellationToken = default)
         {
-            var commandText = (string)null;
-            if (cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out var commandText) == false)
             {
                 var fields = await GetActualFieldsAsync(request.Connection,
                     request.Name,
@@ -365,7 +352,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="request"></param>
         /// <param name="fields"></param>
@@ -390,14 +377,13 @@ namespace RepoDb
         #region GetMaxText
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
         internal static string GetMaxText(MaxRequest request)
         {
-            var commandText = (string)null;
-            if (cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out var commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateMax(new QueryBuilder(),
@@ -415,14 +401,13 @@ namespace RepoDb
         #region GetMaxAllText
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
         internal static string GetMaxAllText(MaxAllRequest request)
         {
-            var commandText = (string)null;
-            if (cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out var commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateMaxAll(new QueryBuilder(),
@@ -439,14 +424,13 @@ namespace RepoDb
         #region GetMergeText
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
         internal static string GetMergeText(MergeRequest request)
         {
-            var commandText = (string)null;
-            if (cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out var commandText) == false)
             {
                 var fields = GetActualFields(request.Connection,
                     request.Name,
@@ -459,7 +443,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
@@ -467,8 +451,7 @@ namespace RepoDb
         internal static async Task<string> GetMergeTextAsync(MergeRequest request,
             CancellationToken cancellationToken = default)
         {
-            var commandText = (string)null;
-            if (cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out var commandText) == false)
             {
                 var fields = await GetActualFieldsAsync(request.Connection,
                     request.Name,
@@ -482,7 +465,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="request"></param>
         /// <param name="fields"></param>
@@ -513,8 +496,7 @@ namespace RepoDb
         /// <returns>The cached command text.</returns>
         internal static string GetMergeAllText(MergeAllRequest request)
         {
-            var commandText = (string)null;
-            if (cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out var commandText) == false)
             {
                 var fields = GetActualFields(request.Connection,
                     request.Name,
@@ -527,7 +509,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
@@ -535,8 +517,7 @@ namespace RepoDb
         internal static async Task<string> GetMergeAllTextAsync(MergeAllRequest request,
             CancellationToken cancellationToken = default)
         {
-            var commandText = (string)null;
-            if (cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out var commandText) == false)
             {
                 var fields = await GetActualFieldsAsync(request.Connection,
                     request.Name,
@@ -550,7 +531,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="request"></param>
         /// <param name="fields"></param>
@@ -576,14 +557,13 @@ namespace RepoDb
         #region GetMinText
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
         internal static string GetMinText(MinRequest request)
         {
-            var commandText = (string)null;
-            if (cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out var commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateMin(new QueryBuilder(),
@@ -601,14 +581,13 @@ namespace RepoDb
         #region GetMinAllText
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
         internal static string GetMinAllText(MinAllRequest request)
         {
-            var commandText = (string)null;
-            if (cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out var commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateMinAll(new QueryBuilder(),
@@ -625,14 +604,13 @@ namespace RepoDb
         #region GetQueryText
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
         internal static string GetQueryText(QueryRequest request)
         {
-            var commandText = (string)null;
-            if (cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out var commandText) == false)
             {
                 var fields = GetActualFields(request.Connection,
                     request.Name,
@@ -645,7 +623,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
@@ -653,8 +631,7 @@ namespace RepoDb
         internal static async Task<string> GetQueryTextAsync(QueryRequest request,
             CancellationToken cancellationToken = default)
         {
-            var commandText = (string)null;
-            if (cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out var commandText) == false)
             {
                 var fields = await GetActualFieldsAsync(request.Connection,
                     request.Name,
@@ -668,7 +645,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="request"></param>
         /// <param name="fields"></param>
@@ -691,14 +668,13 @@ namespace RepoDb
         #region GetQueryAllText
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
         internal static string GetQueryAllText(QueryAllRequest request)
         {
-            var commandText = (string)null;
-            if (cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out var commandText) == false)
             {
                 var fields = GetActualFields(request.Connection,
                     request.Name,
@@ -711,7 +687,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
@@ -719,8 +695,7 @@ namespace RepoDb
         internal static async Task<string> GetQueryAllTextAsync(QueryAllRequest request,
             CancellationToken cancellationToken = default)
         {
-            var commandText = (string)null;
-            if (cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out var commandText) == false)
             {
                 var fields = await GetActualFieldsAsync(request.Connection,
                     request.Name,
@@ -734,7 +709,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="request"></param>
         /// <param name="fields"></param>
@@ -755,7 +730,7 @@ namespace RepoDb
         #region GetQueryMultipleText
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="request"></param>
@@ -763,8 +738,7 @@ namespace RepoDb
         internal static string GetQueryMultipleText<TEntity>(QueryMultipleRequest request)
             where TEntity : class
         {
-            var commandText = (string)null;
-            if (cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out var commandText) == false)
             {
                 var fields = GetActualFields(request.Connection,
                     request.Name,
@@ -777,7 +751,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="request"></param>
@@ -787,8 +761,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            var commandText = (string)null;
-            if (cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out var commandText) == false)
             {
                 var fields = await GetActualFieldsAsync(request.Connection,
                     request.Name,
@@ -802,7 +775,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="request"></param>
@@ -827,14 +800,13 @@ namespace RepoDb
         #region GetSumText
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
         internal static string GetSumText(SumRequest request)
         {
-            var commandText = (string)null;
-            if (cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out var commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateSum(new QueryBuilder(),
@@ -852,14 +824,13 @@ namespace RepoDb
         #region GetSumAllText
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
         internal static string GetSumAllText(SumAllRequest request)
         {
-            var commandText = (string)null;
-            if (cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out var commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateSumAll(new QueryBuilder(),
@@ -876,14 +847,13 @@ namespace RepoDb
         #region GetTruncateText
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
         internal static string GetTruncateText(TruncateRequest request)
         {
-            var commandText = (string)null;
-            if (cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out var commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
                 commandText = statementBuilder.CreateTruncate(new QueryBuilder(),
@@ -898,14 +868,13 @@ namespace RepoDb
         #region GetUpdateText
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
         internal static string GetUpdateText(UpdateRequest request)
         {
-            var commandText = (string)null;
-            if (cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out var commandText) == false)
             {
                 var fields = GetActualFields(request.Connection,
                     request.Name,
@@ -918,7 +887,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
@@ -926,8 +895,7 @@ namespace RepoDb
         internal static async Task<string> GetUpdateTextAsync(UpdateRequest request,
             CancellationToken cancellationToken = default)
         {
-            var commandText = (string)null;
-            if (cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out var commandText) == false)
             {
                 var fields = await GetActualFieldsAsync(request.Connection,
                     request.Name,
@@ -941,7 +909,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="request"></param>
         /// <param name="fields"></param>
@@ -966,14 +934,13 @@ namespace RepoDb
         #region GetUpdateAllText
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
         internal static string GetUpdateAllText(UpdateAllRequest request)
         {
-            var commandText = (string)null;
-            if (cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out var commandText) == false)
             {
                 var fields = GetActualFields(request.Connection,
                     request.Name,
@@ -986,7 +953,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
@@ -994,8 +961,7 @@ namespace RepoDb
         internal static async Task<string> GetUpdateAllTextAsync(UpdateAllRequest request,
             CancellationToken cancellationToken = default)
         {
-            var commandText = (string)null;
-            if (cache.TryGetValue(request, out commandText) == false)
+            if (cache.TryGetValue(request, out var commandText) == false)
             {
                 var fields = await GetActualFieldsAsync(request.Connection,
                     request.Name,
@@ -1009,7 +975,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="request"></param>
         /// <param name="fields"></param>
@@ -1041,7 +1007,7 @@ namespace RepoDb
             cache.Clear();
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -1062,7 +1028,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
@@ -1085,7 +1051,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="fields"></param>
         /// <param name="dbFields"></param>
@@ -1102,7 +1068,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -1134,7 +1100,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -1166,7 +1132,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="builder"></param>

@@ -47,11 +47,10 @@ namespace RepoDb
 
             // Variables
             var key = GenerateHashCode(type);
-            var value = (object)null;
             var result = default(TPropertyHandler);
 
             // Try get the value
-            if (cache.TryGetValue(key, out value) == false)
+            if (cache.TryGetValue(key, out var value) == false)
             {
                 value = typeLevelResolver.Resolve(type);
                 result = Converter.ToType<TPropertyHandler>(value);
@@ -131,11 +130,10 @@ namespace RepoDb
 
             // Variables
             var key = GenerateHashCode(entityType, propertyInfo);
-            var value = (object)null;
             var result = default(TPropertyHandler);
 
             // Try get the value
-            if (cache.TryGetValue(key, out value) == false)
+            if (cache.TryGetValue(key, out var value) == false)
             {
                 value = propertyLevelResolver.Resolve(entityType, propertyInfo);
                 result = Converter.ToType<TPropertyHandler>(value);

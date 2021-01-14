@@ -86,7 +86,6 @@ namespace RepoDb
         {
             var type = connection.GetType();
             var key = (long)type.GetHashCode();
-            var result = (IEnumerable<DbField>)null;
 
             // Note: For SqlConnection, the ConnectionString is changing if the (Integrated Security=False). Actually for this isolation, the database name is enough.
             if (!string.IsNullOrWhiteSpace(connection?.Database))
@@ -101,7 +100,7 @@ namespace RepoDb
             }
 
             // Try get the value
-            if (cache.TryGetValue(key, out result) == false)
+            if (cache.TryGetValue(key, out var result) == false)
             {
                 // Get from DB
                 var dbHelper = DbHelperMapper.Get(type);
@@ -174,7 +173,6 @@ namespace RepoDb
         {
             var type = connection.GetType();
             var key = (long)type.GetHashCode();
-            var result = (IEnumerable<DbField>)null;
 
             // Note: For SqlConnection, the ConnectionString is changing if the (Integrated Security=False). Actually for this isolation, the database name is enough.
             if (!string.IsNullOrWhiteSpace(connection?.Database))
@@ -189,7 +187,7 @@ namespace RepoDb
             }
 
             // Try get the value
-            if (cache.TryGetValue(key, out result) == false)
+            if (cache.TryGetValue(key, out var result) == false)
             {
                 // Get from DB
                 var dbHelper = DbHelperMapper.Get(type);

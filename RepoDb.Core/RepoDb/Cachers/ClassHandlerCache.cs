@@ -44,11 +44,10 @@ namespace RepoDb
 
             // Variables
             var key = GenerateHashCode(type);
-            var value = (object)null;
             var result = default(TClassHandler);
 
             // Try get the value
-            if (cache.TryGetValue(key, out value) == false)
+            if (cache.TryGetValue(key, out var value) == false)
             {
                 value = resolver.Resolve(type);
                 result = Converter.ToType<TClassHandler>(value);
