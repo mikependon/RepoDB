@@ -751,11 +751,12 @@ namespace RepoDb
         /// <returns>An enumerable list of <see cref="QueryField"/> objects.</returns>
         public IEnumerable<QueryField> GetFields(bool traverse)
         {
+            // Variables
+            var explore = (Action<QueryGroup>)null;
             var queryFields = new List<QueryField>();
 
-            // Variables
             // Logic for traverse
-            Action<QueryGroup> explore = queryGroup =>
+            explore = new Action<QueryGroup>(queryGroup =>
             {
                 // Check child fields
                 if (queryGroup.QueryFields?.Any() == true)
@@ -764,14 +765,14 @@ namespace RepoDb
                 }
 
                 // Check child groups
-                if (traverse && queryGroup.QueryGroups?.Any() == true)
+                if (traverse == true && queryGroup.QueryGroups?.Any() == true)
                 {
                     foreach (var qg in queryGroup.QueryGroups)
                     {
                         explore(qg);
                     }
                 }
-            };
+            });
 
             // Explore
             explore(this);
