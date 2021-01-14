@@ -165,7 +165,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Throws an exception if the type is not a sublcass of type <see cref="DbConnection"/>.
+        /// Throws an exception if the type is not a subclass of type <see cref="DbConnection"/>.
         /// </summary>
         private static void Guard(Type type)
         {

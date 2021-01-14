@@ -27,7 +27,7 @@ namespace RepoDb.Reflection
             var memberBindings = GetMemberBindingsForDictionary(readerParameterExpression,
                 readerFields?.AsList());
 
-            // Throw an error if there are no matching atleast one
+            // Throw an error if there are no matching at least one
             if (memberBindings.Any() != true)
             {
                 throw new InvalidOperationException($"There are no member bindings found from the resultset of the data reader.");

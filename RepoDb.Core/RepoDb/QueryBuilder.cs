@@ -12,9 +12,9 @@ namespace RepoDb
     public class QueryBuilder
     {
         // A StringBuilder's capacity grows dynamically as required (e.g. during append operations), but there's a 
-        // perfomance penalty to be paid every time this happens (memory allocation + copy). The initial capacity
+        // performance penalty to be paid every time this happens (memory allocation + copy). The initial capacity
         // of a StringBuilder buffer is only 16 characters by default - too small to hold any meaningful query string,
-        // so let's increase this to somthing more sensible. This should improve overall performance at the expense
+        // so let's increase this to something more sensible. This should improve overall performance at the expense
         // of higher memory usage for short queries.
 
         //TODO: Tune this value
@@ -585,7 +585,7 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Append the mapped properpties name to the SQL Query Statement.
+        /// Append the mapped properties name to the SQL Query Statement.
         /// </summary>
         /// <typeparam name="TEntity">The type of data entity object bound for the SQL Statement to be created.</typeparam>
         /// <param name="index">The parameter index.</param>
