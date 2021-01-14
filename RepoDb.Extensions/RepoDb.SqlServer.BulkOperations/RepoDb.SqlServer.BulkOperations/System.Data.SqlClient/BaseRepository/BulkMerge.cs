@@ -28,7 +28,6 @@ namespace RepoDb
         /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static int BulkMerge<TEntity>(this BaseRepository<TEntity, SqlConnection> repository,
             IEnumerable<TEntity> entities,
@@ -68,7 +67,6 @@ namespace RepoDb
         /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static int BulkMerge<TEntity>(this BaseRepository<TEntity, SqlConnection> repository,
             string tableName,

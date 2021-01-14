@@ -704,8 +704,6 @@ namespace RepoDb
         /// <param name="options"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
-        /// <param name="isReturnIdentity"></param>
-        /// <param name="usePhysicalPseudoTempTable"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>

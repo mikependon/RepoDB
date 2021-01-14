@@ -129,7 +129,6 @@ namespace RepoDb
         /// <param name="options"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
-        /// <param name="hasOrderingColumn"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
         private static int WriteToServerInternal<TSqlBulkCopy, TSqlBulkCopyOptions, TSqlBulkCopyColumnMappingCollection,
@@ -407,7 +406,6 @@ namespace RepoDb
         /// <param name="options"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
-        /// <param name="hasOrderingColumn"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
