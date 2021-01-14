@@ -46,7 +46,7 @@ namespace RepoDb
             bool throwException = true)
         {
             var cacheItem = (CacheItem<T>)null;
-            var value = (object)null;
+            object value;
             if (cache.TryGetValue(item.Key, out value))
             {
                 cacheItem = value as CacheItem<T>;
@@ -81,7 +81,7 @@ namespace RepoDb
         /// <returns>A boolean value that signifies the presence of the key from the collection.</returns>
         public bool Contains(string key)
         {
-            var value = (object)null;
+            object value;
             if (cache.TryGetValue(key, out value) == true)
             {
                 var expirable = value as IExpirable;
@@ -104,7 +104,7 @@ namespace RepoDb
             bool throwException = true)
         {
             var item = (CacheItem<T>)null;
-            var value = (object)null;
+            object value;
             if (cache.TryGetValue(key, out value))
             {
                 item = value as CacheItem<T>;
@@ -141,7 +141,7 @@ namespace RepoDb
         public void Remove(string key,
             bool throwException = true)
         {
-            var item = (object)null;
+            object item;
             if (cache.TryRemove(key, out item) == false && throwException == true)
             {
                 throw new ItemNotFoundException($"Failed to remove an item with key '{key}'.");

@@ -47,9 +47,8 @@ namespace RepoDb
 
             // Variables
             var key = GenerateHashCode(type);
-            var value = (object)null;
-            var result = default(TPropertyHandler);
-
+            object value;
+            TPropertyHandler result;
             // Try get the value
             if (cache.TryGetValue(key, out value) == false)
             {
@@ -131,9 +130,8 @@ namespace RepoDb
 
             // Variables
             var key = GenerateHashCode(entityType, propertyInfo);
-            var value = (object)null;
-            var result = default(TPropertyHandler);
-
+            object value;
+            TPropertyHandler result;
             // Try get the value
             if (cache.TryGetValue(key, out value) == false)
             {

@@ -70,7 +70,7 @@ namespace RepoDb
 
             // Variables
             var key = GenerateHashCode(type);
-            var value = (DbType?)null;
+            DbType? value;
 
             // Try get the cache
             if (maps.TryGetValue(key, out value))
@@ -114,11 +114,11 @@ namespace RepoDb
         {
             // Validate
             ThrowNullReferenceException(type, "Type");
-
-            // Variables
-            var value = (DbType?)null;
             var key = GenerateHashCode(type);
 
+
+            // Variables
+            DbType? value;
             // Try get the value
             maps.TryGetValue(key, out value);
 
@@ -144,7 +144,7 @@ namespace RepoDb
         public static void Remove(Type type)
         {
             var key = type.GetHashCode();
-            var value = (DbType?)null;
+            DbType? value;
 
             // Try get the value
             maps.TryRemove(key, out value);
@@ -298,7 +298,7 @@ namespace RepoDb
 
             // Variables
             var key = GenerateHashCode(entityType, propertyInfo);
-            var value = (DbType?)null;
+            DbType? value;
 
             // Try get the cache
             if (maps.TryGetValue(key, out value))
@@ -369,7 +369,7 @@ namespace RepoDb
 
             // Variables
             var key = GenerateHashCode(entityType, propertyInfo);
-            var value = (DbType?)null;
+            DbType? value;
 
             // Try get the value
             maps.TryGetValue(key, out value);
@@ -422,7 +422,7 @@ namespace RepoDb
 
             // Variables
             var key = GenerateHashCode(entityType, propertyInfo);
-            var value = (DbType?)null;
+            DbType? value;
 
             // Try get the value
             maps.TryRemove(key, out value);

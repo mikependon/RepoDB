@@ -129,10 +129,8 @@ namespace RepoDb
                 return this.hashCode.Value;
             }
 
-            var hashCode = 0;
-
             // Set the hashcode
-            hashCode = Name.GetHashCode() + IsPrimary.GetHashCode() + IsIdentity.GetHashCode() + IsNullable.GetHashCode();
+            int hashCode = Name.GetHashCode() + IsPrimary.GetHashCode() + IsIdentity.GetHashCode() + IsNullable.GetHashCode();
             if (Type != null)
             {
                 hashCode += Type.GetHashCode();

@@ -751,28 +751,27 @@ namespace RepoDb
         /// <returns>An enumerable list of <see cref="QueryField"/> objects.</returns>
         public IEnumerable<QueryField> GetFields(bool traverse)
         {
-            // Variables
-            var explore = (Action<QueryGroup>)null;
             var queryFields = new List<QueryField>();
 
+            // Variables
             // Logic for traverse
-            explore = new Action<QueryGroup>(queryGroup =>
-            {
+            Action<QueryGroup> explore = new Action<QueryGroup>(queryGroup =>
+             {
                 // Check child fields
                 if (queryGroup.QueryFields?.Any() == true)
-                {
-                    queryFields.AddRange(queryGroup.QueryFields);
-                }
+                 {
+                     queryFields.AddRange(queryGroup.QueryFields);
+                 }
 
                 // Check child groups
                 if (traverse == true && queryGroup.QueryGroups?.Any() == true)
-                {
-                    foreach (var qg in queryGroup.QueryGroups)
-                    {
-                        explore(qg);
-                    }
-                }
-            });
+                 {
+                     foreach (var qg in queryGroup.QueryGroups)
+                     {
+                         explore(qg);
+                     }
+                 }
+             });
 
             // Explore
             explore(this);

@@ -122,10 +122,11 @@ namespace RepoDb
                 return null;
             }
 
-            // Variables
-            var properties = (IEnumerable<ClassProperty>)null;
             var key = GenerateHashCode(entityType);
 
+
+            // Variables
+            IEnumerable<ClassProperty> properties;
             // Try get the value
             if (cache.TryGetValue(key, out properties) == false)
             {

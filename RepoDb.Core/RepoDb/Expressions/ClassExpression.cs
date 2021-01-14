@@ -148,11 +148,11 @@ namespace RepoDb
             {
                 // Guard first
                 Guard(property);
-
-                // Variables needed
-                var func = (Func<TEntity, TResult>)null;
                 var key = property.GetHashCode();
 
+
+                // Variables needed
+                Func<TEntity, TResult> func;
                 // Get from the cache
                 if (cache.TryGetValue(key, out func) == false)
                 {

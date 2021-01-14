@@ -62,7 +62,7 @@ namespace RepoDb
 
             // Variables for cache
             var key = GenerateHashCode(type);
-            var value = (object)null;
+            object value;
 
             // Try get the mappings
             if (maps.TryGetValue(key, out value))
@@ -110,7 +110,7 @@ namespace RepoDb
             GuardPresence(type);
 
             // Variables for the cache
-            var value = (object)null;
+            object value;
 
             // get the value
             maps.TryGetValue(GenerateHashCode(type), out value);
@@ -147,7 +147,7 @@ namespace RepoDb
 
             // Variables for cache
             var key = GenerateHashCode(type);
-            var existing = (object)null;
+            object existing;
 
             // Try get the value
             maps.TryRemove(key, out existing);

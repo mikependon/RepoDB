@@ -663,7 +663,6 @@ namespace RepoDb.Reflection
             // Variables
             var isNullExpression = (Expression)null;
             var trueExpression = (Expression)null;
-            var falseExpression = (Expression)null;
 
             // Ensure (Ref/Nullable)
             if (expression.Type.IsNullable())
@@ -677,7 +676,7 @@ namespace RepoDb.Reflection
 
             // False
             var methodCallExpression = Expression.Call(method, ConvertExpressionToTypeExpression(expression, StaticType.Object));
-            falseExpression = ConvertExpressionToTypeExpression(methodCallExpression, StaticType.String);
+            Expression falseExpression = ConvertExpressionToTypeExpression(methodCallExpression, StaticType.String);
 
             // Call and return
             return isNullExpression == null ? falseExpression :
@@ -1500,7 +1499,7 @@ namespace RepoDb.Reflection
             DbField dbField,
             IDbSetting dbSetting)
         {
-            var expression = (Expression)null;
+            Expression expression;
 
             // Get the property value
             if (propertyExpression.Type == StaticType.PropertyInfo)

@@ -152,7 +152,7 @@ namespace RepoDb
 
             // Variables
             var key = GenerateHashCode(typeof(TEntity), propertyInfo);
-            var value = (string)null;
+            string value;
 
             // Try get the cache
             if (maps.TryGetValue(key, out value))
@@ -242,7 +242,7 @@ namespace RepoDb
 
             // Variables
             var key = GenerateHashCode(entityType, propertyInfo);
-            var value = (string)null;
+            string value;
 
             // Try get the value
             maps.TryGetValue(key, out value);
@@ -295,7 +295,7 @@ namespace RepoDb
 
             // Variables
             var key = GenerateHashCode(typeof(TEntity), propertyInfo);
-            var value = (string)null;
+            string value;
 
             // Try get the value
             maps.TryRemove(key, out value);

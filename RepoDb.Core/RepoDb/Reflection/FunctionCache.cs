@@ -75,8 +75,8 @@ namespace RepoDb
                 IEnumerable<DbField> dbFields = null,
                 IDbSetting dbSetting = null)
             {
-                var result = (Func<DbDataReader, TResult>)null;
                 var key = GetKey(reader);
+                Func<DbDataReader, TResult> result;
                 if (cache.TryGetValue(key, out result) == false)
                 {
                     result = FunctionFactory.CompileDataReaderToType<TResult>(reader, dbFields, dbSetting);
@@ -132,8 +132,8 @@ namespace RepoDb
                 IEnumerable<DbField> dbFields = null,
                 IDbSetting dbSetting = null)
             {
-                var result = (Func<DbDataReader, dynamic>)null;
                 var key = GetKey(reader);
+                Func<DbDataReader, dynamic> result;
                 if (cache.TryGetValue(key, out result) == false)
                 {
                     result = FunctionFactory.CompileDataReaderToExpandoObject(reader, dbFields, dbSetting);
@@ -197,8 +197,8 @@ namespace RepoDb
                 IEnumerable<DbField> outputFields,
                 IDbSetting dbSetting = null)
             {
-                var func = (Action<DbCommand, TEntity>)null;
                 var key = GetKey(cacheKey, inputFields, outputFields);
+                Action<DbCommand, TEntity> func;
                 if (cache.TryGetValue(key, out func) == false)
                 {
                     if (typeof(TEntity).IsDictionaryStringObject())
@@ -293,8 +293,8 @@ namespace RepoDb
                 int batchSize,
                 IDbSetting dbSetting = null)
             {
-                var func = (Action<DbCommand, IList<TEntity>>)null;
                 var key = GetKey(cacheKey, inputFields, outputFields, batchSize);
+                Action<DbCommand, IList<TEntity>> func;
                 if (cache.TryGetValue(key, out func) == false)
                 {
                     if (typeof(TEntity).IsDictionaryStringObject())
@@ -391,7 +391,7 @@ namespace RepoDb
             {
                 var key = (long)typeof(TEntity).GetHashCode() + field.GetHashCode() +
                     parameterName.GetHashCode() + index.GetHashCode();
-                var func = (Action<TEntity, DbCommand>)null;
+                Action<TEntity, DbCommand> func;
                 if (cache.TryGetValue(key, out func) == false)
                 {
                     func = FunctionFactory.CompileDbCommandToProperty<TEntity>(field, parameterName, index, dbSetting);
@@ -436,7 +436,7 @@ namespace RepoDb
             internal static Action<TEntity, object> Get(Field field)
             {
                 var key = (long)typeof(TEntity).GetHashCode() + field.GetHashCode();
-                var func = (Action<TEntity, object>)null;
+                Action<TEntity, object> func;
                 if (cache.TryGetValue(key, out func) == false)
                 {
                     if (typeof(TEntity).IsDictionaryStringObject())
@@ -496,7 +496,7 @@ namespace RepoDb
                     return null;
                 }
                 var key = paramType.GetHashCode() + Convert.ToInt32(entityType?.GetHashCode());
-                var func = (Action<DbCommand, object>)null;
+                Action<DbCommand, object> func;
                 if (cache.TryGetValue(key, out func) == false)
                 {
                     if (paramType.IsPlainType())

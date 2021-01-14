@@ -47,7 +47,7 @@ namespace RepoDb.DbHelpers
         #region Helpers
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         private string GetCommandText()
@@ -68,7 +68,7 @@ namespace RepoDb.DbHelpers
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         private IEnumerable<string> GetBlobTypes()
@@ -88,7 +88,7 @@ namespace RepoDb.DbHelpers
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
@@ -96,7 +96,7 @@ namespace RepoDb.DbHelpers
         {
             var columnType = reader.GetString(4);
             var excluded = GetBlobTypes();
-            var size = (int?)null;
+            int? size;
             if (excluded.Contains(columnType.ToLowerInvariant()))
             {
                 size = null;
@@ -117,7 +117,7 @@ namespace RepoDb.DbHelpers
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="reader"></param>
         /// <param name="cancellationToken"></param>
@@ -127,7 +127,7 @@ namespace RepoDb.DbHelpers
         {
             var columnType = await reader.GetFieldValueAsync<string>(4, cancellationToken);
             var excluded = GetBlobTypes();
-            var size = (int?)null;
+            int? size;
             if (excluded.Contains(columnType.ToLowerInvariant()))
             {
                 size = null;

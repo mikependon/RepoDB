@@ -32,10 +32,10 @@ namespace RepoDb
         /// <returns>The cached primary property.</returns>
         public static ClassProperty Get(Type entityType)
         {
-            // Variables for the cache
-            var property = (ClassProperty)null;
             var key = GenerateHashCode(entityType);
 
+            // Variables for the cache
+            ClassProperty property;
             // Try get the value
             if (cache.TryGetValue(key, out property) == false)
             {

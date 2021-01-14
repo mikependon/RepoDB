@@ -208,10 +208,8 @@ namespace RepoDb
                 return this.hashCode.Value;
             }
 
-            var hashCode = 0;
-
             // Set the hashcode
-            hashCode = Name.GetHashCode() + (int)Order;
+            int hashCode = Name.GetHashCode() + (int)Order;
 
             // Set and return the hashcode
             return (this.hashCode = hashCode).Value;

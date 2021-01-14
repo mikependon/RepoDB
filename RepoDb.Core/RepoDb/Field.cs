@@ -295,10 +295,8 @@ namespace RepoDb
                 return this.hashCode.Value;
             }
 
-            var hashCode = 0;
-
             // Set the hash code
-            hashCode = Name.GetHashCode();
+            int hashCode = Name.GetHashCode();
             if (Type != null)
             {
                 hashCode += Type.GetHashCode();

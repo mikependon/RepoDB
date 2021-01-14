@@ -66,7 +66,7 @@ namespace RepoDb
 
             // Variables
             var key = entityType.GetHashCode();
-            var value = (string)null;
+            string value;
 
             // Try get the cache
             if (maps.TryGetValue(key, out value))
@@ -109,9 +109,9 @@ namespace RepoDb
         /// <returns>The mapped name of the class.</returns>
         public static string Get(Type entityType)
         {
-            var value = (string)null;
             var key = entityType.GetHashCode();
 
+            string value;
             // Try get the value
             maps.TryGetValue(key, out value);
 
@@ -138,7 +138,7 @@ namespace RepoDb
         public static void Remove(Type entityType)
         {
             var key = entityType.GetHashCode();
-            var value = (string)null;
+            string value;
 
             // Try get the value
             maps.TryRemove(key, out value);

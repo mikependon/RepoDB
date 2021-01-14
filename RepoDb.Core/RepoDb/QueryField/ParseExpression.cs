@@ -46,7 +46,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static Operation GetOperation(ExpressionType expressionType)
         {
-            var value = default(Operation);
+            Operation value;
             if (Enum.TryParse(expressionType.ToString(), out value))
             {
                 return value;
@@ -202,7 +202,7 @@ namespace RepoDb
             var operation = unaryNodeType == ExpressionType.Not ? Operation.NotEqual : Operation.Equal;
 
             // Value
-            var value = (object)null;
+            object value;
             if (expression.Type == StaticType.Boolean)
             {
                 value = true;

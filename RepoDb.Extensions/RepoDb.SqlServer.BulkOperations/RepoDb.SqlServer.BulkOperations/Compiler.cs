@@ -43,7 +43,7 @@ namespace RepoDb.SqlServer.BulkOperations
             /// <returns></returns>
             public static Func<TEntity, TResult> GetFunc(string methodName)
             {
-                var func = (Func<TEntity, TResult>)null;
+                Func<TEntity, TResult> func;
                 if (cache.TryGetValue(methodName.GetHashCode(), out func) == false)
                 {
                     var typeOfEntity = typeof(TEntity);
@@ -96,7 +96,7 @@ namespace RepoDb.SqlServer.BulkOperations
             /// <returns></returns>
             public static Action<TEntity> GetFunc(string methodName)
             {
-                var func = (Action<TEntity>)null;
+                Action<TEntity> func;
                 if (cache.TryGetValue(methodName.GetHashCode(), out func) == false)
                 {
                     var typeOfEntity = typeof(TEntity);
@@ -334,7 +334,7 @@ namespace RepoDb.SqlServer.BulkOperations
                 {
                     return null;
                 }
-                var func = (Action<TEntity, object>)null;
+                Action<TEntity, object> func;
                 if (cache.TryGetValue(classProperty.GetHashCode(), out func) == false)
                 {
                     if (classProperty != null)
@@ -388,7 +388,7 @@ namespace RepoDb.SqlServer.BulkOperations
             /// <returns></returns>
             public static Func<TEntity, TResult> GetFunc(string fieldName)
             {
-                var func = (Func<TEntity, TResult>)null;
+                Func<TEntity, TResult> func;
                 if (cache.TryGetValue(fieldName.GetHashCode(), out func) == false)
                 {
                     var typeOfEntity = typeof(TEntity);
@@ -443,7 +443,7 @@ namespace RepoDb.SqlServer.BulkOperations
             /// <returns></returns>
             public static Func<TEnum> GetFunc(string value)
             {
-                var func = (Func<TEnum>)null;
+                Func<TEnum> func;
                 if (cache.TryGetValue(value.GetHashCode(), out func) == false)
                 {
                     var typeOfEnum = typeof(TEnum);

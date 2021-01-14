@@ -44,9 +44,8 @@ namespace RepoDb
 
             // Variables
             var key = GenerateHashCode(type);
-            var value = (object)null;
-            var result = default(TClassHandler);
-
+            object value;
+            TClassHandler result;
             // Try get the value
             if (cache.TryGetValue(key, out value) == false)
             {

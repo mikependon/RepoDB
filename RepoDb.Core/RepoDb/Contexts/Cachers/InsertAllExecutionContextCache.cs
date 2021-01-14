@@ -36,7 +36,7 @@ namespace RepoDb.Contexts.Cachers
         internal static InsertAllExecutionContext<TEntity> Get<TEntity>(string key)
             where TEntity : class
         {
-            var result = (object)null;
+            object result;
             if (cache.TryGetValue(key, out result))
             {
                 return result as InsertAllExecutionContext<TEntity>;

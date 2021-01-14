@@ -27,7 +27,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static string GetAverageText(AverageRequest request)
         {
-            var commandText = (string)null;
+            string commandText;
             if (cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
@@ -52,7 +52,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static string GetAverageAllText(AverageAllRequest request)
         {
-            var commandText = (string)null;
+            string commandText;
             if (cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
@@ -76,7 +76,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static string GetBatchQueryText(BatchQueryRequest request)
         {
-            var commandText = (string)null;
+            string commandText;
             if (cache.TryGetValue(request, out commandText) == false)
             {
                 var fields = GetActualFields(request.Connection,
@@ -98,7 +98,7 @@ namespace RepoDb
         internal static async Task<string> GetBatchQueryTextAsync(BatchQueryRequest request,
             CancellationToken cancellationToken = default)
         {
-            var commandText = (string)null;
+            string commandText;
             if (cache.TryGetValue(request, out commandText) == false)
             {
                 var fields = await GetActualFieldsAsync(request.Connection,
@@ -143,7 +143,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static string GetCountText(CountRequest request)
         {
-            var commandText = (string)null;
+            string commandText;
             if (cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
@@ -167,7 +167,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static string GetCountAllText(CountAllRequest request)
         {
-            var commandText = (string)null;
+            string commandText;
             if (cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
@@ -190,7 +190,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static string GetDeleteText(DeleteRequest request)
         {
-            var commandText = (string)null;
+            string commandText;
             if (cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
@@ -214,7 +214,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static string GetDeleteAllText(DeleteAllRequest request)
         {
-            var commandText = (string)null;
+            string commandText;
             if (cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
@@ -237,7 +237,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static string GetExistsText(ExistsRequest request)
         {
-            var commandText = (string)null;
+            string commandText;
             if (cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
@@ -261,7 +261,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static string GetInsertText(InsertRequest request)
         {
-            var commandText = (string)null;
+            string commandText;
             if (cache.TryGetValue(request, out commandText) == false)
             {
                 var fields = GetActualFields(request.Connection,
@@ -283,7 +283,7 @@ namespace RepoDb
         internal static async Task<string> GetInsertTextAsync(InsertRequest request,
             CancellationToken cancellationToken = default)
         {
-            var commandText = (string)null;
+            string commandText;
             if (cache.TryGetValue(request, out commandText) == false)
             {
                 var fields = await GetActualFieldsAsync(request.Connection,
@@ -328,7 +328,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static string GetInsertAllText(InsertAllRequest request)
         {
-            var commandText = (string)null;
+            string commandText;
             if (cache.TryGetValue(request, out commandText) == false)
             {
                 var fields = GetActualFields(request.Connection,
@@ -350,7 +350,7 @@ namespace RepoDb
         internal static async Task<string> GetInsertAllTextAsync(InsertAllRequest request,
             CancellationToken cancellationToken = default)
         {
-            var commandText = (string)null;
+            string commandText;
             if (cache.TryGetValue(request, out commandText) == false)
             {
                 var fields = await GetActualFieldsAsync(request.Connection,
@@ -396,7 +396,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static string GetMaxText(MaxRequest request)
         {
-            var commandText = (string)null;
+            string commandText;
             if (cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
@@ -421,7 +421,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static string GetMaxAllText(MaxAllRequest request)
         {
-            var commandText = (string)null;
+            string commandText;
             if (cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
@@ -445,7 +445,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static string GetMergeText(MergeRequest request)
         {
-            var commandText = (string)null;
+            string commandText;
             if (cache.TryGetValue(request, out commandText) == false)
             {
                 var fields = GetActualFields(request.Connection,
@@ -467,7 +467,7 @@ namespace RepoDb
         internal static async Task<string> GetMergeTextAsync(MergeRequest request,
             CancellationToken cancellationToken = default)
         {
-            var commandText = (string)null;
+            string commandText;
             if (cache.TryGetValue(request, out commandText) == false)
             {
                 var fields = await GetActualFieldsAsync(request.Connection,
@@ -513,7 +513,7 @@ namespace RepoDb
         /// <returns>The cached command text.</returns>
         internal static string GetMergeAllText(MergeAllRequest request)
         {
-            var commandText = (string)null;
+            string commandText;
             if (cache.TryGetValue(request, out commandText) == false)
             {
                 var fields = GetActualFields(request.Connection,
@@ -535,7 +535,7 @@ namespace RepoDb
         internal static async Task<string> GetMergeAllTextAsync(MergeAllRequest request,
             CancellationToken cancellationToken = default)
         {
-            var commandText = (string)null;
+            string commandText;
             if (cache.TryGetValue(request, out commandText) == false)
             {
                 var fields = await GetActualFieldsAsync(request.Connection,
@@ -582,7 +582,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static string GetMinText(MinRequest request)
         {
-            var commandText = (string)null;
+            string commandText;
             if (cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
@@ -607,7 +607,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static string GetMinAllText(MinAllRequest request)
         {
-            var commandText = (string)null;
+            string commandText;
             if (cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
@@ -631,7 +631,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static string GetQueryText(QueryRequest request)
         {
-            var commandText = (string)null;
+            string commandText;
             if (cache.TryGetValue(request, out commandText) == false)
             {
                 var fields = GetActualFields(request.Connection,
@@ -653,7 +653,7 @@ namespace RepoDb
         internal static async Task<string> GetQueryTextAsync(QueryRequest request,
             CancellationToken cancellationToken = default)
         {
-            var commandText = (string)null;
+            string commandText;
             if (cache.TryGetValue(request, out commandText) == false)
             {
                 var fields = await GetActualFieldsAsync(request.Connection,
@@ -697,7 +697,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static string GetQueryAllText(QueryAllRequest request)
         {
-            var commandText = (string)null;
+            string commandText;
             if (cache.TryGetValue(request, out commandText) == false)
             {
                 var fields = GetActualFields(request.Connection,
@@ -719,7 +719,7 @@ namespace RepoDb
         internal static async Task<string> GetQueryAllTextAsync(QueryAllRequest request,
             CancellationToken cancellationToken = default)
         {
-            var commandText = (string)null;
+            string commandText;
             if (cache.TryGetValue(request, out commandText) == false)
             {
                 var fields = await GetActualFieldsAsync(request.Connection,
@@ -763,7 +763,7 @@ namespace RepoDb
         internal static string GetQueryMultipleText<TEntity>(QueryMultipleRequest request)
             where TEntity : class
         {
-            var commandText = (string)null;
+            string commandText;
             if (cache.TryGetValue(request, out commandText) == false)
             {
                 var fields = GetActualFields(request.Connection,
@@ -787,7 +787,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            var commandText = (string)null;
+            string commandText;
             if (cache.TryGetValue(request, out commandText) == false)
             {
                 var fields = await GetActualFieldsAsync(request.Connection,
@@ -833,7 +833,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static string GetSumText(SumRequest request)
         {
-            var commandText = (string)null;
+            string commandText;
             if (cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
@@ -858,7 +858,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static string GetSumAllText(SumAllRequest request)
         {
-            var commandText = (string)null;
+            string commandText;
             if (cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
@@ -882,7 +882,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static string GetTruncateText(TruncateRequest request)
         {
-            var commandText = (string)null;
+            string commandText;
             if (cache.TryGetValue(request, out commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
@@ -904,7 +904,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static string GetUpdateText(UpdateRequest request)
         {
-            var commandText = (string)null;
+            string commandText;
             if (cache.TryGetValue(request, out commandText) == false)
             {
                 var fields = GetActualFields(request.Connection,
@@ -926,7 +926,7 @@ namespace RepoDb
         internal static async Task<string> GetUpdateTextAsync(UpdateRequest request,
             CancellationToken cancellationToken = default)
         {
-            var commandText = (string)null;
+            string commandText;
             if (cache.TryGetValue(request, out commandText) == false)
             {
                 var fields = await GetActualFieldsAsync(request.Connection,
@@ -972,7 +972,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static string GetUpdateAllText(UpdateAllRequest request)
         {
-            var commandText = (string)null;
+            string commandText;
             if (cache.TryGetValue(request, out commandText) == false)
             {
                 var fields = GetActualFields(request.Connection,
@@ -994,7 +994,7 @@ namespace RepoDb
         internal static async Task<string> GetUpdateAllTextAsync(UpdateAllRequest request,
             CancellationToken cancellationToken = default)
         {
-            var commandText = (string)null;
+            string commandText;
             if (cache.TryGetValue(request, out commandText) == false)
             {
                 var fields = await GetActualFieldsAsync(request.Connection,

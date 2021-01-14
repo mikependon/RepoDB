@@ -50,7 +50,7 @@ namespace RepoDb
 
             // Variables
             var key = GenerateHashCode(connectionType);
-            var existing = (IDbHelper)null;
+            IDbHelper existing;
 
             // Try get the mappings
             if (maps.TryGetValue(key, out existing))
@@ -97,7 +97,7 @@ namespace RepoDb
             Guard(connectionType);
 
             // Variables for the cache
-            var value = (IDbHelper)null;
+            IDbHelper value;
 
             // get the value
             maps.TryGetValue(GenerateHashCode(connectionType), out value);
@@ -129,7 +129,7 @@ namespace RepoDb
 
             // Variables for cache
             var key = GenerateHashCode(connectionType);
-            var existing = (IDbHelper)null;
+            IDbHelper existing;
 
             // Try get the the value
             maps.TryRemove(key, out existing);

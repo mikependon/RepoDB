@@ -96,7 +96,7 @@ namespace RepoDb.DbHelpers
         {
             var columnType = reader.GetString(4);
             var excluded = GetBlobTypes();
-            var size = (int?)null;
+            int? size;
             if (excluded.Contains(columnType.ToLowerInvariant()))
             {
                 size = null;
@@ -127,7 +127,7 @@ namespace RepoDb.DbHelpers
         {
             var columnType = await reader.GetFieldValueAsync<string>(4, cancellationToken);
             var excluded = GetBlobTypes();
-            var size = (int?)null;
+            int? size;
             if (excluded.Contains(columnType.ToLowerInvariant()))
             {
                 size = null;

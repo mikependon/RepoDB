@@ -75,7 +75,7 @@ namespace RepoDb.Contexts.Providers
 
             // Create
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var commandText = (string)null;
+            string commandText;
 
             // Create a different kind of requests
             if (batchSize > 1)
@@ -149,7 +149,7 @@ namespace RepoDb.Contexts.Providers
 
             // Create
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
-            var commandText = (string)null;
+            string commandText;
 
             // Create a different kind of requests
             if (batchSize > 1)
