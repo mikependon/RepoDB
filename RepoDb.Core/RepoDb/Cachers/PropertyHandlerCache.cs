@@ -15,7 +15,7 @@ namespace RepoDb
     {
         #region Privates
 
-        private static readonly ConcurrentDictionary<int, object> cache = new ConcurrentDictionary<int, object>();
+        private static readonly ConcurrentDictionary<MemberInfo, object> cache = new ConcurrentDictionary<MemberInfo, object>();
         private static readonly IResolver<Type, PropertyInfo, object> propertyLevelResolver = new PropertyHandlerPropertyLevelResolver();
         private static readonly IResolver<Type, object> typeLevelResolver = new PropertyHandlerTypeLevelResolver();
 
@@ -45,25 +45,7 @@ namespace RepoDb
             // Validate
             ThrowNullReferenceException(type, "Type");
 
-            // Variables
-            var key = GenerateHashCode(type);
-            var result = default(TPropertyHandler);
-
-            // Try get the value
-            if (cache.TryGetValue(key, out var value) == false)
-            {
-                value = typeLevelResolver.Resolve(type);
-                result = Converter.ToType<TPropertyHandler>(value);
-                cache.TryAdd(key, result);
-            }
-            else
-            {
-                // Set the result
-                result = Converter.ToType<TPropertyHandler>(value);
-            }
-
-            // Return the value
-            return result;
+            return (TPropertyHandler)cache.GetOrAdd(type.GetUnderlyingType(), _ => typeLevelResolver.Resolve(_));
         }
 
         #endregion
@@ -103,7 +85,6 @@ namespace RepoDb
             where TEntity : class =>
             Get<TEntity, TPropertyHandler>(TypeExtension.GetProperty<TEntity>(field.Name));
 
-
         /// <summary>
         /// Property Level: Gets the cached <see cref="IPropertyHandler{TInput, TResult}"/> object that is being mapped on a specific <see cref="PropertyInfo"/> object.
         /// </summary>
@@ -128,25 +109,7 @@ namespace RepoDb
             // Validate
             ThrowNullReferenceException(propertyInfo, "PropertyInfo");
 
-            // Variables
-            var key = GenerateHashCode(entityType, propertyInfo);
-            var result = default(TPropertyHandler);
-
-            // Try get the value
-            if (cache.TryGetValue(key, out var value) == false)
-            {
-                value = propertyLevelResolver.Resolve(entityType, propertyInfo);
-                result = Converter.ToType<TPropertyHandler>(value);
-                cache.TryAdd(key, result);
-            }
-            else
-            {
-                // Set the result
-                result = Converter.ToType<TPropertyHandler>(value);
-            }
-
-            // Return the value
-            return result;
+            return (TPropertyHandler)cache.GetOrAdd(propertyInfo, _ => propertyLevelResolver.Resolve(entityType, propertyInfo));
         }
 
         #endregion
@@ -160,24 +123,6 @@ namespace RepoDb
         /// </summary>
         public static void Flush() =>
             cache.Clear();
-
-        /// <summary>
-        /// Generates a hashcode for caching.
-        /// </summary>
-        /// <param name="type">The type of the data entity.</param>
-        /// <returns>The generated hashcode.</returns>
-        private static int GenerateHashCode(Type type) =>
-            TypeExtension.GenerateHashCode(type);
-
-        /// <summary>
-        /// Generates a hashcode for caching.
-        /// </summary>
-        /// <param name="entityType">The type of the data entity.</param>
-        /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/>.</param>
-        /// <returns>The generated hashcode.</returns>
-        private static int GenerateHashCode(Type entityType,
-            PropertyInfo propertyInfo) =>
-            TypeExtension.GenerateHashCode(entityType, propertyInfo);
 
         /// <summary>
         /// Validates the target object presence.
