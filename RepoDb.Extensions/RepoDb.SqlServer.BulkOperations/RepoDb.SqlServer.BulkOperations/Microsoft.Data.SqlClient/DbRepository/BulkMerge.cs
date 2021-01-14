@@ -61,11 +61,6 @@ namespace RepoDb
                     usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                     transaction: transaction);
             }
-            catch
-            {
-                // Throw back the error
-                throw;
-            }
             finally
             {
                 // Dispose the connection
@@ -126,11 +121,6 @@ namespace RepoDb
                     usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                     transaction: transaction);
             }
-            catch
-            {
-                // Throw back the error
-                throw;
-            }
             finally
             {
                 // Dispose the connection
@@ -184,11 +174,6 @@ namespace RepoDb
                     batchSize: batchSize,
                     usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                     transaction: transaction);
-            }
-            catch
-            {
-                // Throw back the error
-                throw;
             }
             finally
             {
@@ -248,11 +233,6 @@ namespace RepoDb
                     batchSize: batchSize,
                     usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                     transaction: transaction);
-            }
-            catch
-            {
-                // Throw back the error
-                throw;
             }
             finally
             {
@@ -314,11 +294,6 @@ namespace RepoDb
                     usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                     transaction: transaction);
             }
-            catch
-            {
-                // Throw back the error
-                throw;
-            }
             finally
             {
                 // Dispose the connection
@@ -379,11 +354,6 @@ namespace RepoDb
                     isReturnIdentity: isReturnIdentity,
                     usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                     transaction: transaction);
-            }
-            catch
-            {
-                // Throw back the error
-                throw;
             }
             finally
             {
@@ -449,11 +419,6 @@ namespace RepoDb
                     transaction: transaction,
                     cancellationToken: cancellationToken);
             }
-            catch
-            {
-                // Throw back the error
-                throw;
-            }
             finally
             {
                 // Dispose the connection
@@ -517,11 +482,6 @@ namespace RepoDb
                     transaction: transaction,
                     cancellationToken: cancellationToken);
             }
-            catch
-            {
-                // Throw back the error
-                throw;
-            }
             finally
             {
                 // Dispose the connection
@@ -578,11 +538,6 @@ namespace RepoDb
                     usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                     transaction: transaction,
                     cancellationToken: cancellationToken);
-            }
-            catch
-            {
-                // Throw back the error
-                throw;
             }
             finally
             {
@@ -645,11 +600,6 @@ namespace RepoDb
                     usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                     transaction: transaction,
                     cancellationToken: cancellationToken);
-            }
-            catch
-            {
-                // Throw back the error
-                throw;
             }
             finally
             {
@@ -714,11 +664,6 @@ namespace RepoDb
                     transaction: transaction,
                     cancellationToken: cancellationToken);
             }
-            catch
-            {
-                // Throw back the error
-                throw;
-            }
             finally
             {
                 // Dispose the connection
@@ -782,11 +727,6 @@ namespace RepoDb
                     usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
                     transaction: transaction,
                     cancellationToken: cancellationToken);
-            }
-            catch
-            {
-                // Throw back the error
-                throw;
             }
             finally
             {

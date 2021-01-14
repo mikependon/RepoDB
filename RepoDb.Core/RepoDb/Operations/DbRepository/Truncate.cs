@@ -25,15 +25,11 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return connection.Truncate<TEntity>(commandTimeout: CommandTimeout,
+                return connection.Truncate<TEntity>(
+                    commandTimeout: CommandTimeout,
                     transaction: null,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
-            }
-            catch
-            {
-                // Throw back the error
-                throw;
             }
             finally
             {
@@ -61,11 +57,6 @@ namespace RepoDb
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
-            }
-            catch
-            {
-                // Throw back the error
-                throw;
             }
             finally
             {
@@ -98,11 +89,6 @@ namespace RepoDb
                     statementBuilder: StatementBuilder,
                     cancellationToken: CancellationToken.None);
             }
-            catch
-            {
-                // Throw back the error
-                throw;
-            }
             finally
             {
                 // Dispose the connection
@@ -130,11 +116,6 @@ namespace RepoDb
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
-            }
-            catch
-            {
-                // Throw back the error
-                throw;
             }
             finally
             {
@@ -166,11 +147,6 @@ namespace RepoDb
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
             }
-            catch
-            {
-                // Throw back the error
-                throw;
-            }
             finally
             {
                 // Dispose the connection
@@ -201,11 +177,6 @@ namespace RepoDb
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
-            catch
-            {
-                // Throw back the error
-                throw;
-            }
             finally
             {
                 // Dispose the connection
@@ -233,11 +204,6 @@ namespace RepoDb
                     transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
-            }
-            catch
-            {
-                // Throw back the error
-                throw;
             }
             finally
             {
@@ -270,11 +236,6 @@ namespace RepoDb
                     statementBuilder: StatementBuilder,
                     cancellationToken: CancellationToken.None);
             }
-            catch
-            {
-                // Throw back the error
-                throw;
-            }
             finally
             {
                 // Dispose the connection
@@ -303,11 +264,6 @@ namespace RepoDb
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
-            }
-            catch
-            {
-                // Throw back the error
-                throw;
             }
             finally
             {
@@ -339,11 +295,6 @@ namespace RepoDb
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
-            }
-            catch
-            {
-                // Throw back the error
-                throw;
             }
             finally
             {
