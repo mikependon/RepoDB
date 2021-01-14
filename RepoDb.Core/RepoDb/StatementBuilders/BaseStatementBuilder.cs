@@ -484,7 +484,7 @@ namespace RepoDb.StatementBuilders
             // Iterate the indexes
             for (var index = 0; index < batchSize; index++)
             {
-                queryBuilder.Insert()
+                builder.Insert()
                     .Into()
                     .TableNameFrom(tableName, DbSetting)
                     .HintsFrom(hints)
@@ -1109,7 +1109,7 @@ namespace RepoDb.StatementBuilders
             // Iterate the indexes
             for (var index = 0; index < batchSize; index++)
             {
-                queryBuilder
+                builder
                     .Update()
                     .TableNameFrom(tableName, DbSetting)
                     .HintsFrom(hints)
