@@ -13,7 +13,7 @@ namespace RepoDb
     /// </summary>
     public static class PropertyCache
     {
-        private static readonly ConcurrentDictionary<int, IEnumerable<ClassProperty>> cache = new ConcurrentDictionary<int, IEnumerable<ClassProperty>>();
+        private static readonly ConcurrentDictionary<int, IReadOnlyList<ClassProperty>> cache = new ConcurrentDictionary<int, IReadOnlyList<ClassProperty>>();
 
         #region Methods
 
@@ -106,7 +106,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <returns>The cached list <see cref="ClassProperty"/> objects.</returns>
-        public static IEnumerable<ClassProperty> Get<TEntity>()
+        public static IReadOnlyList<ClassProperty> Get<TEntity>()
             where TEntity : class =>
             Get(typeof(TEntity));
 
@@ -115,7 +115,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="entityType">The type of the data entity.</param>
         /// <returns>The cached list <see cref="ClassProperty"/> objects.</returns>
-        public static IEnumerable<ClassProperty> Get(Type entityType)
+        public static IReadOnlyList<ClassProperty> Get(Type entityType)
         {
             if (entityType?.IsClassType() != true)
             {
