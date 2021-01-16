@@ -1279,11 +1279,8 @@ namespace RepoDb
             }
 
             // After Execution
-            if (trace != null)
-            {
-                trace.AfterUpdateAll(new TraceLog(sessionId, context.CommandText, entities, result,
-                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
-            }
+            trace?.AfterUpdateAll(new TraceLog(sessionId, context.CommandText, entities, result,
+                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Return the result
             return result;
@@ -1488,11 +1485,8 @@ namespace RepoDb
             }
 
             // After Execution
-            if (trace != null)
-            {
-                trace.AfterUpdateAll(new TraceLog(sessionId, context.CommandText, entities, result,
-                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
-            }
+            trace?.AfterUpdateAll(new TraceLog(sessionId, context.CommandText, entities, result,
+                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Return the result
             return result;

@@ -2469,11 +2469,8 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true);
 
             // After Execution
-            if (trace != null)
-            {
-                trace.AfterMin(new TraceLog(sessionId, commandText, param, result,
-                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
-            }
+            trace?.AfterMin(new TraceLog(sessionId, commandText, param, result,
+                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Result
             return result;
@@ -2544,11 +2541,8 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true);
 
             // After Execution
-            if (trace != null)
-            {
-                trace.AfterMin(new TraceLog(sessionId, commandText, param, result,
-                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
-            }
+            trace?.AfterMin(new TraceLog(sessionId, commandText, param, result,
+                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Result
             return result;

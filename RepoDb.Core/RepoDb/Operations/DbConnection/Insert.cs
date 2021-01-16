@@ -669,11 +669,8 @@ namespace RepoDb
             }
 
             // After Execution
-            if (trace != null)
-            {
-                trace.AfterInsert(new TraceLog(sessionId, context.CommandText, entity, result,
-                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
-            }
+            trace?.AfterInsert(new TraceLog(sessionId, context.CommandText, entity, result,
+                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Return the result
             return result;
@@ -775,11 +772,8 @@ namespace RepoDb
             }
 
             // After Execution
-            if (trace != null)
-            {
-                trace.AfterInsert(new TraceLog(sessionId, context.CommandText, entity, result,
-                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
-            }
+            trace?.AfterInsert(new TraceLog(sessionId, context.CommandText, entity, result,
+                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Return the result
             return result;

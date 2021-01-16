@@ -316,11 +316,8 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true);
 
             // After Execution
-            if (trace != null)
-            {
-                trace.AfterTruncate(new TraceLog(sessionId, commandText, null, result,
-                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
-            }
+            trace?.AfterTruncate(new TraceLog(sessionId, commandText, null, result,
+                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Return the result
             return result;
@@ -384,11 +381,8 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true);
 
             // After Execution
-            if (trace != null)
-            {
-                trace.AfterTruncate(new TraceLog(sessionId, commandText, null, result,
-                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
-            }
+            trace?.AfterTruncate(new TraceLog(sessionId, commandText, null, result,
+                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Return the result
             return result;

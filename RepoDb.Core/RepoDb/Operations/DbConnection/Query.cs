@@ -2220,11 +2220,8 @@ namespace RepoDb
             }
 
             // After Execution
-            if (trace != null)
-            {
-                trace.AfterQuery(new TraceLog(sessionId, commandText, param, result,
-                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
-            }
+            trace?.AfterQuery(new TraceLog(sessionId, commandText, param, result,
+                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Result
             return result;
@@ -2345,11 +2342,8 @@ namespace RepoDb
             }
 
             // After Execution
-            if (trace != null)
-            {
-                trace.AfterQuery(new TraceLog(sessionId, commandText, param, result,
-                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
-            }
+            trace?.AfterQuery(new TraceLog(sessionId, commandText, param, result,
+                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Result
             return result;
