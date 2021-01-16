@@ -250,7 +250,6 @@ namespace RepoDb
             }
 
             // Variables needed
-            var dbSetting = connection.GetDbSetting();
             var hasTransaction = (transaction != null);
             var result = default(int);
 
@@ -272,7 +271,6 @@ namespace RepoDb
                 dbFields = dbFields ?? DbFieldCache.Get(connection, tableName, transaction, true);
 
                 // Variables needed
-                var identityDbField = dbFields?.FirstOrDefault(dbField => dbField.IsIdentity);
                 var readerFields = Enumerable
                     .Range(0, reader.FieldCount)
                     .Select((index) => reader.GetName(index));
@@ -801,7 +799,6 @@ namespace RepoDb
             }
 
             // Variables needed
-            var dbSetting = connection.GetDbSetting();
             var hasTransaction = (transaction != null);
             var result = default(int);
 
@@ -823,7 +820,6 @@ namespace RepoDb
                 dbFields = dbFields ?? await DbFieldCache.GetAsync(connection, tableName, transaction, true, cancellationToken);
 
                 // Variables needed
-                var identityDbField = dbFields?.FirstOrDefault(dbField => dbField.IsIdentity);
                 var readerFields = Enumerable
                     .Range(0, reader.FieldCount)
                     .Select((index) => reader.GetName(index));
