@@ -995,11 +995,8 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true);
 
             // After Execution
-            if (trace != null)
-            {
-                trace.AfterDeleteAll(new TraceLog(sessionId, commandText, null, result,
-                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
-            }
+            trace?.AfterDeleteAll(new TraceLog(sessionId, commandText, null, result,
+                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Result
             return result;
@@ -1064,11 +1061,8 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true);
 
             // After Execution
-            if (trace != null)
-            {
-                trace.AfterDeleteAll(new TraceLog(sessionId, commandText, null, result,
-                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
-            }
+            trace?.AfterDeleteAll(new TraceLog(sessionId, commandText, null, result,
+                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Result
             return result;

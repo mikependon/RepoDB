@@ -10,7 +10,7 @@ namespace RepoDb.Reflection
         #region Helper
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="parameterVariable"></param>
         /// <param name="parameterType"></param>
@@ -28,7 +28,7 @@ namespace RepoDb.Reflection
         #region SqlServer (System)
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="parameterVariable"></param>
         /// <param name="classProperty"></param>
@@ -74,13 +74,8 @@ namespace RepoDb.Reflection
         /// <returns>The value represented by the SystemSqlServerTypeMapAttribute.DbType property.</returns>
         internal static object GetSystemSqlServerDbTypeFromAttribute(Attribute attribute)
         {
-            if (attribute == null)
-            {
-                return null;
-            }
-            var type = attribute.GetType();
-            return type
-                .GetProperty("DbType")?
+            var type = attribute?.GetType();
+            return type?.GetProperty("DbType")?
                 .GetValue(attribute);
         }
 
@@ -91,12 +86,7 @@ namespace RepoDb.Reflection
         /// <returns>The type of System.Data.SqlClient.SqlParameter represented by SystemSqlServerTypeMapAttribute.ParameterType property.</returns>
         internal static Type GetSystemSqlServerParameterTypeFromAttribute(Attribute attribute)
         {
-            if (attribute == null)
-            {
-                return null;
-            }
-            return (Type)attribute
-                .GetType()
+            return (Type) attribute?.GetType()
                 .GetProperty("ParameterType")?
                 .GetValue(attribute);
         }
@@ -122,7 +112,7 @@ namespace RepoDb.Reflection
         #region SqlServer (Microsoft)
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="parameterVariable"></param>
         /// <param name="classProperty"></param>
@@ -168,13 +158,8 @@ namespace RepoDb.Reflection
         /// <returns>The value represented by the MicrosoftSqlServerTypeMapAttribute.DbType property.</returns>
         internal static object GetMicrosoftSqlServerDbTypeFromAttribute(Attribute attribute)
         {
-            if (attribute == null)
-            {
-                return null;
-            }
-            var type = attribute.GetType();
-            return type
-                .GetProperty("DbType")?
+            var type = attribute?.GetType();
+            return type?.GetProperty("DbType")?
                 .GetValue(attribute);
         }
 
@@ -185,12 +170,7 @@ namespace RepoDb.Reflection
         /// <returns>The type of Microsoft.Data.SqlClient.SqlParameter represented by MicrosoftSqlServerTypeMapAttribute.ParameterType property.</returns>
         internal static Type GetMicrosoftSqlServerParameterTypeFromAttribute(Attribute attribute)
         {
-            if (attribute == null)
-            {
-                return null;
-            }
-            return (Type)attribute
-                .GetType()
+            return (Type) attribute?.GetType()
                 .GetProperty("ParameterType")?
                 .GetValue(attribute);
         }
@@ -216,7 +196,7 @@ namespace RepoDb.Reflection
         #region MySql
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="parameterVariable"></param>
         /// <param name="classProperty"></param>
@@ -262,13 +242,8 @@ namespace RepoDb.Reflection
         /// <returns>The value represented by the MySqlTypeMapAttribute.DbType property.</returns>
         internal static object GetMySqlDbTypeFromAttribute(Attribute attribute)
         {
-            if (attribute == null)
-            {
-                return null;
-            }
-            var type = attribute.GetType();
-            return type
-                .GetProperty("DbType")?
+            var type = attribute?.GetType();
+            return type?.GetProperty("DbType")?
                 .GetValue(attribute);
         }
 
@@ -279,12 +254,7 @@ namespace RepoDb.Reflection
         /// <returns>The type of MySql.Data.MySqlClient.MySqlParameter represented by MySqlTypeMapAttribute.ParameterType property.</returns>
         internal static Type GetMySqlParameterTypeFromAttribute(Attribute attribute)
         {
-            if (attribute == null)
-            {
-                return null;
-            }
-            return (Type)attribute
-                .GetType()
+            return (Type) attribute?.GetType()
                 .GetProperty("ParameterType")?
                 .GetValue(attribute);
         }
@@ -310,7 +280,7 @@ namespace RepoDb.Reflection
         #region Npgsql
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="parameterVariable"></param>
         /// <param name="classProperty"></param>
@@ -356,13 +326,8 @@ namespace RepoDb.Reflection
         /// <returns>The value represented by the NpgsqlDbTypeMapAttribute.DbType property.</returns>
         internal static object GetNpgsqlDbTypeFromAttribute(Attribute attribute)
         {
-            if (attribute == null)
-            {
-                return null;
-            }
-            var type = attribute.GetType();
-            return type
-                .GetProperty("DbType")?
+            var type = attribute?.GetType();
+            return type?.GetProperty("DbType")?
                 .GetValue(attribute);
         }
 
@@ -373,12 +338,7 @@ namespace RepoDb.Reflection
         /// <returns>The type of NpgsqlTypes.NpgsqlParameter represented by NpgsqlDbTypeMapAttribute.ParameterType property.</returns>
         internal static Type GetNpgsqlParameterTypeFromAttribute(Attribute attribute)
         {
-            if (attribute == null)
-            {
-                return null;
-            }
-            return (Type)attribute
-                .GetType()
+            return (Type) attribute?.GetType()
                 .GetProperty("ParameterType")?
                 .GetValue(attribute);
         }
