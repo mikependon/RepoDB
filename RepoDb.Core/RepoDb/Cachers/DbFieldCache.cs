@@ -13,7 +13,7 @@ namespace RepoDb
     /// </summary>
     public static class DbFieldCache
     {
-        private static readonly ConcurrentDictionary<long, IEnumerable<DbField>> cache = new ConcurrentDictionary<long, IEnumerable<DbField>>();
+        private static readonly ConcurrentDictionary<long, IReadOnlyList<DbField>> cache = new ConcurrentDictionary<long, IReadOnlyList<DbField>>();
 
         #region Helpers
 
@@ -78,7 +78,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <param name="enableValidation">Enables the validation after retrieving the database fields.</param>
         /// <returns>The cached field definitions of the entity.</returns>
-        internal static IEnumerable<DbField> GetInternal<TDbConnection>(TDbConnection connection,
+        internal static IReadOnlyList<DbField> GetInternal<TDbConnection>(TDbConnection connection,
             string tableName,
             IDbTransaction transaction,
             bool enableValidation)

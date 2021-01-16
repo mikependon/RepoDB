@@ -25,7 +25,7 @@ namespace RepoDb.Interfaces
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>A list of <see cref="DbField"/> of the target table.</returns>
-        IEnumerable<DbField> GetFields(IDbConnection connection,
+        IReadOnlyList<DbField> GetFields(IDbConnection connection,
             string tableName,
             IDbTransaction transaction = null);
 
@@ -37,7 +37,7 @@ namespace RepoDb.Interfaces
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <param name="cancellationToken"> A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
         /// <returns>A list of <see cref="DbField"/> of the target table.</returns>
-        Task<IEnumerable<DbField>> GetFieldsAsync(IDbConnection connection,
+        Task<IReadOnlyList<DbField>> GetFieldsAsync(IDbConnection connection,
             string tableName,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default);

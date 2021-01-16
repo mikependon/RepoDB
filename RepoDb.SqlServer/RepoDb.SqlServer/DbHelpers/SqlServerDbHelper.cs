@@ -146,7 +146,7 @@ namespace RepoDb.DbHelpers
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>A list of <see cref="DbField"/> of the target table.</returns>
-        public IEnumerable<DbField> GetFields(IDbConnection connection,
+        public IReadOnlyList<DbField> GetFields(IDbConnection connection,
             string tableName,
             IDbTransaction transaction = null)
         {
@@ -183,7 +183,7 @@ namespace RepoDb.DbHelpers
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A list of <see cref="DbField"/> of the target table.</returns>
-        public async Task<IEnumerable<DbField>> GetFieldsAsync(IDbConnection connection,
+        public async Task<IReadOnlyList<DbField>> GetFieldsAsync(IDbConnection connection,
             string tableName,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
