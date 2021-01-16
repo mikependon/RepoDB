@@ -10,7 +10,6 @@ We would like you and the community of .NET to understand the limitations of the
 - [Computed Columns](#computed-columns)
 - [JOIN Query (Support)](#join-query-support)
 - [Cache Invalidation](#cache-invalidation)
-- [Output Parameters](#output-parameters)
 - [Advance Query Tree Expression](#advance-query-tree-expression)
 
 ## Composite Keys
@@ -390,42 +389,6 @@ cache.Remove("AllCustomers");
 ```
 
 By explicitly removing it, any of the fetch operations that does pointed to the cache key `AllCustomers` will again retrieve the latest information from the database.
-
-## Output Parameters
-
-The output parameter is when you would like to retrieve the value from the database in a parameterized way.
-
-Let us say you have created a stored procedure below.
-
-```csharp
-CREATE PROCEDURE [dbo].[sp_InsertPerson]
-(
-	@Name NVARCHAR(128)
-	, @Address NVARCHAR(512)
-	, @Identity INT OUTPUT  
-)  
-AS  
-BEGIN
-	INSERT INTO [dbo].[Person]
-	(
-		Name
-		, Address
-	)
-	VALUES
-	(
-		@Name
-		, @Address
-	);
-
-	SELECT @Identity = SCOPE_IDENTITY();
-END
-```
-
-The above stored procedure is simply accepting the @Name and @Address parameters from the client and insert it as new row into the Person table. The last parameter named @Identity is an output parameter that is used to return the identity value of the newly record.
-
-When using ADO.NET, you simply set the DbParameter.ParameterDirection into ParameterDirection.Output and calls the DbParameter.Value property to retrieve the value. However, RepoDB is not supporting the retrieval of the information from the output parameters. This is due to the way how we designed the object expressions and compositions.
-
-Until this is being purposely requested and/or developed, it is unfortunate, but there is no other way to retrieve the ouput parameter value in the current version of the library.
 
 ### Alternative Solution
 

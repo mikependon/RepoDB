@@ -522,9 +522,6 @@ namespace RepoDb
             }
 
             // Variables needed
-            var setFields = fields
-                .Select(field => field.AsJoinQualifier("T", "S", dbSetting))
-                .Join(", ");
             var builder = new QueryBuilder();
 
             // Insertable fields
@@ -632,9 +629,6 @@ namespace RepoDb
             }
 
             // Variables needed
-            var setFields = fields
-                .Select(field => field.AsJoinQualifier("T", "S", dbSetting))
-                .Join(", ");
             var builder = new QueryBuilder();
 
             // Insertable fields

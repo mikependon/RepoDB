@@ -669,11 +669,8 @@ namespace RepoDb
             }
 
             // After Execution
-            if (trace != null)
-            {
-                trace.AfterInsert(new TraceLog(sessionId, context.CommandText, entity, result,
-                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
-            }
+            trace?.AfterInsert(new TraceLog(sessionId, context.CommandText, entity, result,
+                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Return the result
             return result;
@@ -713,9 +710,6 @@ namespace RepoDb
         {
             // Variables needed
             var dbSetting = connection.GetDbSetting();
-
-            // Get the database fields
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
 
             // Get the context
             var context = await InsertExecutionContextProvider.CreateAsync<TEntity>(connection,
@@ -775,11 +769,8 @@ namespace RepoDb
             }
 
             // After Execution
-            if (trace != null)
-            {
-                trace.AfterInsert(new TraceLog(sessionId, context.CommandText, entity, result,
-                    DateTime.UtcNow.Subtract(beforeExecutionTime)));
-            }
+            trace?.AfterInsert(new TraceLog(sessionId, context.CommandText, entity, result,
+                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Return the result
             return result;
