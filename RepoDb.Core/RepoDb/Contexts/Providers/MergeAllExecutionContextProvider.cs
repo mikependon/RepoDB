@@ -232,7 +232,6 @@ namespace RepoDb.Contexts.Providers
             string commandText)
             where TEntity : class
         {
-            var typeOfEntity = typeof(TEntity);
             var dbSetting = connection.GetDbSetting();
             var identity = (Field)null;
             var inputFields = (IEnumerable<DbField>)null;

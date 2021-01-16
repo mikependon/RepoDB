@@ -1436,7 +1436,6 @@ namespace RepoDb
         {
             // Variables needed
             var type = entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity);
-            var isObjectType = typeof(TEntity) == StaticType.Object;
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var primary = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
             var properties = (IEnumerable<ClassProperty>)null;
@@ -1845,7 +1844,6 @@ namespace RepoDb
         {
             // Variables needed
             var type = entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity);
-            var isObjectType = typeof(TEntity) == StaticType.Object;
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
             var primary = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
             var properties = (IEnumerable<ClassProperty>)null;

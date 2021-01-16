@@ -59,10 +59,6 @@ namespace RepoDb
 
             // Variables needed
             var result = default(int);
-            var entityType = entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity);
-            var entityFields = entityType.IsDictionaryStringObject() ?
-                GetDictionaryStringObjectFields(entities?.FirstOrDefault() as IDictionary<string, object>) :
-                FieldCache.Get(entityType);
 
             // Actual Execution
             using (var sqlBulkCopy = (TSqlBulkCopy)Activator.CreateInstance(typeof(TSqlBulkCopy), connection, options, transaction))
@@ -336,10 +332,6 @@ namespace RepoDb
 
             // Variables needed
             var result = default(int);
-            var entityType = entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity);
-            var entityFields = entityType.IsDictionaryStringObject() ?
-                GetDictionaryStringObjectFields(entities?.FirstOrDefault() as IDictionary<string, object>) :
-                FieldCache.Get(entityType);
 
             // Actual Execution
             using (var sqlBulkCopy = (TSqlBulkCopy)Activator.CreateInstance(typeof(TSqlBulkCopy), connection, options, transaction))
