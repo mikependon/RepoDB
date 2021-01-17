@@ -18,7 +18,7 @@ namespace RepoDb.UnitTests.CustomObjects
             return string.Empty;
         }
 
-        public string CreateBatchQuery(QueryBuilder queryBuilder, string tableName, IEnumerable<Field> fields, int? page, int? rowsPerBatch, IEnumerable<OrderField> orderBy = null, QueryGroup where = null, string hints = null)
+        public string CreateBatchQuery(QueryBuilder queryBuilder, string tableName, IEnumerable<Field> fields, int page, int rowsPerBatch, IEnumerable<OrderField> orderBy = null, QueryGroup where = null, string hints = null)
         {
             return string.Empty;
         }
@@ -144,7 +144,7 @@ namespace RepoDb.UnitTests.CustomObjects
                   averageableClientTypeResolver)
         {}
 
-        public override string CreateBatchQuery(QueryBuilder queryBuilder, string tableName, IEnumerable<Field> fields, int? page, int? rowsPerBatch, IEnumerable<OrderField> orderBy = null, QueryGroup where = null, string hints = null)
+        public override string CreateBatchQuery(QueryBuilder queryBuilder, string tableName, IEnumerable<Field> fields, int page, int rowsPerBatch, IEnumerable<OrderField> orderBy = null, QueryGroup where = null, string hints = null)
         {
             return string.Empty;
         }
