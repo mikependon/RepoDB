@@ -155,7 +155,7 @@ namespace RepoDb.Contexts.Providers
         /// <param name="commandText"></param>
         /// <returns></returns>
         private static InsertExecutionContext<TEntity> CreateInternal<TEntity>(IDbConnection connection,
-            IEnumerable<DbField> dbFields,
+            IReadOnlyList<DbField> dbFields,
             string tableName,
             IEnumerable<Field> fields,
             string commandText)
@@ -163,7 +163,7 @@ namespace RepoDb.Contexts.Providers
         {
             var dbSetting = connection.GetDbSetting();
             var identity = (Field)null;
-            var inputFields = (IEnumerable<DbField>)null;
+            var inputFields = (IReadOnlyList<DbField>)null;
             var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
 
             // Set the identity field

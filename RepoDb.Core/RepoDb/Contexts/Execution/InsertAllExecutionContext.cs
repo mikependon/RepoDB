@@ -19,7 +19,7 @@ namespace RepoDb.Contexts.Execution
         /// <summary>
         /// The list of the input <see cref="DbField"/> objects to be included in the execution.
         /// </summary>
-        public IEnumerable<DbField> InputFields { get; set; }
+        public IReadOnlyList<DbField> InputFields { get; set; }
 
         /// <summary>
         /// The batch size of the execution.

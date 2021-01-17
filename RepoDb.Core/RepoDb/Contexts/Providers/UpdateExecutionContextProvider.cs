@@ -166,7 +166,7 @@ namespace RepoDb.Contexts.Providers
         /// <returns></returns>
         private static UpdateExecutionContext<TEntity> CreateInternal<TEntity>(IDbConnection connection,
             string tableName,
-            IEnumerable<DbField> dbFields,
+            IReadOnlyList<DbField> dbFields,
             IEnumerable<Field> fields,
             string commandText)
             where TEntity : class

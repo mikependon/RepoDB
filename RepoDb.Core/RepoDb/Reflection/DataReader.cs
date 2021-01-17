@@ -22,7 +22,7 @@ namespace RepoDb.Reflection
         /// <param name="dbSetting">The instance of <see cref="IDbSetting"/> object to be used.</param>
         /// <returns>A list of the target result type.</returns>
         public static IEnumerable<TResult> ToEnumerable<TResult>(DbDataReader reader,
-            IEnumerable<DbField> dbFields = null,
+            IReadOnlyList<DbField> dbFields = null,
             IDbSetting dbSetting = null)
         {
             if (reader != null && reader.IsClosed == false && reader.HasRows)
@@ -51,7 +51,7 @@ namespace RepoDb.Reflection
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A list of the target result type.</returns>
         public static async Task<IEnumerable<TResult>> ToEnumerableAsync<TResult>(DbDataReader reader,
-            IEnumerable<DbField> dbFields = null,
+            IReadOnlyList<DbField> dbFields = null,
             IDbSetting dbSetting = null,
             CancellationToken cancellationToken = default)
         {
@@ -81,7 +81,7 @@ namespace RepoDb.Reflection
         /// <param name="dbSetting">The instance of <see cref="IDbSetting"/> object to be used.</param>
         /// <returns>An array of dynamic objects.</returns>
         public static IEnumerable<dynamic> ToEnumerable(DbDataReader reader,
-            IEnumerable<DbField> dbFields = null,
+            IReadOnlyList<DbField> dbFields = null,
             IDbSetting dbSetting = null)
         {
             if (reader != null && reader.IsClosed == false && reader.HasRows)
@@ -109,7 +109,7 @@ namespace RepoDb.Reflection
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An array of dynamic objects.</returns>
         public static async Task<IEnumerable<dynamic>> ToEnumerableAsync(DbDataReader reader,
-            IEnumerable<DbField> dbFields = null,
+            IReadOnlyList<DbField> dbFields = null,
             IDbSetting dbSetting = null,
             CancellationToken cancellationToken = default)
         {

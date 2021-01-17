@@ -191,7 +191,7 @@ namespace RepoDb.Contexts.Providers
         private static UpdateAllExecutionContext<TEntity> CreateInternal<TEntity>(IDbConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
-            IEnumerable<DbField> dbFields,
+            IReadOnlyList<DbField> dbFields,
             IEnumerable<Field> qualifiers,
             int batchSize,
             IEnumerable<Field> fields,

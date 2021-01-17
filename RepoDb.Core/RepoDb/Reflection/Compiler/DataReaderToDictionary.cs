@@ -19,7 +19,7 @@ namespace RepoDb.Reflection
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         internal static Func<DbDataReader, ExpandoObject> CompileDataReaderToExpandoObject(DbDataReader reader,
-            IEnumerable<DbField> dbFields,
+            IReadOnlyList<DbField> dbFields,
             IDbSetting dbSetting)
         {
             var readerParameterExpression = Expression.Parameter(StaticType.DbDataReader, "reader");

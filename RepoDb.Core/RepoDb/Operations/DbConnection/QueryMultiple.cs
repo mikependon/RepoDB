@@ -183,7 +183,7 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true))
             {
                 var dbSetting = connection.GetDbSetting();
-                var dbFields = (IEnumerable<DbField>)null;
+                var dbFields = (IReadOnlyList<DbField>)null;
 
                 // T1
                 dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T1>(), transaction);
@@ -409,7 +409,7 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true))
             {
                 var dbSetting = connection.GetDbSetting();
-                var dbFields = (IEnumerable<DbField>)null;
+                var dbFields = (IReadOnlyList<DbField>)null;
 
                 // T1
                 dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T1>(), transaction);
@@ -680,7 +680,7 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true))
             {
                 var dbSetting = connection.GetDbSetting();
-                var dbFields = (IEnumerable<DbField>)null;
+                var dbFields = (IReadOnlyList<DbField>)null;
 
                 // T1
                 dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T1>(), transaction);
@@ -994,7 +994,7 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true))
             {
                 var dbSetting = connection.GetDbSetting();
-                var dbFields = (IEnumerable<DbField>)null;
+                var dbFields = (IReadOnlyList<DbField>)null;
 
                 // T1
                 dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T1>(), transaction);
@@ -1351,7 +1351,7 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true))
             {
                 var dbSetting = connection.GetDbSetting();
-                var dbFields = (IEnumerable<DbField>)null;
+                var dbFields = (IReadOnlyList<DbField>)null;
 
                 // T1
                 dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T1>(), transaction);
@@ -1752,7 +1752,7 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true))
             {
                 var dbSetting = connection.GetDbSetting();
-                var dbFields = (IEnumerable<DbField>)null;
+                var dbFields = (IReadOnlyList<DbField>)null;
 
                 // T1
                 dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T1>(), transaction);
@@ -1976,7 +1976,7 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true))
             {
                 var dbSetting = connection.GetDbSetting();
-                var dbFields = (IEnumerable<DbField>)null;
+                var dbFields = (IReadOnlyList<DbField>)null;
 
                 // T1
                 dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T1>(), transaction, true, cancellationToken);
@@ -2208,7 +2208,7 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true))
             {
                 var dbSetting = connection.GetDbSetting();
-                var dbFields = (IEnumerable<DbField>)null;
+                var dbFields = (IReadOnlyList<DbField>)null;
 
                 // T1
                 dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T1>(), transaction, true, cancellationToken);
@@ -2485,7 +2485,7 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true))
             {
                 var dbSetting = connection.GetDbSetting();
-                var dbFields = (IEnumerable<DbField>)null;
+                var dbFields = (IReadOnlyList<DbField>)null;
 
                 // T1
                 dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T1>(), transaction, true, cancellationToken);
@@ -2805,7 +2805,7 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true))
             {
                 var dbSetting = connection.GetDbSetting();
-                var dbFields = (IEnumerable<DbField>)null;
+                var dbFields = (IReadOnlyList<DbField>)null;
 
                 // T1
                 dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T1>(), transaction, true, cancellationToken);
@@ -3168,7 +3168,7 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true))
             {
                 var dbSetting = connection.GetDbSetting();
-                var dbFields = (IEnumerable<DbField>)null;
+                var dbFields = (IReadOnlyList<DbField>)null;
 
                 // T1
                 dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T1>(), transaction, true, cancellationToken);
@@ -3575,7 +3575,7 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true))
             {
                 var dbSetting = connection.GetDbSetting();
-                var dbFields = (IEnumerable<DbField>)null;
+                var dbFields = (IReadOnlyList<DbField>)null;
 
                 // T1
                 dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T1>(), transaction, true, cancellationToken);

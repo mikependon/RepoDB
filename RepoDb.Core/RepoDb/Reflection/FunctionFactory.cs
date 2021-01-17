@@ -22,7 +22,7 @@ namespace RepoDb.Reflection
         /// <param name="dbSetting">The instance of <see cref="IDbSetting"/> object to be used.</param>
         /// <returns></returns>
         public static Func<DbDataReader, TResult> CompileDataReaderToType<TResult>(DbDataReader reader,
-            IEnumerable<DbField> dbFields = null,
+            IReadOnlyList<DbField> dbFields = null,
             IDbSetting dbSetting = null) =>
             Compiler.CompileDataReaderToType<TResult>(reader, dbFields, dbSetting);
 
@@ -38,7 +38,7 @@ namespace RepoDb.Reflection
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         public static Func<DbDataReader, ExpandoObject> CompileDataReaderToExpandoObject(DbDataReader reader,
-            IEnumerable<DbField> dbFields = null,
+            IReadOnlyList<DbField> dbFields = null,
             IDbSetting dbSetting = null) =>
             Compiler.CompileDataReaderToExpandoObject(reader, dbFields, dbSetting);
 
@@ -54,8 +54,8 @@ namespace RepoDb.Reflection
         /// <param name="outputFields"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        public static Action<DbCommand, TEntity> CompileDataEntityDbParameterSetter<TEntity>(IEnumerable<DbField> inputFields,
-            IEnumerable<DbField> outputFields,
+        public static Action<DbCommand, TEntity> CompileDataEntityDbParameterSetter<TEntity>(IReadOnlyList<DbField> inputFields,
+            IReadOnlyList<DbField> outputFields,
             IDbSetting dbSetting = null)
             where TEntity : class =>
             Compiler.CompileDataEntityDbParameterSetter<TEntity>(inputFields, outputFields, dbSetting);
@@ -73,8 +73,8 @@ namespace RepoDb.Reflection
         /// <param name="batchSize"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        public static Action<DbCommand, IList<TEntity>> CompileDataEntityListDbParameterSetter<TEntity>(IEnumerable<DbField> inputFields,
-            IEnumerable<DbField> outputFields,
+        public static Action<DbCommand, IList<TEntity>> CompileDataEntityListDbParameterSetter<TEntity>(IReadOnlyList<DbField> inputFields,
+            IReadOnlyList<DbField> outputFields,
             int batchSize,
             IDbSetting dbSetting = null)
             where TEntity : class =>
@@ -91,7 +91,7 @@ namespace RepoDb.Reflection
         /// <param name="inputFields"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        public static Action<DbCommand, TEntity> CompileDictionaryStringObjectDbParameterSetter<TEntity>(IEnumerable<DbField> inputFields,
+        public static Action<DbCommand, TEntity> CompileDictionaryStringObjectDbParameterSetter<TEntity>(IReadOnlyList<DbField> inputFields,
             IDbSetting dbSetting = null)
             where TEntity : class =>
             Compiler.CompileDictionaryStringObjectDbParameterSetter<TEntity>(inputFields, dbSetting);
@@ -108,7 +108,7 @@ namespace RepoDb.Reflection
         /// <param name="batchSize"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        public static Action<DbCommand, IList<TEntity>> CompileDictionaryStringObjectListDbParameterSetter<TEntity>(IEnumerable<DbField> inputFields,
+        public static Action<DbCommand, IList<TEntity>> CompileDictionaryStringObjectListDbParameterSetter<TEntity>(IReadOnlyList<DbField> inputFields,
             int batchSize,
             IDbSetting dbSetting = null)
             where TEntity : class =>
@@ -175,7 +175,7 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         public static Action<DbCommand, object> GetPlainTypeToDbParametersCompiledFunction(Type paramType,
             Type entityType,
-            IEnumerable<DbField> dbFields = null) =>
+            IReadOnlyList<DbField> dbFields = null) =>
             Compiler.GetPlainTypeToDbParametersCompiledFunction(paramType, entityType, dbFields);
 
         #endregion

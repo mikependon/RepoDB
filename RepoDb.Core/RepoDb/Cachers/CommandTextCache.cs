@@ -1058,7 +1058,7 @@ namespace RepoDb
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         private static IEnumerable<Field> GetActualFieldsInternal(IEnumerable<Field> fields,
-            IEnumerable<DbField> dbFields,
+            IReadOnlyList<DbField> dbFields,
             IDbSetting dbSetting)
         {
             return dbFields?.Any() == true ?

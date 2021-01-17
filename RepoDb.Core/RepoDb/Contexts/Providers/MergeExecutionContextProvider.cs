@@ -165,7 +165,7 @@ namespace RepoDb.Contexts.Providers
         /// <param name="commandText"></param>
         /// <returns></returns>
         private static MergeExecutionContext<TEntity> CreateInternal<TEntity>(IDbConnection connection,
-            IEnumerable<DbField> dbFields,
+            IReadOnlyList<DbField> dbFields,
             string tableName,
             IEnumerable<Field> fields,
             string commandText)

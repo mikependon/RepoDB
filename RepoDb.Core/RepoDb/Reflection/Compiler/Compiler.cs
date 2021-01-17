@@ -141,7 +141,7 @@ namespace RepoDb.Reflection
         /// </summary>
         /// <param name="fields"></param>
         /// <returns></returns>
-        internal static IEnumerable<FieldDirection> GetInputFieldDirections(IEnumerable<DbField> fields)
+        internal static IEnumerable<FieldDirection> GetInputFieldDirections(IReadOnlyList<DbField> fields)
         {
             if (fields?.Any() != true)
             {
@@ -160,7 +160,7 @@ namespace RepoDb.Reflection
         /// </summary>
         /// <param name="fields"></param>
         /// <returns></returns>
-        internal static IEnumerable<FieldDirection> GetOutputFieldDirections(IEnumerable<DbField> fields)
+        internal static IEnumerable<FieldDirection> GetOutputFieldDirections(IReadOnlyList<DbField> fields)
         {
             if (fields?.Any() != true)
             {
@@ -321,7 +321,7 @@ namespace RepoDb.Reflection
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         internal static IEnumerable<DataReaderField> GetDataReaderFields(DbDataReader reader,
-            IEnumerable<DbField> dbFields,
+            IReadOnlyList<DbField> dbFields,
             IDbSetting dbSetting)
         {
             return Enumerable.Range(0, reader.FieldCount)

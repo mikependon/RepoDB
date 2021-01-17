@@ -17,8 +17,8 @@ namespace RepoDb.Reflection
         /// <param name="batchSize"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        internal static Action<DbCommand, IList<TEntity>> CompileDataEntityListDbParameterSetter<TEntity>(IEnumerable<DbField> inputFields,
-            IEnumerable<DbField> outputFields,
+        internal static Action<DbCommand, IList<TEntity>> CompileDataEntityListDbParameterSetter<TEntity>(IReadOnlyList<DbField> inputFields,
+            IReadOnlyList<DbField> outputFields,
             int batchSize,
             IDbSetting dbSetting)
             where TEntity : class

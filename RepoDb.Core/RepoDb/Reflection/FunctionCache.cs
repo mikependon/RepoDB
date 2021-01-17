@@ -17,7 +17,7 @@ namespace RepoDb
         #region Helpers
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
@@ -42,7 +42,7 @@ namespace RepoDb
         #region GetDataReaderToDataEntityCompiledFunction
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TResult"></typeparam>
         /// <param name="reader"></param>
@@ -50,14 +50,14 @@ namespace RepoDb
         /// <param name="dbSetting">The instance of <see cref="IDbSetting"/> object to be used.</param>
         /// <returns></returns>
         internal static Func<DbDataReader, TResult> GetDataReaderToTypeCompiledFunction<TResult>(DbDataReader reader,
-            IEnumerable<DbField> dbFields = null,
+            IReadOnlyList<DbField> dbFields = null,
             IDbSetting dbSetting = null) =>
             DataReaderToTypeCache<TResult>.Get(reader, dbFields, dbSetting);
 
         #region DataReaderToTypeCache
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TResult"></typeparam>
         private static class DataReaderToTypeCache<TResult>
@@ -65,14 +65,14 @@ namespace RepoDb
             private static ConcurrentDictionary<long, Func<DbDataReader, TResult>> cache = new ConcurrentDictionary<long, Func<DbDataReader, TResult>>();
 
             /// <summary>
-            /// 
+            ///
             /// </summary>
             /// <param name="reader"></param>
             /// <param name="dbFields">The list of the <see cref="DbField"/> objects to be used.</param>
             /// <param name="dbSetting">The instance of <see cref="IDbSetting"/> object to be used.</param>
             /// <returns></returns>
             internal static Func<DbDataReader, TResult> Get(DbDataReader reader,
-                IEnumerable<DbField> dbFields = null,
+                IReadOnlyList<DbField> dbFields = null,
                 IDbSetting dbSetting = null)
             {
                 var key = GetKey(reader);
@@ -85,7 +85,7 @@ namespace RepoDb
             }
 
             /// <summary>
-            /// 
+            ///
             /// </summary>
             /// <param name="reader"></param>
             /// <returns></returns>
@@ -100,35 +100,35 @@ namespace RepoDb
         #region GetDataReaderToExpandoObjectCompileFunction
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="reader"></param>
         /// <param name="dbFields"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         internal static Func<DbDataReader, dynamic> GetDataReaderToExpandoObjectCompileFunction(DbDataReader reader,
-            IEnumerable<DbField> dbFields = null,
+            IReadOnlyList<DbField> dbFields = null,
             IDbSetting dbSetting = null) =>
             DataReaderToExpandoObjectCache.Get(reader, dbFields, dbSetting);
 
         #region DataReaderToExpandoObjectCache
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         private static class DataReaderToExpandoObjectCache
         {
             private static ConcurrentDictionary<long, Func<DbDataReader, dynamic>> cache = new ConcurrentDictionary<long, Func<DbDataReader, dynamic>>();
 
             /// <summary>
-            /// 
+            ///
             /// </summary>
             /// <param name="reader"></param>
             /// <param name="dbFields"></param>
             /// <param name="dbSetting"></param>
             /// <returns></returns>
             internal static Func<DbDataReader, dynamic> Get(DbDataReader reader,
-                IEnumerable<DbField> dbFields = null,
+                IReadOnlyList<DbField> dbFields = null,
                 IDbSetting dbSetting = null)
             {
                 var key = GetKey(reader);
@@ -141,7 +141,7 @@ namespace RepoDb
             }
 
             /// <summary>
-            /// 
+            ///
             /// </summary>
             /// <param name="reader"></param>
             /// <returns></returns>
@@ -156,7 +156,7 @@ namespace RepoDb
         #region GetDataEntityDbParameterSetterCompiledFunction
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="cacheKey"></param>
@@ -165,8 +165,8 @@ namespace RepoDb
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         internal static Action<DbCommand, TEntity> GetDataEntityDbParameterSetterCompiledFunction<TEntity>(string cacheKey,
-            IEnumerable<DbField> inputFields,
-            IEnumerable<DbField> outputFields,
+            IReadOnlyList<DbField> inputFields,
+            IReadOnlyList<DbField> outputFields,
             IDbSetting dbSetting = null)
             where TEntity : class =>
             DataEntityDbParameterSetterCache<TEntity>.Get(cacheKey, inputFields, outputFields, dbSetting);
@@ -174,7 +174,7 @@ namespace RepoDb
         #region DataEntityDbParameterSetterCache
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         private static class DataEntityDbParameterSetterCache<TEntity>
@@ -183,7 +183,7 @@ namespace RepoDb
             private static ConcurrentDictionary<long, Action<DbCommand, TEntity>> cache = new ConcurrentDictionary<long, Action<DbCommand, TEntity>>();
 
             /// <summary>
-            /// 
+            ///
             /// </summary>
             /// <param name="cacheKey"></param>
             /// <param name="inputFields"></param>
@@ -191,8 +191,8 @@ namespace RepoDb
             /// <param name="dbSetting"></param>
             /// <returns></returns>
             internal static Action<DbCommand, TEntity> Get(string cacheKey,
-                IEnumerable<DbField> inputFields,
-                IEnumerable<DbField> outputFields,
+                IReadOnlyList<DbField> inputFields,
+                IReadOnlyList<DbField> outputFields,
                 IDbSetting dbSetting = null)
             {
                 var key = GetKey(cacheKey, inputFields, outputFields);
@@ -211,15 +211,15 @@ namespace RepoDb
             }
 
             /// <summary>
-            /// 
+            ///
             /// </summary>
             /// <param name="cacheKey"></param>
             /// <param name="inputFields"></param>
             /// <param name="outputFields"></param>
             /// <returns></returns>
             private static long GetKey(string cacheKey,
-                IEnumerable<DbField> inputFields,
-                IEnumerable<DbField> outputFields)
+                IReadOnlyList<DbField> inputFields,
+                IReadOnlyList<DbField> outputFields)
             {
                 var key = (long)typeof(TEntity).GetHashCode() + cacheKey.GetHashCode();
                 if (inputFields != null)
@@ -247,7 +247,7 @@ namespace RepoDb
         #region GetDataEntityListDbParameterSetterCompiledFunction
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="cacheKey"></param>
@@ -257,8 +257,8 @@ namespace RepoDb
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         internal static Action<DbCommand, IList<TEntity>> GetDataEntityListDbParameterSetterCompiledFunction<TEntity>(string cacheKey,
-            IEnumerable<DbField> inputFields,
-            IEnumerable<DbField> outputFields,
+            IReadOnlyList<DbField> inputFields,
+            IReadOnlyList<DbField> outputFields,
             int batchSize,
             IDbSetting dbSetting = null)
             where TEntity : class =>
@@ -267,7 +267,7 @@ namespace RepoDb
         #region DataEntityListDbParameterSetterCache
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         private static class DataEntityListDbParameterSetterCache<TEntity>
@@ -276,7 +276,7 @@ namespace RepoDb
             private static ConcurrentDictionary<long, Action<DbCommand, IList<TEntity>>> cache = new ConcurrentDictionary<long, Action<DbCommand, IList<TEntity>>>();
 
             /// <summary>
-            /// 
+            ///
             /// </summary>
             /// <param name="cacheKey"></param>
             /// <param name="inputFields"></param>
@@ -285,8 +285,8 @@ namespace RepoDb
             /// <param name="dbSetting"></param>
             /// <returns></returns>
             internal static Action<DbCommand, IList<TEntity>> Get(string cacheKey,
-                IEnumerable<DbField> inputFields,
-                IEnumerable<DbField> outputFields,
+                IReadOnlyList<DbField> inputFields,
+                IReadOnlyList<DbField> outputFields,
                 int batchSize,
                 IDbSetting dbSetting = null)
             {
@@ -307,7 +307,7 @@ namespace RepoDb
             }
 
             /// <summary>
-            /// 
+            ///
             /// </summary>
             /// <param name="cacheKey"></param>
             /// <param name="inputFields"></param>
@@ -315,8 +315,8 @@ namespace RepoDb
             /// <param name="batchSize"></param>
             /// <returns></returns>
             private static long GetKey(string cacheKey,
-                IEnumerable<DbField> inputFields,
-                IEnumerable<DbField> outputFields,
+                IReadOnlyList<DbField> inputFields,
+                IReadOnlyList<DbField> outputFields,
                 int batchSize)
             {
                 var key = (long)typeof(TEntity).GetHashCode() + batchSize.GetHashCode() +
@@ -346,7 +346,7 @@ namespace RepoDb
         #region GetDbCommandToPropertyCompiledFunction
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="field"></param>
@@ -364,7 +364,7 @@ namespace RepoDb
         #region DbCommandToPropertyCache
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         private static class DbCommandToPropertyCache<TEntity>
@@ -373,7 +373,7 @@ namespace RepoDb
             private static ConcurrentDictionary<long, Action<TEntity, DbCommand>> cache = new ConcurrentDictionary<long, Action<TEntity, DbCommand>>();
 
             /// <summary>
-            /// 
+            ///
             /// </summary>
             /// <param name="field"></param>
             /// <param name="parameterName"></param>
@@ -403,7 +403,7 @@ namespace RepoDb
         #region GetDataEntityPropertySetterCompiledFunction
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="field"></param>
@@ -415,7 +415,7 @@ namespace RepoDb
         #region DataEntityPropertySetterCache
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         private static class DataEntityPropertySetterCache<TEntity>
@@ -424,7 +424,7 @@ namespace RepoDb
             private static ConcurrentDictionary<long, Action<TEntity, object>> cache = new ConcurrentDictionary<long, Action<TEntity, object>>();
 
             /// <summary>
-            /// 
+            ///
             /// </summary>
             /// <param name="field"></param>
             /// <returns></returns>
@@ -454,7 +454,7 @@ namespace RepoDb
         #region GetPlainTypeToDbParametersCompiledFunction
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="paramType"></param>
         /// <param name="entityType"></param>
@@ -462,20 +462,20 @@ namespace RepoDb
         /// <returns></returns>
         internal static Action<DbCommand, object> GetPlainTypeToDbParametersCompiledFunction(Type paramType,
             Type entityType,
-            IEnumerable<DbField> dbFields = null) =>
+            IReadOnlyList<DbField> dbFields = null) =>
             PlainTypeToDbParametersCompiledFunctionCache.Get(paramType, entityType, dbFields);
 
         #region PlainTypeToDbParametersCompiledFunctionCache
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         private static class PlainTypeToDbParametersCompiledFunctionCache
         {
             private static ConcurrentDictionary<long, Action<DbCommand, object>> cache = new ConcurrentDictionary<long, Action<DbCommand, object>>();
 
             /// <summary>
-            /// 
+            ///
             /// </summary>
             /// <param name="paramType"></param>
             /// <param name="entityType"></param>
@@ -483,7 +483,7 @@ namespace RepoDb
             /// <returns></returns>
             internal static Action<DbCommand, object> Get(Type paramType,
                 Type entityType,
-                IEnumerable<DbField> dbFields = null)
+                IReadOnlyList<DbField> dbFields = null)
             {
                 if (paramType == null)
                 {

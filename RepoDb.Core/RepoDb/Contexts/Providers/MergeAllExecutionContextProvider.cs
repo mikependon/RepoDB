@@ -14,12 +14,12 @@ using System.Threading.Tasks;
 namespace RepoDb.Contexts.Providers
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     internal static class MergeAllExecutionContextProvider
     {
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="tableName"></param>
@@ -48,7 +48,7 @@ namespace RepoDb.Contexts.Providers
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -128,7 +128,7 @@ namespace RepoDb.Contexts.Providers
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -210,7 +210,7 @@ namespace RepoDb.Contexts.Providers
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -224,7 +224,7 @@ namespace RepoDb.Contexts.Providers
         /// <returns></returns>
         private static MergeAllExecutionContext<TEntity> CreateInternal<TEntity>(IDbConnection connection,
             IEnumerable<TEntity> entities,
-            IEnumerable<DbField> dbFields,
+            IReadOnlyList<DbField> dbFields,
             string tableName,
             IEnumerable<Field> qualifiers,
             int batchSize,
@@ -234,7 +234,7 @@ namespace RepoDb.Contexts.Providers
         {
             var dbSetting = connection.GetDbSetting();
             var identity = (Field)null;
-            var inputFields = (IEnumerable<DbField>)null;
+            var inputFields = (IReadOnlyList<DbField>)null;
             var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
 
             // Check the fields

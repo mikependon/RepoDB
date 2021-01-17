@@ -190,7 +190,7 @@ namespace RepoDb.Extensions
             object param,
             IEnumerable<string> propertiesToSkip,
             Type entityType,
-            IEnumerable<DbField> dbFields = null)
+            IReadOnlyList<DbField> dbFields = null)
         {
             // Check
             if (param == null)
@@ -239,7 +239,7 @@ namespace RepoDb.Extensions
         private static void CreateParametersInternal(IDbCommand command,
             object param,
             IEnumerable<string> propertiesToSkip,
-            IEnumerable<DbField> dbFields = null)
+            IReadOnlyList<DbField> dbFields = null)
         {
             var type = param.GetType();
 
@@ -316,7 +316,7 @@ namespace RepoDb.Extensions
         private static void CreateParameters(IDbCommand command,
             IDictionary<string, object> dictionary,
             IEnumerable<string> propertiesToSkip,
-            IEnumerable<DbField> dbFields = null)
+            IReadOnlyList<DbField> dbFields = null)
         {
             var kvps = dictionary.Where(kvp =>
                 propertiesToSkip?.Contains(kvp.Key, StringComparer.OrdinalIgnoreCase) != true);
@@ -395,7 +395,7 @@ namespace RepoDb.Extensions
             QueryGroup queryGroup,
             IEnumerable<string> propertiesToSkip,
             Type entityType,
-            IEnumerable<DbField> dbFields = null)
+            IReadOnlyList<DbField> dbFields = null)
         {
             if (queryGroup == null)
             {
@@ -416,7 +416,7 @@ namespace RepoDb.Extensions
             IEnumerable<QueryField> queryFields,
             IEnumerable<string> propertiesToSkip,
             Type entityType,
-            IEnumerable<DbField> dbFields = null)
+            IReadOnlyList<DbField> dbFields = null)
         {
             if (queryFields == null)
             {
@@ -459,7 +459,7 @@ namespace RepoDb.Extensions
             QueryField queryField,
             IEnumerable<string> propertiesToSkip,
             Type entityType,
-            IEnumerable<DbField> dbFields = null)
+            IReadOnlyList<DbField> dbFields = null)
         {
             if (queryField == null)
             {
@@ -691,7 +691,7 @@ namespace RepoDb.Extensions
         /// <param name="dbFields"></param>
         /// <returns></returns>
         private static DbField GetDbField(string fieldName,
-            IEnumerable<DbField> dbFields)
+            IReadOnlyList<DbField> dbFields)
         {
             if (string.IsNullOrWhiteSpace(fieldName))
             {

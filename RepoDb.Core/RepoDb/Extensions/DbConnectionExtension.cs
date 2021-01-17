@@ -1079,7 +1079,7 @@ namespace RepoDb
             int? commandTimeout,
             IDbTransaction transaction,
             Type entityType,
-            IEnumerable<DbField> dbFields,
+            IReadOnlyList<DbField> dbFields,
             bool skipCommandArrayParametersCheck)
         {
             // Variables
@@ -1181,7 +1181,7 @@ namespace RepoDb
             IDbTransaction transaction,
             CancellationToken cancellationToken,
             Type entityType,
-            IEnumerable<DbField> dbFields,
+            IReadOnlyList<DbField> dbFields,
             bool skipCommandArrayParametersCheck)
         {
             // Variables
@@ -1279,7 +1279,7 @@ namespace RepoDb
             int? commandTimeout,
             IDbTransaction transaction,
             Type entityType,
-            IEnumerable<DbField> dbFields,
+            IReadOnlyList<DbField> dbFields,
             bool skipCommandArrayParametersCheck)
         {
             using (var command = CreateDbCommandForExecution(connection: connection,
@@ -1363,7 +1363,7 @@ namespace RepoDb
             IDbTransaction transaction,
             CancellationToken cancellationToken,
             Type entityType,
-            IEnumerable<DbField> dbFields,
+            IReadOnlyList<DbField> dbFields,
             bool skipCommandArrayParametersCheck)
         {
             using (var command = await CreateDbCommandForExecutionAsync(connection: connection,
@@ -1562,7 +1562,7 @@ namespace RepoDb
             IDbTransaction transaction,
             ICache cache,
             Type entityType,
-            IEnumerable<DbField> dbFields,
+            IReadOnlyList<DbField> dbFields,
             bool skipCommandArrayParametersCheck)
         {
             // Get Cache
@@ -1682,7 +1682,7 @@ namespace RepoDb
             ICache cache,
             CancellationToken cancellationToken,
             Type entityType,
-            IEnumerable<DbField> dbFields,
+            IReadOnlyList<DbField> dbFields,
             bool skipCommandArrayParametersCheck)
         {
             // Get Cache
@@ -2022,7 +2022,7 @@ namespace RepoDb
         /// <param name="dbFields"></param>
         /// <returns></returns>
         internal static Field GetAndGuardPrimaryKeyOrIdentityKey(Type entityType,
-            IEnumerable<DbField> dbFields)
+            IReadOnlyList<DbField> dbFields)
         {
             if (entityType == null)
             {
@@ -2224,7 +2224,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static QueryGroup WhatToQueryGroup<T>(string tableName,
             T what,
-            IEnumerable<DbField> dbFields)
+            IReadOnlyList<DbField> dbFields)
         {
             var key = dbFields?.FirstOrDefault(p => p.IsPrimary == true) ?? dbFields?.FirstOrDefault(p => p.IsIdentity == true);
             if (key == null)
@@ -2743,7 +2743,7 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             Type entityType = null,
-            IEnumerable<DbField> dbFields = null,
+            IReadOnlyList<DbField> dbFields = null,
             bool skipCommandArrayParametersCheck = true)
         {
             // Validate
@@ -2786,7 +2786,7 @@ namespace RepoDb
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default,
             Type entityType = null,
-            IEnumerable<DbField> dbFields = null,
+            IReadOnlyList<DbField> dbFields = null,
             bool skipCommandArrayParametersCheck = true)
         {
             // Validate
@@ -2827,7 +2827,7 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             Type entityType = null,
-            IEnumerable<DbField> dbFields = null,
+            IReadOnlyList<DbField> dbFields = null,
             bool skipCommandArrayParametersCheck = true)
         {
             // Command

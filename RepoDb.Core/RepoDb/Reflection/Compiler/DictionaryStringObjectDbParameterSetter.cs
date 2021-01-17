@@ -17,7 +17,7 @@ namespace RepoDb.Reflection
         /// <param name="inputFields"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        internal static Action<DbCommand, TEntity> CompileDictionaryStringObjectDbParameterSetter<TEntity>(IEnumerable<DbField> inputFields,
+        internal static Action<DbCommand, TEntity> CompileDictionaryStringObjectDbParameterSetter<TEntity>(IReadOnlyList<DbField> inputFields,
             IDbSetting dbSetting)
             where TEntity : class
         {

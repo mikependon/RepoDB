@@ -29,7 +29,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="dbFields">The list of <see cref="DbField"/> objects to be validated.</param>
         private static void ValidateDbFields(string tableName,
-            IEnumerable<DbField> dbFields)
+            IReadOnlyList<DbField> dbFields)
         {
             if (dbFields?.Any() != true)
             {
