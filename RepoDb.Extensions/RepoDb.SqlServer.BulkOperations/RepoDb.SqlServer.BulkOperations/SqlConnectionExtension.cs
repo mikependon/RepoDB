@@ -315,7 +315,7 @@ namespace RepoDb
             }
             if (reader.HasRows == false)
             {
-                throw new EmptyException("The reader must contain atleast a single row.");
+                throw new EmptyException("The reader must contain at least a single row.");
             }
         }
 
@@ -331,7 +331,7 @@ namespace RepoDb
             }
             if (dataTable.Rows.Count <= 0)
             {
-                throw new EmptyException("The data table must contain atleast a single row.");
+                throw new EmptyException("The data table must contain at least a single row.");
             }
         }
 

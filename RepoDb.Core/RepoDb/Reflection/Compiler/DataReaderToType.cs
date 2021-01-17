@@ -13,7 +13,7 @@ namespace RepoDb.Reflection
     internal partial class Compiler
     {
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TResult"></typeparam>
         /// <param name="reader"></param>
@@ -43,7 +43,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TResult"></typeparam>
         /// <param name="reader"></param>
@@ -74,7 +74,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TResult"></typeparam>
         /// <param name="reader"></param>
@@ -96,7 +96,7 @@ namespace RepoDb.Reflection
             // Throw an error if there are no bindings
             if (arguments?.Any() != true && memberAssignments?.Any() != true)
             {
-                throw new InvalidOperationException($"There are no 'contructor parameter' and/or 'property member' bindings found between the resultset of the data reader and the type '{typeOfResult.FullName}'.");
+                throw new InvalidOperationException($"There are no 'constructor parameter' and/or 'property member' bindings found between the ResultSet of the data reader and the type '{typeOfResult.FullName}'.");
             }
 
             // Initialize the members

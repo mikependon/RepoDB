@@ -1263,7 +1263,7 @@ namespace RepoDb.StatementBuilders
         {
             if (DbSetting.IsMultiStatementExecutable == false && batchSize > 1)
             {
-                throw new NotSupportedException($"Multiple execution is not supported based on the current database setting '{DbSetting.GetType().FullName}'. Consider setting the batchsize to 1.");
+                throw new NotSupportedException($"Multiple execution is not supported based on the current database setting '{DbSetting.GetType().FullName}'. Consider setting the batchSize to 1.");
             }
         }
 

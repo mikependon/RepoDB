@@ -33,7 +33,7 @@ namespace RepoDb
         {
             if (dbFields?.Any() != true)
             {
-                throw new MissingFieldsException($"There are no database fields found for table '{tableName}'. Make sure that the target table '{tableName}' is present in the database and/or atleast a single field is available.");
+                throw new MissingFieldsException($"There are no database fields found for table '{tableName}'. Make sure that the target table '{tableName}' is present in the database and/or at least a single field is available.");
             }
         }
 
