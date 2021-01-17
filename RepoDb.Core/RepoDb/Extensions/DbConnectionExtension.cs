@@ -2580,7 +2580,7 @@ namespace RepoDb
         internal static void WhereToCommandParameters(DbCommand command,
             QueryGroup where,
             Type entityType,
-            IEnumerable<DbField> dbFields) =>
+            IReadOnlyList<DbField> dbFields) =>
             DbCommandExtension.CreateParameters(command, where, null, entityType, dbFields);
 
         /// <summary>

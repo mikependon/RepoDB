@@ -78,7 +78,7 @@ namespace RepoDb
             try
             {
                 // Get the DB Fields
-                dbFields = dbFields ?? DbFieldCache.Get(connection, tableName, transaction, true);
+                dbFields ??= DbFieldCache.Get(connection, tableName, transaction, true);
 
                 // Variables needed
                 var identityDbField = dbFields?.FirstOrDefault(dbField => dbField.IsIdentity);
@@ -268,7 +268,7 @@ namespace RepoDb
             try
             {
                 // Get the DB Fields
-                dbFields = dbFields ?? DbFieldCache.Get(connection, tableName, transaction, true);
+                dbFields ??= DbFieldCache.Get(connection, tableName, transaction, true);
 
                 // Variables needed
                 var readerFields = Enumerable
