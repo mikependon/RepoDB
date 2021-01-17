@@ -78,7 +78,7 @@ namespace RepoDb.Reflection
                 // ClassProperty
                 if (ClassProperty?.PropertyInfo != null)
                 {
-                    message = string.Concat(descriptiveContextString, $"PropertyInfo: {ClassProperty.PropertyInfo.Name} ({ClassProperty.PropertyInfo.PropertyType}), DeclaringType: {ClassProperty.DeclaringType} ");
+                    message = string.Concat(descriptiveContextString, $"PropertyInfo: {ClassProperty.PropertyInfo.Name} ({ClassProperty.PropertyInfo.PropertyType}), DeclaringType: {ClassProperty.GetDeclaringType()} ");
                 }
 
                 // Return

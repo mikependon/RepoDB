@@ -50,7 +50,7 @@ namespace RepoDb.Extensions
         /// <returns>The <see cref="IEnumerable{T}"/> object in which the items are of type <typeparamref name="TargetType"/>.</returns>
         [Obsolete("Use the 'WithType<T>' method instead.")]
         public static IEnumerable<TargetType> OfTargetType<SourceType, TargetType>(this IEnumerable<SourceType> value) =>
-            value is IEnumerable<TargetType> types ? types : value.OfType<TargetType>();
+            value is IEnumerable<TargetType> enumerable ? enumerable : value.OfType<TargetType>();
 
         /// <summary>
         /// Checks whether the instance of <see cref="System.Collections.IEnumerable"/> is of type <see cref="IEnumerable{T}"/>, then casts it, otherwise, 
