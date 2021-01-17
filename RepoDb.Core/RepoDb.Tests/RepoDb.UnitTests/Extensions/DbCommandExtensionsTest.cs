@@ -51,9 +51,9 @@ namespace RepoDb.UnitTests.Extensions
 
         #endregion
 
-        #region PropertyHandlerTests
+#region PropertyHandlerTests
 
-        #region PropertyLevel
+#region PropertyLevel
 
         [TestMethod]
         public void TestDbCommandCreateParametersPropertyHandlerPropertyLevelInvocationViaDictionary()
@@ -101,9 +101,9 @@ namespace RepoDb.UnitTests.Extensions
             }
         }
 
-        #endregion
+#endregion
 
-        #region Type Level
+#region Type Level
 
         [TestMethod]
         public void TestDbCommandCreateParametersPropertyHandlerTypeLevelInvocationViaDynamic()
@@ -197,9 +197,9 @@ namespace RepoDb.UnitTests.Extensions
             }
         }
 
-        #endregion
+#endregion
 
-        #endregion
+#endregion
 
         [TestMethod]
         public void TestIsPlainTypeForAnoynmousType()
@@ -212,14 +212,13 @@ namespace RepoDb.UnitTests.Extensions
             Assert.IsFalse(type.GetEnumerableClassProperties().Any());
         }
 
+        private class PrivateDbConnection : CustomDbConnection { }
+
         [TestMethod]
         public void TestSqlConnectionExecuteQueryViaDynamicsWithEmptyArrayParameters()
         {
-            if (DbSettingMapper.Get(typeof(CustomDbConnection)) == null)
-            {
-                DbSettingMapper.Add(typeof(CustomDbConnection), new CustomDbSetting(), true);
-            }
-            using (var connection = new CustomDbConnection())
+            DbSettingMapper.Add(typeof(PrivateDbConnection), new CustomDbSetting(), true);
+            using (var connection = new PrivateDbConnection())
             {
                 var sql = @"
 select * from someTable

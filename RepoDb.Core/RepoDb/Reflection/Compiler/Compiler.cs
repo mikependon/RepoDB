@@ -858,7 +858,7 @@ namespace RepoDb.Reflection
         /// <param name="classProperty"></param>
         /// <param name="targetType"></param>
         /// <returns></returns>
-        internal static (Expression convertedExpression, Type handlerSetType) ConvertExpressionToPropertyHandlerSetExpressionTuple(Expression expression,
+        internal static (Expression convertedExpression, Type handlerSetReturnType) ConvertExpressionToPropertyHandlerSetExpressionTuple(Expression expression,
             ClassProperty classProperty,
             Type targetType)
         {

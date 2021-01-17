@@ -33,22 +33,6 @@ namespace RepoDb.Resolvers
                 dbType = TypeMapper.Get(propertyInfo.DeclaringType, propertyInfo);
             }
 
-            // Specialized
-            if (dbType == null)
-            {
-                var underlyingType = propertyInfo.PropertyType.GetUnderlyingType();
-                if (underlyingType == StaticType.ByteArray)
-                {
-                    dbType = DbType.Binary;
-                }
-            }
-
-            // Type Level
-            if (dbType == null)
-            {
-                dbType = TypeMapper.Get(propertyInfo.PropertyType);
-            }
-
             // Return the value
             return dbType;
         }

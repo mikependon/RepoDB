@@ -232,7 +232,7 @@ namespace RepoDb
             isDbTypeWasSet = true;
 
             // Return the value
-            return dbType = TypeMapCache.Get(GetDeclaringType(), PropertyInfo);
+            return dbType = TypeMapCache.Get(GetDeclaringType(), PropertyInfo) ?? TypeMapCache.Get(PropertyInfo.PropertyType);
         }
 
         /*

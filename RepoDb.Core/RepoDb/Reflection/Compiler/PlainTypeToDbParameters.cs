@@ -1,7 +1,9 @@
 ﻿using RepoDb.Enumerations;
 using RepoDb.Extensions;
+using RepoDb.Resolvers;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
@@ -41,26 +43,33 @@ namespace RepoDb.Reflection
                 var dbField = dbFields?.FirstOrDefault(df =>
                     string.Equals(df.Name, paramProperty.GetMappedName(), StringComparison.OrdinalIgnoreCase));
                 var valueExpression = (Expression)Expression.Property(entityExpression, paramProperty.PropertyInfo);
+                var valueType = (entityProperty ?? paramProperty).PropertyInfo.PropertyType.GetUnderlyingType();
 
                 // PropertyHandler
-                var handlerSetType = (Type)null;
-                (valueExpression, handlerSetType) = ConvertExpressionToPropertyHandlerSetExpressionTuple(valueExpression,
-                    paramProperty, paramProperty.PropertyInfo.PropertyType);
+                var handlerSetTuple = ConvertExpressionToPropertyHandlerSetExpressionTuple(valueExpression, paramProperty, valueType);
+                if (handlerSetTuple.handlerSetReturnType != null)
+                {
+                    valueExpression = handlerSetTuple.convertedExpression;
+                    valueType = handlerSetTuple.handlerSetReturnType;
+                }
 
                 // Automatic
                 if (Converter.ConversionType == ConversionType.Automatic && dbField?.Type != null)
                 {
-                    valueExpression = ConvertExpressionWithAutomaticConversion(valueExpression,
-                        dbField.Type.GetUnderlyingType());
+                    valueType = dbField.Type.GetUnderlyingType();
+                    valueExpression = ConvertExpressionWithAutomaticConversion(valueExpression, valueType);
                 }
 
-                // DbType. PropertyHandler first
-                var dbType = handlerSetType != null ?
-                    GetDbType(null, handlerSetType) :
-                    GetDbType(entityProperty ?? paramProperty, (entityProperty ?? paramProperty).PropertyInfo.PropertyType);
-                if (dbType == null && paramProperty.PropertyInfo.PropertyType.IsEnum)
+                // DbType
+                var dbType =
+                    (paramProperty == null ? null : TypeMapCache.Get(paramProperty.GetDeclaringType(), paramProperty.PropertyInfo)) ??
+                    (entityProperty == null ? null : TypeMapCache.Get(entityProperty.GetDeclaringType(), entityProperty.PropertyInfo));
+                if (dbType == null && (valueType ??= dbField?.Type.GetUnderlyingType()) != null)
                 {
-                    dbType = Converter.EnumDefaultDatabaseType;
+                    dbType =
+                        valueType.GetDbType() ??                                        // type level, use TypeMapCache
+                        new ClientTypeToDbTypeResolver().Resolve(valueType) ??          // type level, primitive mapping
+                        (valueType.IsEnum ? Converter.EnumDefaultDatabaseType : null);  // use Converter.EnumDefaultDatabaseType
                 }
 
                 var dbTypeExpression = dbType == null ? GetNullableTypeExpression(StaticType.DbType) :

@@ -276,20 +276,25 @@ namespace RepoDb.Extensions
 
             /*
              * Set DbType as much as possible, to avoid parameter misjudgment when Value is null.
-             * The corresponding DbType is parsed by valueType.
-             * If valueType is null, it means that it may not be an attribute of the class entity(ex: dictionary). At this time, try to use dbField to determine.
-             * If it cannot be parsed, it may be enum, which is determined by Converter.EnumDefaultDatabaseType.
+             * order:
+             *      1. attribute level, TypeMapAttribute define on class's property
+             *      2. property level, assigned by TypeMapper.Add(entityType, property, dbType, ...)
+             *      3. type level, use TypeMapCache, assigned by TypeMapper.Add(type, dbType, ...), not included Primitive mapping.
+             *      4. type level, primitive mapping, included special type. ex: byte[] ...etc.
+             *      5. if isEnum, use Converter.EnumDefaultDatabaseType.
              */
-            if (valueType == null)
+
+            // if classProperty exists, try get dbType from attribute level or property level, 
+            // The reason for not using classProperty.GetDbType() is to avoid getting the type level mapping.
+            var dbType =
+                (classProperty == null ? null : TypeMapCache.Get(classProperty.GetDeclaringType(), classProperty.PropertyInfo));
+            if (dbType == null && (valueType ??= dbField?.Type.GetUnderlyingType() ?? fallbackType) != null)
             {
-                valueType = dbField?.Type.GetUnderlyingType() ?? fallbackType;
+                dbType =
+                    valueType.GetDbType() ??                                        // type level, use TypeMapCache
+                    clientTypeToDbTypeResolver.Resolve(valueType) ??                // type level, primitive mapping
+                    (valueType.IsEnum ? Converter.EnumDefaultDatabaseType : null);  // use Converter.EnumDefaultDatabaseType
             }
-            var dbType = valueType == null ? (DbType?)null : 
-                (
-                    valueType.GetDbType() ??  // use TypeMapCache
-                    clientTypeToDbTypeResolver.Resolve(valueType) ??  // use Primitive mapping.
-                    (valueType.IsEnum ? Converter.EnumDefaultDatabaseType : (DbType?)null)  // use Converter.EnumDefaultDatabaseType
-                );
 
             /*
              * Return the parameter
