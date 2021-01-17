@@ -1,5 +1,4 @@
 ﻿using RepoDb.Exceptions;
-using RepoDb.Extensions;
 using RepoDb.SqlServer.BulkOperations;
 using System;
 using System.Collections.Generic;

@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Data.Common;
-using System.Data;
 using System.Linq.Expressions;
 using System.Linq;
 using System.Collections.Generic;
 using RepoDb.Interfaces;
-using System.Threading.Tasks;
 using RepoDb.Extensions;
 
 namespace RepoDb.Reflection
