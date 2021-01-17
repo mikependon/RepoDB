@@ -206,7 +206,7 @@ namespace RepoDb.Contexts.Providers
                 InputFields = inputFields,
                 ParametersSetterFunc = FunctionCache.GetDataEntityDbParameterSetterCompiledFunction<TEntity>(
                     string.Concat(typeof(TEntity).FullName, StringConstant.Period, tableName, ".Merge"),
-                    inputFields?.AsList(),
+                    inputFields,
                     null,
                     dbSetting),
                 IdentityPropertySetterFunc = identityPropertySetter

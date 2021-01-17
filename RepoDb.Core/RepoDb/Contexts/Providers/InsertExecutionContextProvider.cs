@@ -13,12 +13,12 @@ using System.Threading.Tasks;
 namespace RepoDb.Contexts.Providers
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     internal static class InsertExecutionContextProvider
     {
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="tableName"></param>
@@ -39,7 +39,7 @@ namespace RepoDb.Contexts.Providers
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -91,7 +91,7 @@ namespace RepoDb.Contexts.Providers
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -145,7 +145,7 @@ namespace RepoDb.Contexts.Providers
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -198,7 +198,7 @@ namespace RepoDb.Contexts.Providers
                 InputFields = inputFields,
                 ParametersSetterFunc = FunctionCache.GetDataEntityDbParameterSetterCompiledFunction<TEntity>(
                     string.Concat(typeof(TEntity).FullName, StringConstant.Period, tableName, ".Insert"),
-                    inputFields?.AsList(),
+                    inputFields,
                     null,
                     dbSetting),
                 IdentityPropertySetterFunc = identityPropertySetter

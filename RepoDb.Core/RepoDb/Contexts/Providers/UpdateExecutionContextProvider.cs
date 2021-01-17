@@ -13,12 +13,12 @@ using System.Threading.Tasks;
 namespace RepoDb.Contexts.Providers
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     internal static class UpdateExecutionContextProvider
     {
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="tableName"></param>
@@ -43,7 +43,7 @@ namespace RepoDb.Contexts.Providers
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -98,7 +98,7 @@ namespace RepoDb.Contexts.Providers
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -155,7 +155,7 @@ namespace RepoDb.Contexts.Providers
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
@@ -172,10 +172,8 @@ namespace RepoDb.Contexts.Providers
             where TEntity : class
         {
             var dbSetting = connection.GetDbSetting();
-            var inputFields = new List<DbField>();
-
             // Filter the actual properties for input fields
-            inputFields = dbFields?
+            var inputFields = dbFields?
                 .Where(dbField => dbField.IsIdentity == false)
                 .Where(dbField =>
                     fields.FirstOrDefault(field => string.Equals(field.Name.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
@@ -188,7 +186,7 @@ namespace RepoDb.Contexts.Providers
                 InputFields = inputFields,
                 ParametersSetterFunc = FunctionCache.GetDataEntityDbParameterSetterCompiledFunction<TEntity>(
                     string.Concat(typeof(TEntity).FullName, StringConstant.Period, tableName, ".Update"),
-                    inputFields?.AsList(),
+                    inputFields,
                     null,
                     dbSetting)
             };

@@ -290,7 +290,7 @@ namespace RepoDb.Contexts.Providers
             {
                 singleEntityFunc = FunctionCache.GetDataEntityDbParameterSetterCompiledFunction<TEntity>(
                     string.Concat(typeof(TEntity).FullName, StringConstant.Period, tableName, ".MergeAll"),
-                    inputFields?.AsList(),
+                    inputFields,
                     null,
                     dbSetting);
             }
@@ -298,7 +298,7 @@ namespace RepoDb.Contexts.Providers
             {
                 multipleEntitiesFunc = FunctionCache.GetDataEntityListDbParameterSetterCompiledFunction<TEntity>(
                     string.Concat(typeof(TEntity).FullName, StringConstant.Period, tableName, ".MergeAll"),
-                    inputFields?.AsList(),
+                    inputFields,
                     null,
                     batchSize,
                     dbSetting);
