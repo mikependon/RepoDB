@@ -158,10 +158,10 @@ namespace RepoDb.Requests
             }
 
             // Add the page
-            hashCode += (int)Page;
+            hashCode += Page;
 
             // Add the rows per batch
-            hashCode += (int)RowsPerBatch;
+            hashCode += RowsPerBatch;
 
             // Add the hints
             if (!string.IsNullOrWhiteSpace(Hints))
