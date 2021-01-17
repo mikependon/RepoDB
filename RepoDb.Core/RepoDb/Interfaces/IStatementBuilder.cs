@@ -3,7 +3,7 @@
 namespace RepoDb.Interfaces
 {
     /// <summary>
-    /// An interface that is used to mark a class to be a statement builder object. The statement builder is an object that is being mapped and/or injected into the repositories to be used for 
+    /// An interface that is used to mark a class to be a statement builder object. The statement builder is an object that is being mapped and/or injected into the repositories to be used for
     /// composing the SQL Statements. Implement this interface if the caller would likely to support the different statement building approach, or by supporting the other data providers.
     /// </summary>
     public interface IStatementBuilder
@@ -61,8 +61,8 @@ namespace RepoDb.Interfaces
         string CreateBatchQuery(QueryBuilder queryBuilder,
             string tableName,
             IEnumerable<Field> fields,
-            int? page,
-            int? rowsPerBatch,
+            int page,
+            int rowsPerBatch,
             IEnumerable<OrderField> orderBy = null,
             QueryGroup where = null,
             string hints = null);

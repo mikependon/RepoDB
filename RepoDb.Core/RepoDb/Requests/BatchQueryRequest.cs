@@ -30,8 +30,8 @@ namespace RepoDb.Requests
             IDbConnection connection,
             IDbTransaction transaction,
             IEnumerable<Field> fields,
-            int? page,
-            int? rowsPerBatch,
+            int page,
+            int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             QueryGroup where = null,
             string hints = null,
@@ -67,8 +67,8 @@ namespace RepoDb.Requests
             IDbConnection connection,
             IDbTransaction transaction,
             IEnumerable<Field> fields,
-            int? page,
-            int? rowsPerBatch,
+            int page,
+            int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             QueryGroup where = null,
             string hints = null,
@@ -99,12 +99,12 @@ namespace RepoDb.Requests
         /// <summary>
         /// Gets the filter for the rows.
         /// </summary>
-        public int? Page { get; }
+        public int Page { get; }
 
         /// <summary>
         /// Gets the number of rows per batch.
         /// </summary>
-        public int? RowsPerBatch { get; }
+        public int RowsPerBatch { get; }
 
         /// <summary>
         /// Gets the list of the order fields.
@@ -158,16 +158,10 @@ namespace RepoDb.Requests
             }
 
             // Add the page
-            if (Page != null)
-            {
-                hashCode += (int)Page;
-            }
+            hashCode += Page;
 
             // Add the rows per batch
-            if (RowsPerBatch != null)
-            {
-                hashCode += (int)RowsPerBatch;
-            }
+            hashCode += RowsPerBatch;
 
             // Add the hints
             if (!string.IsNullOrWhiteSpace(Hints))
