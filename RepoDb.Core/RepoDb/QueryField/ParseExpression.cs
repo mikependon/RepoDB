@@ -267,7 +267,7 @@ namespace RepoDb
             // Value
             if (expression?.Object != null)
             {
-                if (expression?.Object?.Type == StaticType.String)
+                if (expression.Object?.Type == StaticType.String)
                 {
                     var likeable = ConvertToLikeableValue("Contains", Converter.ToType<string>(expression.Arguments.First().GetValue()));
                     return ToLike(property.GetMappedName(), likeable, unaryNodeType);

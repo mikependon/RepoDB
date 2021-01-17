@@ -33,7 +33,7 @@ namespace RepoDb.Extensions
         public static Attribute GetCustomAttribute(this PropertyInfo property,
             Type type)
         {
-            var attributes = property.GetCustomAttributes(type, false)?.WithType<Attribute>();
+            var attributes = property.GetCustomAttributes(type, false).WithType<Attribute>();
             return attributes?.FirstOrDefault(a => a.GetType() == type);
         }
 

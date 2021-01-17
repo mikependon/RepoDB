@@ -25,8 +25,8 @@ namespace RepoDb.Extensions
         /// <param name="type">The current type.</param>
         /// <returns>The instance of <see cref="ConstructorInfo"/> with the most arguments.</returns>
         public static ConstructorInfo GetConstructorWithMostArguments(this Type type) =>
-            type.GetConstructors()?.Where(item => item.GetParameters().Length > 0)?
-                .OrderByDescending(item => item.GetParameters().Length)?.FirstOrDefault();
+            type.GetConstructors().Where(item => item.GetParameters().Length > 0)
+                .OrderByDescending(item => item.GetParameters().Length).FirstOrDefault();
 
         /// <summary>
         /// Checks whether the current type is of type <see cref="object"/>.
@@ -162,7 +162,7 @@ namespace RepoDb.Extensions
             Type sourceType)
         {
             var genericTypes = sourceType?.GetGenericArguments();
-            if (genericTypes?.Length == currentType?.GetGenericArguments()?.Length)
+            if (genericTypes?.Length == currentType?.GetGenericArguments().Length)
             {
                 return currentType.MakeGenericType(genericTypes);
             }
@@ -201,7 +201,7 @@ namespace RepoDb.Extensions
                     item.Name == StaticType.IClassHandler.Name && item.Namespace == StaticType.IClassHandler.Namespace);
             if (targetInterface != null)
             {
-                return targetInterface.GetGenericArguments()?.FirstOrDefault() == targetModelType;
+                return targetInterface.GetGenericArguments().FirstOrDefault() == targetModelType;
             }
             return false;
         }

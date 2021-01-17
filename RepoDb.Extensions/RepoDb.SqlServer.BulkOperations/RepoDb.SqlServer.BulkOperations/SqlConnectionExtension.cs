@@ -675,7 +675,7 @@ namespace RepoDb
                 // QUALIFIERS
                 .On()
                 .OpenParen()
-                .WriteText(qualifiers?
+                .WriteText(qualifiers
                     .Select(
                         field => field.AsJoinQualifier("S", "T", dbSetting))
                             .Join(" AND "))

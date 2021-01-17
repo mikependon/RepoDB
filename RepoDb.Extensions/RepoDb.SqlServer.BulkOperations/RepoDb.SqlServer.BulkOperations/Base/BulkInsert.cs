@@ -286,7 +286,7 @@ namespace RepoDb
                 else
                 {
                     // Filter the fields (based on the data reader)
-                    if (readerFields?.Any() == true)
+                    if (readerFields.Any() == true)
                     {
                         fields = fields?
                             .Where(e =>
@@ -389,7 +389,7 @@ namespace RepoDb
             where TSqlTransaction : DbTransaction
         {
             // Validate
-            if (dataTable?.Rows?.Count <= 0)
+            if (dataTable?.Rows.Count <= 0)
             {
                 return default;
             }
@@ -631,9 +631,9 @@ namespace RepoDb
 
                 // Variables needed
                 var identityDbField = dbFields?.FirstOrDefault(dbField => dbField.IsIdentity);
-                var entityType = entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity);
+                var entityType = entities.FirstOrDefault()?.GetType() ?? typeof(TEntity);
                 var entityFields = entityType.IsDictionaryStringObject() ?
-                    GetDictionaryStringObjectFields(entities?.FirstOrDefault() as IDictionary<string, object>) :
+                    GetDictionaryStringObjectFields(entities.FirstOrDefault() as IDictionary<string, object>) :
                     FieldCache.Get(entityType);
                 var fields = dbFields?.Select(dbField => dbField.AsField());
 
@@ -835,7 +835,7 @@ namespace RepoDb
                 else
                 {
                     // Filter the fields (based on the data reader)
-                    if (readerFields?.Any() == true)
+                    if (readerFields.Any() == true)
                     {
                         fields = fields?
                             .Where(e =>
@@ -941,7 +941,7 @@ namespace RepoDb
             where TSqlTransaction : DbTransaction
         {
             // Validate
-            if (dataTable?.Rows?.Count <= 0)
+            if (dataTable?.Rows.Count <= 0)
             {
                 return default;
             }

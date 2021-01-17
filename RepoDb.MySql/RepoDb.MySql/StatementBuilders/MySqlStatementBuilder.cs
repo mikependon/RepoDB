@@ -72,7 +72,7 @@ namespace RepoDb.StatementBuilders
             }
 
             // Validate order by
-            if (orderBy == null || orderBy?.Any() != true)
+            if (orderBy == null || orderBy.Any() != true)
             {
                 throw new EmptyException("The argument 'orderBy' is required.");
             }
@@ -403,8 +403,8 @@ namespace RepoDb.StatementBuilders
             // Check the qualifiers
             if (qualifiers?.Any() == true)
             {
-                var others = qualifiers.Where(f => !string.Equals(f.Name, primaryField?.Name, StringComparison.OrdinalIgnoreCase));
-                if (others?.Any() == true)
+                var others = qualifiers.Where(f => !string.Equals(f.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase));
+                if (others.Any() == true)
                 {
                     throw new InvalidQualifiersException($"MySql is using the primary key as qualifier for merge operation. " +
                         $"Consider creating 'PrimaryKey' in the {tableName} and set the 'qualifiers' to NULL.");
@@ -506,8 +506,8 @@ namespace RepoDb.StatementBuilders
             // Check the qualifiers
             if (qualifiers?.Any() == true)
             {
-                var others = qualifiers.Where(f => !string.Equals(f.Name, primaryField?.Name, StringComparison.OrdinalIgnoreCase));
-                if (others?.Any() == true)
+                var others = qualifiers.Where(f => !string.Equals(f.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase));
+                if (others.Any() == true)
                 {
                     throw new InvalidQualifiersException($"MySql is using the primary key as qualifier for merge operation. " +
                         $"Consider creating 'PrimaryKey' in the {tableName} and set the 'qualifiers' to NULL.");
@@ -667,12 +667,12 @@ namespace RepoDb.StatementBuilders
             if (orderBy != null)
             {
                 // Check if the order fields are present in the given fields
-                var unmatchesOrderFields = orderBy?.Where(orderField =>
-                    fields?.FirstOrDefault(f =>
+                var unmatchesOrderFields = orderBy.Where(orderField =>
+                    fields.FirstOrDefault(f =>
                         string.Equals(orderField.Name, f.Name, StringComparison.OrdinalIgnoreCase)) == null);
 
                 // Throw an error we found any unmatches
-                if (unmatchesOrderFields?.Any() == true)
+                if (unmatchesOrderFields.Any() == true)
                 {
                     throw new MissingFieldsException($"The order fields '{unmatchesOrderFields.Select(field => field.Name).Join(", ")}' are not " +
                         $"present at the given fields '{fields.Select(field => field.Name).Join(", ")}'.");
