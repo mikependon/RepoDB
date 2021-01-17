@@ -62,7 +62,7 @@ namespace RepoDb.Reflection
         {
             return property?
                 .PropertyInfo
-                .GetCustomAttributes()?
+                .GetCustomAttributes()
                 .FirstOrDefault(e =>
                     e.GetType().FullName.Equals("RepoDb.Attributes.SystemSqlServerTypeMapAttribute"));
         }
@@ -146,7 +146,7 @@ namespace RepoDb.Reflection
         {
             return property?
                 .PropertyInfo
-                .GetCustomAttributes()?
+                .GetCustomAttributes()
                 .FirstOrDefault(e =>
                     e.GetType().FullName.Equals("RepoDb.Attributes.MicrosoftSqlServerTypeMapAttribute"));
         }
@@ -230,7 +230,7 @@ namespace RepoDb.Reflection
         {
             return property?
                 .PropertyInfo
-                .GetCustomAttributes()?
+                .GetCustomAttributes()
                 .FirstOrDefault(e =>
                     e.GetType().FullName.Equals("RepoDb.Attributes.MySqlTypeMapAttribute"));
         }
@@ -314,7 +314,7 @@ namespace RepoDb.Reflection
         {
             return property?
                 .PropertyInfo
-                .GetCustomAttributes()?
+                .GetCustomAttributes()
                 .FirstOrDefault(e =>
                     e.GetType().FullName.Equals("RepoDb.Attributes.NpgsqlTypeMapAttribute"));
         }

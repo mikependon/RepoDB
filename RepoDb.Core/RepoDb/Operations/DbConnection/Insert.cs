@@ -186,7 +186,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            if (entity?.GetType()?.IsDictionaryStringObject() == true)
+            if (entity?.GetType().IsDictionaryStringObject() == true)
             {
                 return InsertInternalBase<IDictionary<string, object>, TResult>(connection: connection,
                     tableName: tableName,
@@ -398,7 +398,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            if (entity?.GetType()?.IsDictionaryStringObject() == true)
+            if (entity?.GetType().IsDictionaryStringObject() == true)
             {
                 return InsertAsyncInternalBase<IDictionary<string, object>, TResult>(connection: connection,
                     tableName: tableName,

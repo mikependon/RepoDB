@@ -121,7 +121,7 @@ namespace RepoDb
                 else
                 {
                     // Filter the fields (based on the data reader)
-                    if (readerFields?.Any() == true)
+                    if (readerFields.Any() == true)
                     {
                         fields = fields
                             .Where(e =>
@@ -257,7 +257,7 @@ namespace RepoDb
             where TSqlTransaction : DbTransaction
         {
             // Validate
-            if (dataTable?.Rows?.Count <= 0)
+            if (dataTable?.Rows.Count <= 0)
             {
                 return default;
             }
@@ -538,7 +538,7 @@ namespace RepoDb
                 else
                 {
                     // Filter the fields (based on the data reader)
-                    if (readerFields?.Any() == true)
+                    if (readerFields.Any() == true)
                     {
                         fields = fields
                             .Where(e =>
@@ -680,7 +680,7 @@ namespace RepoDb
             where TSqlTransaction : DbTransaction
         {
             // Validate
-            if (dataTable?.Rows?.Count <= 0)
+            if (dataTable?.Rows.Count <= 0)
             {
                 return default;
             }

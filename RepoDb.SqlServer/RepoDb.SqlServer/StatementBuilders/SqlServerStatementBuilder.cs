@@ -73,7 +73,7 @@ namespace RepoDb.StatementBuilders
             }
 
             // Validate order by
-            if (orderBy == null || orderBy?.Any() != true)
+            if (orderBy == null || orderBy.Any() != true)
             {
                 throw new EmptyException("The argument 'orderBy' is required.");
             }
@@ -380,7 +380,7 @@ namespace RepoDb.StatementBuilders
                         string.Equals(field.Name, f.Name, StringComparison.OrdinalIgnoreCase)) == null);
 
                 // Throw an error we found any unmatches
-                if (unmatchesQualifiers?.Any() == true)
+                if (unmatchesQualifiers.Any() == true)
                 {
                     throw new InvalidQualifiersException($"The qualifiers '{unmatchesQualifiers.Select(field => field.Name).Join(", ")}' are not " +
                         $"present at the given fields '{fields.Select(field => field.Name).Join(", ")}'.");
@@ -391,7 +391,7 @@ namespace RepoDb.StatementBuilders
                 if (primaryField != null)
                 {
                     // Make sure that primary is present in the list of fields before qualifying to become a qualifier
-                    var isPresent = fields?.FirstOrDefault(f => string.Equals(f.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase)) != null;
+                    var isPresent = fields.FirstOrDefault(f => string.Equals(f.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase)) != null;
 
                     // Throw if not present
                     if (isPresent == false)
@@ -537,7 +537,7 @@ namespace RepoDb.StatementBuilders
                         string.Equals(field.Name, f.Name, StringComparison.OrdinalIgnoreCase)) == null);
 
                 // Throw an error we found any unmatches
-                if (unmatchesQualifiers?.Any() == true)
+                if (unmatchesQualifiers.Any() == true)
                 {
                     throw new InvalidQualifiersException($"The qualifiers '{unmatchesQualifiers.Select(field => field.Name).Join(", ")}' are not " +
                         $"present at the given fields '{fields.Select(field => field.Name).Join(", ")}'.");
@@ -548,7 +548,7 @@ namespace RepoDb.StatementBuilders
                 if (primaryField != null)
                 {
                     // Make sure that primary is present in the list of fields before qualifying to become a qualifier
-                    var isPresent = fields?.FirstOrDefault(f => string.Equals(f.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase)) != null;
+                    var isPresent = fields.FirstOrDefault(f => string.Equals(f.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase)) != null;
 
                     // Throw if not present
                     if (isPresent == false)

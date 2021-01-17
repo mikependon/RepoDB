@@ -731,12 +731,12 @@ namespace RepoDb.StatementBuilders
             if (orderBy != null)
             {
                 // Check if the order fields are present in the given fields
-                var unmatchesOrderFields = orderBy?.Where(orderField =>
-                    fields?.FirstOrDefault(f =>
+                var unmatchesOrderFields = orderBy.Where(orderField =>
+                    fields.FirstOrDefault(f =>
                         string.Equals(orderField.Name, f.Name, StringComparison.OrdinalIgnoreCase)) == null);
 
                 // Throw an error we found any unmatches
-                if (unmatchesOrderFields?.Any() == true)
+                if (unmatchesOrderFields.Any() == true)
                 {
                     throw new MissingFieldsException($"The order fields '{unmatchesOrderFields.Select(field => field.Name).Join(", ")}' are not " +
                         $"present at the given fields '{fields.Select(field => field.Name).Join(", ")}'.");
@@ -798,11 +798,11 @@ namespace RepoDb.StatementBuilders
             {
                 // Check if the order fields are present in the given fields
                 var unmatchesOrderFields = orderBy?.Where(orderField =>
-                    fields?.FirstOrDefault(f =>
+                    fields.FirstOrDefault(f =>
                         string.Equals(orderField.Name, f.Name, StringComparison.OrdinalIgnoreCase)) == null);
 
                 // Throw an error we found any unmatches
-                if (unmatchesOrderFields?.Any() == true)
+                if (unmatchesOrderFields.Any() == true)
                 {
                     throw new MissingFieldsException($"The order fields '{unmatchesOrderFields.Select(field => field.AsField(DbSetting)).Join(", ")}' are not " +
                         $"present at the given fields '{fields.Select(field => field.Name).Join(", ")}'.");
@@ -986,7 +986,7 @@ namespace RepoDb.StatementBuilders
                     !string.Equals(f.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase));
 
             // Check if there are updatable fields
-            if (updatableFields?.Any() != true)
+            if (updatableFields.Any() != true)
             {
                 throw new EmptyException("The list of updatable fields cannot be null or empty.");
             }
@@ -1052,12 +1052,12 @@ namespace RepoDb.StatementBuilders
             if (qualifiers?.Any() == true)
             {
                 // Check if the qualifiers are present in the given fields
-                var unmatchesQualifiers = qualifiers?.Where(field =>
+                var unmatchesQualifiers = qualifiers.Where(field =>
                     fields?.FirstOrDefault(f =>
                         string.Equals(field.Name, f.Name, StringComparison.OrdinalIgnoreCase)) == null);
 
                 // Throw an error we found any unmatches
-                if (unmatchesQualifiers?.Any() == true)
+                if (unmatchesQualifiers.Any() == true)
                 {
                     throw new InvalidQualifiersException($"The qualifiers '{unmatchesQualifiers.Select(field => field.Name).Join(", ")}' are not " +
                         $"present at the given fields '{fields.Select(field => field.Name).Join(", ")}'.");
@@ -1068,7 +1068,7 @@ namespace RepoDb.StatementBuilders
                 if (primaryField != null)
                 {
                     // Make sure that primary is present in the list of fields before qualifying to become a qualifier
-                    var isPresent = fields?.FirstOrDefault(f =>
+                    var isPresent = fields.FirstOrDefault(f =>
                         string.Equals(f.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase)) != null;
 
                     // Throw if not present
@@ -1095,7 +1095,7 @@ namespace RepoDb.StatementBuilders
                     qualifiers.FirstOrDefault(q => string.Equals(q.Name, f.Name, StringComparison.OrdinalIgnoreCase)) == null);
 
             // Check if there are updatable fields
-            if (fields?.Any() != true)
+            if (fields.Any() != true)
             {
                 throw new EmptyException("The list of updatable fields cannot be null or empty.");
             }

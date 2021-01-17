@@ -115,7 +115,7 @@ namespace RepoDb.Extensions
                 // Contains
                 if (expression.Method.Name == "Contains")
                 {
-                    var last = expression.Arguments?.Last();
+                    var last = expression.Arguments.Last();
                     if (last?.IsMember() == true)
                     {
                         return last.ToMember().GetField();
@@ -198,7 +198,7 @@ namespace RepoDb.Extensions
                     expression.Method.Name == "StartsWith" ||
                     expression.Method.Name == "EndsWith")
                 {
-                    var last = expression.Arguments?.Last();
+                    var last = expression.Arguments.Last();
                     if (last?.IsMember() == true)
                     {
                         return last.ToMember().Member.GetMappedName();
@@ -383,7 +383,7 @@ namespace RepoDb.Extensions
         /// <param name="expression">The instance of <see cref="MethodCallExpression"/> object where the value is to be extracted.</param>
         /// <returns>The extracted value from <see cref="MethodCallExpression"/> object.</returns>
         public static object GetValue(this MethodCallExpression expression) =>
-            expression.Method.GetValue(expression.Object?.GetValue(), expression.Arguments?.Select(argExpression => argExpression.GetValue()).ToArray());
+            expression.Method.GetValue(expression.Object?.GetValue(), expression.Arguments.Select(argExpression => argExpression.GetValue()).ToArray());
 
         /// <summary>
         /// Gets a value from the current instance of <see cref="MemberExpression"/> object.
@@ -419,7 +419,7 @@ namespace RepoDb.Extensions
             var list = Activator.CreateInstance(expression.Type);
             foreach (var item in expression.Initializers)
             {
-                item.AddMethod.Invoke(list, new[] { item.Arguments?.FirstOrDefault().GetValue() });
+                item.AddMethod.Invoke(list, new[] { item.Arguments.FirstOrDefault().GetValue() });
             }
             return list;
         }

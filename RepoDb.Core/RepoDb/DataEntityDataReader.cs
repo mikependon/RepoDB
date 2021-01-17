@@ -100,7 +100,7 @@ namespace RepoDb
             // Type
             var entityType = typeof(TEntity);
             EntityType = entityType == StaticType.Object ?
-                (entities?.FirstOrDefault()?.GetType() ?? entityType) :
+                (entities.FirstOrDefault()?.GetType() ?? entityType) :
                 entityType;
             isDictionaryStringObject = EntityType.IsDictionaryStringObject();
 
