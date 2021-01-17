@@ -27,7 +27,7 @@ namespace RepoDb.Resolvers
                 throw new NullReferenceException("The type must not be null.");
             }
 
-            type = type?.GetUnderlyingType();
+            type = type.GetUnderlyingType();
 
             if (type == StaticType.Int64)
             {

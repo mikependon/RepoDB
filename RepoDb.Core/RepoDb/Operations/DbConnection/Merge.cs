@@ -662,7 +662,7 @@ namespace RepoDb
             // Return the result
             if (setting.IsUseUpsert == false)
             {
-                if (entity?.GetType()?.IsDictionaryStringObject() == true)
+                if (entity?.GetType().IsDictionaryStringObject() == true)
                 {
                     return MergeInternalBase<IDictionary<string, object>, TResult>(connection: connection,
                         tableName: tableName,
@@ -691,7 +691,7 @@ namespace RepoDb
             }
             else
             {
-                if (entity?.GetType()?.IsDictionaryStringObject() == true)
+                if (entity?.GetType().IsDictionaryStringObject() == true)
                 {
                     return UpsertInternalBase<IDictionary<string, object>, TResult>(connection: connection,
                         tableName: tableName,
@@ -1416,7 +1416,7 @@ namespace RepoDb
             // Return the result
             if (setting.IsUseUpsert == false)
             {
-                if (entity?.GetType()?.IsDictionaryStringObject() == true)
+                if (entity?.GetType().IsDictionaryStringObject() == true)
                 {
                     return MergeAsyncInternalBase<IDictionary<string, object>, TResult>(connection: connection,
                         tableName: tableName,
@@ -1447,7 +1447,7 @@ namespace RepoDb
             }
             else
             {
-                if (entity?.GetType()?.IsDictionaryStringObject() == true)
+                if (entity?.GetType().IsDictionaryStringObject() == true)
                 {
                     return UpsertAsyncInternalBase<IDictionary<string, object>, TResult>(connection: connection,
                         tableName: tableName,

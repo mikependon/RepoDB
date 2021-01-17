@@ -2051,7 +2051,7 @@ namespace RepoDb
             else
             {
                 // Properties
-                var properties = PropertyCache.Get(entityType) ?? entityType?.GetClassProperties();
+                var properties = PropertyCache.Get(entityType) ?? entityType.GetClassProperties();
                 var property = (ClassProperty)null;
 
                 // Primary
@@ -2161,7 +2161,7 @@ namespace RepoDb
             var queryGroup = WhatToQueryGroup<T>(what);
             if (queryGroup == null)
             {
-                var whatType = what?.GetType();
+                var whatType = what.GetType();
                 if (whatType.IsClassType() || whatType.IsAnonymousType())
                 {
                     var field = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction, whatType);
@@ -2199,7 +2199,7 @@ namespace RepoDb
             var queryGroup = WhatToQueryGroup<T>(what);
             if (queryGroup == null)
             {
-                var whatType = what?.GetType();
+                var whatType = what.GetType();
                 if (whatType.IsClassType() || whatType.IsAnonymousType())
                 {
                     var field = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction, whatType, cancellationToken);
@@ -2421,7 +2421,7 @@ namespace RepoDb
             }
             if (dbField != null)
             {
-                var type = entity?.GetType();
+                var type = entity.GetType();
                 if (type.IsClassType())
                 {
                     var properties = PropertyCache.Get(type) ?? type.GetClassProperties();
@@ -2632,7 +2632,7 @@ namespace RepoDb
                 }
             }
 
-            if (queryFields?.Any() != true)
+            if (queryFields.Any() != true)
             {
                 throw new MissingFieldsException("No qualifier fields defined for the 'Upsert' operation. Please check the items defined at the dictionary object.");
             }
@@ -2837,7 +2837,7 @@ namespace RepoDb
             // Func
             if (param != null)
             {
-                var func = FunctionCache.GetPlainTypeToDbParametersCompiledFunction(param?.GetType(), entityType, dbFields);
+                var func = FunctionCache.GetPlainTypeToDbParametersCompiledFunction(param.GetType(), entityType, dbFields);
                 if (func != null)
                 {
                     var cmd = (DbCommand)command;

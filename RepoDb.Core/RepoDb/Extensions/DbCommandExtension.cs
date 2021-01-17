@@ -256,7 +256,7 @@ namespace RepoDb.Extensions
             if (propertiesToSkip != null)
             {
                 classProperties = classProperties?
-                    .Where(p => propertiesToSkip?.Contains(p.PropertyInfo.Name,
+                    .Where(p => propertiesToSkip.Contains(p.PropertyInfo.Name,
                         StringComparer.OrdinalIgnoreCase) == false);
             }
 
@@ -401,7 +401,7 @@ namespace RepoDb.Extensions
             {
                 return;
             }
-            CreateParameters(command, queryGroup?.GetFields(true), propertiesToSkip, entityType, dbFields);
+            CreateParameters(command, queryGroup.GetFields(true), propertiesToSkip, entityType, dbFields);
         }
 
         /// <summary>
@@ -475,7 +475,7 @@ namespace RepoDb.Extensions
             // Variables
             var dbField = GetDbField(queryField.Field.Name, dbFields);
             var value = queryField.Parameter.Value;
-            var valueType = value?.GetType()?.GetUnderlyingType();
+            var valueType = value?.GetType().GetUnderlyingType();
             var isEnum = valueType?.IsEnum;
 
             // PropertyHandler
@@ -492,14 +492,14 @@ namespace RepoDb.Extensions
             if (IsAutomaticConversion(dbField))
             {
                 var underlyingType = dbField.Type.GetUnderlyingType();
-                value = AutomaticConvert(value, classProperty?.PropertyInfo?.PropertyType?.GetUnderlyingType(), underlyingType);
+                value = AutomaticConvert(value, classProperty?.PropertyInfo?.PropertyType.GetUnderlyingType(), underlyingType);
                 valueType = underlyingType;
             }
 
             // DbType
             var dbType = (valueType != null ? clientTypeToDbTypeResolver.Resolve(valueType) : null) ??
                 classProperty?.GetDbType() ??
-                value?.GetType()?.GetDbType();
+                value?.GetType().GetDbType();
 
             // Try get fallback dbType by classProperty to avoid being mistaken as string when value is null.
             if (dbType == null && classProperty != null)
@@ -557,7 +557,7 @@ namespace RepoDb.Extensions
                 {
                     var name = string.Concat(queryField.Parameter.Name, "_In_", i);
                     var value = values[i];
-                    var valueType = value?.GetType()?.GetUnderlyingType();
+                    var valueType = value?.GetType().GetUnderlyingType();
                     var isEnum = valueType?.IsEnum;
 
                     // Propertyhandler
@@ -573,7 +573,7 @@ namespace RepoDb.Extensions
                     if (IsAutomaticConversion(dbField))
                     {
                         var underlyingType = dbField.Type.GetUnderlyingType();
-                        value = AutomaticConvert(value, value?.GetType()?.GetUnderlyingType(), underlyingType);
+                        value = AutomaticConvert(value, value?.GetType().GetUnderlyingType(), underlyingType);
                         valueType = underlyingType;
                     }
 
@@ -613,8 +613,8 @@ namespace RepoDb.Extensions
             {
                 var leftValue = values[0];
                 var rightValue = values[1];
-                var leftValueType = leftValue?.GetType()?.GetUnderlyingType();
-                var rightValueType = rightValue?.GetType()?.GetUnderlyingType();
+                var leftValueType = leftValue?.GetType().GetUnderlyingType();
+                var rightValueType = rightValue?.GetType().GetUnderlyingType();
                 var isLeftEnum = leftValueType?.IsEnum;
                 var isRightEnum = rightValueType?.IsEnum;
 

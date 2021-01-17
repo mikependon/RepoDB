@@ -273,7 +273,7 @@ namespace RepoDb
                     .WithType<PropertyInfo>();
                 var classProperties = PropertyCache.Get<TEntity>()?
                     .Where(classProperty =>
-                        properties?.FirstOrDefault(property => string.Equals(property.Name, classProperty.PropertyInfo.Name, StringComparison.OrdinalIgnoreCase)) != null)?
+                        properties?.FirstOrDefault(property => string.Equals(property.Name, classProperty.PropertyInfo.Name, StringComparison.OrdinalIgnoreCase)) != null)
                     .Select(classProperty => classProperty.PropertyInfo);
                 return (classProperties ?? properties).Select(property => property.AsField());
             }

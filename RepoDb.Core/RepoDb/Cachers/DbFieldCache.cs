@@ -88,7 +88,7 @@ namespace RepoDb
             var key = (long)type.GetHashCode();
 
             // Note: For SqlConnection, the ConnectionString is changing if the (Integrated Security=False). Actually for this isolation, the database name is enough.
-            if (!string.IsNullOrWhiteSpace(connection?.Database))
+            if (!string.IsNullOrWhiteSpace(connection.Database))
             {
                 key += connection.Database.GetHashCode();
             }
@@ -175,7 +175,7 @@ namespace RepoDb
             var key = (long)type.GetHashCode();
 
             // Note: For SqlConnection, the ConnectionString is changing if the (Integrated Security=False). Actually for this isolation, the database name is enough.
-            if (!string.IsNullOrWhiteSpace(connection?.Database))
+            if (!string.IsNullOrWhiteSpace(connection.Database))
             {
                 key += connection.Database.GetHashCode();
             }

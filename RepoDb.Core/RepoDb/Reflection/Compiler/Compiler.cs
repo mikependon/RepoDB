@@ -147,7 +147,7 @@ namespace RepoDb.Reflection
             {
                 return Enumerable.Empty<FieldDirection>();
             }
-            return fields?.Select((value, index) => new FieldDirection
+            return fields.Select((value, index) => new FieldDirection
             {
                 Index = index,
                 DbField = value,
@@ -166,7 +166,7 @@ namespace RepoDb.Reflection
             {
                 return Enumerable.Empty<FieldDirection>();
             }
-            return fields?.Select((value, index) => new FieldDirection
+            return fields.Select((value, index) => new FieldDirection
             {
                 Index = index,
                 DbField = value,
@@ -285,7 +285,7 @@ namespace RepoDb.Reflection
         /// <param name="getMethod"></param>
         /// <returns></returns>
         internal static ParameterInfo GetPropertyHandlerGetParameter(MethodInfo getMethod) =>
-            getMethod?.GetParameters()?.First();
+            getMethod?.GetParameters().First();
 
         /// <summary>
         ///
@@ -301,7 +301,7 @@ namespace RepoDb.Reflection
         /// <param name="setMethod"></param>
         /// <returns></returns>
         internal static ParameterInfo GetPropertyHandlerSetParameter(MethodInfo setMethod) =>
-            setMethod?.GetParameters()?.First();
+            setMethod?.GetParameters().First();
 
         /// <summary>
         ///
@@ -1477,7 +1477,7 @@ namespace RepoDb.Reflection
 
             // Property Handler
             expression = ConvertExpressionToPropertyHandlerSetExpression(expression, null,
-                dbField?.Type.GetUnderlyingType());
+                dbField.Type.GetUnderlyingType());
 
             // Convert to object
             return ConvertExpressionToTypeExpression(expression, StaticType.Object);

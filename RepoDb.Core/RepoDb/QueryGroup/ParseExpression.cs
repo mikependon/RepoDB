@@ -153,11 +153,11 @@ namespace RepoDb
         {
             var queryGroup = (QueryGroup)null;
 
-            if (expression.Operand?.IsMember() == true)
+            if (expression.Operand.IsMember() == true)
             {
                 queryGroup = Parse<TEntity>(expression.Operand.ToMember(), expression.NodeType);
             }
-            else if (expression.Operand?.IsMethodCall() == true)
+            else if (expression.Operand.IsMethodCall() == true)
             {
                 queryGroup = Parse<TEntity>(expression.Operand.ToMethodCall(), expression.NodeType);
             }
