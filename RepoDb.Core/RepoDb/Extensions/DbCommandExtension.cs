@@ -241,7 +241,14 @@ namespace RepoDb.Extensions
             ParameterDirection? parameterDirection, 
             Type fallbackType)
         {
-            var valueType = (classProperty?.PropertyInfo.PropertyType ?? value?.GetType()).GetUnderlyingType();
+            /*
+             * In some cases, the value type and the classProperty type will be inconsistent, Therefore, the type gives priority to value.
+             * ex: in RepoDb.MySql.IntegrationTests.TestMySqlConnectionForQueryForMySqlMapAttribute
+             *    entity AttributeTable.Id = int
+             *    database completetable.Id = bigint(20) AUTO_INCREMENT
+             *    value id in connection.Query<AttributeTable>(id) is from connection.Insert<AttributeTable>(table) = ulong
+             */
+            var valueType = (value?.GetType() ?? classProperty?.PropertyInfo.PropertyType).GetUnderlyingType();
 
             /*
              * Try to get the propertyHandler, the order of the source of resolve is classProperty and valueType.
