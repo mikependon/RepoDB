@@ -100,7 +100,7 @@ namespace RepoDb
         /// <returns>The mapped <see cref="DbType"/> object of the property.</returns>
         internal static DbType? Get<TEntity>(PropertyInfo propertyInfo)
             where TEntity : class =>
-            Get(typeof(TEntity), propertyInfo);
+            Get(typeof(TEntity), propertyInfo) ?? Get(propertyInfo.PropertyType);
 
         /// <summary>
         /// Property Level: Gets the cached <see cref="DbType"/> object that is being mapped on a specific <see cref="PropertyInfo"/> object.

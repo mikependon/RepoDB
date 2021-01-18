@@ -78,7 +78,7 @@ namespace RepoDb.Reflection
                 // ClassProperty
                 if (ClassProperty?.PropertyInfo != null)
                 {
-                    message = string.Concat(descriptiveContextString, $"PropertyInfo: {ClassProperty.PropertyInfo.Name} ({ClassProperty.PropertyInfo.PropertyType}), DeclaringType: {ClassProperty.DeclaringType} ");
+                    message = string.Concat(descriptiveContextString, $"PropertyInfo: {ClassProperty.PropertyInfo.Name} ({ClassProperty.PropertyInfo.PropertyType}), DeclaringType: {ClassProperty.GetDeclaringType()} ");
                 }
 
                 // Return
@@ -858,7 +858,7 @@ namespace RepoDb.Reflection
         /// <param name="classProperty"></param>
         /// <param name="targetType"></param>
         /// <returns></returns>
-        internal static (Expression convertedExpression, Type handlerSetType) ConvertExpressionToPropertyHandlerSetExpressionTuple(Expression expression,
+        internal static (Expression convertedExpression, Type handlerSetReturnType) ConvertExpressionToPropertyHandlerSetExpressionTuple(Expression expression,
             ClassProperty classProperty,
             Type targetType)
         {

@@ -21,19 +21,6 @@ namespace RepoDb.Extensions
 
         #endregion
 
-        #region SubClasses
-
-        /// <summary>
-        ///
-        /// </summary>
-        private class PropertyHandlerSetReturnDefinition
-        {
-            public object Value { get; set; }
-            public Type ReturnType { get; set; }
-        }
-
-        #endregion
-
         #region CreateParameter
 
         /// <summary>
@@ -230,6 +217,99 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
+        /// Create Parameter, the process will handle value conversion and type conversion.
+        /// </summary>
+        /// <param name="command">The command object to be used.</param>
+        /// <param name="name">Entity property's name.</param>
+        /// <param name="value">Entity property's value, maybe null.</param>
+        /// <param name="classProperty">
+        /// The entity's class property information. <br />
+        /// If the parameter is a dictionary, it will be null, otherwise it will not be null.
+        /// </param>
+        /// <param name="dbField">
+        /// Used to get the actual field type information of the database to determine whether automatic type conversion is required. <br />
+        /// When the tableName is assigned, it will be based on the database field information obtained by the tableName, so this parameter will be null in most cases.
+        /// </param>
+        /// <param name="parameterDirection">The direction of the parameter.</param>
+        /// <param name="fallbackType">Used when none of the above parameters can determine the value of Parameter.DbType.</param>
+        /// <returns>An instance of the newly created parameter object.</returns>
+        private static IDbDataParameter CreateParameter(IDbCommand command, 
+            string name,
+            object value,
+            ClassProperty classProperty,
+            DbField dbField,
+            ParameterDirection? parameterDirection, 
+            Type fallbackType)
+        {
+            /*
+             * In some cases, the value type and the classProperty type will be inconsistent, Therefore, the type gives priority to value.
+             * ex: in RepoDb.MySql.IntegrationTests.TestMySqlConnectionForQueryForMySqlMapAttribute
+             *    entity AttributeTable.Id = int
+             *    database completetable.Id = bigint(20) AUTO_INCREMENT
+             *    value id in connection.Query<AttributeTable>(id) is from connection.Insert<AttributeTable>(table) = ulong
+             */
+            var valueType = (value?.GetType() ?? classProperty?.PropertyInfo.PropertyType).GetUnderlyingType();
+
+            /*
+             * Try to get the propertyHandler, the order of the source of resolve is classProperty and valueType.
+             * If the propertyHandler exists, the value and DbType are re-determined by the propertyHandler.
+             */
+            var propertyHandler = 
+                classProperty?.GetPropertyHandler() ?? 
+                (valueType == null ? null : PropertyHandlerCache.Get<object>(valueType));
+            if (propertyHandler != null)
+            {
+                var propertyHandlerSetMethod = propertyHandler.GetType().GetMethod("Set");
+                value = propertyHandlerSetMethod.Invoke(propertyHandler, new[] { value, classProperty });
+                valueType = propertyHandlerSetMethod.ReturnType.GetUnderlyingType();
+            }
+
+            /*
+             * When the database field information exists and the field type definition is found to be different from the valueType, 
+             * if automatic type conversion is activated at this time, it will be processed.
+             */
+            if (valueType != null && dbField != null && IsAutomaticConversion(dbField))
+            {
+                var dbFieldType = dbField.Type.GetUnderlyingType();
+                if (dbFieldType != valueType)
+                {
+                    if (value != null)
+                    {
+                        value = AutomaticConvert(value, valueType, dbFieldType);
+                    }
+                    valueType = dbFieldType;
+                }
+            }
+
+            /*
+             * Set DbType as much as possible, to avoid parameter misjudgment when Value is null.
+             * order:
+             *      1. attribute level, TypeMapAttribute define on class's property
+             *      2. property level, assigned by TypeMapper.Add(entityType, property, dbType, ...)
+             *      3. type level, use TypeMapCache, assigned by TypeMapper.Add(type, dbType, ...), not included Primitive mapping.
+             *      4. type level, primitive mapping, included special type. ex: byte[] ...etc.
+             *      5. if isEnum, use Converter.EnumDefaultDatabaseType.
+             */
+
+            // if classProperty exists, try get dbType from attribute level or property level, 
+            // The reason for not using classProperty.GetDbType() is to avoid getting the type level mapping.
+            var dbType =
+                (classProperty == null ? null : TypeMapCache.Get(classProperty.GetDeclaringType(), classProperty.PropertyInfo));
+            if (dbType == null && (valueType ??= dbField?.Type.GetUnderlyingType() ?? fallbackType) != null)
+            {
+                dbType =
+                    valueType.GetDbType() ??                                        // type level, use TypeMapCache
+                    clientTypeToDbTypeResolver.Resolve(valueType) ??                // type level, primitive mapping
+                    (valueType.IsEnum ? Converter.EnumDefaultDatabaseType : null);  // use Converter.EnumDefaultDatabaseType
+            }
+
+            /*
+             * Return the parameter
+             */
+            return command.CreateParameter(name, value, dbType, parameterDirection);
+        }
+
+        /// <summary>
         ///
         /// </summary>
         /// <param name="command"></param>
@@ -255,9 +335,7 @@ namespace RepoDb.Extensions
             // Skip
             if (propertiesToSkip != null)
             {
-                classProperties = classProperties?
-                    .Where(p => propertiesToSkip.Contains(p.PropertyInfo.Name,
-                        StringComparer.OrdinalIgnoreCase) == false);
+                classProperties = classProperties?.Where(p => propertiesToSkip.Contains(p.PropertyInfo.Name, StringComparer.OrdinalIgnoreCase) == false);
             }
 
             // Iterate
@@ -266,43 +344,7 @@ namespace RepoDb.Extensions
                 var name = classProperty.GetMappedName();
                 var dbField = GetDbField(name, dbFields);
                 var value = classProperty.PropertyInfo.GetValue(param);
-                var valueType = value?.GetType();
-                var isEnum = valueType?.IsEnum;
-                var returnType = (Type)null;
-
-                // Propertyhandler
-                var propertyHandler = GetPropertyHandler(classProperty, valueType);
-                var definition = InvokePropertyHandlerSetMethod(propertyHandler, value, classProperty);
-                if (definition != null)
-                {
-                    returnType = definition.ReturnType.GetUnderlyingType();
-                    value = definition.Value;
-                }
-
-                // Automatic
-                if (IsAutomaticConversion(dbField))
-                {
-                    var underlyingType = dbField.Type.GetUnderlyingType();
-                    value = AutomaticConvert(value, classProperty.PropertyInfo.PropertyType.GetUnderlyingType(), underlyingType);
-                    returnType = underlyingType;
-                }
-
-                /*
-                 * DbType, Decide in the following logical order
-                 *   1. PropertyHandler.Set method's ReturnType, use Primitive mapping.
-                 *   2. Property Type, use TypeMapCache.
-                 *   3. Property value's Type, use TypeMapCache.
-                 *   4. Property Type, use Primitive mapping.
-                 *   5. Specialized enum, use Converter.EnumDefaultDatabaseType.
-                 */
-                var dbType = (returnType != null ? clientTypeToDbTypeResolver.Resolve(returnType) : null) ??
-                    classProperty.GetDbType() ??
-                    value?.GetType()?.GetDbType() ??
-                    (classProperty != null ? clientTypeToDbTypeResolver.Resolve(classProperty.PropertyInfo.PropertyType) : null) ??
-                    (isEnum == true ? Converter.EnumDefaultDatabaseType : (DbType?)null);
-
-                // Add the parameter
-                command.Parameters.Add(command.CreateParameter(name, value, dbType));
+                command.Parameters.Add(CreateParameter(command, name, value, classProperty, dbField, null, null));
             }
         }
 
@@ -327,59 +369,14 @@ namespace RepoDb.Extensions
                 var dbField = GetDbField(kvp.Key, dbFields);
                 var value = kvp.Value;
                 var classProperty = (ClassProperty)null;
-                var valueType = (Type)null;
 
                 // CommandParameter
                 if (kvp.Value is CommandParameter commandParameter)
                 {
                     classProperty = PropertyCache.Get(commandParameter.MappedToType, kvp.Key);
                     value = commandParameter.Value;
-                    valueType = value?.GetType()?.GetUnderlyingType();
                 }
-                else
-                {
-                    valueType = value?.GetType()?.GetUnderlyingType();
-                }
-
-                // Variables
-                var isEnum = valueType?.IsEnum;
-
-                // Propertyhandler
-                var propertyHandler = GetPropertyHandler(classProperty, valueType);
-                var definition = InvokePropertyHandlerSetMethod(propertyHandler, value, classProperty);
-                if (definition != null)
-                {
-                    valueType = definition.ReturnType.GetUnderlyingType();
-                    value = definition.Value;
-                }
-
-                // Automatic
-                if (IsAutomaticConversion(dbField))
-                {
-                    var dbFieldType = dbField.Type.GetUnderlyingType();
-                    value = AutomaticConvert(value, valueType, dbFieldType);
-                    valueType = dbFieldType;
-                }
-
-                // DbType
-                var dbType = (valueType != null ? clientTypeToDbTypeResolver.Resolve(valueType) : null) ??
-                    classProperty?.GetDbType() ??
-                    value?.GetType()?.GetDbType();
-
-                // Try get fallback dbType by classProperty to avoid being mistaken as string when value is null.
-                if (dbType == null && classProperty != null)
-                {
-                    dbType = clientTypeToDbTypeResolver.Resolve(classProperty.PropertyInfo.PropertyType);
-                }
-
-                // Specialized enum
-                if (dbType == null && isEnum.HasValue && isEnum.Value == true)
-                {
-                    dbType = Converter.EnumDefaultDatabaseType;
-                }
-
-                // Add the parameter
-                command.Parameters.Add(command.CreateParameter(kvp.Key, value, dbType));
+                command.Parameters.Add(CreateParameter(command, kvp.Key, value, classProperty, dbField, null, null));
             }
         }
 
@@ -466,68 +463,20 @@ namespace RepoDb.Extensions
                 return;
             }
 
+            var fieldName = queryField.Field.Name;
+
             // Skip
-            if (propertiesToSkip?.Contains(queryField.Field.Name, StringComparer.OrdinalIgnoreCase) == true)
+            if (propertiesToSkip?.Contains(fieldName, StringComparer.OrdinalIgnoreCase) == true)
             {
                 return;
             }
 
             // Variables
-            var dbField = GetDbField(queryField.Field.Name, dbFields);
+            var dbField = GetDbField(fieldName, dbFields);
             var value = queryField.Parameter.Value;
-            var valueType = value?.GetType().GetUnderlyingType();
-            var isEnum = valueType?.IsEnum;
-
-            // PropertyHandler
             var classProperty = PropertyCache.Get(entityType, queryField.Field);
-            var propertyHandler = GetPropertyHandler(classProperty, valueType);
-            var definition = InvokePropertyHandlerSetMethod(propertyHandler, value, classProperty);
-            if (definition != null)
-            {
-                valueType = definition.ReturnType.GetUnderlyingType();
-                value = definition.Value;
-            }
-
-            // Automatic
-            if (IsAutomaticConversion(dbField))
-            {
-                var underlyingType = dbField.Type.GetUnderlyingType();
-                value = AutomaticConvert(value, classProperty?.PropertyInfo?.PropertyType.GetUnderlyingType(), underlyingType);
-                valueType = underlyingType;
-            }
-
-            // DbType
-            var dbType = (valueType != null ? clientTypeToDbTypeResolver.Resolve(valueType) : null) ??
-                classProperty?.GetDbType() ??
-                value?.GetType().GetDbType();
-
-            // Try get fallback dbType by classProperty to avoid being mistaken as string when value is null.
-            if (dbType == null && classProperty != null)
-            {
-                dbType = clientTypeToDbTypeResolver.Resolve(classProperty.PropertyInfo.PropertyType);
-            }
-
-            // Specialized enum
-            if (dbType == null && isEnum.HasValue && isEnum == true)
-            {
-                dbType = Converter.EnumDefaultDatabaseType;
-            }
-
-            // Direction
-            var parameterDirection = (ParameterDirection?)null;
-            if (queryField is DirectionalQueryField directionalQueryField)
-            {
-                parameterDirection = directionalQueryField.Direction;
-
-                // Ensure the DB type
-                if (dbType == null && directionalQueryField.Type != null)
-                {
-                    dbType = clientTypeToDbTypeResolver.Resolve(directionalQueryField.Type);
-                }
-            }
-
-            // Add the parameter
-            var parameter = command.CreateParameter(queryField.Parameter.Name, value, dbType, parameterDirection);
+            var (direction, fallbackType) = queryField is DirectionalQueryField n ? ((ParameterDirection?)n.Direction, n.Type) : default;
+            var parameter = CreateParameter(command, queryField.Parameter.Name, value, classProperty, dbField, direction, fallbackType);
             command.Parameters.Add(parameter);
 
             // Set the parameter
@@ -544,50 +493,15 @@ namespace RepoDb.Extensions
             QueryField queryField,
             DbField dbField = null)
         {
-            if (queryField == null)
-            {
-                return;
-            }
-            var values = (queryField.Parameter.Value as System.Collections.IEnumerable)?
+            var values = (queryField?.Parameter.Value as System.Collections.IEnumerable)?
                         .WithType<object>()
                         .AsList();
-            if (values.Any() == true)
+            if (values?.Count > 0)
             {
                 for (var i = 0; i < values.Count; i++)
                 {
                     var name = string.Concat(queryField.Parameter.Name, "_In_", i);
-                    var value = values[i];
-                    var valueType = value?.GetType().GetUnderlyingType();
-                    var isEnum = valueType?.IsEnum;
-
-                    // Propertyhandler
-                    var propertyHandler = GetPropertyHandler(null, valueType);
-                    var definition = InvokePropertyHandlerSetMethod(propertyHandler, value, null);
-                    if (definition != null)
-                    {
-                        valueType = definition.ReturnType.GetUnderlyingType();
-                        value = definition.Value;
-                    }
-
-                    // Automatic
-                    if (IsAutomaticConversion(dbField))
-                    {
-                        var underlyingType = dbField.Type.GetUnderlyingType();
-                        value = AutomaticConvert(value, value?.GetType().GetUnderlyingType(), underlyingType);
-                        valueType = underlyingType;
-                    }
-
-                    // DbType
-                    var dbType = (valueType != null ? clientTypeToDbTypeResolver.Resolve(valueType) : null);
-
-                    // Specialized enum
-                    if (dbType == null && isEnum.HasValue && isEnum.Value == true)
-                    {
-                        dbType = Converter.EnumDefaultDatabaseType;
-                    }
-
-                    // Create
-                    command.Parameters.Add(CreateParameter(command, name, values[i], dbType));
+                    command.Parameters.Add(CreateParameter(command, name, values[i], null, dbField, null, null));
                 }
             }
         }
@@ -602,68 +516,13 @@ namespace RepoDb.Extensions
             QueryField queryField,
             DbField dbField = null)
         {
-            if (queryField == null)
-            {
-                return;
-            }
-            var values = (queryField.Parameter.Value as System.Collections.IEnumerable)?
+            var values = (queryField?.Parameter.Value as System.Collections.IEnumerable)?
                         .WithType<object>()
                         .AsList();
             if (values?.Count == 2)
             {
-                var leftValue = values[0];
-                var rightValue = values[1];
-                var leftValueType = leftValue?.GetType().GetUnderlyingType();
-                var rightValueType = rightValue?.GetType().GetUnderlyingType();
-                var isLeftEnum = leftValueType?.IsEnum;
-                var isRightEnum = rightValueType?.IsEnum;
-
-                // Propertyhandler (Left)
-                var leftPropertyHandler = GetPropertyHandler(null, leftValueType);
-                var leftdefinition = InvokePropertyHandlerSetMethod(leftPropertyHandler, leftValue, null);
-                if (leftdefinition != null)
-                {
-                    leftValueType = leftdefinition.ReturnType.GetUnderlyingType();
-                    leftValue = leftdefinition.Value;
-                }
-
-                // Propertyhandler (Right)
-                var rightPropertyHandler = GetPropertyHandler(null, rightValueType);
-                var rightDefinition = InvokePropertyHandlerSetMethod(rightPropertyHandler, rightValue, null);
-                if (rightDefinition != null)
-                {
-                    rightValueType = rightDefinition.ReturnType.GetUnderlyingType();
-                    rightValue = rightDefinition.Value;
-                }
-
-                // Automatic
-                if (IsAutomaticConversion(dbField))
-                {
-                    leftValueType = dbField.Type.GetUnderlyingType();
-                    rightValueType = leftValueType;
-                    leftValue = AutomaticConvert(leftValue, leftValue?.GetType(), leftValueType);
-                    rightValue = AutomaticConvert(rightValue, leftValue?.GetType(), rightValueType);
-                }
-
-                // DbType
-                var leftDbType = (leftValueType != null ? clientTypeToDbTypeResolver.Resolve(leftValueType) : null);
-                var rightDbType = (rightValueType != null ? clientTypeToDbTypeResolver.Resolve(rightValueType) : null);
-
-                // Specialized enum
-                if (leftDbType == null && isLeftEnum.HasValue && isLeftEnum.Value == true)
-                {
-                    leftDbType = Converter.EnumDefaultDatabaseType;
-                }
-                if (rightDbType == null && isRightEnum.HasValue && isRightEnum.Value == true)
-                {
-                    rightDbType = Converter.EnumDefaultDatabaseType;
-                }
-
-                // Add
-                command.Parameters.Add(
-                    CreateParameter(command, string.Concat(queryField.Parameter.Name, "_Left"), leftValue, leftDbType));
-                command.Parameters.Add(
-                    CreateParameter(command, string.Concat(queryField.Parameter.Name, "_Right"), rightValue, rightDbType));
+                command.Parameters.Add(CreateParameter(command, string.Concat(queryField.Parameter.Name, "_Left"), values[0], null, dbField, null, null));
+                command.Parameters.Add(CreateParameter(command, string.Concat(queryField.Parameter.Name, "_Right"), values[1], null, dbField, null, null));
             }
             else
             {
@@ -709,28 +568,6 @@ namespace RepoDb.Extensions
             }
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="propertyHandler"></param>
-        /// <param name="value"></param>
-        /// <param name="classProperty"></param>
-        private static PropertyHandlerSetReturnDefinition InvokePropertyHandlerSetMethod(object propertyHandler,
-            object value,
-            ClassProperty classProperty)
-        {
-            if (propertyHandler == null)
-            {
-                return null;
-            }
-
-            var setMethod = propertyHandler.GetType().GetMethod("Set");
-            return new PropertyHandlerSetReturnDefinition
-            {
-                ReturnType = setMethod.ReturnType,
-                Value = setMethod.Invoke(propertyHandler, new[] { value, classProperty })
-            };
-        }
 
         /// <summary>
         ///

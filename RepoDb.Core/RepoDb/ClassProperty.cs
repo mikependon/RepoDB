@@ -28,7 +28,7 @@ namespace RepoDb
         public ClassProperty(Type parentType,
             PropertyInfo property)
         {
-            DeclaringType = parentType;
+            declaringType = parentType;
             PropertyInfo = property;
         }
 
@@ -37,7 +37,7 @@ namespace RepoDb
         /// <summary>
         /// Gets the original declaring type (avoiding the interface collision).
         /// </summary>
-        public Type DeclaringType { get; }
+        private readonly Type declaringType;
 
         /// <summary>
         /// Gets the wrapped property of this object.
@@ -62,7 +62,7 @@ namespace RepoDb
         /// </summary>
         /// <returns>The declaring type.</returns>
         public Type GetDeclaringType() =>
-            (DeclaringType ?? PropertyInfo.DeclaringType);
+            (declaringType ?? PropertyInfo.DeclaringType);
 
         /*
          * AsField
@@ -232,7 +232,7 @@ namespace RepoDb
             isDbTypeWasSet = true;
 
             // Return the value
-            return dbType = TypeMapCache.Get(GetDeclaringType(), PropertyInfo);
+            return dbType = TypeMapCache.Get(GetDeclaringType(), PropertyInfo) ?? TypeMapCache.Get(PropertyInfo.PropertyType);
         }
 
         /*
