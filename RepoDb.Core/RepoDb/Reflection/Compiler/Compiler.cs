@@ -1191,12 +1191,15 @@ namespace RepoDb.Reflection
                     var classProperty = classProperties?.
                         FirstOrDefault(property =>
                             string.Equals(property.PropertyInfo.Name, parameterInfo.Name, StringComparison.OrdinalIgnoreCase));
-                    list.Add(new ClassPropertyParameterInfo
+                    if (classProperty != null)
                     {
-                        ClassProperty = classProperty.PropertyInfo.CanWrite ? classProperty : null,
-                        ParameterInfo = parameterInfo,
-                        ParameterInfoMappedClassProperty = classProperty
-                    });
+                        list.Add(new ClassPropertyParameterInfo
+                        {
+                            ClassProperty = classProperty.PropertyInfo.CanWrite ? classProperty : null,
+                            ParameterInfo = parameterInfo,
+                            ParameterInfoMappedClassProperty = classProperty
+                        });
+                    }
                 });
 
             // ClassProperties
