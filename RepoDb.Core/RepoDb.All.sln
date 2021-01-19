@@ -1,0 +1,218 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29613.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb", "RepoDb\RepoDb.csproj", "{848A3476-B319-4BCC-A9CB-572182785B58}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Base", "RepoDb.Base", "{810FF947-4368-477F-9193-07532892B492}"
+	ProjectSection(SolutionItems) = preProject
+		..\CODE_OF_CONDUCT.md = ..\CODE_OF_CONDUCT.md
+		..\LICENSE.txt = ..\LICENSE.txt
+		..\README.md = ..\README.md
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.SqLite", "..\RepoDb.SqLite\RepoDb.SqLite\RepoDb.SqLite.csproj", "{1BD00E8B-7E72-48E2-BFAB-E12F34A96D3D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.MySql", "..\RepoDb.MySql\RepoDb.MySql\RepoDb.MySql.csproj", "{C6E790E9-1DB0-4953-B5A4-ABC517C0C19F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Nuget", "RepoDb.Nuget", "{006AD8A9-75F1-4F67-AF75-0B5204E2E0A4}"
+	ProjectSection(SolutionItems) = preProject
+		..\RepoDb.Nuget\documentation.md = ..\RepoDb.Nuget\documentation.md
+		..\RepoDb.Nuget\install.txt = ..\RepoDb.Nuget\install.txt
+		..\RepoDb.Nuget\readme.txt = ..\RepoDb.Nuget\readme.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Docs", "RepoDb.Docs", "{C7222746-534E-4D95-9B7E-9593C191FDE2}"
+	ProjectSection(SolutionItems) = preProject
+		..\RepoDb.Docs\atomic-batch-bulk.md = ..\RepoDb.Docs\atomic-batch-bulk.md
+		..\RepoDb.Docs\building-the-solutions.md = ..\RepoDb.Docs\building-the-solutions.md
+		..\RepoDb.Docs\bulk-operation-edge-cases.md = ..\RepoDb.Docs\bulk-operation-edge-cases.md
+		..\RepoDb.Docs\coding-standards.md = ..\RepoDb.Docs\coding-standards.md
+		..\RepoDb.Docs\development-experience.md = ..\RepoDb.Docs\development-experience.md
+		..\RepoDb.Docs\issuing-a-pull-request.md = ..\RepoDb.Docs\issuing-a-pull-request.md
+		..\RepoDb.Docs\limitations.md = ..\RepoDb.Docs\limitations.md
+		..\RepoDb.Docs\reporting-an-issue.md = ..\RepoDb.Docs\reporting-an-issue.md
+		..\RepoDb.Docs\support-policy.md = ..\RepoDb.Docs\support-policy.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "READMEs", "READMEs", "{5EA323B8-B4B6-4083-97A3-018C9423B20A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SqLite", "SqLite", "{D203DBE3-A86A-4F48-AE16-3CCCCA443ABC}"
+	ProjectSection(SolutionItems) = preProject
+		..\RepoDb.SqLite\README.md = ..\RepoDb.SqLite\README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MySql", "MySql", "{97CDB540-A186-42B9-9492-608A2392A8C5}"
+	ProjectSection(SolutionItems) = preProject
+		..\RepoDb.MySql\README.md = ..\RepoDb.MySql\README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PostgreSql", "PostgreSql", "{97F2640B-CD0C-430E-8E18-D948A6966C85}"
+	ProjectSection(SolutionItems) = preProject
+		..\RepoDb.PostgreSql\README.md = ..\RepoDb.PostgreSql\README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{FCAEE688-26E0-490C-9C70-0A52AA7AFF62}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.PostgreSql", "..\RepoDb.PostgreSql\RepoDb.PostgreSql\RepoDb.PostgreSql.csproj", "{FAD179C4-B9E1-44F3-956A-D755459747F8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.SqlServer", "..\RepoDb.SqlServer\RepoDb.SqlServer\RepoDb.SqlServer.csproj", "{DBE1E50B-564D-4B81-9DE7-EC6A141A515A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SqlServer", "SqlServer", "{B57B1387-2718-46F0-9608-11746ECB4DF2}"
+	ProjectSection(SolutionItems) = preProject
+		..\RepoDb.SqlServer\README.md = ..\RepoDb.SqlServer\README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SqlServer.BulkOperations", "SqlServer.BulkOperations", "{1E85E11D-431C-4969-B2EE-C82EB0D92DC7}"
+	ProjectSection(SolutionItems) = preProject
+		..\RepoDb.Extensions\RepoDb.SqlServer.BulkOperations\README.md = ..\RepoDb.Extensions\RepoDb.SqlServer.BulkOperations\README.md
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.SqlServer.BulkOperations", "..\RepoDb.Extensions\RepoDb.SqlServer.BulkOperations\RepoDb.SqlServer.BulkOperations\RepoDb.SqlServer.BulkOperations.csproj", "{E6E02782-931E-450D-AAF6-7C1960B2AA17}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.MySqlConnector", "..\RepoDb.MySqlConnector\RepoDb.MySqlConnector\RepoDb.MySqlConnector.csproj", "{C63D73DF-E9CC-4DC7-A2AC-44FD7A378090}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MySqlConnector", "MySqlConnector", "{419BA40B-7803-4E45-893F-FB8A6E81FAC5}"
+	ProjectSection(SolutionItems) = preProject
+		..\RepoDb.MySqlConnector\README.md = ..\RepoDb.MySqlConnector\README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0D6226D2-45AA-4EE3-BC76-BD0B60D8AE6A}"
+	ProjectSection(SolutionItems) = preProject
+		..\Directory.Build.props = ..\Directory.Build.props
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.Benchmarks", "..\RepoDb.Benchmarks\RepoDb.Benchmarks\RepoDb.Benchmarks.csproj", "{38C9D2FC-9762-42C0-AF7B-E36E7F3890E2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.IntegrationTests", "RepoDb.Tests\RepoDb.IntegrationTests\RepoDb.IntegrationTests.csproj", "{86A5DB6E-622C-4320-93F7-8E7DE6CC361B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.UnitTests", "RepoDb.Tests\RepoDb.UnitTests\RepoDb.UnitTests.csproj", "{2EB719D0-36CB-4F3B-9429-10C9CE29C12E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.MySql.IntegrationTests", "..\RepoDb.MySql\RepoDb.MySql.IntegrationTests\RepoDb.MySql.IntegrationTests.csproj", "{BE11218C-C218-4A8F-ABDE-0EF65A920F4B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.MySql.UnitTests", "..\RepoDb.MySql\RepoDb.MySql.UnitTests\RepoDb.MySql.UnitTests.csproj", "{B14F45B8-1B78-473E-BDE0-6E27AC622AED}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.MySqlConnector.UnitTests", "..\RepoDb.MySqlConnector\RepoDb.MySqlConnector.UnitTests\RepoDb.MySqlConnector.UnitTests.csproj", "{D456EA78-645F-4A9A-BF76-A3AD7BC56E2A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.MySqlConnector.IntegrationTests", "..\RepoDb.MySqlConnector\RepoDb.MySqlConnector.IntegrationTests\RepoDb.MySqlConnector.IntegrationTests.csproj", "{80A2A415-1223-4A8A-BF96-E19F90B933A5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.PostgreSql.IntegrationTests", "..\RepoDb.PostgreSql\RepoDb.PostgreSql.IntegrationTests\RepoDb.PostgreSql.IntegrationTests.csproj", "{C2A0A9CE-742C-4DAE-BA49-B27718E411B9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.PostgreSql.UnitTests", "..\RepoDb.PostgreSql\RepoDb.PostgreSql.UnitTests\RepoDb.PostgreSql.UnitTests.csproj", "{0FEFE776-A12C-4C9E-A440-A69D0BE90889}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.SqLite.IntegrationTests", "..\RepoDb.SqLite\RepoDb.SqLite.IntegrationTests\RepoDb.SqLite.IntegrationTests.csproj", "{A23AE067-D17E-4676-B28E-C0428A102939}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.SqLite.UnitTests", "..\RepoDb.SqLite\RepoDb.SqLite.UnitTests\RepoDb.SqLite.UnitTests.csproj", "{826B4F39-6E20-4F3D-8671-0A8C3EDB96C9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.SqlServer.IntegrationTests", "..\RepoDb.SqlServer\RepoDb.SqlServer.IntegrationTests\RepoDb.SqlServer.IntegrationTests.csproj", "{8257EF67-47B6-48F0-9E90-546DD2C20AAB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.SqlServer.UnitTests", "..\RepoDb.SqlServer\RepoDb.SqlServer.UnitTests\RepoDb.SqlServer.UnitTests.csproj", "{2D39959C-CE70-4D10-92F5-951B9A773DC6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{848A3476-B319-4BCC-A9CB-572182785B58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{848A3476-B319-4BCC-A9CB-572182785B58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{848A3476-B319-4BCC-A9CB-572182785B58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{848A3476-B319-4BCC-A9CB-572182785B58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1BD00E8B-7E72-48E2-BFAB-E12F34A96D3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1BD00E8B-7E72-48E2-BFAB-E12F34A96D3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1BD00E8B-7E72-48E2-BFAB-E12F34A96D3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1BD00E8B-7E72-48E2-BFAB-E12F34A96D3D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6E790E9-1DB0-4953-B5A4-ABC517C0C19F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6E790E9-1DB0-4953-B5A4-ABC517C0C19F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6E790E9-1DB0-4953-B5A4-ABC517C0C19F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6E790E9-1DB0-4953-B5A4-ABC517C0C19F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FAD179C4-B9E1-44F3-956A-D755459747F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAD179C4-B9E1-44F3-956A-D755459747F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAD179C4-B9E1-44F3-956A-D755459747F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAD179C4-B9E1-44F3-956A-D755459747F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DBE1E50B-564D-4B81-9DE7-EC6A141A515A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBE1E50B-564D-4B81-9DE7-EC6A141A515A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBE1E50B-564D-4B81-9DE7-EC6A141A515A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBE1E50B-564D-4B81-9DE7-EC6A141A515A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E6E02782-931E-450D-AAF6-7C1960B2AA17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6E02782-931E-450D-AAF6-7C1960B2AA17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6E02782-931E-450D-AAF6-7C1960B2AA17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6E02782-931E-450D-AAF6-7C1960B2AA17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C63D73DF-E9CC-4DC7-A2AC-44FD7A378090}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C63D73DF-E9CC-4DC7-A2AC-44FD7A378090}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C63D73DF-E9CC-4DC7-A2AC-44FD7A378090}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C63D73DF-E9CC-4DC7-A2AC-44FD7A378090}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38C9D2FC-9762-42C0-AF7B-E36E7F3890E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38C9D2FC-9762-42C0-AF7B-E36E7F3890E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38C9D2FC-9762-42C0-AF7B-E36E7F3890E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38C9D2FC-9762-42C0-AF7B-E36E7F3890E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86A5DB6E-622C-4320-93F7-8E7DE6CC361B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86A5DB6E-622C-4320-93F7-8E7DE6CC361B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86A5DB6E-622C-4320-93F7-8E7DE6CC361B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86A5DB6E-622C-4320-93F7-8E7DE6CC361B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2EB719D0-36CB-4F3B-9429-10C9CE29C12E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EB719D0-36CB-4F3B-9429-10C9CE29C12E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EB719D0-36CB-4F3B-9429-10C9CE29C12E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EB719D0-36CB-4F3B-9429-10C9CE29C12E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE11218C-C218-4A8F-ABDE-0EF65A920F4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE11218C-C218-4A8F-ABDE-0EF65A920F4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE11218C-C218-4A8F-ABDE-0EF65A920F4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE11218C-C218-4A8F-ABDE-0EF65A920F4B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B14F45B8-1B78-473E-BDE0-6E27AC622AED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B14F45B8-1B78-473E-BDE0-6E27AC622AED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B14F45B8-1B78-473E-BDE0-6E27AC622AED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B14F45B8-1B78-473E-BDE0-6E27AC622AED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D456EA78-645F-4A9A-BF76-A3AD7BC56E2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D456EA78-645F-4A9A-BF76-A3AD7BC56E2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D456EA78-645F-4A9A-BF76-A3AD7BC56E2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D456EA78-645F-4A9A-BF76-A3AD7BC56E2A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80A2A415-1223-4A8A-BF96-E19F90B933A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80A2A415-1223-4A8A-BF96-E19F90B933A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80A2A415-1223-4A8A-BF96-E19F90B933A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80A2A415-1223-4A8A-BF96-E19F90B933A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2A0A9CE-742C-4DAE-BA49-B27718E411B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2A0A9CE-742C-4DAE-BA49-B27718E411B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2A0A9CE-742C-4DAE-BA49-B27718E411B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2A0A9CE-742C-4DAE-BA49-B27718E411B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0FEFE776-A12C-4C9E-A440-A69D0BE90889}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FEFE776-A12C-4C9E-A440-A69D0BE90889}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FEFE776-A12C-4C9E-A440-A69D0BE90889}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FEFE776-A12C-4C9E-A440-A69D0BE90889}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A23AE067-D17E-4676-B28E-C0428A102939}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A23AE067-D17E-4676-B28E-C0428A102939}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A23AE067-D17E-4676-B28E-C0428A102939}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A23AE067-D17E-4676-B28E-C0428A102939}.Release|Any CPU.Build.0 = Release|Any CPU
+		{826B4F39-6E20-4F3D-8671-0A8C3EDB96C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{826B4F39-6E20-4F3D-8671-0A8C3EDB96C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{826B4F39-6E20-4F3D-8671-0A8C3EDB96C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{826B4F39-6E20-4F3D-8671-0A8C3EDB96C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8257EF67-47B6-48F0-9E90-546DD2C20AAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8257EF67-47B6-48F0-9E90-546DD2C20AAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8257EF67-47B6-48F0-9E90-546DD2C20AAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8257EF67-47B6-48F0-9E90-546DD2C20AAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D39959C-CE70-4D10-92F5-951B9A773DC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D39959C-CE70-4D10-92F5-951B9A773DC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D39959C-CE70-4D10-92F5-951B9A773DC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D39959C-CE70-4D10-92F5-951B9A773DC6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5EA323B8-B4B6-4083-97A3-018C9423B20A} = {810FF947-4368-477F-9193-07532892B492}
+		{D203DBE3-A86A-4F48-AE16-3CCCCA443ABC} = {5EA323B8-B4B6-4083-97A3-018C9423B20A}
+		{97CDB540-A186-42B9-9492-608A2392A8C5} = {5EA323B8-B4B6-4083-97A3-018C9423B20A}
+		{97F2640B-CD0C-430E-8E18-D948A6966C85} = {5EA323B8-B4B6-4083-97A3-018C9423B20A}
+		{FCAEE688-26E0-490C-9C70-0A52AA7AFF62} = {5EA323B8-B4B6-4083-97A3-018C9423B20A}
+		{B57B1387-2718-46F0-9608-11746ECB4DF2} = {5EA323B8-B4B6-4083-97A3-018C9423B20A}
+		{1E85E11D-431C-4969-B2EE-C82EB0D92DC7} = {5EA323B8-B4B6-4083-97A3-018C9423B20A}
+		{419BA40B-7803-4E45-893F-FB8A6E81FAC5} = {5EA323B8-B4B6-4083-97A3-018C9423B20A}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D15A7161-5524-45B7-A22A-EA6C877AA840}
+	EndGlobalSection
+EndGlobal
