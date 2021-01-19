@@ -21,8 +21,4 @@
     <ProjectReference Include="..\RepoDb.SqLite\RepoDb.SqLite.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
-
 </Project>
