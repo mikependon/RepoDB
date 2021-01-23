@@ -109,7 +109,7 @@ namespace RepoDb
                 if (queryGroupTypeMap.MappedType != null)
                 {
                     dictionary.Add(left,
-                        new CommandParameter(left, leftValue, queryGroupTypeMap.MappedType));
+                        new CommandParameter(queryField.Field, leftValue, queryGroupTypeMap.MappedType));
                 }
                 else
                 {
@@ -125,7 +125,7 @@ namespace RepoDb
                 if (queryGroupTypeMap.MappedType != null)
                 {
                     dictionary.Add(right,
-                        new CommandParameter(right, rightValue, queryGroupTypeMap.MappedType));
+                        new CommandParameter(queryField.Field, rightValue, queryGroupTypeMap.MappedType));
                 }
                 else
                 {
@@ -157,7 +157,7 @@ namespace RepoDb
                 if (queryGroupTypeMap.MappedType != null)
                 {
                     dictionary.Add(parameterName,
-                        new CommandParameter(parameterName, values[i], queryGroupTypeMap.MappedType));
+                        new CommandParameter(queryField.Field, values[i], queryGroupTypeMap.MappedType));
                 }
                 else
                 {
@@ -184,7 +184,7 @@ namespace RepoDb
             if (queryGroupTypeMap.MappedType != null)
             {
                 dictionary.Add(queryField.Parameter.Name,
-                    new CommandParameter(queryField.Parameter.Name, queryField.Parameter.Value, queryGroupTypeMap.MappedType));
+                    new CommandParameter(queryField.Field, queryField.Parameter.Value, queryGroupTypeMap.MappedType));
             }
             else
             {

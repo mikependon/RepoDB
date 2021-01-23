@@ -233,12 +233,12 @@ namespace RepoDb.Extensions
         /// <param name="parameterDirection">The direction of the parameter.</param>
         /// <param name="fallbackType">Used when none of the above parameters can determine the value of Parameter.DbType.</param>
         /// <returns>An instance of the newly created parameter object.</returns>
-        private static IDbDataParameter CreateParameter(IDbCommand command, 
+        private static IDbDataParameter CreateParameter(IDbCommand command,
             string name,
             object value,
             ClassProperty classProperty,
             DbField dbField,
-            ParameterDirection? parameterDirection, 
+            ParameterDirection? parameterDirection,
             Type fallbackType)
         {
             /*
@@ -254,8 +254,8 @@ namespace RepoDb.Extensions
              * Try to get the propertyHandler, the order of the source of resolve is classProperty and valueType.
              * If the propertyHandler exists, the value and DbType are re-determined by the propertyHandler.
              */
-            var propertyHandler = 
-                classProperty?.GetPropertyHandler() ?? 
+            var propertyHandler =
+                classProperty?.GetPropertyHandler() ??
                 (valueType == null ? null : PropertyHandlerCache.Get<object>(valueType));
             if (propertyHandler != null)
             {
@@ -293,14 +293,18 @@ namespace RepoDb.Extensions
 
             // if classProperty exists, try get dbType from attribute level or property level, 
             // The reason for not using classProperty.GetDbType() is to avoid getting the type level mapping.
-            var dbType =
-                (classProperty == null ? null : TypeMapCache.Get(classProperty.GetDeclaringType(), classProperty.PropertyInfo));
+            var dbType = classProperty?.GetDbType();
             if (dbType == null && (valueType ??= dbField?.Type.GetUnderlyingType() ?? fallbackType) != null)
             {
                 dbType =
                     valueType.GetDbType() ??                                        // type level, use TypeMapCache
                     clientTypeToDbTypeResolver.Resolve(valueType) ??                // type level, primitive mapping
-                    (valueType.IsEnum ? Converter.EnumDefaultDatabaseType : null);  // use Converter.EnumDefaultDatabaseType
+                    (dbField?.Type != null ?
+                        clientTypeToDbTypeResolver.Resolve(dbField?.Type) : null);  // fallback to the database type
+            }
+            if (dbType == null && valueType.IsEnum)
+            {
+                dbType = Converter.EnumDefaultDatabaseType;                         // use Converter.EnumDefaultDatabaseType
             }
 
             /*
@@ -373,8 +377,9 @@ namespace RepoDb.Extensions
                 // CommandParameter
                 if (kvp.Value is CommandParameter commandParameter)
                 {
-                    classProperty = PropertyCache.Get(commandParameter.MappedToType, kvp.Key);
                     value = commandParameter.Value;
+                    dbField = dbField ?? GetDbField(commandParameter.Field.Name, dbFields);
+                    classProperty = PropertyCache.Get(commandParameter.MappedToType, commandParameter.Field.Name);
                 }
                 command.Parameters.Add(CreateParameter(command, kvp.Key, value, classProperty, dbField, null, null));
             }

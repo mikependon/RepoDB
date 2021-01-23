@@ -26,6 +26,10 @@ namespace RepoDb.Resolvers
             {
                 throw new NullReferenceException("The type must not be null.");
             }
+            if (type.IsEnum)
+            {
+                return null;
+            }
 
             type = type.GetUnderlyingType();
 
