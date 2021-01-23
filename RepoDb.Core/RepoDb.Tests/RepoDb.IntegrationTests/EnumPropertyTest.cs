@@ -10,6 +10,7 @@ using RepoDb.Attributes;
 using RepoDb.Interfaces;
 using RepoDb;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace RepoDb.IntegrationTests
 {
@@ -136,6 +137,25 @@ namespace RepoDb.IntegrationTests
                     ColumnNVarChar = null
                 };
             }
+        }
+        public static List<EnumCompleteTable> CreateEnumCompleteTablesRandomized(int count)
+        {
+            var tables = new List<EnumCompleteTable>();
+            for (var i = 0; i < count; i++)
+            {
+                var direction = i % 2 == 0 ? Direction.West : Direction.East;
+                var index = i + 1;
+                tables.Add(new EnumCompleteTable
+                {
+                    SessionId = Guid.NewGuid(),
+                    ColumnBit = BooleanValue.True,
+                    ColumnNVarChar = direction,
+                    ColumnInt = direction,
+                    ColumnBigInt = direction,
+                    ColumnSmallInt = direction
+                });
+            }
+            return tables;
         }
 
         #endregion
@@ -397,12 +417,13 @@ namespace RepoDb.IntegrationTests
         {
             // Setup
             var entities = Helper.CreateEnumCompleteTables(10);
+            var where = (Expression<Func<EnumCompleteTable, bool>>)(e => e.ColumnNVarChar == Direction.West);
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 var insertAllResult = connection.InsertAll(entities);
-                var queryResult = connection.Query((System.Linq.Expressions.Expression<Func<EnumCompleteTable, bool>>)(e => e.ColumnNVarChar == Direction.West));
+                var queryResult = connection.Query(where);
 
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());
@@ -463,6 +484,106 @@ namespace RepoDb.IntegrationTests
                 // Act
                 var insertAllResult = connection.InsertAll(entities);
                 var queryResult = connection.Query<EnumCompleteTable>(new QueryGroup(new QueryField("ColumnNVarChar", Direction.West)));
+
+                // Assert
+                Assert.AreEqual(entities.Count, queryResult.Count());
+
+                // Assert
+                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
+            }
+        }
+
+        #endregion
+
+        #region EnumAsParam in QueryGroup (OR)
+
+        [TestMethod]
+        public void TestQueryGroupForEnumForTextWithOrConditionViaExpression()
+        {
+            // Setup
+            var entities = CreateEnumCompleteTablesRandomized(10);
+            var where = (Expression<Func<EnumCompleteTable, bool>>)(e => e.ColumnNVarChar == Direction.West || e.ColumnNVarChar == Direction.East);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var insertAllResult = connection.InsertAll(entities);
+                var queryResult = connection.Query(where);
+
+                // Assert
+                Assert.AreEqual(entities.Count, queryResult.Count());
+
+                // Assert
+                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
+            }
+        }
+
+        [TestMethod]
+        public void TestQueryGroupForEnumForNonTextWithOrConditionViaExpression()
+        {
+            // Setup
+            var entities = CreateEnumCompleteTablesRandomized(10);
+            var where = (Expression<Func<EnumCompleteTable, bool>>)(e => e.ColumnInt == Direction.West || e.ColumnInt == Direction.East);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var insertAllResult = connection.InsertAll(entities);
+                var queryResult = connection.Query(where);
+
+                // Assert
+                Assert.AreEqual(entities.Count, queryResult.Count());
+
+                // Assert
+                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
+            }
+        }
+
+        [TestMethod]
+        public void TestQueryGroupForEnumsForTextWithOrConditionViaQueryGroup()
+        {
+            // Setup
+            var entities = CreateEnumCompleteTablesRandomized(10);
+            var fields = new[]
+            {
+                new QueryField("ColumnNVarChar", Direction.West),
+                new QueryField("ColumnNVarChar", Direction.East)
+            };
+            var where = new QueryGroup(fields, RepoDb.Enumerations.Conjunction.Or);
+
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var insertAllResult = connection.InsertAll(entities);
+                var queryResult = connection.Query<EnumCompleteTable>(where);
+
+                // Assert
+                Assert.AreEqual(entities.Count, queryResult.Count());
+
+                // Assert
+                entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
+            }
+        }
+
+        [TestMethod]
+        public void TestQueryGroupForEnumsForNonTextWithOrConditionViaQueryGroup()
+        {
+            // Setup
+            var entities = CreateEnumCompleteTablesRandomized(10);
+            var fields = new[]
+            {
+                new QueryField("ColumnInt", Direction.West),
+                new QueryField("ColumnInt", Direction.East)
+            };
+            var where = new QueryGroup(fields, RepoDb.Enumerations.Conjunction.Or);
+
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var insertAllResult = connection.InsertAll(entities);
+                var queryResult = connection.Query<EnumCompleteTable>(where);
 
                 // Assert
                 Assert.AreEqual(entities.Count, queryResult.Count());
@@ -2220,6 +2341,5 @@ namespace RepoDb.IntegrationTests
         }
 
         #endregion
-
     }
 }
