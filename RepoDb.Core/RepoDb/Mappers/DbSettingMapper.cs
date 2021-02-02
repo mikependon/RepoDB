@@ -33,7 +33,7 @@ namespace RepoDb
         public static void Add<TDbConnection>(IDbSetting dbSetting,
             bool @override)
             where TDbConnection : DbConnection =>
-            Add(StaticType.DbConnection, dbSetting, @override);
+            Add(typeof(TDbConnection), dbSetting, @override);
 
         /// <summary>
         /// Adds a mapping between the type of <see cref="DbConnection"/> and an instance of <see cref="IDbSetting"/> object.
@@ -112,7 +112,7 @@ namespace RepoDb
         /// <typeparam name="TDbConnection">The type of <see cref="DbConnection"/>.</typeparam>
         public static void Remove<TDbConnection>()
             where TDbConnection : DbConnection =>
-            Remove(StaticType.DbConnection);
+            Remove(typeof(TDbConnection));
 
         /// <summary>
         /// Removes the mapping between the type of <see cref="DbConnection"/> and an instance of <see cref="IDbSetting"/> object.
