@@ -325,9 +325,9 @@ namespace RepoDb.PostgreSql.UnitTests
                 3,
                 null,
                 null);
-            var expected = "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( @Id, @Name, @Address ) ; " +
-                "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( @Id_1, @Name_1, @Address_1 ) ; " +
-                "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( @Id_2, @Name_2, @Address_2 ) ;";
+            var expected = "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( @Id, @Name, @Address ) RETURNING NULL AS \"Id\", @__RepoDb_OrderColumn_0 AS \"OrderColumn\" ; " +
+                "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( @Id_1, @Name_1, @Address_1 ) RETURNING NULL AS \"Id\", @__RepoDb_OrderColumn_1 AS \"OrderColumn\" ; " +
+                "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( @Id_2, @Name_2, @Address_2 ) RETURNING NULL AS \"Id\", @__RepoDb_OrderColumn_2 AS \"OrderColumn\" ;";
 
             // Assert
             Assert.AreEqual(expected, query);
@@ -346,9 +346,9 @@ namespace RepoDb.PostgreSql.UnitTests
                 3,
                 new DbField("Id", true, false, false, typeof(int), null, null, null, null),
                 null);
-            var expected = "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( @Id, @Name, @Address ) ; " +
-                "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( @Id_1, @Name_1, @Address_1 ) ; " +
-                "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( @Id_2, @Name_2, @Address_2 ) ;";
+            var expected = "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( @Id, @Name, @Address ) RETURNING \"Id\" AS \"Id\", @__RepoDb_OrderColumn_0 AS \"OrderColumn\" ; " +
+                "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( @Id_1, @Name_1, @Address_1 ) RETURNING \"Id\" AS \"Id\", @__RepoDb_OrderColumn_1 AS \"OrderColumn\" ; " +
+                "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( @Id_2, @Name_2, @Address_2 ) RETURNING \"Id\" AS \"Id\", @__RepoDb_OrderColumn_2 AS \"OrderColumn\" ;";
 
             // Assert
             Assert.AreEqual(expected, query);
