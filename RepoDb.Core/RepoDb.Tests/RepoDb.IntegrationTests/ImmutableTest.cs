@@ -1665,5 +1665,168 @@ namespace RepoDb.IntegrationTests
 
         #endregion
 
+        #region Constructor/ExecuteQuery
+
+        #region ExecuteQuery (Matched CTOR Arguments)
+
+        private class ImmutableWithMatchedCtorArguments
+        {
+            public ImmutableWithMatchedCtorArguments(int id,
+                DateTime value)
+            {
+                Id = id;
+                Value = value;
+            }
+
+            public int Id { get; set; }
+            public DateTime Value { get; set; }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryForImmutableWithMatchedCtorArguments()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Setup
+                var param = new { Value = DateTime.UtcNow.Date };
+                var sql = "SELECT 1 AS [Id], @Value AS [Value];";
+
+                // Act
+                var queryResult = connection.ExecuteQuery<ImmutableWithMatchedCtorArguments>(sql, param).FirstOrDefault();
+
+                // Assert
+                Assert.AreEqual(1, queryResult.Id);
+                Assert.AreEqual(param.Value, queryResult.Value);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryAsyncForImmutableWithMatchedCtorArguments()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Setup
+                var param = new { Value = DateTime.UtcNow.Date };
+                var sql = "SELECT 1 AS [Id], @Value AS [Value];";
+
+                // Act
+                var queryResult = connection.ExecuteQueryAsync<ImmutableWithMatchedCtorArguments>(sql, param).Result.FirstOrDefault();
+
+                // Assert
+                Assert.AreEqual(1, queryResult.Id);
+                Assert.AreEqual(param.Value, queryResult.Value);
+            }
+        }
+
+        #endregion
+
+        #region ExecuteQuery (Matched CTOR Arguments From Multiple CTORs)
+
+        private class ImmutableWithMatchedCtorArgumentsFromMultipleCtors
+        {
+            public ImmutableWithMatchedCtorArgumentsFromMultipleCtors()
+            { }
+
+            public ImmutableWithMatchedCtorArgumentsFromMultipleCtors(int id,
+                DateTime value)
+            {
+                Id = id;
+                Value = value;
+            }
+
+            public int Id { get; set; }
+            public DateTime Value { get; set; }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryForImmutableWithMatchedCtorArgumentsFromMultipleCtors()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Setup
+                var param = new { Value = DateTime.UtcNow.Date };
+                var sql = "SELECT 1 AS [Id], @Value AS [Value];";
+
+                // Act
+                var queryResult = connection.ExecuteQuery<ImmutableWithMatchedCtorArgumentsFromMultipleCtors>(sql, param).FirstOrDefault();
+
+                // Assert
+                Assert.AreEqual(1, queryResult.Id);
+                Assert.AreEqual(param.Value, queryResult.Value);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryAsyncForImmutableWithMatchedCtorArgumentsFromMultipleCtors()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Setup
+                var param = new { Value = DateTime.UtcNow.Date };
+                var sql = "SELECT 1 AS [Id], @Value AS [Value];";
+
+                // Act
+                var queryResult = connection.ExecuteQueryAsync<ImmutableWithMatchedCtorArgumentsFromMultipleCtors>(sql, param).Result.FirstOrDefault();
+
+                // Assert
+                Assert.AreEqual(1, queryResult.Id);
+                Assert.AreEqual(param.Value, queryResult.Value);
+            }
+        }
+
+        #endregion
+
+        #region ExecuteQuery (Unmatched CTOR Arguments From Multiple CTORs)
+
+        private class ImmutableWithUnmatchedCtorArgumentsFromMultipleCtors
+        {
+            public ImmutableWithUnmatchedCtorArgumentsFromMultipleCtors()
+            { }
+
+            public ImmutableWithUnmatchedCtorArgumentsFromMultipleCtors(int id,
+                DateTime value,
+                string extra)
+            {
+                Id = id;
+                Value = value;
+                Extra = extra;
+            }
+
+            public int Id { get; set; }
+            public DateTime Value { get; set; }
+            public string Extra { get; set; }
+        }
+
+        [TestMethod, ExpectedException(typeof(MissingMemberException))]
+        public void ThrowExceptionOnSqlConnectionExecuteQueryForImmutableWithUnmatchedCtorArgumentsFromMultipleCtors()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Setup
+                var param = new { Value = DateTime.UtcNow.Date };
+                var sql = "SELECT 1 AS [Id], @Value AS [Value];";
+
+                // Act
+                connection.ExecuteQuery<ImmutableWithUnmatchedCtorArgumentsFromMultipleCtors>(sql, param);
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionOnSqlConnectionExecuteQueryAsyncForImmutableWithUnmatchedCtorArgumentsFromMultipleCtors()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Setup
+                var param = new { Value = DateTime.UtcNow.Date };
+                var sql = "SELECT 1 AS [Id], @Value AS [Value];";
+
+                // Act
+                connection.ExecuteQueryAsync<ImmutableWithUnmatchedCtorArgumentsFromMultipleCtors>(sql, param).Wait();
+            }
+        }
+
+        #endregion
+
+        #endregion
     }
 }
