@@ -107,12 +107,17 @@ namespace RepoDb.Reflection
         /// <summary>
         /// A class that contains both the property <see cref="MemberAssignment"/> object and the constructor argument <see cref="Expression"/> value.
         /// </summary>
-        internal struct MemberBinding
+        internal class MemberBinding
         {
             /// <summary>
             /// Gets the instance of <see cref="ClassProperty"/> object in used.
             /// </summary>
             public ClassProperty ClassProperty { get; set; }
+
+            /// <summary>
+            /// Gets the instance of <see cref="ParameterInfo"/> object in used.
+            /// </summary>
+            public ParameterInfo ParameterInfo { get; set; }
 
             /// <summary>
             /// Gets the current member assignment of the defined property.
@@ -129,7 +134,7 @@ namespace RepoDb.Reflection
             /// </summary>
             /// <returns>The presented string.</returns>
             public override string ToString() =>
-                ClassProperty.ToString();
+                ClassProperty?.ToString() ?? ParameterInfo?.ToString();
         }
 
         #endregion
@@ -1275,6 +1280,7 @@ namespace RepoDb.Reflection
                     memberBindings.Add(new MemberBinding
                     {
                         ClassProperty = classPropertyParameterInfo.ClassProperty,
+                        ParameterInfo = classPropertyParameterInfo?.ParameterInfo,
                         MemberAssignment = memberAssignment,
                         Argument = argument
                     });
