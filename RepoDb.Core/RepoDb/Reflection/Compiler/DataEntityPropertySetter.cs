@@ -20,10 +20,10 @@ namespace RepoDb.Reflection
             var typeOfEntity = typeof(TEntity);
 
             // Get the entity property
-            var property = (typeOfEntity.GetProperty(field.Name) ?? typeOfEntity.GetMappedProperty(field.Name)?.PropertyInfo);
+            var property = typeOfEntity.GetMappedProperty(field.Name)?.PropertyInfo;
 
             // Return the function
-            return CompileDataEntityPropertySetter<TEntity>(property, field.Type);
+            return CompileDataEntityPropertySetter<TEntity>(property, property?.PropertyType ?? field.Type);
         }
 
         /// <summary>
