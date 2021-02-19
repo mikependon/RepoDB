@@ -230,7 +230,16 @@ namespace RepoDb
         ExpressionType? unaryNodeType = null)
         where TEntity : class
         {
-            if (expression.Method.Name == "Contains")
+            if (expression.Method.Name == "Equals")
+            {
+                return ParseEquals<TEntity>(expression, unaryNodeType)?.AsEnumerable();
+            }
+            else if (expression.Method.Name == "CompareString")
+            {
+                // Usual case for VB.Net (Microsoft.VisualBasic.CompilerServices.Operators.CompareString #767)
+                return ParseCompareString<TEntity>(expression, unaryNodeType)?.AsEnumerable();
+            }
+            else if (expression.Method.Name == "Contains")
             {
                 return ParseContains<TEntity>(expression, unaryNodeType)?.AsEnumerable();
             }
@@ -248,6 +257,55 @@ namespace RepoDb
                 return ParseAny<TEntity>(expression, unaryNodeType)?.AsEnumerable();
             }
             return null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="expression"></param>
+        /// <param name="unaryNodeType"></param>
+        /// <returns></returns>
+        internal static QueryField ParseEquals<TEntity>(MethodCallExpression expression,
+            ExpressionType? unaryNodeType = null)
+            where TEntity : class
+        {
+            // Property
+            var property = GetProperty<TEntity>(expression);
+
+            // Value
+            if (expression?.Object != null)
+            {
+                if (expression.Object?.Type == StaticType.String)
+                {
+                    var value = Converter.ToType<string>(expression.Arguments.First().GetValue());
+                    return new QueryField(property.GetMappedName(), value);
+                }
+            }
+
+            // Return
+            return null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="expression"></param>
+        /// <param name="unaryNodeType"></param>
+        /// <returns></returns>
+        internal static QueryField ParseCompareString<TEntity>(MethodCallExpression expression,
+            ExpressionType? unaryNodeType = null)
+            where TEntity : class
+        {
+            // Property
+            var property = expression.Arguments.First().ToMember().Member;
+
+            // Value
+            var value = Converter.ToType<string>(expression.Arguments.ElementAt(1).GetValue());
+
+            // Return
+            return new QueryField(property.GetMappedName(), value);
         }
 
         /// <summary>
