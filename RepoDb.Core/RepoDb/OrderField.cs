@@ -131,7 +131,7 @@ namespace RepoDb
         internal static OrderField Parse<TEntity>(MemberExpression expression,
             Order order)
             where TEntity : class =>
-            new OrderField(expression.ToMember().Member.Name, order);
+            new OrderField(expression.ToMember().Member.GetMappedName(), order);
 
         /// <summary>
         /// Parses a property from the data entity object based on the given <see cref="BinaryExpression"/> and converts the result 
@@ -185,10 +185,10 @@ namespace RepoDb
             {
                 if (property.PropertyType != typeof(Order))
                 {
-                    throw new InvalidTypeException($"The type of field '{property.Name}' must be of '{typeof(Order).FullName}'.");
+                    throw new InvalidTypeException($"The type of field '{property.GetMappedName()}' must be of '{typeof(Order).FullName}'.");
                 }
                 var order = (Order)property.GetValue(obj);
-                list.Add(new OrderField(property.Name, order));
+                list.Add(new OrderField(property.GetMappedName(), order));
             }
             return list;
         }
