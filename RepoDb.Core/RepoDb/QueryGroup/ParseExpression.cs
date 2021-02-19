@@ -131,7 +131,10 @@ namespace RepoDb
             else
             {
                 var rightQueryGroup = Parse<TEntity>(expression.Right);
-                return new QueryGroup(new[] { leftQueryGroup, rightQueryGroup }, GetConjunction(expression));
+                if (rightQueryGroup != null)
+                {
+                    return new QueryGroup(new[] { leftQueryGroup, rightQueryGroup }, GetConjunction(expression));
+                }
             }
 
             // Return
