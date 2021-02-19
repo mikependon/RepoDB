@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RepoDb.Attributes;
 using RepoDb.Enumerations;
 using RepoDb.Exceptions;
 using System;
@@ -9,10 +10,21 @@ namespace RepoDb.UnitTests.Others
     [TestClass]
     public class OrderFieldTest
     {
+        #region SubClasses
+
         public class OrderFieldTestClass
         {
             public int Id { get; set; }
         }
+
+        private class OrderFieldTestMappedClass
+        {
+            public int Id { get; set; }
+            [Map("PropertyText")]
+            public string PropertyString { get; set; }
+        }
+
+        #endregion
 
         [TestMethod]
         public void TestOrderFieldNameAndStringEquality()
@@ -27,6 +39,54 @@ namespace RepoDb.UnitTests.Others
             Assert.IsTrue(equal);
         }
 
+        // Ascending
+
+        [TestMethod]
+        public void TestOrderFieldForAscending()
+        {
+            // Act
+            var parsed = OrderField.Ascending<OrderFieldTestClass>(p => p.Id);
+
+            // Assert
+            Assert.AreEqual(Order.Ascending, parsed.Order);
+        }
+
+        [TestMethod]
+        public void TestOrderFieldAscendingFromMappedProperty()
+        {
+            // Act
+            var parsed = OrderField.Ascending<OrderFieldTestMappedClass>(p => p.PropertyString);
+
+            // Assert
+            Assert.AreEqual("PropertyText", parsed.Name);
+            Assert.AreEqual(Order.Ascending, parsed.Order);
+        }
+
+        // Descending
+
+        [TestMethod]
+        public void TestOrderFieldForDescending()
+        {
+            // Act
+            var parsed = OrderField.Descending<OrderFieldTestClass>(p => p.Id);
+
+            // Assert
+            Assert.AreEqual(Order.Descending, parsed.Order);
+        }
+
+        [TestMethod]
+        public void TestOrderFielDecendingFromMappedProperty()
+        {
+            // Act
+            var parsed = OrderField.Descending<OrderFieldTestMappedClass>(p => p.PropertyString);
+
+            // Assert
+            Assert.AreEqual("PropertyText", parsed.Name);
+            Assert.AreEqual(Order.Descending, parsed.Order);
+        }
+
+        // Parse (Ascending)
+
         [TestMethod]
         public void TestOrderFieldParseExpressionForAscending()
         {
@@ -38,13 +98,14 @@ namespace RepoDb.UnitTests.Others
         }
 
         [TestMethod]
-        public void TestOrderFieldParseExpressionForDescending()
+        public void TestOrderFieldParseExpressionFromMappedPropertyForAscending()
         {
             // Act
-            var parsed = OrderField.Parse<OrderFieldTestClass>(p => p.Id, Order.Descending);
+            var parsed = OrderField.Parse<OrderFieldTestMappedClass>(p => p.PropertyString, Order.Ascending);
 
             // Assert
-            Assert.AreEqual(Order.Descending, parsed.Order);
+            Assert.AreEqual("PropertyText", parsed.Name);
+            Assert.AreEqual(Order.Ascending, parsed.Order);
         }
 
         [TestMethod]
@@ -58,6 +119,29 @@ namespace RepoDb.UnitTests.Others
 
             // Assert
             Assert.AreEqual(Order.Ascending, orderField.First().Order);
+        }
+
+        // Parse (Descending)
+
+        [TestMethod]
+        public void TestOrderFieldParseExpressionForDescending()
+        {
+            // Act
+            var parsed = OrderField.Parse<OrderFieldTestClass>(p => p.Id, Order.Descending);
+
+            // Assert
+            Assert.AreEqual(Order.Descending, parsed.Order);
+        }
+
+        [TestMethod]
+        public void TestOrderFieldParseExpressionFromMappedPropertyForDescending()
+        {
+            // Act
+            var parsed = OrderField.Parse<OrderFieldTestMappedClass>(p => p.PropertyString, Order.Descending);
+
+            // Assert
+            Assert.AreEqual("PropertyText", parsed.Name);
+            Assert.AreEqual(Order.Descending, parsed.Order);
         }
 
         [TestMethod]
@@ -86,6 +170,8 @@ namespace RepoDb.UnitTests.Others
             Assert.AreEqual(Order.Ascending, orderField.First().Order);
             Assert.AreEqual(Order.Descending, orderField.Last().Order);
         }
+
+        // Exceptions
 
         [TestMethod, ExpectedException(typeof(InvalidExpressionException))]
         public void ThrowExceptionOnOrderFieldIfTheParseLinqExpressionHasNoProperty()
