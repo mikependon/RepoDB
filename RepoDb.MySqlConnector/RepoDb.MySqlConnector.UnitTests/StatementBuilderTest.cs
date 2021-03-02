@@ -661,21 +661,6 @@ namespace RepoDb.MySqlConnector.UnitTests
                 null);
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidQualifiersException))]
-        public void ThrowExceptionOnMySqlStatementBuilderCreateMergeIfThereAreOtherFieldsAsQualifers()
-        {
-            // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
-
-            // Act
-            builder.CreateMerge(new QueryBuilder(),
-                "Table",
-                Field.From("Id", "Name", "Address"),
-                Field.From("Id", "Name"),
-                new DbField("Id", true, false, false, typeof(int), null, null, null, null),
-                null);
-        }
-
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
         public void ThrowExceptionOnMySqlStatementBuilderCreateMergeIfThereAreHints()
         {
@@ -791,22 +776,6 @@ namespace RepoDb.MySqlConnector.UnitTests
                 null,
                 3,
                 null,
-                null);
-        }
-
-        [TestMethod, ExpectedException(typeof(InvalidQualifiersException))]
-        public void ThrowExceptionOnMySqlStatementBuilderCreateMergeAllIfThereAreOtherFieldsAsQualifers()
-        {
-            // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
-
-            // Act
-            builder.CreateMergeAll(new QueryBuilder(),
-                "Table",
-                Field.From("Id", "Name", "Address"),
-                Field.From("Id", "Name"),
-                3,
-                new DbField("Id", true, false, false, typeof(int), null, null, null, null),
                 null);
         }
 

@@ -394,21 +394,10 @@ namespace RepoDb.StatementBuilders
                 throw new NullReferenceException($"The list of fields cannot be null or empty.");
             }
 
-            // Check the primary field
+            // Validate the Primary Key
             if (primaryField == null)
             {
-                throw new PrimaryFieldNotFoundException($"MySql is using the primary key as qualifier for merge operation.");
-            }
-
-            // Check the qualifiers
-            if (qualifiers?.Any() == true)
-            {
-                var others = qualifiers.Where(f => !string.Equals(f.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase));
-                if (others.Any() == true)
-                {
-                    throw new InvalidQualifiersException($"MySql is using the primary key as qualifier for merge operation. " +
-                        $"Consider creating 'PrimaryKey' in the {tableName} and set the 'qualifiers' to NULL.");
-                }
+                throw new PrimaryFieldNotFoundException($"The is no primary field from the table '{tableName}'.");
             }
 
             // Initialize the builder
@@ -497,21 +486,10 @@ namespace RepoDb.StatementBuilders
                 throw new NullReferenceException($"The list of fields cannot be null or empty.");
             }
 
-            // Check the primary field
+            // Validate the Primary Key
             if (primaryField == null)
             {
-                throw new PrimaryFieldNotFoundException($"MySql is using the primary key as qualifier for merge operation.");
-            }
-
-            // Check the qualifiers
-            if (qualifiers?.Any() == true)
-            {
-                var others = qualifiers.Where(f => !string.Equals(f.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase));
-                if (others.Any() == true)
-                {
-                    throw new InvalidQualifiersException($"MySql is using the primary key as qualifier for merge operation. " +
-                        $"Consider creating 'PrimaryKey' in the {tableName} and set the 'qualifiers' to NULL.");
-                }
+                throw new PrimaryFieldNotFoundException($"The is no primary field from the table '{tableName}'.");
             }
 
             // Initialize the builder
