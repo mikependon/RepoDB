@@ -324,27 +324,23 @@ namespace RepoDb.StatementBuilders
                 throw new NullReferenceException($"The list of fields cannot be null or empty.");
             }
 
-            // Check the primary field
-            if (primaryField == null)
-            {
-                throw new PrimaryFieldNotFoundException($"PostgreSql is using the primary key as qualifier for (INSERT or REPLACE) operation.");
-            }
-
-            // Check the qualifiers
-            if (qualifiers?.Any() == true)
-            {
-                var others = qualifiers.Where(f => !string.Equals(f.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase));
-                if (others.Any() == true)
-                {
-                    throw new InvalidQualifiersException($"PostgreSql is using the primary key as qualifier for (INSERT or REPLACE) operation. " +
-                        $"Consider creating 'PrimaryKey' in the {tableName} and set the 'qualifiers' to NULL.");
-                }
-            }
-
             // Set the qualifiers
-            if (qualifiers?.Any() != true)
+            if (qualifiers?.Any() != true && primaryField != null)
             {
                 qualifiers = primaryField.AsField().AsEnumerable();
+            }
+
+            // Validate the qualifiers
+            if (qualifiers?.Any() != true)
+            {
+                if (primaryField == null)
+                {
+                    throw new PrimaryFieldNotFoundException($"The is no primary field from the table '{tableName}' that can be used as qualifier.");
+                }
+                else
+                {
+                    throw new InvalidQualifiersException($"There are no defined qualifier fields.");
+                }
             }
 
             // Initialize the builder
@@ -454,27 +450,23 @@ namespace RepoDb.StatementBuilders
                 throw new NullReferenceException($"The list of fields cannot be null or empty.");
             }
 
-            // Check the primary field
-            if (primaryField == null)
-            {
-                throw new PrimaryFieldNotFoundException($"PostgreSql is using the primary key as qualifier for (INSERT or REPLACE) operation.");
-            }
-
-            // Check the qualifiers
-            if (qualifiers?.Any() == true)
-            {
-                var others = qualifiers.Where(f => !string.Equals(f.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase));
-                if (others.Any() == true)
-                {
-                    throw new InvalidQualifiersException($"PostgreSql is using the primary key as qualifier for (INSERT or REPLACE) operation. " +
-                        $"Consider creating 'PrimaryKey' in the {tableName} and set the 'qualifiers' to NULL.");
-                }
-            }
-
             // Set the qualifiers
-            if (qualifiers?.Any() != true)
+            if (qualifiers?.Any() != true && primaryField != null)
             {
                 qualifiers = primaryField.AsField().AsEnumerable();
+            }
+
+            // Validate the qualifiers
+            if (qualifiers?.Any() != true)
+            {
+                if (primaryField == null)
+                {
+                    throw new PrimaryFieldNotFoundException($"The is no primary field from the table '{tableName}' that can be used as qualifier.");
+                }
+                else
+                {
+                    throw new InvalidQualifiersException($"There are no defined qualifier fields.");
+                }
             }
 
             // Initialize the builder

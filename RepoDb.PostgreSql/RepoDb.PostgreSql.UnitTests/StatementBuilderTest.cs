@@ -662,21 +662,6 @@ namespace RepoDb.PostgreSql.UnitTests
                 null);
         }
 
-        [TestMethod, ExpectedException(typeof(InvalidQualifiersException))]
-        public void ThrowExceptionOnPostgreSqlStatementBuilderCreateMergeIfThereAreOtherFieldsAsQualifers()
-        {
-            // Setup
-            var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
-
-            // Act
-            builder.CreateMerge(new QueryBuilder(),
-                "Table",
-                Field.From("Id", "Name", "Address"),
-                Field.From("Id", "Name"),
-                new DbField("Id", true, false, false, typeof(int), null, null, null, null),
-                null);
-        }
-
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
         public void ThrowExceptionOnPostgreSqlStatementBuilderCreateMergeIfThereAreHints()
         {
@@ -792,22 +777,6 @@ namespace RepoDb.PostgreSql.UnitTests
                 null,
                 3,
                 null,
-                null);
-        }
-
-        [TestMethod, ExpectedException(typeof(InvalidQualifiersException))]
-        public void ThrowExceptionOnPostgreSqlStatementBuilderCreateMergeAllIfThereAreOtherFieldsAsQualifers()
-        {
-            // Setup
-            var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
-
-            // Act
-            builder.CreateMergeAll(new QueryBuilder(),
-                "Table",
-                Field.From("Id", "Name", "Address"),
-                Field.From("Id", "Name"),
-                3,
-                new DbField("Id", true, false, false, typeof(int), null, null, null, null),
                 null);
         }
 
