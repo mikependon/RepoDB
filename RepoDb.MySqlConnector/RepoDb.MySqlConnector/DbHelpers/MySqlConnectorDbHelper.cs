@@ -140,7 +140,7 @@ namespace RepoDb.DbHelpers
             return new DbField(await reader.GetFieldValueAsync<string>(0, cancellationToken),
                 await reader.GetFieldValueAsync<bool>(1, cancellationToken),
                 await reader.GetFieldValueAsync<bool>(2, cancellationToken),
-                await reader.GetFieldValueAsync<bool>(1, cancellationToken),
+                await reader.GetFieldValueAsync<bool>(3, cancellationToken),
                 DbTypeResolver.Resolve(columnType),
                 size,
                 await reader.IsDBNullAsync(6, cancellationToken) ? (byte?)null : byte.Parse((await reader.GetFieldValueAsync<int>(6, cancellationToken)).ToString()),
