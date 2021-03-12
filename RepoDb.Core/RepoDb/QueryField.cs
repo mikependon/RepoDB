@@ -253,6 +253,10 @@ namespace RepoDb
                     .Count()
                     .GetHashCode();
             }
+            // The string representation affects the collision
+            // var objA = QueryGroup.Parse<EntityClass>(c => c.Id == 1 && c.Value != 1);
+            // var objB = QueryGroup.Parse<EntityClass>(c => c.Id != 1 && c.Value == 1);
+            hashCode += string.Concat(Field.Name, GetOperationText()).GetHashCode();
 
             // Set and return the hashcode
             return (this.hashCode = hashCode).Value;
