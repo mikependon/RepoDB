@@ -12,6 +12,7 @@ namespace RepoDb.UnitTests.Equalities
         private class EntityClass
         {
             public int Id { get; set; }
+            public int Value { get; set; }
             public string Name { get; set; }
         }
 
@@ -119,8 +120,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupHashCodeEqualityForCollidedExpressions()
         {
             // Prepare
-            var objA = QueryGroup.Parse<EntityClass>(c => c.Id == 1 && c.Id != 1);
-            var objB = QueryGroup.Parse<EntityClass>(c => c.Id != 1 && c.Id == 1);
+            var objA = QueryGroup.Parse<EntityClass>(c => c.Id == 1 && c.Value != 1);
+            var objB = QueryGroup.Parse<EntityClass>(c => c.Id != 1 && c.Value == 1);
 
             // Act
             var equal = (objA.GetHashCode() == objB.GetHashCode());
@@ -429,8 +430,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupObjectEqualityForCollidedExpressions()
         {
             // Prepare
-            var objA = QueryGroup.Parse<EntityClass>(c => c.Id == 1 && c.Id != 1);
-            var objB = QueryGroup.Parse<EntityClass>(c => c.Id != 1 && c.Id == 1);
+            var objA = QueryGroup.Parse<EntityClass>(c => c.Id == 1 && c.Value != 1);
+            var objB = QueryGroup.Parse<EntityClass>(c => c.Id != 1 && c.Value == 1);
 
             // Act
             var equal = (objA == objB);
@@ -739,8 +740,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupObjectEqualityViaEqualsMethodForCollidedExpressions()
         {
             // Prepare
-            var objA = QueryGroup.Parse<EntityClass>(c => c.Id == 1 && c.Id != 1);
-            var objB = QueryGroup.Parse<EntityClass>(c => c.Id != 1 && c.Id == 1);
+            var objA = QueryGroup.Parse<EntityClass>(c => c.Id == 1 && c.Value != 1);
+            var objB = QueryGroup.Parse<EntityClass>(c => c.Id != 1 && c.Value == 1);
 
             // Act
             var equal = Equals(objA, objB);
@@ -1063,8 +1064,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupArrayListContainabilityForCollidedExpressions()
         {
             // Prepare
-            var objA = QueryGroup.Parse<EntityClass>(c => c.Id == 1 && c.Id != 1);
-            var objB = QueryGroup.Parse<EntityClass>(c => c.Id != 1 && c.Id == 1);
+            var objA = QueryGroup.Parse<EntityClass>(c => c.Id == 1 && c.Value != 1);
+            var objB = QueryGroup.Parse<EntityClass>(c => c.Id != 1 && c.Value == 1);
             var list = new ArrayList();
 
             // Act
@@ -1411,8 +1412,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestQueryGroupGenericListContainabilityForCollidedExpressions()
         {
             // Prepare
-            var objA = QueryGroup.Parse<EntityClass>(c => c.Id == 1 && c.Id != 1);
-            var objB = QueryGroup.Parse<EntityClass>(c => c.Id != 1 && c.Id == 1);
+            var objA = QueryGroup.Parse<EntityClass>(c => c.Id == 1 && c.Value != 1);
+            var objB = QueryGroup.Parse<EntityClass>(c => c.Id != 1 && c.Value == 1);
             var list = new List<QueryGroup>();
 
             // Act
