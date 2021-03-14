@@ -1091,8 +1091,7 @@ namespace RepoDb
                         null,
                         null,
                         null,
-                        null,
-                        false);// TODO understand how set thath a primary key can have a default value, and which is the desired behavior during insert operation of entity without explits fields
+                        null);// TODO understand how set thath a primary key can have a default value, and which is the desired behavior during insert operation of entity without explits fields
                 }
             }
             return DbFieldCache.Get(request.Connection, request.Name, request.Transaction)?.FirstOrDefault(f => f.IsPrimary);
@@ -1124,8 +1123,7 @@ namespace RepoDb
                         null,
                         null,
                         null,
-                        null,
-                        false);// TODO understand how set thath an identity can have a default value, and which is the desired behavior during insert operation of entity without explits fields
+                        null);// TODO understand how set thath an identity can have a default value, and which is the desired behavior during insert operation of entity without explits fields
                 }
             }
             return DbFieldCache.Get(request.Connection, request.Name, request.Transaction)?.FirstOrDefault(f => f.IsIdentity);

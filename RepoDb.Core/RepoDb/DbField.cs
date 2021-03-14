@@ -30,8 +30,8 @@ namespace RepoDb
             int? size,
             byte? precision,
             byte? scale,
-            string databaseType,
-            bool hasDefaultValue)
+            string databaseType
+            )
         {
             // Name is required
             if (string.IsNullOrWhiteSpace(name))
@@ -56,6 +56,29 @@ namespace RepoDb
             }
             Scale = scale;
             DatabaseType = databaseType;
+        }
+
+        public DbField(string name,
+            bool isPrimary,
+            bool isIdentity,
+            bool isNullable,
+            Type type,
+            int? size,
+            byte? precision,
+            byte? scale,
+            string databaseType,
+            bool hasDefaultValue)
+            : this(
+                  name,
+                  isPrimary,
+                  isIdentity,
+                  isNullable,
+                  type,
+                  size,
+                  precision,
+                  scale,
+                  databaseType)
+        {
             HasDefaultValue = hasDefaultValue;
         }
 
