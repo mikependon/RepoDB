@@ -387,7 +387,7 @@ namespace RepoDb.StatementBuilders
                 if (primaryField != identityField)
                 {
                     var isPresent = fields.FirstOrDefault(f => string.Equals(f.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase)) != null;
-                    if (isPresent == false)
+                    if (isPresent == false && !primaryField.HasDefaultValue)
                     {
                         throw new PrimaryFieldNotFoundException("The non-identity primary field must be present during insert operation.");
                     }
@@ -464,7 +464,7 @@ namespace RepoDb.StatementBuilders
                 if (primaryField != identityField)
                 {
                     var isPresent = fields.FirstOrDefault(f => string.Equals(f.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase)) != null;
-                    if (isPresent == false)
+                    if (isPresent == false && !primaryField.HasDefaultValue)
                     {
                         throw new PrimaryFieldNotFoundException("The non-identity primary field must be present during insert operation.");
                     }

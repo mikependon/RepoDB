@@ -57,6 +57,7 @@ namespace RepoDb.DbHelpers
 	                , CAST(C.is_identity AS BOOLEAN) AS IsIdentity
 	                , CAST(C.is_nullable AS BOOLEAN) AS IsNullable
 	                , C.data_type AS DataType
+                    , CAST(column_default is not null as boolean) AS HasDefault
                 FROM information_schema.columns C
                 LEFT JOIN
                 (
@@ -91,7 +92,8 @@ namespace RepoDb.DbHelpers
                 null,
                 null,
                 null,
-                reader.IsDBNull(4) ? "text" : reader.GetString(4));
+                reader.IsDBNull(4) ? "text" : reader.GetString(4),
+                !reader.IsDBNull(5) && reader.GetBoolean(5));
         }
 
         /// <summary>
@@ -111,7 +113,8 @@ namespace RepoDb.DbHelpers
                 null,
                 null,
                 null,
-                await reader.IsDBNullAsync(4, cancellationToken) ? "text" : reader.GetString(4));
+                await reader.IsDBNullAsync(4, cancellationToken) ? "text" : reader.GetString(4),
+                !await reader.IsDBNullAsync(5, cancellationToken) && await reader.GetFieldValueAsync<bool>(5, cancellationToken));
         }
 
         #endregion

@@ -21,6 +21,7 @@ namespace RepoDb
         /// <param name="precision">The precision of the field.</param>
         /// <param name="scale">The scale of the field.</param>
         /// <param name="databaseType">The database type of the field.</param>
+        /// <param name="hasDefaultValue">The value that indicates wheter the field has a default value</param>
         public DbField(string name,
             bool isPrimary,
             bool isIdentity,
@@ -29,7 +30,8 @@ namespace RepoDb
             int? size,
             byte? precision,
             byte? scale,
-            string databaseType)
+            string databaseType,
+            bool hasDefaultValue)
         {
             // Name is required
             if (string.IsNullOrWhiteSpace(name))
@@ -54,6 +56,7 @@ namespace RepoDb
             }
             Scale = scale;
             DatabaseType = databaseType;
+            HasDefaultValue = hasDefaultValue;
         }
 
         #region Properties
@@ -77,6 +80,11 @@ namespace RepoDb
         /// Gets the value whether the column is nullable.
         /// </summary>
         public bool IsNullable { get; }
+
+        /// <summary>
+        /// Gets tha value wheter the column has a default value
+        /// </summary>
+        public bool HasDefaultValue { get; }
 
         /// <summary>
         /// Gets the .NET type of the column.
