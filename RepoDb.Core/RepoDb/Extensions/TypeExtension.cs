@@ -60,7 +60,8 @@ namespace RepoDb.Extensions
         /// <param name="type">The current type.</param>
         /// <returns>Returns true if the current type is of type <see cref="IDictionary{TKey, TValue}"/> (with string/object key-value-pair).</returns>
         public static bool IsDictionaryStringObject(this Type type) =>
-            type == StaticType.IDictionaryStringObject || type == StaticType.ExpandoObject;
+            type == StaticType.IDictionaryStringObject ||
+            type == StaticType.DictionaryStringObject || type == StaticType.ExpandoObject;
 
         /// <summary>
         /// Checks whether the current type is wrapped within a <see cref="Nullable{T}"/> object.
@@ -103,7 +104,7 @@ namespace RepoDb.Extensions
         /// <param name="type">The current type.</param>
         /// <returns>The list of the enumerable <see cref="ClassProperty"/> objects.</returns>
         internal static IEnumerable<ClassProperty> GetEnumerableClassProperties(this Type type) =>
-            PropertyCache.Get(type).Where(classProperty => 
+            PropertyCache.Get(type).Where(classProperty =>
             {
                 var propType = classProperty.PropertyInfo.PropertyType;
                 return
