@@ -124,6 +124,11 @@ namespace RepoDb
         public static Type Dictionary => typeof(Dictionary<,>);
 
         /// <summary>
+        /// Gets a type of the <see cref="Dictionary{TKey, TValue}"/> (with string/object key-value-pair) .NET CLR type.
+        /// </summary>
+        public static Type DictionaryStringObject => typeof(Dictionary<string, object>);
+
+        /// <summary>
         /// Gets a type of the <see cref="double"/> .NET CLR type.
         /// </summary>
         public static Type Double => typeof(double);
