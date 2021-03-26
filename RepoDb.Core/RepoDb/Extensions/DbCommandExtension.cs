@@ -250,6 +250,12 @@ namespace RepoDb.Extensions
              */
             var valueType = (value?.GetType() ?? classProperty?.PropertyInfo.PropertyType).GetUnderlyingType();
 
+            // Enum
+            if (valueType?.IsEnum == true && dbField != null)
+            {
+                value = ConvertEnumValueToType(value, dbField.Type);
+            }
+
             /*
              * Try to get the propertyHandler, the order of the source of resolve is classProperty and valueType.
              * If the propertyHandler exists, the value and DbType are re-determined by the propertyHandler.
@@ -293,7 +299,8 @@ namespace RepoDb.Extensions
 
             // if classProperty exists, try get dbType from attribute level or property level, 
             // The reason for not using classProperty.GetDbType() is to avoid getting the type level mapping.
-            var dbType = classProperty?.GetDbType();
+            var dbType = classProperty == null ? null :
+                TypeMapCache.Get(classProperty.GetDeclaringType(), classProperty.PropertyInfo);
             if (dbType == null && (valueType ??= dbField?.Type.GetUnderlyingType() ?? fallbackType) != null)
             {
                 dbType =
@@ -636,21 +643,16 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
-        /// <param name="classProperty"></param>
-        /// <param name="targetType"></param>
+        /// <param name="value"></param>
+        /// <param name="type"></param>
         /// <returns></returns>
-        private static object GetPropertyHandler(ClassProperty classProperty,
-            Type targetType)
-        {
-            var propertyHandler = classProperty?.GetPropertyHandler();
-            if (propertyHandler == null && targetType != null)
-            {
-                propertyHandler = PropertyHandlerCache.Get<object>(targetType);
-            }
-            return propertyHandler;
-        }
+        private static object ConvertEnumValueToType(object value,
+            Type type) =>
+            value != null ?
+                type == StaticType.String ?
+                    value?.ToString() : Convert.ChangeType(Convert.ToInt32(value), type) : null;
 
         #endregion
     }

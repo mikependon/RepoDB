@@ -43,7 +43,14 @@ namespace RepoDb.Reflection
                 var dbField = dbFields?.FirstOrDefault(df =>
                     string.Equals(df.Name, paramProperty.GetMappedName(), StringComparison.OrdinalIgnoreCase));
                 var valueExpression = (Expression)Expression.Property(entityExpression, paramProperty.PropertyInfo);
-                var valueType = (entityProperty ?? paramProperty).PropertyInfo.PropertyType.GetUnderlyingType();
+                var targetProperty = (entityProperty ?? paramProperty);
+                var valueType = targetProperty.PropertyInfo.PropertyType.GetUnderlyingType();
+
+                // Enum
+                if (targetProperty.PropertyInfo.PropertyType.IsEnum && dbField != null)
+                {
+                    valueExpression = ConvertEnumExpressionToTypeExpression(valueExpression, dbField.Type);
+                }
 
                 // PropertyHandler
                 var handlerSetTuple = ConvertExpressionToPropertyHandlerSetExpressionTuple(valueExpression, paramProperty, valueType);
@@ -66,10 +73,13 @@ namespace RepoDb.Reflection
                     (entityProperty == null ? null : TypeMapCache.Get(entityProperty.GetDeclaringType(), entityProperty.PropertyInfo));
                 if (dbType == null && (valueType ??= dbField?.Type.GetUnderlyingType()) != null)
                 {
+                    var resolver = new ClientTypeToDbTypeResolver();
                     dbType =
-                        valueType.GetDbType() ??                                        // type level, use TypeMapCache
-                        new ClientTypeToDbTypeResolver().Resolve(valueType) ??          // type level, primitive mapping
-                        (valueType.IsEnum ? Converter.EnumDefaultDatabaseType : null);  // use Converter.EnumDefaultDatabaseType
+                        valueType.GetDbType() ??                // type level, use TypeMapCache
+                        resolver.Resolve(valueType) ??          // type level, primitive mapping
+                        (valueType.IsEnum ?
+                            (dbField?.Type != null ? resolver.Resolve(dbField.Type) : null) ?? // use the DBField.Type
+                                Converter.EnumDefaultDatabaseType :  null);  // use Converter.EnumDefaultDatabaseType
                 }
 
                 var dbTypeExpression = dbType == null ? GetNullableTypeExpression(StaticType.DbType) :
