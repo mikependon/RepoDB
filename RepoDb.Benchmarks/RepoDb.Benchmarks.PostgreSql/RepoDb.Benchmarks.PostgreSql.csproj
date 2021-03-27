@@ -9,9 +9,10 @@
     <PackageReference Include="BenchmarkDotNet" Version="0.12.1" />
     <PackageReference Include="Dapper" Version="2.0.78" />
     <PackageReference Include="Dapper.Contrib" Version="2.0.78" />
+    <PackageReference Include="linq2db.PostgreSQL" Version="3.2.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.4" />
-    <PackageReference Include="NHibernate" Version="5.3.6" />
-    <PackageReference Include="Npgsql" Version="5.0.3" />
+    <PackageReference Include="NHibernate" Version="5.3.7" />
+    <PackageReference Include="Npgsql" Version="5.0.4" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.2" />
   </ItemGroup>
 
@@ -19,6 +20,21 @@
     <ProjectReference Include="..\..\RepoDb.Extensions\RepoDb.SqlServer.BulkOperations\RepoDb.SqlServer.BulkOperations\RepoDb.SqlServer.BulkOperations.csproj" />
     <ProjectReference Include="..\..\RepoDb.PostgreSql\RepoDb.PostgreSql\RepoDb.PostgreSql.csproj" />
     <ProjectReference Include="..\..\RepoDb.SqlServer\RepoDb.SqlServer\RepoDb.SqlServer.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Models\PersonDatabase.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>PersonDatabase.generated.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Models\PersonDatabase.generated.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PersonDatabase.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
 
 </Project>
