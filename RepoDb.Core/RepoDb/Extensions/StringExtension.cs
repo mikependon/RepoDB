@@ -11,6 +11,8 @@ namespace RepoDb.Extensions
     /// </summary>
     public static class StringExtension
     {
+        private static readonly Regex alphaNumericRegex = new(@"[^a-zA-Z0-9]", RegexOptions.Compiled | RegexOptions.ExplicitCapture);
+        
         /// <summary>
         /// Joins an array string with a given separator.
         /// </summary>
@@ -60,7 +62,8 @@ namespace RepoDb.Extensions
             {
                 value = value.Trim();
             }
-            return Regex.Replace(value, @"[^a-zA-Z0-9]", "_");
+
+            return alphaNumericRegex.Replace(value, "_");
         }
 
         /// <summary>
