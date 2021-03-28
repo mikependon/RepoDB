@@ -1,5 +1,6 @@
 ﻿using RepoDb.Exceptions;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -17,7 +18,7 @@ namespace RepoDb.Extensions
     /// </summary>
     public static class ExpressionExtension
     {
-        private readonly static ExpressionType[] extractableExpressionTypes = new[]
+        private readonly static HashSet<ExpressionType> extractableExpressionTypes = new()
         {
             ExpressionType.Equal,
             ExpressionType.NotEqual,
@@ -27,7 +28,7 @@ namespace RepoDb.Extensions
             ExpressionType.LessThanOrEqual
         };
 
-        private readonly static ExpressionType[] mathematicalExpressionTypes = new[]
+        private readonly static HashSet<ExpressionType> mathematicalExpressionTypes = new()
         {
             ExpressionType.Add,
             ExpressionType.Subtract,
