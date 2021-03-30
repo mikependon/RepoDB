@@ -13,8 +13,8 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="member">The member where to retrieve a name.</param>
         /// <returns>The name of the <see cref="MemberInfo"/>.</returns>
-        internal static string GetMappedName(this MemberInfo member) =>
-            member.IsPropertyInfo() ? PropertyMappedNameCache.Get(member.ToPropertyInfo()) : member.Name;
+        internal static string GetMappedName(this MemberInfo member) => 
+            member is PropertyInfo memberInfo ? PropertyMappedNameCache.Get(memberInfo) : member.Name;
 
         /// <summary>
         /// Gets a value from the current instance of <see cref="MemberInfo"/> object.
@@ -27,19 +27,13 @@ namespace RepoDb.Extensions
             object obj,
             object[] parameters = null)
         {
-            if (member.IsFieldInfo())
+            return member switch
             {
-                return member.ToFieldInfo().GetValue(obj);
-            }
-            else if (member.IsPropertyInfo())
-            {
-                return member.ToPropertyInfo().GetValue(obj);
-            }
-            else if (member.IsMethodInfo())
-            {
-                return member.ToMethodInfo().Invoke(obj, parameters);
-            }
-            return null;
+                FieldInfo fieldInfo => fieldInfo.GetValue(obj),
+                PropertyInfo propertyInfo => propertyInfo.GetValue(obj),
+                MethodInfo methodInfo => methodInfo.Invoke(obj, parameters),
+                _ => null
+            };
         }
 
         /// <summary>
@@ -52,46 +46,18 @@ namespace RepoDb.Extensions
             object obj,
             object value)
         {
-            if (member.IsFieldInfo())
+            if (member is FieldInfo fieldInfo)
             {
-                member.ToFieldInfo().SetValue(obj, value);
+                fieldInfo.SetValue(obj, value);
             }
-            else if (member.IsPropertyInfo())
+            else if (member is PropertyInfo propertyInfo)
             {
-                member.ToPropertyInfo().SetValue(obj, value);
+                propertyInfo.SetValue(obj, value);
             }
         }
 
         #region Identification and Conversion
-
-        // Field
-
-        /// <summary>
-        /// Identify whether the current instance of <see cref="MemberInfo"/> is a <see cref="FieldInfo"/> object.
-        /// </summary>
-        /// <param name="member">The instance of <see cref="MemberInfo"/> to be checked.</param>
-        /// <returns>True if the instance of <see cref="MemberInfo"/> is a <see cref="FieldInfo"/> object.</returns>
-        public static bool IsFieldInfo(this MemberInfo member) =>
-            member is FieldInfo;
-
-        /// <summary>
-        /// Converts the current instance of <see cref="MemberInfo"/> object into <see cref="FieldInfo"/> object.
-        /// </summary>
-        /// <param name="member">The instance of the <see cref="MemberInfo"/> object.</param>
-        /// <returns>A converted instance of <see cref="FieldInfo"/> object.</returns>
-        public static FieldInfo ToFieldInfo(this MemberInfo member) =>
-            (FieldInfo)member;
-
-        // Property
-
-        /// <summary>
-        /// Identify whether the current instance of <see cref="MemberInfo"/> is a <see cref="PropertyInfo"/> object.
-        /// </summary>
-        /// <param name="member">The instance of <see cref="MemberInfo"/> to be checked.</param>
-        /// <returns>True if the instance of <see cref="MemberInfo"/> is a <see cref="PropertyInfo"/> object.</returns>
-        public static bool IsPropertyInfo(this MemberInfo member) =>
-            member is PropertyInfo;
-
+        
         /// <summary>
         /// Converts the current instance of <see cref="MemberInfo"/> object into <see cref="PropertyInfo"/> object.
         /// </summary>
@@ -99,25 +65,7 @@ namespace RepoDb.Extensions
         /// <returns>A converted instance of <see cref="PropertyInfo"/> object.</returns>
         public static PropertyInfo ToPropertyInfo(this MemberInfo member) =>
             (PropertyInfo)member;
-
-        // Method
-
-        /// <summary>
-        /// Identify whether the current instance of <see cref="MemberInfo"/> is a <see cref="MethodInfo"/> object.
-        /// </summary>
-        /// <param name="member">The instance of <see cref="MemberInfo"/> to be checked.</param>
-        /// <returns>True if the instance of <see cref="MemberInfo"/> is a <see cref="MethodInfo"/> object.</returns>
-        public static bool IsMethodInfo(this MemberInfo member) =>
-            member is MethodInfo;
-
-        /// <summary>
-        /// Converts the current instance of <see cref="MemberInfo"/> object into <see cref="MethodInfo"/> object.
-        /// </summary>
-        /// <param name="member">The instance of the <see cref="MemberInfo"/> object.</param>
-        /// <returns>A converted instance of <see cref="MethodInfo"/> object.</returns>
-        public static MethodInfo ToMethodInfo(this MemberInfo member) =>
-            (MethodInfo)member;
-
+        
         #endregion
 
         #region Helpers
@@ -131,14 +79,12 @@ namespace RepoDb.Extensions
         internal static bool IsMemberArgumentLengthEqual(MemberInfo member1,
             MemberInfo member2)
         {
-            if (member1.IsMethodInfo() && member2.IsMethodInfo())
+            if (member1 is MethodInfo methodInfo1 && member2 is MethodInfo methodInfo2)
             {
-                return member1.ToMethodInfo().GetParameters().Length == member2.ToMethodInfo().GetParameters().Length;
+                return methodInfo1.GetParameters().Length == methodInfo2.GetParameters().Length;
             }
-            else
-            {
-                return member1.IsPropertyInfo() && member2.IsPropertyInfo();
-            }
+
+            return member1 is PropertyInfo && member2 is PropertyInfo;
         }
 
         #endregion

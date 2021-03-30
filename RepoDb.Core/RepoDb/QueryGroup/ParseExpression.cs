@@ -79,23 +79,14 @@ namespace RepoDb
         private static QueryGroup Parse<TEntity>(Expression expression)
             where TEntity : class
         {
-            if (expression.IsLambda())
+            return expression switch
             {
-                return Parse<TEntity>(expression.ToLambda().Body);
-            }
-            else if (expression.IsBinary())
-            {
-                return Parse<TEntity>(expression.ToBinary());
-            }
-            else if (expression.IsUnary())
-            {
-                return Parse<TEntity>(expression.ToUnary());
-            }
-            else if (expression.IsMethodCall())
-            {
-                return Parse<TEntity>(expression.ToMethodCall());
-            }
-            return null;
+                LambdaExpression lambdaExpression => Parse<TEntity>(lambdaExpression.Body),
+                BinaryExpression binaryExpression => Parse<TEntity>(binaryExpression),
+                UnaryExpression unaryExpression => Parse<TEntity>(unaryExpression),
+                MethodCallExpression methodCallExpression => Parse<TEntity>(methodCallExpression),
+                _ => null
+            };
         }
 
         /*
@@ -154,18 +145,12 @@ namespace RepoDb
         private static QueryGroup Parse<TEntity>(UnaryExpression expression)
             where TEntity : class
         {
-            var queryGroup = (QueryGroup)null;
-
-            if (expression.Operand.IsMember() == true)
+            return expression.Operand switch
             {
-                queryGroup = Parse<TEntity>(expression.Operand.ToMember(), expression.NodeType);
-            }
-            else if (expression.Operand.IsMethodCall() == true)
-            {
-                queryGroup = Parse<TEntity>(expression.Operand.ToMethodCall(), expression.NodeType);
-            }
-
-            return queryGroup;
+                MemberExpression memberExpression => Parse<TEntity>(memberExpression, expression.NodeType),
+                MethodCallExpression methodCallExpression => Parse<TEntity>(methodCallExpression, expression.NodeType),
+                _ => null
+            };
         }
 
         /*
@@ -250,27 +235,15 @@ namespace RepoDb
         /// <returns></returns>
         internal static ExpressionType? GetNodeType(Expression expression)
         {
-            if (expression == null)
+            return expression switch
             {
-                return null;
-            }
-            if (expression.IsLambda())
-            {
-                return GetNodeType(expression.ToLambda());
-            }
-            else if (expression.IsBinary())
-            {
-                return GetNodeType(expression.ToBinary());
-            }
-            else if (expression.IsMethodCall())
-            {
-                return GetNodeType(expression.ToMethodCall());
-            }
-            else if (expression.IsMember())
-            {
-                return GetNodeType(expression.ToMember());
-            }
-            return null;
+                null => null,
+                LambdaExpression lambdaExpression => GetNodeType(lambdaExpression),
+                BinaryExpression binaryExpression => GetNodeType(binaryExpression),
+                MethodCallExpression methodCallExpression => GetNodeType(methodCallExpression),
+                MemberExpression memberExpression => GetNodeType(memberExpression),
+                _ => null
+            };
         }
 
         /// <summary>
@@ -279,7 +252,7 @@ namespace RepoDb
         /// <param name="expression"></param>
         /// <returns></returns>
         internal static ExpressionType? GetNodeType(LambdaExpression expression) =>
-            GetNodeType(expression.ToLambda().Body);
+            GetNodeType(expression.Body);
 
         /// <summary>
         /// 
