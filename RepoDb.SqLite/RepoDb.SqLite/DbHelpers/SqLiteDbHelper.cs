@@ -15,6 +15,8 @@ namespace RepoDb.DbHelpers
     /// </summary>
     public sealed class SqLiteDbHelper : IDbHelper
     {
+        private const string doubleQuote = "\"";
+
         /// <summary>
         /// Creates a new instance of <see cref="SqLiteDbHelper"/> class.
         /// </summary>
@@ -48,10 +50,8 @@ namespace RepoDb.DbHelpers
         /// </summary>
         /// <param name="tableName"></param>
         /// <returns></returns>
-        private string GetCommandText(string tableName)
-        {
-            return $"pragma table_info({DataEntityExtension.GetTableName(tableName)});";
-        }
+        private string GetCommandText(string tableName) =>
+            $"pragma table_info({DataEntityExtension.GetTableName(tableName)});";
 
         /// <summary>
         ///
@@ -115,7 +115,9 @@ namespace RepoDb.DbHelpers
                 transaction: transaction);
 
             // Return
-            return GetIdentityFieldNameInternal(sql);
+            return GetIdentityFieldNameInternal(sql)?
+                .AsUnquoted(connection.GetDbSetting())?
+                .Replace(doubleQuote, string.Empty);
         }
 
         /// <summary>
@@ -141,7 +143,9 @@ namespace RepoDb.DbHelpers
                 cancellationToken: cancellationToken);
 
             // Return
-            return GetIdentityFieldNameInternal(sql);
+            return GetIdentityFieldNameInternal(sql)?
+                .AsUnquoted(connection.GetDbSetting())?
+                .Replace(doubleQuote, string.Empty);
         }
 
         /// <summary>
@@ -161,7 +165,20 @@ namespace RepoDb.DbHelpers
                 {
                     if (IsIdentity(field))
                     {
-                        return field.Substring(0, field.IndexOf(" "));
+                        var fieldName = field;
+
+                        // This happens if the table has been created with the PRIMARY KEY keyword
+                        // defined at the end of schema. See issue #802
+                        if (field.StartsWith("PRIMARY KEY", StringComparison.OrdinalIgnoreCase))
+                        {
+                            fieldName = fieldName
+                                .Replace("PRIMARY KEY", string.Empty)
+                                .Trim()
+                                .Replace("(", string.Empty);
+                        }
+
+                        // Return
+                        return fieldName.Substring(0, fieldName.IndexOf(" "));
                     }
                 }
             }
@@ -179,9 +196,7 @@ namespace RepoDb.DbHelpers
         {
             var upper = field.ToUpper();
             return upper.Contains("AUTOINCREMENT") ||
-                   upper.Contains("INTEGER PRIMARY KEY") ||
-                   (upper.Contains("INTEGER") && upper.Contains("PRIMARY KEY")) ||
-                   (upper.Contains("INTEGER") && upper.Contains("PRIMARY") && upper.Contains("KEY"));
+                   (upper.Contains("INTEGER") && upper.Contains("PRIMARY KEY"));
         }
 
         /// <summary>
