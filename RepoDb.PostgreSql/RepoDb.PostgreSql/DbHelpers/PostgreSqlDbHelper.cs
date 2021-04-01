@@ -54,7 +54,17 @@ namespace RepoDb.DbHelpers
             return @"
                 SELECT C.column_name
 	                , CAST((CASE WHEN C.column_name = TMP.column_name THEN 1 ELSE 0 END) AS BOOLEAN) AS IsPrimary
-	                , CAST(C.is_identity AS BOOLEAN) AS IsIdentity
+	                , CAST(
+		                (
+			                CASE WHEN
+			                (
+				                C.is_identity = 'YES'
+				                OR
+				                POSITION('NEXTVAL' IN UPPER(C.column_default)) >= 1
+			                )
+			                THEN 1 ELSE 0 END
+		                )
+		                AS BOOLEAN) AS IsIdentity
 	                , CAST(C.is_nullable AS BOOLEAN) AS IsNullable
 	                , C.data_type AS DataType
                 FROM information_schema.columns C
@@ -66,7 +76,7 @@ namespace RepoDb.DbHelpers
 	                FROM information_schema.table_constraints TC 
 	                JOIN information_schema.constraint_column_usage AS CCU USING (constraint_schema, constraint_name) 
 	                JOIN information_schema.columns AS C ON C.table_schema = TC.constraint_schema
-	  	                AND TC.table_name = C.table_name
+		                AND TC.table_name = C.table_name
 		                AND CCU.column_name = C.column_name
 	                WHERE TC.constraint_type = 'PRIMARY KEY'
                 ) TMP ON TMP.table_schema = C.table_schema
