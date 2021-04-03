@@ -178,30 +178,14 @@ namespace RepoDb
         public static IEnumerable<Field> Parse<TEntity, TResult>(Expression<Func<TEntity, TResult>> expression)
             where TEntity : class
         {
-            var result = (IEnumerable<Field>)null;
-
-            if (expression.Body.IsUnary())
+            return expression.Body switch
             {
-                result = Parse<TEntity>(expression.Body.ToUnary());
-            }
-            else if (expression.Body.IsMember())
-            {
-                result = Parse<TEntity>(expression.Body.ToMember());
-            }
-            else if (expression.Body.IsBinary())
-            {
-                result = Parse<TEntity>(expression.Body.ToBinary());
-            }
-            else if (expression.Body.IsNew())
-            {
-                result = Parse<TEntity>(expression.Body.ToNew());
-            }
-            if (result == null)
-            {
-                throw new InvalidExpressionException($"Expression '{expression}' is invalid.");
-            }
-
-            return result;
+                UnaryExpression unaryExpression => Parse<TEntity>(unaryExpression),
+                MemberExpression memberExpression => Parse<TEntity>(memberExpression),
+                BinaryExpression binaryExpression => Parse<TEntity>(binaryExpression),
+                NewExpression newExpression => Parse<TEntity>(newExpression),
+                _ => throw new InvalidExpressionException($"Expression '{expression}' is invalid.")
+            };
         }
 
         /// <summary>
@@ -214,15 +198,12 @@ namespace RepoDb
         internal static IEnumerable<Field> Parse<TEntity>(UnaryExpression expression)
             where TEntity : class
         {
-            if (expression.Operand.IsMember())
+            return expression.Operand switch
             {
-                return Parse<TEntity>(expression.Operand.ToMember());
-            }
-            else if (expression.Operand.IsBinary())
-            {
-                return Parse<TEntity>(expression.Operand.ToBinary());
-            }
-            return null;
+                MemberExpression memberExpression => Parse<TEntity>(memberExpression),
+                BinaryExpression binaryExpression => Parse<TEntity>(binaryExpression),
+                _ => null
+            };
         }
 
         /// <summary>
@@ -235,9 +216,9 @@ namespace RepoDb
         internal static IEnumerable<Field> Parse<TEntity>(MemberExpression expression)
             where TEntity : class
         {
-            if (expression.Member is PropertyInfo)
+            if (expression.Member is PropertyInfo propertyInfo)
             {
-                return expression.Member.ToPropertyInfo().AsField().AsEnumerable();
+                return propertyInfo.AsField().AsEnumerable();
             }
             else
             {

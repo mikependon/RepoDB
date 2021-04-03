@@ -413,27 +413,15 @@ namespace RepoDb
         internal static ClassProperty GetProperty<TEntity>(Expression expression)
             where TEntity : class
         {
-            if (expression == null)
+            return expression switch
             {
-                return null;
-            }
-            if (expression.IsLambda())
-            {
-                return GetProperty<TEntity>(expression.ToLambda());
-            }
-            else if (expression.IsBinary())
-            {
-                return GetProperty<TEntity>(expression.ToBinary());
-            }
-            else if (expression.IsMethodCall())
-            {
-                return GetProperty<TEntity>(expression.ToMethodCall());
-            }
-            else if (expression.IsMember())
-            {
-                return GetProperty<TEntity>(expression.ToMember());
-            }
-            return null;
+                null => null,
+                LambdaExpression lambdaExpression => GetProperty<TEntity>(lambdaExpression),
+                BinaryExpression binaryExpression => GetProperty<TEntity>(binaryExpression),
+                MethodCallExpression methodCallExpression => GetProperty<TEntity>(methodCallExpression),
+                MemberExpression memberExpression => GetProperty<TEntity>(memberExpression),
+                _ => null
+            };
         }
 
         /// <summary>
@@ -443,7 +431,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static ClassProperty GetProperty<TEntity>(LambdaExpression expression)
             where TEntity : class =>
-            GetProperty<TEntity>(expression.ToLambda().Body);
+            GetProperty<TEntity>(expression.Body);
 
         /// <summary>
         /// 
@@ -461,7 +449,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static ClassProperty GetProperty<TEntity>(MethodCallExpression expression)
             where TEntity : class =>
-            (expression?.Object?.Type == StaticType.String) ?
+            expression?.Object?.Type == StaticType.String ?
             GetProperty<TEntity>(expression.Object.ToMember()) :
             GetProperty<TEntity>(expression.Arguments.LastOrDefault());
 

@@ -108,8 +108,8 @@ namespace RepoDb.DbHelpers
                 !reader.IsDBNull(3) && reader.GetBoolean(3),
                 reader.IsDBNull(4) ? DbTypeResolver.Resolve("text") : DbTypeResolver.Resolve(reader.GetString(4)),
                 reader.IsDBNull(5) ? 0 : reader.GetInt32(5),
-                reader.IsDBNull(6) ? 0 : reader.GetByte(6),
-                reader.IsDBNull(7) ? 0 : reader.GetByte(7),
+                reader.IsDBNull(6) ? (byte?)0 : reader.GetByte(6),
+                reader.IsDBNull(7) ? (byte?)0 : reader.GetByte(7),
                 reader.IsDBNull(7) ? "text" : reader.GetString(4));
         }
 
@@ -128,8 +128,8 @@ namespace RepoDb.DbHelpers
                 !await reader.IsDBNullAsync(3, cancellationToken) && await reader.GetFieldValueAsync<bool>(3, cancellationToken),
                 await reader.IsDBNullAsync(4, cancellationToken) ? DbTypeResolver.Resolve("text") : DbTypeResolver.Resolve(await reader.GetFieldValueAsync<string>(4, cancellationToken)),
                 await reader.IsDBNullAsync(5, cancellationToken) ? 0 : await reader.GetFieldValueAsync<int>(5, cancellationToken),
-                await reader.IsDBNullAsync(6, cancellationToken) ? 0 : await reader.GetFieldValueAsync<byte>(6, cancellationToken),
-                await reader.IsDBNullAsync(7, cancellationToken) ? 0 : await reader.GetFieldValueAsync<byte>(7, cancellationToken),
+                await reader.IsDBNullAsync(6, cancellationToken) ? (byte?)0 : await reader.GetFieldValueAsync<byte>(6, cancellationToken),
+                await reader.IsDBNullAsync(7, cancellationToken) ? (byte?)0 : await reader.GetFieldValueAsync<byte>(7, cancellationToken),
                 await reader.IsDBNullAsync(7, cancellationToken) ? "text" : await reader.GetFieldValueAsync<string>(4, cancellationToken));
         }
 

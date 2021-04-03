@@ -82,19 +82,13 @@ namespace RepoDb
             Order order)
             where TEntity : class
         {
-            if (expression.Body.IsUnary())
+            return expression.Body switch
             {
-                return Parse<TEntity>(expression.Body.ToUnary(), order);
-            }
-            else if (expression.Body.IsMember())
-            {
-                return Parse<TEntity>(expression.Body.ToMember(), order);
-            }
-            else if (expression.Body.IsBinary())
-            {
-                return Parse<TEntity>(expression.Body.ToBinary(), order);
-            }
-            throw new InvalidExpressionException($"Expression '{expression}' is invalid.");
+                UnaryExpression unaryExpression => Parse<TEntity>(unaryExpression, order),
+                MemberExpression memberExpression => Parse<TEntity>(memberExpression, order),
+                BinaryExpression binaryExpression => Parse<TEntity>(binaryExpression, order),
+                _ => throw new InvalidExpressionException($"Expression '{expression}' is invalid.")
+            };
         }
 
         /// <summary>
@@ -109,15 +103,12 @@ namespace RepoDb
             Order order)
             where TEntity : class
         {
-            if (expression.Operand.IsMember())
+            return expression.Operand switch
             {
-                return Parse<TEntity>(expression.Operand.ToMember(), order);
-            }
-            else if (expression.Operand.IsBinary())
-            {
-                return Parse<TEntity>(expression.Operand.ToBinary(), order);
-            }
-            throw new InvalidExpressionException($"Expression '{expression}' is invalid.");
+                MemberExpression memberExpression => Parse<TEntity>(memberExpression, order),
+                BinaryExpression binaryExpression => Parse<TEntity>(binaryExpression, order),
+                _ => throw new InvalidExpressionException($"Expression '{expression}' is invalid.")
+            };
         }
 
         /// <summary>
@@ -131,7 +122,7 @@ namespace RepoDb
         internal static OrderField Parse<TEntity>(MemberExpression expression,
             Order order)
             where TEntity : class =>
-            new OrderField(expression.ToMember().Member.GetMappedName(), order);
+            new (expression.Member.GetMappedName(), order);
 
         /// <summary>
         /// Parses a property from the data entity object based on the given <see cref="BinaryExpression"/> and converts the result 
@@ -144,7 +135,7 @@ namespace RepoDb
         internal static OrderField Parse<TEntity>(BinaryExpression expression,
             Order order)
             where TEntity : class =>
-            new OrderField(expression.GetName(), order);
+            new (expression.GetName(), order);
 
         /// <summary>
         /// Parses a property from the data entity object based on the given <see cref="Expression"/> and converts the result 
@@ -155,7 +146,7 @@ namespace RepoDb
         /// <returns>An instance of <see cref="OrderField"/> object with <see cref="Order.Ascending"/> value.</returns>
         public static OrderField Ascending<TEntity>(Expression<Func<TEntity, object>> expression)
             where TEntity : class =>
-            Parse<TEntity>(expression, Order.Ascending);
+            Parse(expression, Order.Ascending);
 
         /// <summary>
         /// Parses a property from the data entity object based on the given <see cref="Expression"/> and converts the result 
@@ -166,7 +157,7 @@ namespace RepoDb
         /// <returns>An instance of <see cref="OrderField"/> object with <see cref="Order.Descending"/> value.</returns>
         public static OrderField Descending<TEntity>(Expression<Func<TEntity, object>> expression)
             where TEntity : class =>
-            Parse<TEntity>(expression, Order.Descending);
+            Parse(expression, Order.Descending);
 
         /// <summary>
         /// Parse an object properties to be used for ordering. The object can have multiple properties for ordering and each property must have
