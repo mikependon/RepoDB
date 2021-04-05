@@ -1,22 +1,12 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RepoDb.Attributes;
 using RepoDb.Enumerations;
-using System.Linq;
-using System.Reflection;
+using RepoDb.Extensions;
 
 namespace RepoDb.UnitTests.Enumerations
 {
     [TestClass]
     public class OrderTextTest
     {
-        private TextAttribute GetOrderTextAttribute(Order order)
-        {
-            return typeof(Order)
-                .GetMembers()
-                .First(member => member.Name.ToLowerInvariant() == order.ToString().ToLowerInvariant())
-                .GetCustomAttribute<TextAttribute>();
-        }
-
         [TestMethod]
         public void TestOrderAscendingText()
         {
@@ -24,10 +14,10 @@ namespace RepoDb.UnitTests.Enumerations
             var operation = Order.Ascending;
 
             // Act
-            var parsed = GetOrderTextAttribute(operation);
+            var text = operation.GetText();
 
             // Assert
-            Assert.AreEqual("ASC", parsed.Text);
+            Assert.AreEqual("ASC", text);
         }
 
         [TestMethod]
@@ -37,10 +27,10 @@ namespace RepoDb.UnitTests.Enumerations
             var operation = Order.Descending;
 
             // Act
-            var parsed = GetOrderTextAttribute(operation);
+            var text = operation.GetText();
 
             // Assert
-            Assert.AreEqual("DESC", parsed.Text);
+            Assert.AreEqual("DESC", text);
         }
     }
 }

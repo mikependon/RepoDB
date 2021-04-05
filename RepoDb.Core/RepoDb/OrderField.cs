@@ -1,12 +1,9 @@
-﻿using RepoDb.Attributes;
-using RepoDb.Enumerations;
+﻿using RepoDb.Enumerations;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 
 namespace RepoDb
 {
@@ -15,7 +12,6 @@ namespace RepoDb
     /// </summary>
     public class OrderField
     {
-        private TextAttribute orderTextAttribute = null;
         private int? hashCode = null;
 
         /// <summary>
@@ -48,23 +44,6 @@ namespace RepoDb
         /// Gets the order direction of the field.
         /// </summary>
         public Order Order { get; }
-
-        #endregion
-
-        #region Methods
-
-        /// <summary>
-        /// Gets the value of the <see cref="TextAttribute.Text"/> thas was implemented on the ordering direction.
-        /// </summary>
-        /// <returns>The string containing the text value of the ordering direction.</returns>
-        public string GetOrderText()
-        {
-            orderTextAttribute ??= typeof(Order)
-                .GetMembers()
-                .First(member => string.Equals(member.Name, Order.ToString(), StringComparison.OrdinalIgnoreCase))
-                .GetCustomAttribute<TextAttribute>();
-            return orderTextAttribute.Text;
-        }
 
         #endregion
 
