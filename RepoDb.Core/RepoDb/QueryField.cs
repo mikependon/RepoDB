@@ -1,11 +1,9 @@
-﻿using RepoDb.Attributes;
-using RepoDb.Enumerations;
+﻿using RepoDb.Enumerations;
 using RepoDb.Extensions;
 using System;
 using System.Collections;
 using System.Data;
 using System.Linq;
-using System.Reflection;
 
 namespace RepoDb
 {
@@ -18,7 +16,6 @@ namespace RepoDb
         private const int HASHCODE_ISNULL = 128;
         private const int HASHCODE_ISNOTNULL = 256;
         private int? hashCode = null;
-        private TextAttribute operationTextAttribute = null;
 
         #region Constructors
 
@@ -187,21 +184,7 @@ namespace RepoDb
         {
             Parameter?.Reset();
             DbParameter = null;
-            operationTextAttribute = null;
             hashCode = null;
-        }
-
-        /// <summary>
-        /// Gets the text value of <see cref="TextAttribute"/> implemented at the <see cref="Operation"/> property value of this instance.
-        /// </summary>
-        /// <returns>A string instance containing the value of the <see cref="TextAttribute"/> text property.</returns>
-        public string GetOperationText()
-        {
-            operationTextAttribute ??= StaticType.Operation
-                .GetMembers()
-                .First(member => string.Equals(member.Name, Operation.ToString(), StringComparison.OrdinalIgnoreCase))
-                .GetCustomAttribute<TextAttribute>();
-            return operationTextAttribute.Text;
         }
 
         /// <summary>
@@ -256,7 +239,7 @@ namespace RepoDb
             // The string representation affects the collision
             // var objA = QueryGroup.Parse<EntityClass>(c => c.Id == 1 && c.Value != 1);
             // var objB = QueryGroup.Parse<EntityClass>(c => c.Id != 1 && c.Value == 1);
-            hashCode += string.Concat(Field.Name, GetOperationText()).GetHashCode();
+            hashCode += string.Concat(Field.Name, Operation.GetText()).GetHashCode();
 
             // Set and return the hashcode
             return (this.hashCode = hashCode).Value;

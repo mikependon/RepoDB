@@ -1,22 +1,12 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RepoDb.Attributes;
 using RepoDb.Enumerations;
-using System.Linq;
-using System.Reflection;
+using RepoDb.Extensions;
 
 namespace RepoDb.UnitTests.Enumerations
 {
     [TestClass]
     public class ConjunctionTextTest
     {
-        private TextAttribute GetConjunctionTextAttribute(Conjunction conjunction)
-        {
-            return typeof(Conjunction)
-                .GetMembers()
-                .First(member => member.Name.ToLowerInvariant() == conjunction.ToString().ToLowerInvariant())
-                .GetCustomAttribute<TextAttribute>();
-        }
-
         [TestMethod]
         public void TestConjunctionAndText()
         {
@@ -24,10 +14,10 @@ namespace RepoDb.UnitTests.Enumerations
             var operation = Conjunction.And;
 
             // Act
-            var parsed = GetConjunctionTextAttribute(operation);
+            var text = operation.GetText();
 
             // Assert
-            Assert.AreEqual("AND", parsed.Text);
+            Assert.AreEqual("AND", text);
         }
 
         [TestMethod]
@@ -37,10 +27,10 @@ namespace RepoDb.UnitTests.Enumerations
             var operation = Conjunction.Or;
 
             // Act
-            var parsed = GetConjunctionTextAttribute(operation);
+            var text = operation.GetText();
 
             // Assert
-            Assert.AreEqual("OR", parsed.Text);
+            Assert.AreEqual("OR", text);
         }
 
     }

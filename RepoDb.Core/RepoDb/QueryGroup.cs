@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using RepoDb.Enumerations;
 using RepoDb.Extensions;
-using RepoDb.Attributes;
-using System.Reflection;
 using RepoDb.Interfaces;
 
 namespace RepoDb
@@ -17,7 +15,6 @@ namespace RepoDb
     {
         private bool isFixed = false;
         private int? hashCode = null;
-        private TextAttribute conjuctionTextAttribute = null;
 
         #region Constructors
 
@@ -639,7 +636,6 @@ namespace RepoDb
         {
             ResetQueryFields();
             ResetQueryGroups();
-            conjuctionTextAttribute = null;
             isFixed = false;
             hashCode = null;
         }
@@ -680,19 +676,6 @@ namespace RepoDb
         public void IsForUpdate() =>
             PrependAnUnderscoreAtTheParameters();
 
-        /// <summary>
-        /// Gets the text value of <see cref="TextAttribute"/> implemented at the <see cref="Conjunction"/> property value of this instance.
-        /// </summary>
-        /// <returns>A string instance containing the value of the <see cref="TextAttribute"/> text property.</returns>
-        public string GetConjunctionText()
-        {
-            conjuctionTextAttribute ??= typeof(Conjunction)
-                .GetMembers()
-                .First(member => string.Equals(member.Name, Conjunction.ToString(), StringComparison.OrdinalIgnoreCase))
-                .GetCustomAttribute<TextAttribute>();
-            return conjuctionTextAttribute.Text;
-        }
-
 
         /// <summary>
         /// Gets the stringified query expression format of the current instance. A formatted string for field-operation-parameter will be
@@ -718,8 +701,8 @@ namespace RepoDb
 
             // Variables
             var groupList = new List<string>();
-            var conjunction = GetConjunctionText();
-            var separator = string.Concat(" ", GetConjunctionText(), " ");
+            var conjunction = Conjunction.GetText();
+            var separator = string.Concat(" ", conjunction, " ");
 
             // Check the instance fields
             var queryFields = QueryFields.AsList();

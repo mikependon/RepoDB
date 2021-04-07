@@ -404,7 +404,7 @@ namespace RepoDb
             int index,
             IDbSetting dbSetting)
         {
-            return Append(string.Concat("HAVING COUNT(", queryField.Field.Name, ") ", queryField.GetOperationText(), ", ", queryField.AsParameter(index, dbSetting)));
+            return Append(string.Concat("HAVING COUNT(", queryField.Field.Name, ") ", queryField.Operation.GetText(), ", ", queryField.AsParameter(index, dbSetting)));
         }
 
         /// <summary>

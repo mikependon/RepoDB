@@ -41,11 +41,11 @@ namespace RepoDb.Extensions
         {
             if (string.IsNullOrWhiteSpace(alias))
             {
-                return string.Concat(orderField.Name.AsField(dbSetting), " ", orderField.GetOrderText());
+                return string.Concat(orderField.Name.AsField(dbSetting), " ", orderField.Order.GetText());
             }
             else
             {
-                return string.Concat(orderField.Name.AsAliasField(alias, dbSetting), " ", orderField.GetOrderText());
+                return string.Concat(orderField.Name.AsAliasField(alias, dbSetting), " ", orderField.Order.GetText());
             }
         }
     }

@@ -1,6 +1,4 @@
-﻿using RepoDb.Attributes;
-
-namespace RepoDb.Enumerations
+﻿namespace RepoDb.Enumerations
 {
     /// <summary>
     /// An enumeration that is used to define an ordering for the query.
@@ -10,10 +8,10 @@ namespace RepoDb.Enumerations
         /// <summary>
         /// The ascending order.
         /// </summary>
-        [Text("ASC")] Ascending = 720208773,
+        Ascending = 720208773,
         /// <summary>
         /// The descending order.
         /// </summary>
-        [Text("DESC")] Descending = 1249030520
+        Descending = 1249030520
     }
 }

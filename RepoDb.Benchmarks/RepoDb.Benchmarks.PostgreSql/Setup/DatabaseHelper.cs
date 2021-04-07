@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.Data.SqlClient;
 using Npgsql;
 
 namespace RepoDb.Benchmarks.PostgreSql.Setup

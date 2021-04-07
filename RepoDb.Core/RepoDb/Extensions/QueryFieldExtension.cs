@@ -127,7 +127,7 @@ namespace RepoDb.Extensions
             }
             else
             {
-                return string.Concat(queryField.AsField(dbSetting), " ", queryField.GetOperationText(), " ", queryField.AsParameter(index, dbSetting));
+                return string.Concat(queryField.AsField(dbSetting), " ", queryField.Operation.GetText(), " ", queryField.AsParameter(index, dbSetting));
             }
         }
 
@@ -141,7 +141,7 @@ namespace RepoDb.Extensions
         internal static string AsFieldAndParameterForBetween(this QueryField queryField,
             int index,
             IDbSetting dbSetting) =>
-            string.Concat(queryField.AsField(dbSetting), " ", queryField.GetOperationText(), " ", queryField.AsBetweenParameter(index, dbSetting));
+            string.Concat(queryField.AsField(dbSetting), " ", queryField.Operation.GetText(), " ", queryField.AsBetweenParameter(index, dbSetting));
 
         /// <summary>
         /// 
@@ -161,7 +161,7 @@ namespace RepoDb.Extensions
             }
             else
             {
-                return string.Concat(queryField.AsField(dbSetting), " ", queryField.GetOperationText(), " ", queryField.AsInParameter(index, dbSetting));
+                return string.Concat(queryField.AsField(dbSetting), " ", queryField.Operation.GetText(), " ", queryField.AsInParameter(index, dbSetting));
             }
         }
     }
