@@ -606,12 +606,7 @@ namespace RepoDb.Extensions
             }
             else
             {
-                var method = StaticType.Convert.GetMethod(string.Concat("To", targetType.Name), new[] { fromType });
-                if (method != null)
-                {
-                    value = method.Invoke(null, new[] { value });
-                }
-                return value;
+                return Convert.ChangeType(value, targetType);
             }
         }
 

@@ -86,8 +86,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\Directory.Build.props = ..\Directory.Build.props
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.Benchmarks", "..\RepoDb.Benchmarks\RepoDb.Benchmarks\RepoDb.Benchmarks.csproj", "{38C9D2FC-9762-42C0-AF7B-E36E7F3890E2}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.IntegrationTests", "RepoDb.Tests\RepoDb.IntegrationTests\RepoDb.IntegrationTests.csproj", "{86A5DB6E-622C-4320-93F7-8E7DE6CC361B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.UnitTests", "RepoDb.Tests\RepoDb.UnitTests\RepoDb.UnitTests.csproj", "{2EB719D0-36CB-4F3B-9429-10C9CE29C12E}"
@@ -111,6 +109,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.SqlServer.IntegrationTests", "..\RepoDb.SqlServer\RepoDb.SqlServer.IntegrationTests\RepoDb.SqlServer.IntegrationTests.csproj", "{8257EF67-47B6-48F0-9E90-546DD2C20AAB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.SqlServer.UnitTests", "..\RepoDb.SqlServer\RepoDb.SqlServer.UnitTests\RepoDb.SqlServer.UnitTests.csproj", "{2D39959C-CE70-4D10-92F5-951B9A773DC6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Benchmarks.SqlServer", "..\RepoDb.Benchmarks\RepoDb.Benchmarks.SqlServer\RepoDb.Benchmarks.SqlServer.csproj", "{52D8E025-4143-4D46-B4DC-AE016281907A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Benchmarks.PostgreSql", "..\RepoDb.Benchmarks\RepoDb.Benchmarks.PostgreSql\RepoDb.Benchmarks.PostgreSql.csproj", "{9614BDFB-2E88-4503-A066-49B8F701B190}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -146,10 +148,6 @@ Global
 		{C63D73DF-E9CC-4DC7-A2AC-44FD7A378090}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C63D73DF-E9CC-4DC7-A2AC-44FD7A378090}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C63D73DF-E9CC-4DC7-A2AC-44FD7A378090}.Release|Any CPU.Build.0 = Release|Any CPU
-		{38C9D2FC-9762-42C0-AF7B-E36E7F3890E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{38C9D2FC-9762-42C0-AF7B-E36E7F3890E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{38C9D2FC-9762-42C0-AF7B-E36E7F3890E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{38C9D2FC-9762-42C0-AF7B-E36E7F3890E2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{86A5DB6E-622C-4320-93F7-8E7DE6CC361B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{86A5DB6E-622C-4320-93F7-8E7DE6CC361B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{86A5DB6E-622C-4320-93F7-8E7DE6CC361B}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -198,6 +196,14 @@ Global
 		{2D39959C-CE70-4D10-92F5-951B9A773DC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2D39959C-CE70-4D10-92F5-951B9A773DC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2D39959C-CE70-4D10-92F5-951B9A773DC6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52D8E025-4143-4D46-B4DC-AE016281907A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52D8E025-4143-4D46-B4DC-AE016281907A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52D8E025-4143-4D46-B4DC-AE016281907A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52D8E025-4143-4D46-B4DC-AE016281907A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9614BDFB-2E88-4503-A066-49B8F701B190}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9614BDFB-2E88-4503-A066-49B8F701B190}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9614BDFB-2E88-4503-A066-49B8F701B190}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9614BDFB-2E88-4503-A066-49B8F701B190}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
