@@ -1,6 +1,7 @@
 ﻿using BenchmarkDotNet.Columns;
 using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Diagnosers;
+using BenchmarkDotNet.Environments;
 using BenchmarkDotNet.Exporters;
 using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Loggers;
@@ -28,6 +29,7 @@ namespace RepoDb.Benchmarks.PostgreSql.Configurations
             AddColumnProvider(DefaultColumnProviders.Metrics);
 
             var job = Job.ShortRun
+                .WithRuntime(CoreRuntime.Core50)
                 .WithLaunchCount(DefaultConstants.DefaultLaunchCount)
                 .WithWarmupCount(DefaultConstants.DefaultWarmupCount)
                 .WithUnrollFactor(DefaultConstants.DefaultUnrollFactor)
