@@ -93,9 +93,9 @@ namespace RepoDb.Requests
         public static bool operator ==(TruncateRequest objA,
             TruncateRequest objB)
         {
-            if (ReferenceEquals(null, objA))
+            if (objA is null)
             {
-                return ReferenceEquals(null, objB);
+                return objB is null;
             }
             return objB?.GetHashCode() == objA.GetHashCode();
         }

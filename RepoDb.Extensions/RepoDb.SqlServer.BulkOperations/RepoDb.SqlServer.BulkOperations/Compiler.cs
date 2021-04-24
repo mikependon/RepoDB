@@ -33,8 +33,7 @@ namespace RepoDb.SqlServer.BulkOperations
         private static class MethodFuncCache<TEntity, TResult>
             where TEntity : class
         {
-            private static ConcurrentDictionary<int, Func<TEntity, TResult>> cache =
-                new ConcurrentDictionary<int, Func<TEntity, TResult>>();
+            private static ConcurrentDictionary<int, Func<TEntity, TResult>> cache = new();
 
             /// <summary>
             /// 
@@ -85,8 +84,7 @@ namespace RepoDb.SqlServer.BulkOperations
         private static class VoidMethodFuncCache<TEntity>
             where TEntity : class
         {
-            private static ConcurrentDictionary<int, Action<TEntity>> cache =
-                new ConcurrentDictionary<int, Action<TEntity>>();
+            private static ConcurrentDictionary<int, Action<TEntity>> cache = new();
 
             /// <summary>
             /// 
@@ -140,8 +138,7 @@ namespace RepoDb.SqlServer.BulkOperations
         private static class ParameterizedMethodFuncCache<TEntity, TResult>
             where TEntity : class
         {
-            private static ConcurrentDictionary<int, Func<TEntity, object[], TResult>> cache =
-                new ConcurrentDictionary<int, Func<TEntity, object[], TResult>>();
+            private static ConcurrentDictionary<int, Func<TEntity, object[], TResult>> cache = new();
 
             /// <summary>
             /// 
@@ -204,8 +201,7 @@ namespace RepoDb.SqlServer.BulkOperations
         private static class ParameterizedVoidMethodFuncCache<TEntity>
             where TEntity : class
         {
-            private static ConcurrentDictionary<int, Action<TEntity, object[]>> cache =
-                new ConcurrentDictionary<int, Action<TEntity, object[]>>();
+            private static ConcurrentDictionary<int, Action<TEntity, object[]>> cache = new();
 
             /// <summary>
             /// 
@@ -269,8 +265,7 @@ namespace RepoDb.SqlServer.BulkOperations
         private static class PropertyGetterFuncCache<TEntity, TResult>
             where TEntity : class
         {
-            private static ConcurrentDictionary<int, Func<TEntity, TResult>> cache =
-                new ConcurrentDictionary<int, Func<TEntity, TResult>>();
+            private static ConcurrentDictionary<int, Func<TEntity, TResult>> cache = new();
 
             /// <summary>
             /// 
@@ -316,8 +311,7 @@ namespace RepoDb.SqlServer.BulkOperations
         private static class PropertySetterFuncCache<TEntity>
             where TEntity : class
         {
-            private static ConcurrentDictionary<int, Action<TEntity, object>> cache =
-                new ConcurrentDictionary<int, Action<TEntity, object>>();
+            private static ConcurrentDictionary<int, Action<TEntity, object>> cache = new();
 
             /// <summary>
             /// 
@@ -374,8 +368,7 @@ namespace RepoDb.SqlServer.BulkOperations
         private static class FieldGetterFuncCache<TEntity, TResult>
             where TEntity : class
         {
-            private static ConcurrentDictionary<int, Func<TEntity, TResult>> cache =
-                new ConcurrentDictionary<int, Func<TEntity, TResult>>();
+            private static ConcurrentDictionary<int, Func<TEntity, TResult>> cache = new();
 
             /// <summary>
             /// 
@@ -428,8 +421,7 @@ namespace RepoDb.SqlServer.BulkOperations
         private static class EnumFuncCache<TEnum>
             where TEnum : Enum
         {
-            private static ConcurrentDictionary<int, Func<TEnum>> cache =
-                new ConcurrentDictionary<int, Func<TEnum>>();
+            private static ConcurrentDictionary<int, Func<TEnum>> cache = new();
 
             /// <summary>
             /// 

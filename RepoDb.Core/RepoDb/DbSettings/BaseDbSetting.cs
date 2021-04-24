@@ -195,9 +195,9 @@ namespace RepoDb.DbSettings
         public static bool operator ==(BaseDbSetting objA,
             BaseDbSetting objB)
         {
-            if (ReferenceEquals(null, objA))
+            if (objA is null)
             {
-                return ReferenceEquals(null, objB);
+                return objB is null;
             }
             return objB?.GetHashCode() == objA.GetHashCode();
         }

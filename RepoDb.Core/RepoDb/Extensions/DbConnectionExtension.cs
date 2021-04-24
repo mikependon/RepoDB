@@ -189,7 +189,7 @@ namespace RepoDb
                 DbFieldCache.Get(connection, tableName, transaction, false) : null;
 
             // Execute the actual method
-            using (var command = CreateDbCommandForExecution(connection: connection,
+            using var command = CreateDbCommandForExecution(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -197,28 +197,27 @@ namespace RepoDb
                 transaction: transaction,
                 entityType: null,
                 dbFields: dbFields,
-                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
+                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
+
+            var result = (IEnumerable<dynamic>)null;
+
+            // Execute
+            using (var reader = command.ExecuteReader())
             {
-                var result = (IEnumerable<dynamic>)null;
+                result = DataReader.ToEnumerable(reader, dbFields, connection.GetDbSetting()).AsList();
 
-                // Execute
-                using (var reader = command.ExecuteReader())
+                // Set Cache
+                if (cacheKey != null)
                 {
-                    result = DataReader.ToEnumerable(reader, dbFields, connection.GetDbSetting()).AsList();
-
-                    // Set Cache
-                    if (cacheKey != null)
-                    {
-                        cache?.Add(cacheKey, (IEnumerable<dynamic>)result, cacheItemExpiration.GetValueOrDefault(), false);
-                    }
+                    cache?.Add(cacheKey, (IEnumerable<dynamic>)result, cacheItemExpiration.GetValueOrDefault(), false);
                 }
-
-                // Set the output parameters
-                SetOutputParameters(param);
-
-                // Return
-                return result;
             }
+
+            // Set the output parameters
+            SetOutputParameters(param);
+
+            // Return
+            return result;
         }
 
         #endregion
@@ -317,7 +316,7 @@ namespace RepoDb
                 await DbFieldCache.GetAsync(connection, tableName, transaction, false, cancellationToken) : null;
 
             // Execute the actual method
-            using (var command = await CreateDbCommandForExecutionAsync(connection: connection,
+            using var command = await CreateDbCommandForExecutionAsync(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -326,28 +325,27 @@ namespace RepoDb
                 cancellationToken: cancellationToken,
                 entityType: null,
                 dbFields: dbFields,
-                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
+                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
+
+            var result = (IEnumerable<dynamic>)null;
+
+            // Execute
+            using (var reader = await command.ExecuteReaderAsync(cancellationToken))
             {
-                var result = (IEnumerable<dynamic>)null;
+                result = (await DataReader.ToEnumerableAsync(reader, dbFields, connection.GetDbSetting(), cancellationToken)).AsList();
 
-                // Execute
-                using (var reader = await command.ExecuteReaderAsync(cancellationToken))
+                // Set Cache
+                if (cacheKey != null)
                 {
-                    result = (await DataReader.ToEnumerableAsync(reader, dbFields, connection.GetDbSetting(), cancellationToken)).AsList();
-
-                    // Set Cache
-                    if (cacheKey != null)
-                    {
-                        cache?.Add(cacheKey, (IEnumerable<dynamic>)result, cacheItemExpiration.GetValueOrDefault(), false);
-                    }
+                    cache?.Add(cacheKey, (IEnumerable<dynamic>)result, cacheItemExpiration.GetValueOrDefault(), false);
                 }
-
-                // Set the output parameters
-                SetOutputParameters(param);
-
-                // Return
-                return result;
             }
+
+            // Set the output parameters
+            SetOutputParameters(param);
+
+            // Return
+            return result;
         }
 
         #endregion
@@ -579,7 +577,7 @@ namespace RepoDb
                 DbFieldCache.Get(connection, tableName, transaction, false) : null;
 
             // Execute the actual method
-            using (var command = CreateDbCommandForExecution(connection: connection,
+            using var command = CreateDbCommandForExecution(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -587,28 +585,27 @@ namespace RepoDb
                 transaction: transaction,
                 entityType: typeof(TResult),
                 dbFields: dbFields,
-                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
+                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
+
+            var result = (IEnumerable<TResult>)null;
+
+            // Execute
+            using (var reader = command.ExecuteReader())
             {
-                var result = (IEnumerable<TResult>)null;
+                result = DataReader.ToEnumerable<TResult>(reader, dbFields, connection.GetDbSetting()).AsList();
 
-                // Execute
-                using (var reader = command.ExecuteReader())
+                // Set Cache
+                if (cacheKey != null)
                 {
-                    result = DataReader.ToEnumerable<TResult>(reader, dbFields, connection.GetDbSetting()).AsList();
-
-                    // Set Cache
-                    if (cacheKey != null)
-                    {
-                        cache?.Add(cacheKey, (IEnumerable<TResult>)result, cacheItemExpiration.GetValueOrDefault(), false);
-                    }
+                    cache?.Add(cacheKey, (IEnumerable<TResult>)result, cacheItemExpiration.GetValueOrDefault(), false);
                 }
-
-                // Set the output parameters
-                SetOutputParameters(param);
-
-                // Return
-                return result;
             }
+
+            // Set the output parameters
+            SetOutputParameters(param);
+
+            // Return
+            return result;
         }
 
         #endregion
@@ -852,7 +849,7 @@ namespace RepoDb
                 await DbFieldCache.GetAsync(connection, tableName, transaction, false, cancellationToken) : null;
 
             // Execute the actual method
-            using (var command = await CreateDbCommandForExecutionAsync(connection: connection,
+            using var command = await CreateDbCommandForExecutionAsync(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -861,29 +858,28 @@ namespace RepoDb
                 cancellationToken: cancellationToken,
                 entityType: typeof(TResult),
                 dbFields: dbFields,
-                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
+                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
+
+            var result = (IEnumerable<TResult>)null;
+
+            // Execute
+            using (var reader = await command.ExecuteReaderAsync(cancellationToken))
             {
-                var result = (IEnumerable<TResult>)null;
+                result = (await DataReader.ToEnumerableAsync<TResult>(reader, dbFields,
+                    connection.GetDbSetting(), cancellationToken)).AsList();
 
-                // Execute
-                using (var reader = await command.ExecuteReaderAsync(cancellationToken))
+                // Set Cache
+                if (cacheKey != null)
                 {
-                    result = (await DataReader.ToEnumerableAsync<TResult>(reader, dbFields,
-                        connection.GetDbSetting(), cancellationToken)).AsList();
-
-                    // Set Cache
-                    if (cacheKey != null)
-                    {
-                        cache?.Add(cacheKey, (IEnumerable<TResult>)result, cacheItemExpiration.GetValueOrDefault(), false);
-                    }
+                    cache?.Add(cacheKey, (IEnumerable<TResult>)result, cacheItemExpiration.GetValueOrDefault(), false);
                 }
-
-                // Set the output parameters
-                SetOutputParameters(param);
-
-                // Return
-                return result;
             }
+
+            // Set the output parameters
+            SetOutputParameters(param);
+
+            // Return
+            return result;
         }
 
         #endregion
@@ -1282,7 +1278,7 @@ namespace RepoDb
             IEnumerable<DbField> dbFields,
             bool skipCommandArrayParametersCheck)
         {
-            using (var command = CreateDbCommandForExecution(connection: connection,
+            using var command = CreateDbCommandForExecution(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -1290,16 +1286,15 @@ namespace RepoDb
                 transaction: transaction,
                 entityType: entityType,
                 dbFields: dbFields,
-                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
-            {
-                var result = command.ExecuteNonQuery();
+                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
 
-                // Set the output parameters
-                SetOutputParameters(param);
+            var result = command.ExecuteNonQuery();
 
-                // Return
-                return result;
-            }
+            // Set the output parameters
+            SetOutputParameters(param);
+
+            // Return
+            return result;
         }
 
         #endregion
@@ -1366,7 +1361,7 @@ namespace RepoDb
             IEnumerable<DbField> dbFields,
             bool skipCommandArrayParametersCheck)
         {
-            using (var command = await CreateDbCommandForExecutionAsync(connection: connection,
+            using var command = await CreateDbCommandForExecutionAsync(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -1375,16 +1370,15 @@ namespace RepoDb
                 cancellationToken: cancellationToken,
                 entityType: entityType,
                 dbFields: dbFields,
-                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
-            {
-                var result = await command.ExecuteNonQueryAsync(cancellationToken);
+                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
 
-                // Set the output parameters
-                SetOutputParameters(param);
+            var result = await command.ExecuteNonQueryAsync(cancellationToken);
 
-                // Return
-                return result;
-            }
+            // Set the output parameters
+            SetOutputParameters(param);
+
+            // Return
+            return result;
         }
 
         #endregion
@@ -1575,7 +1569,7 @@ namespace RepoDb
                 }
             }
 
-            using (var command = CreateDbCommandForExecution(connection: connection,
+            using var command = CreateDbCommandForExecution(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -1583,22 +1577,21 @@ namespace RepoDb
                 transaction: transaction,
                 entityType: entityType,
                 dbFields: dbFields,
-                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
+                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
+
+            var result = Converter.ToType<TResult>(command.ExecuteScalar());
+
+            // Set Cache
+            if (cacheKey != null)
             {
-                var result = Converter.ToType<TResult>(command.ExecuteScalar());
-
-                // Set Cache
-                if (cacheKey != null)
-                {
-                    cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
-                }
-
-                // Set the output parameters
-                SetOutputParameters(param);
-
-                // Return
-                return result;
+                cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
             }
+
+            // Set the output parameters
+            SetOutputParameters(param);
+
+            // Return
+            return result;
         }
 
         #endregion
@@ -1695,7 +1688,7 @@ namespace RepoDb
                 }
             }
 
-            using (var command = await CreateDbCommandForExecutionAsync(connection: connection,
+            using var command = await CreateDbCommandForExecutionAsync(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -1704,22 +1697,21 @@ namespace RepoDb
                 cancellationToken: cancellationToken,
                 entityType: entityType,
                 dbFields: dbFields,
-                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck))
+                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
+
+            var result = Converter.ToType<TResult>(await command.ExecuteScalarAsync(cancellationToken));
+
+            // Set Cache
+            if (cacheKey != null)
             {
-                var result = Converter.ToType<TResult>(await command.ExecuteScalarAsync(cancellationToken));
-
-                // Set Cache
-                if (cacheKey != null)
-                {
-                    cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
-                }
-
-                // Set the output parameters
-                SetOutputParameters(param);
-
-                // Return
-                return result;
+                cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
             }
+
+            // Set the output parameters
+            SetOutputParameters(param);
+
+            // Return
+            return result;
         }
 
         #endregion

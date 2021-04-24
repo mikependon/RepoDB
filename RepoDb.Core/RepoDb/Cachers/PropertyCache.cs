@@ -13,7 +13,7 @@ namespace RepoDb
     /// </summary>
     public static class PropertyCache
     {
-        private static readonly ConcurrentDictionary<int, IEnumerable<ClassProperty>> cache = new ConcurrentDictionary<int, IEnumerable<ClassProperty>>();
+        private static readonly ConcurrentDictionary<int, IEnumerable<ClassProperty>> cache = new();
 
         #region Methods
 

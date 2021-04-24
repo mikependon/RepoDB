@@ -633,7 +633,7 @@ namespace RepoDb
                     {
                         throw new CancelledExecutionException(context.CommandText);
                     }
-                    return default(TResult);
+                    return default;
                 }
                 context.CommandText = (cancellableTraceLog.Statement ?? context.CommandText);
                 entity = (TEntity)(cancellableTraceLog.Parameter ?? entity);
@@ -733,7 +733,7 @@ namespace RepoDb
                     {
                         throw new CancelledExecutionException(context.CommandText);
                     }
-                    return default(TResult);
+                    return default;
                 }
                 context.CommandText = (cancellableTraceLog.Statement ?? context.CommandText);
                 entity = (TEntity)(cancellableTraceLog.Parameter ?? entity);

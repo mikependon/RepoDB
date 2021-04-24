@@ -149,9 +149,9 @@ namespace RepoDb
         public static bool operator ==(Parameter objA,
             Parameter objB)
         {
-            if (ReferenceEquals(null, objA))
+            if (objA is null)
             {
-                return ReferenceEquals(null, objB);
+                return objB is null;
             }
             return objB?.GetHashCode() == objA.GetHashCode();
         }

@@ -35,44 +35,24 @@ namespace RepoDb.Resolvers
             ColumnTime : System.DateTime
             ColumnVarChar : System.String
              */
-            switch (dbType)
+            return dbType switch
             {
-                case DbType.Int64:
-                    return "BIGINT";
-                case DbType.Byte:
-                case DbType.Binary:
-                    return "BLOB";
-                case DbType.Boolean:
-                    return "BOOLEAN";
-                case DbType.String:
-                case DbType.AnsiString:
-                case DbType.AnsiStringFixedLength:
-                case DbType.StringFixedLength:
-                    return "TEXT";
-                case DbType.Date:
-                    return "DATE";
-                case DbType.DateTime:
-                case DbType.DateTime2:
-                case DbType.DateTimeOffset:
-                    return "DATETIME";
-                case DbType.Decimal:
-                    return "DECIMAL";
-                case DbType.Single:
-                    return "REAL";
-                case DbType.Double:
-                    return "DOUBLE";
-                case DbType.Int32:
-                case DbType.Int16:
-                    return "INT";
-                case DbType.Time:
-                    return "TIME";
-                default:
-                    /* DbType.Guid
+                DbType.Int64 => "BIGINT",
+                DbType.Byte or DbType.Binary => "BLOB",
+                DbType.Boolean => "BOOLEAN",
+                DbType.String or DbType.AnsiString or DbType.AnsiStringFixedLength or DbType.StringFixedLength => "TEXT",
+                DbType.Date => "DATE",
+                DbType.DateTime or DbType.DateTime2 or DbType.DateTimeOffset => "DATETIME",
+                DbType.Decimal => "DECIMAL",
+                DbType.Single => "REAL",
+                DbType.Double => "DOUBLE",
+                DbType.Int32 or DbType.Int16 => "INT",
+                DbType.Time => "TIME",
+                _ => "TEXT",/* DbType.Guid
                      * DbType.Xml
                      * DbType.Object
                      */
-                    return "TEXT";
-            }
+            };
         }
     }
 }

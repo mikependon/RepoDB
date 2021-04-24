@@ -174,19 +174,18 @@ namespace RepoDb.DbHelpers
             };
 
             // Iterate and extract
-            using (var reader = (DbDataReader)connection.ExecuteReader(commandText, param, transaction: transaction))
+            using var reader = (DbDataReader)connection.ExecuteReader(commandText, param, transaction: transaction);
+
+            var dbFields = new List<DbField>();
+
+            // Iterate the list of the fields
+            while (reader.Read())
             {
-                var dbFields = new List<DbField>();
-
-                // Iterate the list of the fields
-                while (reader.Read())
-                {
-                    dbFields.Add(ReaderToDbField(reader));
-                }
-
-                // Return the list of fields
-                return dbFields;
+                dbFields.Add(ReaderToDbField(reader));
             }
+
+            // Return the list of fields
+            return dbFields;
         }
 
         /// <summary>
@@ -213,24 +212,23 @@ namespace RepoDb.DbHelpers
             };
 
             // Iterate and extract
-            using (var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, param, transaction: transaction,
-                cancellationToken: cancellationToken))
+            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, param, transaction: transaction,
+                cancellationToken: cancellationToken);
+
+            var dbFields = new List<DbField>();
+
+            // Iterate the list of the fields
+            while (await reader.ReadAsync(cancellationToken))
             {
-                var dbFields = new List<DbField>();
-
-                // Iterate the list of the fields
-                while (await reader.ReadAsync(cancellationToken))
-                {
-                    // The 'ReaderToDbFieldAsync' is having a bad behavior on different versions
-                    // of MySQL for this driver (from Oracle). Also, the 'CAST' and 'CONVERT' is
-                    // not working on our DEVENV.
-                    // dbFields.Add(await ReaderToDbFieldAsync(reader, cancellationToken));
-                    dbFields.Add(ReaderToDbField(reader));
-                }
-
-                // Return the list of fields
-                return dbFields;
+                // The 'ReaderToDbFieldAsync' is having a bad behavior on different versions
+                // of MySQL for this driver (from Oracle). Also, the 'CAST' and 'CONVERT' is
+                // not working on our DEVENV.
+                // dbFields.Add(await ReaderToDbFieldAsync(reader, cancellationToken));
+                dbFields.Add(ReaderToDbField(reader));
             }
+
+            // Return the list of fields
+            return dbFields;
         }
 
         #endregion

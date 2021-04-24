@@ -26,7 +26,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests
         /// <summary>
         /// Gets the current <see cref="Random"/> object in used.
         /// </summary>
-        public static Random Randomizer => new Random(1);
+        public static Random Randomizer => new(1);
 
         #endregion
 
@@ -56,10 +56,8 @@ namespace RepoDb.MySqlConnector.IntegrationTests
                 }
                 var value1 = propertyOfType1.GetValue(t1);
                 var value2 = propertyOfType2.GetValue(t2);
-                if (value1 is byte[] && value2 is byte[])
+                if (value1 is byte[] b1 && value2 is byte[] b2)
                 {
-                    var b1 = (byte[])value1;
-                    var b2 = (byte[])value2;
                     for (var i = 0; i < Math.Min(b1.Length, b2.Length); i++)
                     {
                         var v1 = b1[i];
@@ -123,10 +121,8 @@ namespace RepoDb.MySqlConnector.IntegrationTests
                 {
                     var value1 = property.GetValue(obj);
                     var value2 = dictionary[property.Name];
-                    if (value1 is byte[] && value2 is byte[])
+                    if (value1 is byte[] b1 && value2 is byte[] b2)
                     {
-                        var b1 = (byte[])value1;
-                        var b2 = (byte[])value2;
                         for (var i = 0; i < Math.Min(b1.Length, b2.Length); i++)
                         {
                             var v1 = b1[i];
@@ -138,9 +134,9 @@ namespace RepoDb.MySqlConnector.IntegrationTests
                     else
                     {
                         var propertyType = property.PropertyType.GetUnderlyingType();
-                        if (propertyType == typeof(TimeSpan) && value2 is DateTime)
+                        if (propertyType == typeof(TimeSpan) && value2 is DateTime dateTime)
                         {
-                            value2 = ((DateTime)value2).TimeOfDay;
+                            value2 = dateTime.TimeOfDay;
                         }
                         Assert.AreEqual(Convert.ChangeType(value1, propertyType), Convert.ChangeType(value2, propertyType),
                             $"Assert failed for '{property.Name}'. The values are '{value1}' and '{value2}'.");

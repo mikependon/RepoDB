@@ -563,23 +563,22 @@ namespace RepoDb
                             else
                             {
                                 // Set the identity back
-                                using (var reader = command.ExecuteReader())
+                                using var reader = command.ExecuteReader();
+
+                                // Get the results
+                                var position = 0;
+                                do
                                 {
-                                    // Get the results
-                                    var position = 0;
-                                    do
+                                    if (reader.Read())
                                     {
-                                        if (reader.Read())
-                                        {
-                                            var value = Converter.DbNullToNull(reader.GetValue(0));
-                                            var index = batchItems.Count > 1 && reader.FieldCount > 1 ? reader.GetInt32(1) : position;
-                                            context.IdentityPropertySetterFunc.Invoke(batchItems[index], value);
-                                            result++;
-                                        }
-                                        position++;
+                                        var value = Converter.DbNullToNull(reader.GetValue(0));
+                                        var index = batchItems.Count > 1 && reader.FieldCount > 1 ? reader.GetInt32(1) : position;
+                                        context.IdentityPropertySetterFunc.Invoke(batchItems[index], value);
+                                        result++;
                                     }
-                                    while (reader.NextResult());
+                                    position++;
                                 }
+                                while (reader.NextResult());
                             }
                         }
                     }
@@ -803,24 +802,23 @@ namespace RepoDb
                             else
                             {
                                 // Set the identity back
-                                using (var reader = await command.ExecuteReaderAsync(cancellationToken))
+                                using var reader = await command.ExecuteReaderAsync(cancellationToken);
+                                
+                                // Get the results
+                                var position = 0;
+                                do
                                 {
-                                    // Get the results
-                                    var position = 0;
-                                    do
+                                    if (await reader.ReadAsync(cancellationToken))
                                     {
-                                        if (await reader.ReadAsync(cancellationToken))
-                                        {
-                                            // No need to use async on this level (await reader.GetFieldValueAsync<object>(0, cancellationToken))
-                                            var value = Converter.DbNullToNull(reader.GetValue(0));
-                                            var index = batchItems.Count > 1 && reader.FieldCount > 1 ? reader.GetInt32(1) : position;
-                                            context.IdentityPropertySetterFunc.Invoke(batchItems[index], value);
-                                            result++;
-                                        }
-                                        position++;
+                                        // No need to use async on this level (await reader.GetFieldValueAsync<object>(0, cancellationToken))
+                                        var value = Converter.DbNullToNull(reader.GetValue(0));
+                                        var index = batchItems.Count > 1 && reader.FieldCount > 1 ? reader.GetInt32(1) : position;
+                                        context.IdentityPropertySetterFunc.Invoke(batchItems[index], value);
+                                        result++;
                                     }
-                                    while (await reader.NextResultAsync(cancellationToken));
+                                    position++;
                                 }
+                                while (await reader.NextResultAsync(cancellationToken));
                             }
                         }
                     }

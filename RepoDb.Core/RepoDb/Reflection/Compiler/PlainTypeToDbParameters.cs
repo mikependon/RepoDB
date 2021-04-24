@@ -53,11 +53,11 @@ namespace RepoDb.Reflection
                 }
 
                 // PropertyHandler
-                var handlerSetTuple = ConvertExpressionToPropertyHandlerSetExpressionTuple(valueExpression, paramProperty, valueType);
-                if (handlerSetTuple.handlerSetReturnType != null)
+                var (convertedExpression, handlerSetReturnType) = ConvertExpressionToPropertyHandlerSetExpressionTuple(valueExpression, paramProperty, valueType);
+                if (handlerSetReturnType != null)
                 {
-                    valueExpression = handlerSetTuple.convertedExpression;
-                    valueType = handlerSetTuple.handlerSetReturnType;
+                    valueExpression = convertedExpression;
+                    valueType = handlerSetReturnType;
                 }
 
                 // Automatic

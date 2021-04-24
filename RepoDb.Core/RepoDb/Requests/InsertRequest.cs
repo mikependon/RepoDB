@@ -133,9 +133,9 @@ namespace RepoDb.Requests
         public static bool operator ==(InsertRequest objA,
             InsertRequest objB)
         {
-            if (ReferenceEquals(null, objA))
+            if (objA is null)
             {
-                return ReferenceEquals(null, objB);
+                return objB is null;
             }
             return objB?.GetHashCode() == objA.GetHashCode();
         }

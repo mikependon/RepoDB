@@ -74,8 +74,7 @@ namespace RepoDb
         {
             if (cache.TryGetValue(key, out var value) == true)
             {
-                var expirable = value as IExpirable;
-                if (expirable != null)
+                if (value is IExpirable expirable)
                 {
                     return expirable.IsExpired() == false;
                 }

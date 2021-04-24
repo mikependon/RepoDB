@@ -15,7 +15,7 @@ namespace RepoDb
     {
         #region Privates
 
-        private static readonly ConcurrentDictionary<int, object> maps = new ConcurrentDictionary<int, object>();
+        private static readonly ConcurrentDictionary<int, object> maps = new();
 
         #endregion
 

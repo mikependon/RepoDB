@@ -61,7 +61,7 @@ namespace RepoDb
              */
 
             // Throw an unsupported exception if not parsed
-            if (ReferenceEquals(parsed, null))
+            if (parsed is null)
             {
                 throw new NotSupportedException($"Expression '{expression}' is currently not supported.");
             }

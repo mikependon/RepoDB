@@ -39,32 +39,14 @@ namespace RepoDb.Resolvers
             ColumnTime : System.String
             ColumnVarChar : System.String
              */
-            switch (dbTypeName.ToLowerInvariant())
+            return dbTypeName.ToLowerInvariant() switch
             {
-                case "bigint":
-                case "decimal":
-                case "int":
-                case "integer":
-                case "numeric":
-                    return typeof(long);
-                case "blob":
-                    return typeof(byte[]);
-                case "double":
-                case "real":
-                    return typeof(double);
-                case "boolean":
-                case "char":
-                case "date":
-                case "datetime":
-                case "none":
-                case "string":
-                case "text":
-                case "time":
-                case "varchar":
-                    return typeof(string);
-                default:
-                    return typeof(object);
-            }
+                "bigint" or "decimal" or "int" or "integer" or "numeric" => typeof(long),
+                "blob" => typeof(byte[]),
+                "double" or "real" => typeof(double),
+                "boolean" or "char" or "date" or "datetime" or "none" or "string" or "text" or "time" or "varchar" => typeof(string),
+                _ => typeof(object),
+            };
         }
     }
 }

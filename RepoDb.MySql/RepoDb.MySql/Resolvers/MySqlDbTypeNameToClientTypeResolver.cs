@@ -63,71 +63,24 @@ namespace RepoDb.Resolvers
             ColumnTinyText (System.String)
             ColumnBit (System.UInt64)
              */
-            switch (dbTypeName.ToLowerInvariant())
+            return dbTypeName.ToLowerInvariant() switch
             {
-                case "bigint":
-                case "integer":
-                    return typeof(long);
-                case "blob":
-                case "blobasarray":
-                case "binary":
-                case "longblob":
-                case "mediumblob":
-                case "tinyblob":
-                case "varbinary":
-                case "geometry":
-                case "linestring":
-                case "multilinestring":
-                case "multipoint":
-                case "multipolygon":
-                case "point":
-                case "polygon":
-                    return typeof(byte[]);
-                case "boolean":
-                    return typeof(bool);
-                case "char":
-                case "json":
-                case "longtext":
-                case "mediumtext":
-                case "nchar":
-                case "nvarchar":
-                case "string":
-                case "text":
-                case "tinytext":
-                case "varchar":
-                    return typeof(string);
-                case "date":
-                case "datetime":
-                case "datetime2":
-                case "timestamp":
-                    return typeof(DateTime);
-                case "time":
-                    return typeof(TimeSpan);
-                case "decimal":
-                case "decimal2":
-                case "numeric":
-                    return typeof(decimal);
-                case "double":
-                case "real":
-                    return typeof(double);
-                case "float":
-                    return typeof(float);
-                case "int":
-                case "int2":
-                case "mediumint":
-                case "year":
-                    return typeof(int);
-                case "smallint":
-                    return typeof(short);
-                case "tinyint":
-                    return typeof(sbyte);
-                case "bit":
-                    return typeof(ulong);
-                case "none":
-                    return typeof(object);
-                default:
-                    return typeof(object);
-            }
+                "bigint" or "integer" => typeof(long),
+                "blob" or "blobasarray" or "binary" or "longblob" or "mediumblob" or "tinyblob" or "varbinary" or "geometry" or "linestring" or "multilinestring" or "multipoint" or "multipolygon" or "point" or "polygon" => typeof(byte[]),
+                "boolean" => typeof(bool),
+                "char" or "json" or "longtext" or "mediumtext" or "nchar" or "nvarchar" or "string" or "text" or "tinytext" or "varchar" => typeof(string),
+                "date" or "datetime" or "datetime2" or "timestamp" => typeof(DateTime),
+                "time" => typeof(TimeSpan),
+                "decimal" or "decimal2" or "numeric" => typeof(decimal),
+                "double" or "real" => typeof(double),
+                "float" => typeof(float),
+                "int" or "int2" or "mediumint" or "year" => typeof(int),
+                "smallint" => typeof(short),
+                "tinyint" => typeof(sbyte),
+                "bit" => typeof(ulong),
+                "none" => typeof(object),
+                _ => typeof(object),
+            };
         }
     }
 }

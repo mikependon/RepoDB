@@ -16,7 +16,7 @@ namespace RepoDb
     {
         #region Privates
 
-        private static readonly ConcurrentDictionary<int, DbType?> cache = new ConcurrentDictionary<int, DbType?>();
+        private static readonly ConcurrentDictionary<int, DbType?> cache = new();
         private static readonly IResolver<PropertyInfo, DbType?> propertyLevelResolver = new TypeMapPropertyLevelResolver();
         private static readonly IResolver<Type, DbType?> typeLevelResolver = new TypeMapTypeLevelResolver();
 

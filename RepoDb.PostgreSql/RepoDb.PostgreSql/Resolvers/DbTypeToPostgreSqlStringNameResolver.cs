@@ -156,44 +156,24 @@ namespace RepoDb.Resolvers
             ColumnXML = System.String
             ColumnXMLAsArray = System.Array
             */
-            switch (dbType)
+            return dbType switch
             {
-                case DbType.Int64:
-                    return "BIGINT";
-                case DbType.Binary:
-                case DbType.Byte:
-                    return "BYTEA";
-                case DbType.Boolean:
-                    return "BOOLEAN";
-                case DbType.AnsiString:
-                case DbType.AnsiStringFixedLength:
-                case DbType.String:
-                case DbType.StringFixedLength:
-                    return "TEXT";
-                case DbType.Date:
-                case DbType.DateTime:
-                case DbType.DateTime2:
-                case DbType.DateTimeOffset:
-                    return "DATE";
-                case DbType.Decimal:
-                    return "NUMERIC";
-                case DbType.Single:
-                    return "REAL";
-                case DbType.Double:
-                    return "DOUBLE PRECISION";
-                case DbType.Int32:
-                    return "INTEGER";
-                case DbType.Int16:
-                    return "SMALLINT";
-                case DbType.Time:
-                    return "INTERVAL";
-                default:
-                    /* DbType.Guid
+                DbType.Int64 => "BIGINT",
+                DbType.Binary or DbType.Byte => "BYTEA",
+                DbType.Boolean => "BOOLEAN",
+                DbType.AnsiString or DbType.AnsiStringFixedLength or DbType.String or DbType.StringFixedLength => "TEXT",
+                DbType.Date or DbType.DateTime or DbType.DateTime2 or DbType.DateTimeOffset => "DATE",
+                DbType.Decimal => "NUMERIC",
+                DbType.Single => "REAL",
+                DbType.Double => "DOUBLE PRECISION",
+                DbType.Int32 => "INTEGER",
+                DbType.Int16 => "SMALLINT",
+                DbType.Time => "INTERVAL",
+                _ => "TEXT",/* DbType.Guid
                      * DbType.Xml
                      * DbType.Object
                      */
-                    return "TEXT";
-            }
+            };
         }
     }
 }

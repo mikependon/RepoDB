@@ -23,7 +23,7 @@ namespace RepoDb.Extensions
         /// <param name="dbField">The <see cref="DbField"/> to be converted.</param>
         /// <returns>An instance of <see cref="Field"/> object.</returns>
         public static Field AsField(this DbField dbField) =>
-            new Field(dbField.Name, dbField.Type);
+            new(dbField.Name, dbField.Type);
 
         /// <summary>
         /// Converts the list of <see cref="DbField"/> objects into an <see cref="IEnumerable{T}"/> of <see cref="Field"/> objects.

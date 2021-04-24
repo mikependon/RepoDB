@@ -62,7 +62,7 @@ namespace RepoDb
         /// <typeparam name="TResult"></typeparam>
         private static class DataReaderToTypeCache<TResult>
         {
-            private static ConcurrentDictionary<long, Func<DbDataReader, TResult>> cache = new ConcurrentDictionary<long, Func<DbDataReader, TResult>>();
+            private static ConcurrentDictionary<long, Func<DbDataReader, TResult>> cache = new();
 
             /// <summary>
             /// 
@@ -118,7 +118,7 @@ namespace RepoDb
         /// </summary>
         private static class DataReaderToExpandoObjectCache
         {
-            private static ConcurrentDictionary<long, Func<DbDataReader, dynamic>> cache = new ConcurrentDictionary<long, Func<DbDataReader, dynamic>>();
+            private static ConcurrentDictionary<long, Func<DbDataReader, dynamic>> cache = new();
 
             /// <summary>
             /// 
@@ -180,7 +180,7 @@ namespace RepoDb
         private static class DataEntityDbParameterSetterCache<TEntity>
             where TEntity : class
         {
-            private static ConcurrentDictionary<long, Action<DbCommand, TEntity>> cache = new ConcurrentDictionary<long, Action<DbCommand, TEntity>>();
+            private static ConcurrentDictionary<long, Action<DbCommand, TEntity>> cache = new();
 
             /// <summary>
             /// 
@@ -273,7 +273,7 @@ namespace RepoDb
         private static class DataEntityListDbParameterSetterCache<TEntity>
             where TEntity : class
         {
-            private static ConcurrentDictionary<long, Action<DbCommand, IList<TEntity>>> cache = new ConcurrentDictionary<long, Action<DbCommand, IList<TEntity>>>();
+            private static ConcurrentDictionary<long, Action<DbCommand, IList<TEntity>>> cache = new();
 
             /// <summary>
             /// 
@@ -370,7 +370,7 @@ namespace RepoDb
         private static class DbCommandToPropertyCache<TEntity>
             where TEntity : class
         {
-            private static ConcurrentDictionary<long, Action<TEntity, DbCommand>> cache = new ConcurrentDictionary<long, Action<TEntity, DbCommand>>();
+            private static ConcurrentDictionary<long, Action<TEntity, DbCommand>> cache = new();
 
             /// <summary>
             /// 
@@ -421,7 +421,7 @@ namespace RepoDb
         private static class DataEntityPropertySetterCache<TEntity>
             where TEntity : class
         {
-            private static ConcurrentDictionary<long, Action<TEntity, object>> cache = new ConcurrentDictionary<long, Action<TEntity, object>>();
+            private static ConcurrentDictionary<long, Action<TEntity, object>> cache = new();
 
             /// <summary>
             /// 
@@ -472,7 +472,7 @@ namespace RepoDb
         /// </summary>
         private static class PlainTypeToDbParametersCompiledFunctionCache
         {
-            private static ConcurrentDictionary<long, Action<DbCommand, object>> cache = new ConcurrentDictionary<long, Action<DbCommand, object>>();
+            private static ConcurrentDictionary<long, Action<DbCommand, object>> cache = new();
 
             /// <summary>
             /// 

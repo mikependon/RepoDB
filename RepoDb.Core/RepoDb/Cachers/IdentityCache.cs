@@ -11,7 +11,7 @@ namespace RepoDb
     /// </summary>
     public static class IdentityCache
     {
-        private static readonly ConcurrentDictionary<int, ClassProperty> cache = new ConcurrentDictionary<int, ClassProperty>();
+        private static readonly ConcurrentDictionary<int, ClassProperty> cache = new();
         private static IResolver<Type, ClassProperty> resolver = new IdentityResolver();
 
         #region Methods
