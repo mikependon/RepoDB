@@ -1929,11 +1929,7 @@ namespace RepoDb
             Type entity)
         {
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var key = GetAndGuardPrimaryKeyOrIdentityKey(entity, dbFields);
-            if (key == null)
-            {
-                key = GetPrimaryOrIdentityKey(entity);
-            }
+            var key = GetAndGuardPrimaryKeyOrIdentityKey(entity, dbFields) ?? GetPrimaryOrIdentityKey(entity);
             return GetAndGuardPrimaryKeyOrIdentityKey(tableName, key);
         }
 
@@ -1983,11 +1979,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
         {
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
-            var property = GetAndGuardPrimaryKeyOrIdentityKey(entityType, dbFields);
-            if (property == null)
-            {
-                property = GetPrimaryOrIdentityKey(entityType);
-            }
+            var property = GetAndGuardPrimaryKeyOrIdentityKey(entityType, dbFields) ?? GetPrimaryOrIdentityKey(entityType);
             return GetAndGuardPrimaryKeyOrIdentityKey(tableName, property);
         }
 
@@ -1997,15 +1989,8 @@ namespace RepoDb
         /// <param name="tableName"></param>
         /// <param name="field"></param>
         /// <returns></returns>
-        internal static Field GetAndGuardPrimaryKeyOrIdentityKey(string tableName,
-            Field field)
-        {
-            if (field == null)
-            {
-                throw new KeyFieldNotFoundException($"No primary key and identity key found at the table '{tableName}'.");
-            }
-            return field;
-        }
+        internal static Field GetAndGuardPrimaryKeyOrIdentityKey(string tableName, Field field) =>
+            field ?? throw new KeyFieldNotFoundException($"No primary key and identity key found at the table '{tableName}'.");
 
         /// <summary>
         ///

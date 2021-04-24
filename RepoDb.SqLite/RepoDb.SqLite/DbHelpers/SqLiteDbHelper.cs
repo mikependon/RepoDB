@@ -159,7 +159,7 @@ namespace RepoDb.DbHelpers
             var fields = ParseTableFieldsFromSql(sql);
 
             // Iterate the fields
-            if (fields != null && fields.Length > 0)
+            if (fields?.Length > 0)
             {
                 foreach (var field in fields)
                 {

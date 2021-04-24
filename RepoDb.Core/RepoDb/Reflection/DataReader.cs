@@ -25,7 +25,7 @@ namespace RepoDb.Reflection
             IEnumerable<DbField> dbFields = null,
             IDbSetting dbSetting = null)
         {
-            if (reader != null && reader.IsClosed == false && reader.HasRows)
+            if (reader?.IsClosed == false && reader.HasRows)
             {
                 var func = FunctionCache.GetDataReaderToTypeCompiledFunction<TResult>(reader,
                     dbFields,
@@ -56,7 +56,7 @@ namespace RepoDb.Reflection
             CancellationToken cancellationToken = default)
         {
             var list = new List<TResult>();
-            if (reader != null && reader.IsClosed == false && reader.HasRows)
+            if (reader?.IsClosed == false && reader.HasRows)
             {
                 var func = FunctionCache.GetDataReaderToTypeCompiledFunction<TResult>(reader,
                     dbFields,
@@ -84,7 +84,7 @@ namespace RepoDb.Reflection
             IEnumerable<DbField> dbFields = null,
             IDbSetting dbSetting = null)
         {
-            if (reader != null && reader.IsClosed == false && reader.HasRows)
+            if (reader?.IsClosed == false && reader.HasRows)
             {
                 var func = FunctionCache.GetDataReaderToExpandoObjectCompileFunction(reader,
                     dbFields,
@@ -114,7 +114,7 @@ namespace RepoDb.Reflection
             CancellationToken cancellationToken = default)
         {
             var list = new List<dynamic>();
-            if (reader != null && reader.IsClosed == false && reader.HasRows)
+            if (reader?.IsClosed == false && reader.HasRows)
             {
                 var func = FunctionCache.GetDataReaderToExpandoObjectCompileFunction(reader,
                     dbFields,

@@ -97,7 +97,7 @@ namespace RepoDb
             {
                 item = value as CacheItem<T>;
             }
-            if (item != null && !item.IsExpired())
+            if (item?.IsExpired() == false)
             {
                 return item;
             }

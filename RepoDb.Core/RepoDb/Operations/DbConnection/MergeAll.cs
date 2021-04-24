@@ -1520,7 +1520,7 @@ namespace RepoDb
                     // Iterate the result
                     if (Converter.DbNullToNull(upsertResult) != null)
                     {
-                        result += 1;
+                        result++;
                     }
                 }
 
@@ -1922,7 +1922,7 @@ namespace RepoDb
                     // Iterate the result
                     if (Converter.DbNullToNull(upsertResult) != null)
                     {
-                        result += 1;
+                        result++;
                     }
                 }
 

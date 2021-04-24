@@ -45,7 +45,7 @@ namespace RepoDb.Resolvers
         public virtual string Resolve(Field field,
             IDbSetting dbSetting)
         {
-            if (field != null && field.Type != null)
+            if (field?.Type != null)
             {
                 var dbType = DbTypeResolver.Resolve(field.Type);
                 if (dbType != null)

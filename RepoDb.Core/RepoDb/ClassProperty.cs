@@ -282,11 +282,7 @@ namespace RepoDb
         /// <returns>The mapped-name value.</returns>
         public string GetMappedName()
         {
-            if (mappedName != null)
-            {
-                return mappedName;
-            }
-            return mappedName = PropertyMappedNameCache.Get(GetDeclaringType(), PropertyInfo);
+            return mappedName ??= PropertyMappedNameCache.Get(GetDeclaringType(), PropertyInfo);
         }
 
         #endregion
