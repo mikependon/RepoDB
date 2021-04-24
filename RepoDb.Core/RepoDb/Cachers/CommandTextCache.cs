@@ -16,7 +16,7 @@ namespace RepoDb
     /// </summary>
     public static class CommandTextCache
     {
-        private static readonly ConcurrentDictionary<BaseRequest, string> cache = new ConcurrentDictionary<BaseRequest, string>();
+        private static readonly ConcurrentDictionary<BaseRequest, string> cache = new();
 
         #region GetAverageText
 

@@ -74,20 +74,19 @@ namespace RepoDb
             SqlTransaction transaction = null)
             where TEntity : class
         {
-            using (var reader = new DataEntityDataReader<TEntity>(entities))
-            {
-                return BulkDeleteInternal(connection: connection,
-                    tableName: ClassMappedNameCache.Get<TEntity>(),
-                    reader: reader,
-                    qualifiers: ParseExpression(qualifiers),
-                    mappings: mappings,
-                    options: options,
-                    hints: hints,
-                    bulkCopyTimeout: bulkCopyTimeout,
-                    batchSize: batchSize,
-                    usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                    transaction: transaction);
-            }
+            using var reader = new DataEntityDataReader<TEntity>(entities);
+
+            return BulkDeleteInternal(connection: connection,
+                tableName: ClassMappedNameCache.Get<TEntity>(),
+                reader: reader,
+                qualifiers: ParseExpression(qualifiers),
+                mappings: mappings,
+                options: options,
+                hints: hints,
+                bulkCopyTimeout: bulkCopyTimeout,
+                batchSize: batchSize,
+                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
+                transaction: transaction);
         }
 
         /// <summary>
@@ -119,20 +118,19 @@ namespace RepoDb
             SqlTransaction transaction = null)
             where TEntity : class
         {
-            using (var reader = new DataEntityDataReader<TEntity>(entities))
-            {
-                return BulkDeleteInternal(connection: connection,
-                    tableName: tableName,
-                    reader: reader,
-                    qualifiers: ParseExpression(qualifiers),
-                    mappings: mappings,
-                    options: options,
-                    hints: hints,
-                    bulkCopyTimeout: bulkCopyTimeout,
-                    batchSize: batchSize,
-                    usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                    transaction: transaction);
-            }
+            using var reader = new DataEntityDataReader<TEntity>(entities);
+
+            return BulkDeleteInternal(connection: connection,
+                tableName: tableName,
+                reader: reader,
+                qualifiers: ParseExpression(qualifiers),
+                mappings: mappings,
+                options: options,
+                hints: hints,
+                bulkCopyTimeout: bulkCopyTimeout,
+                batchSize: batchSize,
+                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
+                transaction: transaction);
         }
 
         /// <summary>
@@ -403,21 +401,20 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            using (var reader = new DataEntityDataReader<TEntity>(entities))
-            {
-                return await BulkDeleteAsyncInternal(connection: connection,
-                    tableName: ClassMappedNameCache.Get<TEntity>(),
-                    reader: reader,
-                    qualifiers: ParseExpression(qualifiers),
-                    mappings: mappings,
-                    options: options,
-                    hints: hints,
-                    bulkCopyTimeout: bulkCopyTimeout,
-                    batchSize: batchSize,
-                    usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                    transaction: transaction,
-                    cancellationToken: cancellationToken);
-            }
+            using var reader = new DataEntityDataReader<TEntity>(entities);
+
+            return await BulkDeleteAsyncInternal(connection: connection,
+                tableName: ClassMappedNameCache.Get<TEntity>(),
+                reader: reader,
+                qualifiers: ParseExpression(qualifiers),
+                mappings: mappings,
+                options: options,
+                hints: hints,
+                bulkCopyTimeout: bulkCopyTimeout,
+                batchSize: batchSize,
+                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -451,21 +448,20 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            using (var reader = new DataEntityDataReader<TEntity>(entities))
-            {
-                return await BulkDeleteAsyncInternal(connection: connection,
-                    tableName: tableName,
-                    reader: reader,
-                    qualifiers: ParseExpression(qualifiers),
-                    mappings: mappings,
-                    options: options,
-                    hints: hints,
-                    bulkCopyTimeout: bulkCopyTimeout,
-                    batchSize: batchSize,
-                    usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                    transaction: transaction,
-                    cancellationToken: cancellationToken);
-            }
+            using var reader = new DataEntityDataReader<TEntity>(entities);
+
+            return await BulkDeleteAsyncInternal(connection: connection,
+                tableName: tableName,
+                reader: reader,
+                qualifiers: ParseExpression(qualifiers),
+                mappings: mappings,
+                options: options,
+                hints: hints,
+                bulkCopyTimeout: bulkCopyTimeout,
+                batchSize: batchSize,
+                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>

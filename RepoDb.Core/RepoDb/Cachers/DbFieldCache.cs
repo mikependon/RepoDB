@@ -13,7 +13,7 @@ namespace RepoDb
     /// </summary>
     public static class DbFieldCache
     {
-        private static readonly ConcurrentDictionary<long, IEnumerable<DbField>> cache = new ConcurrentDictionary<long, IEnumerable<DbField>>();
+        private static readonly ConcurrentDictionary<long, IEnumerable<DbField>> cache = new();
 
         #region Helpers
 

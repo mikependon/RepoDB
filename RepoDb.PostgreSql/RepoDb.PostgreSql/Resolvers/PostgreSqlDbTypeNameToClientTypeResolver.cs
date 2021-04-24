@@ -160,106 +160,39 @@ namespace RepoDb.Resolvers
             ColumnXML = System.String
             ColumnXMLAsArray = System.Array
             */
-            switch (dbTypeName.ToLowerInvariant())
+            return dbTypeName.ToLowerInvariant() switch
             {
-                case "bigint":
-                    return typeof(System.Int64);
-                case "char":
-                case "\"char\"":
-                    return typeof(System.Char);
-                case "array":
-                    return typeof(System.Array);
-                case "character":
-                case "character varying":
-                case "json":
-                case "jsonb":
-                case "jsonpath":
-                case "name":
-                case "pg_dependencies":
-                case "pg_lsn":
-                case "pg_mcv_list":
-                case "pg_ndistinct":
-                case "pg_node_tree":
-                case "refcursor":
-                case "regclass":
-                case "regdictionary":
-                case "regnamespace":
-                case "regoper":
-                case "regoperator":
-                case "regproc":
-                case "regprocedure":
-                case "regrole":
-                case "text":
-                case "txid_snapshot":
-                case "xml":
-                    return typeof(System.String);
-                case "bit":
-                case "boolean":
-                    return typeof(System.Boolean);
-                case "bit varying":
-                    return typeof(System.Collections.BitArray);
-                case "box":
-                    return typeof(NpgsqlTypes.NpgsqlBox);
-                case "bytea":
-                    return typeof(System.Byte[]);
-                case "cid":
-                case "oid":
-                case "regconfig":
-                case "regtype":
-                case "xid":
-                    return typeof(System.UInt32);
-                case "circle":
-                    return typeof(NpgsqlTypes.NpgsqlCircle);
-                case "date":
-                case "timestamp without time zone":
-                case "timestamp":
-                case "timestamp with time zone":
-                case "timestamptz":
-                    return typeof(System.DateTime);
-                case "double precision":
-                    return typeof(System.Double);
-                case "inet":
-                    return typeof(System.Net.IPAddress);
-                case "integer":
-                    return typeof(System.Int32);
-                case "interval":
-                case "time without time zone":
-                case "time":
-                    return typeof(System.TimeSpan);
-                case "line":
-                    return typeof(NpgsqlTypes.NpgsqlLine);
-                case "lseg":
-                    return typeof(NpgsqlTypes.NpgsqlLSeg);
-                case "macaddr":
-                case "macaddr8":
-                    return typeof(System.Net.NetworkInformation.PhysicalAddress);
-                case "money":
-                case "numeric":
-                    return typeof(System.Decimal);
-                case "path":
-                    return typeof(NpgsqlTypes.NpgsqlPath);
-                case "point":
-                    return typeof(NpgsqlTypes.NpgsqlPoint);
-                case "polygon":
-                    return typeof(NpgsqlTypes.NpgsqlPolygon);
-                case "real":
-                    return typeof(System.Single);
-                case "smallint":
-                    return typeof(System.Int16);
-                case "tid":
-                    return typeof(NpgsqlTypes.NpgsqlTid);
-                case "timetz":
-                case "time with time zone":
-                    return typeof(System.DateTimeOffset);
-                case "tsquery":
-                    return typeof(NpgsqlTypes.NpgsqlTsQuery);
-                case "tsvector":
-                    return typeof(NpgsqlTypes.NpgsqlTsVector);
-                case "uuid":
-                    return typeof(System.Guid);
-                default:
-                    return typeof(object);
-            }
+                "bigint" => typeof(System.Int64),
+                "char" or "\"char\"" => typeof(System.Char),
+                "array" => typeof(System.Array),
+                "character" or "character varying" or "json" or "jsonb" or "jsonpath" or "name" or "pg_dependencies" or "pg_lsn" or "pg_mcv_list" or "pg_ndistinct" or "pg_node_tree" or "refcursor" or "regclass" or "regdictionary" or "regnamespace" or "regoper" or "regoperator" or "regproc" or "regprocedure" or "regrole" or "text" or "txid_snapshot" or "xml" => typeof(System.String),
+                "bit" or "boolean" => typeof(System.Boolean),
+                "bit varying" => typeof(System.Collections.BitArray),
+                "box" => typeof(NpgsqlTypes.NpgsqlBox),
+                "bytea" => typeof(System.Byte[]),
+                "cid" or "oid" or "regconfig" or "regtype" or "xid" => typeof(System.UInt32),
+                "circle" => typeof(NpgsqlTypes.NpgsqlCircle),
+                "date" or "timestamp without time zone" or "timestamp" or "timestamp with time zone" or "timestamptz" => typeof(System.DateTime),
+                "double precision" => typeof(System.Double),
+                "inet" => typeof(System.Net.IPAddress),
+                "integer" => typeof(System.Int32),
+                "interval" or "time without time zone" or "time" => typeof(System.TimeSpan),
+                "line" => typeof(NpgsqlTypes.NpgsqlLine),
+                "lseg" => typeof(NpgsqlTypes.NpgsqlLSeg),
+                "macaddr" or "macaddr8" => typeof(System.Net.NetworkInformation.PhysicalAddress),
+                "money" or "numeric" => typeof(System.Decimal),
+                "path" => typeof(NpgsqlTypes.NpgsqlPath),
+                "point" => typeof(NpgsqlTypes.NpgsqlPoint),
+                "polygon" => typeof(NpgsqlTypes.NpgsqlPolygon),
+                "real" => typeof(System.Single),
+                "smallint" => typeof(System.Int16),
+                "tid" => typeof(NpgsqlTypes.NpgsqlTid),
+                "timetz" or "time with time zone" => typeof(System.DateTimeOffset),
+                "tsquery" => typeof(NpgsqlTypes.NpgsqlTsQuery),
+                "tsvector" => typeof(NpgsqlTypes.NpgsqlTsVector),
+                "uuid" => typeof(System.Guid),
+                _ => typeof(object),
+            };
         }
     }
 }

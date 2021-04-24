@@ -201,12 +201,11 @@ namespace RepoDb
                 }
                 else
                 {
-                    using (var reader = (DbDataReader)connection.ExecuteReader(sql, commandTimeout: bulkCopyTimeout, transaction: transaction))
-                    {
-                        var mapping = mappings?.FirstOrDefault(e => string.Equals(e.DestinationColumn, identityDbField.Name, StringComparison.OrdinalIgnoreCase));
-                        var identityField = mapping != null ? new Field(mapping.SourceColumn) : identityDbField.AsField();
-                        result = SetIdentityForEntities<TEntity>(entities, reader, identityField);
-                    }
+                    using var reader = (DbDataReader)connection.ExecuteReader(sql, commandTimeout: bulkCopyTimeout, transaction: transaction);
+
+                    var mapping = mappings?.FirstOrDefault(e => string.Equals(e.DestinationColumn, identityDbField.Name, StringComparison.OrdinalIgnoreCase));
+                    var identityField = mapping != null ? new Field(mapping.SourceColumn) : identityDbField.AsField();
+                    result = SetIdentityForEntities<TEntity>(entities, reader, identityField);
                 }
 
                 // Drop the table after used
@@ -635,14 +634,13 @@ namespace RepoDb
                 var column = dataTable.Columns[identityDbField.Name];
                 if (isReturnIdentity == true && column?.ReadOnly == false)
                 {
-                    using (var reader = (DbDataReader)connection.ExecuteReader(sql, commandTimeout: bulkCopyTimeout, transaction: transaction))
+                    using var reader = (DbDataReader)connection.ExecuteReader(sql, commandTimeout: bulkCopyTimeout, transaction: transaction);
+
+                    while (reader.Read())
                     {
-                        while (reader.Read())
-                        {
-                            var value = Converter.DbNullToNull(reader.GetFieldValue<object>(0));
-                            dataTable.Rows[result][column] = value;
-                            result++;
-                        }
+                        var value = Converter.DbNullToNull(reader.GetFieldValue<object>(0));
+                        dataTable.Rows[result][column] = value;
+                        result++;
                     }
                 }
                 else
@@ -879,11 +877,9 @@ namespace RepoDb
                 }
                 else
                 {
+                    using var reader = (DbDataReader)connection.ExecuteReader(sql, commandTimeout: bulkCopyTimeout, transaction: transaction);
 
-                    using (var reader = (DbDataReader)connection.ExecuteReader(sql, commandTimeout: bulkCopyTimeout, transaction: transaction))
-                    {
-                        result = await SetIdentityForEntitiesAsync<TEntity>(entities, reader, identityDbField, cancellationToken);
-                    }
+                    result = await SetIdentityForEntitiesAsync<TEntity>(entities, reader, identityDbField, cancellationToken);
                 }
 
                 // Drop the table after used
@@ -1318,14 +1314,13 @@ namespace RepoDb
                 var column = dataTable.Columns[identityDbField.Name];
                 if (isReturnIdentity == true && column?.ReadOnly == false)
                 {
-                    using (var reader = (DbDataReader)(await connection.ExecuteReaderAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, cancellationToken: cancellationToken)))
+                    using var reader = (DbDataReader)await connection.ExecuteReaderAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, cancellationToken: cancellationToken);
+
+                    while (await reader.ReadAsync(cancellationToken))
                     {
-                        while (await reader.ReadAsync(cancellationToken))
-                        {
-                            var value = Converter.DbNullToNull((await reader.GetFieldValueAsync<object>(0, cancellationToken)));
-                            dataTable.Rows[result][column] = value;
-                            result++;
-                        }
+                        var value = Converter.DbNullToNull((await reader.GetFieldValueAsync<object>(0, cancellationToken)));
+                        dataTable.Rows[result][column] = value;
+                        result++;
                     }
                 }
                 else

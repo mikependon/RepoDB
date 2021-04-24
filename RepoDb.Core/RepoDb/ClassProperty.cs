@@ -282,11 +282,7 @@ namespace RepoDb
         /// <returns>The mapped-name value.</returns>
         public string GetMappedName()
         {
-            if (mappedName != null)
-            {
-                return mappedName;
-            }
-            return mappedName = PropertyMappedNameCache.Get(GetDeclaringType(), PropertyInfo);
+            return mappedName ??= PropertyMappedNameCache.Get(GetDeclaringType(), PropertyInfo);
         }
 
         #endregion
@@ -332,9 +328,9 @@ namespace RepoDb
         public static bool operator ==(ClassProperty objA,
             ClassProperty objB)
         {
-            if (ReferenceEquals(null, objA))
+            if (objA is null)
             {
-                return ReferenceEquals(null, objB);
+                return objB is null;
             }
             return objB?.GetHashCode() == objA.GetHashCode();
         }

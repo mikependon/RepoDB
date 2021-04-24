@@ -20,53 +20,31 @@ namespace RepoDb.Resolvers
         /// <returns>The equivalent string name.</returns>
         public virtual string Resolve(DbType dbType)
         {
-            switch (dbType)
+            return dbType switch
             {
-                case DbType.Int64:
-                    return "BIGINT";
-                case DbType.Binary:
-                    return "BINARY";
-                case DbType.Boolean:
-                    return "BIT";
-                case DbType.String:
-                    return "NVARCHAR";
-                case DbType.Date:
-                    return "DATE";
-                case DbType.DateTime:
-                    return "DATETIME";
-                case DbType.DateTime2:
-                    return "DATETIME2";
-                case DbType.DateTimeOffset:
-                    return "DATETIMEOFFSET";
-                case DbType.Decimal:
-                    return "DECIMAL(18,2)";
-                case DbType.Single:
-                    return "REAL";
-                case DbType.Double:
-                    return "FLOAT";
-                case DbType.Int32:
-                    return "INT";
-                case DbType.Int16:
-                    return "SMALLINT";
-                case DbType.Time:
-                    return "TIME";
-                case DbType.Byte:
-                    return "TINYINT";
-                case DbType.Guid:
-                    return "UNIQUEIDENTIFIER";
-                case DbType.AnsiString:
-                    return "VARCHAR";
-                case DbType.AnsiStringFixedLength:
-                    return "CHAR";
-                case DbType.StringFixedLength:
-                    return "NCHAR";
-                case DbType.Object:
-                    return "OBJECT";
-                case DbType.Xml:
-                    return "XML";
-                default:
-                    return "NVARCHAR";
-            }
+                DbType.Int64 => "BIGINT",
+                DbType.Binary => "BINARY",
+                DbType.Boolean => "BIT",
+                DbType.String => "NVARCHAR",
+                DbType.Date => "DATE",
+                DbType.DateTime => "DATETIME",
+                DbType.DateTime2 => "DATETIME2",
+                DbType.DateTimeOffset => "DATETIMEOFFSET",
+                DbType.Decimal => "DECIMAL(18,2)",
+                DbType.Single => "REAL",
+                DbType.Double => "FLOAT",
+                DbType.Int32 => "INT",
+                DbType.Int16 => "SMALLINT",
+                DbType.Time => "TIME",
+                DbType.Byte => "TINYINT",
+                DbType.Guid => "UNIQUEIDENTIFIER",
+                DbType.AnsiString => "VARCHAR",
+                DbType.AnsiStringFixedLength => "CHAR",
+                DbType.StringFixedLength => "NCHAR",
+                DbType.Object => "OBJECT",
+                DbType.Xml => "XML",
+                _ => "NVARCHAR",
+            };
         }
     }
 }

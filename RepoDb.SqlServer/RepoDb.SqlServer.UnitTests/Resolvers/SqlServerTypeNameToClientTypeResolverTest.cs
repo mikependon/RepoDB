@@ -13,7 +13,7 @@ namespace RepoDb.SqlServer.UnitTests.Resolvers
          * https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/sql-server-data-type-mappings
          */
 
-        private readonly SqlServerDbTypeNameToClientTypeResolver m_resolver = new SqlServerDbTypeNameToClientTypeResolver();
+        private readonly SqlServerDbTypeNameToClientTypeResolver m_resolver = new();
 
         [TestMethod]
         public void TestSqlServerTypeNameToClientTypeResolverForBigInt()

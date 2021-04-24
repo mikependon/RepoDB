@@ -17,7 +17,7 @@ namespace RepoDb.Extensions
     {
         #region Privates
 
-        private static ClientTypeToDbTypeResolver clientTypeToDbTypeResolver = new ClientTypeToDbTypeResolver();
+        private static ClientTypeToDbTypeResolver clientTypeToDbTypeResolver = new();
 
         #endregion
 
@@ -385,7 +385,7 @@ namespace RepoDb.Extensions
                 if (kvp.Value is CommandParameter commandParameter)
                 {
                     value = commandParameter.Value;
-                    dbField = dbField ?? GetDbField(commandParameter.Field.Name, dbFields);
+                    dbField ??= GetDbField(commandParameter.Field.Name, dbFields);
                     classProperty = PropertyCache.Get(commandParameter.MappedToType, commandParameter.Field.Name);
                 }
                 command.Parameters.Add(CreateParameter(command, kvp.Key, value, classProperty, dbField, null, null));

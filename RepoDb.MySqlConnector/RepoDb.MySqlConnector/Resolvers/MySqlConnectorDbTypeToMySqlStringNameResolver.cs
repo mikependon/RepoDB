@@ -60,80 +60,40 @@ namespace RepoDb.Resolvers
             ColumnTinyText (System.String)
             ColumnBit (System.UInt64)
              */
-            switch (dbType)
+            return dbType switch
             {
-                case MySqlDbType.Binary:
-                    return "BINARY";
-                case MySqlDbType.Bit:
-                    return "BIT";
-                case MySqlDbType.Blob:
-                    return "BLOB";
-                case MySqlDbType.Byte:
-                case MySqlDbType.UByte:
-                    return "TINYINT";
-                case MySqlDbType.Date:
-                    return "DATE";
-                case MySqlDbType.DateTime:
-                    return "DATETIME";
-                case MySqlDbType.Decimal:
-                    return "DECIMAL";
-                case MySqlDbType.Double:
-                    return "DOUBLE";
-                case MySqlDbType.Enum:
-                case MySqlDbType.Guid:
-                case MySqlDbType.Set:
-                case MySqlDbType.Text:
-                    return "TEXT";
-                case MySqlDbType.Float:
-                    return "FLOAT";
-                case MySqlDbType.Geometry:
-                    return "GEOMETRY";
-                case MySqlDbType.Int16:
-                case MySqlDbType.Int24:
-                case MySqlDbType.UInt24:
-                case MySqlDbType.UInt16:
-                    return "SMALLINT";
-                case MySqlDbType.Int32:
-                case MySqlDbType.UInt32:
-                    return "INT";
-                case MySqlDbType.Int64:
-                case MySqlDbType.UInt64:
-                    return "BIGINT";
-                case MySqlDbType.JSON:
-                    return "JSON";
-                case MySqlDbType.LongBlob:
-                    return "LONGBLOB";
-                case MySqlDbType.LongText:
-                    return "LONGTEXT";
-                case MySqlDbType.MediumBlob:
-                    return "MEDIUMBLOB";
-                case MySqlDbType.MediumText:
-                    return "MEDIUMTEXT";
-                case MySqlDbType.Newdate:
-                    return "DATE";
-                case MySqlDbType.NewDecimal:
-                    return "DECIMAL";
-                case MySqlDbType.String:
-                    return "STRING";
-                case MySqlDbType.Time:
-                    return "TIME";
-                case MySqlDbType.Timestamp:
-                    return "TIMESTAMP";
-                case MySqlDbType.TinyBlob:
-                    return "TINYBLOB";
-                case MySqlDbType.TinyText:
-                    return "TINYTEXT";
-                case MySqlDbType.VarBinary:
-                    return "VARBINARY";
-                case MySqlDbType.VarChar:
-                    return "VARCHAR";
-                case MySqlDbType.VarString:
-                    return "VARCHAR";
-                case MySqlDbType.Year:
-                    return "YEAR";
-                default:
-                    return "TEXT";
-            }
+                MySqlDbType.Binary => "BINARY",
+                MySqlDbType.Bit => "BIT",
+                MySqlDbType.Blob => "BLOB",
+                MySqlDbType.Byte or MySqlDbType.UByte => "TINYINT",
+                MySqlDbType.Date => "DATE",
+                MySqlDbType.DateTime => "DATETIME",
+                MySqlDbType.Decimal => "DECIMAL",
+                MySqlDbType.Double => "DOUBLE",
+                MySqlDbType.Enum or MySqlDbType.Guid or MySqlDbType.Set or MySqlDbType.Text => "TEXT",
+                MySqlDbType.Float => "FLOAT",
+                MySqlDbType.Geometry => "GEOMETRY",
+                MySqlDbType.Int16 or MySqlDbType.Int24 or MySqlDbType.UInt24 or MySqlDbType.UInt16 => "SMALLINT",
+                MySqlDbType.Int32 or MySqlDbType.UInt32 => "INT",
+                MySqlDbType.Int64 or MySqlDbType.UInt64 => "BIGINT",
+                MySqlDbType.JSON => "JSON",
+                MySqlDbType.LongBlob => "LONGBLOB",
+                MySqlDbType.LongText => "LONGTEXT",
+                MySqlDbType.MediumBlob => "MEDIUMBLOB",
+                MySqlDbType.MediumText => "MEDIUMTEXT",
+                MySqlDbType.Newdate => "DATE",
+                MySqlDbType.NewDecimal => "DECIMAL",
+                MySqlDbType.String => "STRING",
+                MySqlDbType.Time => "TIME",
+                MySqlDbType.Timestamp => "TIMESTAMP",
+                MySqlDbType.TinyBlob => "TINYBLOB",
+                MySqlDbType.TinyText => "TINYTEXT",
+                MySqlDbType.VarBinary => "VARBINARY",
+                MySqlDbType.VarChar => "VARCHAR",
+                MySqlDbType.VarString => "VARCHAR",
+                MySqlDbType.Year => "YEAR",
+                _ => "TEXT",
+            };
         }
     }
 }

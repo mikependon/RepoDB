@@ -2445,7 +2445,7 @@ namespace RepoDb
                     {
                         throw new CancelledExecutionException(commandText);
                     }
-                    return default(TResult);
+                    return default;
                 }
                 commandText = (cancellableTraceLog.Statement ?? commandText);
                 param = (cancellableTraceLog.Parameter ?? param);
@@ -2516,7 +2516,7 @@ namespace RepoDb
                     {
                         throw new CancelledExecutionException(commandText);
                     }
-                    return default(TResult);
+                    return default;
                 }
                 commandText = (cancellableTraceLog.Statement ?? commandText);
                 param = (cancellableTraceLog.Parameter ?? param);

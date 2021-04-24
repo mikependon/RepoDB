@@ -152,9 +152,9 @@ namespace RepoDb.Requests
         /// <returns>True if the instances are equal.</returns>
         public static bool operator ==(MergeRequest objA, MergeRequest objB)
         {
-            if (ReferenceEquals(null, objA))
+            if (objA is null)
             {
-                return ReferenceEquals(null, objB);
+                return objB is null;
             }
             return objB?.GetHashCode() == objA.GetHashCode();
         }

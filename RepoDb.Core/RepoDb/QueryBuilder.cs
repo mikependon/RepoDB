@@ -19,7 +19,7 @@ namespace RepoDb
 
         //TODO: Tune this value
         private const int INITIAL_STRINGBUILDER_CAPACITY = 256;
-        private readonly StringBuilder stringBuilder = new StringBuilder(INITIAL_STRINGBUILDER_CAPACITY);
+        private readonly StringBuilder stringBuilder = new(INITIAL_STRINGBUILDER_CAPACITY);
 
         /// <summary>
         /// Stringify the current object.

@@ -78,7 +78,7 @@ namespace RepoDb
             try
             {
                 // Get the DB Fields
-                dbFields = dbFields ?? DbFieldCache.Get(connection, tableName, transaction, true);
+                dbFields ??= DbFieldCache.Get(connection, tableName, transaction, true);
 
                 // Variables needed
                 var identityDbField = dbFields?.FirstOrDefault(dbField => dbField.IsIdentity);
@@ -268,7 +268,7 @@ namespace RepoDb
             try
             {
                 // Get the DB Fields
-                dbFields = dbFields ?? DbFieldCache.Get(connection, tableName, transaction, true);
+                dbFields ??= DbFieldCache.Get(connection, tableName, transaction, true);
 
                 // Variables needed
                 var readerFields = Enumerable
@@ -414,7 +414,7 @@ namespace RepoDb
             try
             {
                 // Get the DB Fields
-                dbFields = dbFields ?? DbFieldCache.Get(connection, tableName, transaction, true);
+                dbFields ??= DbFieldCache.Get(connection, tableName, transaction, true);
 
                 // Variables needed
                 var identityDbField = dbFields?.FirstOrDefault(dbField => dbField.IsIdentity);
@@ -507,10 +507,9 @@ namespace RepoDb
                         var column = dataTable.Columns[identityDbField.Name];
                         if (column?.ReadOnly == false)
                         {
-                            using (var reader = (DbDataReader)(connection.ExecuteReader(sql, commandTimeout: bulkCopyTimeout, transaction: transaction)))
-                            {
-                                result = SetIdentityForEntities(dataTable, reader, column);
-                            }
+                            using var reader = (DbDataReader)connection.ExecuteReader(sql, commandTimeout: bulkCopyTimeout, transaction: transaction);
+
+                            result = SetIdentityForEntities(dataTable, reader, column);
                         }
                         else
                         {
@@ -627,7 +626,7 @@ namespace RepoDb
             try
             {
                 // Get the DB Fields
-                dbFields = dbFields ?? await DbFieldCache.GetAsync(connection, tableName, transaction, true, cancellationToken: cancellationToken);
+                dbFields ??= await DbFieldCache.GetAsync(connection, tableName, transaction, true, cancellationToken: cancellationToken);
 
                 // Variables needed
                 var identityDbField = dbFields?.FirstOrDefault(dbField => dbField.IsIdentity);
@@ -817,7 +816,7 @@ namespace RepoDb
             try
             {
                 // Get the DB Fields
-                dbFields = dbFields ?? await DbFieldCache.GetAsync(connection, tableName, transaction, true, cancellationToken);
+                dbFields ??= await DbFieldCache.GetAsync(connection, tableName, transaction, true, cancellationToken);
 
                 // Variables needed
                 var readerFields = Enumerable
@@ -966,7 +965,7 @@ namespace RepoDb
             try
             {
                 // Get the DB Fields
-                dbFields = dbFields ?? await DbFieldCache.GetAsync(connection, tableName, transaction, true, cancellationToken);
+                dbFields ??= await DbFieldCache.GetAsync(connection, tableName, transaction, true, cancellationToken);
 
                 // Variables needed
                 var identityDbField = dbFields?.FirstOrDefault(dbField => dbField.IsIdentity);
@@ -1060,10 +1059,9 @@ namespace RepoDb
                         var column = dataTable.Columns[identityDbField.Name];
                         if (column?.ReadOnly == false)
                         {
-                            using (var reader = (DbDataReader)(await connection.ExecuteReaderAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, cancellationToken: cancellationToken)))
-                            {
-                                result = await SetIdentityForEntitiesAsync(dataTable, reader, column, cancellationToken);
-                            }
+                            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, cancellationToken: cancellationToken);
+
+                            result = await SetIdentityForEntitiesAsync(dataTable, reader, column, cancellationToken);
                         }
                         else
                         {

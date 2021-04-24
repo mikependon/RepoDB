@@ -159,7 +159,7 @@ namespace RepoDb.DbHelpers
             var fields = ParseTableFieldsFromSql(sql);
 
             // Iterate the fields
-            if (fields != null && fields.Length > 0)
+            if (fields?.Length > 0)
             {
                 foreach (var field in fields)
                 {
@@ -244,20 +244,19 @@ namespace RepoDb.DbHelpers
             var commandText = GetCommandText(tableName);
 
             // Iterate and extract
-            using (var reader = (DbDataReader)connection.ExecuteReader(commandText, transaction: transaction))
+            using var reader = (DbDataReader)connection.ExecuteReader(commandText, transaction: transaction);
+
+            var dbFields = new List<DbField>();
+            var identity = GetIdentityFieldName(connection, tableName, transaction);
+
+            // Iterate the list of the fields
+            while (reader.Read())
             {
-                var dbFields = new List<DbField>();
-                var identity = GetIdentityFieldName(connection, tableName, transaction);
-
-                // Iterate the list of the fields
-                while (reader.Read())
-                {
-                    dbFields.Add(ReaderToDbField(reader, identity));
-                }
-
-                // Return the list of fields
-                return dbFields;
+                dbFields.Add(ReaderToDbField(reader, identity));
             }
+
+            // Return the list of fields
+            return dbFields;
         }
 
         /// <summary>
@@ -277,20 +276,19 @@ namespace RepoDb.DbHelpers
             var commandText = GetCommandText(tableName);
 
             // Iterate and extract
-            using (var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, cancellationToken: cancellationToken))
+            using var reader = (DbDataReader)await connection.ExecuteReaderAsync(commandText, transaction: transaction, cancellationToken: cancellationToken);
+
+            var dbFields = new List<DbField>();
+            var identity = await GetIdentityFieldNameAsync(connection, tableName, transaction, cancellationToken);
+
+            // Iterate the list of the fields
+            while (await reader.ReadAsync(cancellationToken))
             {
-                var dbFields = new List<DbField>();
-                var identity = await GetIdentityFieldNameAsync(connection, tableName, transaction, cancellationToken);
-
-                // Iterate the list of the fields
-                while (await reader.ReadAsync(cancellationToken))
-                {
-                    dbFields.Add(await ReaderToDbFieldAsync(reader, identity, cancellationToken));
-                }
-
-                // Return the list of fields
-                return dbFields;
+                dbFields.Add(await ReaderToDbFieldAsync(reader, identity, cancellationToken));
             }
+
+            // Return the list of fields
+            return dbFields;
         }
 
         #endregion

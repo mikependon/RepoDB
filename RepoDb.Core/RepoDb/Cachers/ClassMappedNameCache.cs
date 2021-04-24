@@ -11,7 +11,7 @@ namespace RepoDb
     /// </summary>
     public static class ClassMappedNameCache
     {
-        private static readonly ConcurrentDictionary<int, string> cache = new ConcurrentDictionary<int, string>();
+        private static readonly ConcurrentDictionary<int, string> cache = new();
         private static IResolver<Type, string> resolver = new ClassMappedNameResolver();
 
         #region Methods

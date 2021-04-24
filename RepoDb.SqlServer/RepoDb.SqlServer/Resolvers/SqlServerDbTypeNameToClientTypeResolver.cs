@@ -25,60 +25,25 @@ namespace RepoDb.Resolvers
             {
                 throw new NullReferenceException("The DB Type name must not be null.");
             }
-            switch (dbTypeName.ToLowerInvariant())
+            return dbTypeName.ToLowerInvariant() switch
             {
-                case "bigint":
-                    return typeof(long);
-                case "attribute":
-                case "binary":
-                case "filestream":
-                case "image":
-                case "rowversion":
-                case "timestamp":
-                case "varbinary":
-                case "varbinary(max)":
-                    return typeof(byte[]);
-                case "bit":
-                    return typeof(bool);
-                case "char":
-                case "nchar":
-                case "ntext":
-                case "nvarchar":
-                case "text":
-                case "varchar":
-                case "xml": // Xml?
-                    return typeof(string);
-                case "date":
-                case "datetime":
-                case "datetime2":
-                case "smalldatetime":
-                    return typeof(DateTime);
-                case "datetimeoffset":
-                    return typeof(DateTimeOffset);
-                case "decimal":
-                case "money":
-                case "numeric":
-                case "smallmoney":
-                    return typeof(decimal);
-                case "float":
-                    return typeof(double);
-                case "int":
-                    return typeof(int);
-                case "real":
-                    return typeof(float);
-                case "smallint":
-                    return typeof(short);
-                case "sql_variant":
-                    return typeof(SqlVariant);
-                case "time":
-                    return typeof(TimeSpan);
-                case "tinyint":
-                    return typeof(byte);
-                case "uniqueidentifier":
-                    return typeof(Guid);
-                default:
-                    return typeof(object);
-            }
+                "bigint" => typeof(long),
+                "attribute" or "binary" or "filestream" or "image" or "rowversion" or "timestamp" or "varbinary" or "varbinary(max)" => typeof(byte[]),
+                "bit" => typeof(bool),
+                "char" or "nchar" or "ntext" or "nvarchar" or "text" or "varchar" or "xml" => typeof(string),
+                "date" or "datetime" or "datetime2" or "smalldatetime" => typeof(DateTime),
+                "datetimeoffset" => typeof(DateTimeOffset),
+                "decimal" or "money" or "numeric" or "smallmoney" => typeof(decimal),
+                "float" => typeof(double),
+                "int" => typeof(int),
+                "real" => typeof(float),
+                "smallint" => typeof(short),
+                "sql_variant" => typeof(SqlVariant),
+                "time" => typeof(TimeSpan),
+                "tinyint" => typeof(byte),
+                "uniqueidentifier" => typeof(Guid),
+                _ => typeof(object),
+            };
         }
     }
 }

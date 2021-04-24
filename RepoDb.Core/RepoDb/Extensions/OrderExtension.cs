@@ -11,14 +11,11 @@ namespace RepoDb.Extensions
         /// <summary>
         /// Gets the text value is used to defined the <see cref="Order"/>.
         /// </summary>
-        public static string GetText(this Order order)
+        public static string GetText(this Order order) => order switch
         {
-            return order switch
-            {
-                Order.Ascending => "ASC",
-                Order.Descending => "DESC",
-                _ => throw new ArgumentOutOfRangeException()
-            };
-        }
+            Order.Ascending => "ASC",
+            Order.Descending => "DESC",
+            _ => throw new ArgumentOutOfRangeException(nameof(order))
+        };
     }
 }

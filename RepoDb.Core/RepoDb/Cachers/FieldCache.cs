@@ -10,7 +10,7 @@ namespace RepoDb
     /// </summary>
     public static class FieldCache
     {
-        private static readonly ConcurrentDictionary<int, IEnumerable<Field>> cache = new ConcurrentDictionary<int, IEnumerable<Field>>();
+        private static readonly ConcurrentDictionary<int, IEnumerable<Field>> cache = new();
 
         #region Methods
 

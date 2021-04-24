@@ -90,8 +90,7 @@ namespace RepoDb
         private static class GetPropertyValuesCache<TEntity, TResult>
             where TEntity : class
         {
-            private static ConcurrentDictionary<int, Func<TEntity, TResult>> cache =
-                new ConcurrentDictionary<int, Func<TEntity, TResult>>();
+            private static ConcurrentDictionary<int, Func<TEntity, TResult>> cache = new();
 
             /// <summary>
             /// 

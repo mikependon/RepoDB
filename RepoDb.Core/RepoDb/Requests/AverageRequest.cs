@@ -145,9 +145,9 @@ namespace RepoDb.Requests
         public static bool operator ==(AverageRequest objA,
             AverageRequest objB)
         {
-            if (ReferenceEquals(null, objA))
+            if (objA is null)
             {
-                return ReferenceEquals(null, objB);
+                return objB is null;
             }
             return objB?.GetHashCode() == objA.GetHashCode();
         }
