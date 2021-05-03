@@ -82,5 +82,13 @@ namespace RepoDb.Extensions
         /// <returns>The converted <see cref="Array"/> object.</returns>
         public static T[] AsArray<T>(this IEnumerable<T> value) =>
             value is T[] array ? array : value?.ToArray();
+
+        /// <summary>
+        /// Gets a value indicating whether the current collection is null or empty.
+        /// </summary>
+        /// <param name="value">The target type.</param>
+        /// <typeparam name="T">The actual enumerable instance.</typeparam>
+        /// <returns>A value indicating whether the collection is null or empty.</returns>
+        public static bool IsNullOrEmpty<T>(this IEnumerable<T> value) => !value?.Any() ?? true;
     }
 }
