@@ -46,11 +46,16 @@ namespace RepoDb
         /// <returns></returns>
         internal static Operation GetOperation(ExpressionType expressionType)
         {
-            if (Enum.TryParse(expressionType.ToString(), out Operation value))
+            return expressionType switch
             {
-                return value;
-            }
-            throw new NotSupportedException($"Operation: Expression '{expressionType}' is currently not supported.");
+                ExpressionType.Equal => Operation.Equal,
+                ExpressionType.GreaterThan => Operation.GreaterThan,
+                ExpressionType.LessThan => Operation.LessThan,
+                ExpressionType.NotEqual => Operation.NotEqual,
+                ExpressionType.GreaterThanOrEqual => Operation.GreaterThanOrEqual,
+                ExpressionType.LessThanOrEqual => Operation.LessThanOrEqual,
+                _ => throw new NotSupportedException($"Operation: Expression '{expressionType}' is currently not supported.")
+            };
         }
 
         /// <summary>
