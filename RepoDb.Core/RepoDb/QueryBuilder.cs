@@ -785,7 +785,7 @@ namespace RepoDb
             if (fields.IsNullOrEmpty()) return this;
 
             return Append("WHERE (")
-                .AppendJoin(fields.Select(f => f.Name.AsFieldAndParameter(index, dbSetting)), "AND ", false)
+                .AppendJoin(fields.Select(f => f.Name.AsFieldAndParameter(index, dbSetting)), " AND ", false)
                 .Append(')');
         }
 
