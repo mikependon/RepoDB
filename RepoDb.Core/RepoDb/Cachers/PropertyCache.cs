@@ -13,7 +13,8 @@ namespace RepoDb
     /// </summary>
     public static class PropertyCache
     {
-        private static readonly ConcurrentDictionary<int, Dictionary<string, ClassProperty>> cache = new();
+        private static readonly ConcurrentDictionary<int, IEnumerable<ClassProperty>> cache = new();
+        private static readonly ConcurrentDictionary<int, Dictionary<string, ClassProperty>> mappedCache = new();
 
         #region Methods
 
@@ -115,8 +116,26 @@ namespace RepoDb
         /// </summary>
         /// <param name="entityType">The type of the data entity.</param>
         /// <returns>The cached list <see cref="ClassProperty"/> objects.</returns>
-        public static IEnumerable<ClassProperty> Get(Type entityType) => 
-            GetMapped(entityType)?.Values;
+        public static IEnumerable<ClassProperty> Get(Type entityType)
+        {
+            if (entityType?.IsClassType() != true)
+            {
+                return null;
+            }
+            
+            // Variables
+            var key = GenerateHashCode(entityType);
+
+            // Try get the value
+            if (cache.TryGetValue(key, out var properties) == false)
+            {
+                properties = entityType.GetClassProperties().AsList();
+                cache.TryAdd(key, properties);
+            }
+
+            // Return the value
+            return properties;
+        }
 
         private static Dictionary<string, ClassProperty> GetMapped(Type entityType)
         {
@@ -129,12 +148,12 @@ namespace RepoDb
             var key = GenerateHashCode(entityType);
 
             // Try get the value
-            if (cache.TryGetValue(key, out var properties) == false)
+            if (mappedCache.TryGetValue(key, out var properties) == false)
             {
-                properties = entityType.GetClassProperties()
+                properties = Get(entityType)
                     .ToDictionary(p => p.GetMappedName(), p => p, StringComparer.OrdinalIgnoreCase);
                 
-                cache.TryAdd(key, properties);
+                mappedCache.TryAdd(key, properties);
             }
 
             // Return the value
