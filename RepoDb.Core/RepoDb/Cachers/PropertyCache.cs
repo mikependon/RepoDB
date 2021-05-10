@@ -13,7 +13,7 @@ namespace RepoDb
     /// </summary>
     public static class PropertyCache
     {
-        private static readonly ConcurrentDictionary<int, IEnumerable<ClassProperty>> cache = new();
+        private static readonly ConcurrentDictionary<int, Dictionary<string, ClassProperty>> cache = new();
 
         #region Methods
 
@@ -25,7 +25,7 @@ namespace RepoDb
         /// <returns>The instance of cached <see cref="ClassProperty"/> object.</returns>
         public static ClassProperty Get<TEntity>(Expression<Func<TEntity, object>> expression)
             where TEntity : class =>
-            Get(typeof(TEntity), ExpressionExtension.GetProperty<TEntity>(expression));
+            Get(typeof(TEntity), ExpressionExtension.GetProperty(expression));
 
         /// <summary>
         /// Gets the cached <see cref="ClassProperty"/> object of the data entity (via property name).
@@ -43,16 +43,16 @@ namespace RepoDb
         /// <param name="entityType">The type of the data entity.</param>
         /// <param name="propertyName">The name of the property.</param>
         /// <returns>The instance of cached <see cref="ClassProperty"/> object.</returns>
-        public static ClassProperty Get(Type entityType,
-            string propertyName)
+        public static ClassProperty Get(Type entityType, string propertyName)
         {
             // Validate the presence
             ThrowNullReferenceException(propertyName, "PropertyName");
 
+            ClassProperty classProperty = null;
+            GetMapped(entityType)?.TryGetValue(propertyName, out classProperty);
+            
             // Return the value
-            return Get(entityType)?
-                .FirstOrDefault(p =>
-                    string.Equals(p.GetMappedName(), propertyName, StringComparison.OrdinalIgnoreCase));
+            return classProperty;
         }
 
         /// <summary>
@@ -71,16 +71,16 @@ namespace RepoDb
         /// <param name="entityType">The type of the data entity.</param>
         /// <param name="field">The instance of the <see cref="Field"/> object.</param>
         /// <returns>The instance of cached <see cref="ClassProperty"/> object.</returns>
-        public static ClassProperty Get(Type entityType,
-            Field field)
+        public static ClassProperty Get(Type entityType, Field field)
         {
             // Validate the presence
             ThrowNullReferenceException(field, "Field");
 
+            ClassProperty classProperty = null;
+            GetMapped(entityType)?.TryGetValue(field.Name, out classProperty);
+            
             // Return the value
-            return Get(entityType)?
-                .FirstOrDefault(p =>
-                    string.Equals(p.GetMappedName(), field?.Name, StringComparison.OrdinalIgnoreCase));
+            return classProperty;
         }
 
         /// <summary>
@@ -89,16 +89,16 @@ namespace RepoDb
         /// <param name="entityType">The type of the data entity.</param>
         /// <param name="propertyInfo">The instance of the <see cref="PropertyInfo"/> object.</param>
         /// <returns>The instance of cached <see cref="ClassProperty"/> object.</returns>
-        internal static ClassProperty Get(Type entityType,
-            PropertyInfo propertyInfo)
+        internal static ClassProperty Get(Type entityType, PropertyInfo propertyInfo)
         {
             // Validate the presence
             ThrowNullReferenceException(propertyInfo, "PropertyInfo");
 
-            // Return the value
-            return Get(entityType)?
-                .FirstOrDefault(p => p.PropertyInfo == propertyInfo ||
-                    string.Equals(p.GetMappedName(), PropertyMappedNameCache.Get(entityType, propertyInfo), StringComparison.OrdinalIgnoreCase));
+            ClassProperty classProperty = null;
+            var classProperties = GetMapped(entityType);
+            classProperties?.TryGetValue(PropertyMappedNameCache.Get(entityType, propertyInfo), out classProperty);
+
+            return classProperty ?? classProperties?.Values.FirstOrDefault(p => p.PropertyInfo == propertyInfo);
         }
 
         /// <summary>
@@ -115,7 +115,10 @@ namespace RepoDb
         /// </summary>
         /// <param name="entityType">The type of the data entity.</param>
         /// <returns>The cached list <see cref="ClassProperty"/> objects.</returns>
-        public static IEnumerable<ClassProperty> Get(Type entityType)
+        public static IEnumerable<ClassProperty> Get(Type entityType) => 
+            GetMapped(entityType)?.Values;
+
+        private static Dictionary<string, ClassProperty> GetMapped(Type entityType)
         {
             if (entityType?.IsClassType() != true)
             {
@@ -128,7 +131,9 @@ namespace RepoDb
             // Try get the value
             if (cache.TryGetValue(key, out var properties) == false)
             {
-                properties = entityType.GetClassProperties().AsList();
+                properties = entityType.GetClassProperties()
+                    .ToDictionary(p => p.GetMappedName(), p => p, StringComparer.OrdinalIgnoreCase);
+                
                 cache.TryAdd(key, properties);
             }
 
