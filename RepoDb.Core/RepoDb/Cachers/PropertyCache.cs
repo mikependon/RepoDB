@@ -47,7 +47,7 @@ namespace RepoDb
         {
             // Validate the presence
             ThrowNullReferenceException(propertyName, "PropertyName");
-            
+
             // Return the value
             return Get(entityType)?
                 .FirstOrDefault(p =>
@@ -74,7 +74,7 @@ namespace RepoDb
         {
             // Validate the presence
             ThrowNullReferenceException(field, "Field");
-            
+
             // Return the value
             return Get(entityType)?
                 .FirstOrDefault(p =>
@@ -118,7 +118,7 @@ namespace RepoDb
             {
                 return null;
             }
-            
+
             // Variables
             var key = GenerateHashCode(entityType);
 
