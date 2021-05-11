@@ -14,7 +14,6 @@ namespace RepoDb
     public static class PropertyCache
     {
         private static readonly ConcurrentDictionary<int, IEnumerable<ClassProperty>> cache = new();
-        private static readonly ConcurrentDictionary<int, Dictionary<string, ClassProperty>> mappedCache = new();
 
         #region Methods
 
@@ -48,12 +47,11 @@ namespace RepoDb
         {
             // Validate the presence
             ThrowNullReferenceException(propertyName, "PropertyName");
-
-            ClassProperty classProperty = null;
-            GetMapped(entityType)?.TryGetValue(propertyName, out classProperty);
             
             // Return the value
-            return classProperty;
+            return Get(entityType)?
+                .FirstOrDefault(p =>
+                    string.Equals(p.GetMappedName(), propertyName, StringComparison.OrdinalIgnoreCase));
         }
 
         /// <summary>
@@ -76,12 +74,11 @@ namespace RepoDb
         {
             // Validate the presence
             ThrowNullReferenceException(field, "Field");
-
-            ClassProperty classProperty = null;
-            GetMapped(entityType)?.TryGetValue(field.Name, out classProperty);
             
             // Return the value
-            return classProperty;
+            return Get(entityType)?
+                .FirstOrDefault(p =>
+                    string.Equals(p.GetMappedName(), field?.Name, StringComparison.OrdinalIgnoreCase));
         }
 
         /// <summary>
@@ -95,11 +92,10 @@ namespace RepoDb
             // Validate the presence
             ThrowNullReferenceException(propertyInfo, "PropertyInfo");
 
-            ClassProperty classProperty = null;
-            var classProperties = GetMapped(entityType);
-            classProperties?.TryGetValue(PropertyMappedNameCache.Get(entityType, propertyInfo), out classProperty);
-
-            return classProperty ?? classProperties?.Values.FirstOrDefault(p => p.PropertyInfo == propertyInfo);
+            // Return the value
+            return Get(entityType)?
+                .FirstOrDefault(p => p.PropertyInfo == propertyInfo || 
+                    string.Equals(p.GetMappedName(), PropertyMappedNameCache.Get(entityType, propertyInfo), StringComparison.OrdinalIgnoreCase));
         }
 
         /// <summary>
@@ -131,29 +127,6 @@ namespace RepoDb
             {
                 properties = entityType.GetClassProperties().AsList();
                 cache.TryAdd(key, properties);
-            }
-
-            // Return the value
-            return properties;
-        }
-
-        private static Dictionary<string, ClassProperty> GetMapped(Type entityType)
-        {
-            if (entityType?.IsClassType() != true)
-            {
-                return null;
-            }
-
-            // Variables
-            var key = GenerateHashCode(entityType);
-
-            // Try get the value
-            if (mappedCache.TryGetValue(key, out var properties) == false)
-            {
-                properties = Get(entityType)
-                    .ToDictionary(p => p.GetMappedName(), p => p, StringComparer.OrdinalIgnoreCase);
-                
-                mappedCache.TryAdd(key, properties);
             }
 
             // Return the value

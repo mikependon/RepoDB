@@ -21,7 +21,7 @@ namespace RepoDb
             where TEntity : class
         {
             // Failing at some point - for base interfaces
-            var property = PropertyCache.Get<TEntity>(field.Name);
+            var property = MappedPropertyCache.Get<TEntity>(field.Name);
 
             // Matches to the actual class properties
             if (property == null)
@@ -481,7 +481,7 @@ namespace RepoDb
             var name = PropertyMappedNameCache.Get(propertyInfo);
 
             // Failing at some point - for base interfaces
-            var property = PropertyCache.Get<TEntity>(name);
+            var property = MappedPropertyCache.Get<TEntity>(name);
 
             // Matches to the actual class properties
             if (property == null)

@@ -142,7 +142,7 @@ namespace RepoDb.Extensions
         /// <param name="mappedName">The name of the property mapping.</param>
         /// <returns>The instance of <see cref="ClassProperty"/>.</returns>
         internal static ClassProperty GetMappedProperty(this Type type, string mappedName) =>
-            PropertyCache.Get(type, mappedName);
+            MappedPropertyCache.Get(type, mappedName);
 
         /// <summary>
         /// Returns the list of the interface types being implemented by the current type.
