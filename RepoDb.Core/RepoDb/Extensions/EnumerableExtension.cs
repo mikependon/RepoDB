@@ -90,5 +90,12 @@ namespace RepoDb.Extensions
         /// <typeparam name="T">The actual enumerable instance.</typeparam>
         /// <returns>A value indicating whether the collection is null or empty.</returns>
         public static bool IsNullOrEmpty<T>(this IEnumerable<T> value) => !value?.Any() ?? true;
+        
+#if NETSTANDARD2_0
+        public static HashSet<T> ToHashSet<T>(this IEnumerable<T> source, IEqualityComparer<T> comparer)
+        {
+            return new(source, comparer);
+        }
+#endif
     }
 }
