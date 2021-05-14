@@ -71,9 +71,9 @@ namespace RepoDb.DbHelpers
         /// 
         /// </summary>
         /// <returns></returns>
-        private IEnumerable<string> GetBlobTypes()
+        private HashSet<string> GetBlobTypes()
         {
-            return new[]
+            return new()
             {
                 "blob",
                 "blobasarray",

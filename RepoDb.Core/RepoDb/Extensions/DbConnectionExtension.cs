@@ -2845,8 +2845,12 @@ namespace RepoDb
             // Normal parameters
             if (param != null)
             {
+                var propertiesToSkip = commandArrayParametersText?.CommandArrayParameters?
+                    .Select(cap => cap.ParameterName)
+                    .ToHashSet(StringComparer.OrdinalIgnoreCase);
+                
                 command.CreateParameters(param,
-                    commandArrayParametersText?.CommandArrayParameters?.Select(cap => cap.ParameterName),
+                    propertiesToSkip,
                     entityType,
                     dbFields);
             }

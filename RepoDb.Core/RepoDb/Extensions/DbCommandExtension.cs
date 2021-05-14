@@ -175,7 +175,7 @@ namespace RepoDb.Extensions
         /// <param name="dbFields"></param>
         internal static void CreateParameters(this IDbCommand command,
             object param,
-            IEnumerable<string> propertiesToSkip,
+            HashSet<string> propertiesToSkip,
             Type entityType,
             IEnumerable<DbField> dbFields = null)
         {
@@ -329,7 +329,7 @@ namespace RepoDb.Extensions
         /// <param name="dbFields"></param>
         private static void CreateParametersInternal(IDbCommand command,
             object param,
-            IEnumerable<string> propertiesToSkip,
+            HashSet<string> propertiesToSkip,
             IEnumerable<DbField> dbFields = null)
         {
             var type = param.GetType();
@@ -346,7 +346,7 @@ namespace RepoDb.Extensions
             // Skip
             if (propertiesToSkip != null)
             {
-                classProperties = classProperties?.Where(p => propertiesToSkip.Contains(p.PropertyInfo.Name, StringComparer.OrdinalIgnoreCase) == false);
+                classProperties = classProperties?.Where(p => propertiesToSkip.Contains(p.PropertyInfo.Name) == false);
             }
 
             // Iterate
@@ -368,11 +368,11 @@ namespace RepoDb.Extensions
         /// <param name="dbFields"></param>
         private static void CreateParameters(IDbCommand command,
             IDictionary<string, object> dictionary,
-            IEnumerable<string> propertiesToSkip,
+            HashSet<string> propertiesToSkip,
             IEnumerable<DbField> dbFields = null)
         {
             var kvps = dictionary.Where(kvp =>
-                propertiesToSkip?.Contains(kvp.Key, StringComparer.OrdinalIgnoreCase) != true);
+                propertiesToSkip?.Contains(kvp.Key) != true);
 
             // Iterate the key value pairs
             foreach (var kvp in kvps)
@@ -402,7 +402,7 @@ namespace RepoDb.Extensions
         /// <param name="dbFields"></param>
         internal static void CreateParameters(IDbCommand command,
             QueryGroup queryGroup,
-            IEnumerable<string> propertiesToSkip,
+            HashSet<string> propertiesToSkip,
             Type entityType,
             IEnumerable<DbField> dbFields = null)
         {
@@ -423,7 +423,7 @@ namespace RepoDb.Extensions
         /// <param name="dbFields"></param>
         internal static void CreateParameters(this IDbCommand command,
             IEnumerable<QueryField> queryFields,
-            IEnumerable<string> propertiesToSkip,
+            HashSet<string> propertiesToSkip,
             Type entityType,
             IEnumerable<DbField> dbFields = null)
         {
@@ -434,7 +434,7 @@ namespace RepoDb.Extensions
 
             // Filter the query fields
             var filteredQueryFields = queryFields
-                .Where(qf => propertiesToSkip?.Contains(qf.Field.Name, StringComparer.OrdinalIgnoreCase) != true);
+                .Where(qf => propertiesToSkip?.Contains(qf.Field.Name) != true);
 
             // Iterate the filtered query fields
             foreach (var queryField in filteredQueryFields)
@@ -466,7 +466,7 @@ namespace RepoDb.Extensions
         /// <param name="dbFields"></param>
         private static void CreateParameters(this IDbCommand command,
             QueryField queryField,
-            IEnumerable<string> propertiesToSkip,
+            HashSet<string> propertiesToSkip,
             Type entityType,
             IEnumerable<DbField> dbFields = null)
         {
@@ -478,7 +478,7 @@ namespace RepoDb.Extensions
             var fieldName = queryField.Field.Name;
 
             // Skip
-            if (propertiesToSkip?.Contains(fieldName, StringComparer.OrdinalIgnoreCase) == true)
+            if (propertiesToSkip?.Contains(fieldName) == true)
             {
                 return;
             }
