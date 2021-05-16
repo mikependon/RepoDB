@@ -2692,7 +2692,7 @@ namespace RepoDb
 
             // Get the variables needed
             var parameters = values.Select((_, index) =>
-                string.Concat(parameterName, index).AsParameter(dbSetting));
+                string.Concat(parameterName, index.ToString()).AsParameter(dbSetting));
 
             // Replace the target parameter
             return commandText.Replace(parameterName.AsParameter(dbSetting), parameters.Join(", "));
@@ -3217,7 +3217,7 @@ namespace RepoDb
 
             // Get the variables needed
             var parameters = items.Select((_, index) =>
-                string.Concat(parameterName, index).AsParameter(dbSetting));
+                string.Concat(parameterName, index.ToString()).AsParameter(dbSetting));
 
             // Replace the target parameter
             return commandText.Replace(parameterName.AsParameter(dbSetting), parameters.Join(", "));

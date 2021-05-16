@@ -39,7 +39,7 @@ namespace RepoDb.Contexts.Providers
                 ";",
                 hints,
                 ";",
-                where?.GetHashCode());
+                where?.GetHashCode().ToString());
         }
 
         /// <summary>

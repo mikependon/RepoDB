@@ -45,7 +45,7 @@ namespace RepoDb.Reflection
             var name = parameterName ?? propertyName;
             var parameters = Expression.Property(dbCommandParameterExpression, dbCommandParametersProperty);
             var parameter = Expression.Call(parameters, dbParameterCollectionIndexerMethod,
-                Expression.Constant(index > 0 ? string.Concat(name, "_", index) : name));
+                Expression.Constant(index > 0 ? string.Concat(name, "_", index.ToString()) : name));
 
             // Assign the Parameter.Value into DataEntity.Property
             var value = Expression.Property(parameter, dbParameterValueProperty);

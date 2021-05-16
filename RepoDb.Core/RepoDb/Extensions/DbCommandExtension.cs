@@ -139,7 +139,7 @@ namespace RepoDb.Extensions
             {
                 for (var i = 0; i < values.Length; i++)
                 {
-                    var name = string.Concat(commandArrayParameter.ParameterName, i).AsParameter(dbSetting);
+                    var name = string.Concat(commandArrayParameter.ParameterName, i.ToString()).AsParameter(dbSetting);
                     command.Parameters.Add(command.CreateParameter(name, values[i], null));
                 }
             }
@@ -512,7 +512,7 @@ namespace RepoDb.Extensions
             {
                 for (var i = 0; i < values.Count; i++)
                 {
-                    var name = string.Concat(queryField.Parameter.Name, "_In_", i);
+                    var name = string.Concat(queryField.Parameter.Name, "_In_", i.ToString());
                     command.Parameters.Add(CreateParameter(command, name, values[i], null, dbField, null, null));
                 }
             }

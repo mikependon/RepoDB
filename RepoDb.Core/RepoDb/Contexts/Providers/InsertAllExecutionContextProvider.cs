@@ -38,7 +38,7 @@ namespace RepoDb.Contexts.Providers
                 ";",
                 fields?.Select(f => f.Name).Join(","),
                 ";",
-                batchSize,
+                batchSize.ToString(),
                 ";",
                 hints);
         }

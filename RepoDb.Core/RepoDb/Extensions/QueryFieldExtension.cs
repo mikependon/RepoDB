@@ -93,7 +93,7 @@ namespace RepoDb.Extensions
             var values = enumerable
                 .OfType<object>()
                 .Select((_, valueIndex) =>
-                    string.Concat(queryField.Parameter.Name.AsParameter(index, dbSetting), "_In_", valueIndex))
+                    string.Concat(queryField.Parameter.Name.AsParameter(index, dbSetting), "_In_", valueIndex.ToString()))
                 .Join(", ");
             return string.Concat("(", values, ")");
         }

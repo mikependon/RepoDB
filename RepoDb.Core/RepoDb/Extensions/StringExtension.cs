@@ -295,7 +295,7 @@ namespace RepoDb.Extensions
                     (value.StartsWith(dbSetting.ParameterPrefix) ? value.Substring(1) : value)
                         .AsUnquoted(true, dbSetting).AsAlphaNumeric());
             }
-            return index > 0 ? string.Concat(value, "_", index) : value;
+            return index > 0 ? string.Concat(value, "_", index.ToString()) : value;
         }
 
         /// <summary>

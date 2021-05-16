@@ -148,7 +148,7 @@ namespace RepoDb
 
             for (var i = 0; i < values.Count; i++)
             {
-                var parameterName = string.Concat(queryField.Parameter.Name, "_In_", i);
+                var parameterName = string.Concat(queryField.Parameter.Name, "_In_", i.ToString());
                 if (dictionary.ContainsKey(parameterName))
                 {
                     continue;
