@@ -96,7 +96,7 @@ namespace RepoDb.Requests
             }
 
             // Get first the entity hash code
-            var hashCode = string.Concat(Name, ".Max").GetHashCode();
+            var hashCode = HashCode.Combine(Name, ".Max");
 
             // Add the field
             if (Field != null)

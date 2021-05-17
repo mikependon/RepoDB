@@ -85,7 +85,7 @@ namespace RepoDb.Requests
             }
 
             // Get first the entity hash code
-            var hashCode = string.Concat(Name, ".Count").GetHashCode();
+            var hashCode = HashCode.Combine(Name, ".Count");
 
             // Get the properties hash codes
             if (Where != null)

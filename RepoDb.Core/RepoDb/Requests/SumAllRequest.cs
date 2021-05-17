@@ -85,7 +85,7 @@ namespace RepoDb.Requests
             }
 
             // Get first the entity hash code
-            var hashCode = string.Concat(Name, ".SumAll").GetHashCode();
+            var hashCode = HashCode.Combine(Name, ".SumAll");
 
             // Add the field
             if (Field != null)

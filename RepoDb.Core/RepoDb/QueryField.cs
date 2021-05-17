@@ -239,7 +239,7 @@ namespace RepoDb
             // The string representation affects the collision
             // var objA = QueryGroup.Parse<EntityClass>(c => c.Id == 1 && c.Value != 1);
             // var objB = QueryGroup.Parse<EntityClass>(c => c.Id != 1 && c.Value == 1);
-            hashCode += string.Concat(Field.Name, Operation.GetText()).GetHashCode();
+            hashCode += HashCode.Combine(Field.Name, Operation.GetText());
 
             // Set and return the hashcode
             return (this.hashCode = hashCode).Value;

@@ -131,7 +131,7 @@ namespace RepoDb.Requests
             }
 
             // Get first the entity hash code
-            var hashCode = string.Concat(Name, ".QueryMultiple").GetHashCode();
+            var hashCode = HashCode.Combine(Name, ".QueryMultiple");
 
             // Add the index
             if (Index != null)

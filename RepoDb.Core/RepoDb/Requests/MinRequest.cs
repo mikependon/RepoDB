@@ -96,7 +96,7 @@ namespace RepoDb.Requests
             }
 
             // Get first the entity hash code
-            var hashCode = string.Concat(Name, ".Min").GetHashCode();
+            var hashCode = HashCode.Combine(Name, ".Min");
 
             // Add the field
             if (Field != null)

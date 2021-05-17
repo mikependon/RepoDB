@@ -131,7 +131,7 @@ namespace RepoDb.Requests
             }
 
             // Get first the entity hash code
-            var hashCode = string.Concat(Name, ".BatchQuery").GetHashCode();
+            var hashCode = HashCode.Combine(Name, ".BatchQuery");
 
             // Add the fields
             if (Fields != null)
