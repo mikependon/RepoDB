@@ -1637,7 +1637,7 @@ namespace RepoDb.Reflection
         {
             var dbParameterParameterNameSetMethod = StaticType.DbParameter.GetProperty("ParameterName").SetMethod;
             var parameterName = dbField.Name.AsUnquoted(true, dbSetting).AsAlphaNumeric();
-            parameterName = entityIndex > 0 ? string.Concat(dbSetting.ParameterPrefix, parameterName, "_", entityIndex) :
+            parameterName = entityIndex > 0 ? string.Concat(dbSetting.ParameterPrefix, parameterName, "_", entityIndex.ToString()) :
                 string.Concat(dbSetting.ParameterPrefix, parameterName);
             return Expression.Call(parameterVariableExpression, dbParameterParameterNameSetMethod,
                 Expression.Constant(parameterName));

@@ -103,7 +103,7 @@ namespace RepoDb
         /// </summary>
         /// <returns></returns>
         public override string ToString() =>
-            string.Concat(Name, " (", Value, ")");
+            string.Concat(Name, " (", Value.ToString(), ")");
 
         #endregion
 

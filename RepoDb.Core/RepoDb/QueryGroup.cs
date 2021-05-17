@@ -618,7 +618,7 @@ namespace RepoDb
                     if (firstQueryField.Field.Equals(secondQueryField.Field))
                     {
                         var fieldValue = secondQueryField.Parameter;
-                        fieldValue.SetName(string.Concat(secondQueryField.Parameter.Name, "_", fieldIndex));
+                        fieldValue.SetName(string.Concat(secondQueryField.Parameter.Name, "_", fieldIndex.ToString()));
                     }
                 }
                 secondList.RemoveAll(qf => qf.Field.Equals(firstQueryField.Field));
