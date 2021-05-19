@@ -23,17 +23,16 @@ namespace RepoDb
         /// <returns></returns>
         private static long GetReaderFieldsHashCode(DbDataReader reader)
         {
-            if (reader == null)
+            long hashCode = 0;
+            
+            if (reader is not null)
             {
-                return 0;
+                for (var ordinal = 0; ordinal < reader.FieldCount; ordinal++)
+                {
+                    hashCode += HashCode.Combine(reader.GetName(ordinal), ordinal, reader.GetFieldType(ordinal));
+                }
             }
-            var hashCode = (long)0;
-            for (var ordinal = 0; ordinal < reader.FieldCount; ordinal++)
-            {
-                // The spatial data type is null.
-                hashCode += string.Concat(reader.GetName(ordinal), "-", ordinal.ToString()).GetHashCode() +
-                    (reader.GetFieldType(ordinal)?.GetHashCode()).GetValueOrDefault();
-            }
+            
             return hashCode;
         }
 

@@ -85,7 +85,7 @@ namespace RepoDb.Requests
             }
 
             // Get first the entity hash code
-            var hashCode = string.Concat(Name, ".AverageAll").GetHashCode();
+            var hashCode = HashCode.Combine(Name, ".AverageAll");
 
             // Add the field
             if (Field != null)

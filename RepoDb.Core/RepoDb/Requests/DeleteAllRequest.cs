@@ -74,7 +74,7 @@ namespace RepoDb.Requests
             }
 
             // Get first the entity hash code
-            var hashCode = string.Concat(Name, ".DeleteAll").GetHashCode();
+            var hashCode = HashCode.Combine(Name, ".DeleteAll");
 
             // Add the hints
             if (!string.IsNullOrWhiteSpace(Hints))
