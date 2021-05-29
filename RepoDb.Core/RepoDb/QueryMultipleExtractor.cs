@@ -3,6 +3,7 @@ using RepoDb.Reflection;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -107,7 +108,9 @@ namespace RepoDb
         public async Task<IEnumerable<TEntity>> ExtractAsync<TEntity>(bool isMoveToNextResult = true)
             where TEntity : class
         {
-            var result = (await DataReader.ToEnumerableAsync<TEntity>(reader, cancellationToken: CancellationToken)).AsList();
+            var result = await DataReader.ToEnumerableAsync<TEntity>(reader, cancellationToken: CancellationToken)
+                .ToListAsync(CancellationToken);
+            
             if (isMoveToNextResult)
             {
                 await NextResultAsync();
@@ -141,7 +144,9 @@ namespace RepoDb
         /// <returns>An enumerable of extracted data entity.</returns>
         public async Task<IEnumerable<dynamic>> ExtractAsync(bool isMoveToNextResult = true)
         {
-            var result = (await DataReader.ToEnumerableAsync(reader, cancellationToken: CancellationToken)).AsList();
+            var result = await DataReader.ToEnumerableAsync(reader, cancellationToken: CancellationToken)
+                .ToListAsync(CancellationToken);
+            
             if (isMoveToNextResult)
             {
                 await NextResultAsync();

@@ -1,8 +1,8 @@
 ﻿using RepoDb.Interfaces;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Runtime.CompilerServices;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace RepoDb.Reflection
 {
@@ -50,23 +50,21 @@ namespace RepoDb.Reflection
         /// <param name="dbSetting">The instance of <see cref="IDbSetting"/> object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A list of the target result type.</returns>
-        public static async Task<IEnumerable<TResult>> ToEnumerableAsync<TResult>(DbDataReader reader,
+        public static async IAsyncEnumerable<TResult> ToEnumerableAsync<TResult>(DbDataReader reader,
             IEnumerable<DbField> dbFields = null,
             IDbSetting dbSetting = null,
-            CancellationToken cancellationToken = default)
+            [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            var list = new List<TResult>();
-            if (reader?.IsClosed == false && reader.HasRows)
+            if (reader?.IsClosed != false || !reader.HasRows) yield break;
+            
+            var func = FunctionCache.GetDataReaderToTypeCompiledFunction<TResult>(reader,
+                dbFields,
+                dbSetting);
+            
+            while (await reader.ReadAsync(cancellationToken))
             {
-                var func = FunctionCache.GetDataReaderToTypeCompiledFunction<TResult>(reader,
-                    dbFields,
-                    dbSetting);
-                while (await reader.ReadAsync(cancellationToken))
-                {
-                    list.Add(func(reader));
-                }
+                yield return func(reader);
             }
-            return list;
         }
 
         #endregion
@@ -108,23 +106,21 @@ namespace RepoDb.Reflection
         /// <param name="dbSetting">The instance of <see cref="IDbSetting"/> object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An array of dynamic objects.</returns>
-        public static async Task<IEnumerable<dynamic>> ToEnumerableAsync(DbDataReader reader,
+        public static async IAsyncEnumerable<dynamic> ToEnumerableAsync(DbDataReader reader,
             IEnumerable<DbField> dbFields = null,
             IDbSetting dbSetting = null,
-            CancellationToken cancellationToken = default)
+            [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            var list = new List<dynamic>();
-            if (reader?.IsClosed == false && reader.HasRows)
+            if (reader?.IsClosed != false || !reader.HasRows) yield break;
+            
+            var func = FunctionCache.GetDataReaderToExpandoObjectCompileFunction(reader,
+                dbFields,
+                dbSetting);
+            
+            while (await reader.ReadAsync(cancellationToken))
             {
-                var func = FunctionCache.GetDataReaderToExpandoObjectCompileFunction(reader,
-                    dbFields,
-                    dbSetting);
-                while (await reader.ReadAsync(cancellationToken))
-                {
-                    list.Add(func(reader));
-                }
+                yield return func(reader);
             }
-            return list;
         }
 
         #endregion
