@@ -488,7 +488,7 @@ namespace RepoDb
                 {
                     return null;
                 }
-                var key = paramType.GetHashCode() + Convert.ToInt32(entityType?.GetHashCode());
+                var key = paramType.GetHashCode() + (entityType?.GetHashCode() ?? 0);
                 if (cache.TryGetValue(key, out var func) == false)
                 {
                     if (paramType.IsPlainType())
