@@ -7,6 +7,7 @@ using System;
 using System.Data;
 using System.Dynamic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.IntegrationTests.Operations
 {
@@ -444,7 +445,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region ExtractAsync<TEntity>
 
         [TestMethod]
-        public void TestSqlConnectionExecuteQueryAsyncMultipleForExtractAsyncWithoutParameters()
+        public async Task TestSqlConnectionExecuteQueryAsyncMultipleForExtractAsyncWithoutParameters()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -455,11 +456,11 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT TOP 1 * FROM [sc].[IdentityTable];
+                using (var result = await connection.ExecuteQueryMultipleAsync(@"SELECT TOP 1 * FROM [sc].[IdentityTable];
                     SELECT TOP 2 * FROM [sc].[IdentityTable];
                     SELECT TOP 3 * FROM [sc].[IdentityTable];
                     SELECT TOP 4 * FROM [sc].[IdentityTable];
-                    SELECT TOP 5 * FROM [sc].[IdentityTable];").Result)
+                    SELECT TOP 5 * FROM [sc].[IdentityTable];"))
                 {
                     while (result.Position >= 0)
                     {
@@ -467,7 +468,7 @@ namespace RepoDb.IntegrationTests.Operations
                         var index = result.Position + 1;
 
                         // Act
-                        var items = result.ExtractAsync<IdentityTable>().Result;
+                        var items = await result.ExtractAsync<IdentityTable>();
 
                         // Assert
                         Assert.AreEqual(index, items.Count());
@@ -483,7 +484,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionExecuteQueryMultipleAsyncForExtractAsyncWithMultipleTopParameters()
+        public async Task TestSqlConnectionExecuteQueryMultipleAsyncForExtractAsyncWithMultipleTopParameters()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -494,12 +495,12 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT TOP (@Top1) * FROM [sc].[IdentityTable];
+                using (var result = await connection.ExecuteQueryMultipleAsync(@"SELECT TOP (@Top1) * FROM [sc].[IdentityTable];
                     SELECT TOP (@Top2) * FROM [sc].[IdentityTable];
                     SELECT TOP (@Top3) * FROM [sc].[IdentityTable];
                     SELECT TOP (@Top4) * FROM [sc].[IdentityTable];
                     SELECT TOP (@Top5) * FROM [sc].[IdentityTable];",
-                    new { Top1 = 1, Top2 = 2, Top3 = 3, Top4 = 4, Top5 = 5 }).Result)
+                    new { Top1 = 1, Top2 = 2, Top3 = 3, Top4 = 4, Top5 = 5 }))
                 {
                     while (result.Position >= 0)
                     {
@@ -507,7 +508,7 @@ namespace RepoDb.IntegrationTests.Operations
                         var index = result.Position + 1;
 
                         // Act
-                        var items = result.ExtractAsync<IdentityTable>().Result;
+                        var items = await result.ExtractAsync<IdentityTable>();
 
                         // Assert
                         Assert.AreEqual(index, items.Count());
@@ -523,7 +524,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionExecuteQueryMultipleAsyncForExtractAsyncWithMultipleArrayParameters()
+        public async Task TestSqlConnectionExecuteQueryMultipleAsyncForExtractAsyncWithMultipleArrayParameters()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -531,15 +532,15 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(tables);
+                await connection.InsertAllAsync(tables);
 
                 // Act
-                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT TOP (@Top1) * FROM [sc].[IdentityTable];
+                using (var result = await connection.ExecuteQueryMultipleAsync(@"SELECT TOP (@Top1) * FROM [sc].[IdentityTable];
                     SELECT TOP (@Top2) * FROM [sc].[IdentityTable];
                     SELECT TOP (@Top3) * FROM [sc].[IdentityTable];
                     SELECT TOP (@Top4) * FROM [sc].[IdentityTable];
                     SELECT TOP (@Top5) * FROM [sc].[IdentityTable] WHERE ColumnInt IN (@ColumnInt);",
-                    new { Top1 = 1, Top2 = 2, Top3 = 3, Top4 = 4, Top5 = 5, ColumnInt = new[] { 1, 2, 3, 4, 5 } }).Result)
+                    new { Top1 = 1, Top2 = 2, Top3 = 3, Top4 = 4, Top5 = 5, ColumnInt = new[] { 1, 2, 3, 4, 5 } }))
                 {
                     while (result.Position >= 0)
                     {
@@ -547,7 +548,7 @@ namespace RepoDb.IntegrationTests.Operations
                         var index = result.Position + 1;
 
                         // Act
-                        var items = result.ExtractAsync<IdentityTable>().Result;
+                        var items = await result.ExtractAsync<IdentityTable>();
 
                         // Assert
                         Assert.AreEqual(index, items.Count());
@@ -563,7 +564,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionExecuteQueryMultipleAsyncForExtractAsyncWithNormalStatementFollowedByStoredProcedures()
+        public async Task TestSqlConnectionExecuteQueryMultipleAsyncForExtractAsyncWithNormalStatementFollowedByStoredProcedures()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -571,30 +572,30 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(tables);
+                await connection.InsertAllAsync(tables);
 
                 // Act
-                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT TOP (@Top1) * FROM [sc].[IdentityTable];
+                using (var result = await connection.ExecuteQueryMultipleAsync(@"SELECT TOP (@Top1) * FROM [sc].[IdentityTable];
                     EXEC [dbo].[sp_get_identity_tables];
                     EXEC [dbo].[sp_get_identity_table_by_id] @Id",
-                    new { Top1 = 1, tables.Last().Id }, CommandType.Text).Result)
+                    new { Top1 = 1, tables.Last().Id }, CommandType.Text))
                 {
                     // Act
-                    var value1 = result.ExtractAsync<IdentityTable>().Result;
+                    var value1 = await result.ExtractAsync<IdentityTable>();
 
                     // Assert
                     Assert.AreEqual(1, value1.Count());
                     Helper.AssertPropertiesEquality(tables.Where(t => t.Id == value1.First().Id).First(), value1.First());
 
                     // Act
-                    var value2 = result.ExtractAsync<IdentityTable>().Result;
+                    var value2 = await result.ExtractAsync<IdentityTable>();
 
                     // Assert
                     Assert.AreEqual(tables.Count, value2.Count());
                     tables.ForEach(item => Helper.AssertPropertiesEquality(item, value2.ElementAt(tables.IndexOf(item))));
 
                     // Act
-                    var value3 = result.ExtractAsync<IdentityTable>().Result;
+                    var value3 = await result.ExtractAsync<IdentityTable>();
 
                     // Assert
                     Assert.AreEqual(1, value3.Count());
@@ -605,7 +606,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionExecuteQueryAsyncMultipleForExtractAsyncWithoutParametersAndWithManualNextResultCall()
+        public async Task TestSqlConnectionExecuteQueryAsyncMultipleForExtractAsyncWithoutParametersAndWithManualNextResultCall()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -613,14 +614,14 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(tables);
+                await connection.InsertAllAsync(tables);
 
                 // Act
-                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT TOP 1 * FROM [sc].[IdentityTable];
+                using (var result = await connection.ExecuteQueryMultipleAsync(@"SELECT TOP 1 * FROM [sc].[IdentityTable];
                     SELECT TOP 2 * FROM [sc].[IdentityTable];
                     SELECT TOP 3 * FROM [sc].[IdentityTable];
                     SELECT TOP 4 * FROM [sc].[IdentityTable];
-                    SELECT TOP 5 * FROM [sc].[IdentityTable];").Result)
+                    SELECT TOP 5 * FROM [sc].[IdentityTable];"))
                 {
                     while (result.Position >= 0)
                     {
@@ -628,7 +629,7 @@ namespace RepoDb.IntegrationTests.Operations
                         var index = result.Position + 1;
 
                         // Act
-                        var items = result.ExtractAsync<IdentityTable>(false).Result;
+                        var items = await result.ExtractAsync<IdentityTable>(false);
                         result.NextResultAsync().Wait();
 
                         // Assert
@@ -649,7 +650,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region ExtractAsync<dynamic>
 
         [TestMethod]
-        public void TestSqlConnectionExecuteQueryMultipleAsyncForExtractAsyncAsDynamicWithoutParameters()
+        public async Task TestSqlConnectionExecuteQueryMultipleAsyncForExtractAsyncAsDynamicWithoutParameters()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -657,14 +658,14 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(tables);
+                await connection.InsertAllAsync(tables);
 
                 // Act
-                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT TOP 1 * FROM [sc].[IdentityTable];
+                using (var result = await connection.ExecuteQueryMultipleAsync(@"SELECT TOP 1 * FROM [sc].[IdentityTable];
                     SELECT TOP 2 * FROM [sc].[IdentityTable];
                     SELECT TOP 3 * FROM [sc].[IdentityTable];
                     SELECT TOP 4 * FROM [sc].[IdentityTable];
-                    SELECT TOP 5 * FROM [sc].[IdentityTable];").Result)
+                    SELECT TOP 5 * FROM [sc].[IdentityTable];"))
                 {
                     while (result.Position >= 0)
                     {
@@ -672,7 +673,7 @@ namespace RepoDb.IntegrationTests.Operations
                         var index = result.Position + 1;
 
                         // Act
-                        var items = result.ExtractAsync().Result;
+                        var items = await result.ExtractAsync();
 
                         // Assert
                         Assert.AreEqual(index, items.Count());
@@ -688,7 +689,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionExecuteQueryMultipleAsyncForExtractAsyncAsDynamicWithMultipleTopParameters()
+        public async Task TestSqlConnectionExecuteQueryMultipleAsyncForExtractAsyncAsDynamicWithMultipleTopParameters()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -696,15 +697,15 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(tables);
+                await connection.InsertAllAsync(tables);
 
                 // Act
-                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT TOP (@Top1) * FROM [sc].[IdentityTable];
+                using (var result = await connection.ExecuteQueryMultipleAsync(@"SELECT TOP (@Top1) * FROM [sc].[IdentityTable];
                     SELECT TOP (@Top2) * FROM [sc].[IdentityTable];
                     SELECT TOP (@Top3) * FROM [sc].[IdentityTable];
                     SELECT TOP (@Top4) * FROM [sc].[IdentityTable];
                     SELECT TOP (@Top5) * FROM [sc].[IdentityTable];",
-                    new { Top1 = 1, Top2 = 2, Top3 = 3, Top4 = 4, Top5 = 5 }).Result)
+                    new { Top1 = 1, Top2 = 2, Top3 = 3, Top4 = 4, Top5 = 5 }))
                 {
                     while (result.Position >= 0)
                     {
@@ -712,7 +713,7 @@ namespace RepoDb.IntegrationTests.Operations
                         var index = result.Position + 1;
 
                         // Act
-                        var items = result.ExtractAsync().Result;
+                        var items = await result.ExtractAsync();
 
                         // Assert
                         Assert.AreEqual(index, items.Count());
@@ -728,7 +729,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionExecuteQueryMultipleAsyncForExtractAsyncAsDynamicWithMultipleArrayParameters()
+        public async Task TestSqlConnectionExecuteQueryMultipleAsyncForExtractAsyncAsDynamicWithMultipleArrayParameters()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -736,15 +737,15 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAll(tables);
+                await connection.InsertAllAsync(tables);
 
                 // Act
-                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT TOP (@Top1) * FROM [sc].[IdentityTable];
+                using (var result = await connection.ExecuteQueryMultipleAsync(@"SELECT TOP (@Top1) * FROM [sc].[IdentityTable];
                     SELECT TOP (@Top2) * FROM [sc].[IdentityTable];
                     SELECT TOP (@Top3) * FROM [sc].[IdentityTable];
                     SELECT TOP (@Top4) * FROM [sc].[IdentityTable];
                     SELECT TOP (@Top5) * FROM [sc].[IdentityTable] WHERE ColumnInt IN (@ColumnInt);",
-                    new { Top1 = 1, Top2 = 2, Top3 = 3, Top4 = 4, Top5 = 5, ColumnInt = new[] { 1, 2, 3, 4, 5 } }).Result)
+                    new { Top1 = 1, Top2 = 2, Top3 = 3, Top4 = 4, Top5 = 5, ColumnInt = new[] { 1, 2, 3, 4, 5 } }))
                 {
                     while (result.Position >= 0)
                     {
@@ -752,7 +753,7 @@ namespace RepoDb.IntegrationTests.Operations
                         var index = result.Position + 1;
 
                         // Act
-                        var items = result.ExtractAsync().Result;
+                        var items = await result.ExtractAsync();
 
                         // Assert
                         Assert.AreEqual(index, items.Count());
@@ -1563,25 +1564,25 @@ namespace RepoDb.IntegrationTests.Operations
         #region ExecuteQueryMultipeAsync.Extract (Multiple Type)
 
         [TestMethod]
-        public void TestSqlConnectionExecuteQueryMultipleAsyncForMultipleTypes()
+        public async Task TestSqlConnectionExecuteQueryMultipleAsyncForMultipleTypes()
         {
             // Setup
             var identityTables = Helper.CreateIdentityTables(10).AsList();
             var nonIdentityTables = Helper.CreateNonIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = await new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpenAsync())
             {
                 // Act
                 connection.InsertAll(identityTables);
                 connection.InsertAll(nonIdentityTables);
 
                 // Act
-                using (var result = connection.ExecuteQueryMultipleAsync(@"SELECT * FROM [sc].[IdentityTable];
-                    SELECT * FROM [dbo].[NonIdentityTable];").Result)
+                using (var result = await connection.ExecuteQueryMultipleAsync(@"SELECT * FROM [sc].[IdentityTable];
+                    SELECT * FROM [dbo].[NonIdentityTable];"))
                 {
                     // Act
-                    var identityTablesResult = result.ExtractAsync<IdentityTable>().Result;
-                    var nonIdentityTablesResult = result.ExtractAsync<NonIdentityTable>().Result;
+                    var identityTablesResult = await result.ExtractAsync<IdentityTable>();
+                    var nonIdentityTablesResult = await result.ExtractAsync<NonIdentityTable>();
 
                     // Assert
                     Assert.AreEqual(identityTables.Count, identityTablesResult.Count());
