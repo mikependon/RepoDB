@@ -327,17 +327,18 @@ namespace RepoDb
                 dbFields: dbFields,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
 
-            var result = (IEnumerable<dynamic>)null;
+            IEnumerable<dynamic> result;
 
             // Execute
             using (var reader = await command.ExecuteReaderAsync(cancellationToken))
             {
-                result = (await DataReader.ToEnumerableAsync(reader, dbFields, connection.GetDbSetting(), cancellationToken)).AsList();
+                result = await DataReader.ToEnumerableAsync(reader, dbFields, connection.GetDbSetting(), cancellationToken)
+                    .ToListAsync(cancellationToken);
 
                 // Set Cache
                 if (cacheKey != null)
                 {
-                    cache?.Add(cacheKey, (IEnumerable<dynamic>)result, cacheItemExpiration.GetValueOrDefault(), false);
+                    cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
                 }
             }
 
@@ -860,18 +861,18 @@ namespace RepoDb
                 dbFields: dbFields,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
 
-            var result = (IEnumerable<TResult>)null;
+            IEnumerable<TResult> result;
 
             // Execute
             using (var reader = await command.ExecuteReaderAsync(cancellationToken))
             {
-                result = (await DataReader.ToEnumerableAsync<TResult>(reader, dbFields,
-                    connection.GetDbSetting(), cancellationToken)).AsList();
+                result = await DataReader.ToEnumerableAsync<TResult>(reader, dbFields, connection.GetDbSetting(), cancellationToken)
+                    .ToListAsync(cancellationToken);
 
                 // Set Cache
                 if (cacheKey != null)
                 {
-                    cache?.Add(cacheKey, (IEnumerable<TResult>)result, cacheItemExpiration.GetValueOrDefault(), false);
+                    cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
                 }
             }
 

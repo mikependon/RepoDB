@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -1980,12 +1981,12 @@ namespace RepoDb
 
                 // T1
                 dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T1>(), transaction, true, cancellationToken);
-                var item1 = await DataReader.ToEnumerableAsync<T1>(reader, dbFields, dbSetting, cancellationToken);
+                var item1 = await DataReader.ToEnumerableAsync<T1>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
 
                 // T2
                 await reader.NextResultAsync(cancellationToken);
                 dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T2>(), transaction, true, cancellationToken);
-                var item2 = await DataReader.ToEnumerableAsync<T2>(reader, dbFields, dbSetting, cancellationToken);
+                var item2 = await DataReader.ToEnumerableAsync<T2>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
 
                 // Result
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>>(item1, item2);
@@ -2212,17 +2213,17 @@ namespace RepoDb
 
                 // T1
                 dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T1>(), transaction, true, cancellationToken);
-                var item1 = await DataReader.ToEnumerableAsync<T1>(reader, dbFields, dbSetting, cancellationToken);
+                var item1 = await DataReader.ToEnumerableAsync<T1>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
 
                 // T2
                 await reader.NextResultAsync(cancellationToken);
                 dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T2>(), transaction, true, cancellationToken);
-                var item2 = await DataReader.ToEnumerableAsync<T2>(reader, dbFields, dbSetting, cancellationToken);
+                var item2 = await DataReader.ToEnumerableAsync<T2>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
 
                 // T3
                 await reader.NextResultAsync(cancellationToken);
                 dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T3>(), transaction, true, cancellationToken);
-                var item3 = await DataReader.ToEnumerableAsync<T3>(reader, dbFields, dbSetting, cancellationToken);
+                var item3 = await DataReader.ToEnumerableAsync<T3>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
 
                 // Result
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>(item1, item2, item3);
@@ -2489,22 +2490,22 @@ namespace RepoDb
 
                 // T1
                 dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T1>(), transaction, true, cancellationToken);
-                var item1 = await DataReader.ToEnumerableAsync<T1>(reader, dbFields, dbSetting, cancellationToken);
+                var item1 = await DataReader.ToEnumerableAsync<T1>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
 
                 // T2
                 await reader.NextResultAsync(cancellationToken);
                 dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T2>(), transaction, true, cancellationToken);
-                var item2 = await DataReader.ToEnumerableAsync<T2>(reader, dbFields, dbSetting, cancellationToken);
+                var item2 = await DataReader.ToEnumerableAsync<T2>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
 
                 // T3
                 await reader.NextResultAsync(cancellationToken);
                 dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T3>(), transaction, true, cancellationToken);
-                var item3 = await DataReader.ToEnumerableAsync<T3>(reader, dbFields, dbSetting, cancellationToken);
+                var item3 = await DataReader.ToEnumerableAsync<T3>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
 
                 // T4
                 await reader.NextResultAsync(cancellationToken);
                 dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T4>(), transaction, true, cancellationToken);
-                var item4 = await DataReader.ToEnumerableAsync<T4>(reader, dbFields, dbSetting, cancellationToken);
+                var item4 = await DataReader.ToEnumerableAsync<T4>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
 
                 // Result
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>(item1, item2, item3, item4);
@@ -2809,27 +2810,27 @@ namespace RepoDb
 
                 // T1
                 dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T1>(), transaction, true, cancellationToken);
-                var item1 = await DataReader.ToEnumerableAsync<T1>(reader, dbFields, dbSetting, cancellationToken);
+                var item1 = await DataReader.ToEnumerableAsync<T1>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
 
                 // T2
                 await reader.NextResultAsync(cancellationToken);
                 dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T2>(), transaction, true, cancellationToken);
-                var item2 = await DataReader.ToEnumerableAsync<T2>(reader, dbFields, dbSetting, cancellationToken);
+                var item2 = await DataReader.ToEnumerableAsync<T2>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
 
                 // T3
                 await reader.NextResultAsync(cancellationToken);
                 dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T3>(), transaction, true, cancellationToken);
-                var item3 = await DataReader.ToEnumerableAsync<T3>(reader, dbFields, dbSetting, cancellationToken);
+                var item3 = await DataReader.ToEnumerableAsync<T3>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
 
                 // T4
                 await reader.NextResultAsync(cancellationToken);
                 dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T4>(), transaction, true, cancellationToken);
-                var item4 = await DataReader.ToEnumerableAsync<T4>(reader, dbFields, dbSetting, cancellationToken);
+                var item4 = await DataReader.ToEnumerableAsync<T4>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
 
                 // T5
                 await reader.NextResultAsync(cancellationToken);
                 dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T5>(), transaction, true, cancellationToken);
-                var item5 = await DataReader.ToEnumerableAsync<T5>(reader, dbFields, dbSetting, cancellationToken);
+                var item5 = await DataReader.ToEnumerableAsync<T5>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
 
                 // Result
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>(item1, item2, item3, item4, item5);
@@ -3172,32 +3173,32 @@ namespace RepoDb
 
                 // T1
                 dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T1>(), transaction, true, cancellationToken);
-                var item1 = await DataReader.ToEnumerableAsync<T1>(reader, dbFields, dbSetting, cancellationToken);
+                var item1 = await DataReader.ToEnumerableAsync<T1>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
 
                 // T2
                 await reader.NextResultAsync(cancellationToken);
                 dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T2>(), transaction, true, cancellationToken);
-                var item2 = await DataReader.ToEnumerableAsync<T2>(reader, dbFields, dbSetting, cancellationToken);
+                var item2 = await DataReader.ToEnumerableAsync<T2>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
 
                 // T3
                 await reader.NextResultAsync(cancellationToken);
                 dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T3>(), transaction, true, cancellationToken);
-                var item3 = await DataReader.ToEnumerableAsync<T3>(reader, dbFields, dbSetting, cancellationToken);
+                var item3 = await DataReader.ToEnumerableAsync<T3>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
 
                 // T4
                 await reader.NextResultAsync(cancellationToken);
                 dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T4>(), transaction, true, cancellationToken);
-                var item4 = await DataReader.ToEnumerableAsync<T4>(reader, dbFields, dbSetting, cancellationToken);
+                var item4 = await DataReader.ToEnumerableAsync<T4>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
 
                 // T5
                 await reader.NextResultAsync(cancellationToken);
                 dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T5>(), transaction, true, cancellationToken);
-                var item5 = await DataReader.ToEnumerableAsync<T5>(reader, dbFields, dbSetting, cancellationToken);
+                var item5 = await DataReader.ToEnumerableAsync<T5>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
 
                 // T6
                 await reader.NextResultAsync(cancellationToken);
                 dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T6>(), transaction, true, cancellationToken);
-                var item6 = await DataReader.ToEnumerableAsync<T6>(reader, dbFields, dbSetting, cancellationToken);
+                var item6 = await DataReader.ToEnumerableAsync<T6>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
 
                 // Result
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>(
@@ -3579,37 +3580,37 @@ namespace RepoDb
 
                 // T1
                 dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T1>(), transaction, true, cancellationToken);
-                var item1 = await DataReader.ToEnumerableAsync<T1>(reader, dbFields, dbSetting, cancellationToken);
+                var item1 = await DataReader.ToEnumerableAsync<T1>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
 
                 // T2
                 await reader.NextResultAsync(cancellationToken);
                 dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T2>(), transaction, true, cancellationToken);
-                var item2 = await DataReader.ToEnumerableAsync<T2>(reader, dbFields, dbSetting, cancellationToken);
+                var item2 = await DataReader.ToEnumerableAsync<T2>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
 
                 // T3
                 await reader.NextResultAsync(cancellationToken);
                 dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T3>(), transaction, true, cancellationToken);
-                var item3 = await DataReader.ToEnumerableAsync<T3>(reader, dbFields, dbSetting, cancellationToken);
+                var item3 = await DataReader.ToEnumerableAsync<T3>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
 
                 // T4
                 await reader.NextResultAsync(cancellationToken);
                 dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T4>(), transaction, true, cancellationToken);
-                var item4 = await DataReader.ToEnumerableAsync<T4>(reader, dbFields, dbSetting, cancellationToken);
+                var item4 = await DataReader.ToEnumerableAsync<T4>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
 
                 // T5
                 await reader.NextResultAsync(cancellationToken);
                 dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T5>(), transaction, true, cancellationToken);
-                var item5 = await DataReader.ToEnumerableAsync<T5>(reader, dbFields, dbSetting, cancellationToken);
+                var item5 = await DataReader.ToEnumerableAsync<T5>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
 
                 // T6
                 await reader.NextResultAsync(cancellationToken);
                 dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T6>(), transaction, true, cancellationToken);
-                var item6 = await DataReader.ToEnumerableAsync<T6>(reader, dbFields, dbSetting, cancellationToken);
+                var item6 = await DataReader.ToEnumerableAsync<T6>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
 
                 // T7
                 await reader.NextResultAsync(cancellationToken);
                 dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T7>(), transaction, true, cancellationToken);
-                var item7 = await DataReader.ToEnumerableAsync<T7>(reader, dbFields, dbSetting, cancellationToken);
+                var item7 = await DataReader.ToEnumerableAsync<T7>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
 
                 // Result
                 result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>(
