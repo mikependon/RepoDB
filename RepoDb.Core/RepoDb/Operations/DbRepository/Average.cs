@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace RepoDb
 {
     public partial class DbRepository<TDbConnection> : IDisposable
-        where TDbConnection : DbConnection
+        where TDbConnection : DbConnection, new()
     {
         #region Average<TEntity, TResult>
 

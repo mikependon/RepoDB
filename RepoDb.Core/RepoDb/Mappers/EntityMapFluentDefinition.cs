@@ -396,8 +396,9 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TClassHandler">The type of the <see cref="IClassHandler{TEntity}"/>.</typeparam>
         /// <returns>The current instance.</returns>
-        public EntityMapFluentDefinition<TEntity> ClassHandler<TClassHandler>() =>
-            ClassHandler<TClassHandler>(Activator.CreateInstance<TClassHandler>());
+        public EntityMapFluentDefinition<TEntity> ClassHandler<TClassHandler>() 
+            where TClassHandler : new() =>
+            ClassHandler(new TClassHandler());
 
         /// <summary>
         /// Defines a mapping between a data entity type and a <see cref="IClassHandler{TEntity}"/> object. It uses the <see cref="Activator.CreateInstance(Type)"/> method to create the instance of target <see cref="IClassHandler{TEntity}"/>.
@@ -406,8 +407,9 @@ namespace RepoDb
         /// <typeparam name="TClassHandler">The type of the <see cref="IClassHandler{TEntity}"/>.</typeparam>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
         /// <returns>The current instance.</returns>
-        public EntityMapFluentDefinition<TEntity> ClassHandler<TClassHandler>(bool force) =>
-            ClassHandler<TClassHandler>(Activator.CreateInstance<TClassHandler>(), force);
+        public EntityMapFluentDefinition<TEntity> ClassHandler<TClassHandler>(bool force) 
+            where TClassHandler : new() =>
+            ClassHandler(new TClassHandler(), force);
 
         /// <summary>
         /// Defines a mapping between a data entity type and a <see cref="IClassHandler{TEntity}"/> object.
@@ -447,8 +449,9 @@ namespace RepoDb
         /// <typeparam name="TPropertyHandler">The type of the <see cref="IPropertyHandler{TInput, TResult}"/>.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
         /// <returns>The current instance.</returns>
-        public EntityMapFluentDefinition<TEntity> PropertyHandler<TPropertyHandler>(Expression<Func<TEntity, object>> expression) =>
-            PropertyHandler<TPropertyHandler>(expression, Activator.CreateInstance<TPropertyHandler>());
+        public EntityMapFluentDefinition<TEntity> PropertyHandler<TPropertyHandler>(Expression<Func<TEntity, object>> expression) 
+            where TPropertyHandler : new() =>
+            PropertyHandler(expression, new TPropertyHandler());
 
         /// <summary>
         /// Defines a mapping between a data entity type property and a <see cref="IPropertyHandler{TInput, TResult}"/> object. It uses the <see cref="Activator.CreateInstance(Type)"/> method to create the instance of target <see cref="IPropertyHandler{TInput, TResult}"/>.
@@ -459,8 +462,9 @@ namespace RepoDb
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
         /// <returns>The current instance.</returns>
         public EntityMapFluentDefinition<TEntity> PropertyHandler<TPropertyHandler>(Expression<Func<TEntity, object>> expression,
-            bool force) =>
-            PropertyHandler<TPropertyHandler>(expression, Activator.CreateInstance<TPropertyHandler>(), force);
+            bool force) 
+            where TPropertyHandler : new() =>
+            PropertyHandler(expression, new TPropertyHandler(), force);
 
         /// <summary>
         /// Defines a mapping between a data entity type property and a <see cref="IPropertyHandler{TInput, TResult}"/> object.
@@ -500,8 +504,9 @@ namespace RepoDb
         /// <typeparam name="TPropertyHandler">The type of the <see cref="IPropertyHandler{TInput, TResult}"/>.</typeparam>
         /// <param name="propertyName">The name of the class property to be mapped.</param>
         /// <returns>The current instance.</returns>
-        public EntityMapFluentDefinition<TEntity> PropertyHandler<TPropertyHandler>(string propertyName) =>
-            PropertyHandler<TPropertyHandler>(propertyName, Activator.CreateInstance<TPropertyHandler>(), false);
+        public EntityMapFluentDefinition<TEntity> PropertyHandler<TPropertyHandler>(string propertyName) 
+            where TPropertyHandler : new() =>
+            PropertyHandler(propertyName, new TPropertyHandler(), false);
 
         /// <summary>
         /// Adds a <see cref="IPropertyHandler{TInput, TResult}"/> mapping into a data entity type property (via property name).
@@ -541,8 +546,9 @@ namespace RepoDb
         /// <typeparam name="TPropertyHandler">The type of the <see cref="IPropertyHandler{TInput, TResult}"/>.</typeparam>
         /// <param name="field">The instance of <see cref="Field"/> object to be mapped.</param>
         /// <returns>The current instance.</returns>
-        public EntityMapFluentDefinition<TEntity> PropertyHandler<TPropertyHandler>(Field field) =>
-            PropertyHandler<TPropertyHandler>(field, Activator.CreateInstance<TPropertyHandler>(), false);
+        public EntityMapFluentDefinition<TEntity> PropertyHandler<TPropertyHandler>(Field field)
+            where TPropertyHandler : new() =>
+            PropertyHandler(field, new TPropertyHandler(), false);
 
         /// <summary>
         /// Adds a <see cref="IPropertyHandler{TInput, TResult}"/> mapping into a data entity type property (via <see cref="Field"/> object).

@@ -16,7 +16,7 @@ namespace RepoDb
     /// <typeparam name="TEntity">The type of data entity object to be mapped on this repository.</typeparam>
     /// <typeparam name="TDbConnection">The type of the <see cref="DbConnection"/> object.</typeparam>
     public abstract partial class BaseRepository<TEntity, TDbConnection> : IDisposable
-        where TDbConnection : DbConnection
+        where TDbConnection : DbConnection, new()
         where TEntity : class
     {
         #region Constructors
