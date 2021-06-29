@@ -32,8 +32,9 @@ namespace RepoDb
         /// <typeparam name="TType">The target .NET CLR type.</typeparam>
         /// <typeparam name="TClassHandler">The type of the handler.</typeparam>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
-        public static void Add<TType, TClassHandler>(bool force = false) =>
-            Add(typeof(TType), Activator.CreateInstance<TClassHandler>(), force);
+        public static void Add<TType, TClassHandler>(bool force = false)
+            where TClassHandler : new() =>
+            Add(typeof(TType), new TClassHandler(), force);
 
         /// <summary>
         /// Adds a mapping between a .NET CLR type and a <see cref="IClassHandler{TEntity}"/> object.

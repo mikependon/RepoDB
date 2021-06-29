@@ -52,8 +52,9 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TPropertyHandler">The type of the handler.</typeparam>
         /// <returns>The current instance.</returns>
-        public TypeMapFluentDefinition<TType> PropertyHandler<TPropertyHandler>() =>
-            PropertyHandler<TPropertyHandler>(Activator.CreateInstance<TPropertyHandler>(), false);
+        public TypeMapFluentDefinition<TType> PropertyHandler<TPropertyHandler>()
+            where TPropertyHandler : new() =>
+            PropertyHandler(new TPropertyHandler(), false);
 
         /// <summary>
         /// Defines a mapping between a .NET CLR type and a <see cref="IPropertyHandler{TInput, TResult}"/> object. It uses the <see cref="Activator.CreateInstance(Type)"/> method to create the instance of target property handler.
@@ -62,8 +63,9 @@ namespace RepoDb
         /// <typeparam name="TPropertyHandler">The type of the handler.</typeparam>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
         /// <returns>The current instance.</returns>
-        public TypeMapFluentDefinition<TType> PropertyHandler<TPropertyHandler>(bool force) =>
-            PropertyHandler<TPropertyHandler>(Activator.CreateInstance<TPropertyHandler>(), force);
+        public TypeMapFluentDefinition<TType> PropertyHandler<TPropertyHandler>(bool force)
+            where TPropertyHandler : new() =>
+            PropertyHandler(new TPropertyHandler(), force);
 
         /// <summary>
         /// Defines a mapping between a .NET CLR type and a <see cref="IPropertyHandler{TInput, TResult}"/> object.

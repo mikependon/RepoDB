@@ -80,6 +80,7 @@ namespace RepoDb.IntegrationTests
         /// <param name="strict">True if to be strict on the conversion.</param>
         /// <returns>The instance of the converted object.</returns>
         public static T ConverToType<T>(object obj, bool strict = true)
+            where T : new()
         {
             var fromType = obj.GetType();
             var toTypeProperties = typeof(T).GetProperties();
@@ -100,7 +101,7 @@ namespace RepoDb.IntegrationTests
                 }
                 if (result == null)
                 {
-                    result = Activator.CreateInstance<T>();
+                    result = new T();
                 }
                 toProperty.SetValue(result, property.GetValue(obj));
             });

@@ -15,7 +15,7 @@ namespace RepoDb
     /// </summary>
     /// <typeparam name="TDbConnection">The type of the <see cref="DbConnection"/> object.</typeparam>
     public partial class DbRepository<TDbConnection> : IDisposable
-        where TDbConnection : DbConnection
+        where TDbConnection : DbConnection, new()
     {
         #region Fields
 
@@ -290,8 +290,10 @@ namespace RepoDb
                 {
                     if (this.connection == null)
                     {
-                        connection = Activator.CreateInstance<TDbConnection>();
-                        connection.ConnectionString = ConnectionString;
+                        connection = new TDbConnection
+                        {
+                            ConnectionString = ConnectionString
+                        };
                         this.connection = connection;
                     }
                     else
@@ -302,8 +304,10 @@ namespace RepoDb
             }
             else
             {
-                connection = Activator.CreateInstance<TDbConnection>();
-                connection.ConnectionString = ConnectionString;
+                connection = new TDbConnection
+                {
+                    ConnectionString = ConnectionString
+                };
             }
             return connection;
         }
