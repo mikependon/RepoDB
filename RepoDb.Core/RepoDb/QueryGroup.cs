@@ -602,7 +602,7 @@ namespace RepoDb
         private void FixQueryFields(IEnumerable<QueryField> fields)
         {
             var firstList = fields
-                .OrderBy(queryField => queryField.Parameter.Name)
+                .OrderBy(queryField => queryField.Parameter.Name, StringComparer.OrdinalIgnoreCase)
                 .AsList();
             var secondList = new List<QueryField>(firstList);
 
