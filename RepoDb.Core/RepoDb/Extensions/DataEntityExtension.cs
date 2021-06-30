@@ -91,7 +91,7 @@ namespace RepoDb.Extensions
             IDbSetting dbSetting)
         {
             // Get the schema and table name
-            var index = tableName.IndexOf(".");
+            var index = tableName.IndexOf(CharConstant.Period);
             if (index > 0)
             {
                 return tableName.Substring(0, index).AsUnquoted(true, dbSetting);
@@ -119,7 +119,7 @@ namespace RepoDb.Extensions
             IDbSetting dbSetting)
         {
             // Get the schema and table name
-            var index = tableName.IndexOf(".");
+            var index = tableName.IndexOf(CharConstant.Period);
             if (index > 0)
             {
                 if (tableName.Length > index)

@@ -91,7 +91,7 @@ namespace RepoDb.Extensions
             {
                 return value;
             }
-            if (value.IndexOf(StringConstant.Period) < 0)
+            if (value.IndexOf(CharConstant.Period) < 0)
             {
                 return value.AsUnquotedInternal(trim, dbSetting);
             }
@@ -171,7 +171,7 @@ namespace RepoDb.Extensions
             {
                 value = value.Trim();
             }
-            var firstIndex = value.IndexOf(StringConstant.Period);
+            var firstIndex = value.IndexOf(CharConstant.Period);
             if (ignoreSchema || firstIndex < 0)
             {
                 return value.AsQuotedInternal(dbSetting);

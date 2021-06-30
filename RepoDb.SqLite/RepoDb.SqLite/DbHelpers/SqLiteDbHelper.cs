@@ -178,7 +178,7 @@ namespace RepoDb.DbHelpers
                         }
 
                         // Return
-                        return fieldName.Substring(0, fieldName.IndexOf(" "));
+                        return fieldName.Substring(0, fieldName.IndexOf(' '));
                     }
                 }
             }
@@ -212,8 +212,8 @@ namespace RepoDb.DbHelpers
             }
 
             // Do parse
-            var openingTokenIndex = sql.IndexOf("(");
-            var closingTokenIndex = sql.IndexOf(")");
+            var openingTokenIndex = sql.IndexOf('(');
+            var closingTokenIndex = sql.IndexOf(')');
             var parsed = sql.Substring((openingTokenIndex + 1), (closingTokenIndex - (openingTokenIndex + 1)));
 
             // Simply split by comma
