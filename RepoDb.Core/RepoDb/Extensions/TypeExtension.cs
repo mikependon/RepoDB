@@ -52,7 +52,7 @@ namespace RepoDb.Extensions
         /// <param name="type">The current type.</param>
         /// <returns>Returns true if the current type is an anonymous class.</returns>
         public static bool IsAnonymousType(this Type type) =>
-            type.FullName.StartsWith("<>f__AnonymousType");
+            type.FullName.StartsWith("<>f__AnonymousType", StringComparison.OrdinalIgnoreCase);
 
         /// <summary>
         /// Checks whether the current type is of type <see cref="IDictionary{TKey, TValue}"/> (with string/object key-value-pair).
