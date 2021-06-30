@@ -91,6 +91,7 @@ namespace RepoDb.Extensions
             {
                 return value;
             }
+            
             if (value.IndexOf(CharConstant.Period) < 0)
             {
                 return value.AsUnquotedInternal(trim, dbSetting);
