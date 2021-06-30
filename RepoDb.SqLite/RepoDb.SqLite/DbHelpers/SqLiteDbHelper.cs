@@ -194,9 +194,9 @@ namespace RepoDb.DbHelpers
         /// <returns></returns>
         private bool IsIdentity(string field)
         {
-            var upper = field.ToUpper();
-            return upper.Contains("AUTOINCREMENT") ||
-                   (upper.Contains("INTEGER") && upper.Contains("PRIMARY KEY"));
+            return field.Contains("AUTOINCREMENT", StringComparison.OrdinalIgnoreCase) ||
+                   (field.Contains("INTEGER", StringComparison.OrdinalIgnoreCase) 
+                    && field.Contains("PRIMARY KEY", StringComparison.OrdinalIgnoreCase));
         }
 
         /// <summary>
