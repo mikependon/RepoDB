@@ -201,7 +201,8 @@ namespace RepoDb.Extensions
                 {
                     if (!string.IsNullOrWhiteSpace(current))
                     {
-                        if (current.StartsWith(dbSetting.OpeningQuote) && item.EndsWith(dbSetting.ClosingQuote))
+                        if (current.StartsWith(dbSetting.OpeningQuote, StringComparison.OrdinalIgnoreCase) 
+                            && item.EndsWith(dbSetting.ClosingQuote, StringComparison.OrdinalIgnoreCase))
                         {
                             list.Add(string.Concat(current, StringConstant.Period, item));
                             current = null;
@@ -209,9 +210,9 @@ namespace RepoDb.Extensions
                     }
                     else
                     {
-                        if (item.StartsWith(dbSetting.OpeningQuote))
+                        if (item.StartsWith(dbSetting.OpeningQuote, StringComparison.OrdinalIgnoreCase))
                         {
-                            if (item.EndsWith(dbSetting.ClosingQuote))
+                            if (item.EndsWith(dbSetting.ClosingQuote, StringComparison.OrdinalIgnoreCase))
                             {
                                 list.Add(item.AsQuotedInternal(dbSetting));
                             }
@@ -247,11 +248,11 @@ namespace RepoDb.Extensions
         private static string AsQuotedInternal(this string value,
             IDbSetting dbSetting)
         {
-            if (!value.StartsWith(dbSetting.OpeningQuote))
+            if (!value.StartsWith(dbSetting.OpeningQuote, StringComparison.OrdinalIgnoreCase))
             {
                 value = string.Concat(dbSetting.OpeningQuote, value);
             }
-            if (!value.EndsWith(dbSetting.ClosingQuote))
+            if (!value.EndsWith(dbSetting.ClosingQuote, StringComparison.OrdinalIgnoreCase))
             {
                 value = string.Concat(value, dbSetting.ClosingQuote);
             }
@@ -292,7 +293,7 @@ namespace RepoDb.Extensions
             if (dbSetting != null)
             {
                 value = string.Concat(dbSetting.ParameterPrefix,
-                    (value.StartsWith(dbSetting.ParameterPrefix) ? value.Substring(1) : value)
+                    (value.StartsWith(dbSetting.ParameterPrefix, StringComparison.OrdinalIgnoreCase) ? value.Substring(1) : value)
                         .AsUnquoted(true, dbSetting).AsAlphaNumeric());
             }
             return index > 0 ? string.Concat(value, "_", index.ToString()) : value;

@@ -118,16 +118,16 @@ namespace RepoDb
         {
             if (methodName == "Contains")
             {
-                value = value.StartsWith("%") ? value : string.Concat("%", value);
-                value = value.EndsWith("%") ? value : string.Concat(value, "%");
+                value = value.StartsWith("%", StringComparison.OrdinalIgnoreCase) ? value : string.Concat("%", value);
+                value = value.EndsWith("%", StringComparison.OrdinalIgnoreCase) ? value : string.Concat(value, "%");
             }
             else if (methodName == "StartsWith")
             {
-                value = value.EndsWith("%") ? value : string.Concat(value, "%");
+                value = value.EndsWith("%", StringComparison.OrdinalIgnoreCase) ? value : string.Concat(value, "%");
             }
             else if (methodName == "EndsWith")
             {
-                value = value.StartsWith("%") ? value : string.Concat("%", value);
+                value = value.StartsWith("%", StringComparison.OrdinalIgnoreCase) ? value : string.Concat("%", value);
             }
             return value;
         }

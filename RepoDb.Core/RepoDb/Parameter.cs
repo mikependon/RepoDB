@@ -68,7 +68,7 @@ namespace RepoDb
         /// </summary>
         internal void PrependAnUnderscore()
         {
-            if (!Name.StartsWith("_"))
+            if (!Name.StartsWith("_", StringComparison.OrdinalIgnoreCase))
             {
                 Name = string.Concat("_", Name);
             }
