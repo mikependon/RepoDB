@@ -2680,7 +2680,7 @@ namespace RepoDb
             IDbSetting dbSetting)
         {
             // Check for the defined parameter
-            if (commandText.IndexOf(parameterName) < 0)
+            if (commandText.IndexOf(parameterName, StringComparison.OrdinalIgnoreCase) < 0)
             {
                 return commandText;
             }
@@ -3203,7 +3203,7 @@ namespace RepoDb
             System.Collections.IEnumerable values,
             IDbSetting dbSetting)
         {
-            if (commandText.IndexOf(parameterName) < 0)
+            if (commandText.IndexOf(parameterName, StringComparison.OrdinalIgnoreCase) < 0)
             {
                 return commandText;
             }
@@ -3236,7 +3236,7 @@ namespace RepoDb
             // Check the IN operation parameters
             if (queryField.Operation == Operation.In || queryField.Operation == Operation.NotIn)
             {
-                if (commandText.IndexOf(string.Concat(queryField.Parameter.Name, "_In_")) > 0)
+                if (commandText.IndexOf(string.Concat(queryField.Parameter.Name, "_In_"), StringComparison.OrdinalIgnoreCase) > 0)
                 {
                     return true;
                 }
@@ -3245,7 +3245,7 @@ namespace RepoDb
             // Check the BETWEEN operation parameters
             else if (queryField.Operation == Operation.Between || queryField.Operation == Operation.NotBetween)
             {
-                if (commandText.IndexOf(string.Concat(queryField.Parameter.Name, "_Left")) > 0)
+                if (commandText.IndexOf(string.Concat(queryField.Parameter.Name, "_Left"), StringComparison.OrdinalIgnoreCase) > 0)
                 {
                     return true;
                 }
