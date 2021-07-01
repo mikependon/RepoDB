@@ -299,6 +299,20 @@ namespace RepoDb.Extensions
             return index > 0 ? string.Concat(value, "_", index.ToString()) : value;
         }
 
+#if NETSTANDARD2_0
+        /// <summary>
+        /// Returns a value indicating whether a specified string occurs within this string, using the specified comparison rules.
+        /// </summary>
+        /// <param name="value">The string to be contained.</param>
+        /// <param name="stringToSeek">The string to seek.</param>
+        /// <param name="comparisonType">One of the enumeration values that specifies the rules to use in the comparison.</param>
+        /// <returns>true if the value parameter occurs within this string, or if value is the empty string (""); otherwise, false.</returns>
+        public static bool Contains(this string value, string stringToSeek, StringComparison comparisonType)
+        {
+            return value?.IndexOf(stringToSeek, comparisonType) >= 0;
+        }
+#endif
+        
         /// <summary>
         /// 
         /// </summary>

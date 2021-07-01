@@ -568,7 +568,7 @@ namespace RepoDb.Extensions
             {
                 return null;
             }
-            if (fieldName.Contains("_In_"))
+            if (fieldName.Contains("_In_", StringComparison.OrdinalIgnoreCase))
             {
                 return dbFields?.FirstOrDefault(df =>
                     fieldName.StartsWith(df.Name, StringComparison.OrdinalIgnoreCase));
