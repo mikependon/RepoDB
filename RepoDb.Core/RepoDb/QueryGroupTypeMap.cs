@@ -6,7 +6,7 @@ namespace RepoDb
     /// A class that is being used to hold the <see cref="RepoDb.QueryGroup"/> object type mapping. This class has been introduced
     /// to support the needs of the multi-resultsets query operation.
     /// </summary>
-    internal class QueryGroupTypeMap
+    internal readonly struct QueryGroupTypeMap
     {
         /// <summary>
         /// Creates an instance of <see cref="QueryGroupTypeMap"/> class.
