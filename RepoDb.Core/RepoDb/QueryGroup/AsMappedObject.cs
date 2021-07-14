@@ -37,7 +37,7 @@ namespace RepoDb
         /// <param name="queryGroupTypeMap"></param>
         /// <param name="fixParameters"></param>
         private static void AsMappedObject(IDictionary<string, object> dictionary,
-            QueryGroupTypeMap queryGroupTypeMap,
+            in QueryGroupTypeMap queryGroupTypeMap,
             bool fixParameters = true)
         {
             var queryFields = queryGroupTypeMap
@@ -67,7 +67,7 @@ namespace RepoDb
         /// <param name="queryGroupTypeMap"></param>
         /// <param name="queryFields"></param>
         private static void AsMappedObjectForQueryFields(IDictionary<string, object> dictionary,
-            QueryGroupTypeMap queryGroupTypeMap,
+            in QueryGroupTypeMap queryGroupTypeMap,
             IEnumerable<QueryField> queryFields)
         {
             foreach (var queryField in queryFields)
@@ -96,7 +96,7 @@ namespace RepoDb
         /// <param name="queryGroupTypeMap"></param>
         /// <param name="queryField"></param>
         private static void AsMappedObjectForBetweenQueryField(IDictionary<string, object> dictionary,
-            QueryGroupTypeMap queryGroupTypeMap,
+            in QueryGroupTypeMap queryGroupTypeMap,
             QueryField queryField)
         {
             var values = GetValueList(queryField.Parameter.Value);
@@ -141,7 +141,7 @@ namespace RepoDb
         /// <param name="queryGroupTypeMap"></param>
         /// <param name="queryField"></param>
         private static void AsMappedObjectForInQueryField(IDictionary<string, object> dictionary,
-            QueryGroupTypeMap queryGroupTypeMap,
+            in QueryGroupTypeMap queryGroupTypeMap,
             QueryField queryField)
         {
             var values = GetValueList(queryField.Parameter.Value);
@@ -173,7 +173,7 @@ namespace RepoDb
         /// <param name="queryGroupTypeMap"></param>
         /// <param name="queryField"></param>
         private static void AsMappedObjectForNormalQueryField(IDictionary<string, object> dictionary,
-            QueryGroupTypeMap queryGroupTypeMap,
+            in QueryGroupTypeMap queryGroupTypeMap,
             QueryField queryField)
         {
             if (dictionary.ContainsKey(queryField.Parameter.Name))
