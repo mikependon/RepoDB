@@ -16,7 +16,7 @@ namespace RepoDb.UnitTests.DbHelpers
         [TestInitialize]
         public void Initialize()
         {
-            DbSettingMapper.Add(typeof(DbHelperDbConnection), new CustomDbSetting(), true);
+            DbSettingMapper.Add<DbHelperDbConnection>(new CustomDbSetting(), true);
             StatementBuilderMapper.Add(typeof(DbHelperDbConnection), new CustomStatementBuilder(), true);
         }
 

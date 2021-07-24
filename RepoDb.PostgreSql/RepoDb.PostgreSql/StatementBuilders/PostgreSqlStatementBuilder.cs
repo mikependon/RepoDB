@@ -18,7 +18,7 @@ namespace RepoDb.StatementBuilders
         /// Creates a new instance of <see cref="PostgreSqlStatementBuilder"/> object.
         /// </summary>
         public PostgreSqlStatementBuilder()
-            : this(DbSettingMapper.Get(typeof(NpgsqlConnection)),
+            : this(DbSettingMapper.Get<NpgsqlConnection>(),
                   new PostgreSqlConvertFieldResolver(),
                   new ClientTypeToAverageableClientTypeResolver())
         { }

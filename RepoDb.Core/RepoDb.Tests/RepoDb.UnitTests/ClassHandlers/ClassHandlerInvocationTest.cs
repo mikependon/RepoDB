@@ -13,7 +13,7 @@ namespace RepoDb.UnitTests.ClassHandlers
         [TestInitialize]
         public void Initialize()
         {
-            DbSettingMapper.Add(typeof(ClassHandlerConnection), new CustomDbSetting(), true);
+            DbSettingMapper.Add<ClassHandlerConnection>(new CustomDbSetting(), true);
             DbHelperMapper.Add(typeof(ClassHandlerConnection), new CustomDbHelper(), true);
             StatementBuilderMapper.Add(typeof(ClassHandlerConnection), new CustomStatementBuilder(), true);
         }

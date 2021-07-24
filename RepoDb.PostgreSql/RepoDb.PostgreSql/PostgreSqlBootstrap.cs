@@ -33,7 +33,7 @@ namespace RepoDb
             }
 
             // Map the DbSetting
-            DbSettingMapper.Add(typeof(NpgsqlConnection), new PostgreSqlDbSetting(), true);
+            DbSettingMapper.Add<NpgsqlConnection>(new PostgreSqlDbSetting(), true);
 
             // Map the DbHelper
             DbHelperMapper.Add(typeof(NpgsqlConnection), new PostgreSqlDbHelper(), true);

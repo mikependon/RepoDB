@@ -15,12 +15,12 @@ namespace RepoDb.UnitTests.ClassHandlers
         public void Initialize()
         {
             // For Non-Attributed Entity
-            DbSettingMapper.Add(typeof(ClassHandlerConnection), new CustomDbSetting(), true);
+            DbSettingMapper.Add<ClassHandlerConnection>(new CustomDbSetting(), true);
             DbHelperMapper.Add(typeof(ClassHandlerConnection), new CustomDbHelper(), true);
             StatementBuilderMapper.Add(typeof(ClassHandlerConnection), new CustomStatementBuilder(), true);
 
             // For Attributed Entity
-            DbSettingMapper.Add(typeof(ClassHandlerForEntityWithAttributeConnection), new CustomDbSetting(), true);
+            DbSettingMapper.Add<ClassHandlerForEntityWithAttributeConnection>(new CustomDbSetting(), true);
             DbHelperMapper.Add(typeof(ClassHandlerForEntityWithAttributeConnection), new CustomDbHelper(), true);
             StatementBuilderMapper.Add(typeof(ClassHandlerForEntityWithAttributeConnection), new CustomStatementBuilder(), true);
         }

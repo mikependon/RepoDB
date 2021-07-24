@@ -33,8 +33,8 @@ namespace RepoDb
 
             // Map the DbSetting
             var dbSetting = new SqlServerDbSetting();
-            DbSettingMapper.Add(typeof(Microsoft.Data.SqlClient.SqlConnection), dbSetting, true);
-            DbSettingMapper.Add(typeof(System.Data.SqlClient.SqlConnection), dbSetting, true);
+            DbSettingMapper.Add<Microsoft.Data.SqlClient.SqlConnection>(dbSetting, true);
+            DbSettingMapper.Add<System.Data.SqlClient.SqlConnection>(dbSetting, true);
 
             // Map the DbHelper
             var dbHelper = new SqlServerDbHelper();

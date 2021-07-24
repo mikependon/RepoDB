@@ -33,7 +33,7 @@ namespace RepoDb
             }
 
             // Map the DbSetting
-            DbSettingMapper.Add(typeof(MySqlConnection), new MySqlConnectorDbSetting(), true);
+            DbSettingMapper.Add<MySqlConnection>(new MySqlConnectorDbSetting(), true);
 
             // Map the DbHelper
             DbHelperMapper.Add(typeof(MySqlConnection), new MySqlConnectorDbHelper(), true);

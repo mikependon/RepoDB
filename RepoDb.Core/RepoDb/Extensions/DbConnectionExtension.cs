@@ -1080,7 +1080,7 @@ namespace RepoDb
             bool skipCommandArrayParametersCheck)
         {
             // Variables
-            var setting = DbSettingMapper.Get(connection.GetType());
+            var setting = DbSettingMapper.Get(connection);
             var command = CreateDbCommandForExecution(connection: connection,
                 commandText: commandText,
                 param: param,
@@ -1733,7 +1733,7 @@ namespace RepoDb
             }
 
             // Get the setting
-            var setting = DbSettingMapper.Get(connection.GetType());
+            var setting = DbSettingMapper.Get(connection);
 
             // Check the presence
             if (setting == null)
@@ -2830,7 +2830,7 @@ namespace RepoDb
             {
                 commandArrayParametersText = GetCommandArrayParametersText(commandText,
                    param,
-                   DbSettingMapper.Get(connection.GetType()));
+                   DbSettingMapper.Get(connection));
             }
 
             // Check

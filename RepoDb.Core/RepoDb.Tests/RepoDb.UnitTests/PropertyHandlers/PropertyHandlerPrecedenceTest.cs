@@ -15,7 +15,7 @@ namespace RepoDb.UnitTests.PropertyHandlers
         [TestInitialize]
         public void Initialize()
         {
-            DbSettingMapper.Add(typeof(PropertyHandlerConnection), new CustomDbSetting(), true);
+            DbSettingMapper.Add<PropertyHandlerConnection>(new CustomDbSetting(), true);
             DbHelperMapper.Add(typeof(PropertyHandlerConnection), new CustomDbHelper(), true);
             StatementBuilderMapper.Add(typeof(PropertyHandlerConnection), new CustomStatementBuilder(), true);
         }

@@ -38,7 +38,7 @@ namespace RepoDb
 
             // Map the DbSetting
             var sdsDbSetting = new SqLiteDbSetting(true);
-            DbSettingMapper.Add(typeof(SQLiteConnection), sdsDbSetting, true);
+            DbSettingMapper.Add<SQLiteConnection>(sdsDbSetting, true);
 
             // Map the DbHelper
             DbHelperMapper.Add(typeof(SQLiteConnection),
@@ -55,7 +55,7 @@ namespace RepoDb
 
             // Map the DbSetting
             var mdsDbSetting = new SqLiteDbSetting(false);
-            DbSettingMapper.Add(typeof(SqliteConnection), mdsDbSetting, true);
+            DbSettingMapper.Add<SqliteConnection>(mdsDbSetting, true);
 
             // Map the DbHelper
             DbHelperMapper.Add(typeof(SqliteConnection),
