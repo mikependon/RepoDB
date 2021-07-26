@@ -15,7 +15,7 @@ namespace RepoDb.UnitTests.Interfaces
         public void Initialize()
         {
             DbSettingMapper.Add<CacheDbConnection>(new CustomDbSetting(), true);
-            DbHelperMapper.Add(typeof(CacheDbConnection), new CustomDbHelper(), true);
+            DbHelperMapper.Add<CacheDbConnection>(new CustomDbHelper(), true);
             StatementBuilderMapper.Add(typeof(CacheDbConnection), new CustomStatementBuilder(), true);
         }
 

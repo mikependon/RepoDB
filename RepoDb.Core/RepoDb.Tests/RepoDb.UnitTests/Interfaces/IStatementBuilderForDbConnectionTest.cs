@@ -15,7 +15,7 @@ namespace RepoDb.UnitTests.Interfaces
         public void Initialize()
         {
             DbSettingMapper.Add<StatementBuilderDbConnection>(new CustomDbSetting(), true);
-            DbHelperMapper.Add(typeof(StatementBuilderDbConnection), new CustomDbHelper(), true);
+            DbHelperMapper.Add<StatementBuilderDbConnection>(new CustomDbHelper(), true);
         }
 
         #region SubClasses

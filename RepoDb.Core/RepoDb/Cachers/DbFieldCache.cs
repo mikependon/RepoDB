@@ -103,7 +103,7 @@ namespace RepoDb
             if (cache.TryGetValue(key, out var result) == false)
             {
                 // Get from DB
-                var dbHelper = DbHelperMapper.Get(type);
+                var dbHelper = DbHelperMapper.Get(connection);
                 result = dbHelper?.GetFields(connection, tableName, transaction);
 
                 // Validate
@@ -190,7 +190,7 @@ namespace RepoDb
             if (cache.TryGetValue(key, out var result) == false)
             {
                 // Get from DB
-                var dbHelper = DbHelperMapper.Get(type);
+                var dbHelper = DbHelperMapper.Get(connection);
                 result = await dbHelper?.GetFieldsAsync(connection, tableName, transaction, cancellationToken);
 
                 // Validate

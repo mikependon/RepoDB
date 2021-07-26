@@ -36,7 +36,7 @@ namespace RepoDb
             DbSettingMapper.Add<NpgsqlConnection>(new PostgreSqlDbSetting(), true);
 
             // Map the DbHelper
-            DbHelperMapper.Add(typeof(NpgsqlConnection), new PostgreSqlDbHelper(), true);
+            DbHelperMapper.Add<NpgsqlConnection>(new PostgreSqlDbHelper(), true);
 
             // Map the Statement Builder
             StatementBuilderMapper.Add(typeof(NpgsqlConnection), new PostgreSqlStatementBuilder(), true);

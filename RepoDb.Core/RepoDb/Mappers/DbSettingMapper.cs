@@ -3,12 +3,11 @@ using RepoDb.Interfaces;
 using System;
 using System.Collections.Concurrent;
 using System.Data;
-using System.Data.Common;
 
 namespace RepoDb
 {
     /// <summary>
-    /// A class that is being used to map a type of <see cref="DbConnection"/> into an instance of <see cref="IDbSetting"/> object.
+    /// A class that is being used to map a type of <see cref="IDbConnection"/> into an instance of <see cref="IDbSetting"/> object.
     /// </summary>
     public static class DbSettingMapper
     {
@@ -25,9 +24,9 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Adds a mapping between the type of <see cref="DbConnection"/> and an instance of <see cref="IDbSetting"/> object.
+        /// Adds a mapping between the type of <see cref="IDbConnection"/> and an instance of <see cref="IDbSetting"/> object.
         /// </summary>
-        /// <typeparam name="TDbConnection">The type of <see cref="DbConnection"/> object.</typeparam>
+        /// <typeparam name="TDbConnection">The type of <see cref="IDbConnection"/> object.</typeparam>
         /// <param name="dbSetting">The instance of <see cref="IDbSetting"/> object to mapped to.</param>
         /// <param name="override">Set to true if to override the existing mapping, otherwise an exception will be thrown if the mapping is already present.</param>
         public static void Add<TDbConnection>(IDbSetting dbSetting,
@@ -62,9 +61,9 @@ namespace RepoDb
         */
 
         /// <summary>
-        /// Gets an existing <see cref="IDbSetting"/> object that is mapped to type <see cref="DbConnection"/>.
+        /// Gets an existing <see cref="IDbSetting"/> object that is mapped to type <see cref="IDbConnection"/>.
         /// </summary>
-        /// <typeparam name="TDbConnection">The type of <see cref="DbConnection"/>.</typeparam>
+        /// <typeparam name="TDbConnection">The type of <see cref="IDbConnection"/>.</typeparam>
         /// <returns>An instance of mapped <see cref="IDbSetting"/></returns>
         public static IDbSetting Get<TDbConnection>()
             where TDbConnection : IDbConnection
@@ -77,9 +76,10 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Gets an existing <see cref="IDbSetting"/> object that is mapped to type <see cref="DbConnection"/>.
+        /// Gets an existing <see cref="IDbSetting"/> object that is mapped to type <see cref="IDbConnection"/>.
         /// </summary>
-        /// <typeparam name="TDbConnection">The type of <see cref="DbConnection"/>.</typeparam>
+        /// <typeparam name="TDbConnection">The type of <see cref="IDbConnection"/>.</typeparam>
+        /// <param name="connection">The instance of <see cref="IDbConnection"/>.</param>
         /// <returns>An instance of mapped <see cref="IDbSetting"/></returns>
         public static IDbSetting Get<TDbConnection>(TDbConnection connection)
             where TDbConnection : IDbConnection
@@ -96,9 +96,9 @@ namespace RepoDb
         */
 
         /// <summary>
-        /// Removes the mapping between the type of <see cref="DbConnection"/> and an instance of <see cref="IDbSetting"/> object.
+        /// Removes the mapping between the type of <see cref="IDbConnection"/> and an instance of <see cref="IDbSetting"/> object.
         /// </summary>
-        /// <typeparam name="TDbConnection">The type of <see cref="DbConnection"/>.</typeparam>
+        /// <typeparam name="TDbConnection">The type of <see cref="IDbConnection"/>.</typeparam>
         public static void Remove<TDbConnection>()
             where TDbConnection : IDbConnection
         {

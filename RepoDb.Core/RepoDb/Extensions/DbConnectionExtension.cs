@@ -1759,7 +1759,7 @@ namespace RepoDb
             }
 
             // Get the setting
-            var helper = DbHelperMapper.Get(connection.GetType());
+            var helper = DbHelperMapper.Get(connection);
 
             // Check the presence
             if (helper == null)

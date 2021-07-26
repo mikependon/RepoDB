@@ -38,8 +38,8 @@ namespace RepoDb
 
             // Map the DbHelper
             var dbHelper = new SqlServerDbHelper();
-            DbHelperMapper.Add(typeof(Microsoft.Data.SqlClient.SqlConnection), dbHelper, true);
-            DbHelperMapper.Add(typeof(System.Data.SqlClient.SqlConnection), dbHelper, true);
+            DbHelperMapper.Add<Microsoft.Data.SqlClient.SqlConnection>(dbHelper, true);
+            DbHelperMapper.Add<System.Data.SqlClient.SqlConnection>(dbHelper, true);
 
             // Map the Statement Builder
             var statementBuilder = new SqlServerStatementBuilder(dbSetting);

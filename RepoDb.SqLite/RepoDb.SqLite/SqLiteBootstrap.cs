@@ -41,8 +41,7 @@ namespace RepoDb
             DbSettingMapper.Add<SQLiteConnection>(sdsDbSetting, true);
 
             // Map the DbHelper
-            DbHelperMapper.Add(typeof(SQLiteConnection),
-                new SqLiteDbHelper(sdsDbSetting, new SdsSqLiteDbTypeNameToClientTypeResolver()), true);
+            DbHelperMapper.Add<SQLiteConnection>(new SqLiteDbHelper(sdsDbSetting, new SdsSqLiteDbTypeNameToClientTypeResolver()), true);
 
             // Map the Statement Builder
             StatementBuilderMapper.Add(typeof(SQLiteConnection), new SqLiteStatementBuilder(sdsDbSetting,
@@ -58,8 +57,7 @@ namespace RepoDb
             DbSettingMapper.Add<SqliteConnection>(mdsDbSetting, true);
 
             // Map the DbHelper
-            DbHelperMapper.Add(typeof(SqliteConnection),
-                new SqLiteDbHelper(mdsDbSetting, new MdsSqLiteDbTypeNameToClientTypeResolver()), true);
+            DbHelperMapper.Add<SqliteConnection>(new SqLiteDbHelper(mdsDbSetting, new MdsSqLiteDbTypeNameToClientTypeResolver()), true);
 
             // Map the Statement Builder
             StatementBuilderMapper.Add(typeof(SqliteConnection), new SqLiteStatementBuilder(mdsDbSetting,

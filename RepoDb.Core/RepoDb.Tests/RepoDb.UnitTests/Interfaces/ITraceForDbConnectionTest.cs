@@ -13,7 +13,7 @@ namespace RepoDb.UnitTests.Interfaces
         public static void ClassInitialize(TestContext context)
         {
             DbSettingMapper.Add<TraceDbConnection>(new CustomDbSetting(), true);
-            DbHelperMapper.Add(typeof(TraceDbConnection), new CustomDbHelper(), true);
+            DbHelperMapper.Add<TraceDbConnection>(new CustomDbHelper(), true);
             StatementBuilderMapper.Add(typeof(TraceDbConnection), new CustomStatementBuilder(), true);
         }
 
