@@ -39,7 +39,7 @@ namespace RepoDb
             DbHelperMapper.Add<NpgsqlConnection>(new PostgreSqlDbHelper(), true);
 
             // Map the Statement Builder
-            StatementBuilderMapper.Add(typeof(NpgsqlConnection), new PostgreSqlStatementBuilder(), true);
+            StatementBuilderMapper.Add<NpgsqlConnection>(new PostgreSqlStatementBuilder(), true);
 
             // Set the flag
             IsInitialized = true;

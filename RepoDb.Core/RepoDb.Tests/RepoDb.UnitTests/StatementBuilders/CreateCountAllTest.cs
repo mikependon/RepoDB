@@ -10,8 +10,8 @@ namespace RepoDb.UnitTests.StatementBuilders
         [TestInitialize]
         public void Initialize()
         {
-            StatementBuilderMapper.Add(typeof(BaseStatementBuilderDbConnection), new CustomBaseStatementBuilder(), true);
-            StatementBuilderMapper.Add(typeof(NonHintsSupportingBaseStatementBuilderDbConnection), new CustomNonHintsSupportingBaseStatementBuilder(), true);
+            StatementBuilderMapper.Add<BaseStatementBuilderDbConnection>(new CustomBaseStatementBuilder(), true);
+            StatementBuilderMapper.Add<NonHintsSupportingBaseStatementBuilderDbConnection>(new CustomNonHintsSupportingBaseStatementBuilder(), true);
         }
 
         #region SubClasses
@@ -26,7 +26,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestBaseStatementBuilderCreateCountAll()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
+            var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
 
@@ -44,7 +44,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestBaseStatementBuilderCreateCountAllWithHints()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
+            var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var hints = "WITH (NOLOCK)";
@@ -63,7 +63,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestBaseStatementBuilderCreateCountAllWithQuotedTableSchema()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
+            var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "[dbo].[Table]";
 
@@ -81,7 +81,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestBaseStatementBuilderCreateCountAllWithUnquotedTableSchema()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
+            var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "dbo.Table";
 
@@ -99,7 +99,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnBaseStatementBuilderCreateCountAllIfTheTableIsNull()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
+            var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = (string)null;
 
@@ -113,7 +113,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnBaseStatementBuilderCreateCountAllIfTheTableIsEmpty()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
+            var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "";
 
@@ -127,7 +127,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnBaseStatementBuilderCreateCountAllIfTheTableIsWhitespace()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
+            var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = " ";
 
@@ -141,7 +141,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnBaseStatementBuilderCreateCountAllIIfTheHintsAreNotSupported()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(NonHintsSupportingBaseStatementBuilderDbConnection));
+            var statementBuilder = StatementBuilderMapper.Get<NonHintsSupportingBaseStatementBuilderDbConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
 

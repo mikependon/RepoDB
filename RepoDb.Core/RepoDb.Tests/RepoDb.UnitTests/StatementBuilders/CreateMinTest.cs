@@ -10,8 +10,8 @@ namespace RepoDb.UnitTests.StatementBuilders
         [TestInitialize]
         public void Initialize()
         {
-            StatementBuilderMapper.Add(typeof(BaseStatementBuilderDbConnection), new CustomBaseStatementBuilder(), true);
-            StatementBuilderMapper.Add(typeof(NonHintsSupportingBaseStatementBuilderDbConnection), new CustomNonHintsSupportingBaseStatementBuilder(), true);
+            StatementBuilderMapper.Add<BaseStatementBuilderDbConnection>(new CustomBaseStatementBuilder(), true);
+            StatementBuilderMapper.Add<NonHintsSupportingBaseStatementBuilderDbConnection>(new CustomNonHintsSupportingBaseStatementBuilder(), true);
         }
 
         #region SubClasses
@@ -26,7 +26,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestBaseStatementBuilderCreateMin()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
+            var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var field = new Field("Value");
@@ -46,7 +46,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestBaseStatementBuilderCreateMinWithWhereExpression()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
+            var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var field = new Field("Value");
@@ -70,7 +70,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestBaseStatementBuilderCreateMinWithHints()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
+            var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var field = new Field("Value");
@@ -91,7 +91,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestBaseStatementBuilderCreateMinWithWhereExpressionAndWithHints()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
+            var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var field = new Field("Value");
@@ -117,7 +117,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestBaseStatementBuilderCreateMinWithQuotedTableSchema()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
+            var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "[dbo].[Table]";
             var field = new Field("Value");
@@ -137,7 +137,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestBaseStatementBuilderCreateMinWithUnquotedTableSchema()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
+            var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "dbo.Table";
             var field = new Field("Value");
@@ -157,7 +157,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnBaseStatementBuilderCreateMinIfTheTableIsNull()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
+            var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = (string)null;
             var field = new Field("Value");
@@ -173,7 +173,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnBaseStatementBuilderCreateMinIfTheTableIsEmpty()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
+            var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "";
             var field = new Field("Value");
@@ -189,7 +189,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnBaseStatementBuilderCreateMinIfTheTableIsWhitespace()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
+            var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = " ";
             var field = new Field("Value");
@@ -205,7 +205,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnBaseStatementBuilderCreateMinIfTheFieldIsNull()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
+            var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = " ";
 
@@ -220,7 +220,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnBaseStatementBuilderCreateMinIIfTheHintsAreNotSupported()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(NonHintsSupportingBaseStatementBuilderDbConnection));
+            var statementBuilder = StatementBuilderMapper.Get<NonHintsSupportingBaseStatementBuilderDbConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var field = new Field("Value");

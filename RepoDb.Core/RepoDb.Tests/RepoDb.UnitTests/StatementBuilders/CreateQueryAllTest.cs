@@ -12,8 +12,8 @@ namespace RepoDb.UnitTests.StatementBuilders
         [TestInitialize]
         public void Initialize()
         {
-            StatementBuilderMapper.Add(typeof(BaseStatementBuilderDbConnection), new CustomBaseStatementBuilder(), true);
-            StatementBuilderMapper.Add(typeof(NonHintsSupportingBaseStatementBuilderDbConnection), new CustomNonHintsSupportingBaseStatementBuilder(), true);
+            StatementBuilderMapper.Add<BaseStatementBuilderDbConnection>(new CustomBaseStatementBuilder(), true);
+            StatementBuilderMapper.Add<NonHintsSupportingBaseStatementBuilderDbConnection>(new CustomNonHintsSupportingBaseStatementBuilder(), true);
         }
 
         #region SubClasses
@@ -28,7 +28,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestBaseStatementBuilderCreateQueryAll()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
+            var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -47,7 +47,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestBaseStatementBuilderCreateQueryAllWithQuotedTableSchema()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
+            var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "[dbo].[Table]";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -66,7 +66,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestBaseStatementBuilderCreateQueryAllWithUnquotedTableSchema()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
+            var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "dbo.Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -85,7 +85,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestBaseStatementBuilderCreateQueryAllWithOrderBy()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
+            var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -109,7 +109,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestBaseStatementBuilderCreateQueryAllWithHints()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
+            var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -130,7 +130,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestBaseStatementBuilderCreateQueryAllWithOrderByAndWithHints()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
+            var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -156,7 +156,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnBaseStatementBuilderCreateQueryAllIfTheOrderFieldIsNotCovered()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
+            var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -173,7 +173,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnBaseStatementBuilderCreateQueryAllIfThereAreNoFields()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
+            var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
 
@@ -187,7 +187,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnBaseStatementBuilderCreateQueryAllIfTheTableIsNull()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
+            var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = (string)null;
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -202,7 +202,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnBaseStatementBuilderCreateQueryAllIfTheTableIsEmpty()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
+            var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -217,7 +217,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnBaseStatementBuilderCreateQueryAllIfTheTableIsWhitespace()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
+            var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = " ";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -232,7 +232,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnBaseStatementBuilderCreateQueryAllIfTheHintsAreNotSupported()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(NonHintsSupportingBaseStatementBuilderDbConnection));
+            var statementBuilder = StatementBuilderMapper.Get<NonHintsSupportingBaseStatementBuilderDbConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });

@@ -1785,7 +1785,7 @@ namespace RepoDb
             }
 
             // Get the setting
-            var statementBuilder = StatementBuilderMapper.Get(connection.GetType());
+            var statementBuilder = StatementBuilderMapper.Get(connection);
 
             // Check the presence
             if (statementBuilder == null)

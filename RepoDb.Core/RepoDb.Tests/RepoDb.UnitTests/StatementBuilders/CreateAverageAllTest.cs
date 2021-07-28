@@ -10,9 +10,9 @@ namespace RepoDb.UnitTests.StatementBuilders
         [TestInitialize]
         public void Initialize()
         {
-            StatementBuilderMapper.Add(typeof(BaseStatementBuilderDbConnection), new CustomBaseStatementBuilder(), true);
-            StatementBuilderMapper.Add(typeof(DefinedBaseStatementBuilderDbConnection), new CustomDefinedBaseStatementBuilder(), true);
-            StatementBuilderMapper.Add(typeof(NonHintsSupportingBaseStatementBuilderDbConnection), new CustomNonHintsSupportingBaseStatementBuilder(), true);
+            StatementBuilderMapper.Add<BaseStatementBuilderDbConnection>(new CustomBaseStatementBuilder(), true);
+            StatementBuilderMapper.Add<DefinedBaseStatementBuilderDbConnection>(new CustomDefinedBaseStatementBuilder(), true);
+            StatementBuilderMapper.Add<NonHintsSupportingBaseStatementBuilderDbConnection>(new CustomNonHintsSupportingBaseStatementBuilder(), true);
         }
 
         #region SubClasses
@@ -29,7 +29,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestBaseStatementBuilderCreateAverageAll()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
+            var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var field = new Field("Value");
@@ -49,7 +49,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestBaseStatementBuilderCreateAverageAllWithHints()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
+            var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var field = new Field("Value");
@@ -70,7 +70,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestBaseStatementBuilderCreateAverageAllWithQuotedTableSchema()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
+            var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "[dbo].[Table]";
             var field = new Field("Value");
@@ -90,7 +90,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestBaseStatementBuilderCreateAverageAllWithUnquotedTableSchema()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
+            var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "dbo.Table";
             var field = new Field("Value");
@@ -110,7 +110,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestBaseStatementBuilderCreateAverageAllForOtherAverageableFieldType()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
+            var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var field = new Field("Value", typeof(long));
@@ -130,7 +130,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestBaseStatementBuilderCreateAverageAllForFieldConverter()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(DefinedBaseStatementBuilderDbConnection));
+            var statementBuilder = StatementBuilderMapper.Get<DefinedBaseStatementBuilderDbConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var field = new Field("Value", typeof(int));
@@ -150,7 +150,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void TestBaseStatementBuilderCreateAverageAllForNonAverageableFieldType()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(DefinedBaseStatementBuilderDbConnection));
+            var statementBuilder = StatementBuilderMapper.Get<DefinedBaseStatementBuilderDbConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var field = new Field("Value", typeof(string));
@@ -170,7 +170,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnBaseStatementBuilderCreateAverageAllIfTheTableIsNull()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
+            var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = (string)null;
             var field = new Field("Value");
@@ -186,7 +186,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnBaseStatementBuilderCreateAverageAllIfTheTableIsEmpty()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
+            var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "";
             var field = new Field("Value");
@@ -202,7 +202,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnBaseStatementBuilderCreateAverageAllIfTheTableIsWhitespace()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
+            var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = " ";
             var field = new Field("Value");
@@ -218,7 +218,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnBaseStatementBuilderCreateAverageAllIfTheFieldIsNull()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(BaseStatementBuilderDbConnection));
+            var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = " ";
 
@@ -233,7 +233,7 @@ namespace RepoDb.UnitTests.StatementBuilders
         public void ThrowExceptionOnBaseStatementBuilderCreateAverageAllIfTheHintsAreNotSupported()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(NonHintsSupportingBaseStatementBuilderDbConnection));
+            var statementBuilder = StatementBuilderMapper.Get<NonHintsSupportingBaseStatementBuilderDbConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var field = new Field("Value");

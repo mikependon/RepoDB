@@ -43,8 +43,8 @@ namespace RepoDb
 
             // Map the Statement Builder
             var statementBuilder = new SqlServerStatementBuilder(dbSetting);
-            StatementBuilderMapper.Add(typeof(Microsoft.Data.SqlClient.SqlConnection), statementBuilder, true);
-            StatementBuilderMapper.Add(typeof(System.Data.SqlClient.SqlConnection), statementBuilder, true);
+            StatementBuilderMapper.Add<Microsoft.Data.SqlClient.SqlConnection>(statementBuilder, true);
+            StatementBuilderMapper.Add<System.Data.SqlClient.SqlConnection>(statementBuilder, true);
 
             // Set the flag
             IsInitialized = true;

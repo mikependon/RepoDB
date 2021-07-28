@@ -15,7 +15,7 @@ namespace RepoDb.UnitTests.ClassHandlers
         {
             DbSettingMapper.Add<ClassHandlerConnection>(new CustomDbSetting(), true);
             DbHelperMapper.Add<ClassHandlerConnection>(new CustomDbHelper(), true);
-            StatementBuilderMapper.Add(typeof(ClassHandlerConnection), new CustomStatementBuilder(), true);
+            StatementBuilderMapper.Add<ClassHandlerConnection>(new CustomStatementBuilder(), true);
         }
 
         [TestCleanup]

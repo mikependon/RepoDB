@@ -21,7 +21,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateBatchQueryFirstBatch()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2" });
@@ -54,7 +54,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateBatchQuerySecondBatch()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2" });
@@ -87,7 +87,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateBatchQueryWithHints()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "[dbo].[Table]";
             var fields = Field.From(new[] { "Field1", "Field2" });
@@ -121,7 +121,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateBatchQueryWithQuotedTableSchema()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "[dbo].[Table]";
             var fields = Field.From(new[] { "Field1", "Field2" });
@@ -154,7 +154,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateBatchQueryWithUnquotedTableSchema()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "dbo.Table";
             var fields = Field.From(new[] { "Field1", "Field2" });
@@ -187,7 +187,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateBatchQueryWithWhereExpression()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2" });
@@ -222,7 +222,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateBatchQueryWithWhereExpressionUniqueField()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2" });
@@ -257,7 +257,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void ThrowExceptionOnSqlServerStatementBuilderCreateBatchQueryIfTheTableIsNull()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = (string)null;
             var fields = Field.From(new[] { "Field1", "Field2" });
@@ -276,7 +276,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void ThrowExceptionOnSqlServerStatementBuilderCreateBatchQueryIfTheTableIsEmpty()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "";
             var fields = Field.From(new[] { "Field1", "Field2" });
@@ -295,7 +295,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void ThrowExceptionOnSqlServerStatementBuilderCreateBatchQueryIfTheTableIsWhitespace()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = " ";
             var fields = Field.From(new[] { "Field1", "Field2" });
@@ -314,7 +314,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void ThrowExceptionOnSqlServerStatementBuilderCreateBatchQueryIfTheFieldsAreNull()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var orderBy = OrderField.Parse(new { Field1 = Order.Ascending });
@@ -333,7 +333,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void ThrowExceptionOnSqlServerStatementBuilderCreateBatchQueryIfThereAreNoOrderFields()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2" });
@@ -352,7 +352,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void ThrowExceptionOnSqlServerStatementBuilderCreateBatchQueryIfThePageIsLessThanZero()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2" });
@@ -372,7 +372,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void ThrowExceptionOnSqlServerStatementBuilderCreateBatchQueryIfTheRowsPerBatchIsLessThanOne()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2" });
@@ -395,7 +395,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateCountAll()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
 
@@ -413,7 +413,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateCountAllWithHints()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var hints = "WITH (NOLOCK)";
@@ -432,7 +432,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateCountAllWithQuotedTableSchema()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "[dbo].[Table]";
 
@@ -450,7 +450,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateCountAllWithUnquotedTableSchema()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "dbo.Table";
 
@@ -472,7 +472,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateCount()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
 
@@ -490,7 +490,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateCountWithWhereExpression()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var where = new QueryGroup(new QueryField("Id", 1));
@@ -512,7 +512,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateCountWithHints()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var hints = "WITH (NOLOCK)";
@@ -531,7 +531,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateCountWithWhereExpressionAndWithHints()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var where = new QueryGroup(new QueryField("Id", 1));
@@ -555,7 +555,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateCountWithQuotedTableSchema()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "[dbo].[Table]";
 
@@ -573,7 +573,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateCountWithUnquotedTableSchema()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "dbo.Table";
 
@@ -595,7 +595,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateInsertAllWithIdentity()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -623,7 +623,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateInsertAllWithIdentityAsBigInt()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -651,7 +651,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateInsertAllWithPrimaryAndIdentity()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -680,7 +680,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateInsertAllWithPrimaryAndIdentityAsBigInt()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -709,7 +709,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateInsertAllWithIdentityForThreeBatches()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -747,7 +747,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateInsertAllWithIdentityWithHints()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -776,7 +776,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateInsertAllWithIdentityForThreeBatchesWithHints()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -819,7 +819,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateInsert()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -845,7 +845,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateInsertWithQuotedTableSchema()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "[dbo].[Table]";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -871,7 +871,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateInsertWithUnquotedTableSchema()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "dbo.Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -897,7 +897,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateInsertWithPrimary()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -924,7 +924,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateInsertWithIdentity()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -951,7 +951,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateInsertWithIdentityAsBigInt()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -978,7 +978,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateInsertWithPrimaryAndIdentity()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -1006,7 +1006,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateInsertWithPrimaryAndIdentityAsBigInt()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -1034,7 +1034,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateInsertWithHints()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -1065,7 +1065,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateMergeAll()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -1097,7 +1097,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateMergeAllWithQuotedTableSchema()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "[dbo].[Table]";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -1129,7 +1129,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateMergeAllWithUnquotedTableSchema()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "dbo.Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -1161,7 +1161,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateMergeAllWithCoveredPrimary()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -1195,7 +1195,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateMergeAllWithCoveredPrimaryAsIdentity()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -1230,7 +1230,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateMergeAllWithUncoveredPrimary()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -1264,7 +1264,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateMergeAllWithCoveredIdentity()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -1298,7 +1298,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateMergeAllWithUncoveredIdentity()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -1332,7 +1332,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateMergeAllWithCoveredPrimaryButWithoutQualifiers()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -1365,7 +1365,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateMergeAllWithCoveredPrimaryAndWithCoveredIdentityButWithoutQualifiers()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -1399,7 +1399,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateMergeAllWithIdentityForThreeBatches()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -1451,7 +1451,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateMergeAllWithHints()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -1484,7 +1484,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateMergeAllWithIdentityForThreeBatchesWithHints()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -1537,7 +1537,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void ThrowExceptionOnSqlServerStatementBuilderCreateMergeAllIfThereAreNoFields()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var qualifiers = Field.From("Id");
@@ -1556,7 +1556,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void ThrowExceptionOnSqlServerStatementBuilderCreateMergeAllIfThereAreNoPrimaryAndNoQualifiers()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -1575,7 +1575,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void ThrowExceptionOnSqlServerStatementBuilderCreateMergeAllIfTheQualifiersAreNotPresentAtTheGivenFields()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -1595,7 +1595,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void ThrowExceptionOnSqlServerStatementBuilderCreateMergeAllIfThePrimaryAsQualifierIsNotPresentAtTheGivenFields()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -1615,7 +1615,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void ThrowExceptionOnSqlServerStatementBuilderCreateMergeAllIfTheTableIsNull()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = (string)null;
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -1635,7 +1635,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void ThrowExceptionOnSqlServerStatementBuilderCreateMergeAllIfTheTableIsEmpty()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -1655,7 +1655,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void ThrowExceptionOnSqlServerStatementBuilderCreateMergeAllIfTheTableIsWhitespace()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = " ";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -1675,7 +1675,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void ThrowExceptionOnSqlServerStatementBuilderCreateMergeAllIfThePrimaryIsNotReallyAPrimary()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -1695,7 +1695,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void ThrowExceptionOnSqlServerStatementBuilderCreateMergeAllIfTheIdentityIsNotReallyAnIdentity()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -1720,7 +1720,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateMerge()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -1751,7 +1751,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateMergeWithQuotedTableSchema()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "[dbo].[Table]";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -1782,7 +1782,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateMergeWithUnquotedTableSchema()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "dbo.Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -1813,7 +1813,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateMergeWithCoveredPrimary()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -1846,7 +1846,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateMergeWithCoveredPrimaryAsIdentity()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -1880,7 +1880,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateMergeWithUncoveredPrimary()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -1913,7 +1913,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateMergeWithCoveredIdentity()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -1946,7 +1946,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateMergeWithUncoveredIdentity()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -1979,7 +1979,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateMergeWithCoveredPrimaryButWithoutQualifiers()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -2011,7 +2011,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateMergeWithCoveredPrimaryAndWithCoveredIdentityButWithoutQualifiers()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -2044,7 +2044,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void TestSqlServerStatementBuilderCreateMergeWithHints()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -2076,7 +2076,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void ThrowExceptionOnSqlServerStatementBuilderCreateMergeIfThereAreNoFields()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var qualifiers = Field.From("Id");
@@ -2094,7 +2094,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void ThrowExceptionOnSqlServerStatementBuilderCreateMergeIfThereAreNoPrimaryAndNoQualifiers()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -2112,7 +2112,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void ThrowExceptionOnSqlServerStatementBuilderCreateMergeIfTheQualifiersAreNotPresentAtTheGivenFields()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -2131,7 +2131,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void ThrowExceptionOnSqlServerStatementBuilderCreateMergeIfThePrimaryAsQualifierIsNotPresentAtTheGivenFields()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -2150,7 +2150,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void ThrowExceptionOnSqlServerStatementBuilderCreateMergeIfTheTableIsNull()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = (string)null;
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -2169,7 +2169,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void ThrowExceptionOnSqlServerStatementBuilderCreateMergeIfTheTableIsEmpty()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -2188,7 +2188,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void ThrowExceptionOnSqlServerStatementBuilderCreateMergeIfTheTableIsWhitespace()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = " ";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -2207,7 +2207,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void ThrowExceptionOnSqlServerStatementBuilderCreateMergeIfThePrimaryIsNotReallyAPrimary()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
@@ -2226,7 +2226,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         public void ThrowExceptionOnSqlServerStatementBuilderCreateMergeIfTheIdentityIsNotReallyAnIdentity()
         {
             // Setup
-            var statementBuilder = StatementBuilderMapper.Get(typeof(SqlConnection));
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });

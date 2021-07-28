@@ -14,7 +14,7 @@ namespace RepoDb.UnitTests.Interfaces
         {
             DbSettingMapper.Add<TraceDbConnection>(new CustomDbSetting(), true);
             DbHelperMapper.Add<TraceDbConnection>(new CustomDbHelper(), true);
-            StatementBuilderMapper.Add(typeof(TraceDbConnection), new CustomStatementBuilder(), true);
+            StatementBuilderMapper.Add<TraceDbConnection>(new CustomStatementBuilder(), true);
         }
 
         #region SubClasses

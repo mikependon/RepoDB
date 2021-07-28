@@ -44,7 +44,7 @@ namespace RepoDb
             DbHelperMapper.Add<SQLiteConnection>(new SqLiteDbHelper(sdsDbSetting, new SdsSqLiteDbTypeNameToClientTypeResolver()), true);
 
             // Map the Statement Builder
-            StatementBuilderMapper.Add(typeof(SQLiteConnection), new SqLiteStatementBuilder(sdsDbSetting,
+            StatementBuilderMapper.Add<SQLiteConnection>(new SqLiteStatementBuilder(sdsDbSetting,
                 new SqLiteConvertFieldResolver(),
                 new ClientTypeToAverageableClientTypeResolver()), true);
 
@@ -60,7 +60,7 @@ namespace RepoDb
             DbHelperMapper.Add<SqliteConnection>(new SqLiteDbHelper(mdsDbSetting, new MdsSqLiteDbTypeNameToClientTypeResolver()), true);
 
             // Map the Statement Builder
-            StatementBuilderMapper.Add(typeof(SqliteConnection), new SqLiteStatementBuilder(mdsDbSetting,
+            StatementBuilderMapper.Add<SqliteConnection>(new SqLiteStatementBuilder(mdsDbSetting,
                 new SqLiteConvertFieldResolver(),
                 new ClientTypeToAverageableClientTypeResolver()), true);
 

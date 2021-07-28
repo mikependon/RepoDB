@@ -17,7 +17,7 @@ namespace RepoDb.UnitTests.PropertyHandlers
         {
             DbSettingMapper.Add<PropertyHandlerConnection>(new CustomDbSetting(), true);
             DbHelperMapper.Add<PropertyHandlerConnection>(new CustomDbHelper(), true);
-            StatementBuilderMapper.Add(typeof(PropertyHandlerConnection), new CustomStatementBuilder(), true);
+            StatementBuilderMapper.Add<PropertyHandlerConnection>(new CustomStatementBuilder(), true);
         }
 
         [TestCleanup]

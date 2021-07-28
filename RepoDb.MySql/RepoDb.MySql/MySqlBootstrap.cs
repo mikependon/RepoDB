@@ -39,7 +39,7 @@ namespace RepoDb
             DbHelperMapper.Add<MySqlConnection>(new MySqlDbHelper(), true);
 
             // Map the Statement Builder
-            StatementBuilderMapper.Add(typeof(MySqlConnection), new MySqlStatementBuilder(), true);
+            StatementBuilderMapper.Add<MySqlConnection>(new MySqlStatementBuilder(), true);
 
             // Set the flag
             IsInitialized = true;
