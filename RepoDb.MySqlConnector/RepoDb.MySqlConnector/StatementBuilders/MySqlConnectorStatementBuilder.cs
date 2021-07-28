@@ -17,7 +17,7 @@ namespace RepoDb.StatementBuilders
         /// Creates a new instance of <see cref="MySqlConnectorStatementBuilder"/> object.
         /// </summary>
         public MySqlConnectorStatementBuilder()
-            : this(DbSettingMapper.Get(typeof(MySqlConnection)),
+            : this(DbSettingMapper.Get<MySqlConnection>(),
                   null,
                   null)
         { }

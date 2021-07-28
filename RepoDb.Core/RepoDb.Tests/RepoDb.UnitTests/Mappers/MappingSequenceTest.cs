@@ -28,7 +28,7 @@ namespace RepoDb.UnitTests.Mappers
         public void Initialize()
         {
             Cleanup();
-            DbSettingMapper.Add(typeof(PrivateDbConnection), new CustomDbSetting(), true);
+            DbSettingMapper.Add<PrivateDbConnection>(new CustomDbSetting(), true);
         }
 
         [TestCleanup]

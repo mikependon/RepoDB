@@ -217,7 +217,7 @@ namespace RepoDb.UnitTests.Extensions
         [TestMethod]
         public void TestSqlConnectionExecuteQueryViaDynamicsWithEmptyArrayParameters()
         {
-            DbSettingMapper.Add(typeof(PrivateDbConnection), new CustomDbSetting(), true);
+            DbSettingMapper.Add<PrivateDbConnection>(new CustomDbSetting(), true);
             using (var connection = new PrivateDbConnection())
             {
                 var sql = @"

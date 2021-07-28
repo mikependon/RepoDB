@@ -16,8 +16,8 @@ namespace RepoDb.UnitTests.DbHelpers
         [TestInitialize]
         public void Initialize()
         {
-            DbSettingMapper.Add(typeof(DbHelperDbConnection), new CustomDbSetting(), true);
-            StatementBuilderMapper.Add(typeof(DbHelperDbConnection), new CustomStatementBuilder(), true);
+            DbSettingMapper.Add<DbHelperDbConnection>(new CustomDbSetting(), true);
+            StatementBuilderMapper.Add<DbHelperDbConnection>(new CustomStatementBuilder(), true);
         }
 
         #region SubClasses
@@ -66,7 +66,7 @@ namespace RepoDb.UnitTests.DbHelpers
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            DbHelperMapper.Add(typeof(DbHelperDbConnection), dbHelper.Object, true);
+            DbHelperMapper.Add<DbHelperDbConnection>(dbHelper.Object, true);
 
             // Act
             connection.BatchQuery<DbHelperDataEntity>(0,
@@ -92,7 +92,7 @@ namespace RepoDb.UnitTests.DbHelpers
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            DbHelperMapper.Add(typeof(DbHelperDbConnection), dbHelper.Object, true);
+            DbHelperMapper.Add<DbHelperDbConnection>(dbHelper.Object, true);
 
             // Act
             connection.Insert<DbHelperDataEntity>(new DbHelperDataEntity { Id = 1, Name = "Name" });
@@ -115,7 +115,7 @@ namespace RepoDb.UnitTests.DbHelpers
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            DbHelperMapper.Add(typeof(DbHelperDbConnection), dbHelper.Object, true);
+            DbHelperMapper.Add<DbHelperDbConnection>(dbHelper.Object, true);
 
             // Act
             connection.InsertAll<DbHelperDataEntity>(new[] { new DbHelperDataEntity { Id = 1, Name = "Name" } });
@@ -138,7 +138,7 @@ namespace RepoDb.UnitTests.DbHelpers
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            DbHelperMapper.Add(typeof(DbHelperDbConnection), dbHelper.Object, true);
+            DbHelperMapper.Add<DbHelperDbConnection>(dbHelper.Object, true);
 
             // Act
             connection.Merge<DbHelperDataEntity>(new DbHelperDataEntity { Id = 1, Name = "Name" });
@@ -161,7 +161,7 @@ namespace RepoDb.UnitTests.DbHelpers
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            DbHelperMapper.Add(typeof(DbHelperDbConnection), dbHelper.Object, true);
+            DbHelperMapper.Add<DbHelperDbConnection>(dbHelper.Object, true);
 
             // Act
             connection.MergeAll<DbHelperDataEntity>(new[] { new DbHelperDataEntity { Id = 1, Name = "Name" } });
@@ -184,7 +184,7 @@ namespace RepoDb.UnitTests.DbHelpers
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            DbHelperMapper.Add(typeof(DbHelperDbConnection), dbHelper.Object, true);
+            DbHelperMapper.Add<DbHelperDbConnection>(dbHelper.Object, true);
 
             // Act
             connection.Query<DbHelperDataEntity>((object)null);
@@ -207,7 +207,7 @@ namespace RepoDb.UnitTests.DbHelpers
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            DbHelperMapper.Add(typeof(DbHelperDbConnection), dbHelper.Object, true);
+            DbHelperMapper.Add<DbHelperDbConnection>(dbHelper.Object, true);
 
             // Act
             connection.QueryAll<DbHelperDataEntity>();
@@ -230,7 +230,7 @@ namespace RepoDb.UnitTests.DbHelpers
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            DbHelperMapper.Add(typeof(DbHelperDbConnection), dbHelper.Object, true);
+            DbHelperMapper.Add<DbHelperDbConnection>(dbHelper.Object, true);
 
             // Act
             connection.Update<DbHelperDataEntity>(new DbHelperDataEntity { Id = 1, Name = "Name" });
@@ -253,7 +253,7 @@ namespace RepoDb.UnitTests.DbHelpers
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            DbHelperMapper.Add(typeof(DbHelperDbConnection), dbHelper.Object, true);
+            DbHelperMapper.Add<DbHelperDbConnection>(dbHelper.Object, true);
 
             // Act
             connection.UpdateAll<DbHelperDataEntity>(new[] { new DbHelperDataEntity { Id = 1, Name = "Name" } });
@@ -280,7 +280,7 @@ namespace RepoDb.UnitTests.DbHelpers
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            DbHelperMapper.Add(typeof(DbHelperDbConnection), dbHelper.Object, true);
+            DbHelperMapper.Add<DbHelperDbConnection>(dbHelper.Object, true);
 
             // Act
             connection.BatchQuery(ClassMappedNameCache.Get<DbHelperDataEntity>(),
@@ -307,7 +307,7 @@ namespace RepoDb.UnitTests.DbHelpers
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            DbHelperMapper.Add(typeof(DbHelperDbConnection), dbHelper.Object, true);
+            DbHelperMapper.Add<DbHelperDbConnection>(dbHelper.Object, true);
 
             // Act
             connection.Insert(ClassMappedNameCache.Get<DbHelperDataEntity>(),
@@ -331,7 +331,7 @@ namespace RepoDb.UnitTests.DbHelpers
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            DbHelperMapper.Add(typeof(DbHelperDbConnection), dbHelper.Object, true);
+            DbHelperMapper.Add<DbHelperDbConnection>(dbHelper.Object, true);
 
             // Act
             connection.InsertAll(ClassMappedNameCache.Get<DbHelperDataEntity>(),
@@ -355,7 +355,7 @@ namespace RepoDb.UnitTests.DbHelpers
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            DbHelperMapper.Add(typeof(DbHelperDbConnection), dbHelper.Object, true);
+            DbHelperMapper.Add<DbHelperDbConnection>(dbHelper.Object, true);
 
             // Act
             connection.Merge(ClassMappedNameCache.Get<DbHelperDataEntity>(),
@@ -379,7 +379,7 @@ namespace RepoDb.UnitTests.DbHelpers
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            DbHelperMapper.Add(typeof(DbHelperDbConnection), dbHelper.Object, true);
+            DbHelperMapper.Add<DbHelperDbConnection>(dbHelper.Object, true);
 
             // Act
             connection.MergeAll(ClassMappedNameCache.Get<DbHelperDataEntity>(),
@@ -403,7 +403,7 @@ namespace RepoDb.UnitTests.DbHelpers
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            DbHelperMapper.Add(typeof(DbHelperDbConnection), dbHelper.Object, true);
+            DbHelperMapper.Add<DbHelperDbConnection>(dbHelper.Object, true);
 
             // Act
             connection.Query(ClassMappedNameCache.Get<DbHelperDataEntity>(),
@@ -427,7 +427,7 @@ namespace RepoDb.UnitTests.DbHelpers
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            DbHelperMapper.Add(typeof(DbHelperDbConnection), dbHelper.Object, true);
+            DbHelperMapper.Add<DbHelperDbConnection>(dbHelper.Object, true);
 
             // Act
             connection.QueryAll(ClassMappedNameCache.Get<DbHelperDataEntity>());
@@ -450,7 +450,7 @@ namespace RepoDb.UnitTests.DbHelpers
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            DbHelperMapper.Add(typeof(DbHelperDbConnection), dbHelper.Object, true);
+            DbHelperMapper.Add<DbHelperDbConnection>(dbHelper.Object, true);
 
             // Act
             connection.Update(ClassMappedNameCache.Get<DbHelperDataEntity>(),
@@ -474,7 +474,7 @@ namespace RepoDb.UnitTests.DbHelpers
             // Act
             CommandTextCache.Flush();
             DbFieldCache.Flush();
-            DbHelperMapper.Add(typeof(DbHelperDbConnection), dbHelper.Object, true);
+            DbHelperMapper.Add<DbHelperDbConnection>(dbHelper.Object, true);
 
             // Act
             connection.UpdateAll(ClassMappedNameCache.Get<DbHelperDataEntity>(),

@@ -38,14 +38,13 @@ namespace RepoDb
 
             // Map the DbSetting
             var sdsDbSetting = new SqLiteDbSetting(true);
-            DbSettingMapper.Add(typeof(SQLiteConnection), sdsDbSetting, true);
+            DbSettingMapper.Add<SQLiteConnection>(sdsDbSetting, true);
 
             // Map the DbHelper
-            DbHelperMapper.Add(typeof(SQLiteConnection),
-                new SqLiteDbHelper(sdsDbSetting, new SdsSqLiteDbTypeNameToClientTypeResolver()), true);
+            DbHelperMapper.Add<SQLiteConnection>(new SqLiteDbHelper(sdsDbSetting, new SdsSqLiteDbTypeNameToClientTypeResolver()), true);
 
             // Map the Statement Builder
-            StatementBuilderMapper.Add(typeof(SQLiteConnection), new SqLiteStatementBuilder(sdsDbSetting,
+            StatementBuilderMapper.Add<SQLiteConnection>(new SqLiteStatementBuilder(sdsDbSetting,
                 new SqLiteConvertFieldResolver(),
                 new ClientTypeToAverageableClientTypeResolver()), true);
 
@@ -55,14 +54,13 @@ namespace RepoDb
 
             // Map the DbSetting
             var mdsDbSetting = new SqLiteDbSetting(false);
-            DbSettingMapper.Add(typeof(SqliteConnection), mdsDbSetting, true);
+            DbSettingMapper.Add<SqliteConnection>(mdsDbSetting, true);
 
             // Map the DbHelper
-            DbHelperMapper.Add(typeof(SqliteConnection),
-                new SqLiteDbHelper(mdsDbSetting, new MdsSqLiteDbTypeNameToClientTypeResolver()), true);
+            DbHelperMapper.Add<SqliteConnection>(new SqLiteDbHelper(mdsDbSetting, new MdsSqLiteDbTypeNameToClientTypeResolver()), true);
 
             // Map the Statement Builder
-            StatementBuilderMapper.Add(typeof(SqliteConnection), new SqLiteStatementBuilder(mdsDbSetting,
+            StatementBuilderMapper.Add<SqliteConnection>(new SqLiteStatementBuilder(mdsDbSetting,
                 new SqLiteConvertFieldResolver(),
                 new ClientTypeToAverageableClientTypeResolver()), true);
 

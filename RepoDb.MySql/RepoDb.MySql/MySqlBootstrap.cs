@@ -33,13 +33,13 @@ namespace RepoDb
             }
 
             // Map the DbSetting
-            DbSettingMapper.Add(typeof(MySqlConnection), new MySqlDbSetting(), true);
+            DbSettingMapper.Add<MySqlConnection>(new MySqlDbSetting(), true);
 
             // Map the DbHelper
-            DbHelperMapper.Add(typeof(MySqlConnection), new MySqlDbHelper(), true);
+            DbHelperMapper.Add<MySqlConnection>(new MySqlDbHelper(), true);
 
             // Map the Statement Builder
-            StatementBuilderMapper.Add(typeof(MySqlConnection), new MySqlStatementBuilder(), true);
+            StatementBuilderMapper.Add<MySqlConnection>(new MySqlStatementBuilder(), true);
 
             // Set the flag
             IsInitialized = true;

@@ -12,9 +12,9 @@ namespace RepoDb.UnitTests.Interfaces
         [ClassInitialize]
         public static void ClassInitialize(TestContext context)
         {
-            DbSettingMapper.Add(typeof(TraceDbConnection), new CustomDbSetting(), true);
-            DbHelperMapper.Add(typeof(TraceDbConnection), new CustomDbHelper(), true);
-            StatementBuilderMapper.Add(typeof(TraceDbConnection), new CustomStatementBuilder(), true);
+            DbSettingMapper.Add<TraceDbConnection>(new CustomDbSetting(), true);
+            DbHelperMapper.Add<TraceDbConnection>(new CustomDbHelper(), true);
+            StatementBuilderMapper.Add<TraceDbConnection>(new CustomStatementBuilder(), true);
         }
 
         #region SubClasses

@@ -33,18 +33,18 @@ namespace RepoDb
 
             // Map the DbSetting
             var dbSetting = new SqlServerDbSetting();
-            DbSettingMapper.Add(typeof(Microsoft.Data.SqlClient.SqlConnection), dbSetting, true);
-            DbSettingMapper.Add(typeof(System.Data.SqlClient.SqlConnection), dbSetting, true);
+            DbSettingMapper.Add<Microsoft.Data.SqlClient.SqlConnection>(dbSetting, true);
+            DbSettingMapper.Add<System.Data.SqlClient.SqlConnection>(dbSetting, true);
 
             // Map the DbHelper
             var dbHelper = new SqlServerDbHelper();
-            DbHelperMapper.Add(typeof(Microsoft.Data.SqlClient.SqlConnection), dbHelper, true);
-            DbHelperMapper.Add(typeof(System.Data.SqlClient.SqlConnection), dbHelper, true);
+            DbHelperMapper.Add<Microsoft.Data.SqlClient.SqlConnection>(dbHelper, true);
+            DbHelperMapper.Add<System.Data.SqlClient.SqlConnection>(dbHelper, true);
 
             // Map the Statement Builder
             var statementBuilder = new SqlServerStatementBuilder(dbSetting);
-            StatementBuilderMapper.Add(typeof(Microsoft.Data.SqlClient.SqlConnection), statementBuilder, true);
-            StatementBuilderMapper.Add(typeof(System.Data.SqlClient.SqlConnection), statementBuilder, true);
+            StatementBuilderMapper.Add<Microsoft.Data.SqlClient.SqlConnection>(statementBuilder, true);
+            StatementBuilderMapper.Add<System.Data.SqlClient.SqlConnection>(statementBuilder, true);
 
             // Set the flag
             IsInitialized = true;
