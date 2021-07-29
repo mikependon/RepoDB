@@ -679,27 +679,37 @@ namespace RepoDb
                     .Select(
                         field => field.AsJoinQualifier("S", "T", dbSetting))
                             .Join(" AND "))
-                .CloseParen()
+                .CloseParen();
+
+            if (insertableFields?.Any() == true)
+            {
                 // WHEN NOT MATCHED THEN INSERT VALUES
-                .When()
-                .Not()
-                .Matched()
-                .Then()
-                .Insert()
-                .OpenParen()
-                .FieldsFrom(insertableFields, dbSetting)
-                .CloseParen()
-                .Values()
-                .OpenParen()
-                .AsAliasFieldsFrom(insertableFields, "S", dbSetting)
-                .CloseParen()
+                builder
+                    .When()
+                    .Not()
+                    .Matched()
+                    .Then()
+                    .Insert()
+                    .OpenParen()
+                    .FieldsFrom(insertableFields, dbSetting)
+                    .CloseParen()
+                    .Values()
+                    .OpenParen()
+                    .AsAliasFieldsFrom(insertableFields, "S", dbSetting)
+                    .CloseParen();
+            }
+
+            if (updateableFields?.Any() == true)
+            {
                 // WHEN MATCHED THEN UPDATE SET
-                .When()
-                .Matched()
-                .Then()
-                .Update()
-                .Set()
-                .FieldsAndAliasFieldsFrom(updateableFields, "T", "S", dbSetting);
+                builder
+                    .When()
+                    .Matched()
+                    .Then()
+                    .Update()
+                    .Set()
+                    .FieldsAndAliasFieldsFrom(updateableFields, "T", "S", dbSetting);
+            }
 
             // Set the output
             if (isReturnIdentity == true && identityField != null)
