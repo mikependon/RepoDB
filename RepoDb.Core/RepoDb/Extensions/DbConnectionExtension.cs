@@ -2652,7 +2652,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static IEnumerable<Field> GetQualifiedFields<TEntity>(IEnumerable<Field> fields)
             where TEntity : class =>
-            fields ?? (typeof(TEntity).IsDictionaryStringObject() == false ? FieldCache.Get<TEntity>() : null);
+            (fields ?? (typeof(TEntity).IsDictionaryStringObject() == false ? FieldCache.Get<TEntity>() : null)).AsList();
 
         /// <summary>
         ///
@@ -2664,7 +2664,7 @@ namespace RepoDb
         internal static IEnumerable<Field> GetQualifiedFields<TEntity>(IEnumerable<Field> fields,
             TEntity entity)
             where TEntity : class =>
-            fields ?? GetQualifiedFields(entity);
+            (fields ?? GetQualifiedFields(entity)).AsList();
 
         /// <summary>
         ///
@@ -2849,7 +2849,7 @@ namespace RepoDb
                 var propertiesToSkip = commandArrayParametersText?.CommandArrayParameters?
                     .Select(cap => cap.ParameterName)
                     .ToHashSet(StringComparer.OrdinalIgnoreCase);
-                
+
                 command.CreateParameters(param,
                     propertiesToSkip,
                     entityType,
