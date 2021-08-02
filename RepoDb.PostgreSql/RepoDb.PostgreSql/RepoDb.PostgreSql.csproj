@@ -14,7 +14,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Npgsql" Version="5.0.5" />
+    <PackageReference Include="Npgsql" Version="5.0.7" />
     <PackageReference Include="RepoDb" Version="1.12.7" />
   </ItemGroup>
 
