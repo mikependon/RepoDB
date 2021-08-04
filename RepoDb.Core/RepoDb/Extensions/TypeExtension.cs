@@ -215,7 +215,7 @@ namespace RepoDb.Extensions
         /// <param name="type">The type of the data entity.</param>
         /// <returns>The generated hashcode.</returns>
         internal static int GenerateHashCode(Type type) =>
-            type.GetUnderlyingType().GetHashCode();
+            type.GetHashCode();
 
         /// <summary>
         /// Generates a hashcode for caching.
@@ -225,7 +225,7 @@ namespace RepoDb.Extensions
         /// <returns>The generated hashcode.</returns>
         internal static int GenerateHashCode(Type entityType,
             PropertyInfo propertyInfo) =>
-            entityType.GetUnderlyingType().GetHashCode() + propertyInfo.GenerateCustomizedHashCode(entityType);
+            entityType.GetHashCode() + propertyInfo.GenerateCustomizedHashCode(entityType);
 
         /// <summary>
         /// A helper method to return the instance of <see cref="PropertyInfo"/> object based on name.

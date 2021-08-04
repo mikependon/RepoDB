@@ -2272,6 +2272,8 @@ namespace RepoDb.IntegrationTests
         public void TestEnumGetFromStringWithPropertyHandler()
         {
             EnsureCustomedMappingEnumPropertyHandler<CustomedStringEnum>(customedStringEnumHandler);
+            EnsureCustomedMappingEnumPropertyHandler<CustomedStringEnum?>(customedStringEnumHandler);
+            
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 var enumValue = connection.ExecuteQuery<CustomedStringEnum>("select 'Special-B'").First();
@@ -2308,6 +2310,8 @@ namespace RepoDb.IntegrationTests
         public void TestEnumGetFromDecimalWithPropertyHandler()
         {
             EnsureCustomedMappingEnumPropertyHandler<CustomedDecimalEnum>(customedDecimalEnumHandler);
+            EnsureCustomedMappingEnumPropertyHandler<CustomedDecimalEnum?>(customedDecimalEnumHandler);
+            
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 var enumValue = connection.ExecuteQuery<CustomedDecimalEnum>("select convert(decimal(8,3), 6.2)").First();
