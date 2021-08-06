@@ -51,6 +51,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Setup
             {
                 connection.Truncate<CompleteTable>();
                 connection.Truncate<NonIdentityCompleteTable>();
+                connection.Truncate<EnumTable>();
             }
         }
 
@@ -81,6 +82,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Setup
         {
             CreateCompleteTable();
             CreateNonIdentityCompleteTable();
+            CreateEnumTable();
         }
 
         private static void CreateCompleteTable()
@@ -418,6 +420,32 @@ namespace RepoDb.PostgreSql.IntegrationTests.Setup
                 var tables = Helper.CreateNonIdentityCompleteTables(count);
                 connection.InsertAll(tables);
                 return tables;
+            }
+        }
+
+        #endregion
+
+        #region EnumTable
+
+        private static void CreateEnumTable()
+        {
+            using (var connection = new NpgsqlConnection(ConnectionString))
+            {
+                connection.ExecuteNonQuery(@"
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'hand') THEN
+        CREATE TYPE hand AS ENUM ('Unidentified', 'Left', 'Right');
+    END IF;
+END
+$$;
+
+CREATE TABLE IF NOT EXISTS public.""EnumTable"" (
+    ""Id"" bigint primary key,
+    ""ColumnEnum"" hand not null
+);
+");
+
             }
         }
 
