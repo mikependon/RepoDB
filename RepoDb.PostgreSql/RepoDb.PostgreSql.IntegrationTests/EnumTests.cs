@@ -60,6 +60,22 @@ namespace RepoDb.PostgreSql.IntegrationTests
             public Hands? ColumnText { get; set; }
         }
 
+        [Map("EnumTable")]
+        public class PersonWithEnum
+        {
+            public System.Int64 Id { get; set; }
+            [NpgsqlTypeMap(NpgsqlTypes.NpgsqlDbType.Unknown)]
+            public Hands ColumnEnum { get; set; }
+        }
+
+        [Map("EnumTable")]
+        public class PersonWithNullableEnum
+        {
+            public System.Int64 Id { get; set; }
+            [NpgsqlTypeMap(NpgsqlTypes.NpgsqlDbType.Unknown)]
+            public Hands? ColumnEnum { get; set; }
+        }
+
         #endregion
 
         #region Helpers
@@ -102,6 +118,34 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 {
                     Id = i,
                     ColumnText = hand
+                };
+            }
+        }
+
+        public IEnumerable<PersonWithEnum> GetPersonWithEnum(int count)
+        {
+            var random = new Random();
+            for (var i = 0; i < count; i++)
+            {
+                var hand = random.Next(100) > 50 ? Hands.Right : Hands.Left;
+                yield return new PersonWithEnum
+                {
+                    Id = i,
+                    ColumnEnum = hand
+                };
+            }
+        }
+
+        public IEnumerable<PersonWithNullableEnum> GetPersonWithNullableEnum(int count)
+        {
+            var random = new Random();
+            for (var i = 0; i < count; i++)
+            {
+                var hand = random.Next(100) > 50 ? Hands.Right : Hands.Left;
+                yield return new PersonWithNullableEnum
+                {
+                    Id = i,
+                    ColumnEnum = hand
                 };
             }
         }
@@ -273,5 +317,148 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 });
             }
         }
+
+        [TestMethod]
+        public void TestInsertAndQueryEnumAsEnum()
+        {
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var person = GetPersonWithEnum(1).First();
+
+                // Act
+                connection.Insert(person);
+
+                // Query
+                var queryResult = connection.Query<PersonWithEnum>(person.Id).First();
+
+                // Assert
+                Assert.AreEqual(person.ColumnEnum, queryResult.ColumnEnum);
+            }
+        }
+
+        [TestMethod]
+        public void TestInsertAndQueryEnumAsEnumAsBatch()
+        {
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var people = GetPersonWithEnum(10).AsList();
+
+                // Act
+                connection.InsertAll(people);
+
+                // Query
+                var queryResult = connection.QueryAll<PersonWithEnum>().AsList();
+
+                // Assert
+                people.ForEach(p =>
+                {
+                    var item = queryResult.First(e => e.Id == p.Id);
+                    Assert.AreEqual(p.ColumnEnum, item.ColumnEnum);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestInsertAndQueryEnumAsEnumByEnum()
+        {
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var person = GetPersonWithEnum(1).First();
+
+                // Act
+                connection.Insert(person);
+
+                // Query
+                var queryResult = connection.Query<PersonWithEnum>(where: p => p.ColumnEnum == person.ColumnEnum).First();
+
+                // Assert
+                Assert.AreEqual(person.ColumnEnum, queryResult.ColumnEnum);
+            }
+        }
+
+        [TestMethod]
+        public void TestInsertAndQueryEnumAsNullableEnumAsNull()
+        {
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var person = GetPersonWithNullableEnum(1).First();
+                // person.ColumnEnum = null;
+
+                // Act
+                connection.Insert(person);
+
+                // Query
+                var queryResult = connection.Query<PersonWithNullableEnum>(person.Id).First();
+
+                // Assert
+                Assert.IsNull(queryResult.ColumnEnum);
+            }
+        }
+
+        [TestMethod]
+        public void TestInsertAndQueryEnumAsNullableEnum()
+        {
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var person = GetPersonWithNullableEnum(1).First();
+
+                // Act
+                connection.Insert(person);
+
+                // Query
+                var queryResult = connection.Query<PersonWithNullableEnum>(person.Id).First();
+
+                // Assert
+                Assert.AreEqual(person.ColumnEnum, queryResult.ColumnEnum);
+            }
+        }
+
+        [TestMethod]
+        public void TestInsertAndQueryEnumAsNullableEnumAsBatch()
+        {
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var people = GetPersonWithNullableEnum(10).AsList();
+
+                // Act
+                connection.InsertAll(people);
+
+                // Query
+                var queryResult = connection.QueryAll<PersonWithNullableEnum>().AsList();
+
+                // Assert
+                people.ForEach(p =>
+                {
+                    var item = queryResult.First(e => e.Id == p.Id);
+                    Assert.AreEqual(p.ColumnEnum, item.ColumnEnum);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestInsertAndQueryEnumAsNullableEnumByEnum()
+        {
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var person = GetPersonWithNullableEnum(1).First();
+
+                // Act
+                connection.Insert(person);
+
+                // Query
+                var queryResult = connection.Query<PersonWithNullableEnum>(where: p => p.ColumnEnum == person.ColumnEnum).First();
+
+                // Assert
+                Assert.AreEqual(person.ColumnEnum, queryResult.ColumnEnum);
+            }
+        }
+
     }
 }
