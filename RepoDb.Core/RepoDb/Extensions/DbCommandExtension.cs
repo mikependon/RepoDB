@@ -253,7 +253,9 @@ namespace RepoDb.Extensions
             // Enum
             if (valueType?.IsEnum == true && dbField != null)
             {
-                value = ConvertEnumValueToType(value, dbField.Type);
+                var valueTypeDbType = valueType.GetDbType();
+                var enumToType = (valueTypeDbType != null) ? new DbTypeToClientTypeResolver().Resolve(valueTypeDbType.Value) : dbField.Type;
+                value = ConvertEnumValueToType(value, enumToType);
             }
 
             /*
