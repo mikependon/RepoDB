@@ -111,6 +111,7 @@ namespace RepoDb.IntegrationTests.Setup
             CreateGetIdentityTableByIdStoredProcedure();
             CreateMultiplyStoredProcedure();
             CreateMultiplyWithOutputStoredProcedure();
+            CreateGetServerInfoWithOutputStoredProcedure();
             CreateGetDatabaseDateTimeStoredProcedure();
             CreateIdentityTableTypeStoredProcedure();
         }
@@ -504,6 +505,36 @@ namespace RepoDb.IntegrationTests.Setup
                         BEGIN
                             SET @Output = (@Value1 * @Value2);
                             SELECT @Output;
+                        END";
+                    connection.ExecuteNonQuery(commandText);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Create a stored procedure that is used for multiplication.
+        /// </summary>
+        private static void CreateGetServerInfoWithOutputStoredProcedure()
+        {
+            using (var connection = new SqlConnection(ConnectionStringForRepoDb).EnsureOpen())
+            {
+                var exists = connection.ExecuteScalar("SELECT 1 FROM [sys].[objects] WHERE type = 'P' AND name = 'sp_get_server_info_with_output';");
+                if (exists == null)
+                {
+                    var commandText = @"CREATE PROCEDURE [dbo].[sp_get_server_info_with_output]
+                        (
+                            @UserId INT OUTPUT,
+                            @ServerName NVARCHAR(256) OUTPUT,
+                            @DateTimeUtc DATETIME2(7) OUTPUT
+                        )
+	                    AS
+                        BEGIN
+                            SET @UserId = 1000;
+                            SET @ServerName = 'ServerName';
+                            SET @DateTimeUtc = '1970-01-01 23:59:59.999';
+                            SELECT @UserId AS [UserID]
+                                , @ServerName AS [ServerName]
+                                , @DateTimeUtc AS [DateTimeUtc];
                         END";
                     connection.ExecuteNonQuery(commandText);
                 }

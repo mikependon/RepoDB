@@ -299,6 +299,34 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestSqlConnectionExecuteNonQueryByExecutingAStoredProcedureWithMultipleOutputParameters()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Setup
+                var userId = new DirectionalQueryField("UserId", typeof(int), ParameterDirection.Output);
+                var serverName = new DirectionalQueryField("ServerName", typeof(string), 256, ParameterDirection.Output);
+                var dateTimeUtc = new DirectionalQueryField("DateTimeUtc", typeof(DateTime), ParameterDirection.Output);
+                var param = new[]
+                {
+                    userId,
+                    serverName,
+                    dateTimeUtc
+                };
+
+                // Act
+                var result = connection.ExecuteNonQuery("[dbo].[sp_get_server_info_with_output]",
+                    param: param,
+                    commandType: CommandType.StoredProcedure);
+
+                // Assert
+                Assert.AreEqual(1000, userId.GetValue<int>());
+                Assert.AreEqual("ServerName", serverName.GetValue<string>());
+                Assert.AreEqual(DateTime.Parse("1970-01-01 23:59:59.999"), dateTimeUtc.GetValue<DateTime>());
+            }
+        }
+
         [TestMethod, ExpectedException(typeof(SqlException))]
         public void ThrowExceptionOnTestSqlConnectionExecuteNonQueryIfTheParametersAreNotDefined()
         {
