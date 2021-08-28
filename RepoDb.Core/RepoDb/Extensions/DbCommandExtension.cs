@@ -222,6 +222,7 @@ namespace RepoDb.Extensions
         /// <param name="command">The command object to be used.</param>
         /// <param name="name">Entity property's name.</param>
         /// <param name="value">Entity property's value, maybe null.</param>
+        /// <param name="size">The size of the parameter.</param>
         /// <param name="classProperty">
         /// The entity's class property information. <br />
         /// If the parameter is a dictionary, it will be null, otherwise it will not be null.
@@ -236,6 +237,7 @@ namespace RepoDb.Extensions
         private static IDbDataParameter CreateParameter(IDbCommand command,
             string name,
             object value,
+            int? size,
             ClassProperty classProperty,
             DbField dbField,
             ParameterDirection? parameterDirection,
@@ -314,10 +316,21 @@ namespace RepoDb.Extensions
                 dbType = Converter.EnumDefaultDatabaseType;                         // use Converter.EnumDefaultDatabaseType
             }
 
+            // Create the parameter
+            var parameter = command.CreateParameter(name, value, dbType, parameterDirection);
+
+            // Set the size
+            var sizeValue = size.HasValue ? size.Value :
+                 dbField != null && dbField.Size.HasValue ? dbField.Size.Value : default;
+            if (sizeValue > 0)
+            {
+                parameter.Size = sizeValue;
+            }
+
             /*
              * Return the parameter
              */
-            return command.CreateParameter(name, value, dbType, parameterDirection);
+            return parameter;
         }
 
         /// <summary>
@@ -355,7 +368,15 @@ namespace RepoDb.Extensions
                 var name = classProperty.GetMappedName();
                 var dbField = GetDbField(name, dbFields);
                 var value = classProperty.PropertyInfo.GetValue(param);
-                command.Parameters.Add(CreateParameter(command, name, value, classProperty, dbField, null, null));
+                var parameter = CreateParameter(command,
+                    name,
+                    value,
+                    dbField?.Size,
+                    classProperty,
+                    dbField,
+                    null,
+                    null);
+                command.Parameters.Add(parameter);
             }
         }
 
@@ -388,7 +409,15 @@ namespace RepoDb.Extensions
                     dbField ??= GetDbField(commandParameter.Field.Name, dbFields);
                     classProperty = PropertyCache.Get(commandParameter.MappedToType, commandParameter.Field.Name);
                 }
-                command.Parameters.Add(CreateParameter(command, kvp.Key, value, classProperty, dbField, null, null));
+                var parameter = CreateParameter(command,
+                    kvp.Key,
+                    value,
+                    dbField?.Size,
+                    classProperty,
+                    dbField,
+                    null,
+                    null);
+                command.Parameters.Add(parameter);
             }
         }
 
@@ -487,8 +516,18 @@ namespace RepoDb.Extensions
             var dbField = GetDbField(fieldName, dbFields);
             var value = queryField.Parameter.Value;
             var classProperty = PropertyCache.Get(entityType, queryField.Field);
-            var (direction, fallbackType) = queryField is DirectionalQueryField n ? ((ParameterDirection?)n.Direction, n.Type) : default;
-            var parameter = CreateParameter(command, queryField.Parameter.Name, value, classProperty, dbField, direction, fallbackType);
+            var (direction, fallbackType, size) = queryField is DirectionalQueryField n ?
+                ((ParameterDirection?)n.Direction, n.Type, n.Size ?? dbField?.Size) : default;
+
+            // Create the parameter
+            var parameter = CreateParameter(command,
+                queryField.Parameter.Name,
+                value,
+                size,
+                classProperty,
+                dbField,
+                direction,
+                fallbackType);
             command.Parameters.Add(parameter);
 
             // Set the parameter
@@ -513,7 +552,15 @@ namespace RepoDb.Extensions
                 for (var i = 0; i < values.Count; i++)
                 {
                     var name = string.Concat(queryField.Parameter.Name, "_In_", i.ToString());
-                    command.Parameters.Add(CreateParameter(command, name, values[i], null, dbField, null, null));
+                    var parameter = CreateParameter(command,
+                        name,
+                        values[i],
+                        dbField?.Size,
+                        null,
+                        dbField,
+                        null,
+                        null);
+                    command.Parameters.Add(parameter);
                 }
             }
         }
@@ -533,8 +580,26 @@ namespace RepoDb.Extensions
                         .AsList();
             if (values?.Count == 2)
             {
-                command.Parameters.Add(CreateParameter(command, string.Concat(queryField.Parameter.Name, "_Left"), values[0], null, dbField, null, null));
-                command.Parameters.Add(CreateParameter(command, string.Concat(queryField.Parameter.Name, "_Right"), values[1], null, dbField, null, null));
+                // Left
+                var leftParameter = CreateParameter(command,
+                    string.Concat(queryField.Parameter.Name, "_Left"),
+                    values[0],
+                    dbField?.Size,
+                    null, dbField,
+                    null,
+                    null);
+                command.Parameters.Add(leftParameter);
+
+                // Right
+                var rightParameter = CreateParameter(command,
+                    string.Concat(queryField.Parameter.Name, "_Right"),
+                    values[1],
+                    dbField?.Size,
+                    null,
+                    dbField,
+                    null,
+                    null);
+                command.Parameters.Add(rightParameter);
             }
             else
             {

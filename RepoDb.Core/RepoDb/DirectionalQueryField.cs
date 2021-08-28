@@ -26,6 +26,7 @@ namespace RepoDb
             : this(fieldName,
                   Operation.Equal,
                   null,
+                  null,
                   direction)
         {
             Type = type;
@@ -43,6 +44,7 @@ namespace RepoDb
             : this(fieldName,
                   Operation.Equal,
                   value,
+                  null,
                   direction)
         { }
 
@@ -60,6 +62,7 @@ namespace RepoDb
             : this(fieldName,
                   operation,
                   value,
+                  null,
                   false,
                   direction)
         { }
@@ -76,6 +79,7 @@ namespace RepoDb
             : this(field,
                   Operation.Equal,
                   value,
+                  null,
                   false,
                   direction)
         { }
@@ -94,6 +98,106 @@ namespace RepoDb
             : this(field,
                   operation,
                   value,
+                  null,
+                  false,
+                  direction)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="DirectionalQueryField"/> object.
+        /// </summary>
+        /// <param name="fieldName">The name of the field for the query expression.</param>
+        /// <param name="type">The type of the parameter object.</param>
+        /// <param name="size">The sizeof the parameter value.</param>
+        /// <param name="direction">The direction to be used for the parameter object.</param>
+        public DirectionalQueryField(string fieldName,
+            Type type,
+            int? size,
+            ParameterDirection direction)
+            : this(fieldName,
+                  Operation.Equal,
+                  null,
+                  size,
+                  direction)
+        {
+            Type = type;
+        }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="DirectionalQueryField"/> object.
+        /// </summary>
+        /// <param name="fieldName">The name of the field for the query expression.</param>
+        /// <param name="value">The value to be used for the query expression.</param>
+        /// <param name="size">The sizeof the parameter value.</param>
+        /// <param name="direction">The direction to be used for the parameter object.</param>
+        public DirectionalQueryField(string fieldName,
+            object value,
+            int? size,
+            ParameterDirection direction)
+            : this(fieldName,
+                  Operation.Equal,
+                  value,
+                  size,
+                  direction)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="DirectionalQueryField"/> object.
+        /// </summary>
+        /// <param name="fieldName">The name of the field for the query expression.</param>
+        /// <param name="operation">The operation to be used for the query expression.</param>
+        /// <param name="value">The value to be used for the query expression.</param>
+        /// <param name="size">The sizeof the parameter value.</param>
+        /// <param name="direction">The direction to be used for the parameter object.</param>
+        public DirectionalQueryField(string fieldName,
+            Operation operation,
+            object value,
+            int? size,
+            ParameterDirection direction)
+            : this(fieldName,
+                  operation,
+                  value,
+                  size,
+                  false,
+                  direction)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="DirectionalQueryField"/> object.
+        /// </summary>
+        /// <param name="field">The actual field for the query expression.</param>
+        /// <param name="value">The value to be used for the query expression.</param>
+        /// <param name="size">The sizeof the parameter value.</param>
+        /// <param name="direction">The direction to be used for the parameter object.</param>
+        public DirectionalQueryField(Field field,
+            object value,
+            int? size,
+            ParameterDirection direction)
+            : this(field,
+                  Operation.Equal,
+                  value,
+                  size,
+                  false,
+                  direction)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="DirectionalQueryField"/> object.
+        /// </summary>
+        /// <param name="field">The actual field for the query expression.</param>
+        /// <param name="operation">The operation to be used for the query expression.</param>
+        /// <param name="value">The value to be used for the query expression.</param>
+        /// <param name="size">The sizeof the parameter value.</param>
+        /// <param name="direction">The direction to be used for the parameter object.</param>
+        public DirectionalQueryField(Field field,
+            Operation operation,
+            object value,
+            int? size,
+            ParameterDirection direction)
+            : this(field,
+                  operation,
+                  value,
+                  size,
                   false,
                   direction)
         { }
@@ -104,16 +208,19 @@ namespace RepoDb
         /// <param name="fieldName">The name of the field for the query expression.</param>
         /// <param name="operation">The operation to be used for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
+        /// <param name="size">The sizeof the parameter value.</param>
         /// <param name="appendUnderscore">The value to identify whether the underscore prefix will be appended to the parameter name.</param>
         /// <param name="direction">The direction to be used for the parameter object.</param>
         internal DirectionalQueryField(string fieldName,
             Operation operation,
             object value,
+            int? size,
             bool appendUnderscore,
             ParameterDirection direction)
             : this(new Field(fieldName),
                   operation,
                   value,
+                  size,
                   appendUnderscore,
                   direction)
         { }
@@ -124,15 +231,18 @@ namespace RepoDb
         /// <param name="field">The actual field for the query expression.</param>
         /// <param name="operation">The operation to be used for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
+        /// <param name="size">The sizeof the parameter value.</param>
         /// <param name="appendUnderscore">The value to identify whether the underscore prefix will be appended to the parameter name.</param>
         /// <param name="direction">The direction to be used for the parameter object.</param>
         internal DirectionalQueryField(Field field,
             Operation operation,
             object value,
+            int? size,
             bool appendUnderscore,
             ParameterDirection direction)
             : base(field, operation, value, appendUnderscore)
         {
+            Size = size;
             Direction = direction;
         }
 
@@ -146,9 +256,14 @@ namespace RepoDb
         public ParameterDirection Direction { get; }
 
         /// <summary>
+        /// Gets the size of the parameter currently in used.
+        /// </summary>
+        public int? Size { get; }
+
+        /// <summary>
         /// Gets the type of the parameter.
         /// </summary>
-        internal Type Type { get; }
+        public Type Type { get; }
 
         #endregion
 
@@ -185,7 +300,7 @@ namespace RepoDb
         public override bool Equals(object obj)
         {
             if (obj is null) return false;
-            
+
             return obj.GetHashCode() == GetHashCode();
         }
 
@@ -197,7 +312,7 @@ namespace RepoDb
         public bool Equals(DirectionalQueryField other)
         {
             if (other is null) return false;
-            
+
             return other.GetHashCode() == GetHashCode();
         }
 
