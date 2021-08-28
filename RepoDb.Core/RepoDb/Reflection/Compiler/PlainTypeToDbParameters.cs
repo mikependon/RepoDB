@@ -3,7 +3,6 @@ using RepoDb.Extensions;
 using RepoDb.Resolvers;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
@@ -28,14 +27,12 @@ namespace RepoDb.Reflection
             var entityExpression = ConvertExpressionToTypeExpression(entityParameterExpression, paramType);
             var methodInfo = GetDbCommandCreateParameterMethod();
             var callExpressions = new List<Expression>();
-            var paramProperties = PropertyCache.Get(paramType);
-            var entityProperties = PropertyCache.Get(entityType);
 
             // Iterate
-            foreach (var paramProperty in paramProperties)
+            foreach (var paramProperty in PropertyCache.Get(paramType))
             {
-                // Ensure it matching any params
-                var entityProperty = entityProperties?.FirstOrDefault(e =>
+                // Ensure it matches to atleast one param
+                var entityProperty = PropertyCache.Get(entityType)?.FirstOrDefault(e =>
                     string.Equals(e.GetMappedName(), paramProperty.GetMappedName(), StringComparison.OrdinalIgnoreCase) ||
                     string.Equals(e.PropertyInfo.Name, paramProperty.PropertyInfo.Name, StringComparison.OrdinalIgnoreCase));
 
@@ -47,9 +44,11 @@ namespace RepoDb.Reflection
                 var valueType = targetProperty.PropertyInfo.PropertyType.GetUnderlyingType();
 
                 // Enum
-                if (targetProperty.PropertyInfo.PropertyType.IsEnum && dbField != null)
+                if (valueType.IsEnum && dbField != null)
                 {
-                    valueExpression = ConvertEnumExpressionToTypeExpression(valueExpression, dbField.Type);
+                    var valueTypeDbType = valueType.GetDbType();
+                    var enumToType = (valueTypeDbType != null) ? new DbTypeToClientTypeResolver().Resolve(valueTypeDbType.Value) : dbField.Type;
+                    valueExpression = ConvertEnumExpressionToTypeExpression(valueExpression, enumToType);
                 }
 
                 // PropertyHandler
@@ -67,7 +66,7 @@ namespace RepoDb.Reflection
                     valueExpression = ConvertExpressionWithAutomaticConversion(valueExpression, valueType);
                 }
 
-                // DbType
+                // DbType (retry since the type might had changed after all)
                 var dbType =
                     (paramProperty == null ? null : TypeMapCache.Get(paramProperty.GetDeclaringType(), paramProperty.PropertyInfo)) ??
                     (entityProperty == null ? null : TypeMapCache.Get(entityProperty.GetDeclaringType(), entityProperty.PropertyInfo));
@@ -79,7 +78,7 @@ namespace RepoDb.Reflection
                         resolver.Resolve(valueType) ??          // type level, primitive mapping
                         (valueType.IsEnum ?
                             (dbField?.Type != null ? resolver.Resolve(dbField.Type) : null) ?? // use the DBField.Type
-                                Converter.EnumDefaultDatabaseType :  null);  // use Converter.EnumDefaultDatabaseType
+                                Converter.EnumDefaultDatabaseType : null);  // use Converter.EnumDefaultDatabaseType
                 }
 
                 var dbTypeExpression = dbType == null ? GetNullableTypeExpression(StaticType.DbType) :

@@ -1105,12 +1105,11 @@ namespace RepoDb.Reflection
                 // Enumerations
                 if (targetTypeUnderlyingType.IsEnum)
                 {
-                    // if has PropertyHandler and parameter's type match, skip auto conversion.
+                    // If it has a PropertyHandler and the parameter type is matching, then, skip the auto conversion.
                     var autoConvertEnum = true;
                     if (handlerInstance != null)
                     {
-                        var getMethod = GetPropertyHandlerGetMethod(handlerInstance);
-                        var getParameter = GetPropertyHandlerGetParameter(getMethod);
+                        var getParameter = GetPropertyHandlerGetParameter(GetPropertyHandlerGetMethod(handlerInstance));
                         autoConvertEnum = !(getParameter.ParameterType.GetUnderlyingType() == readerField.Type);
                     }
                     if (autoConvertEnum)
@@ -1423,7 +1422,7 @@ namespace RepoDb.Reflection
             {
                 try
                 {
-                    var dbType = classProperty.GetDbType();
+                    var dbType = classProperty.GetDbType() ?? classProperty.PropertyInfo.PropertyType.GetUnderlyingType().GetDbType();
                     var toType = dbType.HasValue ? new DbTypeToClientTypeResolver().Resolve(dbType.Value) : targetType?.GetUnderlyingType();
                     expression = ConvertEnumExpressionToTypeExpression(expression, toType);
                 }
