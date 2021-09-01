@@ -1738,7 +1738,7 @@ namespace RepoDb
             // Check the presence
             if (setting == null)
             {
-                throw new MissingMappingException($"There is no database setting mapping found for '{connection.GetType().FullName}'. Make sure to install the correct extension library and call the bootstrapper method. You can also visit the library's installation page (http://repodb.net/tutorial/installation).");
+                ThrowMissingMappingException("setting", connection.GetType());
             }
 
             // Return the validator
@@ -1764,7 +1764,7 @@ namespace RepoDb
             // Check the presence
             if (helper == null)
             {
-                throw new MissingMappingException($"There is no database helper mapping found for '{connection.GetType().FullName}'. Make sure to install the correct extension library and call the bootstrapper method. You can also visit the library's installation page (http://repodb.net/tutorial/installation).");
+                ThrowMissingMappingException("helper", connection.GetType());
             }
 
             // Return the validator
@@ -1790,11 +1790,22 @@ namespace RepoDb
             // Check the presence
             if (statementBuilder == null)
             {
-                throw new MissingMappingException($"There is no database statement builder mapping found for '{connection.GetType().FullName}'. Make sure to install the correct extension library and call the bootstrapper method. You can also visit the library's installation page (http://repodb.net/tutorial/installation).");
+                ThrowMissingMappingException("statement builder", connection.GetType());
             }
 
             // Return the validator
             return statementBuilder;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="property"></param>
+        /// <param name="connectionType"></param>
+        private static void ThrowMissingMappingException(string property,
+            Type connectionType)
+        {
+            throw new MissingMappingException($"There is no database {property} mapping found for '{connectionType.FullName}'. Make sure to install the correct extension library and call the bootstrapper method. You can also visit the library's installation page (https://repodb.net/tutorial/installation).");
         }
 
         #endregion
