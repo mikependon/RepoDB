@@ -97,13 +97,15 @@ namespace RepoDb.Extensions
         /// <param name="field">The instance of the <see cref="Field"/> object.</param>
         /// <param name="leftAlias">The left alias.</param>
         /// <param name="rightAlias">The right alias.</param>
+        /// <param name="considerNulls">The value that defines whether the null values are being considered.</param>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The currently in used database setting.</returns>
         public static string AsJoinQualifier(this Field field,
             string leftAlias,
             string rightAlias,
+            bool considerNulls,
             IDbSetting dbSetting) =>
-            field.Name.AsJoinQualifier(leftAlias, rightAlias, dbSetting);
+            field.Name.AsJoinQualifier(leftAlias, rightAlias, considerNulls, dbSetting);
 
         /// <summary>
         /// 

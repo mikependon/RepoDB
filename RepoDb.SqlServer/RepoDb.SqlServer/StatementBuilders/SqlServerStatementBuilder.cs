@@ -451,7 +451,7 @@ namespace RepoDb.StatementBuilders
                 .OpenParen()
                 .WriteText(qualifiers?
                     .Select(
-                        field => field.AsJoinQualifier("S", "T", DbSetting))
+                        field => field.AsJoinQualifier("S", "T", true, DbSetting))
                             .Join(" AND "))
                 .CloseParen()
                 // WHEN NOT MATCHED THEN INSERT VALUES
@@ -619,7 +619,7 @@ namespace RepoDb.StatementBuilders
                     .OpenParen()
                     .WriteText(qualifiers?
                         .Select(
-                            field => field.AsJoinQualifier("S", "T", DbSetting))
+                            field => field.AsJoinQualifier("S", "T", true, DbSetting))
                                 .Join(" AND "))
                     .CloseParen()
                     // WHEN NOT MATCHED THEN INSERT VALUES
