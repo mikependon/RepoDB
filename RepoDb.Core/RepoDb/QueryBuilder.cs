@@ -80,32 +80,32 @@ namespace RepoDb
             if (string.IsNullOrWhiteSpace(value)) return this;
 
             if (spaceBefore) Space();
-            
+
             stringBuilder.Append(value);
-            
+
             return this;
         }
-        
+
         private QueryBuilder Append(char value)
         {
             stringBuilder.Append(value);
-            
+
             return this;
         }
 
         private QueryBuilder AppendJoin(IEnumerable<string> values, string separator = ", ", bool spaceBefore = true)
         {
             if (values.IsNullOrEmpty()) return this;
-            
+
             if (spaceBefore) Space();
-            
+
             stringBuilder
 #if NET5_0             
                 .AppendJoin(separator, values);
 #else
                 .Append(values.Join(separator));
-#endif            
-            
+#endif
+
             return this;
         }
 
@@ -129,7 +129,7 @@ namespace RepoDb
         /// <param name="field">The instance of the <see cref="Field"/> object to be used.</param>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder Average(Field field, IDbSetting dbSetting) => 
+        public QueryBuilder Average(Field field, IDbSetting dbSetting) =>
             Average(field, dbSetting, null);
 
         /// <summary>
@@ -158,7 +158,7 @@ namespace RepoDb
         /// <param name="field">The instance of the <see cref="Field"/> object to be used.</param>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder Min(Field field, IDbSetting dbSetting) => 
+        public QueryBuilder Min(Field field, IDbSetting dbSetting) =>
             Min(field, dbSetting, null);
 
         /// <summary>
@@ -175,7 +175,7 @@ namespace RepoDb
             var name = convertResolver == null
                 ? field.Name.AsField(dbSetting)
                 : convertResolver.Resolve(field, dbSetting);
-            
+
             return Append("MIN (")
                 .Append(name, false)
                 .Append(')');
@@ -187,7 +187,7 @@ namespace RepoDb
         /// <param name="field">The instance of the <see cref="Field"/> object to be used.</param>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder Max(Field field, IDbSetting dbSetting) => 
+        public QueryBuilder Max(Field field, IDbSetting dbSetting) =>
             Max(field, dbSetting, null);
 
         /// <summary>
@@ -204,7 +204,7 @@ namespace RepoDb
             var name = convertResolver == null
                 ? field.Name.AsField(dbSetting)
                 : convertResolver.Resolve(field, dbSetting);
-            
+
             return Append("MAX (")
                 .Append(name, false)
                 .Append(')');
@@ -216,7 +216,7 @@ namespace RepoDb
         /// <param name="field">The instance of the <see cref="Field"/> object to be used.</param>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder Sum(Field field, IDbSetting dbSetting) => 
+        public QueryBuilder Sum(Field field, IDbSetting dbSetting) =>
             Sum(field, dbSetting, null);
 
         /// <summary>
@@ -233,7 +233,7 @@ namespace RepoDb
             var name = convertResolver == null
                 ? field.Name.AsField(dbSetting)
                 : convertResolver.Resolve(field, dbSetting);
-            
+
             return Append("SUM (")
                 .Append(name, false)
                 .Append(')');
@@ -249,7 +249,7 @@ namespace RepoDb
             IDbSetting dbSetting)
         {
             var name = field != null ? field.Name.AsField(dbSetting) : "*";
-            
+
             return Append("COUNT (")
                 .Append(name, false)
                 .Append(')');
@@ -265,7 +265,7 @@ namespace RepoDb
             IDbSetting dbSetting)
         {
             var name = field != null ? field.Name.AsField(dbSetting) : "*";
-            
+
             return Append("COUNT_BIG (")
                 .Append(name, false)
                 .Append(')');
@@ -294,7 +294,7 @@ namespace RepoDb
         /// <param name="fields">The list fields to be stringified.</param>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder FieldsFrom(IEnumerable<Field> fields, IDbSetting dbSetting) => 
+        public QueryBuilder FieldsFrom(IEnumerable<Field> fields, IDbSetting dbSetting) =>
             AppendJoin(fields?.Select(f => f.Name).AsFields(dbSetting));
 
         /// <summary>
@@ -304,7 +304,7 @@ namespace RepoDb
         /// <param name="index">The parameter index.</param>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder FieldsAndParametersFrom<TEntity>(int index, IDbSetting dbSetting) 
+        public QueryBuilder FieldsAndParametersFrom<TEntity>(int index, IDbSetting dbSetting)
             where TEntity : class =>
             FieldsAndParametersFrom(FieldCache.Get<TEntity>(), index, dbSetting);
 
@@ -387,7 +387,7 @@ namespace RepoDb
             IDbSetting dbSetting)
         {
             if (fields.IsNullOrEmpty()) return this;
-            
+
             return Append("GROUP BY")
                 .AppendJoin(fields.AsFields(dbSetting));
         }
@@ -447,7 +447,7 @@ namespace RepoDb
         /// <param name="orderBy">The list of order fields to be stringified.</param>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder OrderByFrom(IEnumerable<OrderField> orderBy, IDbSetting dbSetting) => 
+        public QueryBuilder OrderByFrom(IEnumerable<OrderField> orderBy, IDbSetting dbSetting) =>
             OrderByFrom(orderBy, null, dbSetting);
 
         /// <summary>
@@ -513,14 +513,16 @@ namespace RepoDb
         /// <param name="field">The field to be stringified.</param>
         /// <param name="leftAlias">The left alias.</param>
         /// <param name="rightAlias">The right alias.</param>
+        /// <param name="considerNulls">The value that defines whether the null values are being considered.</param>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
         public QueryBuilder JoinQualifiersFrom(Field field,
             string leftAlias,
             string rightAlias,
+            bool considerNulls,
             IDbSetting dbSetting)
         {
-            return Append(field.AsJoinQualifier(leftAlias, rightAlias, dbSetting));
+            return Append(field.AsJoinQualifier(leftAlias, rightAlias, considerNulls, dbSetting));
         }
 
         /// <summary>
@@ -551,7 +553,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the table.</param>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder TableNameFrom(string tableName, IDbSetting dbSetting) => 
+        public QueryBuilder TableNameFrom(string tableName, IDbSetting dbSetting) =>
             Append(tableName?.AsQuoted(true, dbSetting));
 
         /// <summary>
@@ -572,7 +574,7 @@ namespace RepoDb
         /// <param name="index">The parameter index.</param>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder ParametersFrom(IEnumerable<Field> fields, int index, IDbSetting dbSetting) => 
+        public QueryBuilder ParametersFrom(IEnumerable<Field> fields, int index, IDbSetting dbSetting) =>
             AppendJoin(fields?.AsParameters(index, dbSetting));
 
         /// <summary>
@@ -589,7 +591,7 @@ namespace RepoDb
             var fields = PropertyCache
                 .Get<TEntity>()?
                 .Select(property => property.AsField());
-            
+
             return ParametersAsFieldsFrom(fields, index, dbSetting);
         }
 
@@ -600,7 +602,7 @@ namespace RepoDb
         /// <param name="index">The parameter index.</param>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder ParametersAsFieldsFrom(IEnumerable<Field> fields, int index, IDbSetting dbSetting) => 
+        public QueryBuilder ParametersAsFieldsFrom(IEnumerable<Field> fields, int index, IDbSetting dbSetting) =>
             AppendJoin(fields?.AsParametersAsFields(index, dbSetting));
 
         /// <summary>
@@ -748,7 +750,7 @@ namespace RepoDb
         /// <param name="queryGroup">The query group to be stringified.</param>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder WhereFrom(QueryGroup queryGroup, IDbSetting dbSetting) => 
+        public QueryBuilder WhereFrom(QueryGroup queryGroup, IDbSetting dbSetting) =>
             WhereFrom(queryGroup, 0, dbSetting);
 
         /// <summary>
@@ -767,7 +769,7 @@ namespace RepoDb
                 return Append("WHERE")
                     .Append(queryGroup.GetString(index, dbSetting));
             }
-            
+
             return this;
         }
 
@@ -979,7 +981,7 @@ namespace RepoDb
         public QueryBuilder OnConflict(IEnumerable<Field> fields, IDbSetting dbSetting)
         {
             if (fields.IsNullOrEmpty()) return this;
-            
+
             var fieldNames = fields
                 .Select(f => f.Name.AsQuoted(dbSetting));
 

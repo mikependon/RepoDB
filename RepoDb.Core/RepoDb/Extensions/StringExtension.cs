@@ -12,7 +12,7 @@ namespace RepoDb.Extensions
     public static class StringExtension
     {
         private static readonly Regex alphaNumericRegex = new(@"[^a-zA-Z0-9]", RegexOptions.Compiled | RegexOptions.ExplicitCapture);
-        
+
         /// <summary>
         /// Joins an array string with a given separator.
         /// </summary>
@@ -91,7 +91,7 @@ namespace RepoDb.Extensions
             {
                 return value;
             }
-            
+
             if (value.IndexOf(CharConstant.Period) < 0)
             {
                 return value.AsUnquotedInternal(trim, dbSetting);
@@ -202,7 +202,7 @@ namespace RepoDb.Extensions
                 {
                     if (!string.IsNullOrWhiteSpace(current))
                     {
-                        if (current.StartsWith(dbSetting.OpeningQuote, StringComparison.OrdinalIgnoreCase) 
+                        if (current.StartsWith(dbSetting.OpeningQuote, StringComparison.OrdinalIgnoreCase)
                             && item.EndsWith(dbSetting.ClosingQuote, StringComparison.OrdinalIgnoreCase))
                         {
                             list.Add(string.Concat(current, StringConstant.Period, item));
@@ -308,12 +308,14 @@ namespace RepoDb.Extensions
         /// <param name="stringToSeek">The string to seek.</param>
         /// <param name="comparisonType">One of the enumeration values that specifies the rules to use in the comparison.</param>
         /// <returns>true if the value parameter occurs within this string, or if value is the empty string (""); otherwise, false.</returns>
-        public static bool Contains(this string value, string stringToSeek, StringComparison comparisonType)
+        public static bool Contains(this string value,
+            string stringToSeek,
+            StringComparison comparisonType)
         {
             return value?.IndexOf(stringToSeek, comparisonType) >= 0;
         }
 #endif
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -321,13 +323,26 @@ namespace RepoDb.Extensions
         /// <param name="leftAlias"></param>
         /// <param name="rightAlias"></param>
         /// <param name="dbSetting"></param>
+        /// <param name="considerNulls"></param>
         /// <returns></returns>
         internal static string AsJoinQualifier(this string value,
             string leftAlias,
             string rightAlias,
-            IDbSetting dbSetting) =>
-            string.Concat(leftAlias, StringConstant.Period, value.AsQuoted(true, true, dbSetting), " = ",
+            bool considerNulls,
+            IDbSetting dbSetting)
+        {
+            var qualifiers = string.Concat(leftAlias, StringConstant.Period, value.AsQuoted(true, true, dbSetting), " = ",
                 rightAlias, StringConstant.Period, value.AsQuoted(true, true, dbSetting));
+
+            if (considerNulls)
+            {
+                qualifiers = string.Concat("(", qualifiers, " OR (",
+                    leftAlias, StringConstant.Period, value.AsQuoted(true, true, dbSetting), " IS NULL AND ",
+                    rightAlias, StringConstant.Period, value.AsQuoted(true, true, dbSetting), " IS NULL))");
+            }
+
+            return qualifiers;
+        }
 
         /// <summary>
         /// 
