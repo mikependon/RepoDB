@@ -20,7 +20,7 @@ namespace RepoDb.MySql.DbSettings
             IsDirectionSupported = false;
             IsExecuteReaderDisposable = false;
             IsMultiStatementExecutable = true;
-            IsPreparable = true;
+            IsPreparable = false;
             IsUseUpsert = false;
             OpeningQuote = "`";
             ParameterPrefix = "@";
