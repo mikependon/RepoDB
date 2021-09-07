@@ -677,8 +677,7 @@ namespace RepoDb
                 .OpenParen()
                 .WriteText(qualifiers
                     .Select(
-                        field => /*field.AsJoinQualifier("S", "T", true, dbSetting)*/
-                            AsFieldQualifier(field.Name, "S", "T", true, dbSetting))
+                        field => field.AsJoinQualifier("S", "T", true, dbSetting))
                             .Join(" AND "))
                 .CloseParen();
 
@@ -727,36 +726,6 @@ namespace RepoDb
 
             // Return the sql
             return builder.ToString();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="value"></param>
-        /// <param name="leftAlias"></param>
-        /// <param name="rightAlias"></param>
-        /// <param name="considerNulls"></param>
-        /// <param name="dbSetting"></param>
-        /// <returns></returns>
-        /// 
-        [Obsolete("Only a temporary hotfix for #864.")]
-        private static string AsFieldQualifier(string value,
-            string leftAlias,
-            string rightAlias,
-            bool considerNulls,
-            IDbSetting dbSetting)
-        {
-            var qualifiers = string.Concat(leftAlias, ".", value.AsQuoted(true, true, dbSetting), " = ",
-                rightAlias, ".", value.AsQuoted(true, true, dbSetting));
-
-            if (considerNulls)
-            {
-                qualifiers = string.Concat("(", qualifiers, " OR (",
-                    leftAlias, ".", value.AsQuoted(true, true, dbSetting), " IS NULL AND ",
-                    rightAlias, ".", value.AsQuoted(true, true, dbSetting), " IS NULL))");
-            }
-
-            return qualifiers;
         }
 
         /// <summary>
@@ -818,8 +787,7 @@ namespace RepoDb
                 .WriteText("ON")
                 .WriteText(qualifiers
                     .Select(
-                        field => /*field.AsJoinQualifier("S", "T", true, dbSetting)*/
-                            AsFieldQualifier(field.Name, "S", "T", true, dbSetting))
+                        field => field.AsJoinQualifier("S", "T", true, dbSetting))
                             .Join(" AND "))
                 .End();
 

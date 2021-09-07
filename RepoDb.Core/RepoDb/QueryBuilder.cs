@@ -520,10 +520,8 @@ namespace RepoDb
             string leftAlias,
             string rightAlias,
             bool considerNulls,
-            IDbSetting dbSetting)
-        {
-            return Append(field.AsJoinQualifier(leftAlias, rightAlias, considerNulls, dbSetting));
-        }
+            IDbSetting dbSetting) =>
+            Append(field.AsJoinQualifier(leftAlias, rightAlias, considerNulls, dbSetting));
 
         /// <summary>
         /// Appends a word MERGE to the SQL Query Statement.

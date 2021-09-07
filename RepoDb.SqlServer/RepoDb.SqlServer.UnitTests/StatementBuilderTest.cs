@@ -1082,7 +1082,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var expected = $"" +
                 $"MERGE [Table] AS T " +
                 $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
-                $"AS S ON ( S.[Field1] = T.[Field1] ) " +
+                $"AS S ON ( (S.[Field1] = T.[Field1] OR (S.[Field1] IS NULL AND T.[Field1] IS NULL)) ) " +
                 $"WHEN NOT MATCHED THEN " +
                 $"INSERT ( [Field1], [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
@@ -1114,7 +1114,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var expected = $"" +
                 $"MERGE [dbo].[Table] AS T " +
                 $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
-                $"AS S ON ( S.[Field1] = T.[Field1] ) " +
+                $"AS S ON ( (S.[Field1] = T.[Field1] OR (S.[Field1] IS NULL AND T.[Field1] IS NULL)) ) " +
                 $"WHEN NOT MATCHED THEN " +
                 $"INSERT ( [Field1], [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
@@ -1146,7 +1146,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var expected = $"" +
                 $"MERGE [dbo].[Table] AS T " +
                 $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
-                $"AS S ON ( S.[Field1] = T.[Field1] ) " +
+                $"AS S ON ( (S.[Field1] = T.[Field1] OR (S.[Field1] IS NULL AND T.[Field1] IS NULL)) ) " +
                 $"WHEN NOT MATCHED THEN " +
                 $"INSERT ( [Field1], [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
@@ -1179,7 +1179,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var expected = $"" +
                 $"MERGE [Table] AS T " +
                 $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
-                $"AS S ON ( S.[Field1] = T.[Field1] ) " +
+                $"AS S ON ( (S.[Field1] = T.[Field1] OR (S.[Field1] IS NULL AND T.[Field1] IS NULL)) ) " +
                 $"WHEN NOT MATCHED THEN " +
                 $"INSERT ( [Field1], [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
@@ -1214,7 +1214,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var expected = $"" +
                 $"MERGE [Table] AS T " +
                 $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
-                $"AS S ON ( S.[Field1] = T.[Field1] ) " +
+                $"AS S ON ( (S.[Field1] = T.[Field1] OR (S.[Field1] IS NULL AND T.[Field1] IS NULL)) ) " +
                 $"WHEN NOT MATCHED THEN " +
                 $"INSERT ( [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field2], S.[Field3] ) " +
@@ -1248,7 +1248,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var expected = $"" +
                 $"MERGE [Table] AS T " +
                 $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
-                $"AS S ON ( S.[Field1] = T.[Field1] ) " +
+                $"AS S ON ( (S.[Field1] = T.[Field1] OR (S.[Field1] IS NULL AND T.[Field1] IS NULL)) ) " +
                 $"WHEN NOT MATCHED THEN " +
                 $"INSERT ( [Field1], [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
@@ -1282,7 +1282,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var expected = $"" +
                 $"MERGE [Table] AS T " +
                 $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
-                $"AS S ON ( S.[Field1] = T.[Field1] ) " +
+                $"AS S ON ( (S.[Field1] = T.[Field1] OR (S.[Field1] IS NULL AND T.[Field1] IS NULL)) ) " +
                 $"WHEN NOT MATCHED THEN " +
                 $"INSERT ( [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field2], S.[Field3] ) " +
@@ -1316,7 +1316,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var expected = $"" +
                 $"MERGE [Table] AS T " +
                 $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
-                $"AS S ON ( S.[Field1] = T.[Field1] ) " +
+                $"AS S ON ( (S.[Field1] = T.[Field1] OR (S.[Field1] IS NULL AND T.[Field1] IS NULL)) ) " +
                 $"WHEN NOT MATCHED THEN " +
                 $"INSERT ( [Field1], [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
@@ -1349,7 +1349,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var expected = $"" +
                 $"MERGE [Table] AS T " +
                 $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
-                $"AS S ON ( S.[Field1] = T.[Field1] ) " +
+                $"AS S ON ( (S.[Field1] = T.[Field1] OR (S.[Field1] IS NULL AND T.[Field1] IS NULL)) ) " +
                 $"WHEN NOT MATCHED THEN " +
                 $"INSERT ( [Field1], [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
@@ -1383,7 +1383,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var expected = $"" +
                 $"MERGE [Table] AS T " +
                 $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
-                $"AS S ON ( S.[Field1] = T.[Field1] ) " +
+                $"AS S ON ( (S.[Field1] = T.[Field1] OR (S.[Field1] IS NULL AND T.[Field1] IS NULL)) ) " +
                 $"WHEN NOT MATCHED THEN " +
                 $"INSERT ( [Field1], [Field3] ) " +
                 $"VALUES ( S.[Field1], S.[Field3] ) " +
@@ -1417,7 +1417,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var expected = $"" +
                 $"MERGE [Table] AS T " +
                 $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
-                $"AS S ON ( S.[Field1] = T.[Field1] ) " +
+                $"AS S ON ( (S.[Field1] = T.[Field1] OR (S.[Field1] IS NULL AND T.[Field1] IS NULL)) ) " +
                 $"WHEN NOT MATCHED THEN " +
                 $"INSERT ( [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field2], S.[Field3] ) " +
@@ -1426,7 +1426,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"OUTPUT INSERTED.[Field1] AS [Id], @__RepoDb_OrderColumn_0 AS [OrderColumn] ; " +
                 $"MERGE [Table] AS T " +
                 $"USING ( SELECT @Field1_1 AS [Field1], @Field2_1 AS [Field2], @Field3_1 AS [Field3] ) " +
-                $"AS S ON ( S.[Field1] = T.[Field1] ) " +
+                $"AS S ON ( (S.[Field1] = T.[Field1] OR (S.[Field1] IS NULL AND T.[Field1] IS NULL)) ) " +
                 $"WHEN NOT MATCHED THEN " +
                 $"INSERT ( [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field2], S.[Field3] ) " +
@@ -1435,7 +1435,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"OUTPUT INSERTED.[Field1] AS [Id], @__RepoDb_OrderColumn_1 AS [OrderColumn] ; " +
                 $"MERGE [Table] AS T " +
                 $"USING ( SELECT @Field1_2 AS [Field1], @Field2_2 AS [Field2], @Field3_2 AS [Field3] ) " +
-                $"AS S ON ( S.[Field1] = T.[Field1] ) " +
+                $"AS S ON ( (S.[Field1] = T.[Field1] OR (S.[Field1] IS NULL AND T.[Field1] IS NULL)) ) " +
                 $"WHEN NOT MATCHED THEN " +
                 $"INSERT ( [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field2], S.[Field3] ) " +
@@ -1469,7 +1469,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var expected = $"" +
                 $"MERGE [Table] WITH (TABLOCK) AS T " +
                 $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
-                $"AS S ON ( S.[Field1] = T.[Field1] ) " +
+                $"AS S ON ( (S.[Field1] = T.[Field1] OR (S.[Field1] IS NULL AND T.[Field1] IS NULL)) ) " +
                 $"WHEN NOT MATCHED THEN " +
                 $"INSERT ( [Field1], [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
@@ -1503,7 +1503,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var expected = $"" +
                 $"MERGE [Table] WITH (TABLOCK) AS T " +
                 $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
-                $"AS S ON ( S.[Field1] = T.[Field1] ) " +
+                $"AS S ON ( (S.[Field1] = T.[Field1] OR (S.[Field1] IS NULL AND T.[Field1] IS NULL)) ) " +
                 $"WHEN NOT MATCHED THEN " +
                 $"INSERT ( [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field2], S.[Field3] ) " +
@@ -1512,7 +1512,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"OUTPUT INSERTED.[Field1] AS [Id], @__RepoDb_OrderColumn_0 AS [OrderColumn] ; " +
                 $"MERGE [Table] WITH (TABLOCK) AS T " +
                 $"USING ( SELECT @Field1_1 AS [Field1], @Field2_1 AS [Field2], @Field3_1 AS [Field3] ) " +
-                $"AS S ON ( S.[Field1] = T.[Field1] ) " +
+                $"AS S ON ( (S.[Field1] = T.[Field1] OR (S.[Field1] IS NULL AND T.[Field1] IS NULL)) ) " +
                 $"WHEN NOT MATCHED THEN " +
                 $"INSERT ( [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field2], S.[Field3] ) " +
@@ -1521,7 +1521,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"OUTPUT INSERTED.[Field1] AS [Id], @__RepoDb_OrderColumn_1 AS [OrderColumn] ; " +
                 $"MERGE [Table] WITH (TABLOCK) AS T " +
                 $"USING ( SELECT @Field1_2 AS [Field1], @Field2_2 AS [Field2], @Field3_2 AS [Field3] ) " +
-                $"AS S ON ( S.[Field1] = T.[Field1] ) " +
+                $"AS S ON ( (S.[Field1] = T.[Field1] OR (S.[Field1] IS NULL AND T.[Field1] IS NULL)) ) " +
                 $"WHEN NOT MATCHED THEN " +
                 $"INSERT ( [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field2], S.[Field3] ) " +
@@ -1736,7 +1736,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var expected = $"" +
                 $"MERGE [Table] AS T " +
                 $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
-                $"AS S ON ( S.[Field1] = T.[Field1] ) " +
+                $"AS S ON ( (S.[Field1] = T.[Field1] OR (S.[Field1] IS NULL AND T.[Field1] IS NULL)) ) " +
                 $"WHEN NOT MATCHED THEN " +
                 $"INSERT ( [Field1], [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
@@ -1767,7 +1767,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var expected = $"" +
                 $"MERGE [dbo].[Table] AS T " +
                 $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
-                $"AS S ON ( S.[Field1] = T.[Field1] ) " +
+                $"AS S ON ( (S.[Field1] = T.[Field1] OR (S.[Field1] IS NULL AND T.[Field1] IS NULL)) ) " +
                 $"WHEN NOT MATCHED THEN " +
                 $"INSERT ( [Field1], [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
@@ -1798,7 +1798,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var expected = $"" +
                 $"MERGE [dbo].[Table] AS T " +
                 $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
-                $"AS S ON ( S.[Field1] = T.[Field1] ) " +
+                $"AS S ON ( (S.[Field1] = T.[Field1] OR (S.[Field1] IS NULL AND T.[Field1] IS NULL)) ) " +
                 $"WHEN NOT MATCHED THEN " +
                 $"INSERT ( [Field1], [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
@@ -1830,7 +1830,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var expected = $"" +
                 $"MERGE [Table] AS T " +
                 $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
-                $"AS S ON ( S.[Field1] = T.[Field1] ) " +
+                $"AS S ON ( (S.[Field1] = T.[Field1] OR (S.[Field1] IS NULL AND T.[Field1] IS NULL)) ) " +
                 $"WHEN NOT MATCHED THEN " +
                 $"INSERT ( [Field1], [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
@@ -1864,7 +1864,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var expected = $"" +
                 $"MERGE [Table] AS T " +
                 $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
-                $"AS S ON ( S.[Field1] = T.[Field1] ) " +
+                $"AS S ON ( (S.[Field1] = T.[Field1] OR (S.[Field1] IS NULL AND T.[Field1] IS NULL)) ) " +
                 $"WHEN NOT MATCHED THEN " +
                 $"INSERT ( [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field2], S.[Field3] ) " +
@@ -1897,7 +1897,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var expected = $"" +
                 $"MERGE [Table] AS T " +
                 $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
-                $"AS S ON ( S.[Field1] = T.[Field1] ) " +
+                $"AS S ON ( (S.[Field1] = T.[Field1] OR (S.[Field1] IS NULL AND T.[Field1] IS NULL)) ) " +
                 $"WHEN NOT MATCHED THEN " +
                 $"INSERT ( [Field1], [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
@@ -1930,7 +1930,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var expected = $"" +
                 $"MERGE [Table] AS T " +
                 $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
-                $"AS S ON ( S.[Field1] = T.[Field1] ) " +
+                $"AS S ON ( (S.[Field1] = T.[Field1] OR (S.[Field1] IS NULL AND T.[Field1] IS NULL)) ) " +
                 $"WHEN NOT MATCHED THEN " +
                 $"INSERT ( [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field2], S.[Field3] ) " +
@@ -1963,7 +1963,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var expected = $"" +
                 $"MERGE [Table] AS T " +
                 $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
-                $"AS S ON ( S.[Field1] = T.[Field1] ) " +
+                $"AS S ON ( (S.[Field1] = T.[Field1] OR (S.[Field1] IS NULL AND T.[Field1] IS NULL)) ) " +
                 $"WHEN NOT MATCHED THEN " +
                 $"INSERT ( [Field1], [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
@@ -1995,7 +1995,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var expected = $"" +
                 $"MERGE [Table] AS T " +
                 $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
-                $"AS S ON ( S.[Field1] = T.[Field1] ) " +
+                $"AS S ON ( (S.[Field1] = T.[Field1] OR (S.[Field1] IS NULL AND T.[Field1] IS NULL)) ) " +
                 $"WHEN NOT MATCHED THEN " +
                 $"INSERT ( [Field1], [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
@@ -2028,7 +2028,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var expected = $"" +
                 $"MERGE [Table] AS T " +
                 $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
-                $"AS S ON ( S.[Field1] = T.[Field1] ) " +
+                $"AS S ON ( (S.[Field1] = T.[Field1] OR (S.[Field1] IS NULL AND T.[Field1] IS NULL)) ) " +
                 $"WHEN NOT MATCHED THEN " +
                 $"INSERT ( [Field1], [Field3] ) " +
                 $"VALUES ( S.[Field1], S.[Field3] ) " +
@@ -2061,7 +2061,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var expected = $"" +
                 $"MERGE [Table] WITH (TABLOCK) AS T " +
                 $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
-                $"AS S ON ( S.[Field1] = T.[Field1] ) " +
+                $"AS S ON ( (S.[Field1] = T.[Field1] OR (S.[Field1] IS NULL AND T.[Field1] IS NULL)) ) " +
                 $"WHEN NOT MATCHED THEN " +
                 $"INSERT ( [Field1], [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +

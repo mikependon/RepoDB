@@ -329,19 +329,42 @@ namespace RepoDb.Extensions
             string leftAlias,
             string rightAlias,
             bool considerNulls,
-            IDbSetting dbSetting)
-        {
-            var qualifiers = string.Concat(leftAlias, StringConstant.Period, value.AsQuoted(true, true, dbSetting), " = ",
+            IDbSetting dbSetting) =>
+            considerNulls ? AsJoinQualifierWithNullChecks(value, leftAlias, rightAlias, dbSetting) :
+                AsJoinQualifierWithoutNullChecks(value, leftAlias, rightAlias, dbSetting);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="leftAlias"></param>
+        /// <param name="rightAlias"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
+        private static string AsJoinQualifierWithoutNullChecks(this string value,
+            string leftAlias,
+            string rightAlias,
+            IDbSetting dbSetting) =>
+            string.Concat(leftAlias, StringConstant.Period, value.AsQuoted(true, true, dbSetting), " = ",
                 rightAlias, StringConstant.Period, value.AsQuoted(true, true, dbSetting));
 
-            if (considerNulls)
-            {
-                qualifiers = string.Concat("(", qualifiers, " OR (",
-                    leftAlias, StringConstant.Period, value.AsQuoted(true, true, dbSetting), " IS NULL AND ",
-                    rightAlias, StringConstant.Period, value.AsQuoted(true, true, dbSetting), " IS NULL))");
-            }
-
-            return qualifiers;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="leftAlias"></param>
+        /// <param name="rightAlias"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
+        private static string AsJoinQualifierWithNullChecks(this string value,
+            string leftAlias,
+            string rightAlias,
+            IDbSetting dbSetting)
+        {
+            var qualifiersWithoutNullChecks = AsJoinQualifierWithoutNullChecks(value, leftAlias, rightAlias, dbSetting);
+            var qualifiersWithNullChecks = string.Concat("(", leftAlias, StringConstant.Period, value.AsQuoted(true, true, dbSetting), " IS NULL",
+                " AND ", rightAlias, StringConstant.Period, value.AsQuoted(true, true, dbSetting), " IS NULL)");
+            return string.Concat("(", qualifiersWithoutNullChecks, " OR ", qualifiersWithNullChecks, ")");
         }
 
         /// <summary>
