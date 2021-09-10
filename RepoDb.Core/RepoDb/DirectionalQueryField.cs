@@ -288,6 +288,18 @@ namespace RepoDb
             // Add the parameter direction
             hashCode += Direction.GetHashCode();
 
+            // Add the type
+            if (Type != null)
+            {
+                hashCode += Type.GetHashCode();
+            }
+
+            // Add the size
+            if (Size.HasValue)
+            {
+                hashCode += Size.Value.GetHashCode();
+            }
+
             // Set and return the hashcode
             return (this.hashCode = hashCode).Value;
         }
