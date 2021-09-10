@@ -109,7 +109,7 @@ namespace RepoDb
         public static Type DbParameterCollection => typeof(DbParameterCollection);
 
         /// <summary>
-        /// Gets a type of the <see cref="System.Data.DbType"/> (array) .NET CLR type.
+        /// Gets a type of the <see cref="System.Data.DbType"/> .NET CLR type.
         /// </summary>
         public static Type DbType => typeof(DbType);
 
@@ -227,6 +227,11 @@ namespace RepoDb
         /// Gets a type of the <see cref="Enumerations.Operation"/> .NET CLR type.
         /// </summary>
         public static Type Operation => typeof(Operation);
+
+        /// <summary>
+        /// Gets a type of the <see cref="Attributes.ParameterPropertyValueSetterAttribute"/> .NET CLR type.
+        /// </summary>
+        public static Type ParameterPropertyValueSetterAttribute => typeof(ParameterPropertyValueSetterAttribute);
 
         /// <summary>
         /// Gets a type of the <see cref="Attributes.PropertyHandlerAttribute"/> .NET CLR type.
