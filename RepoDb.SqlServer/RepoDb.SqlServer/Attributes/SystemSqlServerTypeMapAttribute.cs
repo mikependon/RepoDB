@@ -7,26 +7,19 @@ namespace RepoDb.Attributes
     /// <summary>
     /// An attribute used to define a mapping of .NET CLR <see cref="Type"/> into its equivalent <see cref="SqlDbType"/> value.
     /// </summary>
-    public class SystemSqlServerTypeMapAttribute : Attribute
+    public class SystemSqlServerTypeMapAttribute : ParameterPropertyValueSetterAttribute
     {
         /// <summary>
-        /// Creates a new instance of <see cref="SystemSqlServerTypeMapAttribute"/> class.
+        /// Creates a new instance of <see cref="MicrosoftSqlServerTypeMapAttribute"/> class.
         /// </summary>
         /// <param name="dbType">A target <see cref="SqlDbType"/> value.</param>
         public SystemSqlServerTypeMapAttribute(SqlDbType dbType)
-        {
-            DbType = dbType;
-            ParameterType = typeof(SqlParameter);
-        }
+            : base(typeof(SqlParameter), nameof(SqlParameter.SqlDbType), dbType)
+        { }
 
         /// <summary>
         /// Gets a <see cref="SqlDbType"/> that is currently mapped.
         /// </summary>
-        public SqlDbType DbType { get; }
-
-        /// <summary>
-        /// Gets the represented <see cref="Type"/> of the <see cref="SqlParameter"/>.
-        /// </summary>
-        public Type ParameterType { get; }
+        public SqlDbType DbType => (SqlDbType)Value;
     }
 }
