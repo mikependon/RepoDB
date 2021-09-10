@@ -321,7 +321,8 @@ namespace RepoDb.Extensions
             var parameter = command.CreateParameter(name, value, dbType, parameterDirection);
 
             // Set the size
-            parameter.Size = GetSize(size, dbField);
+            var parameterSize = GetSize(size, dbField);
+            parameter.Size = (parameterSize > 0) ? parameterSize : parameter.Size;
 
             // Parameter values
             InvokeParameterPropertyValueSetterAttributes(parameter, classProperty);
