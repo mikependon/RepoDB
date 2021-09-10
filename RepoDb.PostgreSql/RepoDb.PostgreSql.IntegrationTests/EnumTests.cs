@@ -330,6 +330,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 connection.Insert(person);
 
                 // Query
+                connection.ReloadTypes();
                 var queryResult = connection.Query<PersonWithEnum>(person.Id).First();
 
                 // Assert
@@ -349,6 +350,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 connection.InsertAll(people);
 
                 // Query
+                connection.ReloadTypes();
                 var queryResult = connection.QueryAll<PersonWithEnum>().AsList();
 
                 // Assert
@@ -372,6 +374,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 connection.Insert(person);
 
                 // Query
+                connection.ReloadTypes();
                 var queryResult = connection.Query<PersonWithEnum>(where: p => p.ColumnEnum == person.ColumnEnum).First();
 
                 // Assert
@@ -391,12 +394,14 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 connection.Insert(person);
 
                 // Query
+                connection.ReloadTypes();
                 var queryResult = connection.Query<PersonWithEnum>(new { ColumnEnum = person.ColumnEnum }).First();
 
                 // Assert
                 Assert.AreEqual(person.ColumnEnum, queryResult.ColumnEnum);
             }
         }
+
         [TestMethod]
         public void TestInsertAndQueryEnumAsNullableEnumAsNull()
         {
@@ -410,6 +415,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 connection.Insert(person);
 
                 // Query
+                connection.ReloadTypes();
                 var queryResult = connection.Query<PersonWithNullableEnum>(person.Id).First();
 
                 // Assert
@@ -429,6 +435,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 connection.Insert(person);
 
                 // Query
+                connection.ReloadTypes();
                 var queryResult = connection.Query<PersonWithNullableEnum>(person.Id).First();
 
                 // Assert
@@ -448,6 +455,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 connection.InsertAll(people);
 
                 // Query
+                connection.ReloadTypes();
                 var queryResult = connection.QueryAll<PersonWithNullableEnum>().AsList();
 
                 // Assert
@@ -471,6 +479,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 connection.Insert(person);
 
                 // Query
+                connection.ReloadTypes();
                 var queryResult = connection.Query<PersonWithNullableEnum>(where: p => p.ColumnEnum == person.ColumnEnum).First();
 
                 // Assert
