@@ -683,7 +683,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>A stringified formatted-text of the current instance.</returns>
-        public string GetString(IDbSetting dbSetting) =>
+        public virtual string GetString(IDbSetting dbSetting) =>
             GetString(0, dbSetting);
 
         /// <summary>
@@ -710,7 +710,7 @@ namespace RepoDb
             {
                 var fields = QueryFields
                     .Select(qf =>
-                        qf.AsFieldAndParameter(index, dbSetting)).Join(separator);
+                        qf.GetString(index, dbSetting)).Join(separator);
                 groupList.Add(fields);
             }
 
@@ -719,7 +719,8 @@ namespace RepoDb
             if (queryGroups?.Count > 0)
             {
                 var groups = QueryGroups
-                    .Select(qg => qg.GetString(index, dbSetting)).Join(separator);
+                    .Select(qg =>
+                        qg.GetString(index, dbSetting)).Join(separator);
                 groupList.Add(groups);
             }
 
@@ -818,7 +819,7 @@ namespace RepoDb
         public override bool Equals(object obj)
         {
             if (obj is null) return false;
-            
+
             return obj.GetHashCode() == GetHashCode();
         }
 
@@ -830,7 +831,7 @@ namespace RepoDb
         public bool Equals(QueryGroup other)
         {
             if (other is null) return false;
-            
+
             return other.GetHashCode() == GetHashCode();
         }
 
