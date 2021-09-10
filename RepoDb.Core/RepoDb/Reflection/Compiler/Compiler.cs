@@ -1461,6 +1461,16 @@ namespace RepoDb.Reflection
             string.Equals(dbField?.DatabaseType, "USER-DEFINED", StringComparison.OrdinalIgnoreCase);
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="size"></param>
+        /// <param name="dbField"></param>
+        private static int GetSize(int? size,
+            DbField dbField) =>
+            size.HasValue ? size.Value :
+                 dbField?.Size.HasValue == true ? dbField.Size.Value : default;
+
+        /// <summary>
         ///
         /// </summary>
         /// <param name="propertyExpression"></param>
@@ -1673,10 +1683,21 @@ namespace RepoDb.Reflection
         /// <param name="size"></param>
         /// <returns></returns>
         internal static MethodCallExpression GetDbParameterSizeAssignmentExpression(ParameterExpression parameterVariableExpression,
+            int size) =>
+            GetDbParameterSizeAssignmentExpression((Expression)parameterVariableExpression, size);
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="parameterVariableExpression"></param>
+        /// <param name="size"></param>
+        /// <returns></returns>
+        internal static MethodCallExpression GetDbParameterSizeAssignmentExpression(Expression parameterVariableExpression,
             int size)
         {
+            var parameterExpression = ConvertEnumExpressionToTypeExpression(parameterVariableExpression, StaticType.DbParameter);
             var dbParameterSizeSetMethod = StaticType.DbParameter.GetProperty("Size").SetMethod;
-            return Expression.Call(parameterVariableExpression, dbParameterSizeSetMethod, Expression.Constant(size));
+            return Expression.Call(parameterExpression, dbParameterSizeSetMethod, Expression.Constant(size));
         }
 
         /// <summary>

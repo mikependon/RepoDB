@@ -356,6 +356,7 @@ namespace RepoDb.Extensions
 
             // DbType
             var dbType = IsUserDefined(dbField) ? default :
+                classProperty.GetDbType() ??
                 valueType.GetDbType() ??
                 (dbField != null ? clientTypeToDbTypeResolver.Resolve(dbField.Type) : null) ??
                 (DbType?)Converter.EnumDefaultDatabaseType;
