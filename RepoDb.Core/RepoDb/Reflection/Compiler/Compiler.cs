@@ -1422,9 +1422,12 @@ namespace RepoDb.Reflection
             {
                 try
                 {
-                    var dbType = classProperty.GetDbType() ?? classProperty.PropertyInfo.PropertyType.GetUnderlyingType().GetDbType();
-                    var toType = dbType.HasValue ? new DbTypeToClientTypeResolver().Resolve(dbType.Value) : targetType?.GetUnderlyingType();
-                    expression = ConvertEnumExpressionToTypeExpression(expression, toType);
+                    if (!IsUserDefined(dbField))
+                    {
+                        var dbType = classProperty.GetDbType() ?? classProperty.PropertyInfo.PropertyType.GetUnderlyingType().GetDbType();
+                        var toType = dbType.HasValue ? new DbTypeToClientTypeResolver().Resolve(dbType.Value) : targetType?.GetUnderlyingType();
+                        expression = ConvertEnumExpressionToTypeExpression(expression, toType);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -1448,6 +1451,24 @@ namespace RepoDb.Reflection
             // Convert to object
             return ConvertExpressionToTypeExpression(expression, StaticType.Object);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dbField"></param>
+        /// <returns></returns>
+        private static bool IsUserDefined(DbField dbField) =>
+            string.Equals(dbField?.DatabaseType, "USER-DEFINED", StringComparison.OrdinalIgnoreCase);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="size"></param>
+        /// <param name="dbField"></param>
+        private static int GetSize(int? size,
+            DbField dbField) =>
+            size.HasValue ? size.Value :
+                 dbField?.Size.HasValue == true ? dbField.Size.Value : default;
 
         /// <summary>
         ///
@@ -1662,10 +1683,21 @@ namespace RepoDb.Reflection
         /// <param name="size"></param>
         /// <returns></returns>
         internal static MethodCallExpression GetDbParameterSizeAssignmentExpression(ParameterExpression parameterVariableExpression,
+            int size) =>
+            GetDbParameterSizeAssignmentExpression((Expression)parameterVariableExpression, size);
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="parameterVariableExpression"></param>
+        /// <param name="size"></param>
+        /// <returns></returns>
+        internal static MethodCallExpression GetDbParameterSizeAssignmentExpression(Expression parameterVariableExpression,
             int size)
         {
+            var parameterExpression = ConvertEnumExpressionToTypeExpression(parameterVariableExpression, StaticType.DbParameter);
             var dbParameterSizeSetMethod = StaticType.DbParameter.GetProperty("Size").SetMethod;
-            return Expression.Call(parameterVariableExpression, dbParameterSizeSetMethod, Expression.Constant(size));
+            return Expression.Call(parameterExpression, dbParameterSizeSetMethod, Expression.Constant(size));
         }
 
         /// <summary>
@@ -1773,6 +1805,9 @@ namespace RepoDb.Reflection
                 classProperty, dbField);
             parameterAssignmentExpressions.AddIfNotNull(dbTypeAssignmentExpression);
 
+            //-------------------
+            // TODO: Optimize using the ParameterValueAttribute
+
             // DbParameter.SqlDbType (System)
             var systemSqlDbTypeAssignmentExpression = GetDbParameterSystemSqlDbTypeAssignmentExpression(parameterVariableExpression,
                 classProperty);
@@ -1792,6 +1827,7 @@ namespace RepoDb.Reflection
             var npgsqlDbTypeAssignmentExpression = GetDbParameterNpgsqlDbTypeAssignmentExpression(parameterVariableExpression,
                 classProperty);
             parameterAssignmentExpressions.AddIfNotNull(npgsqlDbTypeAssignmentExpression);
+            //-------------------
 
             // DbParameter.Direction
             if (dbSetting.IsDirectionSupported)

@@ -361,7 +361,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         }
 
         [TestMethod]
-        public void TestInsertAndQueryEnumAsEnumByEnum()
+        public void TestInsertAndQueryEnumAsEnumViaEnum()
         {
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
@@ -380,13 +380,31 @@ namespace RepoDb.PostgreSql.IntegrationTests
         }
 
         [TestMethod]
+        public void TestInsertAndQueryEnumAsEnumViaDynamicEnum()
+        {
+            using (var connection = new NpgsqlConnection(Database.ConnectionString))
+            {
+                // Setup
+                var person = GetPersonWithEnum(1).First();
+
+                // Act
+                connection.Insert(person);
+
+                // Query
+                var queryResult = connection.Query<PersonWithEnum>(new { ColumnEnum = person.ColumnEnum }).First();
+
+                // Assert
+                Assert.AreEqual(person.ColumnEnum, queryResult.ColumnEnum);
+            }
+        }
+        [TestMethod]
         public void TestInsertAndQueryEnumAsNullableEnumAsNull()
         {
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Setup
                 var person = GetPersonWithNullableEnum(1).First();
-                // person.ColumnEnum = null;
+                person.ColumnEnum = null;
 
                 // Act
                 connection.Insert(person);
@@ -459,6 +477,5 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 Assert.AreEqual(person.ColumnEnum, queryResult.ColumnEnum);
             }
         }
-
     }
 }
