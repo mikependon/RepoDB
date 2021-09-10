@@ -269,7 +269,7 @@ namespace RepoDb
         /// is <see cref="ConnectionPersistency.PerCall"/>, then this will return a new instance of the <see cref="DbConnection"/> object.
         /// </summary>
         /// <returns>An instance of the <see cref="DbConnection"/> object.</returns>
-        public TDbConnection CreateConnection() =>
+        public virtual TDbConnection CreateConnection() =>
             DbRepository.CreateConnection();
 
         /// <summary>
@@ -279,7 +279,7 @@ namespace RepoDb
         /// </summary>
         /// <param name="force">Set to true to forcely create a new instance of <see cref="DbConnection"/> object regardless of the persistency.</param>
         /// <returns>An instance of the <see cref="DbConnection"/> object.</returns>
-        public TDbConnection CreateConnection(bool force) =>
+        public virtual TDbConnection CreateConnection(bool force) =>
             DbRepository.CreateConnection(force);
 
         /// <summary>
