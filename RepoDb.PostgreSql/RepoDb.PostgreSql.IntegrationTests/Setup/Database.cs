@@ -432,19 +432,18 @@ namespace RepoDb.PostgreSql.IntegrationTests.Setup
             using (var connection = new NpgsqlConnection(ConnectionString))
             {
                 connection.ExecuteNonQuery(@"
-DO $$
-BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'hand') THEN
-        CREATE TYPE hand AS ENUM ('Unidentified', 'Left', 'Right');
-    END IF;
-END
-$$;
+                    DO $$
+                    BEGIN
+                        IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'hand') THEN
+                            CREATE TYPE hand AS ENUM ('Unidentified', 'Left', 'Right');
+                        END IF;
+                    END
+                    $$;
 
-CREATE TABLE IF NOT EXISTS public.""EnumTable"" (
-    ""Id"" bigint primary key,
-    ""ColumnEnum"" hand not null
-);
-");
+                    CREATE TABLE IF NOT EXISTS public.""EnumTable"" (
+                        ""Id"" bigint primary key,
+                        ""ColumnEnum"" hand null
+                    );");
 
             }
         }

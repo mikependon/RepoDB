@@ -176,7 +176,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
 
                 // Act
                 var queryResult = connection.Query<CompleteTableForDateTime>(e =>
-                    e.ColumnTimestampWithTimeZone >= DateTime.UtcNow.Date.AddHours(-1) && e.ColumnTimestampWithTimeZone <= DateTime.UtcNow.Date.AddHours(1)).FirstOrDefault();
+                    e.ColumnTimestampWithTimeZone >= DateTime.UtcNow.Date.AddHours(-5) && e.ColumnTimestampWithTimeZone <= DateTime.UtcNow.Date.AddHours(5)).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -195,8 +195,8 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 connection.Insert(entity);
 
                 // Setup
-                var startDate = DateTime.UtcNow.Date.AddHours(-1);
-                var endDate = DateTime.UtcNow.Date.AddHours(1);
+                var startDate = DateTime.UtcNow.Date.AddHours(-5);
+                var endDate = DateTime.UtcNow.Date.AddHours(5);
 
                 // Act
                 var queryResult = connection.Query<CompleteTableForDateTime>(e =>
@@ -221,7 +221,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
 
                 // Act
                 var queryResult = connection.Query<CompleteTableForDateTime>(e =>
-                    e.ColumnTimestampWithTimeZone >= DateTime.UtcNow.Date.AddHours(-1) && e.ColumnTimestampWithTimeZone <= DateTime.UtcNow.Date.AddHours(1)).FirstOrDefault();
+                    e.ColumnTimestampWithTimeZone >= DateTime.UtcNow.Date.AddHours(-5) && e.ColumnTimestampWithTimeZone <= DateTime.UtcNow.Date.AddHours(5)).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -241,8 +241,8 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 connection.Insert(entity);
 
                 // Setup
-                var startDate = DateTime.UtcNow.Date.AddHours(-1);
-                var endDate = DateTime.UtcNow.Date.AddHours(1);
+                var startDate = DateTime.UtcNow.Date.AddHours(-5);
+                var endDate = DateTime.UtcNow.Date.AddHours(5);
 
                 // Act
                 var queryResult = connection.Query<CompleteTableForDateTime>(e =>

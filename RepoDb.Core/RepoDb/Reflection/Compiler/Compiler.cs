@@ -1422,9 +1422,12 @@ namespace RepoDb.Reflection
             {
                 try
                 {
-                    var dbType = classProperty.GetDbType() ?? classProperty.PropertyInfo.PropertyType.GetUnderlyingType().GetDbType();
-                    var toType = dbType.HasValue ? new DbTypeToClientTypeResolver().Resolve(dbType.Value) : targetType?.GetUnderlyingType();
-                    expression = ConvertEnumExpressionToTypeExpression(expression, toType);
+                    if (!IsUserDefined(dbField))
+                    {
+                        var dbType = classProperty.GetDbType() ?? classProperty.PropertyInfo.PropertyType.GetUnderlyingType().GetDbType();
+                        var toType = dbType.HasValue ? new DbTypeToClientTypeResolver().Resolve(dbType.Value) : targetType?.GetUnderlyingType();
+                        expression = ConvertEnumExpressionToTypeExpression(expression, toType);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -1448,6 +1451,14 @@ namespace RepoDb.Reflection
             // Convert to object
             return ConvertExpressionToTypeExpression(expression, StaticType.Object);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dbField"></param>
+        /// <returns></returns>
+        private static bool IsUserDefined(DbField dbField) =>
+            string.Equals(dbField?.DatabaseType, "USER-DEFINED", StringComparison.OrdinalIgnoreCase);
 
         /// <summary>
         ///
@@ -1773,6 +1784,9 @@ namespace RepoDb.Reflection
                 classProperty, dbField);
             parameterAssignmentExpressions.AddIfNotNull(dbTypeAssignmentExpression);
 
+            //-------------------
+            // TODO: Optimize using the ParameterValueAttribute
+
             // DbParameter.SqlDbType (System)
             var systemSqlDbTypeAssignmentExpression = GetDbParameterSystemSqlDbTypeAssignmentExpression(parameterVariableExpression,
                 classProperty);
@@ -1792,6 +1806,7 @@ namespace RepoDb.Reflection
             var npgsqlDbTypeAssignmentExpression = GetDbParameterNpgsqlDbTypeAssignmentExpression(parameterVariableExpression,
                 classProperty);
             parameterAssignmentExpressions.AddIfNotNull(npgsqlDbTypeAssignmentExpression);
+            //-------------------
 
             // DbParameter.Direction
             if (dbSetting.IsDirectionSupported)

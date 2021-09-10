@@ -386,7 +386,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
             {
                 // Setup
                 var person = GetPersonWithNullableEnum(1).First();
-                // person.ColumnEnum = null;
+                person.ColumnEnum = null;
 
                 // Act
                 connection.Insert(person);

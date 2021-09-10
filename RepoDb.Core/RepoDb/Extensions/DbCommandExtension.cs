@@ -1,4 +1,5 @@
-﻿using RepoDb.Enumerations;
+﻿using RepoDb.Attributes;
+using RepoDb.Enumerations;
 using RepoDb.Exceptions;
 using RepoDb.Interfaces;
 using RepoDb.Resolvers;
@@ -7,6 +8,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Dynamic;
 using System.Linq;
+using System.Reflection;
 
 namespace RepoDb.Extensions
 {
@@ -243,95 +245,131 @@ namespace RepoDb.Extensions
             ParameterDirection? parameterDirection,
             Type fallbackType)
         {
-            /*
-             * In some cases, the value type and the classProperty type will be inconsistent, Therefore, the type gives priority to value.
-             * ex: in RepoDb.MySql.IntegrationTests.TestMySqlConnectionForQueryForMySqlMapAttribute
-             *    entity AttributeTable.Id = int
-             *    database completetable.Id = bigint(20) AUTO_INCREMENT
-             *    value id in connection.Query<AttributeTable>(id) is from connection.Insert<AttributeTable>(table) = ulong
-             */
             var valueType = (value?.GetType() ?? classProperty?.PropertyInfo.PropertyType).GetUnderlyingType();
 
-            // Enum
-            if (valueType?.IsEnum == true && dbField != null)
+            if (valueType?.IsEnum == true)
             {
-                var valueTypeDbType = valueType.GetDbType();
-                var enumToType = (valueTypeDbType != null) ? new DbTypeToClientTypeResolver().Resolve(valueTypeDbType.Value) : dbField.Type;
-                value = ConvertEnumValueToType(value, enumToType);
+                return CreateParameterForEnum(command,
+                    valueType,
+                    name,
+                    value,
+                    size,
+                    classProperty,
+                    dbField,
+                    parameterDirection);
             }
-
-            /*
-             * Try to get the propertyHandler, the order of the source of resolve is classProperty and valueType.
-             * If the propertyHandler exists, the value and DbType are re-determined by the propertyHandler.
-             */
-            var propertyHandler =
-                classProperty?.GetPropertyHandler() ??
-                (valueType == null ? null : PropertyHandlerCache.Get<object>(valueType));
-            if (propertyHandler != null)
+            else
             {
-                var propertyHandlerSetMethod = propertyHandler.GetType().GetMethod("Set");
-                value = propertyHandlerSetMethod.Invoke(propertyHandler, new[] { value, classProperty });
-                valueType = propertyHandlerSetMethod.ReturnType.GetUnderlyingType();
+                return CreateParameterForNonEnum(command,
+                    valueType,
+                    name,
+                    value,
+                    size,
+                    classProperty,
+                    dbField,
+                    parameterDirection,
+                    fallbackType);
             }
+        }
 
-            /*
-             * When the database field information exists and the field type definition is found to be different from the valueType, 
-             * if automatic type conversion is activated at this time, it will be processed.
-             */
-            if (valueType != null && dbField != null && IsAutomaticConversion(dbField))
-            {
-                var dbFieldType = dbField.Type.GetUnderlyingType();
-                if (dbFieldType != valueType)
-                {
-                    if (value != null)
-                    {
-                        value = AutomaticConvert(value, valueType, dbFieldType);
-                    }
-                    valueType = dbFieldType;
-                }
-            }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="valueType"></param>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        /// <param name="size"></param>
+        /// <param name="classProperty"></param>
+        /// <param name="dbField"></param>
+        /// <param name="parameterDirection"></param>
+        /// <param name="fallbackType"></param>
+        /// <returns></returns>
+        private static IDbDataParameter CreateParameterForNonEnum(IDbCommand command,
+            Type valueType,
+            string name,
+            object value,
+            int? size,
+            ClassProperty classProperty,
+            DbField dbField,
+            ParameterDirection? parameterDirection,
+            Type fallbackType)
+        {
+            // Property Handler
+            InvokePropertyHandler(classProperty, ref valueType, ref value);
 
-            /*
-             * Set DbType as much as possible, to avoid parameter misjudgment when Value is null.
-             * order:
-             *      1. attribute level, TypeMapAttribute define on class's property
-             *      2. property level, assigned by TypeMapper.Add(entityType, property, dbType, ...)
-             *      3. type level, use TypeMapCache, assigned by TypeMapper.Add(type, dbType, ...), not included Primitive mapping.
-             *      4. type level, primitive mapping, included special type. ex: byte[] ...etc.
-             *      5. if isEnum, use Converter.EnumDefaultDatabaseType.
-             */
+            // Auto conversion
+            EnsureAutomaticConversion(dbField, ref valueType, ref value);
 
-            // if classProperty exists, try get dbType from attribute level or property level, 
             // The reason for not using classProperty.GetDbType() is to avoid getting the type level mapping.
-            var dbType = classProperty == null ? null :
-                TypeMapCache.Get(classProperty.GetDeclaringType(), classProperty.PropertyInfo);
-            if (dbType == null && (valueType ??= dbField?.Type.GetUnderlyingType() ?? fallbackType) != null)
+
+            // DbType
+            var dbType = classProperty != null ? TypeMapCache.Get(classProperty.GetDeclaringType(), classProperty.PropertyInfo) :
+                null;
+
+            valueType = (valueType ??= dbField?.Type.GetUnderlyingType() ?? fallbackType);
+            if (dbType == null && valueType != null)
             {
                 dbType =
-                    valueType.GetDbType() ??                                        // type level, use TypeMapCache
-                    clientTypeToDbTypeResolver.Resolve(valueType) ??                // type level, primitive mapping
+                    valueType.GetDbType() ??                                        // Type level, use TypeMapCache
+                    clientTypeToDbTypeResolver.Resolve(valueType) ??                // Type level, primitive mapping
                     (dbField?.Type != null ?
-                        clientTypeToDbTypeResolver.Resolve(dbField?.Type) : null);  // fallback to the database type
-            }
-            if (dbType == null && valueType.IsEnum)
-            {
-                dbType = Converter.EnumDefaultDatabaseType;                         // use Converter.EnumDefaultDatabaseType
+                        clientTypeToDbTypeResolver.Resolve(dbField?.Type) : null);  // Fallback to the database type
             }
 
             // Create the parameter
             var parameter = command.CreateParameter(name, value, dbType, parameterDirection);
 
             // Set the size
-            var sizeValue = size.HasValue ? size.Value :
-                 dbField != null && dbField.Size.HasValue ? dbField.Size.Value : default;
-            if (sizeValue > 0)
-            {
-                parameter.Size = sizeValue;
-            }
+            parameter.Size = GetSize(size, dbField);
 
-            /*
-             * Return the parameter
-             */
+            // Parameter values
+            InvokeParameterPropertyValueSetterAttributes(parameter, classProperty);
+
+            // Return the parameter
+            return parameter;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="valueType"></param>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        /// <param name="size"></param>
+        /// <param name="classProperty"></param>
+        /// <param name="dbField"></param>
+        /// <param name="parameterDirection"></param>
+        /// <returns></returns>
+        private static IDbDataParameter CreateParameterForEnum(IDbCommand command,
+            Type valueType,
+            string name,
+            object value,
+            int? size,
+            ClassProperty classProperty,
+            DbField dbField,
+            ParameterDirection? parameterDirection)
+        {
+            // Property handler
+            InvokePropertyHandler(classProperty, ref valueType, ref value);
+
+            // DbType
+            var dbType = IsUserDefined(dbField) ? default :
+                valueType.GetDbType() ??
+                (dbField != null ? clientTypeToDbTypeResolver.Resolve(dbField.Type) : null) ??
+                (DbType?)Converter.EnumDefaultDatabaseType;
+
+            // Create the parameter
+            var parameter = command.CreateParameter(name, value, dbType, parameterDirection);
+
+            // Set the size
+            parameter.Size = GetSize(size, dbField);
+
+            // Type map attributes
+            InvokeParameterPropertyValueSetterAttributes(parameter, classProperty);
+
+            // Return the parameter
             return parameter;
         }
 
@@ -610,6 +648,103 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="classProperty"></param>
+        /// <param name="valueType"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        private static object InvokePropertyHandler(ClassProperty classProperty,
+            ref Type valueType,
+            ref object value)
+        {
+            var propertyHandler = classProperty?.GetPropertyHandler() ??
+                (valueType == null ? null : PropertyHandlerCache.Get<object>(valueType));
+
+            if (propertyHandler != null)
+            {
+                var propertyHandlerSetMethod = propertyHandler.GetType().GetMethod("Set");
+                value = propertyHandlerSetMethod.Invoke(propertyHandler, new[] { value, classProperty });
+                valueType = propertyHandlerSetMethod.ReturnType.GetUnderlyingType();
+            }
+
+            return propertyHandler;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dbField"></param>
+        /// <returns></returns>
+        private static bool IsUserDefined(DbField dbField) =>
+            string.Equals(dbField?.DatabaseType, "USER-DEFINED", StringComparison.OrdinalIgnoreCase);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="size"></param>
+        /// <param name="dbField"></param>
+        private static int GetSize(int? size,
+            DbField dbField) =>
+            size.HasValue ? size.Value :
+                 dbField?.Size.HasValue == true ? dbField.Size.Value : default;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <param name="classProperty"></param>
+        private static void InvokeParameterPropertyValueSetterAttributes(IDbDataParameter parameter,
+            ClassProperty classProperty)
+        {
+            var attributes = GetParameterPropertyValueSetterAttributes(classProperty);
+            if (attributes?.Any() != true)
+            {
+                return;
+            }
+
+            foreach (ParameterPropertyValueSetterAttribute attribute in attributes)
+            {
+                attribute.SetValue(parameter, false);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="classProperty"></param>
+        /// <returns></returns>
+        private static IEnumerable<Attribute> GetParameterPropertyValueSetterAttributes(ClassProperty classProperty) =>
+            classProperty?
+                .PropertyInfo?
+                .GetCustomAttributes()?
+                .Where(e => StaticType.ParameterPropertyValueSetterAttribute.IsAssignableFrom(e.GetType()));
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dbField"></param>
+        /// <param name="valueType"></param>
+        /// <param name="value"></param>
+        private static void EnsureAutomaticConversion(DbField dbField,
+            ref Type valueType,
+            ref object value)
+        {
+            if (valueType != null && dbField != null && IsAutomaticConversion(dbField))
+            {
+                var dbFieldType = dbField.Type.GetUnderlyingType();
+                if (dbFieldType != valueType)
+                {
+                    if (value != null)
+                    {
+                        value = AutomaticConvert(value, valueType, dbFieldType);
+                    }
+                    valueType = dbFieldType;
+                }
+            }
+        }
+
+        /// <summary>
         ///
         /// </summary>
         /// <param name="dbField"></param>
@@ -689,7 +824,6 @@ namespace RepoDb.Extensions
                 value = StaticType.Guid
                     .GetMethod("Parse", new[] { StaticType.String })
                     .Invoke(null, new[] { value });
-
             }
             return value;
         }
@@ -699,10 +833,8 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        private static object AutomaticConvertGuidToString(object value)
-        {
-            return value?.ToString();
-        }
+        private static object AutomaticConvertGuidToString(object value) =>
+            value?.ToString();
 
         /// <summary>
         /// 
