@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using RepoDb.Enumerations;
 using RepoDb.Interfaces;
 
 namespace RepoDb.Extensions
@@ -30,6 +29,14 @@ namespace RepoDb.Extensions
             {
                 queryField.Reset();
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        internal static void PrependAnUnderscoreAtParameter(this QueryField queryField)
+        {
+            queryField.Parameter?.PrependAnUnderscore();
         }
 
         /// <summary>
@@ -96,39 +103,6 @@ namespace RepoDb.Extensions
                     string.Concat(queryField.Parameter.Name.AsParameter(index, dbSetting), "_In_", valueIndex.ToString()))
                 .Join(", ");
             return string.Concat("(", values, ")");
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="queryField"></param>
-        /// <param name="index"></param>
-        /// <param name="dbSetting"></param>
-        /// <returns></returns>
-        internal static string AsFieldAndParameter(this QueryField queryField,
-            int index,
-            IDbSetting dbSetting)
-        {
-            if (queryField.Operation == Operation.Equal && queryField.Parameter.Value == null)
-            {
-                return string.Concat(queryField.AsField(dbSetting), " IS NULL");
-            }
-            else if (queryField.Operation == Operation.NotEqual && queryField.Parameter.Value == null)
-            {
-                return string.Concat(queryField.AsField(dbSetting), " IS NOT NULL");
-            }
-            else if (queryField.Operation == Operation.Between || queryField.Operation == Operation.NotBetween)
-            {
-                return AsFieldAndParameterForBetween(queryField, index, dbSetting);
-            }
-            else if (queryField.Operation == Operation.In || queryField.Operation == Operation.NotIn)
-            {
-                return AsFieldAndParameterForIn(queryField, index, dbSetting);
-            }
-            else
-            {
-                return string.Concat(queryField.AsField(dbSetting), " ", queryField.Operation.GetText(), " ", queryField.AsParameter(index, dbSetting));
-            }
         }
 
         /// <summary>

@@ -1,5 +1,6 @@
 ﻿using RepoDb.Enumerations;
 using RepoDb.Extensions;
+using RepoDb.Interfaces;
 using System;
 using System.Collections;
 using System.Data;
@@ -137,11 +138,35 @@ namespace RepoDb
         #region Methods
 
         /// <summary>
-        /// Prepend an underscore on the bound parameter object.
+        /// 
         /// </summary>
-        internal void PrependAnUnderscoreAtParameter()
+        /// <param name="index"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
+        public virtual string GetString(int index,
+            IDbSetting dbSetting)
         {
-            Parameter?.PrependAnUnderscore();
+            if (Operation == Operation.Equal && Parameter.Value == null)
+            {
+                return string.Concat(this.AsField(dbSetting), " IS NULL");
+            }
+            else if (Operation == Operation.NotEqual && Parameter.Value == null)
+            {
+                return string.Concat(this.AsField(dbSetting), " IS NOT NULL");
+            }
+            else if (Operation == Operation.Between || Operation == Operation.NotBetween)
+            {
+                return this.AsFieldAndParameterForBetween(index, dbSetting);
+            }
+            else if (Operation == Operation.In || Operation == Operation.NotIn)
+            {
+                return this.AsFieldAndParameterForIn(index, dbSetting);
+            }
+            else
+            {
+                return string.Concat(this.AsField(dbSetting), " ",
+                    Operation.GetText(), " ", this.AsParameter(index, dbSetting));
+            }
         }
 
         /// <summary>
@@ -174,7 +199,7 @@ namespace RepoDb
         /// </summary>
         public void IsForUpdate()
         {
-            PrependAnUnderscoreAtParameter();
+            this.PrependAnUnderscoreAtParameter();
         }
 
         /// <summary>
@@ -253,7 +278,7 @@ namespace RepoDb
         public override bool Equals(object obj)
         {
             if (obj is null) return false;
-            
+
             return obj.GetHashCode() == GetHashCode();
         }
 
@@ -265,7 +290,7 @@ namespace RepoDb
         public bool Equals(QueryField other)
         {
             if (other is null) return false;
-            
+
             return other.GetHashCode() == GetHashCode();
         }
 
