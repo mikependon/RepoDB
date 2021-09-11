@@ -72,11 +72,14 @@ namespace RepoDb.Reflection
                 if (size > 0)
                 {
                     var sizeExpression = GetDbParameterSizeAssignmentExpression(parameterExpression, GetSize(null, dbField));
-                    callExpressions.Add(sizeExpression);
+                    callExpressions.AddIfNotNull(sizeExpression);
                 }
 
                 // Type map attributes
-                //InvokeParameterPropertyValueSetterAttributes(parametersExpression, paramProperty);
+                var parameterPropertyValueSetterAttributesExpressions = GetParameterPropertyValueSetterAttributesAssignmentExpressions(
+                    parameterExpression,
+                    (entityProperty ?? paramProperty));
+                callExpressions.AddRangeIfNotNullOrNotEmpty(parameterPropertyValueSetterAttributesExpressions);
 
                 // DbCommand.Parameters.Add
                 var parametersExpression = Expression.Property(commandParameterExpression, "Parameters");

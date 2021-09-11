@@ -705,7 +705,7 @@ namespace RepoDb.Extensions
                 return;
             }
 
-            foreach (ParameterPropertyValueSetterAttribute attribute in attributes)
+            foreach (var attribute in attributes)
             {
                 attribute.SetValue(parameter, false);
             }
@@ -716,11 +716,14 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="classProperty"></param>
         /// <returns></returns>
-        private static IEnumerable<Attribute> GetParameterPropertyValueSetterAttributes(ClassProperty classProperty) =>
+        private static IEnumerable<ParameterPropertyValueSetterAttribute> GetParameterPropertyValueSetterAttributes(ClassProperty classProperty) =>
             classProperty?
                 .PropertyInfo?
                 .GetCustomAttributes()?
-                .Where(e => StaticType.ParameterPropertyValueSetterAttribute.IsAssignableFrom(e.GetType()));
+                .Where(e =>
+                    StaticType.ParameterPropertyValueSetterAttribute.IsAssignableFrom(e.GetType()))
+                .Select(e =>
+                    (ParameterPropertyValueSetterAttribute)e);
 
         /// <summary>
         /// 
