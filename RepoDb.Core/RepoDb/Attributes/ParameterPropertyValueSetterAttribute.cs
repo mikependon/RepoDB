@@ -19,22 +19,18 @@ namespace RepoDb.Attributes
             string propertyName,
             object value)
         {
-            // ParameterType
-            ThrowIfNull(parameterType, "ParameterType");
+            // Validation
+            Validate(parameterType, propertyName);
+
+            // Set the properties
             ParameterType = parameterType;
-
-            // PropertyName
-            ThrowIfNull(propertyName, "PropertyName");
             PropertyName = propertyName;
-
-            // PropertyInfo
-            EnsurePropertyInfo($"The property '{propertyName}' is not found from type '{parameterType.FullName}'.");
-
-            // Value
             Value = value;
         }
 
-        // Properties
+        /*
+         * Properties
+         */
 
         /// <summary>
         /// Gets the represented <see cref="Type"/> of the <see cref="IDbDataParameter"/> object.
@@ -57,7 +53,75 @@ namespace RepoDb.Attributes
         /// <returns></returns>
         internal PropertyInfo PropertyInfo { get; private set; }
 
-        // Methods
+        /*
+         * Methods
+         */
+
+        /// <summary>
+        /// Gets the string representation of the current attribute object.
+        /// </summary>
+        /// <returns>The represented string.</returns>
+        public override string ToString() =>
+            $"{ParameterType?.FullName}.{PropertyName} = {Value}";
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameter"></param>
+        internal void SetValue(IDbDataParameter parameter)
+        {
+            ThrowIfNull(parameter, "Parameter");
+
+            if (ParameterType.IsAssignableFrom(parameter.GetType()))
+            {
+                PropertyInfo.SetValue(parameter, Value);
+            }
+        }
+
+        /*
+         * Helpers
+         */
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameterType"></param>
+        /// <param name="propertyName"></param>
+        private void Validate(Type parameterType,
+            string propertyName)
+        {
+            ThrowIfNull(parameterType, "ParameterType");
+            ValidateParameterType(parameterType);
+            ThrowIfNull(propertyName, "PropertyName");
+            EnsurePropertyInfo(parameterType, propertyName);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameterType"></param>
+        private void ValidateParameterType(Type parameterType)
+        {
+            if (StaticType.IDbDataParameter.IsAssignableFrom(parameterType) == false)
+            {
+                throw new InvalidOperationException($"The parameter type must be deriving from the '{StaticType.IDbDataParameter.FullName}' interface. " +
+                    $"The current passed parameter type is '{parameterType.FullName}'.");
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameterType"></param>
+        /// <param name="propertyName"></param>
+        private void EnsurePropertyInfo(Type parameterType,
+            string propertyName)
+        {
+            // Property
+            PropertyInfo = parameterType?.GetProperty(propertyName);
+            ThrowIfNull(PropertyInfo,
+                $"The property '{propertyName}' is not found from type '{parameterType?.FullName}'.");
+        }
 
         /// <summary>
         /// 
@@ -71,60 +135,6 @@ namespace RepoDb.Attributes
             {
                 throw new NullReferenceException(message);
             }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="message"></param>
-        private void EnsurePropertyInfo(string message)
-        {
-            PropertyInfo = ParameterType?.GetProperty(PropertyName);
-
-            if (PropertyInfo == null)
-            {
-                ThrowIfNull(PropertyInfo, message);
-            }
-        }
-
-        /// <summary>
-        /// Gets the string representation of the current attribute object.
-        /// </summary>
-        /// <returns>The represented string.</returns>
-        public override string ToString() =>
-            $"{ParameterType?.FullName}.{PropertyName} = {Value}";
-
-        /// <summary>
-        /// Sets the value of the <see cref="IDbDataParameter"/> object.
-        /// </summary>
-        /// <param name="parameter">The instance of the <see cref="IDbDataParameter"/> object.</param>
-        /// <param name="throwError">
-        /// Throw an error if the parameter instance is null or the type is different from the 
-        /// <see cref="ParameterType"/> property.
-        /// </param>
-        internal void SetValue(IDbDataParameter parameter,
-            bool throwError = true)
-        {
-            if (parameter == null)
-            {
-                if (throwError)
-                {
-                    throw new NullReferenceException("Parameter");
-                }
-                return;
-            }
-
-            if (ParameterType != parameter?.GetType())
-            {
-                if (throwError)
-                {
-                    throw new InvalidOperationException($"The instance of the given parameter must be of type '{ParameterType.FullName}'.");
-                }
-                return;
-            }
-
-            // TODO: Minor culprit. (NTH) Pre-compile this (if necessary)
-            PropertyInfo.SetValue(parameter, Value);
         }
     }
 }

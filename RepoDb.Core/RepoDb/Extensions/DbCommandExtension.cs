@@ -707,7 +707,7 @@ namespace RepoDb.Extensions
 
             foreach (var attribute in attributes)
             {
-                attribute.SetValue(parameter, false);
+                attribute.SetValue(parameter);
             }
         }
 
