@@ -19,8 +19,18 @@ namespace RepoDb.Attributes
             string propertyName,
             object value)
         {
+            // ParameterType
+            ThrowIfNull(parameterType, "ParameterType");
             ParameterType = parameterType;
+
+            // PropertyName
+            ThrowIfNull(propertyName, "PropertyName");
             PropertyName = propertyName;
+
+            // PropertyInfo
+            EnsurePropertyInfo($"The property '{propertyName}' is not found from type '{parameterType.FullName}'.");
+
+            // Value
             Value = value;
         }
 
@@ -41,14 +51,48 @@ namespace RepoDb.Attributes
         /// </summary>
         public object Value { get; }
 
-        // Methods
-
         /// <summary>
         /// Gets the instance of the <see cref="PropertyInfo"/> based on the target property name.
         /// </summary>
         /// <returns></returns>
-        internal PropertyInfo GetPropertyInfo() =>
-            ParameterType.GetProperty(PropertyName);
+        internal PropertyInfo PropertyInfo { get; private set; }
+
+        // Methods
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="message"></param>
+        private void ThrowIfNull(object obj,
+            string message)
+        {
+            if (obj == null)
+            {
+                throw new NullReferenceException(message);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        private void EnsurePropertyInfo(string message)
+        {
+            PropertyInfo = ParameterType?.GetProperty(PropertyName);
+
+            if (PropertyInfo == null)
+            {
+                ThrowIfNull(PropertyInfo, message);
+            }
+        }
+
+        /// <summary>
+        /// Gets the string representation of the current attribute object.
+        /// </summary>
+        /// <returns>The represented string.</returns>
+        public override string ToString() =>
+            $"{ParameterType?.FullName}.{PropertyName} = {Value}";
 
         /// <summary>
         /// Sets the value of the <see cref="IDbDataParameter"/> object.
@@ -79,7 +123,8 @@ namespace RepoDb.Attributes
                 return;
             }
 
-            GetPropertyInfo().SetValue(parameter, Value);
+            // TODO: Minor culprit. (NTH) Pre-compile this (if necessary)
+            PropertyInfo.SetValue(parameter, Value);
         }
     }
 }

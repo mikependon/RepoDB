@@ -1805,29 +1805,10 @@ namespace RepoDb.Reflection
                 classProperty, dbField);
             parameterAssignmentExpressions.AddIfNotNull(dbTypeAssignmentExpression);
 
-            //-------------------
-            // TODO: Optimize using the ParameterValueAttribute
-
-            // DbParameter.SqlDbType (System)
-            var systemSqlDbTypeAssignmentExpression = GetDbParameterSystemSqlDbTypeAssignmentExpression(parameterVariableExpression,
+            // ParameterPropertyValueSetterAttribute
+            var parameterPropertyValueSetterAttributesExpressions = GetParameterPropertyValueSetterAttributesAssignmentExpressions(parameterVariableExpression,
                 classProperty);
-            parameterAssignmentExpressions.AddIfNotNull(systemSqlDbTypeAssignmentExpression);
-
-            // DbParameter.SqlDbType (Microsoft)
-            var microsoftSqlDbTypeAssignmentExpression = GetDbParameterMicrosoftSqlDbTypeAssignmentExpression(parameterVariableExpression,
-                classProperty);
-            parameterAssignmentExpressions.AddIfNotNull(microsoftSqlDbTypeAssignmentExpression);
-
-            // DbParameter.MySqlDbType
-            var mySqlDbTypeAssignmentExpression = GetDbParameterMySqlDbTypeAssignmentExpression(parameterVariableExpression,
-                classProperty);
-            parameterAssignmentExpressions.AddIfNotNull(mySqlDbTypeAssignmentExpression);
-
-            // DbParameter.NpgsqlDbType
-            var npgsqlDbTypeAssignmentExpression = GetDbParameterNpgsqlDbTypeAssignmentExpression(parameterVariableExpression,
-                classProperty);
-            parameterAssignmentExpressions.AddIfNotNull(npgsqlDbTypeAssignmentExpression);
-            //-------------------
+            parameterAssignmentExpressions.AddRangeIfNotNullOrNotEmpty(parameterPropertyValueSetterAttributesExpressions);
 
             // DbParameter.Direction
             if (dbSetting.IsDirectionSupported)

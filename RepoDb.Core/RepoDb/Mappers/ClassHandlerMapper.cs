@@ -144,10 +144,9 @@ namespace RepoDb
 
             // Variables for cache
             var key = GenerateHashCode(type);
-            var existing = (object)null;
 
             // Try get the value
-            maps.TryRemove(key, out existing);
+            maps.TryRemove(key, out var _);
         }
 
         #endregion

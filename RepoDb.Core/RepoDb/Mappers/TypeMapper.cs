@@ -139,10 +139,9 @@ namespace RepoDb
         public static void Remove(Type type)
         {
             var key = type.GetHashCode();
-            var value = (DbType?)null;
 
             // Try get the value
-            maps.TryRemove(key, out value);
+            maps.TryRemove(key, out var _);
         }
 
         #endregion
@@ -415,10 +414,9 @@ namespace RepoDb
 
             // Variables
             var key = GenerateHashCode(entityType, propertyInfo);
-            var value = (DbType?)null;
 
             // Try get the value
-            maps.TryRemove(key, out value);
+            maps.TryRemove(key, out var _);
         }
 
         /*
