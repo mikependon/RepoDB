@@ -129,8 +129,7 @@ namespace RepoDb
         public void Remove(string key,
             bool throwException = true)
         {
-            var item = (object)null;
-            if (cache.TryRemove(key, out item) == false && throwException == true)
+            if (cache.TryRemove(key, out var _) == false && throwException == true)
             {
                 throw new ItemNotFoundException($"Failed to remove an item with key '{key}'.");
             }

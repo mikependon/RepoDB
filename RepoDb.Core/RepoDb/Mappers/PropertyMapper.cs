@@ -293,10 +293,9 @@ namespace RepoDb
 
             // Variables
             var key = GenerateHashCode(typeof(TEntity), propertyInfo);
-            var value = (string)null;
 
             // Try get the value
-            maps.TryRemove(key, out value);
+            maps.TryRemove(key, out var _);
         }
 
         /*

@@ -136,10 +136,9 @@ namespace RepoDb
         public static void Remove(Type entityType)
         {
             var key = entityType.GetHashCode();
-            var value = (string)null;
 
             // Try get the value
-            maps.TryRemove(key, out value);
+            maps.TryRemove(key, out var _);
         }
 
         /*

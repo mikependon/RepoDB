@@ -146,10 +146,9 @@ namespace RepoDb
 
             // Variables for cache
             var key = GenerateHashCode(type);
-            var existing = (object)null;
 
             // Try get the value
-            maps.TryRemove(key, out existing);
+            maps.TryRemove(key, out var _);
         }
 
         #endregion
@@ -194,7 +193,7 @@ namespace RepoDb
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
         public static void Add<TEntity, TPropertyHandler>(Expression<Func<TEntity, object>> expression,
             bool force)
-            where TEntity : class 
+            where TEntity : class
             where TPropertyHandler : new() =>
             Add(expression, new TPropertyHandler(), force);
 
@@ -220,7 +219,7 @@ namespace RepoDb
         /// <typeparam name="TPropertyHandler">The type of the property handler.</typeparam>
         /// <param name="propertyName">The instance of property handler.</param>
         public static void Add<TEntity, TPropertyHandler>(string propertyName)
-            where TEntity : class 
+            where TEntity : class
             where TPropertyHandler : new() =>
             Add<TEntity, TPropertyHandler>(propertyName, new TPropertyHandler(), false);
 
@@ -587,10 +586,9 @@ namespace RepoDb
 
             // Variables
             var key = GenerateHashCode(entityType, propertyInfo);
-            var value = (object)null;
 
             // Try to remove the value
-            maps.TryRemove(key, out value);
+            maps.TryRemove(key, out var _);
         }
 
         #endregion

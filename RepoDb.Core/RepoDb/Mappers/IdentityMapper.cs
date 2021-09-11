@@ -232,10 +232,9 @@ namespace RepoDb
 
             // Variables
             var key = GenerateHashCode(entityType);
-            var value = (ClassProperty)null;
 
             // Try get the value
-            maps.TryRemove(key, out value);
+            maps.TryRemove(key, out var _);
         }
 
         /*
