@@ -77,12 +77,16 @@ namespace RepoDb.Reflection
                 return null;
             }
 
+            // The problem to this is because of the possibilities of multiple attributes configured for 
+            // DB multiple providers within a single entity and if the parameterExpression is not really
+            // covertible to the target attriute.ParameterType
+
+            //return Expression.Call(Expression.Convert(parameterExpression, attribute.ParameterType),
+            //    attribute.PropertyInfo.SetMethod,
+            //    Expression.Constant(attribute.Value));
+
             var method = GetParameterPropertyValueSetterAttributeSetValueMethod();
-            return Expression.Call(Expression.Constant(attribute), method, new Expression[]
-            {
-                parameterExpression,
-                Expression.Constant(true)
-            });
+            return Expression.Call(Expression.Constant(attribute), method, parameterExpression);
         }
 
         /// <summary>
