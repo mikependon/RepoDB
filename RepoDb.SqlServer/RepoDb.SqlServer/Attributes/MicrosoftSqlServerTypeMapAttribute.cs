@@ -7,6 +7,7 @@ namespace RepoDb.Attributes
     /// <summary>
     /// An attribute used to define a mapping of .NET CLR <see cref="Type"/> into its equivalent <see cref="SqlDbType"/> value.
     /// </summary>
+    [Obsolete("Use the SqlParameterSqlDbTypeAttribute instead.")]
     public class MicrosoftSqlServerTypeMapAttribute : ParameterPropertyValueSetterAttribute
     {
         /// <summary>
