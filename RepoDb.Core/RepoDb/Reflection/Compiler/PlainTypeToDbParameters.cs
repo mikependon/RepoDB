@@ -113,8 +113,8 @@ namespace RepoDb.Reflection
             var dbType = (paramProperty == null ? null : TypeMapCache.Get(paramProperty.GetDeclaringType(), paramProperty.PropertyInfo)) ??
                 (entityProperty == null ? null : TypeMapCache.Get(entityProperty.GetDeclaringType(), entityProperty.PropertyInfo));
 
-            valueType = (valueType ?? dbField?.Type.GetUnderlyingType());
-            if (dbType == null && (valueType ??= dbField?.Type.GetUnderlyingType()) != null)
+            valueType ??= dbField?.Type.GetUnderlyingType();
+            if (dbType == null && valueType != null)
             {
                 var resolver = new ClientTypeToDbTypeResolver();
                 dbType =
