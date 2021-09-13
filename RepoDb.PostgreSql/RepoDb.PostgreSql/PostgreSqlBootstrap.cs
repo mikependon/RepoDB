@@ -1,6 +1,6 @@
 ﻿using Npgsql;
 using RepoDb.DbHelpers;
-using RepoDb.PostgreSql.DbSettings;
+using RepoDb.DbSettings;
 using RepoDb.StatementBuilders;
 
 namespace RepoDb

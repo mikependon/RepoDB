@@ -4,8 +4,9 @@ using System;
 namespace RepoDb.Attributes
 {
     /// <summary>
-    /// An attribute used to define a mapping of .NET CLR <see cref="Type"/> into its equivalent <see cref="MySqlDbType"/> value.
+    /// An attribute that is used to define a mapping of .NET CLR <see cref="Type"/> into its equivalent <see cref="MySqlDbType"/> value.
     /// </summary>
+    [Obsolete("Use the MySqlConnectorParameterDbTypeAttribute instead.")]
     public class MySqlConnectorTypeMapAttribute : ParameterPropertyValueSetterAttribute
     {
         /// <summary>
@@ -17,7 +18,7 @@ namespace RepoDb.Attributes
         { }
 
         /// <summary>
-        /// Gets a <see cref="MySqlDbType"/> that is currently mapped.
+        /// Gets a <see cref="global::MySqlConnector.MySqlDbType"/> that is currently mapped.
         /// </summary>
         public MySqlDbType DbType => (MySqlDbType)Value;
     }

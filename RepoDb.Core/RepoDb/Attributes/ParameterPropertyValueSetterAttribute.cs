@@ -45,7 +45,7 @@ namespace RepoDb.Attributes
         /// <summary>
         /// Gets the value that is used to set property.
         /// </summary>
-        public object Value { get; }
+        internal protected object Value { get; }
 
         /// <summary>
         /// Gets the instance of the <see cref="PropertyInfo"/> based on the target property name.
