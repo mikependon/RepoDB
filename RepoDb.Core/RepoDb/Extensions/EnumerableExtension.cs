@@ -92,7 +92,15 @@ namespace RepoDb.Extensions
         public static bool IsNullOrEmpty<T>(this IEnumerable<T> value) => !value?.Any() ?? true;
         
 #if NETSTANDARD2_0
-        public static HashSet<T> ToHashSet<T>(this IEnumerable<T> source, IEqualityComparer<T> comparer)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="comparer"></param>
+        /// <returns></returns>
+        internal static HashSet<T> ToHashSet<T>(this IEnumerable<T> source,
+            IEqualityComparer<T> comparer)
         {
             return new(source, comparer);
         }
