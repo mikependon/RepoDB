@@ -17,7 +17,7 @@ To get the latest updates about this library, follow us on [Twitter](https://twi
 
 ## News/Updates
 
-Starting at version 1.12.9, we will issue a deprecation notice to [System.Data.SqlClient](https://www.nuget.org/packages/System.Data.SqlClient/). This means that RepoDB will only be defaultly supporting the [Microsoft.Data.SqlClient](https://www.nuget.org/packages/Microsoft.Data.SqlClient) package in the near future.
+Starting at version 1.12.9, we will issue a deprecation notice to [System.Data.SqlClient](https://www.nuget.org/packages/System.Data.SqlClient/) package. In the future, RepoDB will only be "defaultly" supporting the [Microsoft.Data.SqlClient](https://www.nuget.org/packages/Microsoft.Data.SqlClient) package.
 
 ### Working with System.Data.SqlClient
 

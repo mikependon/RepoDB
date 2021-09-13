@@ -13,7 +13,7 @@ It is your best alternative ORM to both Dapper and EntityFramework.
 
 ## News/Updates
 
-Starting at version 1.12.9, we will issue a deprecation notice to [System.Data.SqlClient](https://www.nuget.org/packages/System.Data.SqlClient/). In the future, RepoDB will only be supporting the [Microsoft.Data.SqlClient](https://www.nuget.org/packages/Microsoft.Data.SqlClient) package.
+Starting at version 1.12.9, we will issue a deprecation notice to [System.Data.SqlClient](https://www.nuget.org/packages/System.Data.SqlClient/) package. In the future, RepoDB will only be "defaultly" supporting the [Microsoft.Data.SqlClient](https://www.nuget.org/packages/Microsoft.Data.SqlClient) package.
 
 ### Working with System.Data.SqlClient
 
