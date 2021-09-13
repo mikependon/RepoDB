@@ -1,7 +1,6 @@
 ﻿using MySqlConnector;
-using RepoDb.DbSettings;
 
-namespace RepoDb.MySqlConnector.DbSettings
+namespace RepoDb.DbSettings
 {
     /// <summary>
     /// A setting class used for <see cref="MySqlConnection"/> data provider.

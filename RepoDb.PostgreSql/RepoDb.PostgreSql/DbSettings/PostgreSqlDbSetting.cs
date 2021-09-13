@@ -1,7 +1,6 @@
 ﻿using Npgsql;
-using RepoDb.DbSettings;
 
-namespace RepoDb.PostgreSql.DbSettings
+namespace RepoDb.DbSettings
 {
     /// <summary>
     /// A setting class used for <see cref="NpgsqlConnection"/> data provider.

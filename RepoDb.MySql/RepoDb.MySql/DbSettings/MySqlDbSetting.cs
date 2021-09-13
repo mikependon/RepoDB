@@ -1,7 +1,6 @@
 ﻿using MySql.Data.MySqlClient;
-using RepoDb.DbSettings;
 
-namespace RepoDb.MySql.DbSettings
+namespace RepoDb.DbSettings
 {
     /// <summary>
     /// A setting class used for <see cref="MySqlConnection"/> data provider.
