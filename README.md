@@ -21,7 +21,7 @@ Starting at version 1.12.9, we will issue a deprecation notice to [System.Data.S
 
 ### Working with System.Data.SqlClient
 
-If you continue to work with this package, you have to call the code mentioned below for bootstraping (atleast once).
+If you wish to continue working with this package, you have to bootstrap the `SqlConnection` object with the code below (in the Startup).
 
 ```csharp
 var dbSetting = new SqlServerDbSetting();
