@@ -9,7 +9,7 @@ namespace RepoDb.Attributes
     public class MySqlConnectorParameterDbTypeAttribute : ParameterPropertyValueSetterAttribute
     {
         /// <summary>
-        /// Creates a new instance of <see cref="MySqlConnectorTypeMapAttribute"/> class.
+        /// Creates a new instance of <see cref="MySqlConnectorParameterDbTypeAttribute"/> class.
         /// </summary>
         /// <param name="mySqlDbType">A target <see cref="MySqlConnector.MySqlDbType"/> value.</param>
         public MySqlConnectorParameterDbTypeAttribute(MySqlDbType mySqlDbType)
@@ -17,7 +17,7 @@ namespace RepoDb.Attributes
         { }
 
         /// <summary>
-        /// Gets a <see cref="MySqlConnector.MySqlDbType"/> that is currently mapped.
+        /// Gets the mapped <see cref="MySqlConnector.MySqlDbType"/> value of the parameter.
         /// </summary>
         public MySqlDbType MySqlDbType => (MySqlDbType)Value;
     }

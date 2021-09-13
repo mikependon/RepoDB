@@ -17,7 +17,7 @@ namespace RepoDb.Attributes
         { }
 
         /// <summary>
-        /// Gets a type name that is currently mapped.
+        /// Gets the mapped offset value.
         /// </summary>
         public int Offset => (int)Value;
     }

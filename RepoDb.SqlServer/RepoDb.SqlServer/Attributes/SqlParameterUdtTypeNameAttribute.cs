@@ -11,13 +11,13 @@ namespace RepoDb.Attributes
         /// <summary>
         /// Creates a new instance of <see cref="SqlParameterTypeNameAttribute"/> class.
         /// </summary>
-        /// <param name="udtTypeName">The name of the UTD.</param>
+        /// <param name="udtTypeName">The name of the user-defined type.</param>
         public SqlParameterUdtTypeNameAttribute(string udtTypeName)
             : base(typeof(SqlParameter), nameof(SqlParameter.UdtTypeName), udtTypeName)
         { }
 
         /// <summary>
-        /// Gets a type name that is currently mapped.
+        /// Gets the name of the currently mapped user-defined type of the parameter.
         /// </summary>
         public string UdtTypeName => (string)Value;
     }
