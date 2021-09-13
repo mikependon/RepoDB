@@ -13,6 +13,7 @@ namespace RepoDb.UnitTests.CustomObjects
         public override string SourceColumn { get; set; }
         public override bool SourceColumnNullMapping { get; set; }
         public override object Value { get; set; }
+        public string Tag { get; set; }
         public override void ResetDbType()
         {
         }

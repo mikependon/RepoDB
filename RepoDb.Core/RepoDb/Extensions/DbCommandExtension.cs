@@ -154,7 +154,7 @@ namespace RepoDb.Extensions
         /// <param name="param">The object to be used when creating the parameters.</param>
         public static void CreateParameters(this IDbCommand command,
             object param) =>
-            CreateParameters(command, param, null);
+            CreateParameters(command, param, param?.GetType());
 
         /// <summary>
         /// Creates a parameter from object by mapping the property from the target entity type.
@@ -214,28 +214,22 @@ namespace RepoDb.Extensions
             // Other
             else
             {
-                CreateParametersInternal(command, param, propertiesToSkip, dbFields);
+                CreateParametersInternal(command, param, propertiesToSkip, entityType, dbFields);
             }
         }
 
         /// <summary>
-        /// Create Parameter, the process will handle value conversion and type conversion.
+        /// 
         /// </summary>
-        /// <param name="command">The command object to be used.</param>
-        /// <param name="name">Entity property's name.</param>
-        /// <param name="value">Entity property's value, maybe null.</param>
-        /// <param name="size">The size of the parameter.</param>
-        /// <param name="classProperty">
-        /// The entity's class property information. <br />
-        /// If the parameter is a dictionary, it will be null, otherwise it will not be null.
-        /// </param>
-        /// <param name="dbField">
-        /// Used to get the actual field type information of the database to determine whether automatic type conversion is required. <br />
-        /// When the tableName is assigned, it will be based on the database field information obtained by the tableName, so this parameter will be null in most cases.
-        /// </param>
-        /// <param name="parameterDirection">The direction of the parameter.</param>
-        /// <param name="fallbackType">Used when none of the above parameters can determine the value of Parameter.DbType.</param>
-        /// <returns>An instance of the newly created parameter object.</returns>
+        /// <param name="command"></param>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        /// <param name="size"></param>
+        /// <param name="classProperty"></param>
+        /// <param name="dbField"></param>
+        /// <param name="parameterDirection"></param>
+        /// <param name="fallbackType"></param>
+        /// <returns></returns>
         private static IDbDataParameter CreateParameter(IDbCommand command,
             string name,
             object value,
@@ -340,6 +334,7 @@ namespace RepoDb.Extensions
         /// <param name="value"></param>
         /// <param name="size"></param>
         /// <param name="classProperty"></param>
+        /// <param name="entityType"></param>
         /// <param name="dbField"></param>
         /// <param name="parameterDirection"></param>
         /// <returns></returns>
@@ -381,10 +376,12 @@ namespace RepoDb.Extensions
         /// <param name="command"></param>
         /// <param name="param"></param>
         /// <param name="propertiesToSkip"></param>
+        /// <param name="entityType"></param>
         /// <param name="dbFields"></param>
         private static void CreateParametersInternal(IDbCommand command,
             object param,
             HashSet<string> propertiesToSkip,
+            Type entityType,
             IEnumerable<DbField> dbFields = null)
         {
             var type = param.GetType();
@@ -396,25 +393,32 @@ namespace RepoDb.Extensions
             }
 
             // Variables
-            var classProperties = type.IsClassType() ? PropertyCache.Get(type) : type.GetClassProperties();
+            var entityClassProperties = entityType != null ? PropertyCache.Get(entityType) : default;
+            var paramClassProperties = type.IsClassType() ? PropertyCache.Get(type) : type.GetClassProperties();
 
             // Skip
             if (propertiesToSkip != null)
             {
-                classProperties = classProperties?.Where(p => propertiesToSkip.Contains(p.PropertyInfo.Name) == false);
+                paramClassProperties = paramClassProperties?.Where(p => propertiesToSkip.Contains(p.PropertyInfo.Name) == false);
             }
 
             // Iterate
-            foreach (var classProperty in classProperties)
+            foreach (var paramClassProperty in paramClassProperties)
             {
-                var name = classProperty.GetMappedName();
+                var entityClassProperty = (entityType == paramClassProperty.GetDeclaringType()) ?
+                    paramClassProperty :
+                    entityClassProperties?
+                        .FirstOrDefault(e => string.Equals(e.GetMappedName(), paramClassProperty.GetMappedName()));
+                var name = paramClassProperty
+                    .GetMappedName()
+                    .AsUnquoted(command.Connection.GetDbSetting());
                 var dbField = GetDbField(name, dbFields);
-                var value = classProperty.PropertyInfo.GetValue(param);
+                var value = paramClassProperty.PropertyInfo.GetValue(param);
                 var parameter = CreateParameter(command,
                     name,
                     value,
                     dbField?.Size,
-                    classProperty,
+                    (entityClassProperty ?? paramClassProperty),
                     dbField,
                     null,
                     null);
