@@ -1,19 +1,19 @@
 ﻿using Microsoft.Data.Sqlite;
-using System;
 
 namespace RepoDb.Attributes
 {
     /// <summary>
-    /// An attribute that is used to define a mapping of .NET CLR <see cref="Type"/> into its equivalent <see cref="SqliteType"/> value.
+    /// An attribute used to define a value to the <see cref="SqliteParameter.SqliteType"/>
+    /// property via an entity property before the actual execution.
     /// </summary>
     public class SqliteParameterDbTypeAttribute : ParameterPropertyValueSetterAttribute
     {
         /// <summary>
         /// Creates a new instance of <see cref="SqliteParameterDbTypeAttribute"/> class.
         /// </summary>
-        /// <param name="value">A target <see cref="SqliteType"/> value.</param>
-        public SqliteParameterDbTypeAttribute(SqliteType value)
-            : base(typeof(SqliteParameter), nameof(SqliteParameter.SqliteType), value)
+        /// <param name="sqliteType">A target <see cref="Microsoft.Data.Sqlite.SqliteType"/> value.</param>
+        public SqliteParameterDbTypeAttribute(SqliteType sqliteType)
+            : base(typeof(SqliteParameter), nameof(SqliteParameter.SqliteType), sqliteType)
         { }
 
         /// <summary>

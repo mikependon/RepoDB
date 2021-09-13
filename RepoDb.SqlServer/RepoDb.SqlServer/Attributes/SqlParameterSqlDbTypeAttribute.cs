@@ -4,8 +4,8 @@ using System.Data;
 namespace RepoDb.Attributes
 {
     /// <summary>
-    /// An attribute used to define a value to the <see cref="SqlParameter.SqlDbType"/> property via an entity property
-    /// before the actual execution.
+    /// An attribute used to define a value to the <see cref="SqlParameter.SqlDbType"/>
+    /// property via an entity property before the actual execution.
     /// </summary>
     public class SqlParameterSqlDbTypeAttribute : ParameterPropertyValueSetterAttribute
     {
@@ -18,7 +18,7 @@ namespace RepoDb.Attributes
         { }
 
         /// <summary>
-        /// Gets a <see cref="System.Data.SqlDbType"/> that is currently mapped.
+        /// Gets the mapped <see cref="System.Data.SqlDbType"/> value.
         /// </summary>
         public SqlDbType SqlDbType => (SqlDbType)Value;
     }
