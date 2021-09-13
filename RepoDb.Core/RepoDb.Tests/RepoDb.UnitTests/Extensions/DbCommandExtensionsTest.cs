@@ -11,9 +11,16 @@ namespace RepoDb.UnitTests.Extensions
     [TestClass]
     public class DbCommandExtensionsTest
     {
+        [TestInitialize]
+        public void Initialize()
+        {
+            DbSettingMapper.Add<PropertyHandlerConnection>(new CustomDbSetting(), true);
+        }
+
         [TestCleanup]
         public void Cleanup()
         {
+            DbSettingMapper.Clear();
             PropertyHandlerMapper.Clear();
             PropertyHandlerCache.Flush();
         }
@@ -21,10 +28,6 @@ namespace RepoDb.UnitTests.Extensions
         #region SubClasses
 
         private class PropertyHandlerConnection : CustomDbConnection { }
-
-        #endregion
-
-        #region SubClasses
 
         private class TestClass
         {
@@ -51,9 +54,9 @@ namespace RepoDb.UnitTests.Extensions
 
         #endregion
 
-#region PropertyHandlerTests
+        #region PropertyHandlerTests
 
-#region PropertyLevel
+        #region PropertyLevel
 
         [TestMethod]
         public void TestDbCommandCreateParametersPropertyHandlerPropertyLevelInvocationViaDictionary()
@@ -101,9 +104,9 @@ namespace RepoDb.UnitTests.Extensions
             }
         }
 
-#endregion
+        #endregion
 
-#region Type Level
+        #region Type Level
 
         [TestMethod]
         public void TestDbCommandCreateParametersPropertyHandlerTypeLevelInvocationViaDynamic()
@@ -197,9 +200,9 @@ namespace RepoDb.UnitTests.Extensions
             }
         }
 
-#endregion
+        #endregion
 
-#endregion
+        #endregion
 
         [TestMethod]
         public void TestIsPlainTypeForAnoynmousType()
@@ -233,9 +236,12 @@ where id in (@normalArray)
                     normalArray = new[] { 5, 6 },
                     emptyArray = Array.Empty<int>(),
                     nullArray = (IEnumerable<int>)null,
-                    concat1ArrayA = new[] { 100, 101 }, concat1ArrayB = new[] { 102, 103 },
-                    concat2ArrayA = Array.Empty<int>(), concat2ArrayB = new[] { 200, 201 },
-                    concat3ArrayA = Array.Empty<int>(), concat3ArrayB = Array.Empty<int>()
+                    concat1ArrayA = new[] { 100, 101 },
+                    concat1ArrayB = new[] { 102, 103 },
+                    concat2ArrayA = Array.Empty<int>(),
+                    concat2ArrayB = new[] { 200, 201 },
+                    concat3ArrayA = Array.Empty<int>(),
+                    concat3ArrayB = Array.Empty<int>()
                 };
                 var command = connection.CreateDbCommandForExecution(sql, param, skipCommandArrayParametersCheck: false);
 

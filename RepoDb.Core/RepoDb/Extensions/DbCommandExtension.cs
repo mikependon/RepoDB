@@ -154,7 +154,7 @@ namespace RepoDb.Extensions
         /// <param name="param">The object to be used when creating the parameters.</param>
         public static void CreateParameters(this IDbCommand command,
             object param) =>
-            CreateParameters(command, param, null);
+            CreateParameters(command, param, param?.GetType());
 
         /// <summary>
         /// Creates a parameter from object by mapping the property from the target entity type.
@@ -275,7 +275,6 @@ namespace RepoDb.Extensions
         /// <param name="value"></param>
         /// <param name="size"></param>
         /// <param name="classProperty"></param>
-        /// <param name="entityType"></param>
         /// <param name="dbField"></param>
         /// <param name="parameterDirection"></param>
         /// <param name="fallbackType"></param>
@@ -410,7 +409,9 @@ namespace RepoDb.Extensions
                     paramClassProperty :
                     entityClassProperties?
                         .FirstOrDefault(e => string.Equals(e.GetMappedName(), paramClassProperty.GetMappedName()));
-                var name = paramClassProperty.GetMappedName();
+                var name = paramClassProperty
+                    .GetMappedName()
+                    .AsUnquoted(command.Connection.GetDbSetting());
                 var dbField = GetDbField(name, dbFields);
                 var value = paramClassProperty.PropertyInfo.GetValue(param);
                 var parameter = CreateParameter(command,

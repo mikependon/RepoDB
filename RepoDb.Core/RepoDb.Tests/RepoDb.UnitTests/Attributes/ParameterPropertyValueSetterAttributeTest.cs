@@ -8,6 +8,18 @@ namespace RepoDb.UnitTests.Attributes
     [TestClass]
     public class ParameterPropertyValueSetterAttributeTest
     {
+        [TestInitialize]
+        public void Initialize()
+        {
+            DbSettingMapper.Add<CustomDbConnection>(new CustomDbSetting(), true);
+        }
+
+        [TestCleanup]
+        public void Cleanup()
+        {
+            DbSettingMapper.Clear();
+        }
+
         #region Classes
 
         private class ParameterTagAttributeTestClass : ParameterPropertyValueSetterAttribute
@@ -21,8 +33,6 @@ namespace RepoDb.UnitTests.Attributes
 
         private class ParameterPropertyValueSetterAttributeTestClass
         {
-            public int Id { get; set; }
-
             [ParameterPropertyValueSetter(typeof(CustomDbParameter),
                 "Tag",
                 "ValueOfTag")]
@@ -31,8 +41,6 @@ namespace RepoDb.UnitTests.Attributes
 
         private class ParameterPropertyValueSetterAttributeViaDerivedTestClass
         {
-            public int Id { get; set; }
-
             [ParameterTagAttributeTestClass("ValueOfTag")]
             public string ColumnTag { get; set; }
         }
@@ -40,7 +48,53 @@ namespace RepoDb.UnitTests.Attributes
         #endregion
 
         [TestMethod]
-        public void TestParameterPropertyValueSetterAttributeViaCreateParameters()
+        public void TestParameterPropertyValueSetterAttributeViaEntityViaCreateParameters()
+        {
+            // Act
+            using (var connection = new CustomDbConnection())
+            {
+                var command = connection.CreateCommand();
+                DbCommandExtension
+                    .CreateParameters(command, new ParameterPropertyValueSetterAttributeTestClass
+                    {
+                        ColumnTag = "Test"
+                    });
+
+                // Assert
+                Assert.AreEqual(1, command.Parameters.Count);
+
+                // Assert
+                var parameter = command.Parameters["@ColumnTag"];
+                Assert.AreEqual("ValueOfTag", ((CustomDbParameter)parameter).Tag);
+                Assert.AreEqual("Test", parameter.Value);
+            }
+        }
+
+        [TestMethod]
+        public void TestParameterPropertyValueSetterAttributeViaDerivedClassViaEntityViaCreateParameters()
+        {
+            // Act
+            using (var connection = new CustomDbConnection())
+            {
+                var command = connection.CreateCommand();
+                DbCommandExtension
+                    .CreateParameters(command, new ParameterPropertyValueSetterAttributeViaDerivedTestClass
+                    {
+                        ColumnTag = "Test"
+                    });
+
+                // Assert
+                Assert.AreEqual(1, command.Parameters.Count);
+
+                // Assert
+                var parameter = command.Parameters["@ColumnTag"];
+                Assert.AreEqual("ValueOfTag", ((CustomDbParameter)parameter).Tag);
+                Assert.AreEqual("Test", parameter.Value);
+            }
+        }
+
+        [TestMethod]
+        public void TestParameterPropertyValueSetterAttributeViaAnonymousViaCreateParameters()
         {
             // Act
             using (var connection = new CustomDbConnection())
@@ -57,14 +111,14 @@ namespace RepoDb.UnitTests.Attributes
                 Assert.AreEqual(1, command.Parameters.Count);
 
                 // Assert
-                var parameter = command.Parameters["ColumnTag"];
+                var parameter = command.Parameters["@ColumnTag"];
                 Assert.AreEqual("ValueOfTag", ((CustomDbParameter)parameter).Tag);
                 Assert.AreEqual("Test", parameter.Value);
             }
         }
 
         [TestMethod]
-        public void TestParameterPropertyValueSetterAttributeViaDerivedClassViaCreateParameters()
+        public void TestParameterPropertyValueSetterAttributeViaDerivedClassViaAnonymousViaCreateParameters()
         {
             // Act
             using (var connection = new CustomDbConnection())
@@ -81,7 +135,7 @@ namespace RepoDb.UnitTests.Attributes
                 Assert.AreEqual(1, command.Parameters.Count);
 
                 // Assert
-                var parameter = command.Parameters["ColumnTag"];
+                var parameter = command.Parameters["@ColumnTag"];
                 Assert.AreEqual("ValueOfTag", ((CustomDbParameter)parameter).Tag);
                 Assert.AreEqual("Test", parameter.Value);
             }
