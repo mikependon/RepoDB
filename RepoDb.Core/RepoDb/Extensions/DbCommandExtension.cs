@@ -350,7 +350,7 @@ namespace RepoDb.Extensions
             InvokePropertyHandler(classProperty, ref valueType, ref value);
 
             // DbType
-            var dbType = IsUserDefined(dbField) ? default :
+            var dbType = IsPostgreSqlUserDefined(dbField) ? default :
                 classProperty.GetDbType() ??
                 valueType.GetDbType() ??
                 (dbField != null ? clientTypeToDbTypeResolver.Resolve(dbField.Type) : null) ??
@@ -681,8 +681,9 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="dbField"></param>
         /// <returns></returns>
-        private static bool IsUserDefined(DbField dbField) =>
-            string.Equals(dbField?.DatabaseType, "USER-DEFINED", StringComparison.OrdinalIgnoreCase);
+        private static bool IsPostgreSqlUserDefined(DbField dbField) =>
+            string.Equals(dbField?.DatabaseType, "USER-DEFINED", StringComparison.OrdinalIgnoreCase) &&
+            string.Equals(dbField?.Provider, "PGSQL", StringComparison.OrdinalIgnoreCase);
 
         /// <summary>
         /// 

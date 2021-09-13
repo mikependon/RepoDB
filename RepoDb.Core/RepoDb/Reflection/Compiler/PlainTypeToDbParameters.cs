@@ -153,7 +153,7 @@ namespace RepoDb.Reflection
             Expression valueExpression)
         {
             // DbType
-            var dbType = IsUserDefined(dbField) ? default :
+            var dbType = IsPostgreSqlUserDefined(dbField) ? default :
                 paramProperty.GetDbType() ??
                 valueType.GetDbType() ??
                 (dbField != null ? new ClientTypeToDbTypeResolver().Resolve(dbField.Type) : null) ??

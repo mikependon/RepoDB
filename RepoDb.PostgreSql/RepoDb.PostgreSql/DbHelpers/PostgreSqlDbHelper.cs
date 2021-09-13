@@ -101,7 +101,8 @@ namespace RepoDb.DbHelpers
                 null,
                 null,
                 null,
-                reader.IsDBNull(4) ? "text" : reader.GetString(4));
+                reader.IsDBNull(4) ? "text" : reader.GetString(4),
+                "PGSQL");
         }
 
         /// <summary>
@@ -121,7 +122,8 @@ namespace RepoDb.DbHelpers
                 null,
                 null,
                 null,
-                await reader.IsDBNullAsync(4, cancellationToken) ? "text" : reader.GetString(4));
+                await reader.IsDBNullAsync(4, cancellationToken) ? "text" : reader.GetString(4),
+                "PGSQL");
         }
 
         #endregion
