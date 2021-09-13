@@ -6,13 +6,13 @@ namespace RepoDb.Attributes
     /// An attribute used to define a value to the <see cref="MySqlParameter.MySqlDbType"/>
     /// property via an entity property before the actual execution.
     /// </summary>
-    public class MySqlParameterMySqlDbTypeAttribute : ParameterPropertyValueSetterAttribute
+    public class MySqlParameterDbTypeAttribute : ParameterPropertyValueSetterAttribute
     {
         /// <summary>
-        /// Creates a new instance of <see cref="MySqlParameterMySqlDbTypeAttribute"/> class.
+        /// Creates a new instance of <see cref="MySqlParameterDbTypeAttribute"/> class.
         /// </summary>
         /// <param name="value">A target <see cref="MySql.Data.MySqlClient.MySqlDbType"/> value.</param>
-        public MySqlParameterMySqlDbTypeAttribute(MySqlDbType value)
+        public MySqlParameterDbTypeAttribute(MySqlDbType value)
             : base(typeof(MySqlParameter), nameof(MySqlParameter.MySqlDbType), value)
         { }
 
