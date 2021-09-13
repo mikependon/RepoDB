@@ -334,7 +334,6 @@ namespace RepoDb.Extensions
         /// <param name="value"></param>
         /// <param name="size"></param>
         /// <param name="classProperty"></param>
-        /// <param name="entityType"></param>
         /// <param name="dbField"></param>
         /// <param name="parameterDirection"></param>
         /// <returns></returns>
