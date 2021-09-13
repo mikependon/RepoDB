@@ -1,6 +1,6 @@
 ﻿using MySqlConnector;
 using RepoDb.DbHelpers;
-using RepoDb.MySqlConnector.DbSettings;
+using RepoDb.DbSettings;
 using RepoDb.StatementBuilders;
 
 namespace RepoDb
