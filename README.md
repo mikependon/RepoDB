@@ -15,6 +15,21 @@ It is your best alternative ORM to both Dapper and EntityFramework.
 
 To get the latest updates about this library, follow us on [Twitter](https://twitter.com/mike_pendon)!
 
+## News/Updates
+
+Starting at version 1.12.9, we will issue a deprecation notice to [System.Data.SqlClient](https://www.nuget.org/packages/System.Data.SqlClient/). This means that RepoDB will only be defaultly supporting the [Microsoft.Data.SqlClient](https://www.nuget.org/packages/Microsoft.Data.SqlClient) package in the near future.
+
+### Working with System.Data.SqlClient
+
+If you continue to work with this package, you have to call the code mentioned below for bootstraping (atleast once).
+
+```csharp
+var dbSetting = new SqlServerDbSetting();
+DbSettingMapper.Add<System.Data.SqlClient.SqlConnection>(dbSetting, true);
+DbHelperMapper.Add<System.Data.SqlClient.SqlConnection>(new SqlServerDbHelper(), true);
+StatementBuilderMapper.Add<System.Data.SqlClient.SqlConnection>(new SqlServerStatementBuilder(dbSetting), true);
+```
+
 ## Benefits/Advantages
 
 Like with any other ORMs, RepoDB does provide the preliminary [methods](https://repodb.net/docs#operations) needed for your basic operations. The good thing is, it also does provide the operations that is needed to cater your edge-cases like [2nd-Layer Cache](https://repodb.net/feature/caching), [Tracing](https://repodb.net/feature/tracing), [Repositories](https://repodb.net/feature/repositories), [Property Handlers](https://repodb.net/feature/propertyhandlers) and [Batch](https://repodb.net/feature/batchoperations)/[Bulk Operations](https://repodb.net/feature/bulkoperations).

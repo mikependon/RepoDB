@@ -11,6 +11,23 @@ RepoDB is an open-source .NET ORM library that bridges the gaps of micro-ORMs an
 
 It is your best alternative ORM to both Dapper and EntityFramework.
 
+## News/Updates
+
+Starting at version 1.12.9, we will issue a deprecation notice to [System.Data.SqlClient](https://www.nuget.org/packages/System.Data.SqlClient/). This means that RepoDB will only be defaultly supporting the [Microsoft.Data.SqlClient](https://www.nuget.org/packages/Microsoft.Data.SqlClient) package in the near future.
+
+### Working with System.Data.SqlClient
+
+If you continue to work with this package, you have to call the code mentioned below for bootstraping (atleast once).
+
+```csharp
+var dbSetting = new SqlServerDbSetting();
+DbSettingMapper.Add<System.Data.SqlClient.SqlConnection>(dbSetting, true);
+DbHelperMapper.Add<System.Data.SqlClient.SqlConnection>(new SqlServerDbHelper(), true);
+StatementBuilderMapper.Add<System.Data.SqlClient.SqlConnection>(new SqlServerStatementBuilder(dbSetting), true);
+```
+
+Or, you can replicate the actual [SqlServerBootstrap](https://github.com/mikependon/RepoDB/blob/master/RepoDb.SqlServer/RepoDb.SqlServer/SqlServerBootstrap.cs) class implementation and attach it to your solution. Then, call the local class `Initialize()` method explicitly.
+
 ## Important Pages
 
 - [GitHub Home Page](https://github.com/mikependon/RepoDb) - to learn more about the core library.
