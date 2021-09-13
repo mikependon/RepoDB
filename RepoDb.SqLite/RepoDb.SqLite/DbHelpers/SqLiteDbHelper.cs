@@ -70,7 +70,8 @@ namespace RepoDb.DbHelpers
                 null,
                 null,
                 null,
-                null);
+                null,
+                "SQLITE");
         }
 
         /// <summary>
@@ -92,7 +93,8 @@ namespace RepoDb.DbHelpers
                 null,
                 null,
                 null,
-                null);
+                null,
+                "SQLITE");
         }
 
         /// <summary>

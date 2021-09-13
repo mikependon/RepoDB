@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -113,7 +112,8 @@ namespace RepoDb.DbHelpers
                 size,
                 reader.IsDBNull(6) ? (byte?)null : byte.Parse(reader.GetInt32(6).ToString()),
                 reader.IsDBNull(7) ? (byte?)null : byte.Parse(reader.GetInt32(7).ToString()),
-                reader.GetString(8));
+                reader.GetString(8),
+                "MYSQL");
         }
 
         /// <summary>
@@ -145,7 +145,8 @@ namespace RepoDb.DbHelpers
                 size,
                 await reader.IsDBNullAsync(6, cancellationToken) ? (byte?)null : byte.Parse((await reader.GetFieldValueAsync<ulong>(6, cancellationToken)).ToString()),
                 await reader.IsDBNullAsync(7, cancellationToken) ? (byte?)null : byte.Parse((await reader.GetFieldValueAsync<ulong>(7, cancellationToken)).ToString()),
-                await reader.GetFieldValueAsync<string>(8, cancellationToken));
+                await reader.GetFieldValueAsync<string>(8, cancellationToken),
+                "MYSQL");
         }
 
         #endregion

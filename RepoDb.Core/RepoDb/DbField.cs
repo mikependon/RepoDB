@@ -21,6 +21,7 @@ namespace RepoDb
         /// <param name="precision">The precision of the field.</param>
         /// <param name="scale">The scale of the field.</param>
         /// <param name="databaseType">The database type of the field.</param>
+        /// <param name="provider">The database provider who created this instance.</param>
         public DbField(string name,
             bool isPrimary,
             bool isIdentity,
@@ -29,7 +30,8 @@ namespace RepoDb
             int? size,
             byte? precision,
             byte? scale,
-            string databaseType)
+            string databaseType,
+            string provider = null)
         {
             // Name is required
             if (string.IsNullOrWhiteSpace(name))
@@ -54,6 +56,7 @@ namespace RepoDb
             }
             Scale = scale;
             DatabaseType = databaseType;
+            Provider = provider;
         }
 
         #region Properties
@@ -102,6 +105,11 @@ namespace RepoDb
         /// Gets the database type of the column.
         /// </summary>
         public string DatabaseType { get; }
+
+        /// <summary>
+        /// Gets the database provider who created this instance.
+        /// </summary>
+        public string Provider { get; }
 
         #endregion
 
@@ -153,6 +161,10 @@ namespace RepoDb
             {
                 hashCode += DatabaseType.GetHashCode();
             }
+            if (Provider != null)
+            {
+                hashCode += Provider.GetHashCode();
+            }
 
             // Set and return the hashcode
             return (this.hashCode = hashCode).Value;
@@ -166,7 +178,7 @@ namespace RepoDb
         public override bool Equals(object obj)
         {
             if (obj is null) return false;
-            
+
             return obj.GetHashCode() == GetHashCode();
         }
 
@@ -178,7 +190,7 @@ namespace RepoDb
         public bool Equals(DbField other)
         {
             if (other is null) return false;
-            
+
             return other.GetHashCode() == GetHashCode();
         }
 

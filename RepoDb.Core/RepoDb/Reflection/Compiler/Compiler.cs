@@ -1422,7 +1422,7 @@ namespace RepoDb.Reflection
             {
                 try
                 {
-                    if (!IsUserDefined(dbField))
+                    if (!IsPostgreSqlUserDefined(dbField))
                     {
                         var dbType = classProperty.GetDbType() ?? classProperty.PropertyInfo.PropertyType.GetUnderlyingType().GetDbType();
                         var toType = dbType.HasValue ? new DbTypeToClientTypeResolver().Resolve(dbType.Value) : targetType?.GetUnderlyingType();
@@ -1457,8 +1457,9 @@ namespace RepoDb.Reflection
         /// </summary>
         /// <param name="dbField"></param>
         /// <returns></returns>
-        private static bool IsUserDefined(DbField dbField) =>
-            string.Equals(dbField?.DatabaseType, "USER-DEFINED", StringComparison.OrdinalIgnoreCase);
+        private static bool IsPostgreSqlUserDefined(DbField dbField) =>
+            string.Equals(dbField?.DatabaseType, "USER-DEFINED", StringComparison.OrdinalIgnoreCase) &&
+            string.Equals(dbField?.Provider, "PGSQL", StringComparison.OrdinalIgnoreCase);
 
         /// <summary>
         /// 
