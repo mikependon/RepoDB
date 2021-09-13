@@ -25,10 +25,16 @@ If you continue to work with this package, you have to call the code mentioned b
 
 ```csharp
 var dbSetting = new SqlServerDbSetting();
-DbSettingMapper.Add<System.Data.SqlClient.SqlConnection>(dbSetting, true);
-DbHelperMapper.Add<System.Data.SqlClient.SqlConnection>(new SqlServerDbHelper(), true);
-StatementBuilderMapper.Add<System.Data.SqlClient.SqlConnection>(new SqlServerStatementBuilder(dbSetting), true);
+
+DbSettingMapper
+	.Add<System.Data.SqlClient.SqlConnection>(dbSetting, true);
+DbHelperMapper
+	.Add<System.Data.SqlClient.SqlConnection>(new SqlServerDbHelper(), true);
+StatementBuilderMapper
+	.Add<System.Data.SqlClient.SqlConnection>(new SqlServerStatementBuilder(dbSetting), true);
 ```
+
+Or, you can replicate the actual [SqlServerBootstrap](https://github.com/mikependon/RepoDB/blob/master/RepoDb.SqlServer/RepoDb.SqlServer/SqlServerBootstrap.cs) class implementation and attach it to your solution. Then, call the local class `Initialize()` method explicitly.
 
 ## Benefits/Advantages
 
