@@ -11,13 +11,13 @@ namespace RepoDb.Attributes
         /// <summary>
         /// Creates a new instance of <see cref="SqlParameterTypeNameAttribute"/> class.
         /// </summary>
-        /// <param name="typeName">The name of the type.</param>
+        /// <param name="typeName">The type name of the table-valued parameter (TVP) object.</param>
         public SqlParameterTypeNameAttribute(string typeName)
             : base(typeof(SqlParameter), nameof(SqlParameter.TypeName), typeName)
         { }
 
         /// <summary>
-        /// Gets a type name that is currently mapped.
+        /// Gets the name of the mapped table-valued parameter object (TVP) of the parameter.
         /// </summary>
         public string TypeName => (string)Value;
     }
