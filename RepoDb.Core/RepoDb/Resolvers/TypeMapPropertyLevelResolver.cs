@@ -1,4 +1,5 @@
 ﻿using RepoDb.Attributes;
+using RepoDb.Attributes.Parameter;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using System.Data;
@@ -21,7 +22,8 @@ namespace RepoDb.Resolvers
             var dbType = (DbType?)null;
 
             // Attribute Level
-            var attribute = propertyInfo.GetCustomAttribute<TypeMapAttribute>();
+            var attribute = propertyInfo.GetCustomAttribute<TypeMapAttribute>() ??
+                propertyInfo.GetCustomAttribute<DbTypeAttribute>();
             if (attribute != null)
             {
                 dbType = attribute.DbType;

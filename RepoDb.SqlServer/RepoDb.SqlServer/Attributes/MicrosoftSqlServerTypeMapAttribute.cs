@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using RepoDb.Attributes.Parameter.SqlServer;
 using System;
 using System.Data;
 
@@ -7,19 +7,19 @@ namespace RepoDb.Attributes
     /// <summary>
     /// An attribute used to define a mapping of .NET CLR <see cref="Type"/> into its equivalent <see cref="SqlDbType"/> value.
     /// </summary>
-    [Obsolete("Use the SqlParameterSqlDbTypeAttribute instead.")]
-    public class MicrosoftSqlServerTypeMapAttribute : ParameterPropertyValueSetterAttribute
+    [Obsolete("Use the RepoDb.Attributes.SqlServer.SqlDbTypeAttribute instead.")]
+    public class MicrosoftSqlServerTypeMapAttribute : SqlDbTypeAttribute
     {
         /// <summary>
         /// Creates a new instance of <see cref="MicrosoftSqlServerTypeMapAttribute"/> class.
         /// </summary>
-        /// <param name="dbType">A target <see cref="SqlDbType"/> value.</param>
-        public MicrosoftSqlServerTypeMapAttribute(SqlDbType dbType)
-            : base(typeof(SqlParameter), nameof(SqlParameter.SqlDbType), dbType)
+        /// <param name="sqlDbType">The value of the target <see cref="SqlDbType"/>.</param>
+        public MicrosoftSqlServerTypeMapAttribute(SqlDbType sqlDbType)
+            : base(sqlDbType)
         { }
 
         /// <summary>
-        /// Gets a <see cref="SqlDbType"/> that is currently mapped.
+        /// Gets the mapped <see cref="System.Data.SqlDbType"/> value of the property.
         /// </summary>
         public SqlDbType DbType => (SqlDbType)Value;
     }

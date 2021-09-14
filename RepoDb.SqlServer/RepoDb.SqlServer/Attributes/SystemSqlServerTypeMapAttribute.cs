@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RepoDb.Attributes.Parameter;
+using System;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -7,8 +8,8 @@ namespace RepoDb.Attributes
     /// <summary>
     /// An attribute used to define a mapping of .NET CLR <see cref="Type"/> into its equivalent <see cref="SqlDbType"/> value.
     /// </summary>
-    [Obsolete("Use the SqlParameterSqlDbTypeAttribute instead. The System.Data.SqlClient namespace will soon to be removed from this library.")]
-    public class SystemSqlServerTypeMapAttribute : ParameterPropertyValueSetterAttribute
+    [Obsolete("Use the RepoDb.Attributes.SqlServer.SqlDbTypeAttribute instead. The System.Data.SqlClient namespace support will soon be removed from the library.")]
+    public class SystemSqlServerTypeMapAttribute : PropertyValueAttribute
     {
         /// <summary>
         /// Creates a new instance of <see cref="MicrosoftSqlServerTypeMapAttribute"/> class.

@@ -1,4 +1,4 @@
-﻿using RepoDb.Attributes;
+﻿using RepoDb.Attributes.Parameter;
 using RepoDb.Enumerations;
 using RepoDb.Exceptions;
 using RepoDb.Interfaces;
@@ -319,7 +319,7 @@ namespace RepoDb.Extensions
             parameter.Size = (parameterSize > 0) ? parameterSize : parameter.Size;
 
             // Parameter values
-            InvokeParameterPropertyValueSetterAttributes(parameter, classProperty);
+            InvokePropertyValueAttributes(parameter, classProperty);
 
             // Return the parameter
             return parameter;
@@ -363,7 +363,7 @@ namespace RepoDb.Extensions
             parameter.Size = GetSize(size, dbField);
 
             // Type map attributes
-            InvokeParameterPropertyValueSetterAttributes(parameter, classProperty);
+            InvokePropertyValueAttributes(parameter, classProperty);
 
             // Return the parameter
             return parameter;
@@ -700,10 +700,10 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="parameter"></param>
         /// <param name="classProperty"></param>
-        private static void InvokeParameterPropertyValueSetterAttributes(IDbDataParameter parameter,
+        private static void InvokePropertyValueAttributes(IDbDataParameter parameter,
             ClassProperty classProperty)
         {
-            var attributes = GetParameterPropertyValueSetterAttributes(classProperty);
+            var attributes = GetPropertyValueAttributes(classProperty);
             if (attributes?.Any() != true)
             {
                 return;
@@ -720,14 +720,14 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="classProperty"></param>
         /// <returns></returns>
-        private static IEnumerable<ParameterPropertyValueSetterAttribute> GetParameterPropertyValueSetterAttributes(ClassProperty classProperty) =>
+        private static IEnumerable<PropertyValueAttribute> GetPropertyValueAttributes(ClassProperty classProperty) =>
             classProperty?
                 .PropertyInfo?
                 .GetCustomAttributes()?
                 .Where(e =>
-                    StaticType.ParameterPropertyValueSetterAttribute.IsAssignableFrom(e.GetType()))
+                    StaticType.PropertyValueAttribute.IsAssignableFrom(e.GetType()))
                 .Select(e =>
-                    (ParameterPropertyValueSetterAttribute)e);
+                    (PropertyValueAttribute)e);
 
         /// <summary>
         /// 

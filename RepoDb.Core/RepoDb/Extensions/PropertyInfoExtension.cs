@@ -6,6 +6,7 @@ using RepoDb.Enumerations;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using RepoDb.Interfaces;
+using RepoDb.Attributes.Parameter;
 
 namespace RepoDb.Extensions
 {
@@ -55,7 +56,8 @@ namespace RepoDb.Extensions
             Type declaringType)
         {
             var attributeName = ((MapAttribute)GetCustomAttribute(property, StaticType.MapAttribute))?.Name ??
-                ((ColumnAttribute)GetCustomAttribute(property, StaticType.ColumnAttribute))?.Name;
+                ((ColumnAttribute)GetCustomAttribute(property, StaticType.ColumnAttribute))?.Name ??
+                ((NameAttribute)GetCustomAttribute(property, StaticType.NameAttribute))?.Name;
             return attributeName ??
                 PropertyMapper.Get(declaringType, property) ??
                 property.Name;

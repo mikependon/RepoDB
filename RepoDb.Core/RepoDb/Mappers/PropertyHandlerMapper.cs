@@ -406,7 +406,7 @@ namespace RepoDb
             // Extract
             if (propertyInfo != null)
             {
-                propertyInfo = PropertyCache.Get(entityType, propertyInfo.AsField()).PropertyInfo ?? propertyInfo;
+                propertyInfo = PropertyCache.Get(entityType, propertyInfo?.AsField())?.PropertyInfo ?? propertyInfo;
             }
 
             // Variables

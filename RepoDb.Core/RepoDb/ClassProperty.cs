@@ -1,4 +1,5 @@
 ﻿using RepoDb.Attributes;
+using RepoDb.Attributes.Parameter;
 using RepoDb.Extensions;
 using System;
 using System.ComponentModel.DataAnnotations;
@@ -140,6 +141,7 @@ namespace RepoDb
         /// Gets the <see cref="TypeMapAttribute"/> if present.
         /// </summary>
         /// <returns>The instance of <see cref="TypeMapAttribute"/>.</returns>
+        [Obsolete("Use the GetDbTypeAttribute() method instead.")]
         public TypeMapAttribute GetTypeMapAttribute()
         {
             if (isTypeMapAttributeWasSet)
@@ -148,6 +150,27 @@ namespace RepoDb
             }
             isTypeMapAttributeWasSet = true;
             return typeMapAttribute = PropertyInfo.GetCustomAttribute(StaticType.TypeMapAttribute) as TypeMapAttribute;
+        }
+
+        /*
+         * GetDbTypeAttribute
+         */
+        private bool isDbTypeAttributeWasSet;
+        private DbTypeAttribute dbTypeAttribute;
+
+        /// <summary>
+        /// Gets the <see cref="DbTypeAttribute"/> if present.
+        /// </summary>
+        /// <returns>The instance of <see cref="DbTypeAttribute"/>.</returns>
+        public DbTypeAttribute GetDbTypeAttribute()
+        {
+            if (isDbTypeAttributeWasSet)
+            {
+                return dbTypeAttribute;
+            }
+            isDbTypeAttributeWasSet = true;
+            return dbTypeAttribute = (PropertyInfo.GetCustomAttribute(StaticType.DbTypeAttribute) ??
+                PropertyInfo.GetCustomAttribute(StaticType.TypeMapAttribute)) as DbTypeAttribute;
         }
 
         /*
