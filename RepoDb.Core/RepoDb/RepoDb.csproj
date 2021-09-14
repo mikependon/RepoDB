@@ -20,6 +20,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Attributes\DbParameterDbTypeAttribute.cs" />
+    <Compile Remove="Attributes\DbParameterDirectionAttribute.cs" />
+    <Compile Remove="Attributes\DbParameterIsNullableAttribute.cs" />
+    <Compile Remove="Attributes\DbParameterNameAttribute.cs" />
+    <Compile Remove="Attributes\DbParameterPrecisionAttribute.cs" />
+    <Compile Remove="Attributes\DbParameterScaleAttribute.cs" />
+    <Compile Remove="Attributes\DbParameterSizeAttribute.cs" />
+    <Compile Remove="Attributes\PropertyValueAttribute.cs" />
     <Compile Remove="ClassMap.cs" />
     <Compile Remove="Contexts\Execution\InsertAllExecutionContextCache.cs" />
     <Compile Remove="Contexts\Execution\InsertExecutionContextCache.cs" />

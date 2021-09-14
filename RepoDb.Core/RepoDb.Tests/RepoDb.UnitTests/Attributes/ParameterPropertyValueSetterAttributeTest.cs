@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Attributes;
+using RepoDb.Attributes.Parameter;
 using RepoDb.Extensions;
 using RepoDb.UnitTests.CustomObjects;
 
@@ -22,7 +23,7 @@ namespace RepoDb.UnitTests.Attributes
 
         #region Classes
 
-        private class ParameterTagAttributeTestClass : ParameterPropertyValueSetterAttribute
+        private class ParameterTagAttributeTestClass : PropertyValueAttribute
         {
             public ParameterTagAttributeTestClass(string tag)
                 : base(typeof(CustomDbParameter), "Tag", tag)
@@ -33,7 +34,7 @@ namespace RepoDb.UnitTests.Attributes
 
         private class ParameterPropertyValueSetterAttributeTestClass
         {
-            [ParameterPropertyValueSetter(typeof(CustomDbParameter),
+            [PropertyValueAttribute(typeof(CustomDbParameter),
                 "Tag",
                 "ValueOfTag")]
             public string ColumnTag { get; set; }

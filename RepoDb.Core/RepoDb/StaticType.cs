@@ -1,4 +1,5 @@
 ﻿using RepoDb.Attributes;
+using RepoDb.Attributes.Parameter;
 using RepoDb.Enumerations;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
@@ -234,9 +235,9 @@ namespace RepoDb
         public static Type Operation => typeof(Operation);
 
         /// <summary>
-        /// Gets a type of the <see cref="Attributes.ParameterPropertyValueSetterAttribute"/> .NET CLR type.
+        /// Gets a type of the <see cref="PropertyValueAttribute"/> .NET CLR type.
         /// </summary>
-        public static Type ParameterPropertyValueSetterAttribute => typeof(ParameterPropertyValueSetterAttribute);
+        public static Type PropertyValueAttribute => typeof(PropertyValueAttribute);
 
         /// <summary>
         /// Gets a type of the <see cref="Attributes.PropertyHandlerAttribute"/> .NET CLR type.
