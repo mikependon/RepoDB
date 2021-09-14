@@ -115,6 +115,11 @@ namespace RepoDb
         public static Type DbType => typeof(DbType);
 
         /// <summary>
+        /// Gets a type of the <see cref="Attributes.Parameter.DbTypeAttribute"/> .NET CLR type.
+        /// </summary>
+        public static Type DbTypeAttribute => typeof(DbTypeAttribute);
+
+        /// <summary>
         /// Gets a type of the <see cref="decimal"/> .NET CLR type.
         /// </summary>
         public static Type Decimal => typeof(decimal);
@@ -218,6 +223,11 @@ namespace RepoDb
         /// Gets a type of the <see cref="Attributes.MapAttribute"/> .NET CLR type.
         /// </summary>
         public static Type MapAttribute => typeof(MapAttribute);
+
+        /// <summary>
+        /// Gets a type of the <see cref="Attributes.Parameter.ColumnAttribute"/> .NET CLR type.
+        /// </summary>
+        public static Type NameAttribute => typeof(NameAttribute);
 
         /// <summary>
         /// Gets a type of the <see cref="System.Nullable"/> .NET CLR type.

@@ -25,8 +25,6 @@ namespace RepoDb.Extensions
             }
         }
 
-        // TODO: Remove the filter in the 'TEntity'
-
         /// <summary>
         /// Gets the list of <see cref="PropertyInfo"/> objects from the data entity type as <see cref="ClassProperty"/> objects.
         /// </summary>

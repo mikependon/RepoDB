@@ -1598,8 +1598,8 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static MethodCallExpression GetDbParameterDbTypeAssignmentExpression(ParameterExpression parameterVariableExpression,
             ClassProperty classProperty,
-            DbField dbField)
-            => GetDbParameterDbTypeAssignmentExpression(parameterVariableExpression, GetDbType(classProperty, dbField.Type));
+            DbField dbField) =>
+            GetDbParameterDbTypeAssignmentExpression(parameterVariableExpression, GetDbType(classProperty, dbField.Type));
 
         /// <summary>
         ///
@@ -1608,8 +1608,8 @@ namespace RepoDb.Reflection
         /// <param name="dbField"></param>
         /// <returns></returns>
         internal static MethodCallExpression GetDbParameterDbTypeAssignmentExpression(ParameterExpression parameterVariableExpression,
-            DbField dbField)
-            => GetDbParameterDbTypeAssignmentExpression(parameterVariableExpression, GetDbType(null, dbField.Type));
+            DbField dbField) =>
+            GetDbParameterDbTypeAssignmentExpression(parameterVariableExpression, GetDbType(null, dbField.Type));
 
         /// <summary>
         ///
@@ -1621,11 +1621,11 @@ namespace RepoDb.Reflection
             DbType? dbType)
         {
             var expression = (MethodCallExpression)null;
-            var dbParameterDbTypeSetMethod = StaticType.DbParameter.GetProperty("DbType").SetMethod;
 
             // Set the DB Type
             if (dbType != null)
             {
+                var dbParameterDbTypeSetMethod = StaticType.DbParameter.GetProperty("DbType").SetMethod;
                 expression = Expression.Call(parameterVariableExpression, dbParameterDbTypeSetMethod, Expression.Constant(dbType));
             }
 
@@ -1782,6 +1782,11 @@ namespace RepoDb.Reflection
             var createParameterExpression = GetDbCommandCreateParameterExpression(commandParameterExpression);
             parameterAssignmentExpressions.AddIfNotNull(Expression.Assign(parameterVariableExpression, createParameterExpression));
 
+            // PropertyValueAttributes / DbField must precide
+            var propertyValueAttributeAssignmentExpressions = GetPropertyValueAttributeAssignmentExpressions(parameterVariableExpression,
+                classProperty);
+            parameterAssignmentExpressions.AddRangeIfNotNullOrNotEmpty(propertyValueAttributeAssignmentExpressions);
+
             // DbParameter.Name
             var nameAssignmentExpression = GetDbParameterNameAssignmentExpression(parameterVariableExpression,
                 dbField,
@@ -1805,11 +1810,6 @@ namespace RepoDb.Reflection
             var dbTypeAssignmentExpression = GetDbParameterDbTypeAssignmentExpression(parameterVariableExpression,
                 classProperty, dbField);
             parameterAssignmentExpressions.AddIfNotNull(dbTypeAssignmentExpression);
-
-            // ParameterPropertyValueSetterAttribute
-            var parameterPropertyValueSetterAttributesExpressions = GetParameterPropertyValueSetterAttributesAssignmentExpressions(parameterVariableExpression,
-                classProperty);
-            parameterAssignmentExpressions.AddRangeIfNotNullOrNotEmpty(parameterPropertyValueSetterAttributesExpressions);
 
             // DbParameter.Direction
             if (dbSetting.IsDirectionSupported)
