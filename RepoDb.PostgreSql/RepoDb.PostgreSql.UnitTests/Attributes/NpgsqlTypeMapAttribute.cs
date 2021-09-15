@@ -1,18 +1,19 @@
-﻿using Microsoft.Data.SqlClient;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RepoDb.Attributes.Parameter.SqlServer;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Npgsql;
+using NpgsqlTypes;
+using RepoDb.Attributes;
 using RepoDb.DbSettings;
 using RepoDb.Extensions;
 
-namespace RepoDb.SqlServer.UnitTests.Attributes.Parameter.SqlServer
+namespace RepoDb.PostgreSql.UnitTests.Attributes
 {
     [TestClass]
-    public class ForceColumnEncryptionAttributeTest
+    public class NpgsqlTypeMapAttributeTest
     {
         [TestInitialize]
         public void Initialize()
         {
-            DbSettingMapper.Add<SqlConnection>(new SqlServerDbSetting(), true);
+            DbSettingMapper.Add<NpgsqlConnection>(new PostgreSqlDbSetting(), true);
         }
 
         [TestCleanup]
@@ -23,24 +24,24 @@ namespace RepoDb.SqlServer.UnitTests.Attributes.Parameter.SqlServer
 
         #region Classes
 
-        private class ForceColumnEncryptionAttributeTestClass
+        private class NpgsqlTypeMapAttributeTestClass
         {
-            [ForceColumnEncryption(true)]
+            [NpgsqlTypeMap(NpgsqlDbType.Box)]
             public object ColumnName { get; set; }
         }
 
         #endregion
 
         [TestMethod]
-        public void TestForceColumnEncryptionAttributeViaEntityViaCreateParameters()
+        public void TestNpgsqlTypeMapAttributeViaEntityViaCreateParameters()
         {
             // Act
-            using (var connection = new SqlConnection())
+            using (var connection = new NpgsqlConnection())
             {
                 using (var command = connection.CreateCommand())
                 {
                     DbCommandExtension
-                        .CreateParameters(command, new ForceColumnEncryptionAttributeTestClass
+                        .CreateParameters(command, new NpgsqlTypeMapAttributeTestClass
                         {
                             ColumnName = "Test"
                         });
@@ -50,16 +51,16 @@ namespace RepoDb.SqlServer.UnitTests.Attributes.Parameter.SqlServer
 
                     // Assert
                     var parameter = command.Parameters["@ColumnName"];
-                    Assert.IsTrue(parameter.ForceColumnEncryption);
+                    Assert.AreEqual(NpgsqlDbType.Box, parameter.NpgsqlDbType);
                 }
             }
         }
 
         [TestMethod]
-        public void TestForceColumnEncryptionAttributeViaAnonymousViaCreateParameters()
+        public void TestNpgsqlTypeMapAttributeViaAnonymousViaCreateParameters()
         {
             // Act
-            using (var connection = new SqlConnection())
+            using (var connection = new NpgsqlConnection())
             {
                 using (var command = connection.CreateCommand())
                 {
@@ -68,14 +69,14 @@ namespace RepoDb.SqlServer.UnitTests.Attributes.Parameter.SqlServer
                         {
                             ColumnName = "Test"
                         },
-                        typeof(ForceColumnEncryptionAttributeTestClass));
+                        typeof(NpgsqlTypeMapAttributeTestClass));
 
                     // Assert
                     Assert.AreEqual(1, command.Parameters.Count);
 
                     // Assert
                     var parameter = command.Parameters["@ColumnName"];
-                    Assert.IsTrue(parameter.ForceColumnEncryption);
+                    Assert.AreEqual(NpgsqlDbType.Box, parameter.NpgsqlDbType);
                 }
             }
         }

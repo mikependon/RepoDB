@@ -36,7 +36,7 @@ namespace RepoDb.SqlServer.UnitTests.Attributes.Parameter.SqlServer
         public void TestTypeNameAttributeViaEntityViaCreateParameters()
         {
             // Act
-            using (var connection = new SqlConnection("Server=.;"))
+            using (var connection = new SqlConnection())
             {
                 using (var command = connection.CreateCommand())
                 {
@@ -60,7 +60,7 @@ namespace RepoDb.SqlServer.UnitTests.Attributes.Parameter.SqlServer
         public void TestTypeNameAttributeViaAnonymousViaCreateParameters()
         {
             // Act
-            using (var connection = new SqlConnection("Server=.;"))
+            using (var connection = new SqlConnection())
             {
                 using (var command = connection.CreateCommand())
                 {

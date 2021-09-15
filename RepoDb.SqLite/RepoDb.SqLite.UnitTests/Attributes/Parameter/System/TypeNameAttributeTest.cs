@@ -1,18 +1,18 @@
-﻿using Microsoft.Data.SqlClient;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RepoDb.Attributes.Parameter.SqlServer;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RepoDb.Attributes.Parameter.SQLite;
 using RepoDb.DbSettings;
 using RepoDb.Extensions;
+using System.Data.SQLite;
 
-namespace RepoDb.SqlServer.UnitTests.Attributes.Parameter.SqlServer
+namespace RepoDb.SqLite.UnitTests.Attributes.Parameter.SQLite
 {
     [TestClass]
-    public class ForceColumnEncryptionAttributeTest
+    public class TypeNameAttributeTest
     {
         [TestInitialize]
         public void Initialize()
         {
-            DbSettingMapper.Add<SqlConnection>(new SqlServerDbSetting(), true);
+            DbSettingMapper.Add<SQLiteConnection>(new SqLiteDbSetting(), true);
         }
 
         [TestCleanup]
@@ -23,24 +23,24 @@ namespace RepoDb.SqlServer.UnitTests.Attributes.Parameter.SqlServer
 
         #region Classes
 
-        private class ForceColumnEncryptionAttributeTestClass
+        private class TypeNameAttributeTestClass
         {
-            [ForceColumnEncryption(true)]
+            [TypeName("TypeName")]
             public object ColumnName { get; set; }
         }
 
         #endregion
 
         [TestMethod]
-        public void TestForceColumnEncryptionAttributeViaEntityViaCreateParameters()
+        public void TestTypeNameAttributeViaEntityViaCreateParameters()
         {
             // Act
-            using (var connection = new SqlConnection())
+            using (var connection = new SQLiteConnection())
             {
                 using (var command = connection.CreateCommand())
                 {
                     DbCommandExtension
-                        .CreateParameters(command, new ForceColumnEncryptionAttributeTestClass
+                        .CreateParameters(command, new TypeNameAttributeTestClass
                         {
                             ColumnName = "Test"
                         });
@@ -50,16 +50,16 @@ namespace RepoDb.SqlServer.UnitTests.Attributes.Parameter.SqlServer
 
                     // Assert
                     var parameter = command.Parameters["@ColumnName"];
-                    Assert.IsTrue(parameter.ForceColumnEncryption);
+                    Assert.AreEqual("TypeName", parameter.TypeName);
                 }
             }
         }
 
         [TestMethod]
-        public void TestForceColumnEncryptionAttributeViaAnonymousViaCreateParameters()
+        public void TestTypeNameAttributeViaAnonymousViaCreateParameters()
         {
             // Act
-            using (var connection = new SqlConnection())
+            using (var connection = new SQLiteConnection())
             {
                 using (var command = connection.CreateCommand())
                 {
@@ -68,14 +68,14 @@ namespace RepoDb.SqlServer.UnitTests.Attributes.Parameter.SqlServer
                         {
                             ColumnName = "Test"
                         },
-                        typeof(ForceColumnEncryptionAttributeTestClass));
+                        typeof(TypeNameAttributeTestClass));
 
                     // Assert
                     Assert.AreEqual(1, command.Parameters.Count);
 
                     // Assert
                     var parameter = command.Parameters["@ColumnName"];
-                    Assert.IsTrue(parameter.ForceColumnEncryption);
+                    Assert.AreEqual("TypeName", parameter.TypeName);
                 }
             }
         }

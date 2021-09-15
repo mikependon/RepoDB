@@ -7,7 +7,7 @@ namespace RepoDb.Attributes
     /// <summary>
     /// An attribute used to define a mapping of .NET CLR <see cref="Type"/> into its equivalent <see cref="NpgsqlDbType"/> value.
     /// </summary>
-    [Obsolete("Please use the RepoDb.Attributes.Npgsql.NpgsqlDbTypeAttribute instead.")]
+    [Obsolete("Please use the RepoDb.Attributes.Parameter.Npgsql.NpgsqlDbTypeAttribute instead.")]
     public class NpgsqlTypeMapAttribute : NpgsqlDbTypeAttribute
     {
         /// <summary>
