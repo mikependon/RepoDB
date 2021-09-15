@@ -12,12 +12,29 @@ namespace RepoDb.Attributes.Parameter
         /// <summary>
         /// Creates a new instance of <see cref="PropertyValueAttribute"/> class.
         /// </summary>
-        /// <param name="parameterType">The type of the parameter.</param>
-        /// <param name="propertyName">The name of the property to be set.</param>
-        /// <param name="value">The value to be set.</param>
+        /// <param name="parameterType">The type of the <see cref="IDbDataParameter"/> object.</param>
+        /// <param name="propertyName">The name to be set to the parameter.</param>
+        /// <param name="value">The value to be set to the parameter.</param>
         public PropertyValueAttribute(Type parameterType,
             string propertyName,
             object value)
+            : this(parameterType, propertyName, value, true)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="PropertyValueAttribute"/> class.
+        /// </summary>
+        /// <param name="parameterType">The type of the <see cref="IDbDataParameter"/> object.</param>
+        /// <param name="propertyName">The name to be set to the parameter.</param>
+        /// <param name="value">The value to be set to the parameter.</param>
+        /// <param name="includedInCompilation">
+        /// The value that indicates whether this current attribute method invocation 
+        /// will be included on the ahead-of-time (AOT) compilation.
+        /// </param>
+        internal PropertyValueAttribute(Type parameterType,
+            string propertyName,
+            object value,
+            bool includedInCompilation)
         {
             // Validation
             Validate(parameterType, propertyName);
@@ -26,6 +43,7 @@ namespace RepoDb.Attributes.Parameter
             ParameterType = parameterType;
             PropertyName = propertyName;
             Value = value;
+            IncludedInCompilation = includedInCompilation;
         }
 
         /*
@@ -43,9 +61,15 @@ namespace RepoDb.Attributes.Parameter
         public string PropertyName { get; }
 
         /// <summary>
-        /// Gets the value that is used to set property.
+        /// Gets the value that is used to set in the parameter.
         /// </summary>
-        internal protected object Value { get; }
+        protected internal object Value { get; }
+
+        /// <summary>
+        /// Gets the value that indicates whether this current attribute method invocation 
+        /// will be included on the ahead-of-time (AOT) compilation.
+        /// </summary>
+        protected internal bool IncludedInCompilation { get; }
 
         /// <summary>
         /// Gets the instance of the <see cref="PropertyInfo"/> based on the target property name.
