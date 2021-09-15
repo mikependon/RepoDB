@@ -42,9 +42,12 @@ namespace RepoDb.Reflection
 
             foreach (var attribute in attributes)
             {
-                var expression = GetPropertyValueAttributesAssignmentExpression(parameterVariable,
-                    attribute);
-                expressions.AddIfNotNull(expression);
+                if (attribute.IncludedInCompilation)
+                {
+                    var expression = GetPropertyValueAttributesAssignmentExpression(parameterVariable,
+                        attribute);
+                    expressions.AddIfNotNull(expression);
+                }
             }
 
             return expressions;
