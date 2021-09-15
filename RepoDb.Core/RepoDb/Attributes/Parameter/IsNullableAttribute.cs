@@ -12,9 +12,9 @@ namespace RepoDb.Attributes.Parameter
         /// <summary>
         /// Creates a new instance of <see cref="IsNullableAttribute"/> class.
         /// </summary>
-        /// <param name="isNUllable">The value that defines whether the parameter accepts a null value.</param>
-        public IsNullableAttribute(bool isNUllable)
-            : base(typeof(DbParameter), nameof(DbParameter.IsNullable), isNUllable)
+        /// <param name="isNullable">The value that defines whether the parameter accepts a null value.</param>
+        public IsNullableAttribute(bool isNullable)
+            : base(typeof(DbParameter), nameof(DbParameter.IsNullable), isNullable)
         { }
 
         /// <summary>

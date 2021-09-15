@@ -274,6 +274,14 @@ namespace RepoDb.Extensions
         /// Returns the string as a parameter name in the database.
         /// </summary>
         /// <param name="value">The string to be converted.</param>
+        /// <returns>The string value represented as database parameter.</returns>
+        public static string AsParameter(this string value) =>
+            AsParameter(value, 0, null);
+
+        /// <summary>
+        /// Returns the string as a parameter name in the database.
+        /// </summary>
+        /// <param name="value">The string to be converted.</param>
         /// <param name="dbSetting">The <see cref="IDbSetting"/> object to be used.</param>
         /// <returns>The string value represented as database parameter.</returns>
         public static string AsParameter(this string value,
@@ -291,12 +299,10 @@ namespace RepoDb.Extensions
             int index,
             IDbSetting dbSetting)
         {
-            if (dbSetting != null)
-            {
-                value = string.Concat(dbSetting.ParameterPrefix,
-                    (value.StartsWith(dbSetting.ParameterPrefix, StringComparison.OrdinalIgnoreCase) ? value.Substring(1) : value)
-                        .AsUnquoted(true, dbSetting).AsAlphaNumeric());
-            }
+            var parameterPrefix = dbSetting?.ParameterPrefix ?? "@";
+            value = string.Concat(parameterPrefix,
+                (value.StartsWith(parameterPrefix, StringComparison.OrdinalIgnoreCase) ? value.Substring(1) : value)
+                    .AsUnquoted(true, dbSetting).AsAlphaNumeric());
             return index > 0 ? string.Concat(value, "_", index.ToString()) : value;
         }
 
