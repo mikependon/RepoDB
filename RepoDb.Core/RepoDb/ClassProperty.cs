@@ -208,8 +208,6 @@ namespace RepoDb
             {
                 return isPrimary;
             }
-
-            // Get the value from the cache
             return (isPrimary = PrimaryCache.Get(GetDeclaringType()) != null);
         }
 
@@ -229,8 +227,6 @@ namespace RepoDb
             {
                 return isIdentity;
             }
-
-            // Get the value from the cache
             return (isIdentity = IdentityCache.Get(GetDeclaringType()) != null);
         }
 
@@ -250,11 +246,7 @@ namespace RepoDb
             {
                 return dbType;
             }
-
-            // Set the flag
             isDbTypeWasSet = true;
-
-            // Return the value
             return dbType = TypeMapCache.Get(GetDeclaringType(), PropertyInfo) ?? TypeMapCache.Get(PropertyInfo.PropertyType);
         }
 
@@ -282,14 +274,8 @@ namespace RepoDb
             {
                 return Converter.ToType<TPropertyHandler>(propertyHandler);
             }
-
-            // Set the flag
             propertyHandlerWasSet = true;
-
-            // Set the instance
             propertyHandler = PropertyHandlerCache.Get<TPropertyHandler>(GetDeclaringType(), PropertyInfo);
-
-            // Return the value
             return Converter.ToType<TPropertyHandler>(propertyHandler);
         }
 
@@ -303,10 +289,8 @@ namespace RepoDb
         /// Gets the mapped-name for the current property.
         /// </summary>
         /// <returns>The mapped-name value.</returns>
-        public string GetMappedName()
-        {
-            return mappedName ??= PropertyMappedNameCache.Get(GetDeclaringType(), PropertyInfo);
-        }
+        public string GetMappedName() =>
+            mappedName ??= PropertyMappedNameCache.Get(GetDeclaringType(), PropertyInfo);
 
         #endregion
 
