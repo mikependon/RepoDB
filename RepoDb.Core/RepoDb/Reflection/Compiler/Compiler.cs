@@ -1782,11 +1782,6 @@ namespace RepoDb.Reflection
             var createParameterExpression = GetDbCommandCreateParameterExpression(commandParameterExpression);
             parameterAssignmentExpressions.AddIfNotNull(Expression.Assign(parameterVariableExpression, createParameterExpression));
 
-            // PropertyValueAttributes / DbField must precide
-            var propertyValueAttributeAssignmentExpressions = GetPropertyValueAttributeAssignmentExpressions(parameterVariableExpression,
-                classProperty);
-            parameterAssignmentExpressions.AddRangeIfNotNullOrNotEmpty(propertyValueAttributeAssignmentExpressions);
-
             // DbParameter.Name
             var nameAssignmentExpression = GetDbParameterNameAssignmentExpression(parameterVariableExpression,
                 dbField,
@@ -1838,6 +1833,11 @@ namespace RepoDb.Reflection
                 var scaleAssignmentExpression = GetDbParameterScaleAssignmentExpression(parameterVariableExpression, dbField.Scale.Value);
                 parameterAssignmentExpressions.AddIfNotNull(scaleAssignmentExpression);
             }
+
+            // PropertyValueAttributes / DbField must precide
+            var propertyValueAttributeAssignmentExpressions = GetPropertyValueAttributeAssignmentExpressions(parameterVariableExpression,
+                classProperty);
+            parameterAssignmentExpressions.AddRangeIfNotNullOrNotEmpty(propertyValueAttributeAssignmentExpressions);
 
             // DbCommand.Parameters.Add
             var dbParametersAddExpression = GetDbCommandParametersAddExpression(commandParameterExpression, parameterVariableExpression);

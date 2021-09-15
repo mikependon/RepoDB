@@ -35,7 +35,7 @@ namespace RepoDb.SqlServer.UnitTests.Attributes.Parameter.SqlServer
         public void TestXmlSchemaCollectionOwningSchemaAttributeViaEntityViaCreateParameters()
         {
             // Act
-            using (var connection = new SqlConnection("Server=.;"))
+            using (var connection = new SqlConnection())
             {
                 using (var command = connection.CreateCommand())
                 {
@@ -59,7 +59,7 @@ namespace RepoDb.SqlServer.UnitTests.Attributes.Parameter.SqlServer
         public void TestXmlSchemaCollectionOwningSchemaAttributeViaAnonymousViaCreateParameters()
         {
             // Act
-            using (var connection = new SqlConnection("Server=.;"))
+            using (var connection = new SqlConnection())
             {
                 using (var command = connection.CreateCommand())
                 {

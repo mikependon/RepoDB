@@ -14,7 +14,7 @@ namespace RepoDb.Attributes.Parameter
         /// </summary>
         /// <param name="name">The name of the mapping that is equivalent to the database object/field.</param>
         public NameAttribute(string name)
-            : base(typeof(DbParameter), nameof(DbParameter.ParameterName), name.AsParameter())
+            : base(typeof(DbParameter), nameof(DbParameter.ParameterName), name.AsParameter(), false)
         { }
 
         /// <summary>

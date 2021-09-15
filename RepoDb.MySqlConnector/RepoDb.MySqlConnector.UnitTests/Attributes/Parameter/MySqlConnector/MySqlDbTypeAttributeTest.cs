@@ -1,18 +1,18 @@
-﻿using Microsoft.Data.SqlClient;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RepoDb.Attributes.Parameter.SqlServer;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using MySqlConnector;
+using RepoDb.Attributes.Parameter.MySqlConnector;
 using RepoDb.DbSettings;
 using RepoDb.Extensions;
 
-namespace RepoDb.SqlServer.UnitTests.Attributes.Parameter.SqlServer
+namespace RepoDb.MySqlConnector.UnitTests.Attributes.Parameter.MySqlConnector
 {
     [TestClass]
-    public class ForceColumnEncryptionAttributeTest
+    public class MySqlDbTypeAttributeTest
     {
         [TestInitialize]
         public void Initialize()
         {
-            DbSettingMapper.Add<SqlConnection>(new SqlServerDbSetting(), true);
+            DbSettingMapper.Add<MySqlConnection>(new MySqlConnectorDbSetting(), true);
         }
 
         [TestCleanup]
@@ -23,24 +23,24 @@ namespace RepoDb.SqlServer.UnitTests.Attributes.Parameter.SqlServer
 
         #region Classes
 
-        private class ForceColumnEncryptionAttributeTestClass
+        private class MySqlDbTypeAttributeTestClass
         {
-            [ForceColumnEncryption(true)]
+            [MySqlDbType(MySqlDbType.Geometry)]
             public object ColumnName { get; set; }
         }
 
         #endregion
 
         [TestMethod]
-        public void TestForceColumnEncryptionAttributeViaEntityViaCreateParameters()
+        public void TestMySqlDbTypeAttributeViaEntityViaCreateParameters()
         {
             // Act
-            using (var connection = new SqlConnection())
+            using (var connection = new MySqlConnection())
             {
                 using (var command = connection.CreateCommand())
                 {
                     DbCommandExtension
-                        .CreateParameters(command, new ForceColumnEncryptionAttributeTestClass
+                        .CreateParameters(command, new MySqlDbTypeAttributeTestClass
                         {
                             ColumnName = "Test"
                         });
@@ -50,16 +50,16 @@ namespace RepoDb.SqlServer.UnitTests.Attributes.Parameter.SqlServer
 
                     // Assert
                     var parameter = command.Parameters["@ColumnName"];
-                    Assert.IsTrue(parameter.ForceColumnEncryption);
+                    Assert.AreEqual(MySqlDbType.Geometry, parameter.MySqlDbType);
                 }
             }
         }
 
         [TestMethod]
-        public void TestForceColumnEncryptionAttributeViaAnonymousViaCreateParameters()
+        public void TestMySqlDbTypeAttributeViaAnonymousViaCreateParameters()
         {
             // Act
-            using (var connection = new SqlConnection())
+            using (var connection = new MySqlConnection())
             {
                 using (var command = connection.CreateCommand())
                 {
@@ -68,14 +68,14 @@ namespace RepoDb.SqlServer.UnitTests.Attributes.Parameter.SqlServer
                         {
                             ColumnName = "Test"
                         },
-                        typeof(ForceColumnEncryptionAttributeTestClass));
+                        typeof(MySqlDbTypeAttributeTestClass));
 
                     // Assert
                     Assert.AreEqual(1, command.Parameters.Count);
 
                     // Assert
                     var parameter = command.Parameters["@ColumnName"];
-                    Assert.IsTrue(parameter.ForceColumnEncryption);
+                    Assert.AreEqual(MySqlDbType.Geometry, parameter.MySqlDbType);
                 }
             }
         }
