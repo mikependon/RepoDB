@@ -1,48 +1,48 @@
 ﻿using RepoDb.Enumerations;
 
-namespace RepoDb.Formatted.QueryField
+namespace RepoDb.Extensions.QueryFields
 {
     /// <summary>
-    /// A functional-based <see cref="RepoDb.QueryField"/> object that is using the UPPER function.
+    /// A functional-based <see cref="QueryField"/> object that is using the LENGTH function.
+    /// This only works on PostgreSQL, MySQL and SQLite database providers.
     /// </summary>
-    public sealed class UpperQueryField : FunctionalQueryField
+    public sealed class LengthQueryField : FunctionalQueryField
     {
         #region Constructors
 
         /// <summary>
-        /// Creates a new instance of <see cref="UpperQueryField"/> object.
+        /// Creates a new instance of <see cref="LengthQueryField"/> object.
         /// </summary>
         /// <param name="fieldName">The name of the field for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
-        public UpperQueryField(string fieldName,
-            string value)
+        public LengthQueryField(string fieldName,
+            int value)
             : this(fieldName, Operation.Equal, value)
-        {
-        }
+        { }
 
         /// <param name="field">The actual field for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
-        public UpperQueryField(Field field,
-            string value)
+        public LengthQueryField(Field field,
+            int value)
             : this(field, Operation.Equal, value)
         { }
 
         /// <param name="fieldName">The name of the field for the query expression.</param>
         /// <param name="operation">The operation to be used for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
-        public UpperQueryField(string fieldName,
+        public LengthQueryField(string fieldName,
             Operation operation,
-            string value)
+            int value)
             : this(new Field(fieldName), operation, value)
         { }
 
         /// <param name="field">The actual field for the query expression.</param>
         /// <param name="operation">The operation to be used for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
-        public UpperQueryField(Field field,
+        public LengthQueryField(Field field,
             Operation operation,
-            string value)
-            : base(field, operation, value, "UPPER({0})")
+            int value)
+            : base(field, operation, value, "LENGTH({0})")
         { }
 
         #endregion

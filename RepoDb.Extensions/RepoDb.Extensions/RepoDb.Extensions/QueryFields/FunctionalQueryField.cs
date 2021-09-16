@@ -2,10 +2,10 @@
 using RepoDb.Interfaces;
 using System;
 
-namespace RepoDb.Formatted.QueryField
+namespace RepoDb.Extensions.QueryFields
 {
     /// <summary>
-    /// A dynamic functional-based <see cref="RepoDb.QueryField"/> object. This requires a properly constructed
+    /// A dynamic functional-based <see cref="QueryField"/> object. This requires a properly constructed
     /// formatted string (for a specific database function) in order to work properly.
     /// </summary>
     /// <example>
@@ -15,7 +15,7 @@ namespace RepoDb.Formatted.QueryField
     ///     var result = connection.Query&lt;Entity&gt;(where);
     /// </code>
     /// </example>
-    public class FunctionalQueryField : RepoDb.QueryField, IEquatable<FunctionalQueryField>
+    public class FunctionalQueryField : QueryField, IEquatable<FunctionalQueryField>
     {
         private int? hashCode = null;
 
@@ -80,11 +80,11 @@ namespace RepoDb.Formatted.QueryField
         #region Methods
 
         /// <summary>
-        /// Gets the string representations (column-value pairs) of the current <see cref="RepoDb.QueryField"/> object with the formatted-function transformations.
+        /// Gets the string representations (column-value pairs) of the current <see cref="QueryField"/> object with the formatted-function transformations.
         /// </summary>
         /// <param name="index">The target index.</param>
         /// <param name="dbSetting">The database setting currently in used.</param>
-        /// <returns>The string representations of the current <see cref="RepoDb.QueryField"/> object using the LOWER function.</returns>
+        /// <returns>The string representations of the current <see cref="QueryField"/> object using the LOWER function.</returns>
         public override string GetString(int index,
             IDbSetting dbSetting) =>
             base.GetString(index, Format, dbSetting);

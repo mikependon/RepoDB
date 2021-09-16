@@ -5,7 +5,7 @@ namespace RepoDb.Extensions
     /// <summary>
     /// Contains the extension methods for <see cref="MemberBinding"/> object.
     /// </summary>
-    public static class MemberBindingExtension
+    internal static class MemberBindingExtension
     {
         /// <summary>
         /// Gets a value from the current instance of <see cref="MemberBinding"/> object.

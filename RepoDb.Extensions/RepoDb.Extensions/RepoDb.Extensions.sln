@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30717.126
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb", "..\..\RepoDb.Core\RepoDb\RepoDb.csproj", "{100AE7CB-7F8D-428C-8819-703B88CDC676}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.Formatted", "RepoDb.Formatted\RepoDb.Formatted.csproj", "{2E268E17-32D4-4032-AF3F-D850E165C299}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.Extensions", "RepoDb.Extensions\RepoDb.Extensions.csproj", "{2E268E17-32D4-4032-AF3F-D850E165C299}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

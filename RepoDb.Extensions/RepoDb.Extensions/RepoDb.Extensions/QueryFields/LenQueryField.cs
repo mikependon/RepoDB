@@ -1,9 +1,9 @@
 ﻿using RepoDb.Enumerations;
 
-namespace RepoDb.Formatted.QueryField
+namespace RepoDb.Extensions.QueryFields
 {
     /// <summary>
-    /// A functional-based <see cref="RepoDb.QueryField"/> object that is using the LEN function.
+    /// A functional-based <see cref="QueryField"/> object that is using the LEN function.
     /// This only works on SQL Server database provider.
     /// </summary>
     public sealed class LenQueryField : FunctionalQueryField

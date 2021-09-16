@@ -5,7 +5,7 @@ namespace RepoDb.Extensions
     /// <summary>
     /// Contains the extension methods for <see cref="MemberInfo"/> object.
     /// </summary>
-    public static class MemberInfoExtension
+    internal static class MemberInfoExtension
     {
         /// <summary>
         /// Gets the name of the current instance of <see cref="MemberInfo"/>. If the instance is <see cref="PropertyInfo"/>, it will try to retrieved the
