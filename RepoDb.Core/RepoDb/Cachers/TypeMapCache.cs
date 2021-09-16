@@ -1,5 +1,4 @@
 ﻿using RepoDb.Extensions;
-using RepoDb.Interfaces;
 using RepoDb.Resolvers;
 using System;
 using System.Collections.Concurrent;
@@ -17,8 +16,6 @@ namespace RepoDb
         #region Privates
 
         private static readonly ConcurrentDictionary<int, DbType?> cache = new();
-        private static readonly IResolver<PropertyInfo, DbType?> propertyLevelResolver = new TypeMapPropertyLevelResolver();
-        private static readonly IResolver<Type, DbType?> typeLevelResolver = new TypeMapTypeLevelResolver();
 
         #endregion
 
@@ -50,7 +47,7 @@ namespace RepoDb
             // Try get the value
             if (cache.TryGetValue(key, out var result) == false)
             {
-                result = typeLevelResolver.Resolve(type);
+                result = new TypeMapTypeLevelResolver().Resolve(type);
                 cache.TryAdd(key, result);
             }
 
@@ -120,7 +117,7 @@ namespace RepoDb
             // Try get the value
             if (cache.TryGetValue(key, out var result) == false)
             {
-                result = propertyLevelResolver.Resolve(propertyInfo);
+                result = new TypeMapPropertyLevelResolver().Resolve(propertyInfo);
                 cache.TryAdd(key, result);
             }
 

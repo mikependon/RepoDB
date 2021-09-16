@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using System.Reflection;
 using RepoDb.Attributes;
+using RepoDb.Exceptions;
 using RepoDb.Interfaces;
 
 namespace RepoDb.Extensions
@@ -39,7 +41,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="tableAttribute">The table attribute to be checked.</param>
         /// <returns>The mapped name for the data entity.</returns>
-        private static string GetMappedName(TableAttribute tableAttribute)
+        internal static string GetMappedName(TableAttribute tableAttribute)
         {
             if (tableAttribute == null)
             {
@@ -128,6 +130,63 @@ namespace RepoDb.Extensions
 
             // Return the unquoted
             return tableName.AsUnquoted(true, dbSetting);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="propertyName"></param>
+        /// <returns></returns>
+        internal static PropertyInfo GetPropertyOrThrow<TEntity>(string propertyName)
+            where TEntity : class =>
+            GetPropertyOrThrow(typeof(TEntity), propertyName);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="propertyName"></param>
+        /// <returns></returns>
+        internal static PropertyInfo GetPropertyOrThrow(Type type,
+            string propertyName)
+        {
+            var property = TypeExtension.GetProperty(type, propertyName);
+            if (property == null)
+            {
+                throw new PropertyNotFoundException($"The property '{propertyName}' is not found from type '{type.FullName}'.");
+            }
+            return property;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="propertyName"></param>
+        /// <returns></returns>
+        internal static ClassProperty GetClassPropertyOrThrow<TEntity>(string propertyName)
+            where TEntity : class =>
+            GetClassPropertyOrThrow(typeof(TEntity), propertyName);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="propertyName"></param>
+        /// <returns></returns>
+        internal static ClassProperty GetClassPropertyOrThrow(Type type,
+            string propertyName)
+        {
+            var property = PropertyCache
+                .Get(type)?
+                .FirstOrDefault(
+                    p => string.Equals(p.PropertyInfo.Name, propertyName, StringComparison.OrdinalIgnoreCase));
+            if (property == null)
+            {
+                throw new PropertyNotFoundException($"The class property '{propertyName}' is not found from type '{type.FullName}'.");
+            }
+            return property;
         }
     }
 }

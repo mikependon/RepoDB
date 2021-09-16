@@ -26,8 +26,8 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Adds a mapping between a .NET CLR type and a <see cref="IClassHandler{TEntity}"/> object. It uses the <see cref="Activator.CreateInstance(Type)"/> method to create the instance of target class handler.
-        /// Make sure a default constructor is available for the type of class handler, otherwise an exception will be thrown.
+        /// Adds a mapping between a class and a <see cref="IClassHandler{TEntity}"/> object. It uses the <see cref="Activator.CreateInstance(Type)"/> method to create the instance of target <see cref="IClassHandler{TEntity}"/>.
+        /// Make sure a default constructor is available for the type of <see cref="IClassHandler{TEntity}"/>, otherwise an exception will be thrown.
         /// </summary>
         /// <typeparam name="TType">The target .NET CLR type.</typeparam>
         /// <typeparam name="TClassHandler">The type of the handler.</typeparam>
@@ -57,8 +57,7 @@ namespace RepoDb
             object classHandler,
             bool force = false)
         {
-            // Guard the type
-            GuardPresence(type);
+            // Guard
             Guard(classHandler?.GetType());
 
             // Variables for cache
@@ -69,18 +68,15 @@ namespace RepoDb
             {
                 if (force)
                 {
-                    // Override the existing one
                     maps.TryUpdate(key, classHandler, value);
                 }
                 else
                 {
-                    // Throw an exception
                     throw new MappingExistsException($"The class handler mapping for '{type.FullName}' already exists.");
                 }
             }
             else
             {
-                // Add to mapping
                 maps.TryAdd(key, classHandler);
             }
         }
@@ -90,7 +86,7 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Gets the mapped class handler of the .NET CLR type.
+        /// Get the existing mapped class handler of the .NET CLR type.
         /// </summary>
         /// <typeparam name="TType">The target .NET CLR type.</typeparam>
         /// <typeparam name="TClassHandler">The type of the handler.</typeparam>
@@ -99,7 +95,7 @@ namespace RepoDb
             Get<TClassHandler>(typeof(TType));
 
         /// <summary>
-        /// Gets the mapped class handler of the .NET CLR type.
+        /// Get the existing mapped class handler of the .NET CLR type.
         /// </summary>
         /// <typeparam name="TClassHandler">The type of the handler.</typeparam>
         /// <param name="type">The target .NET CLR type.</param>
@@ -107,7 +103,7 @@ namespace RepoDb
         public static TClassHandler Get<TClassHandler>(Type type)
         {
             // Check the presence
-            GuardPresence(type);
+            ObjectExtension.ThrowIfNull(type, "type");
 
             // get the value
             maps.TryGetValue(GenerateHashCode(type), out var value);
@@ -140,7 +136,7 @@ namespace RepoDb
         public static void Remove(Type type)
         {
             // Check the presence
-            GuardPresence(type);
+            ObjectExtension.ThrowIfNull(type, "type");
 
             // Variables for cache
             var key = GenerateHashCode(type);
@@ -174,22 +170,12 @@ namespace RepoDb
             TypeExtension.GenerateHashCode(type);
 
         /// <summary>
-        /// Throws an exception if null.
+        /// 
         /// </summary>
-        private static void GuardPresence(Type type)
-        {
-            if (type == null)
-            {
-                throw new NullReferenceException("Class handler type.");
-            }
-        }
-
-        /// <summary>
-        /// Throws an exception if the type does not implemented the <see cref="IClassHandler{TEntity}"/> interface.
-        /// </summary>
+        /// <param name="type"></param>
         private static void Guard(Type type)
         {
-            GuardPresence(type);
+            ObjectExtension.ThrowIfNull(type, "type");
             if (type.IsInterfacedTo(StaticType.IClassHandler) == false)
             {
                 throw new InvalidTypeException($"The type '{type.FullName}' must implement the '{StaticType.IClassHandler.FullName}' interface.");

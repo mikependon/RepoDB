@@ -488,5 +488,65 @@ namespace RepoDb.Extensions
             string rightAlias,
             IDbSetting dbSetting) =>
             values?.Select(value => value.AsFieldAndAliasField(leftAlias, rightAlias, dbSetting));
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj"></param>
+        internal static void ThrowIfNullOrEmpty<T>(T obj) =>
+            ThrowIfNullOrEmpty(obj, null);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj"></param>
+        /// <param name="argument"></param>
+        internal static void ThrowIfNullOrEmpty<T>(T obj,
+            string argument)
+        {
+            if (obj == null)
+            {
+                if (string.IsNullOrEmpty(argument))
+                {
+                    throw new NullReferenceException();
+                }
+                else
+                {
+                    throw new NullReferenceException($"The argument '{argument}' cannot be null.");
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        internal static void ThrowIfNullOrWhiteSpace(string value) =>
+            ThrowIfNullOrWhiteSpace(value, null);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="value"></param>
+        /// <param name="argument"></param>
+        internal static void ThrowIfNullOrWhiteSpace(string value,
+            string argument)
+        {
+            if (!string.IsNullOrWhiteSpace(value))
+            {
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(argument))
+            {
+                throw new NullReferenceException();
+            }
+            else
+            {
+                throw new NullReferenceException($"The argument '{argument}' is either null or whitespace.");
+            }
+        }
     }
 }

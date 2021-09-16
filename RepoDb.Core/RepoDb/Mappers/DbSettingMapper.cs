@@ -7,7 +7,7 @@ using System.Data;
 namespace RepoDb
 {
     /// <summary>
-    /// A class that is being used to map a type of <see cref="IDbConnection"/> into an instance of <see cref="IDbSetting"/> object.
+    /// A class that is being used to map an instance of <see cref="IDbSetting"/> of into the type of <see cref="IDbConnection"/> object.
     /// </summary>
     public static class DbSettingMapper
     {
@@ -18,53 +18,50 @@ namespace RepoDb
         #endregion
 
         #region Methods
-        
+
         /*
          * Add
          */
 
         /// <summary>
-        /// Adds a mapping between the type of <see cref="IDbConnection"/> and an instance of <see cref="IDbSetting"/> object.
+        /// Adds a mapping between the type of <typeparamref name="TDbConnection"/> and an <see cref="IDbSetting"/> object.
         /// </summary>
         /// <typeparam name="TDbConnection">The type of <see cref="IDbConnection"/> object.</typeparam>
         /// <param name="dbSetting">The instance of <see cref="IDbSetting"/> object to mapped to.</param>
-        /// <param name="override">Set to true if to override the existing mapping, otherwise an exception will be thrown if the mapping is already present.</param>
+        /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
         public static void Add<TDbConnection>(IDbSetting dbSetting,
-            bool @override)
+            bool force)
             where TDbConnection : IDbConnection
         {
-            var key = typeof(TDbConnection);
-            
+            var type = typeof(TDbConnection);
+
             // Try get the mappings
-            if (maps.TryGetValue(key, out var existing))
+            if (maps.TryGetValue(type, out var existing))
             {
-                if (@override)
+                if (force)
                 {
-                    // Override the existing one
-                    maps.TryUpdate(key, dbSetting, existing);
+                    maps.TryUpdate(type, dbSetting, existing);
                 }
                 else
                 {
-                    // Throw an exception
-                    throw new MappingExistsException($"The database setting mapping to provider '{key.FullName}' already exists.");
+                    throw new MappingExistsException(type.FullName);
                 }
             }
             else
             {
-                // Add to mapping
-                maps.TryAdd(key, dbSetting);
+                maps.TryAdd(type, dbSetting);
             }
         }
 
         /*
-        * Get
-        */
+         * Get
+         */
 
         /// <summary>
-        /// Gets an existing <see cref="IDbSetting"/> object that is mapped to type <see cref="IDbConnection"/>.
+        /// Get the existing mapped <see cref="IDbSetting"/> object from the type of <typeparamref name="TDbConnection"/>.
         /// </summary>
         /// <typeparam name="TDbConnection">The type of <see cref="IDbConnection"/>.</typeparam>
-        /// <returns>An instance of mapped <see cref="IDbSetting"/></returns>
+        /// <returns>The instance of existing mapped <see cref="IDbSetting"/> object.</returns>
         public static IDbSetting Get<TDbConnection>()
             where TDbConnection : IDbConnection
         {
@@ -76,11 +73,11 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Gets an existing <see cref="IDbSetting"/> object that is mapped to type <see cref="IDbConnection"/>.
+        /// Get the existing mapped <see cref="IDbSetting"/> object from the type of <typeparamref name="TDbConnection"/>.
         /// </summary>
         /// <typeparam name="TDbConnection">The type of <see cref="IDbConnection"/>.</typeparam>
         /// <param name="connection">The instance of <see cref="IDbConnection"/>.</param>
-        /// <returns>An instance of mapped <see cref="IDbSetting"/></returns>
+        /// <returns>The instance of exising mapped <see cref="IDbSetting"/> object.</returns>
         public static IDbSetting Get<TDbConnection>(TDbConnection connection)
             where TDbConnection : IDbConnection
         {
@@ -90,13 +87,13 @@ namespace RepoDb
             // Return the value
             return value;
         }
-        
+
         /*
-        * Remove
-        */
+         * Remove
+         */
 
         /// <summary>
-        /// Removes the mapping between the type of <see cref="IDbConnection"/> and an instance of <see cref="IDbSetting"/> object.
+        /// Remove the existing mapped <see cref="IDbSetting"/> object from the type of <typeparamref name="TDbConnection"/>.
         /// </summary>
         /// <typeparam name="TDbConnection">The type of <see cref="IDbConnection"/>.</typeparam>
         public static void Remove<TDbConnection>()
@@ -108,6 +105,10 @@ namespace RepoDb
             // Try get the the value
             maps.TryRemove(key, out _);
         }
+
+        /*
+         * Clear
+         */
 
         /// <summary>
         /// Clears all the existing cached <see cref="IDbSetting"/> objects.
