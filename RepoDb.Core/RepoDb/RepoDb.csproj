@@ -20,38 +20,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Attributes\DbParameterDbTypeAttribute.cs" />
-    <Compile Remove="Attributes\DbParameterDirectionAttribute.cs" />
-    <Compile Remove="Attributes\DbParameterIsNullableAttribute.cs" />
-    <Compile Remove="Attributes\DbParameterNameAttribute.cs" />
-    <Compile Remove="Attributes\DbParameterPrecisionAttribute.cs" />
-    <Compile Remove="Attributes\DbParameterScaleAttribute.cs" />
-    <Compile Remove="Attributes\DbParameterSizeAttribute.cs" />
-    <Compile Remove="Attributes\PropertyValueAttribute.cs" />
-    <Compile Remove="ClassMap.cs" />
-    <Compile Remove="Contexts\Execution\InsertAllExecutionContextCache.cs" />
-    <Compile Remove="Contexts\Execution\InsertExecutionContextCache.cs" />
-    <Compile Remove="Contexts\Execution\MergeAllExecutionContextCache.cs" />
-    <Compile Remove="Contexts\Execution\MergeExecutionContextCache.cs" />
-    <Compile Remove="Contexts\Execution\UpdateAllExecutionContextCache.cs" />
-    <Compile Remove="Contexts\Execution\UpdateExecutionContextCache.cs" />
-    <Compile Remove="Extensions\DateTimeExtensions.cs" />
-    <Compile Remove="Extensions\TimeSpanExtenstion.cs" />
-    <Compile Remove="IdentityOptions.cs" />
-    <Compile Remove="Interfaces\IIdentityOptions.cs" />
-    <Compile Remove="Interfaces\IPrimaryOptions.cs" />
-    <Compile Remove="Interfaces\IPropertyOptions.cs" />
-    <Compile Remove="Mappers\PropertyTypeHandlerMapper.cs" />
-    <Compile Remove="PerformanceMonitor.cs" />
-    <Compile Remove="PrimaryOptions.cs" />
-    <Compile Remove="Properties\AssemblyInfo.cs" />
-    <Compile Remove="PropertyHandlerInstanceCache.cs" />
-    <Compile Remove="PropertyOptions.cs" />
     <Compile Remove="Reflection\DataCommand.cs" />
     <Compile Remove="Reflection\DelegateCache.cs" />
     <Compile Remove="Reflection\DelegateFactory.cs" />
     <Compile Remove="Reflection\Delegates.cs" />
-    <Compile Remove="Reflection\Functions.cs" />
   </ItemGroup>
 
   <ItemGroup>
