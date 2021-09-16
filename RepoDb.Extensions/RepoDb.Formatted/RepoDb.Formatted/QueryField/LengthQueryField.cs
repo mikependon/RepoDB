@@ -3,10 +3,10 @@
 namespace RepoDb.Formatted.QueryField
 {
     /// <summary>
-    /// A functional-based <see cref="RepoDb.QueryField"/> object that is using the LEN function.
+    /// A functional-based <see cref="RepoDb.QueryField"/> object that is using the LENGTH function.
     /// This only works on PostgreSQL, MySQL and SQLite database providers.
     /// </summary>
-    public sealed class LengthQueryField : FormattedFunctionQueryField
+    public sealed class LengthQueryField : FunctionalQueryField
     {
         #region Constructors
 

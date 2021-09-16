@@ -137,41 +137,41 @@ namespace RepoDb
         /// Gets the string representations (column-value pairs) of the current <see cref="QueryField"/> object with the formatted-function transformations.
         /// </summary>
         /// <param name="index">The target index.</param>
-        /// <param name="formattedFunction">The actual string-formatted function.</param>
+        /// <param name="functionFormat">The properly constructed format of the target function to be used.</param>
         /// <param name="dbSetting">The database setting currently in used.</param>
         /// <returns>The string representations of the current <see cref="QueryField"/> object using the LOWER function.</returns>
         protected internal virtual string GetString(int index,
-            string formattedFunction,
+            string functionFormat,
             IDbSetting dbSetting)
         {
             // = AND NULL
             if (Operation == Operation.Equal && Parameter.Value == null)
             {
-                return string.Concat(this.AsField(formattedFunction, dbSetting), " IS NULL");
+                return string.Concat(this.AsField(functionFormat, dbSetting), " IS NULL");
             }
 
             // <> AND NULL
             else if (Operation == Operation.NotEqual && Parameter.Value == null)
             {
-                return string.Concat(this.AsField(formattedFunction, dbSetting), " IS NOT NULL");
+                return string.Concat(this.AsField(functionFormat, dbSetting), " IS NOT NULL");
             }
 
             // BETWEEN @LeftValue AND @RightValue
             else if (Operation == Operation.Between || Operation == Operation.NotBetween)
             {
-                return this.AsFieldAndParameterForBetween(index, formattedFunction, dbSetting);
+                return this.AsFieldAndParameterForBetween(index, functionFormat, dbSetting);
             }
 
             // IN (@Value1, @Value2)
             else if (Operation == Operation.In || Operation == Operation.NotIn)
             {
-                return this.AsFieldAndParameterForIn(index, formattedFunction, dbSetting);
+                return this.AsFieldAndParameterForIn(index, functionFormat, dbSetting);
             }
 
             // [Column] = @Column
             else
             {
-                return string.Concat(this.AsField(formattedFunction, dbSetting), " ", Operation.GetText(), " ", this.AsParameter(index, formattedFunction, dbSetting));
+                return string.Concat(this.AsField(functionFormat, dbSetting), " ", Operation.GetText(), " ", this.AsParameter(index /*, functionFormat*/, dbSetting));
             }
         }
 
