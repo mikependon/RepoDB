@@ -27,9 +27,7 @@ namespace RepoDb
         /// <param name="value">The value to be used for the query expression.</param>
         public QueryField(string fieldName,
             object value)
-            : this(fieldName,
-                  Operation.Equal,
-                  value)
+            : this(fieldName, Operation.Equal, value)
         { }
 
         /// <summary>
@@ -41,10 +39,7 @@ namespace RepoDb
         public QueryField(string fieldName,
             Operation operation,
             object value)
-            : this(fieldName,
-                  operation,
-                  value,
-                  false)
+            : this(fieldName, operation, value, false)
         { }
 
         /// <summary>
@@ -54,10 +49,7 @@ namespace RepoDb
         /// <param name="value">The value to be used for the query expression.</param>
         public QueryField(Field field,
             object value)
-            : this(field,
-                  Operation.Equal,
-                  value,
-                  false)
+            : this(field, Operation.Equal, value, false)
         { }
 
         /// <summary>
@@ -69,10 +61,7 @@ namespace RepoDb
         public QueryField(Field field,
             Operation operation,
             object value)
-            : this(field,
-                  operation,
-                  value,
-                  false)
+            : this(field, operation, value, false)
         { }
 
         /// <summary>
@@ -81,15 +70,12 @@ namespace RepoDb
         /// <param name="fieldName">The name of the field for the query expression.</param>
         /// <param name="operation">The operation to be used for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
-        /// <param name="appendUnderscore">The value to identify whether the underscore prefix will be appended to the parameter name.</param>
-        internal QueryField(string fieldName,
+        /// <param name="prependUnderscore">The value to identify whether the underscore prefix will be appended to the parameter name.</param>
+        public QueryField(string fieldName,
             Operation operation,
             object value,
-            bool appendUnderscore)
-            : this(new Field(fieldName),
-                  operation,
-                  value,
-                  appendUnderscore)
+            bool prependUnderscore)
+            : this(new Field(fieldName), operation, value, prependUnderscore)
         { }
 
         /// <summary>
@@ -98,15 +84,15 @@ namespace RepoDb
         /// <param name="field">The actual field for the query expression.</param>
         /// <param name="operation">The operation to be used for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
-        /// <param name="appendUnderscore">The value to identify whether the underscore prefix will be appended to the parameter name.</param>
-        internal QueryField(Field field,
+        /// <param name="prependUnderscore">The value to identify whether the underscore prefix will be appended to the parameter name.</param>
+        public QueryField(Field field,
             Operation operation,
             object value,
-            bool appendUnderscore)
+            bool prependUnderscore)
         {
             Field = field;
             Operation = operation;
-            Parameter = new Parameter(field.Name, value, appendUnderscore);
+            Parameter = new Parameter(field.Name, value, prependUnderscore);
         }
 
         #endregion
@@ -138,34 +124,54 @@ namespace RepoDb
         #region Methods
 
         /// <summary>
-        /// 
+        /// Gets the string representations (column-value pairs) of the current <see cref="QueryField"/> object.
         /// </summary>
-        /// <param name="index"></param>
-        /// <param name="dbSetting"></param>
-        /// <returns></returns>
+        /// <param name="index">The target index.</param>
+        /// <param name="dbSetting">The database setting currently in used.</param>
+        /// <returns>The string representations of the current <see cref="QueryField"/> object.</returns>
         public virtual string GetString(int index,
+            IDbSetting dbSetting) =>
+            GetString(index, null, dbSetting);
+
+        /// <summary>
+        /// Gets the string representations (column-value pairs) of the current <see cref="QueryField"/> object with the formatted-function transformations.
+        /// </summary>
+        /// <param name="index">The target index.</param>
+        /// <param name="formattedFunction">The actual string-formatted function.</param>
+        /// <param name="dbSetting">The database setting currently in used.</param>
+        /// <returns>The string representations of the current <see cref="QueryField"/> object using the LOWER function.</returns>
+        protected internal virtual string GetString(int index,
+            string formattedFunction,
             IDbSetting dbSetting)
         {
+            // = AND NULL
             if (Operation == Operation.Equal && Parameter.Value == null)
             {
-                return string.Concat(this.AsField(dbSetting), " IS NULL");
+                return string.Concat(this.AsField(formattedFunction, dbSetting), " IS NULL");
             }
+
+            // <> AND NULL
             else if (Operation == Operation.NotEqual && Parameter.Value == null)
             {
-                return string.Concat(this.AsField(dbSetting), " IS NOT NULL");
+                return string.Concat(this.AsField(formattedFunction, dbSetting), " IS NOT NULL");
             }
+
+            // BETWEEN @LeftValue AND @RightValue
             else if (Operation == Operation.Between || Operation == Operation.NotBetween)
             {
-                return this.AsFieldAndParameterForBetween(index, dbSetting);
+                return this.AsFieldAndParameterForBetween(index, formattedFunction, dbSetting);
             }
+
+            // IN (@Value1, @Value2)
             else if (Operation == Operation.In || Operation == Operation.NotIn)
             {
-                return this.AsFieldAndParameterForIn(index, dbSetting);
+                return this.AsFieldAndParameterForIn(index, formattedFunction, dbSetting);
             }
+
+            // [Column] = @Column
             else
             {
-                return string.Concat(this.AsField(dbSetting), " ",
-                    Operation.GetText(), " ", this.AsParameter(index, dbSetting));
+                return string.Concat(this.AsField(formattedFunction, dbSetting), " ", Operation.GetText(), " ", this.AsParameter(index, formattedFunction, dbSetting));
             }
         }
 

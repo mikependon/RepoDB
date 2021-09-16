@@ -10,6 +10,8 @@ namespace RepoDb
     {
         private int? hashCode = null;
 
+        #region Constructors
+
         /// <summary>
         /// Creates a new instance of <see cref="Parameter"/> object.
         /// </summary>
@@ -36,6 +38,8 @@ namespace RepoDb
                 PrependAnUnderscore();
             }
         }
+
+        #endregion
 
         #region Properties
 
@@ -132,7 +136,7 @@ namespace RepoDb
         public override bool Equals(object obj)
         {
             if (obj is null) return false;
-            
+
             return obj.GetHashCode() == GetHashCode();
         }
 
@@ -144,7 +148,7 @@ namespace RepoDb
         public bool Equals(Parameter other)
         {
             if (other is null) return false;
-            
+
             return other.GetHashCode() == GetHashCode();
         }
 
