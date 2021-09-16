@@ -1,27 +1,28 @@
 ﻿using RepoDb.Enumerations;
 
-namespace RepoDb.Formatted.QueryField
+namespace RepoDb.Extensions.QueryFields
 {
     /// <summary>
-    /// A functional-based <see cref="RepoDb.QueryField"/> object that is using the LOWER function.
+    /// A functional-based <see cref="QueryField"/> object that is using the UPPER function.
     /// </summary>
-    public sealed class LowerQueryField : FunctionalQueryField
+    public sealed class UpperQueryField : FunctionalQueryField
     {
         #region Constructors
 
         /// <summary>
-        /// Creates a new instance of <see cref="LowerQueryField"/> object.
+        /// Creates a new instance of <see cref="UpperQueryField"/> object.
         /// </summary>
         /// <param name="fieldName">The name of the field for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
-        public LowerQueryField(string fieldName,
+        public UpperQueryField(string fieldName,
             string value)
             : this(fieldName, Operation.Equal, value)
-        { }
+        {
+        }
 
         /// <param name="field">The actual field for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
-        public LowerQueryField(Field field,
+        public UpperQueryField(Field field,
             string value)
             : this(field, Operation.Equal, value)
         { }
@@ -29,7 +30,7 @@ namespace RepoDb.Formatted.QueryField
         /// <param name="fieldName">The name of the field for the query expression.</param>
         /// <param name="operation">The operation to be used for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
-        public LowerQueryField(string fieldName,
+        public UpperQueryField(string fieldName,
             Operation operation,
             string value)
             : this(new Field(fieldName), operation, value)
@@ -38,10 +39,10 @@ namespace RepoDb.Formatted.QueryField
         /// <param name="field">The actual field for the query expression.</param>
         /// <param name="operation">The operation to be used for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
-        public LowerQueryField(Field field,
+        public UpperQueryField(Field field,
             Operation operation,
             string value)
-            : base(field, operation, value, "LOWER({0})")
+            : base(field, operation, value, "UPPER({0})")
         { }
 
         #endregion
