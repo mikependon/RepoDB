@@ -72,20 +72,20 @@ namespace RepoDb.Extensions
             GetMappedName(typeof(TEntity));
 
         /// <summary>
-        /// Gets the actual schema of the table from the database.
+        /// Gets the schema portion of the passed table name.
         /// </summary>
-        /// <param name="tableName">The passed table name.</param>
-        /// <returns>The actual table schema.</returns>
-        internal static string GetSchema(string tableName) =>
+        /// <param name="tableName">The name of the table.</param>
+        /// <returns>The schema of the passed table name.</returns>
+        public static string GetSchema(string tableName) =>
             GetSchema(tableName, null);
 
         /// <summary>
-        /// Gets the actual schema of the table from the database.
+        /// Gets the schema of the table name.
         /// </summary>
-        /// <param name="tableName">The passed table name.</param>
+        /// <param name="tableName">The name of the table.</param>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
-        /// <returns>The actual table schema.</returns>
-        internal static string GetSchema(string tableName,
+        /// <returns>The schema of the table name.</returns>
+        public static string GetSchema(string tableName,
             IDbSetting dbSetting)
         {
             // Get the schema and table name
@@ -96,24 +96,24 @@ namespace RepoDb.Extensions
             }
 
             // Return the unquoted
-            return dbSetting.DefaultSchema;
+            return dbSetting?.DefaultSchema;
         }
 
         /// <summary>
-        /// Gets the actual name of the table from the database.
+        /// Gets the actual name of the table without the schema.
         /// </summary>
-        /// <param name="tableName">The passed table name.</param>
+        /// <param name="tableName">The name of the table.</param>
         /// <returns>The actual table name.</returns>
-        internal static string GetTableName(string tableName) =>
+        public static string GetTableName(string tableName) =>
             GetTableName(tableName, null);
 
         /// <summary>
-        /// Gets the actual name of the table from the database.
+        /// Gets the actual name of the table without the schema.
         /// </summary>
-        /// <param name="tableName">The passed table name.</param>
+        /// <param name="tableName">The name of the table.</param>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The actual table name.</returns>
-        internal static string GetTableName(string tableName,
+        public static string GetTableName(string tableName,
             IDbSetting dbSetting)
         {
             // Get the schema and table name
