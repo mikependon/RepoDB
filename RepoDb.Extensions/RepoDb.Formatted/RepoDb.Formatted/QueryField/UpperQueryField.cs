@@ -5,7 +5,7 @@ namespace RepoDb.Formatted.QueryField
     /// <summary>
     /// A functional-based <see cref="RepoDb.QueryField"/> object that is using the UPPER function.
     /// </summary>
-    public sealed class UpperQueryField : FormattedFunctionQueryField
+    public sealed class UpperQueryField : FunctionalQueryField
     {
         #region Constructors
 
@@ -15,7 +15,7 @@ namespace RepoDb.Formatted.QueryField
         /// <param name="fieldName">The name of the field for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
         public UpperQueryField(string fieldName,
-            object value)
+            string value)
             : this(fieldName, Operation.Equal, value)
         {
         }
@@ -23,7 +23,7 @@ namespace RepoDb.Formatted.QueryField
         /// <param name="field">The actual field for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
         public UpperQueryField(Field field,
-            object value)
+            string value)
             : this(field, Operation.Equal, value)
         { }
 
@@ -32,7 +32,7 @@ namespace RepoDb.Formatted.QueryField
         /// <param name="value">The value to be used for the query expression.</param>
         public UpperQueryField(string fieldName,
             Operation operation,
-            object value)
+            string value)
             : this(new Field(fieldName), operation, value)
         { }
 
@@ -41,7 +41,7 @@ namespace RepoDb.Formatted.QueryField
         /// <param name="value">The value to be used for the query expression.</param>
         public UpperQueryField(Field field,
             Operation operation,
-            object value)
+            string value)
             : base(field, operation, value, "UPPER({0})")
         { }
 

@@ -5,8 +5,10 @@ namespace RepoDb.Formatted.QueryField
     /// <summary>
     /// A functional-based <see cref="RepoDb.QueryField"/> object that is using the RIGHT function.
     /// </summary>
-    public sealed class RightQueryField : FormattedFunctionQueryField
+    public sealed class RightQueryField : FunctionalQueryField
     {
+        private int? hashCode = null;
+
         #region Constructors
 
         /// <summary>
@@ -74,6 +76,31 @@ namespace RepoDb.Formatted.QueryField
         /// Gets the value that defines the number of characters from the right to be evaluated.
         /// </summary>
         public int CharCount { get; }
+
+        #endregion
+
+        #region Equality and comparers
+
+        /// <summary>
+        /// Returns the hashcode for this <see cref="RightQueryField"/>.
+        /// </summary>
+        /// <returns>The hashcode value.</returns>
+        public override int GetHashCode()
+        {
+            if (this.hashCode != null)
+            {
+                return this.hashCode.Value;
+            }
+
+            // Base
+            var hashCode = base.GetHashCode();
+
+            // CharCount
+            hashCode += CharCount.GetHashCode();
+
+            // Return
+            return (this.hashCode = hashCode).Value;
+        }
 
         #endregion
     }

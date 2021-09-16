@@ -274,14 +274,14 @@ namespace RepoDb.Extensions
         /// 
         /// </summary>
         /// <param name="value"></param>
-        /// <param name="formattedFunction"></param>
+        /// <param name="functionFormat"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         public static string AsField(this string value,
-            string formattedFunction,
+            string functionFormat,
             IDbSetting dbSetting) =>
-            string.IsNullOrWhiteSpace(formattedFunction) ? value.AsQuoted(true, true, dbSetting) :
-                string.Format(formattedFunction, value.AsQuoted(true, true, dbSetting));
+            string.IsNullOrWhiteSpace(functionFormat) ? value.AsQuoted(true, true, dbSetting) :
+                string.Format(functionFormat, value.AsQuoted(true, true, dbSetting));
 
         /// <summary>
         /// Returns the string as a parameter name in the database.
@@ -318,12 +318,12 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="value"></param>
         /// <param name="index"></param>
-        /// <param name="formattedFunction"></param>
+        /// <param name="functionFormat"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         internal static string AsParameter(this string value,
             int index,
-            string formattedFunction,
+            string functionFormat,
             IDbSetting dbSetting)
         {
             var parameterPrefix = dbSetting?.ParameterPrefix ?? "@";
@@ -333,7 +333,7 @@ namespace RepoDb.Extensions
                     .AsUnquoted(true, dbSetting).AsAlphaNumeric());
             value = index > 0 ? string.Concat(value, "_", index.ToString()) : value;
 
-            return string.IsNullOrWhiteSpace(formattedFunction) ? value : string.Format(formattedFunction, value);
+            return string.IsNullOrWhiteSpace(functionFormat) ? value : string.Format(functionFormat, value);
         }
 
 #if NETSTANDARD2_0

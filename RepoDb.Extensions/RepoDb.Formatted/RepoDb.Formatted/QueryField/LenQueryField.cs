@@ -6,7 +6,7 @@ namespace RepoDb.Formatted.QueryField
     /// A functional-based <see cref="RepoDb.QueryField"/> object that is using the LEN function.
     /// This only works on SQL Server database provider.
     /// </summary>
-    public sealed class LenQueryField : FormattedFunctionQueryField
+    public sealed class LenQueryField : FunctionalQueryField
     {
         #region Constructors
 
@@ -42,7 +42,7 @@ namespace RepoDb.Formatted.QueryField
         public LenQueryField(Field field,
             Operation operation,
             int value)
-            : base(field, operation, value, "len({0})")
+            : base(field, operation, value, "LEN({0})")
         { }
 
         #endregion
