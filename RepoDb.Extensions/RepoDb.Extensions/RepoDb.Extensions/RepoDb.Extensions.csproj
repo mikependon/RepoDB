@@ -2,17 +2,13 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net5.0</TargetFrameworks>
-    <AssemblyName>RepoDb.Formatted</AssemblyName>
-    <RootNamespace>RepoDb.Formatted.QueryField</RootNamespace>
+    <AssemblyName>RepoDb.Extensions</AssemblyName>
+    <RootNamespace>RepoDb.Extensions</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
-    <DocumentationFile>obj\Debug\netstandard2.0\RepoDb.Formatted.xml</DocumentationFile>
+    <DocumentationFile>obj\Debug\netstandard2.0\RepoDb.Extensions.xml</DocumentationFile>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="QueryField\FormattedFunctionQueryField.cs" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />

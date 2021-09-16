@@ -5,7 +5,7 @@ namespace RepoDb.Extensions
     /// <summary>
     /// Contains the extension methods for <see cref="Object"/>.
     /// </summary>
-    public static class ObjectExtension
+    internal static class ObjectExtension
     {
         /// <summary>
         /// Converts an object to a <see cref="long"/>.

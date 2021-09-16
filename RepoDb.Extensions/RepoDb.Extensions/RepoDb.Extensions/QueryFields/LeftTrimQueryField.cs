@@ -1,27 +1,27 @@
 ﻿using RepoDb.Enumerations;
 
-namespace RepoDb.Formatted.QueryField
+namespace RepoDb.Extensions.QueryFields
 {
     /// <summary>
-    /// A functional-based <see cref="RepoDb.QueryField"/> object that is using the TRIM function.
+    /// A functional-based <see cref="QueryField"/> object that is using the LTRIM function.
     /// </summary>
-    public sealed class TrimQueryField : FunctionalQueryField
+    public sealed class LeftTrimQueryField : FunctionalQueryField
     {
         #region Constructors
 
         /// <summary>
-        /// Creates a new instance of <see cref="TrimQueryField"/> object.
+        /// Creates a new instance of <see cref="LeftTrimQueryField"/> object.
         /// </summary>
         /// <param name="fieldName">The name of the field for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
-        public TrimQueryField(string fieldName,
+        public LeftTrimQueryField(string fieldName,
             string value)
             : this(fieldName, Operation.Equal, value)
         { }
 
         /// <param name="field">The actual field for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
-        public TrimQueryField(Field field,
+        public LeftTrimQueryField(Field field,
             string value)
             : this(field, Operation.Equal, value)
         { }
@@ -29,7 +29,7 @@ namespace RepoDb.Formatted.QueryField
         /// <param name="fieldName">The name of the field for the query expression.</param>
         /// <param name="operation">The operation to be used for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
-        public TrimQueryField(string fieldName,
+        public LeftTrimQueryField(string fieldName,
             Operation operation,
             string value)
             : this(new Field(fieldName), operation, value)
@@ -38,10 +38,10 @@ namespace RepoDb.Formatted.QueryField
         /// <param name="field">The actual field for the query expression.</param>
         /// <param name="operation">The operation to be used for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
-        public TrimQueryField(Field field,
+        public LeftTrimQueryField(Field field,
             Operation operation,
             string value)
-            : base(field, operation, value, "TRIM({0})")
+            : base(field, operation, value, "LTRIM({0})")
         { }
 
         #endregion

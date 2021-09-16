@@ -1,9 +1,9 @@
 ﻿using RepoDb.Enumerations;
 
-namespace RepoDb.Formatted.QueryField
+namespace RepoDb.Extensions.QueryFields
 {
     /// <summary>
-    /// A functional-based <see cref="RepoDb.QueryField"/> object that is using the RTRIM function.
+    /// A functional-based <see cref="QueryField"/> object that is using the RTRIM function.
     /// </summary>
     public sealed class RightTrimQueryField : FunctionalQueryField
     {

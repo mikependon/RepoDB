@@ -17,7 +17,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="type">The type of the data entity.</param>
         /// <returns>The list of <see cref="ClassProperty"/> objects.</returns>
-        internal static IEnumerable<ClassProperty> GetProperties(Type type)
+        public static IEnumerable<ClassProperty> GetProperties(Type type)
         {
             foreach (var property in type.GetProperties())
             {
@@ -58,7 +58,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="type">The type of the data entity where to get the mapped name.</param>
         /// <returns>The mapped name for the data entity.</returns>
-        internal static string GetMappedName(Type type) =>
+        public static string GetMappedName(Type type) =>
             type.GetCustomAttribute<MapAttribute>()?.Name ?? GetMappedName(type.GetCustomAttribute<TableAttribute>()) ??
                 ClassMapper.Get(type) ?? type.Name;
 
@@ -76,7 +76,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="tableName">The passed table name.</param>
         /// <returns>The actual table schema.</returns>
-        public static string GetSchema(string tableName) =>
+        internal static string GetSchema(string tableName) =>
             GetSchema(tableName, null);
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace RepoDb.Extensions
         /// <param name="tableName">The passed table name.</param>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The actual table schema.</returns>
-        public static string GetSchema(string tableName,
+        internal static string GetSchema(string tableName,
             IDbSetting dbSetting)
         {
             // Get the schema and table name
@@ -104,7 +104,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="tableName">The passed table name.</param>
         /// <returns>The actual table name.</returns>
-        public static string GetTableName(string tableName) =>
+        internal static string GetTableName(string tableName) =>
             GetTableName(tableName, null);
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace RepoDb.Extensions
         /// <param name="tableName">The passed table name.</param>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The actual table name.</returns>
-        public static string GetTableName(string tableName,
+        internal static string GetTableName(string tableName,
             IDbSetting dbSetting)
         {
             // Get the schema and table name
