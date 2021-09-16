@@ -6,8 +6,8 @@ using System.Linq.Expressions;
 namespace RepoDb
 {
     /// <summary>
-    /// A class that is being used to define a data entity level mappings (ie: Table, Column, Primary, Identity, DB Type and Property Handler).
-    /// Use this class if you wish to define the mappings in a fluent manner and avoid the models be decorated by the attributes.
+    /// A class that is being used to define the class mappings (ie: Table, Column, Primary, Identity, DB Type and Property Handler).
+    /// Use this class if you wish to avoid decorating an attribute into the models.
     /// </summary>
     /// <typeparam name="TEntity">The type of the data entity.</typeparam>
     public class EntityMapFluentDefinition<TEntity>
@@ -16,7 +16,7 @@ namespace RepoDb
         #region Properties
 
         /// <summary>
-        /// Gets the current type of the data entity.
+        /// Gets the current type of the class.
         /// </summary>
         public Type EntityType { get; } = typeof(TEntity);
 
@@ -25,23 +25,23 @@ namespace RepoDb
         #region Table
 
         /// <summary>
-        /// Defines a mapping between a data entity type and a database object.
+        /// Defines a mapping between a class and a database object (i.e.: Table, View).
         /// </summary>
-        /// <param name="databaseObjectName">The name of the database object (ie: Table, View).</param>
+        /// <param name="name">The name of the database object (i.e.: Table, View).</param>
         /// <returns>The current instance.</returns>
-        public EntityMapFluentDefinition<TEntity> Table(string databaseObjectName) =>
-            Table(databaseObjectName, false);
+        public EntityMapFluentDefinition<TEntity> Table(string name) =>
+            Table(name, false);
 
         /// <summary>
-        /// Defines a mapping between a data entity type and a database object.
+        /// Defines a mapping between a class and a database object.
         /// </summary>
-        /// <param name="databaseObjectName">The name of the database object (ie: Table, View).</param>
+        /// <param name="name">The name of the database object (ie: Table, View).</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
         /// <returns>The current instance.</returns>
-        public EntityMapFluentDefinition<TEntity> Table(string databaseObjectName,
+        public EntityMapFluentDefinition<TEntity> Table(string name,
             bool force)
         {
-            ClassMapper.Add<TEntity>(databaseObjectName, force);
+            ClassMapper.Add<TEntity>(name, force);
             return this;
         }
 
@@ -54,7 +54,7 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Defines a mapping between a data entity type property and a database column.
+        /// Defines a mapping between a class property and a database column.
         /// </summary>
         /// <param name="expression">The expression to be parsed.</param>
         /// <param name="columnName">The name of the database column.</param>
@@ -64,7 +64,7 @@ namespace RepoDb
             Column(expression, columnName, false);
 
         /// <summary>
-        /// Defines a mapping between a data entity type property and a database column.
+        /// Defines a mapping between a class property and a database column.
         /// </summary>
         /// <param name="expression">The expression to be parsed.</param>
         /// <param name="columnName">The name of the database column.</param>
@@ -83,7 +83,7 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Defines a mapping between a data entity type property and a database column (via property name).
+        /// Defines a mapping between a class property and a database column (via property name).
         /// </summary>
         /// <param name="propertyName">The name of the class property to be mapped.</param>
         /// <param name="columnName">The name of the database column.</param>
@@ -93,7 +93,7 @@ namespace RepoDb
             Column(propertyName, columnName, false);
 
         /// <summary>
-        /// Defines a mapping between a data entity type property and a database column (via property name).
+        /// Defines a mapping between a class property and a database column (via property name).
         /// </summary>
         /// <param name="propertyName">The name of the class property to be mapped.</param>
         /// <param name="columnName">The name of the database column.</param>
@@ -112,7 +112,7 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Defines a mapping between a data entity type property and a database column (via <see cref="Field"/> object).
+        /// Defines a mapping between a class property and a database column (via <see cref="Field"/> object).
         /// </summary>
         /// <param name="field">The instance of <see cref="Field"/> object to be mapped.</param>
         /// <param name="columnName">The name of the database column.</param>
@@ -122,7 +122,7 @@ namespace RepoDb
             Column(field, columnName, false);
 
         /// <summary>
-        /// Defines a mapping between a data entity type property and a database column (via <see cref="Field"/> object).
+        /// Defines a mapping between a class property and a database column (via <see cref="Field"/> object).
         /// </summary>
         /// <param name="field">The instance of <see cref="Field"/> object to be mapped.</param>
         /// <param name="columnName">The name of the database column.</param>
@@ -145,7 +145,7 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Defines the data entity type primary property.
+        /// Defines the class primary property.
         /// </summary>
         /// <param name="expression">The expression to be parsed.</param>
         /// <returns>The current instance.</returns>
@@ -153,7 +153,7 @@ namespace RepoDb
             Primary(expression, false);
 
         /// <summary>
-        /// Defines the data entity type primary property.
+        /// Defines the class primary property.
         /// </summary>
         /// <param name="expression">The expression to be parsed.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
@@ -170,7 +170,7 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Defines the data entity type primary property (via property name).
+        /// Defines the class primary property (via property name).
         /// </summary>
         /// <param name="propertyName">The name of the class property to be mapped.</param>
         /// <returns>The current instance.</returns>
@@ -178,7 +178,7 @@ namespace RepoDb
             Primary(propertyName, false);
 
         /// <summary>
-        /// Defines the data entity type primary property (via property name).
+        /// Defines the class primary property (via property name).
         /// </summary>
         /// <param name="propertyName">The name of the class property to be mapped.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
@@ -195,7 +195,7 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Defines the data entity type primary property (via <see cref="Field"/> object).
+        /// Defines the class primary property (via <see cref="Field"/> object).
         /// </summary>
         /// <param name="field">The instance of <see cref="Field"/> object to be mapped.</param>
         /// <returns>The current instance.</returns>
@@ -203,7 +203,7 @@ namespace RepoDb
             Primary(field, false);
 
         /// <summary>
-        /// Defines the data entity type primary property (via <see cref="Field"/> object).
+        /// Defines the class primary property (via <see cref="Field"/> object).
         /// </summary>
         /// <param name="field">The instance of <see cref="Field"/> object to be mapped.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
@@ -224,7 +224,7 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Defines the data entity type identity property.
+        /// Defines the class identity property.
         /// </summary>
         /// <param name="expression">The expression to be parsed.</param>
         /// <returns>The current instance.</returns>
@@ -232,7 +232,7 @@ namespace RepoDb
             Identity(expression, false);
 
         /// <summary>
-        /// Defines the data entity type identity property.
+        /// Defines the class identity property.
         /// </summary>
         /// <param name="expression">The expression to be parsed.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
@@ -249,7 +249,7 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Defines the data entity type identity property (via property name).
+        /// Defines the class identity property (via property name).
         /// </summary>
         /// <param name="propertyName">The name of the class property to be mapped.</param>
         /// <returns>The current instance.</returns>
@@ -257,7 +257,7 @@ namespace RepoDb
             Identity(propertyName, false);
 
         /// <summary>
-        /// Defines the data entity type identity property (via property name).
+        /// Defines the class identity property (via property name).
         /// </summary>
         /// <param name="propertyName">The name of the class property to be mapped.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
@@ -274,7 +274,7 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Defines the data entity type identity property (via <see cref="Field"/> object).
+        /// Defines the class identity property (via <see cref="Field"/> object).
         /// </summary>
         /// <param name="field">The instance of <see cref="Field"/> object to be mapped.</param>
         /// <returns>The current instance.</returns>
@@ -282,7 +282,7 @@ namespace RepoDb
             Identity(field, false);
 
         /// <summary>
-        /// Defines the data entity type identity property (via <see cref="Field"/> object).
+        /// Defines the class identity property (via <see cref="Field"/> object).
         /// </summary>
         /// <param name="field">The instance of <see cref="Field"/> object to be mapped.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
@@ -303,7 +303,7 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Defines a mapping between a data entity type property and a <see cref="System.Data.DbType"/> object.
+        /// Defines a mapping between a class property and a <see cref="System.Data.DbType"/> object.
         /// </summary>
         /// <param name="expression">The expression to be parsed.</param>
         /// <param name="dbType">The target database type.</param>
@@ -313,7 +313,7 @@ namespace RepoDb
             DbType(expression, dbType, false);
 
         /// <summary>
-        /// Defines a mapping between a data entity type property and a <see cref="System.Data.DbType"/> object.
+        /// Defines a mapping between a class property and a <see cref="System.Data.DbType"/> object.
         /// </summary>
         /// <param name="expression">The expression to be parsed.</param>
         /// <param name="dbType">The target database type.</param>
@@ -332,7 +332,7 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Defines a mapping between a data entity type property and a <see cref="System.Data.DbType"/> object (via property name).
+        /// Defines a mapping between a class property and a <see cref="System.Data.DbType"/> object (via property name).
         /// </summary>
         /// <param name="propertyName">The name of the class property to be mapped.</param>
         /// <param name="dbType">The target database type.</param>
@@ -342,7 +342,7 @@ namespace RepoDb
             DbType(propertyName, dbType, false);
 
         /// <summary>
-        /// Defines a mapping between a data entity type property and a <see cref="System.Data.DbType"/> object (via property name).
+        /// Defines a mapping between a class property and a <see cref="System.Data.DbType"/> object (via property name).
         /// </summary>
         /// <param name="propertyName">The name of the class property to be mapped.</param>
         /// <param name="dbType">The target database type.</param>
@@ -361,7 +361,7 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Defines a mapping between a data entity type property and a <see cref="System.Data.DbType"/> object (via <see cref="Field"/> object).
+        /// Defines a mapping between a class property and a <see cref="System.Data.DbType"/> object (via <see cref="Field"/> object).
         /// </summary>
         /// <param name="field">The instance of <see cref="Field"/> object to be mapped.</param>
         /// <param name="dbType">The target database type.</param>
@@ -372,7 +372,7 @@ namespace RepoDb
 
 
         /// <summary>
-        /// Defines a mapping between a data entity type property and a <see cref="System.Data.DbType"/> object (via <see cref="Field"/> object).
+        /// Defines a mapping between a class property and a <see cref="System.Data.DbType"/> object (via <see cref="Field"/> object).
         /// </summary>
         /// <param name="field">The instance of <see cref="Field"/> object to be mapped.</param>
         /// <param name="dbType">The target database type.</param>
@@ -391,7 +391,7 @@ namespace RepoDb
         #region ClassHandler
 
         /// <summary>
-        /// Defines a mapping between a data entity type and a <see cref="IClassHandler{TEntity}"/> object. It uses the <see cref="Activator.CreateInstance(Type)"/> method to create the instance of target <see cref="IClassHandler{TEntity}"/>.
+        /// Defines a mapping between a class and a <see cref="IClassHandler{TEntity}"/> object. It uses the <see cref="Activator.CreateInstance(Type)"/> method to create the instance of target <see cref="IClassHandler{TEntity}"/>.
         /// Make sure a default constructor is available for the type of <see cref="IClassHandler{TEntity}"/>, otherwise an exception will be thrown.
         /// </summary>
         /// <typeparam name="TClassHandler">The type of the <see cref="IClassHandler{TEntity}"/>.</typeparam>
@@ -401,7 +401,7 @@ namespace RepoDb
             ClassHandler(new TClassHandler());
 
         /// <summary>
-        /// Defines a mapping between a data entity type and a <see cref="IClassHandler{TEntity}"/> object. It uses the <see cref="Activator.CreateInstance(Type)"/> method to create the instance of target <see cref="IClassHandler{TEntity}"/>.
+        /// Defines a mapping between a class and a <see cref="IClassHandler{TEntity}"/> object. It uses the <see cref="Activator.CreateInstance(Type)"/> method to create the instance of target <see cref="IClassHandler{TEntity}"/>.
         /// Make sure a default constructor is available for the type of <see cref="IClassHandler{TEntity}"/>, otherwise an exception will be thrown.
         /// </summary>
         /// <typeparam name="TClassHandler">The type of the <see cref="IClassHandler{TEntity}"/>.</typeparam>
@@ -412,7 +412,7 @@ namespace RepoDb
             ClassHandler(new TClassHandler(), force);
 
         /// <summary>
-        /// Defines a mapping between a data entity type and a <see cref="IClassHandler{TEntity}"/> object.
+        /// Defines a mapping between a class and a <see cref="IClassHandler{TEntity}"/> object.
         /// </summary>
         /// <typeparam name="TClassHandler">The type of the <see cref="IClassHandler{TEntity}"/>.</typeparam>
         /// <param name="classHandler">The instance of the <see cref="IClassHandler{TEntity}"/>.</param>
@@ -421,7 +421,7 @@ namespace RepoDb
             ClassHandler<TClassHandler>(classHandler, false);
 
         /// <summary>
-        /// Defines a mapping between a data entity type and a <see cref="IClassHandler{TEntity}"/> object.
+        /// Defines a mapping between a class and a <see cref="IClassHandler{TEntity}"/> object.
         /// </summary>
         /// <typeparam name="TClassHandler">The type of the <see cref="IClassHandler{TEntity}"/>.</typeparam>
         /// <param name="classHandler">The instance of the <see cref="IClassHandler{TEntity}"/>.</param>
@@ -443,7 +443,7 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Defines a mapping between a data entity type property and a <see cref="IPropertyHandler{TInput, TResult}"/> object. It uses the <see cref="Activator.CreateInstance(Type)"/> method to create the instance of target <see cref="IPropertyHandler{TInput, TResult}"/>.
+        /// Defines a mapping between a class property and a <see cref="IPropertyHandler{TInput, TResult}"/> object. It uses the <see cref="Activator.CreateInstance(Type)"/> method to create the instance of target <see cref="IPropertyHandler{TInput, TResult}"/>.
         /// Make sure a default constructor is available for the type of <see cref="IPropertyHandler{TInput, TResult}"/>, otherwise an exception will be thrown.
         /// </summary>
         /// <typeparam name="TPropertyHandler">The type of the <see cref="IPropertyHandler{TInput, TResult}"/>.</typeparam>
@@ -454,7 +454,7 @@ namespace RepoDb
             PropertyHandler(expression, new TPropertyHandler());
 
         /// <summary>
-        /// Defines a mapping between a data entity type property and a <see cref="IPropertyHandler{TInput, TResult}"/> object. It uses the <see cref="Activator.CreateInstance(Type)"/> method to create the instance of target <see cref="IPropertyHandler{TInput, TResult}"/>.
+        /// Defines a mapping between a class property and a <see cref="IPropertyHandler{TInput, TResult}"/> object. It uses the <see cref="Activator.CreateInstance(Type)"/> method to create the instance of target <see cref="IPropertyHandler{TInput, TResult}"/>.
         /// Make sure a default constructor is available for the type of <see cref="IPropertyHandler{TInput, TResult}"/>, otherwise an exception will be thrown.
         /// </summary>
         /// <typeparam name="TPropertyHandler">The type of the <see cref="IPropertyHandler{TInput, TResult}"/>.</typeparam>
@@ -467,7 +467,7 @@ namespace RepoDb
             PropertyHandler(expression, new TPropertyHandler(), force);
 
         /// <summary>
-        /// Defines a mapping between a data entity type property and a <see cref="IPropertyHandler{TInput, TResult}"/> object.
+        /// Defines a mapping between a class property and a <see cref="IPropertyHandler{TInput, TResult}"/> object.
         /// </summary>
         /// <typeparam name="TPropertyHandler">The type of the <see cref="IPropertyHandler{TInput, TResult}"/>.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
@@ -478,7 +478,7 @@ namespace RepoDb
             PropertyHandler<TPropertyHandler>(expression, propertyHandler, false);
 
         /// <summary>
-        /// Defines a mapping between a data entity type property and a <see cref="IPropertyHandler{TInput, TResult}"/> object.
+        /// Defines a mapping between a class property and a <see cref="IPropertyHandler{TInput, TResult}"/> object.
         /// </summary>
         /// <typeparam name="TPropertyHandler">The type of the <see cref="IPropertyHandler{TInput, TResult}"/>.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
@@ -498,7 +498,7 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Adds a <see cref="IPropertyHandler{TInput, TResult}"/> mapping into a data entity type property (via property name). It uses the <see cref="Activator.CreateInstance(Type)"/> method to create the instance of target <see cref="IPropertyHandler{TInput, TResult}"/>.
+        /// Adds a <see cref="IPropertyHandler{TInput, TResult}"/> mapping into a class property (via property name). It uses the <see cref="Activator.CreateInstance(Type)"/> method to create the instance of target <see cref="IPropertyHandler{TInput, TResult}"/>.
         /// Make sure a default constructor is available for the type of <see cref="IPropertyHandler{TInput, TResult}"/>, otherwise an exception will be thrown.
         /// </summary>
         /// <typeparam name="TPropertyHandler">The type of the <see cref="IPropertyHandler{TInput, TResult}"/>.</typeparam>
@@ -509,7 +509,7 @@ namespace RepoDb
             PropertyHandler(propertyName, new TPropertyHandler(), false);
 
         /// <summary>
-        /// Adds a <see cref="IPropertyHandler{TInput, TResult}"/> mapping into a data entity type property (via property name).
+        /// Adds a <see cref="IPropertyHandler{TInput, TResult}"/> mapping into a class property (via property name).
         /// </summary>
         /// <typeparam name="TPropertyHandler">The type of the <see cref="IPropertyHandler{TInput, TResult}"/>.</typeparam>
         /// <param name="propertyName">The name of the class property to be mapped.</param>
@@ -520,7 +520,7 @@ namespace RepoDb
             PropertyHandler<TPropertyHandler>(propertyName, propertyHandler, false);
 
         /// <summary>
-        /// Adds a <see cref="IPropertyHandler{TInput, TResult}"/> mapping into a data entity type property (via property name).
+        /// Adds a <see cref="IPropertyHandler{TInput, TResult}"/> mapping into a class property (via property name).
         /// </summary>
         /// <typeparam name="TPropertyHandler">The type of the <see cref="IPropertyHandler{TInput, TResult}"/>.</typeparam>
         /// <param name="propertyName">The name of the class property to be mapped.</param>
@@ -540,7 +540,7 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Adds a <see cref="IPropertyHandler{TInput, TResult}"/> mapping into a data entity type property (via <see cref="Field"/> object). It uses the <see cref="Activator.CreateInstance(Type)"/> method to create the instance of target <see cref="IPropertyHandler{TInput, TResult}"/>.
+        /// Adds a <see cref="IPropertyHandler{TInput, TResult}"/> mapping into a class property (via <see cref="Field"/> object). It uses the <see cref="Activator.CreateInstance(Type)"/> method to create the instance of target <see cref="IPropertyHandler{TInput, TResult}"/>.
         /// Make sure a default constructor is available for the type of <see cref="IPropertyHandler{TInput, TResult}"/>, otherwise an exception will be thrown.
         /// </summary>
         /// <typeparam name="TPropertyHandler">The type of the <see cref="IPropertyHandler{TInput, TResult}"/>.</typeparam>
@@ -551,7 +551,7 @@ namespace RepoDb
             PropertyHandler(field, new TPropertyHandler(), false);
 
         /// <summary>
-        /// Adds a <see cref="IPropertyHandler{TInput, TResult}"/> mapping into a data entity type property (via <see cref="Field"/> object).
+        /// Adds a <see cref="IPropertyHandler{TInput, TResult}"/> mapping into a class property (via <see cref="Field"/> object).
         /// </summary>
         /// <typeparam name="TPropertyHandler">The type of the <see cref="IPropertyHandler{TInput, TResult}"/>.</typeparam>
         /// <param name="field">The instance of <see cref="Field"/> object to be mapped.</param>
@@ -562,7 +562,7 @@ namespace RepoDb
             PropertyHandler<TPropertyHandler>(field, propertyHandler, false);
 
         /// <summary>
-        /// Adds a <see cref="IPropertyHandler{TInput, TResult}"/> mapping into a data entity type property (via <see cref="Field"/> object).
+        /// Adds a <see cref="IPropertyHandler{TInput, TResult}"/> mapping into a class property (via <see cref="Field"/> object).
         /// </summary>
         /// <typeparam name="TPropertyHandler">The type of the <see cref="IPropertyHandler{TInput, TResult}"/>.</typeparam>
         /// <param name="field">The instance of <see cref="Field"/> object to be mapped.</param>

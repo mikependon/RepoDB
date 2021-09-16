@@ -1,5 +1,6 @@
 ﻿using RepoDb.Attributes;
 using RepoDb.Exceptions;
+using RepoDb.Extensions;
 using System;
 using System.Collections.Concurrent;
 
@@ -23,68 +24,65 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Adds a mapping between a data entity type and a database object.
+        /// Adds a mapping between a .NET CLR type and a database object (i.e.: Table, View).
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <param name="databaseObjectName">The name of the database object (ie: Table, View).</param>
-        public static void Add<TEntity>(string databaseObjectName)
+        /// <typeparam name="TEntity">The target type.</typeparam>
+        /// <param name="name">The name of the database object (ie: Table, View).</param>
+        public static void Add<TEntity>(string name)
             where TEntity : class =>
-            Add(typeof(TEntity), databaseObjectName);
+            Add(typeof(TEntity), name);
 
         /// <summary>
-        /// Adds a mapping between a data entity type and a database object.
+        /// Adds a mapping between a .NET CLR type and a database object (i.e.: Table, View).
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <param name="databaseObjectName">The name of the database object (ie: Table, View).</param>
+        /// <typeparam name="TEntity">The target type.</typeparam>
+        /// <param name="name">The name of the database object (ie: Table, View).</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
-        public static void Add<TEntity>(string databaseObjectName,
+        public static void Add<TEntity>(string name,
             bool force)
             where TEntity : class =>
-            Add(typeof(TEntity), databaseObjectName, force);
+            Add(typeof(TEntity), name, force);
 
         /// <summary>
-        /// Adds a mapping between a data entity type and a database object.
+        /// Adds a mapping between a .NET CLR type and a database object (i.e.: Table, View).
         /// </summary>
-        /// <param name="entityType">The type of the data entity.</param>
-        /// <param name="databaseObjectName">The name of the database object (ie: Table, View).</param>
-        public static void Add(Type entityType,
-            string databaseObjectName) =>
-            Add(entityType, databaseObjectName, false);
+        /// <param name="type">The target type.</param>
+        /// <param name="name">The name of the database object (ie: Table, View).</param>
+        public static void Add(Type type,
+            string name) =>
+            Add(type, name, false);
 
         /// <summary>
-        /// Adds a mapping between a data entity type and a database object.
+        /// Adds a mapping between a .NET CLR type and a database object (i.e.: Table, View).
         /// </summary>
-        /// <param name="entityType">The type of the data entity.</param>
-        /// <param name="databaseObjectName">The name of the database object (ie: Table, View).</param>
+        /// <param name="type">The target type.</param>
+        /// <param name="name">The name of the database object (ie: Table, View).</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
-        public static void Add(Type entityType,
-            string databaseObjectName,
+        public static void Add(Type type,
+            string name,
             bool force)
         {
             // Validate
-            Validate(databaseObjectName);
+            StringExtension.ThrowIfNullOrWhiteSpace(name, "name");
 
             // Variables
-            var key = entityType.GetHashCode();
+            var key = type.GetHashCode();
 
             // Try get the cache
             if (maps.TryGetValue(key, out var value))
             {
                 if (force)
                 {
-                    // Update the existing one
-                    maps.TryUpdate(key, databaseObjectName, value);
+                    maps.TryUpdate(key, name, value);
                 }
                 else
                 {
-                    // Throws an exception
-                    throw new MappingExistsException($"A class mapping to '{entityType.FullName}' already exists.");
+                    throw new MappingExistsException("The mappings are already existing.");
                 }
             }
             else
             {
-                // Add the mapping
-                maps.TryAdd(key, databaseObjectName);
+                maps.TryAdd(key, name);
             }
         }
 
@@ -93,22 +91,22 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Gets the mapped database object of the data entity type.
+        /// Get the existing mapped database object of the .NET CLR type.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TEntity">The target type.</typeparam>
         /// <returns>The mapped name of the class.</returns>
         public static string Get<TEntity>()
             where TEntity : class =>
             Get(typeof(TEntity));
 
         /// <summary>
-        /// Gets the mapped database object of the data entity type.
+        /// Get the existing mapped database object of the .NET CLR type.
         /// </summary>
-        /// <param name="entityType">The type of the data entity.</param>
+        /// <param name="type">The target type.</param>
         /// <returns>The mapped name of the class.</returns>
-        public static string Get(Type entityType)
+        public static string Get(Type type)
         {
-            var key = entityType.GetHashCode();
+            var key = type.GetHashCode();
 
             // Try get the value
             maps.TryGetValue(key, out var value);
@@ -122,20 +120,20 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Removes the mapped database object on the data entity type.
+        /// Remove the exising mapped database object on the .NET CLR type.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <typeparam name="TEntity">The target type.</typeparam>
         public static void Remove<TEntity>()
             where TEntity : class =>
             Remove(typeof(TEntity));
 
         /// <summary>
-        /// Removes the mapped database object on the data entity type.
+        /// Remove the exising mapped database object on the .NET CLR type.
         /// </summary>
-        /// <param name="entityType">The type of the data entity.</param>
-        public static void Remove(Type entityType)
+        /// <param name="type">The target type.</param>
+        public static void Remove(Type type)
         {
-            var key = entityType.GetHashCode();
+            var key = type.GetHashCode();
 
             // Try get the value
             maps.TryRemove(key, out var _);
@@ -146,26 +144,10 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Clears all the existing cached class mapped names.
+        /// Clears all the existing cached objects.
         /// </summary>
         public static void Clear() =>
             maps.Clear();
-
-        #endregion
-
-        #region Helpers
-
-        /// <summary>
-        /// Validates the database object name that is being passed.
-        /// </summary>
-        /// <param name="databaseObjectName">The target database object name.</param>
-        private static void Validate(string databaseObjectName)
-        {
-            if (string.IsNullOrWhiteSpace(databaseObjectName))
-            {
-                throw new NullReferenceException("The database object name cannot be null.");
-            }
-        }
 
         #endregion
     }

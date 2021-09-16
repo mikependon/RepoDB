@@ -3,7 +3,6 @@ using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using System;
 using System.Collections.Concurrent;
-using System.Linq;
 using System.Linq.Expressions;
 
 namespace RepoDb
@@ -26,7 +25,7 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Adds an identity property mapping into a target data entity type (via expression).
+        /// Adds an identity property mapping into a target class (via expression).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
@@ -35,7 +34,7 @@ namespace RepoDb
             Add<TEntity>(expression, false);
 
         /// <summary>
-        /// Adds an identity property mapping into a target data entity type (via expression).
+        /// Adds an identity property mapping into a target class (via expression).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
@@ -45,24 +44,17 @@ namespace RepoDb
             where TEntity : class
         {
             // Validates
-            ThrowNullReferenceException(expression, "Expression");
+            ObjectExtension.ThrowIfNull(expression, "Expression");
 
             // Get the property
             var property = ExpressionExtension.GetProperty<TEntity>(expression);
 
-            // Get the class property
-            var classProperty = GetClassProperty<TEntity>(property?.Name);
-            if (classProperty == null)
-            {
-                throw new PropertyNotFoundException($"Property '{property.Name}' is not found at type '{typeof(TEntity).FullName}'.");
-            }
-
             // Add to the mapping
-            Add<TEntity>(classProperty, force);
+            Add<TEntity>(DataEntityExtension.GetClassPropertyOrThrow<TEntity>(property?.Name), force);
         }
 
         /// <summary>
-        /// Adds an identity property mapping into a target data entity type (via property name).
+        /// Adds an identity property mapping into a target class (via property name).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="propertyName">The name of the class property to be mapped.</param>
@@ -71,7 +63,7 @@ namespace RepoDb
             Add<TEntity>(propertyName, false);
 
         /// <summary>
-        /// Adds an identity property mapping into a target data entity type (via property name).
+        /// Adds an identity property mapping into a target class (via property name).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="propertyName">The name of the class property to be mapped.</param>
@@ -81,21 +73,14 @@ namespace RepoDb
             where TEntity : class
         {
             // Validates
-            ThrowNullReferenceException(propertyName, "PropertyName");
-
-            // Get the class property
-            var classProperty = GetClassProperty<TEntity>(propertyName);
-            if (classProperty == null)
-            {
-                throw new PropertyNotFoundException($"Property '{propertyName}' is not found at type '{typeof(TEntity).FullName}'.");
-            }
+            ObjectExtension.ThrowIfNull(propertyName, "PropertyName");
 
             // Add to the mapping
-            Add<TEntity>(classProperty, force);
+            Add<TEntity>(DataEntityExtension.GetClassPropertyOrThrow<TEntity>(propertyName), force);
         }
 
         /// <summary>
-        /// Adds an identity property mapping into a target data entity type (via <see cref="Field"/> object).
+        /// Adds an identity property mapping into a target class (via <see cref="Field"/> object).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="field">The instance of <see cref="Field"/> object to be mapped.</param>
@@ -104,7 +89,7 @@ namespace RepoDb
             Add<TEntity>(field, false);
 
         /// <summary>
-        /// Adds an identity property mapping into a target data entity type (via <see cref="Field"/> object).
+        /// Adds an identity property mapping into a target class (via <see cref="Field"/> object).
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="field">The instance of <see cref="Field"/> object to be mapped.</param>
@@ -114,17 +99,10 @@ namespace RepoDb
             where TEntity : class
         {
             // Validates
-            ThrowNullReferenceException(field, "Field");
-
-            // Get the class property
-            var classProperty = GetClassProperty<TEntity>(field.Name);
-            if (classProperty == null)
-            {
-                throw new PropertyNotFoundException($"Property '{field.Name}' is not found at type '{typeof(TEntity).FullName}'.");
-            }
+            ObjectExtension.ThrowIfNull(field, "Field");
 
             // Add to the mapping
-            Add<TEntity>(classProperty, force);
+            Add<TEntity>(DataEntityExtension.GetClassPropertyOrThrow<TEntity>(field.Name), force);
         }
 
         /// <summary>
@@ -141,37 +119,34 @@ namespace RepoDb
         /// <summary>
         /// Adds an identity property mapping into a <see cref="ClassProperty"/> object.
         /// </summary>
-        /// <param name="entityType">The type of the data entity.</param>
+        /// <param name="type">The type of the data entity.</param>
         /// <param name="classProperty">The instance of <see cref="ClassProperty"/> to be mapped.</param>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
-        internal static void Add(Type entityType,
+        internal static void Add(Type type,
             ClassProperty classProperty,
             bool force)
         {
             // Validate
-            ThrowNullReferenceException(entityType, "EntityType");
-            ThrowNullReferenceException(classProperty, "ClassProperty");
+            ObjectExtension.ThrowIfNull(type, "Type");
+            ObjectExtension.ThrowIfNull(classProperty, "ClassProperty");
 
             // Variables
-            var key = GenerateHashCode(entityType);
+            var key = TypeExtension.GenerateHashCode(type);
 
             // Try get the cache
             if (maps.TryGetValue(key, out var value))
             {
                 if (force)
                 {
-                    // Update the existing one
                     maps.TryUpdate(key, classProperty, value);
                 }
                 else
                 {
-                    // Throws an exception
-                    throw new MappingExistsException($"The identity property mapping to type '{classProperty.PropertyInfo.DeclaringType.FullName}' already exists.");
+                    throw new MappingExistsException("The mapping is already existing.");
                 }
             }
             else
             {
-                // Add the mapping
                 maps.TryAdd(key, classProperty);
             }
         }
@@ -181,7 +156,7 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Gets the mapped identity property on the target data entity type.
+        /// Get the exising mapped identity property of the target class.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <returns>An instance of the mapped <see cref="ClassProperty"/> object.</returns>
@@ -190,17 +165,17 @@ namespace RepoDb
             Get(typeof(TEntity));
 
         /// <summary>
-        /// Gets the mapped identity property on the target data entity type.
+        /// Get the exising mapped identity property of the target class.
         /// </summary>
-        /// <param name="entityType">The target type.</param>
+        /// <param name="type">The target type.</param>
         /// <returns>An instance of the mapped <see cref="ClassProperty"/> object.</returns>
-        public static ClassProperty Get(Type entityType)
+        public static ClassProperty Get(Type type)
         {
             // Validate
-            ThrowNullReferenceException(entityType, "Type");
+            ObjectExtension.ThrowIfNull(type, "Type");
 
             // Variables
-            var key = GenerateHashCode(entityType);
+            var key = TypeExtension.GenerateHashCode(type);
 
             // Try get the value
             maps.TryGetValue(key, out var value);
@@ -214,7 +189,7 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Removes the existing mapped identity property of the data entity type.
+        /// Removes the existing mapped identity property of the class.
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         public static void Remove<TEntity>()
@@ -222,16 +197,16 @@ namespace RepoDb
             Remove(typeof(TEntity));
 
         /// <summary>
-        /// Removes the existing mapped identity property of the data entity type.
+        /// Removes the existing mapped identity property of the class.
         /// </summary>
-        /// <param name="entityType">The target type.</param>
-        public static void Remove(Type entityType)
+        /// <param name="type">The target type.</param>
+        public static void Remove(Type type)
         {
             // Validate
-            ThrowNullReferenceException(entityType, "Type");
+            ObjectExtension.ThrowIfNull(type, "Type");
 
             // Variables
-            var key = GenerateHashCode(entityType);
+            var key = TypeExtension.GenerateHashCode(type);
 
             // Try get the value
             maps.TryRemove(key, out var _);
@@ -246,47 +221,6 @@ namespace RepoDb
         /// </summary>
         public static void Clear() =>
             maps.Clear();
-
-        #endregion
-
-        #region Helpers
-
-        /// <summary>
-        /// Generates a hashcode for caching.
-        /// </summary>
-        /// <param name="type">The type of the data entity.</param>
-        /// <returns>The generated hashcode.</returns>
-        private static int GenerateHashCode(Type type) =>
-            TypeExtension.GenerateHashCode(type);
-
-        /// <summary>
-        /// Gets the instance of <see cref="ClassProperty"/> object from of the data entity based on name.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <param name="propertyName">The property name.</param>
-        /// <returns>An instance of <see cref="ClassProperty"/> object.</returns>
-        private static ClassProperty GetClassProperty<TEntity>(string propertyName)
-            where TEntity : class
-        {
-            var properties = PropertyCache.Get<TEntity>();
-            return properties.FirstOrDefault(
-                p => string.Equals(p.PropertyInfo.Name, propertyName, StringComparison.OrdinalIgnoreCase));
-        }
-
-        /// <summary>
-        /// Validates the target object presence.
-        /// </summary>
-        /// <typeparam name="T">The type of the object.</typeparam>
-        /// <param name="obj">The object to be checked.</param>
-        /// <param name="argument">The name of the argument.</param>
-        private static void ThrowNullReferenceException<T>(T obj,
-            string argument)
-        {
-            if (obj == null)
-            {
-                throw new NullReferenceException($"The argument '{argument}' cannot be null.");
-            }
-        }
 
         #endregion
     }

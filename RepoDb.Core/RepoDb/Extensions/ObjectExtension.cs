@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 
 namespace RepoDb.Extensions
 {
@@ -14,5 +15,36 @@ namespace RepoDb.Extensions
         /// <returns>A <see cref="long"/> value of the object.</returns>
         internal static long ToNumber(this object value) =>
             Convert.ToInt64(value);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj"></param>
+        internal static void ThrowIfNull<T>(T obj) =>
+            ThrowIfNull(obj, null);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj"></param>
+        /// <param name="argument"></param>
+        internal static void ThrowIfNull<T>(T obj,
+            string argument)
+        {
+            if (obj != null)
+            {
+                return;
+            }
+            if (string.IsNullOrEmpty(argument))
+            {
+                throw new NullReferenceException();
+            }
+            else
+            {
+                throw new NullReferenceException($"The argument '{argument}' cannot be null.");
+            }
+        }
     }
 }

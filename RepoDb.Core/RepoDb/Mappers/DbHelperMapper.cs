@@ -7,7 +7,7 @@ using System.Data;
 namespace RepoDb
 {
     /// <summary>
-    /// A class that is being used to map a type of <see cref="IDbConnection"/> into an instance of <see cref="IDbHelper"/> object.
+    /// A class that is being used to map an instance of <see cref="IDbHelper"/> of into the type of <see cref="IDbConnection"/> object.
     /// </summary>
     public static class DbHelperMapper
     {
@@ -24,35 +24,32 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Adds a mapping between the type of <see cref="IDbConnection"/> and an instance of <see cref="IDbHelper"/> object.
+        /// Adds a mapping between the type of <typeparamref name="TDbConnection"/> and an <see cref="IDbHelper"/> object.
         /// </summary>
         /// <typeparam name="TDbConnection">The type of <see cref="IDbConnection"/> object.</typeparam>
         /// <param name="dbHelper">The instance of <see cref="IDbHelper"/> object to mapped to.</param>
-        /// <param name="override">Set to true if to override the existing mapping, otherwise an exception will be thrown if the mapping is already present.</param>
+        /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
         public static void Add<TDbConnection>(IDbHelper dbHelper,
-            bool @override)
+            bool force)
             where TDbConnection : IDbConnection
         {
-            var key = typeof(TDbConnection);
+            var type = typeof(TDbConnection);
             
             // Try get the mappings
-            if (maps.TryGetValue(key, out var existing))
+            if (maps.TryGetValue(type, out var existing))
             {
-                if (@override)
+                if (force)
                 {
-                    // Override the existing one
-                    maps.TryUpdate(key, dbHelper, existing);
+                    maps.TryUpdate(type, dbHelper, existing);
                 }
                 else
                 {
-                    // Throw an exception
-                    throw new MappingExistsException($"The database helper mapping to provider '{key.FullName}' already exists.");
+                    throw new MappingExistsException(type.FullName);
                 }
             }
             else
             {
-                // Add to mapping
-                maps.TryAdd(key, dbHelper);
+                maps.TryAdd(type, dbHelper);
             }
         }
 
@@ -61,10 +58,10 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Gets an existing <see cref="IDbHelper"/> object that is mapped to type <see cref="IDbConnection"/>.
+        /// Get the existing mapped <see cref="IDbHelper"/> object from the type of <typeparamref name="TDbConnection"/>.
         /// </summary>
         /// <typeparam name="TDbConnection">The type of <see cref="IDbConnection"/>.</typeparam>
-        /// <returns>An instance of mapped <see cref="IDbHelper"/></returns>
+        /// <returns>The instance of existing mapped <see cref="IDbHelper"/> object.</returns>
         public static IDbHelper Get<TDbConnection>()
             where TDbConnection : IDbConnection
         {
@@ -76,11 +73,11 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Gets an existing <see cref="IDbHelper"/> object that is mapped to type <see cref="IDbConnection"/>.
+        /// Get the existing mapped <see cref="IDbHelper"/> object from the type of <typeparamref name="TDbConnection"/>.
         /// </summary>
         /// <typeparam name="TDbConnection">The type of <see cref="IDbConnection"/>.</typeparam>
         /// <param name="connection">The instance of <see cref="IDbConnection"/>.</param>
-        /// <returns>An instance of mapped <see cref="IDbHelper"/></returns>
+        /// <returns>The instance of exising mapped <see cref="IDbHelper"/> object.</returns>
         public static IDbHelper Get<TDbConnection>(TDbConnection connection)
             where TDbConnection : IDbConnection
         {
@@ -96,7 +93,7 @@ namespace RepoDb
          */
 
         /// <summary>
-        /// Removes the mapping between the type of <see cref="IDbConnection"/> and an instance of <see cref="IDbHelper"/> object.
+        /// Remove the existing mapped <see cref="IDbHelper"/> object from the type of <typeparamref name="TDbConnection"/>.
         /// </summary>
         /// <typeparam name="TDbConnection">The type of <see cref="IDbConnection"/>.</typeparam>
         public static void Remove<TDbConnection>()
