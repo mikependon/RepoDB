@@ -268,7 +268,20 @@ namespace RepoDb.Extensions
         /// <returns>The string value represented as database field.</returns>
         public static string AsField(this string value,
             IDbSetting dbSetting) =>
-            value.AsQuoted(true, true, dbSetting);
+            AsField(value, null, dbSetting);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="formattedFunction"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
+        public static string AsField(this string value,
+            string formattedFunction,
+            IDbSetting dbSetting) =>
+            string.IsNullOrWhiteSpace(formattedFunction) ? value.AsQuoted(true, true, dbSetting) :
+                string.Format(formattedFunction, value.AsQuoted(true, true, dbSetting));
 
         /// <summary>
         /// Returns the string as a parameter name in the database.
@@ -297,13 +310,30 @@ namespace RepoDb.Extensions
         /// <returns>The string value represented as database parameter.</returns>
         public static string AsParameter(this string value,
             int index,
+            IDbSetting dbSetting) =>
+            AsParameter(value, index, null, dbSetting);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="index"></param>
+        /// <param name="formattedFunction"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
+        internal static string AsParameter(this string value,
+            int index,
+            string formattedFunction,
             IDbSetting dbSetting)
         {
             var parameterPrefix = dbSetting?.ParameterPrefix ?? "@";
+
             value = string.Concat(parameterPrefix,
                 (value.StartsWith(parameterPrefix, StringComparison.OrdinalIgnoreCase) ? value.Substring(1) : value)
                     .AsUnquoted(true, dbSetting).AsAlphaNumeric());
-            return index > 0 ? string.Concat(value, "_", index.ToString()) : value;
+            value = index > 0 ? string.Concat(value, "_", index.ToString()) : value;
+
+            return string.IsNullOrWhiteSpace(formattedFunction) ? value : string.Format(formattedFunction, value);
         }
 
 #if NETSTANDARD2_0
