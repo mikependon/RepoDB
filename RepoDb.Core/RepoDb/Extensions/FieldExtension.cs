@@ -92,7 +92,7 @@ namespace RepoDb.Extensions
             field.Name.AsFieldAndAliasField(leftAlias, rightAlias, dbSetting);
 
         /// <summary>
-        /// Creates a string representation of JOIN statement for the target <see cref="Field"/> object.
+        /// Creates a string representation of the JOIN statement for the target qualifier <see cref="Field"/> objects.
         /// </summary>
         /// <param name="field">The instance of the <see cref="Field"/> object.</param>
         /// <param name="leftAlias">The left alias.</param>
@@ -100,7 +100,7 @@ namespace RepoDb.Extensions
         /// <param name="considerNulls">The value that defines whether the null values are being considered.</param>
         /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
         /// <returns>The currently in used database setting.</returns>
-        internal static string AsJoinQualifier(this Field field,
+        public static string AsJoinQualifier(this Field field,
             string leftAlias,
             string rightAlias,
             bool considerNulls,
