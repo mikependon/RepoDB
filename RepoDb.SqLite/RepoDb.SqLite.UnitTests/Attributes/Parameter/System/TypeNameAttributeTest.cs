@@ -15,12 +15,6 @@ namespace RepoDb.SqLite.UnitTests.Attributes.Parameter.SQLite
             DbSettingMapper.Add<SQLiteConnection>(new SqLiteDbSetting(), true);
         }
 
-        [TestCleanup]
-        public void Cleanup()
-        {
-            DbSettingMapper.Clear();
-        }
-
         #region Classes
 
         private class TypeNameAttributeTestClass

@@ -529,7 +529,6 @@ namespace RepoDb.Extensions
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="value"></param>
         /// <param name="argument"></param>
         internal static void ThrowIfNullOrWhiteSpace(string value,

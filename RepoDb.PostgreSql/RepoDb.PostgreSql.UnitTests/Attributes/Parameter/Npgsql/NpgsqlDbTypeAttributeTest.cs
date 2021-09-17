@@ -16,12 +16,6 @@ namespace RepoDb.PostgreSql.UnitTests.Attributes.Parameter.Npgsql
             DbSettingMapper.Add<NpgsqlConnection>(new PostgreSqlDbSetting(), true);
         }
 
-        [TestCleanup]
-        public void Cleanup()
-        {
-            DbSettingMapper.Clear();
-        }
-
         #region Classes
 
         private class NpgsqlDbTypeAttributeTestClass

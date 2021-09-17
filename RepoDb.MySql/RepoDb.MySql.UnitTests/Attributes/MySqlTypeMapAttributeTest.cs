@@ -15,12 +15,6 @@ namespace RepoDb.MySql.UnitTests.Attributes
             DbSettingMapper.Add<MySqlConnection>(new MySqlDbSetting(), true);
         }
 
-        [TestCleanup]
-        public void Cleanup()
-        {
-            DbSettingMapper.Clear();
-        }
-
         #region Classes
 
         private class MySqlDbTypeAttributeTestClass
