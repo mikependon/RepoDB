@@ -1,5 +1,4 @@
-﻿using RepoDb.Extensions;
-using System.Data.Common;
+﻿using System.Data.Common;
 
 namespace RepoDb.Attributes.Parameter
 {
@@ -14,7 +13,7 @@ namespace RepoDb.Attributes.Parameter
         /// </summary>
         /// <param name="name">The name of the mapping that is equivalent to the database object/field.</param>
         public NameAttribute(string name)
-            : base(typeof(DbParameter), nameof(DbParameter.ParameterName), name.AsParameter(), false)
+            : base(typeof(DbParameter), nameof(DbParameter.ParameterName), name, false)
         { }
 
         /// <summary>

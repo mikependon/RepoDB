@@ -709,8 +709,16 @@ namespace RepoDb.Extensions
                 return;
             }
 
+            // In RepoDb, the only way the parameter has '_' is when the time you call the QueryField.IsForUpdate()
+            // method and it is only happening on update operations.
+            var isForUpdate = parameter.ParameterName.StartsWith("_");
+
             foreach (var attribute in attributes)
             {
+                if (attribute is NameAttribute && isForUpdate)
+                {
+                    continue;
+                }
                 attribute.SetValue(parameter);
             }
         }

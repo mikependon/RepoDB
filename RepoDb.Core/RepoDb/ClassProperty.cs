@@ -141,7 +141,6 @@ namespace RepoDb
         /// Gets the <see cref="TypeMapAttribute"/> if present.
         /// </summary>
         /// <returns>The instance of <see cref="TypeMapAttribute"/>.</returns>
-        [Obsolete("Use the GetDbTypeAttribute() method instead.")]
         public TypeMapAttribute GetTypeMapAttribute()
         {
             if (isTypeMapAttributeWasSet)
@@ -247,7 +246,9 @@ namespace RepoDb
                 return dbType;
             }
             isDbTypeWasSet = true;
-            return dbType = TypeMapCache.Get(GetDeclaringType(), PropertyInfo) ?? TypeMapCache.Get(PropertyInfo.PropertyType);
+            return dbType = TypeMapCache.Get(GetDeclaringType(), PropertyInfo) ??
+                PropertyValueAttributeCache.GetAttribute<DbTypeAttribute>(GetDeclaringType(), PropertyInfo)?.DbType ??
+                TypeMapCache.Get(PropertyInfo.PropertyType);
         }
 
         /*
