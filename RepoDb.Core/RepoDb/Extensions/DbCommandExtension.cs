@@ -703,15 +703,15 @@ namespace RepoDb.Extensions
         private static void InvokePropertyValueAttributes(IDbDataParameter parameter,
             ClassProperty classProperty)
         {
-            var attributes = GetPropertyValueAttributes(classProperty);
+            var attributes = classProperty?.GetPropertyValueAttributes();
             if (attributes?.Any() != true)
             {
                 return;
             }
 
-            // In RepoDb, the only way the parameter has '_' is when the time you call the QueryField.IsForUpdate()
+            // In RepoDb, the only way the parameter has '@_' is when the time you call the QueryField.IsForUpdate()
             // method and it is only happening on update operations.
-            var isForUpdate = parameter.ParameterName.StartsWith("_");
+            var isForUpdate = parameter.ParameterName.StartsWith("_") || parameter.ParameterName.StartsWith("@_");
 
             foreach (var attribute in attributes)
             {
@@ -722,20 +722,6 @@ namespace RepoDb.Extensions
                 attribute.SetValue(parameter);
             }
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="classProperty"></param>
-        /// <returns></returns>
-        private static IEnumerable<PropertyValueAttribute> GetPropertyValueAttributes(ClassProperty classProperty) =>
-            classProperty?
-                .PropertyInfo?
-                .GetCustomAttributes()?
-                .Where(e =>
-                    StaticType.PropertyValueAttribute.IsAssignableFrom(e.GetType()))
-                .Select(e =>
-                    (PropertyValueAttribute)e);
 
         /// <summary>
         /// 

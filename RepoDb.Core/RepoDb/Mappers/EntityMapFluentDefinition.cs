@@ -1,5 +1,7 @@
-﻿using RepoDb.Interfaces;
+﻿using RepoDb.Attributes.Parameter;
+using RepoDb.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq.Expressions;
 
@@ -396,7 +398,7 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TClassHandler">The type of the <see cref="IClassHandler{TEntity}"/>.</typeparam>
         /// <returns>The current instance.</returns>
-        public EntityMapFluentDefinition<TEntity> ClassHandler<TClassHandler>() 
+        public EntityMapFluentDefinition<TEntity> ClassHandler<TClassHandler>()
             where TClassHandler : new() =>
             ClassHandler(new TClassHandler());
 
@@ -407,7 +409,7 @@ namespace RepoDb
         /// <typeparam name="TClassHandler">The type of the <see cref="IClassHandler{TEntity}"/>.</typeparam>
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
         /// <returns>The current instance.</returns>
-        public EntityMapFluentDefinition<TEntity> ClassHandler<TClassHandler>(bool force) 
+        public EntityMapFluentDefinition<TEntity> ClassHandler<TClassHandler>(bool force)
             where TClassHandler : new() =>
             ClassHandler(new TClassHandler(), force);
 
@@ -449,7 +451,7 @@ namespace RepoDb
         /// <typeparam name="TPropertyHandler">The type of the <see cref="IPropertyHandler{TInput, TResult}"/>.</typeparam>
         /// <param name="expression">The expression to be parsed.</param>
         /// <returns>The current instance.</returns>
-        public EntityMapFluentDefinition<TEntity> PropertyHandler<TPropertyHandler>(Expression<Func<TEntity, object>> expression) 
+        public EntityMapFluentDefinition<TEntity> PropertyHandler<TPropertyHandler>(Expression<Func<TEntity, object>> expression)
             where TPropertyHandler : new() =>
             PropertyHandler(expression, new TPropertyHandler());
 
@@ -462,7 +464,7 @@ namespace RepoDb
         /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
         /// <returns>The current instance.</returns>
         public EntityMapFluentDefinition<TEntity> PropertyHandler<TPropertyHandler>(Expression<Func<TEntity, object>> expression,
-            bool force) 
+            bool force)
             where TPropertyHandler : new() =>
             PropertyHandler(expression, new TPropertyHandler(), force);
 
@@ -504,7 +506,7 @@ namespace RepoDb
         /// <typeparam name="TPropertyHandler">The type of the <see cref="IPropertyHandler{TInput, TResult}"/>.</typeparam>
         /// <param name="propertyName">The name of the class property to be mapped.</param>
         /// <returns>The current instance.</returns>
-        public EntityMapFluentDefinition<TEntity> PropertyHandler<TPropertyHandler>(string propertyName) 
+        public EntityMapFluentDefinition<TEntity> PropertyHandler<TPropertyHandler>(string propertyName)
             where TPropertyHandler : new() =>
             PropertyHandler(propertyName, new TPropertyHandler(), false);
 
@@ -574,6 +576,97 @@ namespace RepoDb
             bool force)
         {
             PropertyHandlerMapper.Add<TEntity, TPropertyHandler>(field, propertyHandler, force);
+            return this;
+        }
+
+        #endregion
+
+        #region PropertyValueAttributes
+
+        /*
+         * Expression
+         */
+
+        /// <summary>
+        /// Defines the class property parameter value attributes.
+        /// </summary>
+        /// <param name="expression">The expression to be parsed.</param>
+        /// <param name="attributes">The list of property value attributes to be mapped.</param>
+        /// <returns>The current instance.</returns>
+        public EntityMapFluentDefinition<TEntity> PropertyValueAttributes(Expression<Func<TEntity, object>> expression,
+            IEnumerable<PropertyValueAttribute> attributes) =>
+            PropertyValueAttributes(expression, attributes, false);
+
+        /// <summary>
+        /// Defines the class property parameter value attributes.
+        /// </summary>
+        /// <param name="expression">The expression to be parsed.</param>
+        /// <param name="attributes">The list of property value attributes to be mapped.</param>
+        /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
+        /// <returns>The current instance.</returns>
+        public EntityMapFluentDefinition<TEntity> PropertyValueAttributes(Expression<Func<TEntity, object>> expression,
+            IEnumerable<PropertyValueAttribute> attributes,
+            bool force)
+        {
+            PropertyValueAttributeMapper.Add<TEntity>(expression, attributes, force);
+            return this;
+        }
+
+        /*
+         * PropertyName
+         */
+
+        /// <summary>
+        /// Defines the class property parameter value attributes (via property name).
+        /// </summary>
+        /// <param name="propertyName">The name of the class property to be mapped.</param>
+        /// <param name="attributes">The list of property value attributes to be mapped.</param>
+        /// <returns>The current instance.</returns>
+        public EntityMapFluentDefinition<TEntity> PropertyValueAttributes(string propertyName,
+            IEnumerable<PropertyValueAttribute> attributes) =>
+            PropertyValueAttributes(propertyName, attributes, false);
+
+        /// <summary>
+        /// Defines the class property parameter value attributes (via property name).
+        /// </summary>
+        /// <param name="propertyName">The name of the class property to be mapped.</param>
+        /// <param name="attributes">The list of property value attributes to be mapped.</param>
+        /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
+        /// <returns>The current instance.</returns>
+        public EntityMapFluentDefinition<TEntity> PropertyValueAttributes(string propertyName,
+            IEnumerable<PropertyValueAttribute> attributes,
+            bool force)
+        {
+            PropertyValueAttributeMapper.Add<TEntity>(propertyName, attributes, force);
+            return this;
+        }
+
+        /*
+         * Field
+         */
+
+        /// <summary>
+        /// Defines the class property parameter value attributes (via <see cref="Field"/> object).
+        /// </summary>
+        /// <param name="field">The instance of <see cref="Field"/> object to be mapped.</param>
+        /// <param name="attributes">The list of property value attributes to be mapped.</param>
+        /// <returns>The current instance.</returns>
+        public EntityMapFluentDefinition<TEntity> PropertyValueAttributes(Field field,
+            IEnumerable<PropertyValueAttribute> attributes) =>
+            PropertyValueAttributes(field, attributes, false);
+
+        /// <summary>
+        /// Defines the class property parameter value attributes (via <see cref="Field"/> object).
+        /// </summary>
+        /// <param name="field">The instance of <see cref="Field"/> object to be mapped.</param>
+        /// <param name="attributes">The list of property value attributes to be mapped.</param>
+        /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
+        /// <returns>The current instance.</returns>
+        public EntityMapFluentDefinition<TEntity> PropertyValueAttributes(Field field,
+            IEnumerable<PropertyValueAttribute> attributes,
+            bool force)
+        {
+            PropertyValueAttributeMapper.Add<TEntity>(field, attributes, force);
             return this;
         }
 

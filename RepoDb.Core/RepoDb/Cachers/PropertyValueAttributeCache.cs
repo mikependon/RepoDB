@@ -141,6 +141,7 @@ namespace RepoDb
             PropertyInfo propertyInfo)
         {
             // Validate
+            ObjectExtension.ThrowIfNull(entityType, "EntityType");
             ObjectExtension.ThrowIfNull(propertyInfo, "PropertyInfo");
 
             // Variables

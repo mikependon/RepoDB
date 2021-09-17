@@ -3,8 +3,8 @@
 namespace RepoDb.Attributes.Parameter
 {
     /// <summary>
-    /// An attribute used to define a value to the <see cref="DbParameter.Precision"/>
-    /// property via an entity property before the actual execution.
+    /// An attribute that is being used to define a value to the <see cref="DbParameter.Precision"/>
+    /// property via a class property mapping..
     /// </summary>
     public class PrecisionAttribute : PropertyValueAttribute
     {

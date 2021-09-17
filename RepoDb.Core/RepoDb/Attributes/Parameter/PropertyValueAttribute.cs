@@ -98,9 +98,16 @@ namespace RepoDb.Attributes.Parameter
 
             if (ParameterType.IsAssignableFrom(parameter.GetType()))
             {
-                PropertyInfo.SetValue(parameter, Value);
+                // The reason why we use the 'GetValue()' method over the 'Value' property is because
+                // of the fact that derived class should sometime customize the value.
+                PropertyInfo.SetValue(parameter, GetValue());
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        internal virtual object GetValue() => Value;
 
         /*
          * Helpers
