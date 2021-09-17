@@ -32,7 +32,7 @@ namespace RepoDb.Reflection
             Expression parameterVariable,
             ClassProperty classProperty)
         {
-            var attributes = GetPropertyValueAttributes(classProperty);
+            var attributes = classProperty?.GetPropertyValueAttributes();
             if (attributes?.Any() != true)
             {
                 return default;
@@ -99,20 +99,6 @@ namespace RepoDb.Reflection
 
             StaticType.PropertyValueAttribute.GetMethod("SetValue",
                 BindingFlags.Instance | BindingFlags.NonPublic);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="classProperty"></param>
-        /// <returns></returns>
-        private static IEnumerable<PropertyValueAttribute> GetPropertyValueAttributes(ClassProperty classProperty) =>
-            classProperty?
-                .PropertyInfo?
-                .GetCustomAttributes()?
-                .Where(e =>
-                    StaticType.PropertyValueAttribute.IsAssignableFrom(e.GetType()))
-                .Select(e =>
-                    (PropertyValueAttribute)e);
 
         #endregion
     }

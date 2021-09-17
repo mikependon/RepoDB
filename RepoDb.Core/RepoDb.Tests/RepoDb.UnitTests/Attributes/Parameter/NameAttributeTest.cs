@@ -48,7 +48,7 @@ namespace RepoDb.UnitTests.Attributes.Parameter
                     Assert.AreEqual(1, command.Parameters.Count);
 
                     // Assert
-                    var parameter = command.Parameters["TableColumnName"];
+                    var parameter = command.Parameters["@TableColumnName"];
                     Assert.IsNotNull(parameter);
                 }
             }

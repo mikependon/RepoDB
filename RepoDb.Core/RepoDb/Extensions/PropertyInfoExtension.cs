@@ -83,7 +83,7 @@ namespace RepoDb.Extensions
         internal static QueryField AsQueryField(this PropertyInfo property,
             object entity,
             bool appendUnderscore) =>
-            new (property.AsField(), Operation.Equal, property.GetHandledValue(entity), appendUnderscore);
+            new(property.AsField(), Operation.Equal, property.GetHandledValue(entity), appendUnderscore);
 
         /// <summary>
         /// Converts a <see cref="PropertyInfo"/> into a mapped name.
@@ -175,6 +175,21 @@ namespace RepoDb.Extensions
         /// <returns>An enumerable array of <see cref="Field"/>.</returns>
         public static IEnumerable<Field> AsFields(this PropertyInfo[] properties) =>
             AsFields(properties.AsEnumerable<PropertyInfo>());
+
+        /// <summary>
+        /// Returns the list of <see cref="PropertyValueAttribute"/> object that is currently mapped
+        /// on the target <see cref="PropertyInfo"/> object.
+        /// </summary>
+        /// <param name="propertyInfo">The target property.</param>
+        /// <returns>The list of mapped <see cref="PropertyHandlerAttribute"/> objects.</returns>
+        public static IEnumerable<PropertyValueAttribute> GetPropertyValueAttributes(this PropertyInfo propertyInfo) =>
+            propertyInfo?
+                .GetCustomAttributes()?
+                .Where(e =>
+                    StaticType.PropertyValueAttribute.IsAssignableFrom(e.GetType()))
+                .Select(e =>
+                    (PropertyValueAttribute)e) ??
+            PropertyValueAttributeCache.Get(propertyInfo?.DeclaringType, propertyInfo);
 
         /// <summary>
         /// Returns the value of the data entity property. If the property handler is defined in the property, then the

@@ -1,10 +1,11 @@
-﻿using System.Data.Common;
+﻿using RepoDb.Extensions;
+using System.Data.Common;
 
 namespace RepoDb.Attributes.Parameter
 {
     /// <summary>
-    /// An attribute used to define a value to the <see cref="DbParameter.ParameterName"/>
-    /// property via an entity property before the actual execution.
+    /// An attribute that is being used to define a value to the <see cref="DbParameter.ParameterName"/>
+    /// property via a class property mapping..
     /// </summary>
     public class NameAttribute : PropertyValueAttribute
     {
@@ -20,5 +21,11 @@ namespace RepoDb.Attributes.Parameter
         /// Gets the mapped name of the equivalent database object/field.
         /// </summary>
         public string Name => (string)Value;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        internal override object GetValue() => Name.AsParameter();
     }
 }

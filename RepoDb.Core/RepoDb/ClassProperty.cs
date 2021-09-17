@@ -2,6 +2,7 @@
 using RepoDb.Attributes.Parameter;
 using RepoDb.Extensions;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Reflection;
@@ -292,6 +293,26 @@ namespace RepoDb
         /// <returns>The mapped-name value.</returns>
         public string GetMappedName() =>
             mappedName ??= PropertyMappedNameCache.Get(GetDeclaringType(), PropertyInfo);
+
+        /*
+         * PropertyHandlerAttributes
+         */
+        private bool isPropertyValueAttributesWasSet;
+        private IEnumerable<PropertyValueAttribute> propertyValueAttributes;
+
+        /// <summary>
+        /// Gets the list of mapped <see cref="PropertyValueAttribute"/> object for the current property.
+        /// </summary>
+        /// <returns>The list of mapped <see cref="PropertyValueAttribute"/> object.</returns>
+        public IEnumerable<PropertyValueAttribute> GetPropertyValueAttributes()
+        {
+            if (isPropertyValueAttributesWasSet == true)
+            {
+                return propertyValueAttributes;
+            }
+            isPropertyValueAttributesWasSet = true;
+            return propertyValueAttributes = PropertyInfo.GetPropertyValueAttributes();
+        }
 
         #endregion
 
