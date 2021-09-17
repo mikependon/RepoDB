@@ -58,8 +58,10 @@ namespace RepoDb.Extensions
             var attributeName = ((MapAttribute)GetCustomAttribute(property, StaticType.MapAttribute))?.Name ??
                 ((ColumnAttribute)GetCustomAttribute(property, StaticType.ColumnAttribute))?.Name ??
                 ((NameAttribute)GetCustomAttribute(property, StaticType.NameAttribute))?.Name;
+
             return attributeName ??
                 PropertyMapper.Get(declaringType, property) ??
+                PropertyValueAttributeCache.GetAttribute<NameAttribute>(declaringType, property)?.Name ??
                 property.Name;
         }
 
@@ -182,14 +184,22 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="propertyInfo">The target property.</param>
         /// <returns>The list of mapped <see cref="PropertyHandlerAttribute"/> objects.</returns>
-        public static IEnumerable<PropertyValueAttribute> GetPropertyValueAttributes(this PropertyInfo propertyInfo) =>
-            propertyInfo?
+        public static IEnumerable<PropertyValueAttribute> GetPropertyValueAttributes(this PropertyInfo propertyInfo)
+        {
+            var attributes = propertyInfo?
                 .GetCustomAttributes()?
                 .Where(e =>
                     StaticType.PropertyValueAttribute.IsAssignableFrom(e.GetType()))
                 .Select(e =>
-                    (PropertyValueAttribute)e) ??
-            PropertyValueAttributeCache.Get(propertyInfo?.DeclaringType, propertyInfo);
+                    (PropertyValueAttribute)e);
+
+            attributes = attributes?.Any() == true ? attributes :
+                PropertyValueAttributeCache.Get(propertyInfo?.DeclaringType, propertyInfo);
+
+            // TODO: Merge the 2
+
+            return attributes;
+        }
 
         /// <summary>
         /// Returns the value of the data entity property. If the property handler is defined in the property, then the
