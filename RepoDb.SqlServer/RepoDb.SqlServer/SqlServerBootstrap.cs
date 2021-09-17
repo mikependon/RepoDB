@@ -1,14 +1,12 @@
 ﻿using RepoDb.DbHelpers;
 using RepoDb.DbSettings;
 using RepoDb.StatementBuilders;
-using System;
 
 namespace RepoDb
 {
     /// <summary>
     /// A class that is used to initialize the necessary settings for both the <see cref="Microsoft.Data.SqlClient.SqlConnection"/> and <see cref="System.Data.SqlClient.SqlConnection"/> objects.
     /// </summary>
-    [Obsolete("This class will never be removed, however, the support to System.Data.SqlClient namespace will soon be removed from the library. In the future, RepoDB will only be supporting the Microsoft.Data.SqlClient namespace. If you still wish to work with System.Data.SqlClient namespace, then follow the steps here (https://github.com/mikependon/RepoDB/tree/master/RepoDb.SqlServer#working-with-systemdatasqlclient).")]
     public static class SqlServerBootstrap
     {
         #region Properties

@@ -15,12 +15,6 @@ namespace RepoDb.SqlServer.UnitTests.Attributes.Parameter.SqlServer
             DbSettingMapper.Add<SqlConnection>(new SqlServerDbSetting(), true);
         }
 
-        [TestCleanup]
-        public void Cleanup()
-        {
-            DbSettingMapper.Clear();
-        }
-
         #region Classes
 
         private class XmlSchemaCollectionOwningSchemaAttributeTestClass
