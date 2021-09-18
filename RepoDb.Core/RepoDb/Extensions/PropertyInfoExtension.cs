@@ -7,6 +7,7 @@ using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using RepoDb.Interfaces;
 using RepoDb.Attributes.Parameter;
+using System.Data;
 
 namespace RepoDb.Extensions
 {
@@ -55,15 +56,51 @@ namespace RepoDb.Extensions
         internal static string GetMappedName(this PropertyInfo property,
             Type declaringType)
         {
-            var attributeName = ((MapAttribute)GetCustomAttribute(property, StaticType.MapAttribute))?.Name ??
+            var mappedName = ((MapAttribute)GetCustomAttribute(property, StaticType.MapAttribute))?.Name ??
                 ((ColumnAttribute)GetCustomAttribute(property, StaticType.ColumnAttribute))?.Name ??
-                ((NameAttribute)GetCustomAttribute(property, StaticType.NameAttribute))?.Name;
+                ((NameAttribute)GetCustomAttribute(property, StaticType.NameAttribute))?.Name ??
+                GetNamePropertyValueAttribute(property, declaringType)?.Value?.ToString();
 
-            return attributeName ??
+            return mappedName ??
                 PropertyMapper.Get(declaringType, property) ??
                 PropertyValueAttributeCache.GetAttribute<NameAttribute>(declaringType, property)?.Name ??
                 property.Name;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="property"></param>
+        /// <param name="declaringType"></param>
+        /// <returns></returns>
+        internal static PropertyValueAttribute GetNamePropertyValueAttribute(this PropertyInfo property,
+            Type declaringType) =>
+            GetPropertyValueAttributeByParameterName(property, declaringType, nameof(IDbDataParameter.ParameterName));
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="property"></param>
+        /// <param name="declaringType"></param>
+        /// <returns></returns>
+        internal static PropertyValueAttribute GetDbTypePropertyValueAttribute(this PropertyInfo property,
+            Type declaringType) =>
+            GetPropertyValueAttributeByParameterName(property, declaringType, nameof(IDbDataParameter.DbType));
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="property"></param>
+        /// <param name="declaringType"></param>
+        /// <param name="parameterName"></param>
+        /// <returns></returns>
+        internal static PropertyValueAttribute GetPropertyValueAttributeByParameterName(this PropertyInfo property,
+            Type declaringType,
+            string parameterName) =>
+            PropertyValueAttributeCache
+                .Get((declaringType ?? property.DeclaringType), property)?
+                .Where(e => string.Equals(parameterName, e.PropertyName, StringComparison.OrdinalIgnoreCase))
+                .LastOrDefault();
 
         /// <summary>
         /// Converts a <see cref="PropertyInfo"/> into a query field object.
