@@ -1,6 +1,9 @@
 ﻿using RepoDb.Attributes.Parameter;
 using RepoDb.Extensions;
+using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -42,12 +45,17 @@ namespace RepoDb.Reflection
 
             foreach (var attribute in attributes)
             {
-                if (attribute.IncludedInCompilation)
+                var exclude = !attribute.IncludedInCompilation ||
+                    string.Equals(nameof(IDbDataParameter.ParameterName), attribute.PropertyName, StringComparison.OrdinalIgnoreCase);
+
+                if (exclude)
                 {
-                    var expression = GetPropertyValueAttributesAssignmentExpression(parameterVariable,
-                        attribute);
-                    expressions.AddIfNotNull(expression);
+                    continue;
                 }
+
+                var expression = GetPropertyValueAttributesAssignmentExpression(parameterVariable,
+                    attribute);
+                expressions.AddIfNotNull(expression);
             }
 
             return expressions;

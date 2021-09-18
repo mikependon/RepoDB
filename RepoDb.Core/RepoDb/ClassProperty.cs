@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
+using System.Linq;
 using System.Reflection;
 
 namespace RepoDb
@@ -156,21 +157,25 @@ namespace RepoDb
          * GetDbTypeAttribute
          */
         private bool isDbTypeAttributeWasSet;
-        private DbTypeAttribute dbTypeAttribute;
+        private PropertyValueAttribute propertyValueAttribute;
 
         /// <summary>
-        /// Gets the <see cref="DbTypeAttribute"/> if present.
+        /// Gets the <see cref="PropertyValueAttribute"/> if present.
         /// </summary>
-        /// <returns>The instance of <see cref="DbTypeAttribute"/>.</returns>
-        public DbTypeAttribute GetDbTypeAttribute()
+        /// <returns>The instance of <see cref="PropertyValueAttribute"/>.</returns>
+        public PropertyValueAttribute GetDbTypeAttribute()
         {
             if (isDbTypeAttributeWasSet)
             {
-                return dbTypeAttribute;
+                return propertyValueAttribute;
             }
             isDbTypeAttributeWasSet = true;
-            return dbTypeAttribute = (PropertyInfo.GetCustomAttribute(StaticType.DbTypeAttribute) ??
-                PropertyInfo.GetCustomAttribute(StaticType.TypeMapAttribute)) as DbTypeAttribute;
+            return propertyValueAttribute = (PropertyInfo.GetCustomAttribute(StaticType.DbTypeAttribute) ??
+                PropertyInfo.GetCustomAttribute(StaticType.TypeMapAttribute)) as DbTypeAttribute ??
+                (GetPropertyValueAttributes()
+                    .Where(
+                        e => string.Equals(nameof(IDbDataParameter.ParameterName), e.PropertyName, StringComparison.OrdinalIgnoreCase))
+                    .LastOrDefault());
         }
 
         /*
@@ -249,6 +254,7 @@ namespace RepoDb
             isDbTypeWasSet = true;
             return dbType = TypeMapCache.Get(GetDeclaringType(), PropertyInfo) ??
                 PropertyValueAttributeCache.GetAttribute<DbTypeAttribute>(GetDeclaringType(), PropertyInfo)?.DbType ??
+                (DbType?)PropertyInfo.GetDbTypePropertyValueAttribute(GetDeclaringType())?.Value ??
                 TypeMapCache.Get(PropertyInfo.PropertyType);
         }
 

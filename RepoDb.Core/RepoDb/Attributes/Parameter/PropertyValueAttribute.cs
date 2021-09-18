@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RepoDb.Extensions;
+using System;
 using System.Data;
 using System.Reflection;
 
@@ -9,6 +10,8 @@ namespace RepoDb.Attributes.Parameter
     /// </summary>
     public class PropertyValueAttribute : Attribute
     {
+        #region Constructors
+
         /// <summary>
         /// Creates a new instance of <see cref="PropertyValueAttribute"/> class.
         /// </summary>
@@ -46,9 +49,9 @@ namespace RepoDb.Attributes.Parameter
             IncludedInCompilation = includedInCompilation;
         }
 
-        /*
-         * Properties
-         */
+        #endregion
+
+        #region Properties
 
         /// <summary>
         /// Gets the represented <see cref="Type"/> of the <see cref="IDbDataParameter"/> object.
@@ -77,9 +80,9 @@ namespace RepoDb.Attributes.Parameter
         /// <returns></returns>
         internal PropertyInfo PropertyInfo { get; private set; }
 
-        /*
-         * Methods
-         */
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Gets the string representation of the current attribute object.
@@ -94,7 +97,7 @@ namespace RepoDb.Attributes.Parameter
         /// <param name="parameter"></param>
         internal void SetValue(IDbDataParameter parameter)
         {
-            ThrowIfNull(parameter, "Parameter");
+            ObjectExtension.ThrowIfNull(parameter, "Parameter");
 
             if (ParameterType.IsAssignableFrom(parameter.GetType()))
             {
@@ -109,9 +112,9 @@ namespace RepoDb.Attributes.Parameter
         /// </summary>
         internal virtual object GetValue() => Value;
 
-        /*
-         * Helpers
-         */
+        #endregion
+
+        #region Helpers
 
         /// <summary>
         /// 
@@ -121,9 +124,9 @@ namespace RepoDb.Attributes.Parameter
         private void Validate(Type parameterType,
             string propertyName)
         {
-            ThrowIfNull(parameterType, "ParameterType");
+            ObjectExtension.ThrowIfNull(parameterType, "ParameterType");
             ValidateParameterType(parameterType);
-            ThrowIfNull(propertyName, "PropertyName");
+            ObjectExtension.ThrowIfNull(propertyName, "PropertyName");
             EnsurePropertyInfo(parameterType, propertyName);
         }
 
@@ -150,22 +153,10 @@ namespace RepoDb.Attributes.Parameter
         {
             // Property
             PropertyInfo = parameterType?.GetProperty(propertyName);
-            ThrowIfNull(PropertyInfo,
+            ObjectExtension.ThrowIfNull(PropertyInfo,
                 $"The property '{propertyName}' is not found from type '{parameterType?.FullName}'.");
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <param name="message"></param>
-        private void ThrowIfNull(object obj,
-            string message)
-        {
-            if (obj == null)
-            {
-                throw new NullReferenceException(message);
-            }
-        }
+        #endregion
     }
 }
