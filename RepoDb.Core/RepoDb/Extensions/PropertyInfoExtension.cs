@@ -182,14 +182,23 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="propertyInfo">The target property.</param>
         /// <returns>The list of mapped <see cref="PropertyHandlerAttribute"/> objects.</returns>
-        public static IEnumerable<PropertyValueAttribute> GetPropertyValueAttributes(this PropertyInfo propertyInfo) =>
-            propertyInfo?
+        public static IEnumerable<PropertyValueAttribute> GetPropertyValueAttributes(this PropertyInfo propertyInfo)
+        {
+            var customAttributes = propertyInfo?
                 .GetCustomAttributes()?
                 .Where(e =>
                     StaticType.PropertyValueAttribute.IsAssignableFrom(e.GetType()))
                 .Select(e =>
-                    (PropertyValueAttribute)e) ??
-            PropertyValueAttributeCache.Get(propertyInfo?.DeclaringType, propertyInfo);
+                    (PropertyValueAttribute)e);
+            var mappedAttributes = PropertyValueAttributeCache
+                .Get(propertyInfo?.DeclaringType, propertyInfo);
+            var uniqueAttributes = mappedAttributes
+                .Where(e => customAttributes?.Contains(e) != true);
+
+            // Return
+            return customAttributes == null ? uniqueAttributes : uniqueAttributes == null ? customAttributes :
+                uniqueAttributes.Union(customAttributes);
+        }
 
         /// <summary>
         /// Returns the value of the data entity property. If the property handler is defined in the property, then the

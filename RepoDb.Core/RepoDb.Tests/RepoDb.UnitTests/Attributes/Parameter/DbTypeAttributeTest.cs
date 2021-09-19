@@ -26,6 +26,7 @@ namespace RepoDb.UnitTests.Attributes.Parameter
         private class DbTypeAttributeTestClass
         {
             [DbType(DbType.AnsiStringFixedLength)]
+            [Size(100)]
             public object ColumnName { get; set; }
         }
 
