@@ -126,6 +126,14 @@ namespace RepoDb
         /// <summary>
         /// Gets the string representations (column-value pairs) of the current <see cref="QueryField"/> object.
         /// </summary>
+        /// <param name="dbSetting">The database setting currently in used.</param>
+        /// <returns>The string representations of the current <see cref="QueryField"/> object.</returns>
+        public virtual string GetString(IDbSetting dbSetting) =>
+            GetString(0, dbSetting);
+
+        /// <summary>
+        /// Gets the string representations (column-value pairs) of the current <see cref="QueryField"/> object.
+        /// </summary>
         /// <param name="index">The target index.</param>
         /// <param name="dbSetting">The database setting currently in used.</param>
         /// <returns>The string representations of the current <see cref="QueryField"/> object.</returns>
@@ -140,7 +148,7 @@ namespace RepoDb
         /// <param name="functionFormat">The properly constructed format of the target function to be used.</param>
         /// <param name="dbSetting">The database setting currently in used.</param>
         /// <returns>The string representations of the current <see cref="QueryField"/> object using the LOWER function.</returns>
-        protected internal virtual string GetString(int index,
+        protected virtual string GetString(int index,
             string functionFormat,
             IDbSetting dbSetting)
         {

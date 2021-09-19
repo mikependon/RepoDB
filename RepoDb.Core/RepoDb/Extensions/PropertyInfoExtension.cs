@@ -230,13 +230,12 @@ namespace RepoDb.Extensions
                 .Select(e =>
                     (PropertyValueAttribute)e);
             var mappedAttributes = PropertyValueAttributeCache
-                .Get(propertyInfo?.DeclaringType, propertyInfo);
-            var uniqueAttributes = mappedAttributes
+                .Get(propertyInfo?.DeclaringType, propertyInfo)?
                 .Where(e => customAttributes?.Contains(e) != true);
 
             // Return
-            return customAttributes == null ? uniqueAttributes : uniqueAttributes == null ? customAttributes :
-                uniqueAttributes.Union(customAttributes);
+            return customAttributes == null ? mappedAttributes : mappedAttributes == null ? customAttributes :
+                mappedAttributes.Union(customAttributes);
         }
 
         /// <summary>
