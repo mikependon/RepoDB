@@ -8,8 +8,10 @@ namespace RepoDb.Attributes.Parameter
     /// <summary>
     /// An attribute that is being used to set a value to any property of the <see cref="IDbDataParameter"/> object.
     /// </summary>
-    public class PropertyValueAttribute : Attribute
+    public class PropertyValueAttribute : Attribute, IEquatable<PropertyValueAttribute>
     {
+        private int? hashCode = null;
+
         #region Constructors
 
         /// <summary>
@@ -156,6 +158,104 @@ namespace RepoDb.Attributes.Parameter
             ObjectExtension.ThrowIfNull(PropertyInfo,
                 $"The property '{propertyName}' is not found from type '{parameterType?.FullName}'.");
         }
+
+        #endregion
+
+        #region Equality and comparers
+
+        /// <summary>
+        /// Returns the hashcode for this <see cref="PropertyValueAttribute"/>.
+        /// </summary>
+        /// <returns>The hashcode value.</returns>
+        public override int GetHashCode()
+        {
+            if (this.hashCode != null)
+            {
+                return this.hashCode.Value;
+            }
+
+            // FullName: This is to ensure that even the user has created an identical formatting 
+            //  on the derived class with the existing classes, the Type.FullName could still 
+            // differentiate the instances
+            var hashCode = GetType().FullName.GetHashCode();
+
+            // Base
+            hashCode += base.GetHashCode();
+
+            // PropertyName
+            if (PropertyName != null)
+            {
+                hashCode += PropertyName.GetHashCode();
+            }
+
+            // ParameterType
+            if (ParameterType != null)
+            {
+                hashCode += ParameterType.GetHashCode();
+            }
+
+            // IncludedInCompilation
+            hashCode += IncludedInCompilation.GetHashCode();
+
+            // Value
+            if (Value != null)
+            {
+                hashCode += Value.GetHashCode();
+            }
+
+            // Return
+            return (this.hashCode = hashCode).Value;
+        }
+
+        /// <summary>
+        /// Compares the <see cref="PropertyValueAttribute"/> object equality against the given target object.
+        /// </summary>
+        /// <param name="obj">The object to be compared to the current object.</param>
+        /// <returns>True if the instances are equals.</returns>
+        public override bool Equals(object obj)
+        {
+            if (obj is null) return false;
+
+            return obj.GetHashCode() == GetHashCode();
+        }
+
+        /// <summary>
+        /// Compares the <see cref="PropertyValueAttribute"/> object equality against the given target object.
+        /// </summary>
+        /// <param name="other">The object to be compared to the current object.</param>
+        /// <returns>True if the instances are equal.</returns>
+        public bool Equals(PropertyValueAttribute other)
+        {
+            if (other is null) return false;
+
+            return other.GetHashCode() == GetHashCode();
+        }
+
+        /// <summary>
+        /// Compares the equality of the two <see cref="PropertyValueAttribute"/> objects.
+        /// </summary>
+        /// <param name="objA">The first <see cref="PropertyValueAttribute"/> object.</param>
+        /// <param name="objB">The second <see cref="PropertyValueAttribute"/> object.</param>
+        /// <returns>True if the instances are equal.</returns>
+        public static bool operator ==(PropertyValueAttribute objA,
+            PropertyValueAttribute objB)
+        {
+            if (objA is null)
+            {
+                return objB is null;
+            }
+            return objA.Equals(objB);
+        }
+
+        /// <summary>
+        /// Compares the inequality of the two <see cref="PropertyValueAttribute"/> objects.
+        /// </summary>
+        /// <param name="objA">The first <see cref="PropertyValueAttribute"/> object.</param>
+        /// <param name="objB">The second <see cref="PropertyValueAttribute"/> object.</param>
+        /// <returns>True if the instances are not equal.</returns>
+        public static bool operator !=(PropertyValueAttribute objA,
+            PropertyValueAttribute objB) =>
+            (objA == objB) == false;
 
         #endregion
     }

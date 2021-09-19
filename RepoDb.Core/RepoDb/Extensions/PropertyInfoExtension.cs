@@ -223,19 +223,20 @@ namespace RepoDb.Extensions
         /// <returns>The list of mapped <see cref="PropertyHandlerAttribute"/> objects.</returns>
         public static IEnumerable<PropertyValueAttribute> GetPropertyValueAttributes(this PropertyInfo propertyInfo)
         {
-            var attributes = propertyInfo?
+            var customAttributes = propertyInfo?
                 .GetCustomAttributes()?
                 .Where(e =>
                     StaticType.PropertyValueAttribute.IsAssignableFrom(e.GetType()))
                 .Select(e =>
                     (PropertyValueAttribute)e);
+            var mappedAttributes = PropertyValueAttributeCache
+                .Get(propertyInfo?.DeclaringType, propertyInfo);
+            var uniqueAttributes = mappedAttributes
+                .Where(e => customAttributes?.Contains(e) != true);
 
-            attributes = attributes?.Any() == true ? attributes :
-                PropertyValueAttributeCache.Get(propertyInfo?.DeclaringType, propertyInfo);
-
-            // TODO: Merge the 2
-
-            return attributes;
+            // Return
+            return customAttributes == null ? uniqueAttributes : uniqueAttributes == null ? customAttributes :
+                uniqueAttributes.Union(customAttributes);
         }
 
         /// <summary>
