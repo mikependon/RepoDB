@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Dynamic;
 using System.Linq;
-using System.Reflection;
 
 namespace RepoDb.Extensions
 {
@@ -715,7 +714,13 @@ namespace RepoDb.Extensions
 
             foreach (var attribute in attributes)
             {
-                if (attribute is NameAttribute && isForUpdate)
+                var exclude = isForUpdate &&
+                    (
+                        attribute is NameAttribute ||
+                        string.Equals(nameof(IDbDataParameter.ParameterName), attribute.PropertyName, StringComparison.OrdinalIgnoreCase)
+                    );
+
+                if (exclude)
                 {
                     continue;
                 }

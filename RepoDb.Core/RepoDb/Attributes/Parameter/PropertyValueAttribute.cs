@@ -161,7 +161,6 @@ namespace RepoDb.Attributes.Parameter
 
         #endregion
 
-
         #region Equality and comparers
 
         /// <summary>
