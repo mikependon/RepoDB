@@ -5,7 +5,7 @@ namespace RepoDb.Attributes.Parameter
 {
     /// <summary>
     /// An attribute that is being used to define a value to the <see cref="DbParameter.Direction"/>
-    /// property via a class property mapping..
+    /// property via a class property mapping.
     /// </summary>
     public class DirectionAttribute : PropertyValueAttribute
     {
