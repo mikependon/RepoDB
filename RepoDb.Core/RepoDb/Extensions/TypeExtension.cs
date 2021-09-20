@@ -241,12 +241,14 @@ namespace RepoDb.Extensions
         /// A helper method to return the instance of <see cref="PropertyInfo"/> object based on name.
         /// </summary>
         /// <param name="type">The target .NET CLR type.</param>
-        /// <param name="propertyName">The name of the class property to be mapped.</param>
+        /// <param name="propertyName">The name of the target class property.</param>
         /// <returns>An instance of <see cref="PropertyInfo"/> object.</returns>
         internal static PropertyInfo GetProperty(Type type,
             string propertyName) =>
-
-            type.GetProperties().FirstOrDefault(p => string.Equals(p.Name, propertyName, StringComparison.OrdinalIgnoreCase));
+            type
+                .GetProperties()
+                .FirstOrDefault(p =>
+                    string.Equals(p.Name, propertyName, StringComparison.OrdinalIgnoreCase));
 
         #endregion
     }

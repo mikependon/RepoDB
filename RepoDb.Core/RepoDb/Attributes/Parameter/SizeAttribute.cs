@@ -4,7 +4,7 @@ namespace RepoDb.Attributes.Parameter
 {
     /// <summary>
     /// An attribute that is being used to define a value to the <see cref="DbParameter.Size"/>
-    /// property via a class property mapping..
+    /// property via a class property mapping.
     /// </summary>
     public class SizeAttribute : PropertyValueAttribute
     {

@@ -20,7 +20,7 @@ namespace RepoDb.Extensions
         /// Gets a custom attribute defined on the property.
         /// </summary>
         /// <typeparam name="T">The custom attribute that is defined into the property.</typeparam>
-        /// <param name="property">The type of where the custom attribute is defined.</param>
+        /// <param name="property">The property of where the custom attribute is defined.</param>
         /// <returns>The custom attribute.</returns>
         public static T GetCustomAttribute<T>(this PropertyInfo property)
             where T : Attribute =>
@@ -29,7 +29,7 @@ namespace RepoDb.Extensions
         /// <summary>
         /// Gets a custom attribute defined on the property.
         /// </summary>
-        /// <param name="property">The type of where the custom attribute is defined.</param>
+        /// <param name="property">The property of where the custom attribute is defined.</param>
         /// <param name="type">The custom attribute that is defined into the property.</param>
         /// <returns>The custom attribute.</returns>
         public static Attribute GetCustomAttribute(this PropertyInfo property,
@@ -63,44 +63,9 @@ namespace RepoDb.Extensions
 
             return mappedName ??
                 PropertyMapper.Get(declaringType, property) ??
-                PropertyValueAttributeCache.GetAttribute<NameAttribute>(declaringType, property)?.Name ??
+                GetPropertyValueAttribute<NameAttribute>(property, declaringType)?.Name ??
                 property.Name;
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="property"></param>
-        /// <param name="declaringType"></param>
-        /// <returns></returns>
-        internal static PropertyValueAttribute GetNamePropertyValueAttribute(this PropertyInfo property,
-            Type declaringType) =>
-            GetPropertyValueAttributeByParameterName(property, declaringType, nameof(IDbDataParameter.ParameterName));
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="property"></param>
-        /// <param name="declaringType"></param>
-        /// <returns></returns>
-        internal static PropertyValueAttribute GetDbTypePropertyValueAttribute(this PropertyInfo property,
-            Type declaringType) =>
-            GetPropertyValueAttributeByParameterName(property, declaringType, nameof(IDbDataParameter.DbType));
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="property"></param>
-        /// <param name="declaringType"></param>
-        /// <param name="parameterName"></param>
-        /// <returns></returns>
-        internal static PropertyValueAttribute GetPropertyValueAttributeByParameterName(this PropertyInfo property,
-            Type declaringType,
-            string parameterName) =>
-            PropertyValueAttributeCache
-                .Get((declaringType ?? property.DeclaringType), property)?
-                .Where(e => string.Equals(parameterName, e.PropertyName, StringComparison.OrdinalIgnoreCase))
-                .LastOrDefault();
 
         /// <summary>
         /// Converts a <see cref="PropertyInfo"/> into a query field object.
@@ -221,22 +186,93 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="propertyInfo">The target property.</param>
         /// <returns>The list of mapped <see cref="PropertyHandlerAttribute"/> objects.</returns>
-        public static IEnumerable<PropertyValueAttribute> GetPropertyValueAttributes(this PropertyInfo propertyInfo)
+        public static IEnumerable<PropertyValueAttribute> GetPropertyValueAttributes(this PropertyInfo propertyInfo) =>
+            GetPropertyValueAttributes(propertyInfo, propertyInfo.DeclaringType);
+
+        /// <summary>
+        /// Returns the list of <see cref="PropertyValueAttribute"/> object that is currently mapped
+        /// on the target <see cref="PropertyInfo"/> object.
+        /// </summary>
+        /// <param name="property">The target property.</param>
+        /// <param name="declaringType">The declaring type of the property.</param>
+        /// <returns>The list of mapped <see cref="PropertyHandlerAttribute"/> objects.</returns>
+        public static IEnumerable<PropertyValueAttribute> GetPropertyValueAttributes(this PropertyInfo property,
+            Type declaringType)
         {
-            var customAttributes = propertyInfo?
+            var customAttributes = property?
                 .GetCustomAttributes()?
                 .Where(e =>
                     StaticType.PropertyValueAttribute.IsAssignableFrom(e.GetType()))
                 .Select(e =>
                     (PropertyValueAttribute)e);
-            var mappedAttributes = PropertyValueAttributeCache
-                .Get(propertyInfo?.DeclaringType, propertyInfo)?
+            var mappedAttributes = PropertyValueAttributeMapper
+                .Get((declaringType ?? property?.DeclaringType), property)?
                 .Where(e => customAttributes?.Contains(e) != true);
 
             // Return
             return customAttributes == null ? mappedAttributes : mappedAttributes == null ? customAttributes :
                 mappedAttributes.Union(customAttributes);
         }
+
+        /// <summary>
+        /// Gets the instance of <see cref="PropertyValueAttribute"/> object from the existing mapped
+        /// list of <see cref="PropertyValueAttribute"/> objects.
+        /// </summary>
+        /// <typeparam name="TPropertyValueAttribute">The target type of the <see cref="PropertyValueAttribute"/>.</typeparam>
+        /// <param name="property">The property where to extract the instance of <see cref="PropertyValueAttribute"/> object.</param>
+        /// <returns>The instance of target <see cref="PropertyValueAttribute"/> object.</returns>
+        public static TPropertyValueAttribute GetPropertyValueAttribute<TPropertyValueAttribute>(this PropertyInfo property)
+            where TPropertyValueAttribute : PropertyValueAttribute =>
+            GetPropertyValueAttribute<TPropertyValueAttribute>(property, property.DeclaringType);
+
+        /// <summary>
+        /// Gets the instance of <see cref="PropertyValueAttribute"/> object from the existing mapped
+        /// list of <see cref="PropertyValueAttribute"/> objects.
+        /// </summary>
+        /// <typeparam name="TPropertyValueAttribute">The target type of the <see cref="PropertyValueAttribute"/>.</typeparam>
+        /// <param name="property">The property where to extract the instance of <see cref="PropertyValueAttribute"/> object.</param>
+        /// <param name="declaringType">The declaring type of the property.</param>
+        /// <returns>The instance of target <see cref="PropertyValueAttribute"/> object.</returns>
+        public static TPropertyValueAttribute GetPropertyValueAttribute<TPropertyValueAttribute>(this PropertyInfo property,
+            Type declaringType)
+            where TPropertyValueAttribute : PropertyValueAttribute =>
+            (TPropertyValueAttribute)GetPropertyValueAttributes(property, declaringType)?
+                .LastOrDefault(e => typeof(TPropertyValueAttribute) == e.GetType());
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="property"></param>
+        /// <param name="declaringType"></param>
+        /// <returns></returns>
+        internal static PropertyValueAttribute GetNamePropertyValueAttribute(this PropertyInfo property,
+            Type declaringType) =>
+            GetPropertyValueAttributeByParameterName(property, declaringType, nameof(IDbDataParameter.ParameterName));
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="property"></param>
+        /// <param name="declaringType"></param>
+        /// <returns></returns>
+        internal static PropertyValueAttribute GetDbTypePropertyValueAttribute(this PropertyInfo property,
+            Type declaringType) =>
+            GetPropertyValueAttributeByParameterName(property, declaringType, nameof(IDbDataParameter.DbType));
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="property"></param>
+        /// <param name="declaringType"></param>
+        /// <param name="parameterName"></param>
+        /// <returns></returns>
+        internal static PropertyValueAttribute GetPropertyValueAttributeByParameterName(this PropertyInfo property,
+            Type declaringType,
+            string parameterName) =>
+            PropertyValueAttributeMapper
+                .Get((declaringType ?? property.DeclaringType), property)?
+                .Where(e => string.Equals(parameterName, e.PropertyName, StringComparison.OrdinalIgnoreCase))
+                .LastOrDefault();
 
         /// <summary>
         /// Returns the value of the data entity property. If the property handler is defined in the property, then the
