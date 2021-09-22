@@ -7,7 +7,7 @@ namespace RepoDb.Requests
     /// <summary>
     /// A class that holds the value of the 'Exists' operation arguments.
     /// </summary>
-    internal class ExistsRequest : BaseRequest, IEquatable<ExistsRequest>
+    internal class ExistsRequest : BaseRequest
     {
         private int? hashCode = null;
 
@@ -85,7 +85,7 @@ namespace RepoDb.Requests
             }
 
             // Get first the entity hash code
-            var hashCode = HashCode.Combine(Name, ".Exists");
+            var hashCode = base.GetHashCode() + HashCode.Combine(Name, ".Exists");
 
             // Get the properties hash codes
             if (Where != null)
@@ -102,56 +102,6 @@ namespace RepoDb.Requests
             // Set and return the hashcode
             return (this.hashCode = hashCode).Value;
         }
-
-        /// <summary>
-        /// Compares the <see cref="ExistsRequest"/> object equality against the given target object.
-        /// </summary>
-        /// <param name="obj">The object to be compared to the current object.</param>
-        /// <returns>True if the instances are equals.</returns>
-        public override bool Equals(object obj)
-        {
-            if (obj is null) return false;
-            
-            return obj.GetHashCode() == GetHashCode();
-        }
-
-        /// <summary>
-        /// Compares the <see cref="ExistsRequest"/> object equality against the given target object.
-        /// </summary>
-        /// <param name="other">The object to be compared to the current object.</param>
-        /// <returns>True if the instances are equal.</returns>
-        public bool Equals(ExistsRequest other)
-        {
-            if (other is null) return false;
-            
-            return other.GetHashCode() == GetHashCode();
-        }
-
-        /// <summary>
-        /// Compares the equality of the two <see cref="ExistsRequest"/> objects.
-        /// </summary>
-        /// <param name="objA">The first <see cref="ExistsRequest"/> object.</param>
-        /// <param name="objB">The second <see cref="ExistsRequest"/> object.</param>
-        /// <returns>True if the instances are equal.</returns>
-        public static bool operator ==(ExistsRequest objA,
-            ExistsRequest objB)
-        {
-            if (objA is null)
-            {
-                return objB is null;
-            }
-            return objA.Equals(objB);
-        }
-
-        /// <summary>
-        /// Compares the inequality of the two <see cref="ExistsRequest"/> objects.
-        /// </summary>
-        /// <param name="objA">The first <see cref="ExistsRequest"/> object.</param>
-        /// <param name="objB">The second <see cref="ExistsRequest"/> object.</param>
-        /// <returns>True if the instances are not equal.</returns>
-        public static bool operator !=(ExistsRequest objA,
-            ExistsRequest objB) =>
-            (objA == objB) == false;
 
         #endregion
     }

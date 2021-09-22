@@ -9,7 +9,7 @@ namespace RepoDb.Requests
     /// <summary>
     /// A class that holds the value of the 'QueryMultiple' operation arguments.
     /// </summary>
-    internal class QueryMultipleRequest : BaseRequest, IEquatable<QueryMultipleRequest>
+    internal class QueryMultipleRequest : BaseRequest
     {
         private int? hashCode = null;
 
@@ -131,7 +131,7 @@ namespace RepoDb.Requests
             }
 
             // Get first the entity hash code
-            var hashCode = HashCode.Combine(Name, ".QueryMultiple");
+            var hashCode = base.GetHashCode() + HashCode.Combine(Name, ".QueryMultiple");
 
             // Add the index
             if (Index != null)
@@ -178,55 +178,6 @@ namespace RepoDb.Requests
             // Set and return the hashcode
             return (this.hashCode = hashCode).Value;
         }
-
-        /// <summary>
-        /// Compares the <see cref="QueryMultipleRequest"/> object equality against the given target object.
-        /// </summary>
-        /// <param name="obj">The object to be compared to the current object.</param>
-        /// <returns>True if the instances are equals.</returns>
-        public override bool Equals(object obj)
-        {
-            if (obj is null) return false;
-            
-            return obj.GetHashCode() == GetHashCode();
-        }
-
-        /// <summary>
-        /// Compares the <see cref="QueryMultipleRequest"/> object equality against the given target object.
-        /// </summary>
-        /// <param name="other">The object to be compared to the current object.</param>
-        /// <returns>True if the instances are equal.</returns>
-        public bool Equals(QueryMultipleRequest other)
-        {
-            if (other is null) return false;
-            
-            return other.GetHashCode() == GetHashCode();
-        }
-
-        /// <summary>
-        /// Compares the equality of the two <see cref="QueryMultipleRequest"/> objects.
-        /// </summary>
-        /// <param name="objA">The first <see cref="QueryMultipleRequest"/> object.</param>
-        /// <param name="objB">The second <see cref="QueryMultipleRequest"/> object.</param>
-        /// <returns>True if the instances are equal.</returns>
-        public static bool operator ==(QueryMultipleRequest objA, QueryMultipleRequest objB)
-        {
-            if (objA is null)
-            {
-                return objB is null;
-            }
-            return objA.Equals(objB);
-        }
-
-        /// <summary>
-        /// Compares the inequality of the two <see cref="QueryMultipleRequest"/> objects.
-        /// </summary>
-        /// <param name="objA">The first <see cref="QueryMultipleRequest"/> object.</param>
-        /// <param name="objB">The second <see cref="QueryMultipleRequest"/> object.</param>
-        /// <returns>True if the instances are not equal.</returns>
-        public static bool operator !=(QueryMultipleRequest objA,
-            QueryMultipleRequest objB) =>
-            (objA == objB) == false;
 
         #endregion
     }
