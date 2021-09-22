@@ -7,8 +7,10 @@ namespace RepoDb.Requests
     /// <summary>
     /// A base class for all operational request.
     /// </summary>
-    internal abstract class BaseRequest
+    internal abstract class BaseRequest : IEquatable<BaseRequest>
     {
+        private int? hashCode = null;
+
         /// <summary>
         /// Creates a new instance of <see cref="BaseRequest"/> object.
         /// </summary>
@@ -51,5 +53,78 @@ namespace RepoDb.Requests
         /// Gets the statement builder.
         /// </summary>
         public IStatementBuilder StatementBuilder { get; }
+
+        #region Equality and comparers
+
+        /// <summary>
+        /// Returns the hashcode for this <see cref="BaseRequest"/>.
+        /// </summary>
+        /// <returns>The hashcode value.</returns>
+        public override int GetHashCode()
+        {
+            // Make sure to return if it is already provided
+            if (this.hashCode != null)
+            {
+                return this.hashCode.Value;
+            }
+
+            // Get first the entity hash code
+            var hashCode = GetType().FullName.GetHashCode();
+
+            // Set and return the hashcode
+            return (this.hashCode = hashCode).Value;
+        }
+
+        /// <summary>
+        /// Compares the <see cref="BaseRequest"/> object equality against the given target object.
+        /// </summary>
+        /// <param name="obj">The object to be compared to the current object.</param>
+        /// <returns>True if the instances are equals.</returns>
+        public override bool Equals(object obj)
+        {
+            if (obj is null) return false;
+
+            return obj.GetHashCode() == GetHashCode();
+        }
+
+        /// <summary>
+        /// Compares the <see cref="BaseRequest"/> object equality against the given target object.
+        /// </summary>
+        /// <param name="other">The object to be compared to the current object.</param>
+        /// <returns>True if the instances are equal.</returns>
+        public bool Equals(BaseRequest other)
+        {
+            if (other is null) return false;
+
+            return other.GetHashCode() == GetHashCode();
+        }
+
+        /// <summary>
+        /// Compares the equality of the two <see cref="BaseRequest"/> objects.
+        /// </summary>
+        /// <param name="objA">The first <see cref="BaseRequest"/> object.</param>
+        /// <param name="objB">The second <see cref="BaseRequest"/> object.</param>
+        /// <returns>True if the instances are equal.</returns>
+        public static bool operator ==(BaseRequest objA,
+            BaseRequest objB)
+        {
+            if (objA is null)
+            {
+                return objB is null;
+            }
+            return objA.Equals(objB);
+        }
+
+        /// <summary>
+        /// Compares the inequality of the two <see cref="BaseRequest"/> objects.
+        /// </summary>
+        /// <param name="objA">The first <see cref="BaseRequest"/> object.</param>
+        /// <param name="objB">The second <see cref="BaseRequest"/> object.</param>
+        /// <returns>True if the instances are not equal.</returns>
+        public static bool operator !=(BaseRequest objA,
+            BaseRequest objB) =>
+            (objA == objB) == false;
+
+        #endregion
     }
 }

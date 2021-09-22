@@ -10,7 +10,7 @@ namespace RepoDb
     /// <summary>
     /// A class that holds a field that is used to order the results of the query operation.
     /// </summary>
-    public class OrderField
+    public class OrderField : IEquatable<OrderField>
     {
         private int? hashCode = null;
 
@@ -101,7 +101,7 @@ namespace RepoDb
         internal static OrderField Parse<TEntity>(MemberExpression expression,
             Order order)
             where TEntity : class =>
-            new (expression.Member.GetMappedName(), order);
+            new(expression.Member.GetMappedName(), order);
 
         /// <summary>
         /// Parses a property from the data entity object based on the given <see cref="BinaryExpression"/> and converts the result 
@@ -114,7 +114,7 @@ namespace RepoDb
         internal static OrderField Parse<TEntity>(BinaryExpression expression,
             Order order)
             where TEntity : class =>
-            new (expression.GetName(), order);
+            new(expression.GetName(), order);
 
         /// <summary>
         /// Parses a property from the data entity object based on the given <see cref="Expression"/> and converts the result 
@@ -195,7 +195,7 @@ namespace RepoDb
         public override bool Equals(object obj)
         {
             if (obj is null) return false;
-            
+
             return obj.GetHashCode() == GetHashCode();
         }
 
@@ -207,7 +207,7 @@ namespace RepoDb
         public bool Equals(OrderField other)
         {
             if (other is null) return false;
-            
+
             return other.GetHashCode() == GetHashCode();
         }
 

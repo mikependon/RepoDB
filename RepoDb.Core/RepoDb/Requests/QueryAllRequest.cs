@@ -9,7 +9,7 @@ namespace RepoDb.Requests
     /// <summary>
     /// A class that holds the value of the 'QueryAll' operation arguments.
     /// </summary>
-    internal class QueryAllRequest : BaseRequest, IEquatable<QueryAllRequest>
+    internal class QueryAllRequest : BaseRequest
     {
         private int? hashCode = null;
 
@@ -98,7 +98,7 @@ namespace RepoDb.Requests
             }
 
             // Get first the entity hash code
-            var hashCode = HashCode.Combine(Name, ".QueryAll");
+            var hashCode = base.GetHashCode() + HashCode.Combine(Name, ".QueryAll");
 
             // Get the qualifier <see cref="Field"/> objects
             if (Fields != null)
@@ -127,56 +127,6 @@ namespace RepoDb.Requests
             // Set and return the hashcode
             return (this.hashCode = hashCode).Value;
         }
-
-        /// <summary>
-        /// Compares the <see cref="QueryAllRequest"/> object equality against the given target object.
-        /// </summary>
-        /// <param name="obj">The object to be compared to the current object.</param>
-        /// <returns>True if the instances are equals.</returns>
-        public override bool Equals(object obj)
-        {
-            if (obj is null) return false;
-            
-            return obj.GetHashCode() == GetHashCode();
-        }
-
-        /// <summary>
-        /// Compares the <see cref="QueryAllRequest"/> object equality against the given target object.
-        /// </summary>
-        /// <param name="other">The object to be compared to the current object.</param>
-        /// <returns>True if the instances are equal.</returns>
-        public bool Equals(QueryAllRequest other)
-        {
-            if (other is null) return false;
-            
-            return other.GetHashCode() == GetHashCode();
-        }
-
-        /// <summary>
-        /// Compares the equality of the two <see cref="QueryAllRequest"/> objects.
-        /// </summary>
-        /// <param name="objA">The first <see cref="QueryAllRequest"/> object.</param>
-        /// <param name="objB">The second <see cref="QueryAllRequest"/> object.</param>
-        /// <returns>True if the instances are equal.</returns>
-        public static bool operator ==(QueryAllRequest objA,
-            QueryAllRequest objB)
-        {
-            if (objA is null)
-            {
-                return objB is null;
-            }
-            return objA.Equals(objB);
-        }
-
-        /// <summary>
-        /// Compares the inequality of the two <see cref="QueryAllRequest"/> objects.
-        /// </summary>
-        /// <param name="objA">The first <see cref="QueryAllRequest"/> object.</param>
-        /// <param name="objB">The second <see cref="QueryAllRequest"/> object.</param>
-        /// <returns>True if the instances are not equal.</returns>
-        public static bool operator !=(QueryAllRequest objA,
-            QueryAllRequest objB) =>
-            (objA == objB) == false;
 
         #endregion
     }
