@@ -214,7 +214,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="type">The type of the data entity.</param>
         /// <returns>The generated hashcode.</returns>
-        internal static int GenerateHashCode(Type type) =>
+        public static int GenerateHashCode(Type type) =>
             type.GetHashCode();
 
         /// <summary>
@@ -223,7 +223,7 @@ namespace RepoDb.Extensions
         /// <param name="entityType">The type of the data entity.</param>
         /// <param name="propertyInfo">The instance of <see cref="PropertyInfo"/>.</param>
         /// <returns>The generated hashcode.</returns>
-        internal static int GenerateHashCode(Type entityType,
+        public static int GenerateHashCode(Type entityType,
             PropertyInfo propertyInfo) =>
             entityType.GetHashCode() + propertyInfo.GenerateCustomizedHashCode(entityType);
 
@@ -232,23 +232,28 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <typeparam name="T">The target .NET CLR type.</typeparam>
         /// <param name="propertyName">The name of the class property to be mapped.</param>
+        /// <param name="includeMappings">True to evaluate the existing mappings.</param>
         /// <returns>An instance of <see cref="PropertyInfo"/> object.</returns>
-        internal static PropertyInfo GetProperty<T>(string propertyName)
+        public static PropertyInfo GetProperty<T>(string propertyName,
+            bool includeMappings = false)
             where T : class =>
-            GetProperty(typeof(T), propertyName);
+            GetProperty(typeof(T), propertyName, includeMappings);
 
         /// <summary>
         /// A helper method to return the instance of <see cref="PropertyInfo"/> object based on name.
         /// </summary>
         /// <param name="type">The target .NET CLR type.</param>
         /// <param name="propertyName">The name of the target class property.</param>
+        /// <param name="includeMappings">True to evaluate the existing mappings.</param>
         /// <returns>An instance of <see cref="PropertyInfo"/> object.</returns>
-        internal static PropertyInfo GetProperty(Type type,
-            string propertyName) =>
+        public static PropertyInfo GetProperty(Type type,
+            string propertyName,
+            bool includeMappings = false) =>
             type
                 .GetProperties()
                 .FirstOrDefault(p =>
-                    string.Equals(p.Name, propertyName, StringComparison.OrdinalIgnoreCase));
+                    string.Equals(p.Name, propertyName, StringComparison.OrdinalIgnoreCase) ||
+                    (includeMappings && string.Equals(p.GetMappedName(), propertyName, StringComparison.OrdinalIgnoreCase)));
 
         #endregion
     }

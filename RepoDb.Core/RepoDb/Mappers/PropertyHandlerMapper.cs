@@ -266,7 +266,7 @@ namespace RepoDb
             ThrowNullReferenceException(propertyName, "PropertyName");
 
             // Get the property
-            var property = TypeExtension.GetProperty<TEntity>(propertyName);
+            var property = TypeExtension.GetProperty<TEntity>(propertyName, true);
             if (property == null)
             {
                 throw new PropertyNotFoundException($"Property '{propertyName}' is not found at type '{typeof(TEntity).FullName}'.");
@@ -331,7 +331,7 @@ namespace RepoDb
             ThrowNullReferenceException(field, "Field");
 
             // Get the property
-            var property = TypeExtension.GetProperty<TEntity>(field.Name);
+            var property = TypeExtension.GetProperty<TEntity>(field.Name, true);
             if (property == null)
             {
                 throw new PropertyNotFoundException($"Property '{field.Name}' is not found at type '{typeof(TEntity).FullName}'.");
@@ -406,7 +406,7 @@ namespace RepoDb
             // Extract
             if (propertyInfo != null)
             {
-                propertyInfo = PropertyCache.Get(entityType, propertyInfo?.AsField())?.PropertyInfo ?? propertyInfo;
+                propertyInfo = PropertyCache.Get(entityType, propertyInfo, true)?.PropertyInfo ?? propertyInfo;
             }
 
             // Variables
@@ -457,7 +457,7 @@ namespace RepoDb
         /// <returns>The mapped property handler object of the property.</returns>
         public static TPropertyHandler Get<TEntity, TPropertyHandler>(string propertyName)
             where TEntity : class =>
-            Get<TEntity, TPropertyHandler>(TypeExtension.GetProperty<TEntity>(propertyName));
+            Get<TEntity, TPropertyHandler>(TypeExtension.GetProperty<TEntity>(propertyName, true));
 
         /// <summary>
         /// Property Level: Gets the mapped property handler object of the data entity type property (via <see cref="Field"/> object).
@@ -468,7 +468,7 @@ namespace RepoDb
         /// <returns>The mapped property handler object of the property.</returns>
         public static TPropertyHandler Get<TEntity, TPropertyHandler>(Field field)
             where TEntity : class =>
-            Get<TEntity, TPropertyHandler>(TypeExtension.GetProperty<TEntity>(field.Name));
+            Get<TEntity, TPropertyHandler>(TypeExtension.GetProperty<TEntity>(field.Name, true));
 
         /// <summary>
         /// Property Level: Gets the mapped property handler on a specific <see cref="PropertyInfo"/> object.
@@ -533,7 +533,7 @@ namespace RepoDb
             ThrowNullReferenceException(propertyName, "PropertyName");
 
             // Get the property
-            var property = TypeExtension.GetProperty<TEntity>(propertyName);
+            var property = TypeExtension.GetProperty<TEntity>(propertyName, true);
             if (property == null)
             {
                 throw new PropertyNotFoundException($"Property '{propertyName}' is not found at type '{typeof(TEntity).FullName}'.");
@@ -555,7 +555,7 @@ namespace RepoDb
             ThrowNullReferenceException(field, "Field");
 
             // Get the property
-            var property = TypeExtension.GetProperty<TEntity>(field.Name);
+            var property = TypeExtension.GetProperty<TEntity>(field.Name, true);
             if (property == null)
             {
                 throw new PropertyNotFoundException($"Property '{field.Name}' is not found at type '{typeof(TEntity).FullName}'.");

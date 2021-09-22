@@ -41,7 +41,7 @@ namespace RepoDb.UnitTests.Caches
         public void TestPropertyCacheForBaseClassGetPropertyViaPropertyName()
         {
             // Act
-            var actual = PropertyCache.Get<BaseClass>("Id");
+            var actual = PropertyCache.Get<BaseClass>("Id", false);
             var expected = "Id";
 
             // Assert
@@ -63,7 +63,7 @@ namespace RepoDb.UnitTests.Caches
         public void TestPropertyCacheForBaseClassGetPropertyViaField()
         {
             // Act
-            var actual = PropertyCache.Get<BaseClass>(new Field("Id"));
+            var actual = PropertyCache.Get<BaseClass>(new Field("Id"), false);
             var expected = "Id";
 
             // Assert
@@ -89,7 +89,7 @@ namespace RepoDb.UnitTests.Caches
         public void TestPropertyCacheForDerivedClassGetPropertyViaPropertyName()
         {
             // Act
-            var actual = PropertyCache.Get<DerivedClass>("Property2");
+            var actual = PropertyCache.Get<DerivedClass>("Property2", false);
             var expected = "Property2";
 
             // Assert
@@ -111,7 +111,7 @@ namespace RepoDb.UnitTests.Caches
         public void TestPropertyCacheForDerivedClassGetPropertyViaField()
         {
             // Act
-            var actual = PropertyCache.Get<DerivedClass>(new Field("Property2"));
+            var actual = PropertyCache.Get<DerivedClass>(new Field("Property2"), false);
             var expected = "Property2";
 
             // Assert
@@ -122,7 +122,7 @@ namespace RepoDb.UnitTests.Caches
         public void TestPropertyCacheForDerivedClassGetMappedPropertyViaPropertyName()
         {
             // Act
-            var actual = PropertyCache.Get<DerivedClass>("Property4");
+            var actual = PropertyCache.Get<DerivedClass>("Property4", true);
             var expected = "Property4";
 
             // Assert
@@ -144,7 +144,7 @@ namespace RepoDb.UnitTests.Caches
         public void TestPropertyCacheForDerivedClassGetMappedPropertyViaField()
         {
             // Act
-            var actual = PropertyCache.Get<DerivedClass>(new Field("Property4"));
+            var actual = PropertyCache.Get<DerivedClass>(new Field("Property4"), true);
             var expected = "Property4";
 
             // Assert

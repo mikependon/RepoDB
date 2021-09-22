@@ -90,7 +90,7 @@ namespace RepoDb
         /// <returns>The mapped <see cref="IPropertyHandler{TInput, TResult}"/> object of the property.</returns>
         public static TPropertyHandler Get<TEntity, TPropertyHandler>(string propertyName)
             where TEntity : class =>
-            Get<TEntity, TPropertyHandler>(TypeExtension.GetProperty<TEntity>(propertyName));
+            Get<TEntity, TPropertyHandler>(TypeExtension.GetProperty<TEntity>(propertyName, true));
 
         /// <summary>
         /// Property Level: Gets the cached <see cref="IPropertyHandler{TInput, TResult}"/> object that is being mapped on a specific class property (via <see cref="Field"/> object).
@@ -101,7 +101,7 @@ namespace RepoDb
         /// <returns>The mapped <see cref="IPropertyHandler{TInput, TResult}"/> object of the property.</returns>
         public static TPropertyHandler Get<TEntity, TPropertyHandler>(Field field)
             where TEntity : class =>
-            Get<TEntity, TPropertyHandler>(TypeExtension.GetProperty<TEntity>(field.Name));
+            Get<TEntity, TPropertyHandler>(TypeExtension.GetProperty<TEntity>(field.Name, true));
 
 
         /// <summary>

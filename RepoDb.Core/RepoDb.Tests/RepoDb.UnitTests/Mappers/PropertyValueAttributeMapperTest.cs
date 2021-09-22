@@ -25,17 +25,6 @@ namespace RepoDb.UnitTests.Mappers
         private class PropertyValueAttributeClass
         {
             public string PropertyString { get; set; }
-
-            [
-                Name("Column3"),
-                DbType(DbType.AnsiStringFixedLength),
-                Direction(ParameterDirection.InputOutput),
-                IsNullable(true),
-                Precision(100),
-                Scale(2),
-                Size(256)
-            ]
-            public string MappedPropertyString { get; set; }
         }
 
         #endregion
@@ -61,7 +50,7 @@ namespace RepoDb.UnitTests.Mappers
         #region Methods
 
         /*
-         * No MapAttribute
+         * Without Attributes
          */
 
         [TestMethod]
@@ -115,7 +104,7 @@ namespace RepoDb.UnitTests.Mappers
         public void TestPropertyValueAttributeMapperViaPropertyInfo()
         {
             // Prepare
-            var classProperty = PropertyCache.Get<PropertyValueAttributeClass>("PropertyString");
+            var classProperty = PropertyCache.Get<PropertyValueAttributeClass>("PropertyString", true);
             var attributes = GetPropertyValueAttributes();
 
             // Act

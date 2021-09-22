@@ -59,7 +59,7 @@ namespace RepoDb.UnitTests.Extensions
             var property = PropertyCache.Get<PropertyValueAttributeClass>(e => e.PropertyString);
 
             // Act
-            var attributes = property.PropertyInfo.GetPropertyValueAttributes();
+            var attributes = property.PropertyInfo.GetPropertyValueAttributes(false);
 
             // Assert
             Assert.AreEqual(7, attributes.Count());
@@ -72,7 +72,7 @@ namespace RepoDb.UnitTests.Extensions
             var property = PropertyCache.Get<PropertyValueAttributeClass>(e => e.PropertyString);
 
             // Act
-            var attribute = property.PropertyInfo.GetPropertyValueAttribute<NameAttribute>();
+            var attribute = property.PropertyInfo.GetPropertyValueAttribute<NameAttribute>(false);
 
             // Assert
             Assert.IsNotNull(attribute);

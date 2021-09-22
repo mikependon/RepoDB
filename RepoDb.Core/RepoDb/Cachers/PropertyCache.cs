@@ -25,7 +25,7 @@ namespace RepoDb
         /// <returns>The instance of cached <see cref="ClassProperty"/> object.</returns>
         public static ClassProperty Get<TEntity>(Expression<Func<TEntity, object>> expression)
             where TEntity : class =>
-            Get(typeof(TEntity), ExpressionExtension.GetProperty<TEntity>(expression));
+            Get(typeof(TEntity), ExpressionExtension.GetProperty<TEntity>(expression), false);
 
         /// <summary>
         /// Gets the cached <see cref="ClassProperty"/> object of the data entity (via property name).
@@ -35,7 +35,19 @@ namespace RepoDb
         /// <returns>The instance of cached <see cref="ClassProperty"/> object.</returns>
         public static ClassProperty Get<TEntity>(string propertyName)
             where TEntity : class =>
-            Get(typeof(TEntity), propertyName);
+            Get(typeof(TEntity), propertyName, false);
+
+        /// <summary>
+        /// Gets the cached <see cref="ClassProperty"/> object of the data entity (via property name).
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
+        /// <param name="propertyName">The name of the property.</param>
+        /// <param name="includeMappings">True to evaluate the existing mappings.</param>
+        /// <returns>The instance of cached <see cref="ClassProperty"/> object.</returns>
+        public static ClassProperty Get<TEntity>(string propertyName,
+            bool includeMappings = false)
+            where TEntity : class =>
+            Get(typeof(TEntity), propertyName, includeMappings);
 
         /// <summary>
         /// Gets the cached <see cref="ClassProperty"/> object of the data entity (via property name).
@@ -44,7 +56,19 @@ namespace RepoDb
         /// <param name="propertyName">The name of the property.</param>
         /// <returns>The instance of cached <see cref="ClassProperty"/> object.</returns>
         public static ClassProperty Get(Type entityType,
-            string propertyName)
+            string propertyName) =>
+            Get(entityType, propertyName, false);
+
+        /// <summary>
+        /// Gets the cached <see cref="ClassProperty"/> object of the data entity (via property name).
+        /// </summary>
+        /// <param name="entityType">The type of the data entity.</param>
+        /// <param name="propertyName">The name of the property.</param>
+        /// <param name="includeMappings">True to evaluate the existing mappings.</param>
+        /// <returns>The instance of cached <see cref="ClassProperty"/> object.</returns>
+        public static ClassProperty Get(Type entityType,
+            string propertyName,
+            bool includeMappings = false)
         {
             // Validate the presence
             ThrowNullReferenceException(propertyName, "PropertyName");
@@ -52,7 +76,8 @@ namespace RepoDb
             // Return the value
             return Get(entityType)?
                 .FirstOrDefault(p =>
-                    string.Equals(p.GetMappedName(), propertyName, StringComparison.OrdinalIgnoreCase));
+                    string.Equals(p.PropertyInfo.Name, propertyName, StringComparison.OrdinalIgnoreCase) ||
+                    (includeMappings && string.Equals(p.GetMappedName(), propertyName, StringComparison.OrdinalIgnoreCase)));
         }
 
         /// <summary>
@@ -60,27 +85,29 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="field">The instance of the <see cref="Field"/> object.</param>
+        /// <param name="includeMappings">True to evaluate the existing mappings.</param>
         /// <returns>The instance of cached <see cref="ClassProperty"/> object.</returns>
-        public static ClassProperty Get<TEntity>(Field field)
+        public static ClassProperty Get<TEntity>(Field field,
+            bool includeMappings = false)
             where TEntity : class =>
-            Get(typeof(TEntity), field);
+            Get(typeof(TEntity), field, includeMappings);
 
         /// <summary>
         /// Gets the cached <see cref="ClassProperty"/> object of the data entity (via <see cref="Field"/> object).
         /// </summary>
         /// <param name="entityType">The type of the data entity.</param>
         /// <param name="field">The instance of the <see cref="Field"/> object.</param>
+        /// <param name="includeMappings">True to evaluate the existing mappings.</param>
         /// <returns>The instance of cached <see cref="ClassProperty"/> object.</returns>
         public static ClassProperty Get(Type entityType,
-            Field field)
+            Field field,
+            bool includeMappings = false)
         {
             // Validate the presence
             ThrowNullReferenceException(field, "Field");
 
             // Return the value
-            return Get(entityType)?
-                .FirstOrDefault(p =>
-                    string.Equals(p.GetMappedName(), field?.Name, StringComparison.OrdinalIgnoreCase));
+            return Get(entityType, field.Name, includeMappings);
         }
 
         /// <summary>
@@ -90,15 +117,25 @@ namespace RepoDb
         /// <param name="propertyInfo">The instance of the <see cref="PropertyInfo"/> object.</param>
         /// <returns>The instance of cached <see cref="ClassProperty"/> object.</returns>
         internal static ClassProperty Get(Type entityType,
-            PropertyInfo propertyInfo)
+            PropertyInfo propertyInfo) =>
+            Get(entityType, propertyInfo, false);
+
+        /// <summary>
+        /// Gets the cached <see cref="ClassProperty"/> object of the data entity (via <see cref="PropertyInfo"/> object).
+        /// </summary>
+        /// <param name="entityType">The type of the data entity.</param>
+        /// <param name="propertyInfo">The instance of the <see cref="PropertyInfo"/> object.</param>
+        /// <param name="includeMappings">True to evaluate the existing mappings.</param>
+        /// <returns>The instance of cached <see cref="ClassProperty"/> object.</returns>
+        internal static ClassProperty Get(Type entityType,
+            PropertyInfo propertyInfo,
+            bool includeMappings = false)
         {
             // Validate the presence
             ThrowNullReferenceException(propertyInfo, "PropertyInfo");
 
             // Return the value
-            return Get(entityType)?
-                .FirstOrDefault(p => p.PropertyInfo == propertyInfo ||
-                    string.Equals(p.GetMappedName(), PropertyMappedNameCache.Get(entityType, propertyInfo), StringComparison.OrdinalIgnoreCase));
+            return Get(entityType, propertyInfo.Name, includeMappings);
         }
 
         /// <summary>

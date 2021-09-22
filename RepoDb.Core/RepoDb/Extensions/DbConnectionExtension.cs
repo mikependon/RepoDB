@@ -2325,7 +2325,7 @@ namespace RepoDb
             }
             if (type.IsClassType())
             {
-                var classProperty = PropertyCache.Get(typeof(T), field);
+                var classProperty = PropertyCache.Get(typeof(T), field, true);
                 return new QueryGroup(classProperty?.PropertyInfo.AsQueryField(what));
             }
             else
@@ -2474,7 +2474,7 @@ namespace RepoDb
         {
             var type = entity?.GetType() ?? typeof(TEntity);
             return type.IsDictionaryStringObject() ? ToQueryGroup(field, (IDictionary<string, object>)entity) :
-                ToQueryGroup(PropertyCache.Get<TEntity>(field) ?? PropertyCache.Get(type, field), entity);
+                ToQueryGroup(PropertyCache.Get<TEntity>(field, true) ?? PropertyCache.Get(type, field, true), entity);
         }
 
         /// <summary>

@@ -67,7 +67,7 @@ namespace RepoDb.Reflection
             // Property Handler
             if (typeOfEntity.IsClassType())
             {
-                var classProperty = PropertyCache.Get(typeOfEntity, property);
+                var classProperty = PropertyCache.Get(typeOfEntity, property, true);
                 valueExpression = ConvertExpressionToPropertyHandlerSetExpression(valueExpression,
                     classProperty, targetType ?? classProperty.PropertyInfo.PropertyType);
             }

@@ -201,7 +201,7 @@ namespace RepoDb
         /// <returns>The list of mapped <see cref="PropertyValueAttribute"/> objects.</returns>
         public static IEnumerable<PropertyValueAttribute> Get<TEntity>(string propertyName)
             where TEntity : class =>
-            Get(typeof(TEntity), TypeExtension.GetProperty<TEntity>(propertyName));
+            Get(typeof(TEntity), TypeExtension.GetProperty<TEntity>(propertyName, true));
 
         /// <summary>
         /// Get the list of mapped <see cref="PropertyValueAttribute"/> objects of the class property (via <see cref="Field"/> object).
@@ -211,7 +211,7 @@ namespace RepoDb
         /// <returns>The list of mapped <see cref="PropertyValueAttribute"/> objects.</returns>
         public static IEnumerable<PropertyValueAttribute> Get<TEntity>(Field field)
             where TEntity : class =>
-            Get(typeof(TEntity), TypeExtension.GetProperty<TEntity>(field.Name));
+            Get(typeof(TEntity), TypeExtension.GetProperty<TEntity>(field.Name, true));
 
         /// <summary>
         /// Get the list of mapped <see cref="PropertyValueAttribute"/> objects of the <see cref="PropertyInfo"/> object.
@@ -263,7 +263,7 @@ namespace RepoDb
         /// <param name="propertyName">The name of the target class property.</param>
         public static void Remove<TEntity>(string propertyName)
             where TEntity : class =>
-            Remove(typeof(TEntity), TypeExtension.GetProperty<TEntity>(propertyName));
+            Remove(typeof(TEntity), TypeExtension.GetProperty<TEntity>(propertyName, true));
 
         /// <summary>
         /// Removes the existing mapped <see cref="PropertyValueAttribute"/> objects of the class property (via <see cref="Field"/> object).
@@ -272,7 +272,7 @@ namespace RepoDb
         /// <param name="field">The instance of <see cref="Field"/> object.</param>
         public static void Remove<TEntity>(Field field)
             where TEntity : class =>
-            Remove(typeof(TEntity), TypeExtension.GetProperty<TEntity>(field.Name));
+            Remove(typeof(TEntity), TypeExtension.GetProperty<TEntity>(field.Name, true));
 
         /// <summary>
         /// Removes the existing mapped <see cref="PropertyValueAttribute"/> objects of the <see cref="PropertyInfo"/> object.
