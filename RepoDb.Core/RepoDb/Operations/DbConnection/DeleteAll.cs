@@ -51,7 +51,7 @@ namespace RepoDb
             where TEntity : class
         {
             var key = GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, tableName, transaction);
-            var keys = ExtractPropertyValues<TEntity, object>(entities, PropertyCache.Get<TEntity>(key)).AsList();
+            var keys = ExtractPropertyValues<TEntity, object>(entities, PropertyCache.Get<TEntity>(key, true)).AsList();
 
             return DeleteAllInternal(connection: connection,
                 tableName: tableName,
@@ -152,7 +152,7 @@ namespace RepoDb
             where TEntity : class
         {
             var key = GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, transaction);
-            var keys = ExtractPropertyValues<TEntity, object>(entities, PropertyCache.Get<TEntity>(key))?.AsList();
+            var keys = ExtractPropertyValues<TEntity, object>(entities, PropertyCache.Get<TEntity>(key, true))?.AsList();
 
             return DeleteAllInternal(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
@@ -318,7 +318,7 @@ namespace RepoDb
             where TEntity : class
         {
             var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync<TEntity>(connection, tableName, transaction, cancellationToken);
-            var keys = ExtractPropertyValues<TEntity, object>(entities, PropertyCache.Get<TEntity>(key)).AsList();
+            var keys = ExtractPropertyValues<TEntity, object>(entities, PropertyCache.Get<TEntity>(key, true)).AsList();
 
             return await DeleteAllAsyncInternal(connection: connection,
                 tableName: tableName,
@@ -428,7 +428,7 @@ namespace RepoDb
             where TEntity : class
         {
             var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync<TEntity>(connection, transaction, cancellationToken);
-            var keys = ExtractPropertyValues<TEntity, object>(entities, PropertyCache.Get<TEntity>(key))?.AsList();
+            var keys = ExtractPropertyValues<TEntity, object>(entities, PropertyCache.Get<TEntity>(key, true))?.AsList();
 
             return await DeleteAllAsyncInternal(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),

@@ -76,7 +76,7 @@ namespace RepoDb
             ThrowNullReferenceException(propertyName, "PropertyName");
 
             // Get the property
-            var property = TypeExtension.GetProperty<TEntity>(propertyName);
+            var property = TypeExtension.GetProperty<TEntity>(propertyName, true);
             if (property == null)
             {
                 throw new PropertyNotFoundException($"Property '{propertyName}' is not found at type '{typeof(TEntity).FullName}'.");
@@ -113,7 +113,7 @@ namespace RepoDb
             ThrowNullReferenceException(field, "Field");
 
             // Get the property
-            var property = TypeExtension.GetProperty<TEntity>(field.Name);
+            var property = TypeExtension.GetProperty<TEntity>(field.Name, true);
             if (property == null)
             {
                 throw new PropertyNotFoundException($"Property '{field.Name}' is not found at type '{typeof(TEntity).FullName}'.");
@@ -196,7 +196,7 @@ namespace RepoDb
         /// <returns>The mapped name of the property.</returns>
         public static string Get<TEntity>(string propertyName)
             where TEntity : class =>
-            Get<TEntity>(TypeExtension.GetProperty<TEntity>(propertyName));
+            Get<TEntity>(TypeExtension.GetProperty<TEntity>(propertyName, true));
 
         /// <summary>
         /// Gets the mapped database column of the property (via <see cref="Field"/> object).
@@ -206,7 +206,7 @@ namespace RepoDb
         /// <returns>The mapped name of the property.</returns>
         public static string Get<TEntity>(Field field)
             where TEntity : class =>
-            Get<TEntity>(TypeExtension.GetProperty<TEntity>(field.Name));
+            Get<TEntity>(TypeExtension.GetProperty<TEntity>(field.Name, true));
 
 
         /// <summary>
@@ -269,7 +269,7 @@ namespace RepoDb
         /// <param name="propertyName">The name of the property.</param>
         public static void Remove<TEntity>(string propertyName)
             where TEntity : class =>
-            Remove<TEntity>(TypeExtension.GetProperty<TEntity>(propertyName));
+            Remove<TEntity>(TypeExtension.GetProperty<TEntity>(propertyName, true));
 
         /// <summary>
         /// Removes the mapping between the  class property and database column (via <see cref="Field"/> object).
@@ -278,7 +278,7 @@ namespace RepoDb
         /// <param name="field">The instance of <see cref="Field"/> object.</param>
         public static void Remove<TEntity>(Field field)
             where TEntity : class =>
-            Remove<TEntity>(TypeExtension.GetProperty<TEntity>(field.Name));
+            Remove<TEntity>(TypeExtension.GetProperty<TEntity>(field.Name, true));
 
         /// <summary>
         /// Removes the mapped database column from a <see cref="PropertyInfo"/> object.

@@ -451,7 +451,7 @@ namespace RepoDb.Extensions
                 {
                     value = commandParameter.Value;
                     dbField ??= GetDbField(commandParameter.Field.Name, dbFields);
-                    classProperty = PropertyCache.Get(commandParameter.MappedToType, commandParameter.Field.Name);
+                    classProperty = PropertyCache.Get(commandParameter.MappedToType, commandParameter.Field.Name, true);
                 }
                 var parameter = CreateParameter(command,
                     kvp.Key,
@@ -559,7 +559,7 @@ namespace RepoDb.Extensions
             // Variables
             var dbField = GetDbField(fieldName, dbFields);
             var value = queryField.Parameter.Value;
-            var classProperty = PropertyCache.Get(entityType, queryField.Field);
+            var classProperty = PropertyCache.Get(entityType, queryField.Field, true);
             var (direction, fallbackType, size) = queryField is DirectionalQueryField n ?
                 ((ParameterDirection?)n.Direction, n.Type, n.Size ?? dbField?.Size) : default;
 
