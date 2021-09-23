@@ -21,11 +21,35 @@ namespace RepoDb
 
         #endregion
 
-        #region Property Level
+        #region Methods
 
         /*
          * Add
          */
+
+        /// <summary>
+        /// Adds a mapping between a class property and an instance of <see cref="PropertyValueAttribute"/> object (via expression).
+        /// </summary>
+        /// <typeparam name="TEntity">The target type.</typeparam>
+        /// <param name="expression">The property expression.</param>
+        /// <param name="attribute">The instance of <see cref="PropertyValueAttribute"/> object.</param>
+        public static void Add<TEntity>(Expression<Func<TEntity, object>> expression,
+            PropertyValueAttribute attribute)
+            where TEntity : class =>
+            Add<TEntity>(expression, attribute, false);
+
+        /// <summary>
+        /// Adds a mapping between a class property and an instance of <see cref="PropertyValueAttribute"/> object (via expression).
+        /// </summary>
+        /// <typeparam name="TEntity">The target type.</typeparam>
+        /// <param name="expression">The property expression.</param>
+        /// <param name="attribute">The instance of <see cref="PropertyValueAttribute"/> object.</param>
+        /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
+        public static void Add<TEntity>(Expression<Func<TEntity, object>> expression,
+            PropertyValueAttribute attribute,
+            bool force)
+            where TEntity : class =>
+            Add<TEntity>(expression, new[] { attribute }, force);
 
         /// <summary>
         /// Adds a mapping between a class property and a list of <see cref="PropertyValueAttribute"/> object (via expression).
@@ -50,6 +74,30 @@ namespace RepoDb
             bool force)
             where TEntity : class =>
             Add(ExpressionExtension.GetProperty<TEntity>(expression), attributes, force);
+
+        /// <summary>
+        /// Adds a mapping between a class property and an instance of <see cref="PropertyValueAttribute"/> object (property name).
+        /// </summary>
+        /// <typeparam name="TEntity">The target type.</typeparam>
+        /// <param name="propertyName">The name of the target class property.</param>
+        /// <param name="attribute">The instance of <see cref="PropertyValueAttribute"/> object.</param>
+        public static void Add<TEntity>(string propertyName,
+            PropertyValueAttribute attribute)
+            where TEntity : class =>
+            Add<TEntity>(propertyName, attribute, false);
+
+        /// <summary>
+        /// Adds a mapping between a class property and an instance of <see cref="PropertyValueAttribute"/> object (property name).
+        /// </summary>
+        /// <typeparam name="TEntity">The target type.</typeparam>
+        /// <param name="propertyName">The name of the target class property.</param>
+        /// <param name="attribute">The instance of <see cref="PropertyValueAttribute"/> object.</param>
+        /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
+        public static void Add<TEntity>(string propertyName,
+            PropertyValueAttribute attribute,
+            bool force)
+            where TEntity : class =>
+            Add<TEntity>(propertyName, new[] { attribute }, force);
 
         /// <summary>
         /// Adds a mapping between a class property and a list of <see cref="PropertyValueAttribute"/> object (via property name).
@@ -82,6 +130,30 @@ namespace RepoDb
         }
 
         /// <summary>
+        /// Adds a mapping between a class property and an instance of <see cref="PropertyValueAttribute"/> object (via <see cref="Field"/> object).
+        /// </summary>
+        /// <typeparam name="TEntity">The target type.</typeparam>
+        /// <param name="field">The instance of <see cref="Field"/> object to be mapped.</param>
+        /// <param name="attribute">The instance of <see cref="PropertyValueAttribute"/> object.</param>
+        public static void Add<TEntity>(Field field,
+            PropertyValueAttribute attribute)
+            where TEntity : class =>
+            Add<TEntity>(field, attribute, false);
+
+        /// <summary>
+        /// Adds a mapping between a class property and an instance of <see cref="PropertyValueAttribute"/> object (via <see cref="Field"/> object).
+        /// </summary>
+        /// <typeparam name="TEntity">The target type.</typeparam>
+        /// <param name="field">The instance of <see cref="Field"/> object to be mapped.</param>
+        /// <param name="attribute">The instance of <see cref="PropertyValueAttribute"/> object.</param>
+        /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
+        public static void Add<TEntity>(Field field,
+            PropertyValueAttribute attribute,
+            bool force)
+            where TEntity : class =>
+            Add<TEntity>(field, new[] { attribute }, force);
+
+        /// <summary>
         /// Adds a mapping between a class property and a list of <see cref="PropertyValueAttribute"/> object (via <see cref="Field"/> object).
         /// </summary>
         /// <typeparam name="TEntity">The target type.</typeparam>
@@ -112,7 +184,27 @@ namespace RepoDb
         }
 
         /// <summary>
-        /// Adds a mapping between a class property and a list of <see cref="PropertyValueAttribute"/> object (via <see cref="PropertyInfo"/> object).
+        /// Adds a mapping between a <see cref="PropertyInfo"/> object and an instance of <see cref="PropertyValueAttribute"/> object.
+        /// </summary>
+        /// <param name="propertyInfo">The instance of the target <see cref="PropertyInfo"/> object.</param>
+        /// <param name="attribute">The instance of <see cref="PropertyValueAttribute"/> object.</param>
+        public static void Add(PropertyInfo propertyInfo,
+            PropertyValueAttribute attribute) =>
+            Add(propertyInfo, attribute, false);
+
+        /// <summary>
+        /// Adds a mapping between a <see cref="PropertyInfo"/> object and an instance of <see cref="PropertyValueAttribute"/> object.
+        /// </summary>
+        /// <param name="propertyInfo">The instance of the target <see cref="PropertyInfo"/> object.</param>
+        /// <param name="attribute">The instance of <see cref="PropertyValueAttribute"/> object.</param>
+        /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
+        public static void Add(PropertyInfo propertyInfo,
+            PropertyValueAttribute attribute,
+            bool force) =>
+            Add(propertyInfo, new[] { attribute }, force);
+
+        /// <summary>
+        /// Adds a mapping between a <see cref="PropertyInfo"/> object and a list of <see cref="PropertyValueAttribute"/> object.
         /// </summary>
         /// <param name="propertyInfo">The instance of the target <see cref="PropertyInfo"/> object.</param>
         /// <param name="attributes">The list of <see cref="PropertyValueAttribute"/> object.</param>
@@ -130,6 +222,30 @@ namespace RepoDb
             IEnumerable<PropertyValueAttribute> attributes,
             bool force) =>
             Add(propertyInfo.DeclaringType, propertyInfo, attributes, force);
+
+        /// <summary>
+        /// Adds a mapping between a <see cref="PropertyInfo"/> object and an instance of <see cref="PropertyValueAttribute"/> object.
+        /// </summary>
+        /// <param name="entityType">The target type.</param>
+        /// <param name="propertyInfo">The instance of the target <see cref="PropertyInfo"/> object.</param>
+        /// <param name="attribute">The instance of <see cref="PropertyValueAttribute"/> object.</param>
+        public static void Add(Type entityType,
+            PropertyInfo propertyInfo,
+            PropertyValueAttribute attribute) =>
+            Add(entityType, propertyInfo, attribute, false);
+
+        /// <summary>
+        /// Adds a mapping between a <see cref="PropertyInfo"/> object and an instance of <see cref="PropertyValueAttribute"/> object.
+        /// </summary>
+        /// <param name="entityType">The target type.</param>
+        /// <param name="propertyInfo">The instance of the target <see cref="PropertyInfo"/> object.</param>
+        /// <param name="attribute">The instance of <see cref="PropertyValueAttribute"/> object.</param>
+        /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
+        public static void Add(Type entityType,
+            PropertyInfo propertyInfo,
+            PropertyValueAttribute attribute,
+            bool force) =>
+            Add(entityType, propertyInfo, new[] { attribute }, force);
 
         /// <summary>
         /// Adds a mapping between a <see cref="PropertyInfo"/> object and a list of <see cref="PropertyValueAttribute"/> object.
