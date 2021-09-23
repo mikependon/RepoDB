@@ -302,7 +302,7 @@ namespace RepoDb.SqlServer.BulkOperations
         /// <returns></returns>
         public static Action<TEntity, object> GetPropertySetterFunc<TEntity>(string propertyName)
             where TEntity : class =>
-            PropertySetterFuncCache<TEntity>.GetFunc(PropertyCache.Get<TEntity>(propertyName));
+            PropertySetterFuncCache<TEntity>.GetFunc(PropertyCache.Get<TEntity>(propertyName, true));
 
         /// <summary>
         /// 

@@ -32,32 +32,12 @@ namespace RepoDb
         /// </summary>
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="propertyName">The name of the property.</param>
-        /// <returns>The instance of cached <see cref="ClassProperty"/> object.</returns>
-        public static ClassProperty Get<TEntity>(string propertyName)
-            where TEntity : class =>
-            Get(typeof(TEntity), propertyName, false);
-
-        /// <summary>
-        /// Gets the cached <see cref="ClassProperty"/> object of the data entity (via property name).
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-        /// <param name="propertyName">The name of the property.</param>
         /// <param name="includeMappings">True to evaluate the existing mappings.</param>
         /// <returns>The instance of cached <see cref="ClassProperty"/> object.</returns>
         public static ClassProperty Get<TEntity>(string propertyName,
             bool includeMappings = false)
             where TEntity : class =>
             Get(typeof(TEntity), propertyName, includeMappings);
-
-        /// <summary>
-        /// Gets the cached <see cref="ClassProperty"/> object of the data entity (via property name).
-        /// </summary>
-        /// <param name="entityType">The type of the data entity.</param>
-        /// <param name="propertyName">The name of the property.</param>
-        /// <returns>The instance of cached <see cref="ClassProperty"/> object.</returns>
-        public static ClassProperty Get(Type entityType,
-            string propertyName) =>
-            Get(entityType, propertyName, false);
 
         /// <summary>
         /// Gets the cached <see cref="ClassProperty"/> object of the data entity (via property name).
@@ -109,16 +89,6 @@ namespace RepoDb
             // Return the value
             return Get(entityType, field.Name, includeMappings);
         }
-
-        /// <summary>
-        /// Gets the cached <see cref="ClassProperty"/> object of the data entity (via <see cref="PropertyInfo"/> object).
-        /// </summary>
-        /// <param name="entityType">The type of the data entity.</param>
-        /// <param name="propertyInfo">The instance of the <see cref="PropertyInfo"/> object.</param>
-        /// <returns>The instance of cached <see cref="ClassProperty"/> object.</returns>
-        internal static ClassProperty Get(Type entityType,
-            PropertyInfo propertyInfo) =>
-            Get(entityType, propertyInfo, false);
 
         /// <summary>
         /// Gets the cached <see cref="ClassProperty"/> object of the data entity (via <see cref="PropertyInfo"/> object).
