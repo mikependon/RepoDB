@@ -112,7 +112,7 @@ namespace RepoDb.UnitTests.Cachers
             var classProperty = PropertyCache.Get<PropertyValueAttributeClass>("PropertyString", true);
 
             // Act
-            var actual = new PropertyValueAttributeResolver().Resolve(classProperty.PropertyInfo);
+            var actual = new PropertyValueAttributeResolver().Resolve(classProperty.PropertyInfo, false);
 
             // Assert
             Assert.AreEqual(0, actual.Count());
@@ -142,7 +142,7 @@ namespace RepoDb.UnitTests.Cachers
             var classProperty = PropertyCache.Get<PropertyValueAttributeClass>("PropertyDecimal", true);
 
             // Act
-            var actual = new PropertyValueAttributeResolver().Resolve(classProperty.PropertyInfo);
+            var actual = new PropertyValueAttributeResolver().Resolve(classProperty.PropertyInfo, false);
 
             // Assert
             Assert.AreEqual(7, actual.Count());
