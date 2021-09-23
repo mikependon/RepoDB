@@ -15,14 +15,14 @@ namespace RepoDb.Extensions.QueryFields
         /// <param name="fieldName">The name of the field for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
         public LeftTrimQueryField(string fieldName,
-            string value)
+            object value)
             : this(fieldName, Operation.Equal, value)
         { }
 
         /// <param name="field">The actual field for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
         public LeftTrimQueryField(Field field,
-            string value)
+            object value)
             : this(field, Operation.Equal, value)
         { }
 
@@ -31,7 +31,7 @@ namespace RepoDb.Extensions.QueryFields
         /// <param name="value">The value to be used for the query expression.</param>
         public LeftTrimQueryField(string fieldName,
             Operation operation,
-            string value)
+            object value)
             : this(new Field(fieldName), operation, value)
         { }
 
@@ -40,7 +40,7 @@ namespace RepoDb.Extensions.QueryFields
         /// <param name="value">The value to be used for the query expression.</param>
         public LeftTrimQueryField(Field field,
             Operation operation,
-            string value)
+            object value)
             : base(field, operation, value, "LTRIM({0})")
         { }
 

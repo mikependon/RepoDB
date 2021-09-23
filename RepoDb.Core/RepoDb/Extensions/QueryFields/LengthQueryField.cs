@@ -16,14 +16,14 @@ namespace RepoDb.Extensions.QueryFields
         /// <param name="fieldName">The name of the field for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
         public LengthQueryField(string fieldName,
-            int value)
+            object value)
             : this(fieldName, Operation.Equal, value)
         { }
 
         /// <param name="field">The actual field for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
         public LengthQueryField(Field field,
-            int value)
+            object value)
             : this(field, Operation.Equal, value)
         { }
 
@@ -32,7 +32,7 @@ namespace RepoDb.Extensions.QueryFields
         /// <param name="value">The value to be used for the query expression.</param>
         public LengthQueryField(string fieldName,
             Operation operation,
-            int value)
+            object value)
             : this(new Field(fieldName), operation, value)
         { }
 
@@ -41,7 +41,7 @@ namespace RepoDb.Extensions.QueryFields
         /// <param name="value">The value to be used for the query expression.</param>
         public LengthQueryField(Field field,
             Operation operation,
-            int value)
+            object value)
             : base(field, operation, value, "LENGTH({0})")
         { }
 

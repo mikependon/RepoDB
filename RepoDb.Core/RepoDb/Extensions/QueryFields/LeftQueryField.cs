@@ -17,7 +17,7 @@ namespace RepoDb.Extensions.QueryFields
         /// <param name="fieldName">The name of the field for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
         public LeftQueryField(string fieldName,
-            string value)
+            object value)
             : this(fieldName, Operation.Equal, value)
         { }
 
@@ -27,7 +27,7 @@ namespace RepoDb.Extensions.QueryFields
         /// <param name="field">The actual field for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
         public LeftQueryField(Field field,
-            string value)
+            object value)
             : this(field, Operation.Equal, value)
         { }
 
@@ -39,7 +39,7 @@ namespace RepoDb.Extensions.QueryFields
         /// <param name="value">The value to be used for the query expression.</param>
         public LeftQueryField(string fieldName,
             Operation operation,
-            string value)
+            object value)
             : this(new Field(fieldName), operation, value)
         { }
 
@@ -51,8 +51,8 @@ namespace RepoDb.Extensions.QueryFields
         /// <param name="value">The value to be used for the query expression.</param>
         public LeftQueryField(Field field,
             Operation operation,
-            string value)
-            : this(field, operation, value, (value?.Length).GetValueOrDefault())
+            object value)
+            : this(field, operation, value, (value?.ToString()?.Length).GetValueOrDefault())
         { }
 
         /// <param name="field">The actual field for the query expression.</param>
@@ -61,7 +61,7 @@ namespace RepoDb.Extensions.QueryFields
         /// <param name="charCount">The number of characters from the left to be evaluated.</param>
         private LeftQueryField(Field field,
             Operation operation,
-            string value,
+            object value,
             int charCount)
             : base(field, operation, value, $"LEFT({{0}}, {charCount})")
         {
