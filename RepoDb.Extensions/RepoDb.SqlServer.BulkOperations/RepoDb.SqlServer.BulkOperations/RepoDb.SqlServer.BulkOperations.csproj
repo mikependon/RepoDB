@@ -7,21 +7,15 @@
     <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations</RepositoryUrl>
     <PackageTags>orm orm-framework orm-library hybrid-orm bulk bulk-operations</PackageTags>
     <PackageReleaseNotes>http://repodb.net/release/sqlserverbulk</PackageReleaseNotes>
-    <Version>1.1.5-beta2</Version>
-    <FileVersion>1.1.5.2</FileVersion>
-    <AssemblyVersion>1.1.5.2</AssemblyVersion>
+    <Version>1.1.5</Version>
+    <FileVersion>1.1.5.3</FileVersion>
+    <AssemblyVersion>1.1.5.3</AssemblyVersion>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Interfaces\**" />
-    <EmbeddedResource Remove="Interfaces\**" />
-    <None Remove="Interfaces\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="RepoDb" Version="1.12.8-beta5" />
-    <PackageReference Include="RepoDb.SqlServer" Version="1.1.4-beta1" />
+    <PackageReference Include="RepoDb" Version="1.12.8" />
+    <PackageReference Include="RepoDb.SqlServer" Version="1.1.4" />
   </ItemGroup>
 
   <ItemGroup>

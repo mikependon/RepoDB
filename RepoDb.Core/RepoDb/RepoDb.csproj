@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net5.0</TargetFrameworks>
-    <Version>1.12.8-beta5</Version>
-    <AssemblyVersion>1.12.8.5</AssemblyVersion>
-    <FileVersion>1.12.8.5</FileVersion>
+    <Version>1.12.8</Version>
+    <AssemblyVersion>1.12.8.6</AssemblyVersion>
+    <FileVersion>1.12.8.6</FileVersion>
     <Description>A hybrid ORM library for .NET.</Description>
     <PackageReleaseNotes>http://repodb.net/release/core</PackageReleaseNotes>
     <PackageProjectUrl>https://repodb.net/</PackageProjectUrl>
@@ -12,12 +12,6 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="_SqlServer\**" />
-    <EmbeddedResource Remove="_SqlServer\**" />
-    <None Remove="_SqlServer\**" />
-  </ItemGroup>
 
   <ItemGroup>
     <Compile Remove="Reflection\DataCommand.cs" />
