@@ -128,7 +128,7 @@ On the other hand, as part of the standard when writing code in RepoDB (i.e.: re
 
 ## System.Data.SqlClient
 
-If you are working with this package, you are required to bootstrap the `System.Data.SqlClient.SqlConnection` object during the startup. See the code below.
+If you are working with this package, you are required to bootstrap the connection object on the startup.
 
 ```csharp
 var dbSetting = new SqlServerDbSetting();
@@ -141,7 +141,7 @@ StatementBuilderMapper
 	.Add<System.Data.SqlClient.SqlConnection>(new SqlServerStatementBuilder(dbSetting), true);
 ```
 
-Or, you can replicate the actual [SqlServerBootstrap](https://github.com/mikependon/RepoDB/blob/master/RepoDb.SqlServer/RepoDb.SqlServer/SqlServerBootstrap.cs) class implementation and attach it to your solution. Then, call the local class `Initialize()` method explicitly.
+Or, you can replicate the actual [SqlServerBootstrap](https://github.com/mikependon/RepoDB/blob/master/RepoDb.SqlServer/RepoDb.SqlServer/SqlServerBootstrap.cs) class implementation and attach it to your solution. Then, call the local class initializer method explicitly.
 
 ## Library Limitations
 
