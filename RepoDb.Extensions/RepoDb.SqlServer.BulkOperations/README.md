@@ -1,8 +1,8 @@
-[![SqlServerBulkBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-uai8a?style=flat-square&logo=appveyor)](https://ci.appveyor.com/project/mikependon/repodb-uai8a)
-[![SqlServerBulkHome](https://img.shields.io/badge/home-github-important?style=flat-square&logo=github)](https://github.com/mikependon/RepoDb)
-[![SqlServerBulkVersion](https://img.shields.io/nuget/v/repodb.sqlserver.bulkoperations?style=flat-square&logo=nuget)](https://www.nuget.org/packages/RepoDb.SqlServer.BulkOperations)
-[![SqlServerBulkReleases](https://img.shields.io/badge/releases-core-important?style=flat-square&logo=nuget)](https://repodb.net/release/sqlserverbulk)
-[![SqlServerBulkIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-oap1j?style=flat-square&logo=appveyor&label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-oap1j/build/tests)
+[![SqlServerBulkBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-uai8a?&logo=appveyor)](https://ci.appveyor.com/project/mikependon/repodb-uai8a)
+[![SqlServerBulkHome](https://img.shields.io/badge/home-github-important?&logo=github)](https://github.com/mikependon/RepoDb)
+[![SqlServerBulkVersion](https://img.shields.io/nuget/v/repodb.sqlserver.bulkoperations?&logo=nuget)](https://www.nuget.org/packages/RepoDb.SqlServer.BulkOperations)
+[![SqlServerBulkReleases](https://img.shields.io/badge/releases-core-important?&logo=nuget)](https://repodb.net/release/sqlserverbulk)
+[![SqlServerBulkIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-oap1j?&logo=appveyor&label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-oap1j/build/tests)
 
 # RepoDb.SqlServer.BulkOperations
 

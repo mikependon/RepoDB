@@ -1,15 +1,13 @@
-[![PostgreSqlBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-xb4rk?style=flat-square&logo=appveyor)](https://ci.appveyor.com/project/mikependon/repodb-xb4rk)
-[![PostgreSqlHome](https://img.shields.io/badge/home-github-important?style=flat-square&logo=github)](https://github.com/mikependon/RepoDb)
-[![PostgreSqlVersion](https://img.shields.io/nuget/v/RepoDb.PostgreSql?style=flat-square&logo=nuget)](https://www.nuget.org/packages/RepoDb.PostgreSql)
-[![PostgreSqlReleases](https://img.shields.io/badge/releases-core-important?style=flat-square&logo=nuget)](http://repodb.net/release/postgresql)
-[![PostgreSqlUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-a63f5?style=flat-square&logo=appveyor&label=unit%20tests)](https://ci.appveyor.com/project/mikependon/repodb-a63f5/build/tests)
-[![PostgreSqlIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-uf6o7?style=flat-square&logo=appveyor&label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-uf6o7/build/tests)
+[![PostgreSqlBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-xb4rk?&logo=appveyor)](https://ci.appveyor.com/project/mikependon/repodb-xb4rk)
+[![PostgreSqlHome](https://img.shields.io/badge/home-github-important?&logo=github)](https://github.com/mikependon/RepoDb)
+[![PostgreSqlVersion](https://img.shields.io/nuget/v/RepoDb.PostgreSql?&logo=nuget)](https://www.nuget.org/packages/RepoDb.PostgreSql)
+[![PostgreSqlReleases](https://img.shields.io/badge/releases-core-important?&logo=nuget)](http://repodb.net/release/postgresql)
+[![PostgreSqlUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-a63f5?&logo=appveyor&label=unit%20tests)](https://ci.appveyor.com/project/mikependon/repodb-a63f5/build/tests)
+[![PostgreSqlIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-uf6o7?&logo=appveyor&label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-uf6o7/build/tests)
 
 # RepoDb.PostgreSql - a hybrid .NET ORM library for PostgreSQL.
 
 RepoDB is an open-source .NET ORM library that bridges the gaps of micro-ORMs and full-ORMs. It helps you simplify the switch-over of when to use the BASIC and ADVANCE operations during the development.
-
-It is your best alternative ORM to both Dapper and EntityFramework.
 
 ## Important Pages
 

@@ -1,6 +1,6 @@
 ﻿# The Development Experience
 
-If you are to use RepoDB, your development experience will be identical to both Entity Framework and Dapper ORMs. But, it gives you the most attributes of micro-ORM (i.e: Direct, Performant, Efficient and etc).
+If you are to use RepoDB, your development experience will be identical to both the Micro and Macro ORMs. But, it gives you the most attributes of micro-ORM (i.e: Simplicity, Lightweightness, Performance, Efficiency, etc).
 
 ### Entity Framework
 

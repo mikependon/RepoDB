@@ -1,15 +1,13 @@
-[![SqLiteBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-o6787?style=flat-square&logo=appveyor)](https://ci.appveyor.com/project/mikependon/repodb-o6787)
-[![SqLiteHome](https://img.shields.io/badge/home-github-important?style=flat-square&logo=github)](https://github.com/mikependon/RepoDb)
-[![SqLiteVersion](https://img.shields.io/nuget/v/RepoDb.SqLite?style=flat-square&logo=nuget)](https://www.nuget.org/packages/RepoDb.SqLite)
-[![SqLiteReleases](https://img.shields.io/badge/releases-core-important?style=flat-square&logo=nuget)](http://repodb.net/release/sqlite)
-[![SqLiteUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-mhpo4?style=flat-square&logo=appveyor&label=unit%20tests)](https://ci.appveyor.com/project/mikependon/repodb-mhpo4/build/tests)
-[![SqLiteIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-eg27p?style=flat-square&logo=appveyor&label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-eg27p/build/tests)
+[![SqLiteBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-o6787?&logo=appveyor)](https://ci.appveyor.com/project/mikependon/repodb-o6787)
+[![SqLiteHome](https://img.shields.io/badge/home-github-important?&logo=github)](https://github.com/mikependon/RepoDb)
+[![SqLiteVersion](https://img.shields.io/nuget/v/RepoDb.SqLite?&logo=nuget)](https://www.nuget.org/packages/RepoDb.SqLite)
+[![SqLiteReleases](https://img.shields.io/badge/releases-core-important?&logo=nuget)](http://repodb.net/release/sqlite)
+[![SqLiteUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-mhpo4?&logo=appveyor&label=unit%20tests)](https://ci.appveyor.com/project/mikependon/repodb-mhpo4/build/tests)
+[![SqLiteIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-eg27p?&logo=appveyor&label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-eg27p/build/tests)
 
 # RepoDb.SqLite - a hybrid .NET ORM library for SQLite.
 
 RepoDB is an open-source .NET ORM library that bridges the gaps of micro-ORMs and full-ORMs. It helps you simplify the switch-over of when to use the BASIC and ADVANCE operations during the development.
-
-It is your best alternative ORM to both Dapper and EntityFramework.
 
 ## News/Updates
 

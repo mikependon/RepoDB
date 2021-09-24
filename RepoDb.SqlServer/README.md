@@ -1,36 +1,13 @@
-[![SqlServerBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-paj1k?style=flat-square&logo=appveyor)](https://ci.appveyor.com/project/mikependon/repodb-paj1k)
-[![SqlServerHome](https://img.shields.io/badge/home-github-important?style=flat-square&logo=github)](https://github.com/mikependon/RepoDb)
-[![SqlServerVersion](https://img.shields.io/nuget/v/RepoDb.SqlServer?style=flat-square&logo=nuget)](https://www.nuget.org/packages/RepoDb.SqlServer)
-[![SqlServerReleases](https://img.shields.io/badge/releases-core-important?style=flat-square&logo=nuget)](http://repodb.net/release/sqlserver)
-[![SqlServerUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-iqu81?style=flat-square&logo=appveyor&label=unit%20tests)](https://ci.appveyor.com/project/mikependon/repodb-iqu81/build/tests)
-[![SqlServerIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-qja7a?style=flat-square&logo=appveyor&label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-qja7a/build/tests)
+[![SqlServerBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-paj1k?&logo=appveyor)](https://ci.appveyor.com/project/mikependon/repodb-paj1k)
+[![SqlServerHome](https://img.shields.io/badge/home-github-important?&logo=github)](https://github.com/mikependon/RepoDb)
+[![SqlServerVersion](https://img.shields.io/nuget/v/RepoDb.SqlServer?&logo=nuget)](https://www.nuget.org/packages/RepoDb.SqlServer)
+[![SqlServerReleases](https://img.shields.io/badge/releases-core-important?&logo=nuget)](http://repodb.net/release/sqlserver)
+[![SqlServerUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-iqu81?&logo=appveyor&label=unit%20tests)](https://ci.appveyor.com/project/mikependon/repodb-iqu81/build/tests)
+[![SqlServerIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-qja7a?&logo=appveyor&label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-qja7a/build/tests)
 
 # RepoDb.SqlServer - a hybrid .NET ORM library for SqlServer.
 
 RepoDB is an open-source .NET ORM library that bridges the gaps of micro-ORMs and full-ORMs. It helps you simplify the switch-over of when to use the BASIC and ADVANCE operations during the development.
-
-It is your best alternative ORM to both Dapper and EntityFramework.
-
-## News/Updates
-
-Starting at version 1.12.9, we will issue a deprecation notice to [System.Data.SqlClient](https://www.nuget.org/packages/System.Data.SqlClient/) package. In the future, RepoDB will only be "defaultly" supporting the [Microsoft.Data.SqlClient](https://www.nuget.org/packages/Microsoft.Data.SqlClient) package.
-
-### Working with System.Data.SqlClient
-
-If you wish to continue working with this package, you have to bootstrap the `SqlConnection` object with the code below (in the Startup).
-
-```csharp
-var dbSetting = new SqlServerDbSetting();
-
-DbSettingMapper
-	.Add<System.Data.SqlClient.SqlConnection>(dbSetting, true);
-DbHelperMapper
-	.Add<System.Data.SqlClient.SqlConnection>(new SqlServerDbHelper(), true);
-StatementBuilderMapper
-	.Add<System.Data.SqlClient.SqlConnection>(new SqlServerStatementBuilder(dbSetting), true);
-```
-
-Or, you can replicate the actual [SqlServerBootstrap](https://github.com/mikependon/RepoDB/blob/master/RepoDb.SqlServer/RepoDb.SqlServer/SqlServerBootstrap.cs) class implementation and attach it to your solution. Then, call the local class `Initialize()` method explicitly.
 
 ## Important Pages
 
