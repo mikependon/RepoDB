@@ -1,11 +1,12 @@
-﻿using RepoDb.DbHelpers;
+﻿using Microsoft.Data.SqlClient;
+using RepoDb.DbHelpers;
 using RepoDb.DbSettings;
 using RepoDb.StatementBuilders;
 
 namespace RepoDb
 {
     /// <summary>
-    /// A class that is used to initialize the necessary settings for both the <see cref="Microsoft.Data.SqlClient.SqlConnection"/> and <see cref="System.Data.SqlClient.SqlConnection"/> objects.
+    /// A class that is being used to initialize the necessary settings for the <see cref="SqlConnection"/> object.
     /// </summary>
     public static class SqlServerBootstrap
     {
@@ -21,7 +22,7 @@ namespace RepoDb
         #region Methods
 
         /// <summary>
-        /// Initializes all necessary settings for SqlServer.
+        /// Initializes all the necessary settings for SQL Server.
         /// </summary>
         public static void Initialize()
         {
@@ -33,18 +34,15 @@ namespace RepoDb
 
             // Map the DbSetting
             var dbSetting = new SqlServerDbSetting();
-            DbSettingMapper.Add<Microsoft.Data.SqlClient.SqlConnection>(dbSetting, true);
-            DbSettingMapper.Add<System.Data.SqlClient.SqlConnection>(dbSetting, true);
+            DbSettingMapper.Add<SqlConnection>(dbSetting, true);
 
             // Map the DbHelper
             var dbHelper = new SqlServerDbHelper();
-            DbHelperMapper.Add<Microsoft.Data.SqlClient.SqlConnection>(dbHelper, true);
-            DbHelperMapper.Add<System.Data.SqlClient.SqlConnection>(dbHelper, true);
+            DbHelperMapper.Add<SqlConnection>(dbHelper, true);
 
             // Map the Statement Builder
             var statementBuilder = new SqlServerStatementBuilder(dbSetting);
-            StatementBuilderMapper.Add<Microsoft.Data.SqlClient.SqlConnection>(statementBuilder, true);
-            StatementBuilderMapper.Add<System.Data.SqlClient.SqlConnection>(statementBuilder, true);
+            StatementBuilderMapper.Add<SqlConnection>(statementBuilder, true);
 
             // Set the flag
             IsInitialized = true;
