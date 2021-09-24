@@ -1,15 +1,13 @@
-[![MySqlBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-6adn4?style=flat-square&logo=appveyor)](https://ci.appveyor.com/project/mikependon/repodb-6adn4)
-[![MySqlHome](https://img.shields.io/badge/home-github-important?style=flat-square&logo=github)](https://github.com/mikependon/RepoDb)
-[![MySqlVersion](https://img.shields.io/nuget/v/RepoDb.MySql?style=flat-square&logo=nuget)](https://www.nuget.org/packages/RepoDb.MySql)
-[![MySqlReleases](https://img.shields.io/badge/releases-core-important?style=flat-square&logo=nuget)](http://repodb.net/release/mysql)
-[![MySqlUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-t2hy7?style=flat-square&logo=appveyor&label=unit%20tests)](https://ci.appveyor.com/project/mikependon/repodb-t2hy7/build/tests)
-[![MySqlIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-o4t48?style=flat-square&logo=appveyor&label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-o4t48/build/tests)
+[![MySqlBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-6adn4?&logo=appveyor)](https://ci.appveyor.com/project/mikependon/repodb-6adn4)
+[![MySqlHome](https://img.shields.io/badge/home-github-important?&logo=github)](https://github.com/mikependon/RepoDb)
+[![MySqlVersion](https://img.shields.io/nuget/v/RepoDb.MySql?&logo=nuget)](https://www.nuget.org/packages/RepoDb.MySql)
+[![MySqlReleases](https://img.shields.io/badge/releases-core-important?&logo=nuget)](http://repodb.net/release/mysql)
+[![MySqlUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-t2hy7?&logo=appveyor&label=unit%20tests)](https://ci.appveyor.com/project/mikependon/repodb-t2hy7/build/tests)
+[![MySqlIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-o4t48?&logo=appveyor&label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-o4t48/build/tests)
 
 # RepoDb.MySql - a hybrid .NET ORM library for MySQL.
 
 RepoDB is an open-source .NET ORM library that bridges the gaps of micro-ORMs and full-ORMs. It helps you simplify the switch-over of when to use the BASIC and ADVANCE operations during the development.
-
-It is your best alternative ORM to both Dapper and EntityFramework.
 
 ## Important Pages
 
