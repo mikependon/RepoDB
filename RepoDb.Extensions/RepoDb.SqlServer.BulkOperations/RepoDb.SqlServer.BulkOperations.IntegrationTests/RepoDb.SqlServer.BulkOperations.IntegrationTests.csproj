@@ -10,21 +10,15 @@
     <Compile Remove="Operations\Microsoft.Data.SqlClient\BaseRepository\**" />
     <Compile Remove="Operations\Microsoft.Data.SqlClient\DbRepository\**" />
     <Compile Remove="Operations\Microsoft.Data.SqlClient\SqlConnection\**" />
-    <Compile Remove="Operations\System.Data.SqlClient\BaseRepository\**" />
-    <Compile Remove="Operations\System.Data.SqlClient\DbRepository\**" />
-    <Compile Remove="Operations\System.Data.SqlClient\SqlConnection\**" />
+    <Compile Remove="Operations\System.Data.SqlClient\**" />
     <EmbeddedResource Remove="Operations\Microsoft.Data.SqlClient\BaseRepository\**" />
     <EmbeddedResource Remove="Operations\Microsoft.Data.SqlClient\DbRepository\**" />
     <EmbeddedResource Remove="Operations\Microsoft.Data.SqlClient\SqlConnection\**" />
-    <EmbeddedResource Remove="Operations\System.Data.SqlClient\BaseRepository\**" />
-    <EmbeddedResource Remove="Operations\System.Data.SqlClient\DbRepository\**" />
-    <EmbeddedResource Remove="Operations\System.Data.SqlClient\SqlConnection\**" />
+    <EmbeddedResource Remove="Operations\System.Data.SqlClient\**" />
     <None Remove="Operations\Microsoft.Data.SqlClient\BaseRepository\**" />
     <None Remove="Operations\Microsoft.Data.SqlClient\DbRepository\**" />
     <None Remove="Operations\Microsoft.Data.SqlClient\SqlConnection\**" />
-    <None Remove="Operations\System.Data.SqlClient\BaseRepository\**" />
-    <None Remove="Operations\System.Data.SqlClient\DbRepository\**" />
-    <None Remove="Operations\System.Data.SqlClient\SqlConnection\**" />
+    <None Remove="Operations\System.Data.SqlClient\**" />
   </ItemGroup>
 
   <ItemGroup>
