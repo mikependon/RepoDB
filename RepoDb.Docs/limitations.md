@@ -377,7 +377,7 @@ using (var repository = new DbRepository<SqlConnection>(connectionString, cache:
 
 The returned value of the [QueryAll](https://repodb.net/operation/queryall) operation will be cached to the `cache` argument object for the next 180 minutes. The cache item will not auto validate itself when you and/or somebody had changed the list of customers from the database.
 
-When the cache item has expired, it will again do the wired-up in the database and will retrieve the latest and greatest customer information.
+When the cache item has expired, it will again do the wired-up in the database and will retrieve the latest and greatest row information.
 
 **Alternative Solution**
 
@@ -389,49 +389,6 @@ cache.Remove("AllCustomers");
 ```
 
 By explicitly removing it, any of the fetch operations that does pointed to the cache key `AllCustomers` will again retrieve the latest information from the database.
-
-### Alternative Solution
-
-Simply modify the stored procedure to simply return a scalar-value resultset, see below.
-
-```csharp
-CREATE PROCEDURE [dbo].[sp_InsertPerson]
-(
-	@Name NVARCHAR(128)
-	, @Address NVARCHAR(512)
-)  
-AS  
-BEGIN
-	INSERT INTO [dbo].[Person]
-	(
-		Name
-		, Address
-	)
-	VALUES
-	(
-		@Name
-		, @Address
-	);
-
-	SELECT SCOPE_IDENTITY();
-END
-```
-
-Then, simply use the [ExecuteScalar](https://repodb.net/operation/executescalar) method to retrieve the value.
-
-```csharp
-using (var connection = new SqlConnection(ConnectionString))
-{
-	var param = new
-	{
-		Name = "John Doe",
-		Address = "New York"
-	};
-	var id = connection.ExecuteScalar<int>("[dbo].[sp_InsertPerson]", param, CommandType.StoredProcedure);
-}
-```
-
-This scenario is true to any kind of output parameter invocation.
 
 ## Advance Query Tree Expression
 
