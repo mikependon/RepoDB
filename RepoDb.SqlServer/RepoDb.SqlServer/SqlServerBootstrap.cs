@@ -13,7 +13,7 @@ namespace RepoDb
         #region Properties
 
         /// <summary>
-        /// Gets the value indicating whether the initialization is completed.
+        /// Gets the value that indicates whether the initialization is completed.
         /// </summary>
         public static bool IsInitialized { get; private set; }
 
