@@ -1,12 +1,12 @@
 ﻿using Microsoft.Data.Sqlite;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Enumerations;
-using RepoDb.SqLite.IntegrationTests.Models;
-using RepoDb.SqLite.IntegrationTests.Setup;
+using RepoDb.Sqlite.Microsoft.IntegrationTests.Models;
+using RepoDb.Sqlite.Microsoft.IntegrationTests.Setup;
 using System.Linq;
 using System.Transactions;
 
-namespace RepoDb.SqLite.IntegrationTests.MDS
+namespace RepoDb.Sqlite.Microsoft.IntegrationTests
 {
     [TestClass]
     public class TransactionTests
@@ -1269,7 +1269,7 @@ namespace RepoDb.SqLite.IntegrationTests.MDS
         #region Truncate
 
         /*
-         * Message: Test method RepoDb.SqLite.IntegrationTests.TransactionTests.TestSqlTransactionForTruncateAsync threw exception: 
+         * Message: Test method RepoDb.Sqlite.Microsoft.IntegrationTests.TransactionTests.TestSqlTransactionForTruncateAsync threw exception: 
          * System.AggregateException: One or more errors occurred. (SQL logic error cannot VACUUM from within a transaction) ---> 
          * System.Data.SQLite.SQLiteException: SQL logic error cannot VACUUM from within a transaction
          */

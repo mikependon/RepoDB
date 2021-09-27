@@ -9,11 +9,6 @@
 
 RepoDB is an open-source .NET ORM library that bridges the gaps of micro-ORMs and full-ORMs. It helps you simplify the switch-over of when to use the BASIC and ADVANCE operations during the development.
 
-## News/Updates
-
-- Starting at version 1.0.15, the SQLite driver [System.Data.SQLite](https://www.nuget.org/packages/System.DataSQLite) has been removed.
-- Starting at version 1.0.16, both the SQLite drivers ([Microsoft.Data.Sqlite](https://www.nuget.org/packages/Microsoft.Data.Sqlite/) and [System.Data.SQLite.Core](https://www.nuget.org/packages/System.Data.SQLite.Core/)) has been supported.
-
 ## Important Pages
 
 - [GitHub Home Page](https://github.com/mikependon/RepoDb) - to learn more about the core library.
@@ -29,7 +24,6 @@ RepoDB is an open-source .NET ORM library that bridges the gaps of micro-ORMs an
 ## Dependencies
 
 - [RepoDb](https://www.nuget.org/packages/RepoDb/) - the core library of RepoDB.
-- [Microsoft.Data.Sqlite](https://www.nuget.org/packages/Microsoft.Data.Sqlite.Core/) - the data provider used for SqLite (Microsoft).
 - [System.Data.SQLite.Core](https://www.nuget.org/packages/System.Data.SQLite.Core/) - the data provider used for SqLite (SQLite).
 
 ## License
@@ -43,7 +37,7 @@ RepoDB is an open-source .NET ORM library that bridges the gaps of micro-ORMs an
 At the Package Manager Console, write the command below.
 
 ```csharp
-> Install-Package RepoDb.SqLite
+> Install-Package RepoDb.SQLite.System
 ```
 
 Or, visit our [installation](http://repodb.net/tutorial/installation) page for more information.
@@ -53,7 +47,7 @@ Or, visit our [installation](http://repodb.net/tutorial/installation) page for m
 First, the bootstrapper must be initialized.
 
 ```csharp
-RepoDb.SqLiteBootstrap.Initialize();
+RepoDb.SQLiteBootstrap.Initialize();
 ```
 
 **Note:** The call must be done once.

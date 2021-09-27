@@ -1,13 +1,13 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Extensions;
-using RepoDb.SqLite.IntegrationTests.Models;
+using RepoDb.SQLite.System.IntegrationTests.Models;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Text;
 
-namespace RepoDb.SqLite.IntegrationTests
+namespace RepoDb.SQLite.System.IntegrationTests
 {
     public static class Helper
     {

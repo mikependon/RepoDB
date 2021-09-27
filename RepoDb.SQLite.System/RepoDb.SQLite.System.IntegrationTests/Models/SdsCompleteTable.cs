@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RepoDb.SqLite.IntegrationTests.Models
+namespace RepoDb.SQLite.System.IntegrationTests.Models
 {
     public class SdsCompleteTable
     {

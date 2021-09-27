@@ -2,12 +2,12 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Attributes;
 using RepoDb.Extensions;
-using RepoDb.SqLite.IntegrationTests.Setup;
+using RepoDb.Sqlite.Microsoft.IntegrationTests.Setup;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace RepoDb.SqLite.IntegrationTests.MDS
+namespace RepoDb.Sqlite.Microsoft.IntegrationTests
 {
     [TestClass]
     public class EnumTests

@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Resolvers;
 
-namespace RepoDb.SqLite.UnitTests.Resolvers
+namespace RepoDb.SQLite.System.UnitTests.Resolvers
 {
     [TestClass]
     public class MdsSqLiteDbTypeNameToClientTypeResolverTest
@@ -9,7 +9,7 @@ namespace RepoDb.SqLite.UnitTests.Resolvers
         [TestInitialize]
         public void Initialize()
         {
-            SqLiteBootstrap.Initialize();
+            SQLiteBootstrap.Initialize();
         }
 
         [TestMethod]

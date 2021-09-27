@@ -1,7 +1,7 @@
 using Microsoft.Data.Sqlite;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace RepoDb.SqLite.UnitTests
+namespace RepoDb.Sqlite.Microsoft.UnitTests
 {
     [TestClass]
     public class MappingTest
@@ -9,7 +9,7 @@ namespace RepoDb.SqLite.UnitTests
         [TestInitialize]
         public void Initialize()
         {
-            SqLiteBootstrap.Initialize();
+            SqliteBootstrap.Initialize();
         }
 
         #region MDS

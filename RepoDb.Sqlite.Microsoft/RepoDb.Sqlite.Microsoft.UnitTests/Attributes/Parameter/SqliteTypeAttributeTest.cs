@@ -4,7 +4,7 @@ using RepoDb.Attributes.Parameter.Sqlite;
 using RepoDb.DbSettings;
 using RepoDb.Extensions;
 
-namespace RepoDb.SqLite.UnitTests.Attributes.Parameter.Sqlite
+namespace RepoDb.Sqlite.Microsoft.UnitTests.Attributes.Parameter.Sqlite
 {
     [TestClass]
     public class SqliteTypeAttributeTest

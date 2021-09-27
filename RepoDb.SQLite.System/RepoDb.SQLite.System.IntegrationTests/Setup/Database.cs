@@ -1,9 +1,9 @@
-﻿using RepoDb.SqLite.IntegrationTests.Models;
+﻿using RepoDb.SQLite.System.IntegrationTests.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
 
-namespace RepoDb.SqLite.IntegrationTests.Setup
+namespace RepoDb.SQLite.System.IntegrationTests.Setup
 {
     public static class Database
     {
@@ -40,7 +40,7 @@ namespace RepoDb.SqLite.IntegrationTests.Setup
         public static void Initialize()
         {
             // Initialize SqLite
-            SqLiteBootstrap.Initialize();
+            SQLiteBootstrap.Initialize();
 
             // Check the type of database
             if (IsInMemory == true)

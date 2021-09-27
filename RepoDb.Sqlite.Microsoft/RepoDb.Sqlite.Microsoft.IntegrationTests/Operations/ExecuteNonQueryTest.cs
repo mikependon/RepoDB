@@ -1,9 +1,9 @@
 ﻿using Microsoft.Data.Sqlite;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RepoDb.SqLite.IntegrationTests.Setup;
+using RepoDb.Sqlite.Microsoft.IntegrationTests.Setup;
 using System.Linq;
 
-namespace RepoDb.SqLite.IntegrationTests.Operations.MDS
+namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
 {
     [TestClass]
     public class ExecuteNonQueryTest

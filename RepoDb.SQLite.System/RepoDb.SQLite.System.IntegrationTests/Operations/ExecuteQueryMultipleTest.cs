@@ -1,13 +1,13 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Extensions;
-using RepoDb.SqLite.IntegrationTests.Models;
-using RepoDb.SqLite.IntegrationTests.Setup;
+using RepoDb.SQLite.System.IntegrationTests.Models;
+using RepoDb.SQLite.System.IntegrationTests.Setup;
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Linq;
 
-namespace RepoDb.SqLite.IntegrationTests.Operations.SDS
+namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
 {
     [TestClass]
     public class ExecuteQueryMultipleTest

@@ -2,10 +2,10 @@
 using System.Linq;
 using Microsoft.Data.Sqlite;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RepoDb.SqLite.IntegrationTests.Models;
-using RepoDb.SqLite.IntegrationTests.Setup;
+using RepoDb.Sqlite.Microsoft.IntegrationTests.Models;
+using RepoDb.Sqlite.Microsoft.IntegrationTests.Setup;
 
-namespace RepoDb.SqLite.IntegrationTests.MDS
+namespace RepoDb.Sqlite.Microsoft.IntegrationTests
 {
     [TestClass]
     public class DbHelperTests

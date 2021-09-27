@@ -7,9 +7,9 @@ using RepoDb.StatementBuilders;
 namespace RepoDb
 {
     /// <summary>
-    /// A class used to initialize necessary objects that is connected to <see cref="SqliteConnection"/> object.
+    /// A class that is being used to initialize necessary objects that is connected to <see cref="SqliteConnection"/> object.
     /// </summary>
-    public static class SqLiteBootstrap
+    public static class SqliteBootstrap
     {
         #region Properties
 

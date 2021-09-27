@@ -2,7 +2,7 @@
 using RepoDb.Resolvers;
 using System.Data;
 
-namespace RepoDb.SqLite.UnitTests.Resolvers
+namespace RepoDb.Sqlite.Microsoft.UnitTests.Resolvers
 {
     [TestClass]
     public class DbTypeToSqLiteStringNameResolverTest

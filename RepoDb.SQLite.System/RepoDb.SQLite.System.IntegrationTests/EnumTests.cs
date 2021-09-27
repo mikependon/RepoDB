@@ -1,13 +1,13 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Attributes;
 using RepoDb.Extensions;
-using RepoDb.SqLite.IntegrationTests.Setup;
+using RepoDb.SQLite.System.IntegrationTests.Setup;
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Linq;
 
-namespace RepoDb.SqLite.IntegrationTests.SDS
+namespace RepoDb.SQLite.System.IntegrationTests
 {
     [TestClass]
     public class EnumTests
@@ -41,22 +41,22 @@ namespace RepoDb.SqLite.IntegrationTests.SDS
         [Map("SdsCompleteTable")]
         public class PersonWithText
         {
-            public System.Int64 Id { get; set; }
+            public int Id { get; set; }
             public Hands? ColumnText { get; set; }
         }
 
         [Map("SdsCompleteTable")]
         public class PersonWithInteger
         {
-            public System.Int64 Id { get; set; }
+            public int Id { get; set; }
             public Hands? ColumnInteger { get; set; }
         }
 
         [Map("SdsCompleteTable")]
         public class PersonWithTextAsInteger
         {
-            public System.Int64 Id { get; set; }
-            [TypeMap(System.Data.DbType.Int32)]
+            public int Id { get; set; }
+            [TypeMap(global::System.Data.DbType.Int32)]
             public Hands? ColumnText { get; set; }
         }
 

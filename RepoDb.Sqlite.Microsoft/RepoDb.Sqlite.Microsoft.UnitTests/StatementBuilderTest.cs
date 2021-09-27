@@ -4,7 +4,7 @@ using RepoDb.Enumerations;
 using RepoDb.Exceptions;
 using System;
 
-namespace RepoDb.SqLite.UnitTests
+namespace RepoDb.Sqlite.Microsoft.UnitTests
 {
     [TestClass]
     public class StatementBuilderTest
@@ -12,7 +12,7 @@ namespace RepoDb.SqLite.UnitTests
         [TestInitialize]
         public void Initialize()
         {
-            SqLiteBootstrap.Initialize();
+            SqliteBootstrap.Initialize();
         }
 
         #region MDS

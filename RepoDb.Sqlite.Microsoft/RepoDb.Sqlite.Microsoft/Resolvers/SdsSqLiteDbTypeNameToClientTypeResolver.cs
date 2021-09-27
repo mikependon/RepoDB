@@ -4,7 +4,7 @@ using System;
 namespace RepoDb.Resolvers
 {
     /// <summary>
-    /// A class used to resolve the SqLite Database Types into its equivalent .NET CLR Types. This is only used for 'System.Data.SQLite.Core' library.
+    /// A class that is being used to resolve the SqLite Database Types into its equivalent .NET CLR Types. This is only used for 'System.Data.SQLite.Core' library.
     /// </summary>
     public class SdsSqLiteDbTypeNameToClientTypeResolver : IResolver<string, Type>
     {

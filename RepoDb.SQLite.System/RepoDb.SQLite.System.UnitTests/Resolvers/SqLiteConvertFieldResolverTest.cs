@@ -3,7 +3,7 @@ using RepoDb.Resolvers;
 using System;
 using System.Data.SQLite;
 
-namespace RepoDb.SqLite.UnitTests.Resolvers
+namespace RepoDb.SQLite.System.UnitTests.Resolvers
 {
     [TestClass]
     public class SqLiteConvertFieldResolverTest
@@ -11,7 +11,7 @@ namespace RepoDb.SqLite.UnitTests.Resolvers
         [TestInitialize]
         public void Initialize()
         {
-            SqLiteBootstrap.Initialize();
+            SQLiteBootstrap.Initialize();
         }
 
         #region SDS

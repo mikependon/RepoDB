@@ -9,10 +9,16 @@
 
 RepoDB is an open-source .NET ORM library that bridges the gaps of micro-ORMs and full-ORMs. It helps you simplify the switch-over of when to use the BASIC and ADVANCE operations during the development.
 
-## News/Updates
+## Contribution
 
-- Starting at version 1.0.15, the SQLite driver [System.Data.SQLite](https://www.nuget.org/packages/System.DataSQLite) has been removed.
-- Starting at version 1.0.16, both the SQLite drivers ([Microsoft.Data.Sqlite](https://www.nuget.org/packages/Microsoft.Data.Sqlite/) and [System.Data.SQLite.Core](https://www.nuget.org/packages/System.Data.SQLite.Core/)) has been supported.
+```diff
+- This code-line will be out-of-support soon. The final version would be v1.1.4.
+```
+
+To contribute, please proceed to the new solutions.
+
+- Microsoft.Data.Sqlite - [RepoDb.Sqlite.Microsoft](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Sqlite.Microsoft)
+- System.Data.SQLite.Core - [RepoDb.SQLite.System](https://github.com/mikependon/RepoDb/tree/master/RepoDb.SQLite.System)
 
 ## Important Pages
 
