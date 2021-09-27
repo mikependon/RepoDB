@@ -550,8 +550,7 @@ namespace RepoDb
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null)
             where TEntity : class =>
-            BulkInsertInternalBase<TEntity, SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
-                SqlBulkCopyColumnMapping, SqlTransaction>(connection,
+            BulkInsertInternalBase(connection,
                 tableName,
                 entities,
                 dbFields,
@@ -586,8 +585,7 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             SqlTransaction transaction = null) =>
-            BulkInsertInternalBase<SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
-                SqlBulkCopyColumnMapping, SqlTransaction>(connection,
+            BulkInsertInternalBase(connection,
                 tableName,
                 reader,
                 dbFields,
@@ -627,8 +625,7 @@ namespace RepoDb
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null) =>
-            BulkInsertInternalBase<SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
-                SqlBulkCopyColumnMapping, SqlTransaction>(connection,
+            BulkInsertInternalBase(connection,
                 tableName,
                 dataTable,
                 rowState,
@@ -678,8 +675,7 @@ namespace RepoDb
             SqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            BulkInsertAsyncInternalBase<TEntity, SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
-                SqlBulkCopyColumnMapping, SqlTransaction>(connection,
+            BulkInsertAsyncInternalBase(connection,
                 tableName,
                 entities,
                 dbFields,
@@ -717,8 +713,7 @@ namespace RepoDb
             int? batchSize = null,
             SqlTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            BulkInsertAsyncInternalBase<SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
-                SqlBulkCopyColumnMapping, SqlTransaction>(connection,
+            BulkInsertAsyncInternalBase(connection,
                 tableName,
                 reader,
                 dbFields,
@@ -761,8 +756,7 @@ namespace RepoDb
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            BulkInsertAsyncInternalBase<SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
-                SqlBulkCopyColumnMapping, SqlTransaction>(connection,
+            BulkInsertAsyncInternalBase(connection,
                 tableName,
                 dataTable,
                 rowState,

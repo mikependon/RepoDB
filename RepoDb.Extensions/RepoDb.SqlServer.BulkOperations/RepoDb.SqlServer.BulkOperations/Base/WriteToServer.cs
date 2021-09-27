@@ -7,6 +7,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
 
 namespace RepoDb
 {
@@ -18,11 +19,6 @@ namespace RepoDb
         /// 
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
-        /// <typeparam name="TSqlBulkCopy"></typeparam>
-        /// <typeparam name="TSqlBulkCopyOptions"></typeparam>
-        /// <typeparam name="TSqlBulkCopyColumnMappingCollection"></typeparam>
-        /// <typeparam name="TSqlBulkCopyColumnMapping"></typeparam>
-        /// <typeparam name="TSqlTransaction"></typeparam>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="entities"></param>
@@ -33,22 +29,16 @@ namespace RepoDb
         /// <param name="hasOrderingColumn"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static int WriteToServerInternal<TEntity, TSqlBulkCopy, TSqlBulkCopyOptions, TSqlBulkCopyColumnMappingCollection,
-            TSqlBulkCopyColumnMapping, TSqlTransaction>(DbConnection connection,
+        private static int WriteToServerInternal<TEntity>(SqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            TSqlBulkCopyOptions options = default,
+            SqlBulkCopyOptions options = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool hasOrderingColumn = false,
-            TSqlTransaction transaction = null)
+            SqlTransaction transaction = null)
             where TEntity : class
-            where TSqlBulkCopy : class, IDisposable
-            where TSqlBulkCopyOptions : Enum
-            where TSqlBulkCopyColumnMappingCollection : class
-            where TSqlBulkCopyColumnMapping : class
-            where TSqlTransaction : DbTransaction
         {
             // Throw an error if there are no mappings
             if (mappings?.Any() != true)
@@ -57,24 +47,24 @@ namespace RepoDb
             }
 
             // Variables needed
-            var result = default(int);
+            int result;
 
             // Actual Execution
-            using (var sqlBulkCopy = (TSqlBulkCopy)Activator.CreateInstance(typeof(TSqlBulkCopy), connection, options, transaction))
+            using (var sqlBulkCopy = (SqlBulkCopy)Activator.CreateInstance(typeof(SqlBulkCopy), connection, options, transaction))
             {
                 // Set the destinationtable
-                Compiler.SetProperty<TSqlBulkCopy>(sqlBulkCopy, "DestinationTableName", tableName);
+                Compiler.SetProperty(sqlBulkCopy, "DestinationTableName", tableName);
 
                 // Set the timeout
                 if (bulkCopyTimeout.HasValue)
                 {
-                    Compiler.SetProperty<TSqlBulkCopy>(sqlBulkCopy, "BulkCopyTimeout", bulkCopyTimeout.Value);
+                    Compiler.SetProperty(sqlBulkCopy, "BulkCopyTimeout", bulkCopyTimeout.Value);
                 }
 
                 // Set the batch size
                 if (batchSize.HasValue)
                 {
-                    Compiler.SetProperty<TSqlBulkCopy>(sqlBulkCopy, "BatchSize", batchSize.Value);
+                    Compiler.SetProperty(sqlBulkCopy, "BatchSize", batchSize.Value);
                 }
 
                 // Add the order column
@@ -84,13 +74,13 @@ namespace RepoDb
                 }
 
                 // Add the mappings
-                AddMappings<TSqlBulkCopy, TSqlBulkCopyColumnMappingCollection, TSqlBulkCopyColumnMapping>(sqlBulkCopy, mappings);
+                AddMappings(sqlBulkCopy, mappings);
 
                 // Open the connection and do the operation
                 connection.EnsureOpen();
                 using (var reader = new DataEntityDataReader<TEntity>(tableName, entities, connection, transaction, hasOrderingColumn))
                 {
-                    var writeToServerMethod = Compiler.GetParameterizedVoidMethodFunc<TSqlBulkCopy>("WriteToServer", new[] { typeof(DbDataReader) });
+                    var writeToServerMethod = Compiler.GetParameterizedVoidMethodFunc<SqlBulkCopy>("WriteToServer", new[] { typeof(DbDataReader) });
                     writeToServerMethod(sqlBulkCopy, new[] { reader });
                     result = reader.RecordsAffected;
                 }
@@ -99,8 +89,8 @@ namespace RepoDb
                 if (result <= 0)
                 {
                     // Set the return value
-                    var rowsCopiedFieldOrProperty = Compiler.GetFieldGetterFunc<TSqlBulkCopy, int>("_rowsCopied") ??
-                        Compiler.GetPropertyGetterFunc<TSqlBulkCopy, int>("RowsCopied");
+                    var rowsCopiedFieldOrProperty = Compiler.GetFieldGetterFunc<SqlBulkCopy, int>("_rowsCopied") ??
+                        Compiler.GetPropertyGetterFunc<SqlBulkCopy, int>("RowsCopied");
                     result = (int)rowsCopiedFieldOrProperty?.Invoke(sqlBulkCopy);
                 }
             }
@@ -112,11 +102,6 @@ namespace RepoDb
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TSqlBulkCopy"></typeparam>
-        /// <typeparam name="TSqlBulkCopyOptions"></typeparam>
-        /// <typeparam name="TSqlBulkCopyColumnMappingCollection"></typeparam>
-        /// <typeparam name="TSqlBulkCopyColumnMapping"></typeparam>
-        /// <typeparam name="TSqlTransaction"></typeparam>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="reader"></param>
@@ -126,20 +111,14 @@ namespace RepoDb
         /// <param name="batchSize"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static int WriteToServerInternal<TSqlBulkCopy, TSqlBulkCopyOptions, TSqlBulkCopyColumnMappingCollection,
-            TSqlBulkCopyColumnMapping, TSqlTransaction>(DbConnection connection,
+        private static int WriteToServerInternal(SqlConnection connection,
             string tableName,
             DbDataReader reader,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            TSqlBulkCopyOptions options = default,
+            SqlBulkCopyOptions options = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            TSqlTransaction transaction = null)
-            where TSqlBulkCopy : class, IDisposable
-            where TSqlBulkCopyOptions : Enum
-            where TSqlBulkCopyColumnMappingCollection : class
-            where TSqlBulkCopyColumnMapping : class
-            where TSqlTransaction : DbTransaction
+            SqlTransaction transaction = null)
         {
             // Throw an error if there are no mappings
             if (mappings?.Any() != true)
@@ -148,38 +127,38 @@ namespace RepoDb
             }
 
             // Variables needed
-            var result = default(int);
+            int result;
 
             // Actual Execution
-            using (var sqlBulkCopy = (TSqlBulkCopy)Activator.CreateInstance(typeof(TSqlBulkCopy), connection, options, transaction))
+            using (var sqlBulkCopy = (SqlBulkCopy)Activator.CreateInstance(typeof(SqlBulkCopy), connection, options, transaction))
             {
                 // Set the destinationtable
-                Compiler.SetProperty<TSqlBulkCopy>(sqlBulkCopy, "DestinationTableName", tableName);
+                Compiler.SetProperty(sqlBulkCopy, "DestinationTableName", tableName);
 
                 // Set the timeout
                 if (bulkCopyTimeout.HasValue)
                 {
-                    Compiler.SetProperty<TSqlBulkCopy>(sqlBulkCopy, "BulkCopyTimeout", bulkCopyTimeout.Value);
+                    Compiler.SetProperty(sqlBulkCopy, "BulkCopyTimeout", bulkCopyTimeout.Value);
                 }
 
                 // Set the batch size
                 if (batchSize.HasValue)
                 {
-                    Compiler.SetProperty<TSqlBulkCopy>(sqlBulkCopy, "BatchSize", batchSize.Value);
+                    Compiler.SetProperty(sqlBulkCopy, "BatchSize", batchSize.Value);
                 }
 
                 // Add the mappings
-                AddMappings<TSqlBulkCopy, TSqlBulkCopyColumnMappingCollection, TSqlBulkCopyColumnMapping>(sqlBulkCopy, mappings);
+                AddMappings(sqlBulkCopy, mappings);
 
 
                 // Open the connection and do the operation
                 connection.EnsureOpen();
-                var writeToServerMethod = Compiler.GetParameterizedVoidMethodFunc<TSqlBulkCopy>("WriteToServer", new[] { typeof(DbDataReader) });
+                var writeToServerMethod = Compiler.GetParameterizedVoidMethodFunc<SqlBulkCopy>("WriteToServer", new[] { typeof(DbDataReader) });
                 writeToServerMethod(sqlBulkCopy, new[] { reader });
 
                 // Set the return value
-                var rowsCopiedFieldOrProperty = Compiler.GetFieldGetterFunc<TSqlBulkCopy, int>("_rowsCopied") ??
-                    Compiler.GetPropertyGetterFunc<TSqlBulkCopy, int>("RowsCopied");
+                var rowsCopiedFieldOrProperty = Compiler.GetFieldGetterFunc<SqlBulkCopy, int>("_rowsCopied") ??
+                    Compiler.GetPropertyGetterFunc<SqlBulkCopy, int>("RowsCopied");
                 result = rowsCopiedFieldOrProperty != null ? rowsCopiedFieldOrProperty(sqlBulkCopy) : reader.RecordsAffected;
             }
 
@@ -190,11 +169,6 @@ namespace RepoDb
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TSqlBulkCopy"></typeparam>
-        /// <typeparam name="TSqlBulkCopyOptions"></typeparam>
-        /// <typeparam name="TSqlBulkCopyColumnMappingCollection"></typeparam>
-        /// <typeparam name="TSqlBulkCopyColumnMapping"></typeparam>
-        /// <typeparam name="TSqlTransaction"></typeparam>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="dataTable"></param>
@@ -206,22 +180,16 @@ namespace RepoDb
         /// <param name="hasOrderingColumn"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static int WriteToServerInternal<TSqlBulkCopy, TSqlBulkCopyOptions, TSqlBulkCopyColumnMappingCollection,
-            TSqlBulkCopyColumnMapping, TSqlTransaction>(DbConnection connection,
+        private static int WriteToServerInternal(SqlConnection connection,
             string tableName,
             DataTable dataTable,
             DataRowState? rowState = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            TSqlBulkCopyOptions options = default,
+            SqlBulkCopyOptions options = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool hasOrderingColumn = false,
-            TSqlTransaction transaction = null)
-            where TSqlBulkCopy : class, IDisposable
-            where TSqlBulkCopyOptions : Enum
-            where TSqlBulkCopyColumnMappingCollection : class
-            where TSqlBulkCopyColumnMapping : class
-            where TSqlTransaction : DbTransaction
+            SqlTransaction transaction = null)
         {
             // Throw an error if there are no mappings
             if (mappings?.Any() != true)
@@ -230,24 +198,24 @@ namespace RepoDb
             }
 
             // Variables needed
-            var result = default(int);
+            int result;
 
             // Actual Execution
-            using (var sqlBulkCopy = (TSqlBulkCopy)Activator.CreateInstance(typeof(TSqlBulkCopy), connection, options, transaction))
+            using (var sqlBulkCopy = (SqlBulkCopy)Activator.CreateInstance(typeof(SqlBulkCopy), connection, options, transaction))
             {
                 // Set the destinationtable
-                Compiler.SetProperty<TSqlBulkCopy>(sqlBulkCopy, "DestinationTableName", tableName);
+                Compiler.SetProperty(sqlBulkCopy, "DestinationTableName", tableName);
 
                 // Set the timeout
                 if (bulkCopyTimeout.HasValue)
                 {
-                    Compiler.SetProperty<TSqlBulkCopy>(sqlBulkCopy, "BulkCopyTimeout", bulkCopyTimeout.Value);
+                    Compiler.SetProperty(sqlBulkCopy, "BulkCopyTimeout", bulkCopyTimeout.Value);
                 }
 
                 // Set the batch size
                 if (batchSize.HasValue)
                 {
-                    Compiler.SetProperty<TSqlBulkCopy>(sqlBulkCopy, "BatchSize", batchSize.Value);
+                    Compiler.SetProperty(sqlBulkCopy, "BatchSize", batchSize.Value);
                 }
 
                 // Add the order column
@@ -258,18 +226,18 @@ namespace RepoDb
                 }
 
                 // Add the mappings
-                AddMappings<TSqlBulkCopy, TSqlBulkCopyColumnMappingCollection, TSqlBulkCopyColumnMapping>(sqlBulkCopy, mappings);
+                AddMappings(sqlBulkCopy, mappings);
 
                 // Open the connection and do the operation
                 connection.EnsureOpen();
                 if (rowState.HasValue == true)
                 {
-                    var writeToServerMethod = Compiler.GetParameterizedVoidMethodFunc<TSqlBulkCopy>("WriteToServer", new[] { typeof(DataTable), typeof(DataRowState) });
+                    var writeToServerMethod = Compiler.GetParameterizedVoidMethodFunc<SqlBulkCopy>("WriteToServer", new[] { typeof(DataTable), typeof(DataRowState) });
                     writeToServerMethod(sqlBulkCopy, new object[] { dataTable, rowState.Value });
                 }
                 else
                 {
-                    var writeToServerMethod = Compiler.GetParameterizedVoidMethodFunc<TSqlBulkCopy>("WriteToServer", new[] { typeof(DataTable) });
+                    var writeToServerMethod = Compiler.GetParameterizedVoidMethodFunc<SqlBulkCopy>("WriteToServer", new[] { typeof(DataTable) });
                     writeToServerMethod(sqlBulkCopy, new[] { dataTable });
                 }
 
@@ -289,11 +257,6 @@ namespace RepoDb
         /// 
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
-        /// <typeparam name="TSqlBulkCopy"></typeparam>
-        /// <typeparam name="TSqlBulkCopyOptions"></typeparam>
-        /// <typeparam name="TSqlBulkCopyColumnMappingCollection"></typeparam>
-        /// <typeparam name="TSqlBulkCopyColumnMapping"></typeparam>
-        /// <typeparam name="TSqlTransaction"></typeparam>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="entities"></param>
@@ -305,23 +268,17 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> WriteToServerAsyncInternal<TEntity, TSqlBulkCopy, TSqlBulkCopyOptions, TSqlBulkCopyColumnMappingCollection,
-            TSqlBulkCopyColumnMapping, TSqlTransaction>(DbConnection connection,
+        private static async Task<int> WriteToServerAsyncInternal<TEntity>(SqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            TSqlBulkCopyOptions options = default,
+            SqlBulkCopyOptions options = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool hasOrderingColumn = false,
-            TSqlTransaction transaction = null,
+            SqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
-            where TSqlBulkCopy : class, IDisposable
-            where TSqlBulkCopyOptions : Enum
-            where TSqlBulkCopyColumnMappingCollection : class
-            where TSqlBulkCopyColumnMapping : class
-            where TSqlTransaction : DbTransaction
         {
             // Throw an error if there are no mappings
             if (mappings?.Any() != true)
@@ -330,24 +287,24 @@ namespace RepoDb
             }
 
             // Variables needed
-            var result = default(int);
+            int result;
 
             // Actual Execution
-            using (var sqlBulkCopy = (TSqlBulkCopy)Activator.CreateInstance(typeof(TSqlBulkCopy), connection, options, transaction))
+            using (var sqlBulkCopy = (SqlBulkCopy)Activator.CreateInstance(typeof(SqlBulkCopy), connection, options, transaction))
             {
                 // Set the destinationtable
-                Compiler.SetProperty<TSqlBulkCopy>(sqlBulkCopy, "DestinationTableName", tableName);
+                Compiler.SetProperty(sqlBulkCopy, "DestinationTableName", tableName);
 
                 // Set the timeout
                 if (bulkCopyTimeout.HasValue)
                 {
-                    Compiler.SetProperty<TSqlBulkCopy>(sqlBulkCopy, "BulkCopyTimeout", bulkCopyTimeout.Value);
+                    Compiler.SetProperty(sqlBulkCopy, "BulkCopyTimeout", bulkCopyTimeout.Value);
                 }
 
                 // Set the batch size
                 if (batchSize.HasValue)
                 {
-                    Compiler.SetProperty<TSqlBulkCopy>(sqlBulkCopy, "BatchSize", batchSize.Value);
+                    Compiler.SetProperty(sqlBulkCopy, "BatchSize", batchSize.Value);
                 }
 
                 // Add the order column
@@ -357,13 +314,13 @@ namespace RepoDb
                 }
 
                 // Add the mappings
-                AddMappings<TSqlBulkCopy, TSqlBulkCopyColumnMappingCollection, TSqlBulkCopyColumnMapping>(sqlBulkCopy, mappings);
+                AddMappings(sqlBulkCopy, mappings);
 
                 // Open the connection and do the operation
                 await connection.EnsureOpenAsync(cancellationToken: cancellationToken);
                 using (var reader = new DataEntityDataReader<TEntity>(tableName, entities, connection, transaction, hasOrderingColumn))
                 {
-                    var writeToServerMethod = Compiler.GetParameterizedMethodFunc<TSqlBulkCopy, Task>("WriteToServerAsync", new[] { typeof(DbDataReader), typeof(CancellationToken) });
+                    var writeToServerMethod = Compiler.GetParameterizedMethodFunc<SqlBulkCopy, Task>("WriteToServerAsync", new[] { typeof(DbDataReader), typeof(CancellationToken) });
                     await writeToServerMethod(sqlBulkCopy, new object[] { reader, cancellationToken });
                     result = reader.RecordsAffected;
                 }
@@ -372,8 +329,8 @@ namespace RepoDb
                 if (result <= 0)
                 {
                     // Set the return value
-                    var rowsCopiedFieldOrProperty = Compiler.GetFieldGetterFunc<TSqlBulkCopy, int>("_rowsCopied") ??
-                        Compiler.GetPropertyGetterFunc<TSqlBulkCopy, int>("RowsCopied");
+                    var rowsCopiedFieldOrProperty = Compiler.GetFieldGetterFunc<SqlBulkCopy, int>("_rowsCopied") ??
+                        Compiler.GetPropertyGetterFunc<SqlBulkCopy, int>("RowsCopied");
                     result = (int)rowsCopiedFieldOrProperty?.Invoke(sqlBulkCopy);
                 }
             }
@@ -385,11 +342,6 @@ namespace RepoDb
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TSqlBulkCopy"></typeparam>
-        /// <typeparam name="TSqlBulkCopyOptions"></typeparam>
-        /// <typeparam name="TSqlBulkCopyColumnMappingCollection"></typeparam>
-        /// <typeparam name="TSqlBulkCopyColumnMapping"></typeparam>
-        /// <typeparam name="TSqlTransaction"></typeparam>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="reader"></param>
@@ -400,21 +352,15 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> WriteToServerAsyncInternal<TSqlBulkCopy, TSqlBulkCopyOptions, TSqlBulkCopyColumnMappingCollection,
-            TSqlBulkCopyColumnMapping, TSqlTransaction>(DbConnection connection,
+        private static async Task<int> WriteToServerAsyncInternal(SqlConnection connection,
             string tableName,
             DbDataReader reader,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            TSqlBulkCopyOptions options = default,
+            SqlBulkCopyOptions options = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            TSqlTransaction transaction = null,
+            SqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
-            where TSqlBulkCopy : class, IDisposable
-            where TSqlBulkCopyOptions : Enum
-            where TSqlBulkCopyColumnMappingCollection : class
-            where TSqlBulkCopyColumnMapping : class
-            where TSqlTransaction : DbTransaction
         {
             // Throw an error if there are no mappings
             if (mappings?.Any() != true)
@@ -423,38 +369,38 @@ namespace RepoDb
             }
 
             // Variables needed
-            var result = default(int);
+            int result;
 
             // Actual Execution
-            using (var sqlBulkCopy = (TSqlBulkCopy)Activator.CreateInstance(typeof(TSqlBulkCopy), connection, options, transaction))
+            using (var sqlBulkCopy = (SqlBulkCopy)Activator.CreateInstance(typeof(SqlBulkCopy), connection, options, transaction))
             {
                 // Set the destinationtable
-                Compiler.SetProperty<TSqlBulkCopy>(sqlBulkCopy, "DestinationTableName", tableName);
+                Compiler.SetProperty(sqlBulkCopy, "DestinationTableName", tableName);
 
                 // Set the timeout
                 if (bulkCopyTimeout.HasValue)
                 {
-                    Compiler.SetProperty<TSqlBulkCopy>(sqlBulkCopy, "BulkCopyTimeout", bulkCopyTimeout.Value);
+                    Compiler.SetProperty(sqlBulkCopy, "BulkCopyTimeout", bulkCopyTimeout.Value);
                 }
 
                 // Set the batch size
                 if (batchSize.HasValue)
                 {
-                    Compiler.SetProperty<TSqlBulkCopy>(sqlBulkCopy, "BatchSize", batchSize.Value);
+                    Compiler.SetProperty(sqlBulkCopy, "BatchSize", batchSize.Value);
                 }
 
                 // Add the mappings
-                AddMappings<TSqlBulkCopy, TSqlBulkCopyColumnMappingCollection, TSqlBulkCopyColumnMapping>(sqlBulkCopy, mappings);
+                AddMappings(sqlBulkCopy, mappings);
 
                 // Open the connection and do the operation
                 await connection.EnsureOpenAsync(cancellationToken);
-                var writeToServerMethod = Compiler.GetParameterizedMethodFunc<TSqlBulkCopy, Task>("WriteToServerAsync", new[] { typeof(DbDataReader), typeof(CancellationToken) });
+                var writeToServerMethod = Compiler.GetParameterizedMethodFunc<SqlBulkCopy, Task>("WriteToServerAsync", new[] { typeof(DbDataReader), typeof(CancellationToken) });
                 await writeToServerMethod(sqlBulkCopy, new object[] { reader, cancellationToken });
 
                 // Set the return value
-                var rowsCopiedFieldOrProperty = Compiler.GetFieldGetterFunc<TSqlBulkCopy, int>("_rowsCopied") ??
-                    Compiler.GetPropertyGetterFunc<TSqlBulkCopy, int>("RowsCopied");
-                result = rowsCopiedFieldOrProperty != null ? rowsCopiedFieldOrProperty(sqlBulkCopy) : reader.RecordsAffected;
+                var rowsCopiedFieldOrProperty = Compiler.GetFieldGetterFunc<SqlBulkCopy, int>("_rowsCopied") ??
+                    Compiler.GetPropertyGetterFunc<SqlBulkCopy, int>("RowsCopied");
+                result = rowsCopiedFieldOrProperty?.Invoke(sqlBulkCopy) ?? reader.RecordsAffected;
             }
 
             // Return the result
@@ -464,11 +410,6 @@ namespace RepoDb
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TSqlBulkCopy"></typeparam>
-        /// <typeparam name="TSqlBulkCopyOptions"></typeparam>
-        /// <typeparam name="TSqlBulkCopyColumnMappingCollection"></typeparam>
-        /// <typeparam name="TSqlBulkCopyColumnMapping"></typeparam>
-        /// <typeparam name="TSqlTransaction"></typeparam>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="dataTable"></param>
@@ -481,23 +422,17 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> WriteToServerAsyncInternal<TSqlBulkCopy, TSqlBulkCopyOptions, TSqlBulkCopyColumnMappingCollection,
-            TSqlBulkCopyColumnMapping, TSqlTransaction>(DbConnection connection,
+        private static async Task<int> WriteToServerAsyncInternal(SqlConnection connection,
             string tableName,
             DataTable dataTable,
             DataRowState? rowState = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            TSqlBulkCopyOptions options = default,
+            SqlBulkCopyOptions options = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool hasOrderingColumn = false,
-            TSqlTransaction transaction = null,
+            SqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
-            where TSqlBulkCopy : class, IDisposable
-            where TSqlBulkCopyOptions : Enum
-            where TSqlBulkCopyColumnMappingCollection : class
-            where TSqlBulkCopyColumnMapping : class
-            where TSqlTransaction : DbTransaction
         {
             // Throw an error if there are no mappings
             if (mappings?.Any() != true)
@@ -506,24 +441,24 @@ namespace RepoDb
             }
 
             // Variables needed
-            var result = default(int);
+            int result;
 
             // Actual Execution
-            using (var sqlBulkCopy = (TSqlBulkCopy)Activator.CreateInstance(typeof(TSqlBulkCopy), connection, options, transaction))
+            using (var sqlBulkCopy = (SqlBulkCopy)Activator.CreateInstance(typeof(SqlBulkCopy), connection, options, transaction))
             {
                 // Set the destinationtable
-                Compiler.SetProperty<TSqlBulkCopy>(sqlBulkCopy, "DestinationTableName", tableName);
+                Compiler.SetProperty(sqlBulkCopy, "DestinationTableName", tableName);
 
                 // Set the timeout
                 if (bulkCopyTimeout.HasValue)
                 {
-                    Compiler.SetProperty<TSqlBulkCopy>(sqlBulkCopy, "BulkCopyTimeout", bulkCopyTimeout.Value);
+                    Compiler.SetProperty(sqlBulkCopy, "BulkCopyTimeout", bulkCopyTimeout.Value);
                 }
 
                 // Set the batch size
                 if (batchSize.HasValue)
                 {
-                    Compiler.SetProperty<TSqlBulkCopy>(sqlBulkCopy, "BatchSize", batchSize.Value);
+                    Compiler.SetProperty(sqlBulkCopy, "BatchSize", batchSize.Value);
                 }
 
                 // Add the order column
@@ -534,18 +469,18 @@ namespace RepoDb
                 }
 
                 // Add the mappings
-                AddMappings<TSqlBulkCopy, TSqlBulkCopyColumnMappingCollection, TSqlBulkCopyColumnMapping>(sqlBulkCopy, mappings);
+                AddMappings(sqlBulkCopy, mappings);
 
                 // Open the connection and do the operation
                 await connection.EnsureOpenAsync(cancellationToken);
                 if (rowState.HasValue == true)
                 {
-                    var writeToServerMethod = Compiler.GetParameterizedMethodFunc<TSqlBulkCopy, Task>("WriteToServerAsync", new[] { typeof(DataTable), typeof(DataRowState), typeof(CancellationToken) });
+                    var writeToServerMethod = Compiler.GetParameterizedMethodFunc<SqlBulkCopy, Task>("WriteToServerAsync", new[] { typeof(DataTable), typeof(DataRowState), typeof(CancellationToken) });
                     await writeToServerMethod(sqlBulkCopy, new object[] { dataTable, rowState.Value, cancellationToken });
                 }
                 else
                 {
-                    var writeToServerMethod = Compiler.GetParameterizedMethodFunc<TSqlBulkCopy, Task>("WriteToServerAsync", new[] { typeof(DataTable), typeof(CancellationToken) });
+                    var writeToServerMethod = Compiler.GetParameterizedMethodFunc<SqlBulkCopy, Task>("WriteToServerAsync", new[] { typeof(DataTable), typeof(CancellationToken) });
                     await writeToServerMethod(sqlBulkCopy, new object[] { dataTable, cancellationToken });
                 }
 

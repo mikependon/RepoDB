@@ -10,6 +10,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
 
 namespace RepoDb
 {
@@ -160,20 +161,15 @@ namespace RepoDb
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TSqlBulkCopy"></typeparam>
-        /// <typeparam name="TSqlBulkCopyColumnMappingCollection"></typeparam>
-        /// <typeparam name="TSqlBulkCopyColumnMapping"></typeparam>
         /// <param name="sqlBulkCopy"></param>
         /// <param name="mappings"></param>
-        private static void AddMappings<TSqlBulkCopy, TSqlBulkCopyColumnMappingCollection, TSqlBulkCopyColumnMapping>(TSqlBulkCopy sqlBulkCopy,
+        private static void AddMappings(SqlBulkCopy sqlBulkCopy,
             IEnumerable<BulkInsertMapItem> mappings)
-            where TSqlBulkCopy : class
-            where TSqlBulkCopyColumnMappingCollection : class
         {
-            var columnMappingsProperty = Compiler.GetPropertyGetterFunc<TSqlBulkCopy, TSqlBulkCopyColumnMappingCollection>("ColumnMappings");
+            var columnMappingsProperty = Compiler.GetPropertyGetterFunc<SqlBulkCopy, SqlBulkCopyColumnMappingCollection>("ColumnMappings");
             var columnMappingsInstance = columnMappingsProperty(sqlBulkCopy);
             var types = new[] { typeof(string), typeof(string) };
-            var addMethod = Compiler.GetParameterizedMethodFunc<TSqlBulkCopyColumnMappingCollection, TSqlBulkCopyColumnMapping>("Add", types);
+            var addMethod = Compiler.GetParameterizedMethodFunc<SqlBulkCopyColumnMappingCollection, SqlBulkCopyColumnMapping>("Add", types);
             mappings
                 .AsList()
                 .ForEach(mapItem =>

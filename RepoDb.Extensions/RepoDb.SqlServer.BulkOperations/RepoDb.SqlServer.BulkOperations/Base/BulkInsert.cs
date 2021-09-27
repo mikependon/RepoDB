@@ -6,6 +6,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
 using RepoDb.Interfaces;
 
 namespace RepoDb
@@ -18,11 +19,6 @@ namespace RepoDb
         ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
-        /// <typeparam name="TSqlBulkCopy"></typeparam>
-        /// <typeparam name="TSqlBulkCopyOptions"></typeparam>
-        /// <typeparam name="TSqlBulkCopyColumnMappingCollection"></typeparam>
-        /// <typeparam name="TSqlBulkCopyColumnMapping"></typeparam>
-        /// <typeparam name="TSqlTransaction"></typeparam>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="entities"></param>
@@ -36,39 +32,33 @@ namespace RepoDb
         /// <param name="usePhysicalPseudoTempTable"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static int BulkInsertInternalBase<TEntity, TSqlBulkCopy, TSqlBulkCopyOptions, TSqlBulkCopyColumnMappingCollection,
-            TSqlBulkCopyColumnMapping, TSqlTransaction>(DbConnection connection,
+        private static int BulkInsertInternalBase<TEntity>(SqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<DbField> dbFields = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            TSqlBulkCopyOptions options = default,
+            SqlBulkCopyOptions options = default,
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
-            TSqlTransaction transaction = null)
+            SqlTransaction transaction = null)
             where TEntity : class
-            where TSqlBulkCopy : class, IDisposable
-            where TSqlBulkCopyOptions : Enum
-            where TSqlBulkCopyColumnMappingCollection : class
-            where TSqlBulkCopyColumnMapping : class
-            where TSqlTransaction : DbTransaction
         {
             // Validate
             // ThrowIfNullOrEmpty(entities);
 
             // Variables needed
             var dbSetting = connection.GetDbSetting();
-            var hasTransaction = (transaction != null);
-            var result = default(int);
+            var hasTransaction = transaction != null;
+            int result;
 
             // Check the transaction
             if (transaction == null)
             {
                 // Add the transaction if not present
-                transaction = (TSqlTransaction)connection.EnsureOpen().BeginTransaction();
+                transaction = (SqlTransaction)connection.EnsureOpen().BeginTransaction();
             }
             else
             {
@@ -129,8 +119,7 @@ namespace RepoDb
                     fields);
 
                 // WriteToServer
-                result = WriteToServerInternal<TEntity, TSqlBulkCopy, TSqlBulkCopyOptions, TSqlBulkCopyColumnMappingCollection,
-                    TSqlBulkCopyColumnMapping, TSqlTransaction>(connection,
+                result = WriteToServerInternal<TEntity>(connection,
                     tempTableName ?? tableName,
                     entities,
                     mappings,
@@ -157,7 +146,7 @@ namespace RepoDb
                     {
                         var mapping = mappings?.FirstOrDefault(e => string.Equals(e.DestinationColumn, identityDbField.Name, StringComparison.OrdinalIgnoreCase));
                         var identityField = mapping != null ? new Field(mapping.SourceColumn) : identityDbField.AsField();
-                        result = SetIdentityForEntities<TEntity>(entities, reader, identityField);
+                        result = SetIdentityForEntities(entities, reader, identityField);
                     }
 
                     // Drop the table after used
@@ -198,11 +187,6 @@ namespace RepoDb
         /// <summary>
         ///
         /// </summary>
-        /// <typeparam name="TSqlBulkCopy"></typeparam>
-        /// <typeparam name="TSqlBulkCopyOptions"></typeparam>
-        /// <typeparam name="TSqlBulkCopyColumnMappingCollection"></typeparam>
-        /// <typeparam name="TSqlBulkCopyColumnMapping"></typeparam>
-        /// <typeparam name="TSqlTransaction"></typeparam>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="reader"></param>
@@ -213,21 +197,15 @@ namespace RepoDb
         /// <param name="batchSize"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        internal static int BulkInsertInternalBase<TSqlBulkCopy, TSqlBulkCopyOptions, TSqlBulkCopyColumnMappingCollection,
-            TSqlBulkCopyColumnMapping, TSqlTransaction>(DbConnection connection,
+        internal static int BulkInsertInternalBase(SqlConnection connection,
             string tableName,
             DbDataReader reader,
             IEnumerable<DbField> dbFields = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            TSqlBulkCopyOptions options = default,
+            SqlBulkCopyOptions options = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            TSqlTransaction transaction = null)
-            where TSqlBulkCopy : class, IDisposable
-            where TSqlBulkCopyOptions : Enum
-            where TSqlBulkCopyColumnMappingCollection : class
-            where TSqlBulkCopyColumnMapping : class
-            where TSqlTransaction : DbTransaction
+            SqlTransaction transaction = null)
         {
             // Validate
             if (!reader.HasRows)
@@ -243,7 +221,7 @@ namespace RepoDb
             if (transaction == null)
             {
                 // Add the transaction if not present
-                transaction = (TSqlTransaction)connection.EnsureOpen().BeginTransaction();
+                transaction = (SqlTransaction)connection.EnsureOpen().BeginTransaction();
             }
             else
             {
@@ -259,7 +237,7 @@ namespace RepoDb
                 // Variables needed
                 var readerFields = Enumerable
                     .Range(0, reader.FieldCount)
-                    .Select((index) => reader.GetName(index));
+                    .Select(index => reader.GetName(index));
                 var fields = dbFields?.Select(dbField => dbField.AsField());
 
                 // Filter the fields (based on mappings)
@@ -292,8 +270,7 @@ namespace RepoDb
                 }
 
                 // WriteToServer
-                result = WriteToServerInternal<TSqlBulkCopy, TSqlBulkCopyOptions, TSqlBulkCopyColumnMappingCollection,
-                    TSqlBulkCopyColumnMapping, TSqlTransaction>(connection,
+                result = WriteToServerInternal(connection,
                     tableName,
                     reader,
                     mappings,
@@ -305,7 +282,7 @@ namespace RepoDb
                 // Commit the transaction
                 if (hasTransaction == false)
                 {
-                    transaction?.Commit();
+                    transaction.Commit();
                 }
             }
             catch
@@ -335,11 +312,6 @@ namespace RepoDb
         /// <summary>
         ///
         /// </summary>
-        /// <typeparam name="TSqlBulkCopy"></typeparam>
-        /// <typeparam name="TSqlBulkCopyOptions"></typeparam>
-        /// <typeparam name="TSqlBulkCopyColumnMappingCollection"></typeparam>
-        /// <typeparam name="TSqlBulkCopyColumnMapping"></typeparam>
-        /// <typeparam name="TSqlTransaction"></typeparam>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="dataTable"></param>
@@ -354,25 +326,19 @@ namespace RepoDb
         /// <param name="usePhysicalPseudoTempTable"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        internal static int BulkInsertInternalBase<TSqlBulkCopy, TSqlBulkCopyOptions, TSqlBulkCopyColumnMappingCollection,
-            TSqlBulkCopyColumnMapping, TSqlTransaction>(DbConnection connection,
+        internal static int BulkInsertInternalBase(SqlConnection connection,
             string tableName,
             DataTable dataTable,
             DataRowState? rowState = null,
             IEnumerable<DbField> dbFields = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            TSqlBulkCopyOptions options = default,
+            SqlBulkCopyOptions options = default,
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
-            TSqlTransaction transaction = null)
-            where TSqlBulkCopy : class, IDisposable
-            where TSqlBulkCopyOptions : Enum
-            where TSqlBulkCopyColumnMappingCollection : class
-            where TSqlBulkCopyColumnMapping : class
-            where TSqlTransaction : DbTransaction
+            SqlTransaction transaction = null)
         {
             // Validate
             if (dataTable?.Rows.Count <= 0)
@@ -389,7 +355,7 @@ namespace RepoDb
             if (transaction == null)
             {
                 // Add the transaction if not present
-                transaction = (TSqlTransaction)(connection.EnsureOpen()).BeginTransaction();
+                transaction = (SqlTransaction)connection.EnsureOpen().BeginTransaction();
             }
             else
             {
@@ -448,9 +414,8 @@ namespace RepoDb
                     fields);
 
                 // WriteToServer
-                result = WriteToServerInternal<TSqlBulkCopy, TSqlBulkCopyOptions, TSqlBulkCopyColumnMappingCollection,
-                    TSqlBulkCopyColumnMapping, TSqlTransaction>(connection,
-                    (tempTableName ?? tableName),
+                result = WriteToServerInternal(connection,
+                    tempTableName ?? tableName,
                     dataTable,
                     rowState,
                     mappings,
@@ -530,11 +495,6 @@ namespace RepoDb
         ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
-        /// <typeparam name="TSqlBulkCopy"></typeparam>
-        /// <typeparam name="TSqlBulkCopyOptions"></typeparam>
-        /// <typeparam name="TSqlBulkCopyColumnMappingCollection"></typeparam>
-        /// <typeparam name="TSqlBulkCopyColumnMapping"></typeparam>
-        /// <typeparam name="TSqlTransaction"></typeparam>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="entities"></param>
@@ -549,26 +509,20 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> BulkInsertAsyncInternalBase<TEntity, TSqlBulkCopy, TSqlBulkCopyOptions, TSqlBulkCopyColumnMappingCollection,
-            TSqlBulkCopyColumnMapping, TSqlTransaction>(DbConnection connection,
+        private static async Task<int> BulkInsertAsyncInternalBase<TEntity>(SqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<DbField> dbFields = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            TSqlBulkCopyOptions options = default,
+            SqlBulkCopyOptions options = default,
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
-            TSqlTransaction transaction = null,
+            SqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
-            where TSqlBulkCopy : class, IDisposable
-            where TSqlBulkCopyOptions : Enum
-            where TSqlBulkCopyColumnMappingCollection : class
-            where TSqlBulkCopyColumnMapping : class
-            where TSqlTransaction : DbTransaction
         {
             // Validate
             if (entities?.Any() != true)
@@ -585,7 +539,7 @@ namespace RepoDb
             if (transaction == null)
             {
                 // Add the transaction if not present
-                transaction = (TSqlTransaction)(await connection.EnsureOpenAsync(cancellationToken)).BeginTransaction();
+                transaction = (SqlTransaction)(await connection.EnsureOpenAsync(cancellationToken)).BeginTransaction();
             }
             else
             {
@@ -635,7 +589,7 @@ namespace RepoDb
                     throw new MissingFieldException("There are no field(s) found for this operation.");
                 }
 
-                var withPseudoExecution = (isReturnIdentity == true && identityDbField != null);
+                var withPseudoExecution = isReturnIdentity == true && identityDbField != null;
                 var tempTableName = await CreateTempTableIfNecessaryAsync(connection,
                     tableName,
                     usePhysicalPseudoTempTable,
@@ -646,8 +600,7 @@ namespace RepoDb
                     cancellationToken);
 
                 // WriteToServer
-                result = await WriteToServerAsyncInternal<TEntity, TSqlBulkCopy, TSqlBulkCopyOptions, TSqlBulkCopyColumnMappingCollection,
-                    TSqlBulkCopyColumnMapping, TSqlTransaction>(connection,
+                result = await WriteToServerAsyncInternal<TEntity>(connection,
                     tempTableName ?? tableName,
                     entities,
                     mappings,
@@ -714,11 +667,6 @@ namespace RepoDb
         /// <summary>
         ///
         /// </summary>
-        /// <typeparam name="TSqlBulkCopy"></typeparam>
-        /// <typeparam name="TSqlBulkCopyOptions"></typeparam>
-        /// <typeparam name="TSqlBulkCopyColumnMappingCollection"></typeparam>
-        /// <typeparam name="TSqlBulkCopyColumnMapping"></typeparam>
-        /// <typeparam name="TSqlTransaction"></typeparam>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="reader"></param>
@@ -730,22 +678,16 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        internal static async Task<int> BulkInsertAsyncInternalBase<TSqlBulkCopy, TSqlBulkCopyOptions, TSqlBulkCopyColumnMappingCollection,
-            TSqlBulkCopyColumnMapping, TSqlTransaction>(DbConnection connection,
+        internal static async Task<int> BulkInsertAsyncInternalBase(SqlConnection connection,
             string tableName,
             DbDataReader reader,
             IEnumerable<DbField> dbFields = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            TSqlBulkCopyOptions options = default,
+            SqlBulkCopyOptions options = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            TSqlTransaction transaction = null,
+            SqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
-            where TSqlBulkCopy : class, IDisposable
-            where TSqlBulkCopyOptions : Enum
-            where TSqlBulkCopyColumnMappingCollection : class
-            where TSqlBulkCopyColumnMapping : class
-            where TSqlTransaction : DbTransaction
         {
             // Validate
             if (!reader.HasRows)
@@ -754,14 +696,14 @@ namespace RepoDb
             }
 
             // Variables needed
-            var hasTransaction = (transaction != null);
-            var result = default(int);
+            var hasTransaction = transaction != null;
+            int result;
 
             // Check the transaction
             if (transaction == null)
             {
                 // Add the transaction if not present
-                transaction = (TSqlTransaction)(await connection.EnsureOpenAsync(cancellationToken)).BeginTransaction();
+                transaction = (SqlTransaction)(await connection.EnsureOpenAsync(cancellationToken)).BeginTransaction();
             }
             else
             {
@@ -777,7 +719,7 @@ namespace RepoDb
                 // Variables needed
                 var readerFields = Enumerable
                     .Range(0, reader.FieldCount)
-                    .Select((index) => reader.GetName(index));
+                    .Select(index => reader.GetName(index));
                 var fields = dbFields?.Select(dbField => dbField.AsField());
 
                 // Filter the fields (based on mappings)
@@ -810,8 +752,7 @@ namespace RepoDb
                 }
 
                 // WriteToServer
-                result = await WriteToServerAsyncInternal<TSqlBulkCopy, TSqlBulkCopyOptions, TSqlBulkCopyColumnMappingCollection,
-                    TSqlBulkCopyColumnMapping, TSqlTransaction>(connection,
+                result = await WriteToServerAsyncInternal(connection,
                     tableName,
                     reader,
                     mappings,
@@ -854,11 +795,6 @@ namespace RepoDb
         /// <summary>
         ///
         /// </summary>
-        /// <typeparam name="TSqlBulkCopy"></typeparam>
-        /// <typeparam name="TSqlBulkCopyOptions"></typeparam>
-        /// <typeparam name="TSqlBulkCopyColumnMappingCollection"></typeparam>
-        /// <typeparam name="TSqlBulkCopyColumnMapping"></typeparam>
-        /// <typeparam name="TSqlTransaction"></typeparam>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="dataTable"></param>
@@ -874,26 +810,20 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        internal static async Task<int> BulkInsertAsyncInternalBase<TSqlBulkCopy, TSqlBulkCopyOptions, TSqlBulkCopyColumnMappingCollection,
-            TSqlBulkCopyColumnMapping, TSqlTransaction>(DbConnection connection,
+        internal static async Task<int> BulkInsertAsyncInternalBase(SqlConnection connection,
             string tableName,
             DataTable dataTable,
             DataRowState? rowState = null,
             IEnumerable<DbField> dbFields = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
-            TSqlBulkCopyOptions options = default,
+            SqlBulkCopyOptions options = default,
             string hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
-            TSqlTransaction transaction = null,
+            SqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
-            where TSqlBulkCopy : class, IDisposable
-            where TSqlBulkCopyOptions : Enum
-            where TSqlBulkCopyColumnMappingCollection : class
-            where TSqlBulkCopyColumnMapping : class
-            where TSqlTransaction : DbTransaction
         {
             // Validate
             if (dataTable?.Rows.Count <= 0)
@@ -904,13 +834,12 @@ namespace RepoDb
             // Variables needed
             var dbSetting = connection.GetDbSetting();
             var hasTransaction = transaction != null;
-            int result;
 
             // Check the transaction
             if (transaction == null)
             {
                 // Add the transaction if not present
-                transaction = (TSqlTransaction)(await connection.EnsureOpenAsync(cancellationToken)).BeginTransaction();
+                transaction = (SqlTransaction)(await connection.EnsureOpenAsync(cancellationToken)).BeginTransaction();
             }
             else
             {
@@ -970,8 +899,7 @@ namespace RepoDb
                     cancellationToken);
 
                 // WriteToServer
-                result = await WriteToServerAsyncInternal<TSqlBulkCopy, TSqlBulkCopyOptions, TSqlBulkCopyColumnMappingCollection,
-                    TSqlBulkCopyColumnMapping, TSqlTransaction>(connection,
+                var result = await WriteToServerAsyncInternal(connection,
                     (tempTableName ?? tableName),
                     dataTable,
                     rowState,
@@ -1057,15 +985,11 @@ namespace RepoDb
             IEnumerable<Field> fields)
             where TSqlTransaction : DbTransaction
         {
-            if (withPseudoExecution == false) return null;
+            if (withPseudoExecution == false) 
+                return null;
 
             var tempTableName = CreateTempTableName(tableName, usePhysicalPseudoTempTable, dbSetting);
-
-            var sql = GetCreateTemporaryTableSqlText(tableName,
-                tempTableName,
-                fields,
-                dbSetting,
-                true);
+            var sql = GetCreateTemporaryTableSqlText(tableName, tempTableName, fields, dbSetting, true);
 
             connection.ExecuteNonQuery(sql, transaction: transaction);
 
@@ -1082,15 +1006,11 @@ namespace RepoDb
             CancellationToken cancellationToken)
             where TSqlTransaction : DbTransaction
         {
-            if (withPseudoExecution == false) return null;
+            if (withPseudoExecution == false) 
+                return null;
 
             var tempTableName = CreateTempTableName(tableName, usePhysicalPseudoTempTable, dbSetting);
-
-            var sql = GetCreateTemporaryTableSqlText(tableName,
-                tempTableName,
-                fields,
-                dbSetting,
-                true);
+            var sql = GetCreateTemporaryTableSqlText(tableName, tempTableName, fields, dbSetting, true);
 
             await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
 
@@ -1103,7 +1023,8 @@ namespace RepoDb
             var tempTableName = string.Concat("_RepoDb_BulkInsert_", GetTableName(tableName, dbSetting));
 
             // Add a # prefix if not physical
-            if (usePhysicalPseudoTempTable != true) tempTableName = string.Concat("#", tempTableName);
+            if (usePhysicalPseudoTempTable != true) 
+                tempTableName = string.Concat("#", tempTableName);
             
             return tempTableName;
         }
