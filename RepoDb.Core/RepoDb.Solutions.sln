@@ -38,11 +38,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Docs", "RepoDb.Docs"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "READMEs", "READMEs", "{5EA323B8-B4B6-4083-97A3-018C9423B20A}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SqLite", "SqLite", "{D203DBE3-A86A-4F48-AE16-3CCCCA443ABC}"
-	ProjectSection(SolutionItems) = preProject
-		..\RepoDb.SqLite\README.md = ..\RepoDb.SqLite\README.md
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MySql", "MySql", "{97CDB540-A186-42B9-9492-608A2392A8C5}"
 	ProjectSection(SolutionItems) = preProject
 		..\RepoDb.MySql\README.md = ..\RepoDb.MySql\README.md
@@ -86,6 +81,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\Directory.Build.props = ..\Directory.Build.props
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sqlite.Microsoft", "Sqlite.Microsoft", "{33D8E1C3-814F-4E46-90C6-793DDBCE0793}"
+	ProjectSection(SolutionItems) = preProject
+		..\RepoDb.Sqlite.Microsoft\README.md = ..\RepoDb.Sqlite.Microsoft\README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SQLite.System", "SQLite.System", "{33D9D9D0-2A18-4F7D-8059-7B3679B6D1ED}"
+	ProjectSection(SolutionItems) = preProject
+		..\RepoDb.SQLite.System\README.md = ..\RepoDb.SQLite.System\README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -126,13 +131,14 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{5EA323B8-B4B6-4083-97A3-018C9423B20A} = {810FF947-4368-477F-9193-07532892B492}
-		{D203DBE3-A86A-4F48-AE16-3CCCCA443ABC} = {5EA323B8-B4B6-4083-97A3-018C9423B20A}
 		{97CDB540-A186-42B9-9492-608A2392A8C5} = {5EA323B8-B4B6-4083-97A3-018C9423B20A}
 		{97F2640B-CD0C-430E-8E18-D948A6966C85} = {5EA323B8-B4B6-4083-97A3-018C9423B20A}
 		{FCAEE688-26E0-490C-9C70-0A52AA7AFF62} = {5EA323B8-B4B6-4083-97A3-018C9423B20A}
 		{B57B1387-2718-46F0-9608-11746ECB4DF2} = {5EA323B8-B4B6-4083-97A3-018C9423B20A}
 		{1E85E11D-431C-4969-B2EE-C82EB0D92DC7} = {5EA323B8-B4B6-4083-97A3-018C9423B20A}
 		{419BA40B-7803-4E45-893F-FB8A6E81FAC5} = {5EA323B8-B4B6-4083-97A3-018C9423B20A}
+		{33D8E1C3-814F-4E46-90C6-793DDBCE0793} = {5EA323B8-B4B6-4083-97A3-018C9423B20A}
+		{33D9D9D0-2A18-4F7D-8059-7B3679B6D1ED} = {5EA323B8-B4B6-4083-97A3-018C9423B20A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D15A7161-5524-45B7-A22A-EA6C877AA840}
