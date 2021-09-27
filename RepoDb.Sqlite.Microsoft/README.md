@@ -5,20 +5,9 @@
 [![SqLiteUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-mhpo4?&logo=appveyor&label=unit%20tests)](https://ci.appveyor.com/project/mikependon/repodb-mhpo4/build/tests)
 [![SqLiteIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-eg27p?&logo=appveyor&label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-eg27p/build/tests)
 
-# RepoDb.SqLite - a hybrid .NET ORM library for SQLite.
+# RepoDb.SqLite - a hybrid .NET ORM library for Sqlite.
 
 RepoDB is an open-source .NET ORM library that bridges the gaps of micro-ORMs and full-ORMs. It helps you simplify the switch-over of when to use the BASIC and ADVANCE operations during the development.
-
-## Contribution
-
-```diff
-- This code-line will be out-of-support soon. The final version would be v1.1.4.
-```
-
-To contribute, please proceed to the new solutions.
-
-- Microsoft.Data.Sqlite - [RepoDb.Sqlite.Microsoft](https://github.com/mikependon/RepoDb/tree/master/RepoDb.Sqlite.Microsoft)
-- System.Data.SQLite.Core - [RepoDb.SQLite.System](https://github.com/mikependon/RepoDb/tree/master/RepoDb.SQLite.System)
 
 ## Important Pages
 
@@ -36,7 +25,6 @@ To contribute, please proceed to the new solutions.
 
 - [RepoDb](https://www.nuget.org/packages/RepoDb/) - the core library of RepoDB.
 - [Microsoft.Data.Sqlite](https://www.nuget.org/packages/Microsoft.Data.Sqlite.Core/) - the data provider used for SqLite (Microsoft).
-- [System.Data.SQLite.Core](https://www.nuget.org/packages/System.Data.SQLite.Core/) - the data provider used for SqLite (SQLite).
 
 ## License
 
@@ -49,7 +37,7 @@ To contribute, please proceed to the new solutions.
 At the Package Manager Console, write the command below.
 
 ```csharp
-> Install-Package RepoDb.SqLite
+> Install-Package RepoDb.Sqlite.Microsoft
 ```
 
 Or, visit our [installation](http://repodb.net/tutorial/installation) page for more information.
@@ -59,7 +47,7 @@ Or, visit our [installation](http://repodb.net/tutorial/installation) page for m
 First, the bootstrapper must be initialized.
 
 ```csharp
-RepoDb.SqLiteBootstrap.Initialize();
+RepoDb.SqliteBootstrap.Initialize();
 ```
 
 **Note:** The call must be done once.
@@ -71,7 +59,7 @@ Or, visit the official [get-started](http://repodb.net/tutorial/get-started-sqli
 ### Query
 
 ```csharp
-using (var connection = new SQLiteConnection(ConnectionString))
+using (var connection = new SqliteConnection(ConnectionString))
 {
 	var customer = connection.Query<Customer>(c => c.Id == 10045);
 }
@@ -86,7 +74,7 @@ var customer = new Customer
 	LastName = "Doe",
 	IsActive = true
 };
-using (var connection = new SQLiteConnection(ConnectionString))
+using (var connection = new SqliteConnection(ConnectionString))
 {
 	var id = connection.Insert<Customer>(customer);
 }
@@ -95,7 +83,7 @@ using (var connection = new SQLiteConnection(ConnectionString))
 ### Update
 
 ```csharp
-using (var connection = new SQLiteConnection(ConnectionString))
+using (var connection = new SqliteConnection(ConnectionString))
 {
 	var customer = connection.Query<Customer>(10045);
 	customer.FirstName = "John";
@@ -107,7 +95,7 @@ using (var connection = new SQLiteConnection(ConnectionString))
 ### Delete
 
 ```csharp
-using (var connection = new SQLiteConnection(ConnectionString))
+using (var connection = new SqliteConnection(ConnectionString))
 {
 	var customer = connection.Query<Customer>(10045);
 	var deletedCount = connection.Delete<Customer>(customer);

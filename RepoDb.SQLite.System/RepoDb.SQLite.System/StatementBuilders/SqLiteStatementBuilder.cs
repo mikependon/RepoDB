@@ -1,7 +1,7 @@
-﻿using MySqlConnector;
-using RepoDb.Exceptions;
+﻿using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
+using RepoDb.Resolvers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,26 +9,17 @@ using System.Linq;
 namespace RepoDb.StatementBuilders
 {
     /// <summary>
-    /// A class that is being used to build a SQL Statement for MySql.
+    /// A class that is being used to build a SQL Statement for SqLite.
     /// </summary>
-    public sealed class MySqlConnectorStatementBuilder : BaseStatementBuilder
+    public sealed class SqLiteStatementBuilder : BaseStatementBuilder
     {
         /// <summary>
-        /// Creates a new instance of <see cref="MySqlConnectorStatementBuilder"/> object.
-        /// </summary>
-        public MySqlConnectorStatementBuilder()
-            : this(DbSettingMapper.Get<MySqlConnection>(),
-                  null,
-                  null)
-        { }
-
-        /// <summary>
-        /// Creates a new instance of <see cref="MySqlConnectorStatementBuilder"/> class.
+        /// Creates a new instance of <see cref="SqLiteStatementBuilder"/> class.
         /// </summary>
         /// <param name="dbSetting">The database settings object currently in used.</param>
         /// <param name="convertFieldResolver">The resolver used when converting a field in the database layer.</param>
         /// <param name="averageableClientTypeResolver">The resolver used to identity the type for average.</param>
-        public MySqlConnectorStatementBuilder(IDbSetting dbSetting,
+        public SqLiteStatementBuilder(IDbSetting dbSetting,
             IResolver<Field, IDbSetting, string> convertFieldResolver = null,
             IResolver<Type, Type> averageableClientTypeResolver = null)
             : base(dbSetting,
@@ -112,55 +103,6 @@ namespace RepoDb.StatementBuilders
 
         #endregion
 
-        #region CreateCount
-
-        /// <summary>
-        /// Creates a SQL Statement for count operation.
-        /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="where">The query expression.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <returns>A sql statement for count operation.</returns>
-        public override string CreateCount(QueryBuilder queryBuilder,
-            string tableName,
-            QueryGroup where = null,
-            string hints = null)
-        {
-            var result = base.CreateCount(queryBuilder,
-                tableName,
-                where,
-                hints);
-
-            // Return the query
-            return result.Replace("COUNT (", "COUNT(");
-        }
-
-        #endregion
-
-        #region CreateCountAll
-
-        /// <summary>
-        /// Creates a SQL Statement for count-all operation.
-        /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <returns>A sql statement for count-all operation.</returns>
-        public override string CreateCountAll(QueryBuilder queryBuilder,
-            string tableName,
-            string hints = null)
-        {
-            var result = base.CreateCountAll(queryBuilder,
-                tableName,
-                hints);
-
-            // Return the query
-            return result.Replace("COUNT (", "COUNT(");
-        }
-
-        #endregion
-
         #region CreateExists
 
         /// <summary>
@@ -188,7 +130,7 @@ namespace RepoDb.StatementBuilders
             // Build the query
             builder.Clear()
                 .Select()
-                .WriteText($"1 AS {("ExistsValue").AsQuoted(DbSetting)}")
+                .WriteText("1 AS [ExistsValue]")
                 .From()
                 .TableNameFrom(tableName, DbSetting)
                 .HintsFrom(hints)
@@ -232,9 +174,22 @@ namespace RepoDb.StatementBuilders
                 identityField,
                 hints);
 
+            // Variables needed
+            var databaseType = "BIGINT";
+
+            // Check for the identity
+            if (identityField != null)
+            {
+                var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
+                if (dbType != null)
+                {
+                    databaseType = new DbTypeToSqLiteStringNameResolver().Resolve(dbType.Value);
+                }
+            }
+
             // Set the return value
             var result = identityField != null ?
-                "LAST_INSERT_ID()" :
+                $"CAST(last_insert_rowid() AS {databaseType})" :
                     primaryField != null ? primaryField.Name.AsParameter(DbSetting) : "NULL";
 
             builder
@@ -282,6 +237,19 @@ namespace RepoDb.StatementBuilders
                 identityField,
                 hints);
 
+            // Variables needed
+            var databaseType = (string)null;
+
+            // Check for the identity
+            if (identityField != null)
+            {
+                var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
+                if (dbType != null)
+                {
+                    databaseType = new DbTypeToSqLiteStringNameResolver().Resolve(dbType.Value);
+                }
+            }
+
             if (identityField != null)
             {
                 // Variables needed
@@ -292,8 +260,10 @@ namespace RepoDb.StatementBuilders
                 for (var index = 0; index < splitted.Length; index++)
                 {
                     var line = splitted[index].Trim();
-                    commandTexts.Add(string.Concat(line, " ; SELECT LAST_INSERT_ID() AS ", "Id".AsQuoted(DbSetting), ", ",
-                        $"@__RepoDb_OrderColumn_{index} AS ", "OrderColumn".AsQuoted(DbSetting), " ;"));
+                    var returnValue = string.IsNullOrEmpty(databaseType) ?
+                        "SELECT last_insert_rowid()" :
+                        $"SELECT CAST(last_insert_rowid() AS {databaseType}) AS [Id]";
+                    commandTexts.Add(string.Concat(line, " ; ", returnValue, $", {DbSetting.ParameterPrefix}__RepoDb_OrderColumn_{index} AS [OrderColumn] ;"));
                 }
 
                 // Set the command text
@@ -302,61 +272,6 @@ namespace RepoDb.StatementBuilders
 
             // Return the query
             return commandText;
-        }
-
-        #endregion
-
-        #region CreateMax
-
-        /// <summary>
-        /// Creates a SQL Statement for maximum operation.
-        /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="field">The field to be maximumd.</param>
-        /// <param name="where">The query expression.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <returns>A sql statement for maximum operation.</returns>
-        public override string CreateMax(QueryBuilder queryBuilder,
-            string tableName,
-            Field field,
-            QueryGroup where = null,
-            string hints = null)
-        {
-            var result = base.CreateMax(queryBuilder,
-                tableName,
-                field,
-                where,
-                hints);
-
-            // Return the query
-            return result.Replace("MAX (", "MAX(");
-        }
-
-        #endregion
-
-        #region CreateMaxAll
-
-        /// <summary>
-        /// Creates a SQL Statement for maximum-all operation.
-        /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="field">The field to be maximumd.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <returns>A sql statement for maximum-all operation.</returns>
-        public override string CreateMaxAll(QueryBuilder queryBuilder,
-            string tableName,
-            Field field,
-            string hints = null)
-        {
-            var result = base.CreateMaxAll(queryBuilder,
-                tableName,
-                field,
-                hints);
-
-            // Return the query
-            return result.Replace("MAX (", "MAX(");
         }
 
         #endregion
@@ -382,71 +297,90 @@ namespace RepoDb.StatementBuilders
             DbField identityField = null,
             string hints = null)
         {
-            // Ensure with guards
-            GuardTableName(tableName);
-            GuardHints(hints);
-            GuardPrimary(primaryField);
-            GuardIdentity(identityField);
+            throw new NotImplementedException("The merge statement is not supported in SQLite. SQLite is using the 'Upsert (Insert/Update)' operation.");
+            //// Ensure with guards
+            //GuardTableName(tableName);
+            //GuardHints(hints);
+            //GuardPrimary(primaryField);
+            //GuardIdentity(identityField);
 
-            // Verify the fields
-            if (fields?.Any() != true)
-            {
-                throw new NullReferenceException($"The list of fields cannot be null or empty.");
-            }
+            //// Verify the fields
+            //if (fields?.Any() != true)
+            //{
+            //    throw new NullReferenceException($"The list of fields cannot be null or empty.");
+            //}
 
-            // Validate the Primary Key
-            if (primaryField == null)
-            {
-                throw new PrimaryFieldNotFoundException($"The is no primary field from the table '{tableName}'.");
-            }
+            //// Check the primary field
+            //if (primaryField == null)
+            //{
+            //    throw new PrimaryFieldNotFoundException($"SqLite is using the primary key as qualifier for (INSERT or REPLACE) operation.");
+            //}
 
-            // Initialize the builder
-            var builder = queryBuilder ?? new QueryBuilder();
+            //// Check the qualifiers
+            //if (qualifiers?.Any() == true)
+            //{
+            //    var others = qualifiers.Where(f => !string.Equals(f.Name, primaryField?.Name, StringComparison.OrdinalIgnoreCase));
+            //    if (others?.Any() == true)
+            //    {
+            //        throw new InvalidQualifiersException($"SqLite is using the primary key as qualifier for (INSERT or REPLACE) operation. " +
+            //            $"Consider creating 'PrimaryKey' in the {tableName} and set the 'qualifiers' to NULL.");
+            //    }
+            //}
 
-            // Set the return value
-            var result = (string)null;
+            //// Initialize the builder
+            //var builder = queryBuilder ?? new QueryBuilder();
 
-            // Check both primary and identity
-            if (identityField != null && !string.Equals(identityField.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase))
-            {
-                result = $"(CASE WHEN {identityField.Name.AsParameter(DbSetting)} > 0 THEN " +
-                    $"{identityField.Name.AsParameter(DbSetting)} ELSE " +
-                    $"{primaryField.Name.AsParameter(DbSetting)} END)";
-            }
-            else
-            {
-                result = $"COALESCE({primaryField.Name.AsParameter(DbSetting)}, LAST_INSERT_ID())";
-            }
+            //// Variables needed
+            //var databaseType = "BIGINT";
 
-            // Build the query
-            builder.Clear()
-                .Insert()
-                .Into()
-                .TableNameFrom(tableName, DbSetting)
-                .OpenParen()
-                .FieldsFrom(fields, DbSetting)
-                .CloseParen()
-                .Values()
-                .OpenParen()
-                .ParametersFrom(fields, 0, DbSetting)
-                .CloseParen()
-                .WriteText("ON DUPLICATE KEY")
-                .Update()
-                .FieldsAndParametersFrom(fields, 0, DbSetting)
-                .End();
+            //// Set the return value
+            //var result = (string)null;
 
-            if (!string.IsNullOrEmpty(result))
-            {
-                // Set the result
-                builder
-                    .Select()
-                    .WriteText(result)
-                    .As("Result".AsQuoted(DbSetting))
-                    .End();
-            }
+            //// Check both primary and identity
+            //if (identityField != null)
+            //{
+            //    result = string.Concat($"CAST(COALESCE(last_insert_rowid(), {primaryField.Name.AsParameter(DbSetting)}) AS {databaseType})");
 
-            // Return the query
-            return builder.GetString();
+            //    // Set the type
+            //    var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
+            //    if (dbType != null)
+            //    {
+            //        databaseType = new DbTypeToSqLiteStringNameResolver().Resolve(dbType.Value);
+            //    }
+            //}
+            //else
+            //{
+            //    result = string.Concat($"CAST({primaryField.Name.AsParameter(DbSetting)} AS {databaseType})");
+            //}
+
+            //// Build the query
+            //builder.Clear()
+            //    .Insert()
+            //    .Or()
+            //    .Replace()
+            //    .Into()
+            //    .TableNameFrom(tableName, DbSetting)
+            //    .OpenParen()
+            //    .FieldsFrom(fields, DbSetting)
+            //    .CloseParen()
+            //    .Values()
+            //    .OpenParen()
+            //    .ParametersFrom(fields, 0, DbSetting)
+            //    .CloseParen()
+            //    .End();
+
+            //if (!string.IsNullOrEmpty(result))
+            //{
+            //    // Set the result
+            //    builder
+            //        .Select()
+            //        .WriteText(result)
+            //        .As("Result".AsQuoted(DbSetting))
+            //        .End();
+            //}
+
+            //// Return the query
+            //return builder.GetString();
         }
 
         #endregion
@@ -474,136 +408,101 @@ namespace RepoDb.StatementBuilders
             DbField identityField = null,
             string hints = null)
         {
-            // Ensure with guards
-            GuardTableName(tableName);
-            GuardHints(hints);
-            GuardPrimary(primaryField);
-            GuardIdentity(identityField);
+            throw new NotImplementedException("The merge statement is not supported in SQLite. SQLite is using the 'Upsert (Insert/Update)' operation.");
 
-            // Verify the fields
-            if (fields?.Any() != true)
-            {
-                throw new NullReferenceException($"The list of fields cannot be null or empty.");
-            }
+            //// Ensure with guards
+            //GuardTableName(tableName);
+            //GuardHints(hints);
+            //GuardPrimary(primaryField);
+            //GuardIdentity(identityField);
 
-            // Validate the Primary Key
-            if (primaryField == null)
-            {
-                throw new PrimaryFieldNotFoundException($"The is no primary field from the table '{tableName}'.");
-            }
+            //// Verify the fields
+            //if (fields?.Any() != true)
+            //{
+            //    throw new NullReferenceException($"The list of fields cannot be null or empty.");
+            //}
 
-            // Initialize the builder
-            var builder = queryBuilder ?? new QueryBuilder();
+            //// Check the primary field
+            //if (primaryField == null)
+            //{
+            //    throw new PrimaryFieldNotFoundException($"SqLite is using the primary key as qualifier for (INSERT or REPLACE) operation.");
+            //}
 
-            // Set the return value
-            var result = (string)null;
+            //// Check the qualifiers
+            //if (qualifiers?.Any() == true)
+            //{
+            //    var others = qualifiers.Where(f => !string.Equals(f.Name, primaryField?.Name, StringComparison.OrdinalIgnoreCase));
+            //    if (others?.Any() == true)
+            //    {
+            //        throw new InvalidQualifiersException($"SqLite is using the primary key as qualifier for (INSERT or REPLACE) operation. " +
+            //            $"Consider creating 'PrimaryKey' in the {tableName} and set the 'qualifiers' to NULL.");
+            //    }
+            //}
 
-            // Clear the builder
-            builder.Clear();
+            //// Initialize the builder
+            //var builder = queryBuilder ?? new QueryBuilder();
 
-            // Iterate the indexes
-            for (var index = 0; index < batchSize; index++)
-            {
-                // Build the query
-                builder
-                    .Insert()
-                    .Into()
-                    .TableNameFrom(tableName, DbSetting)
-                    .OpenParen()
-                    .FieldsFrom(fields, DbSetting)
-                    .CloseParen()
-                    .Values()
-                    .OpenParen()
-                    .ParametersFrom(fields, index, DbSetting)
-                    .CloseParen()
-                    .WriteText("ON DUPLICATE KEY")
-                    .Update()
-                    .FieldsAndParametersFrom(fields, index, DbSetting)
-                    .End();
+            //// Variables needed
+            //var databaseType = "BIGINT";
 
-                // Check both primary and identity
-                if (identityField != null && !string.Equals(identityField.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase))
-                {
-                    result = $"(CASE WHEN {identityField.Name.AsParameter(index, DbSetting)} > 0 THEN " +
-                        $"{identityField.Name.AsParameter(index, DbSetting)} ELSE " +
-                        $"{primaryField.Name.AsParameter(index, DbSetting)} END)";
-                }
-                else
-                {
-                    result = $"COALESCE({primaryField.Name.AsParameter(index, DbSetting)}, LAST_INSERT_ID())";
-                }
+            //// Set the return value
+            //var result = (string)null;
 
-                if (!string.IsNullOrEmpty(result))
-                {
-                    // Set the result
-                    builder
-                        .Select()
-                        .WriteText(string.Concat(result, " AS ", "Id".AsQuoted(DbSetting), ","))
-                        .WriteText(string.Concat($"{DbSetting.ParameterPrefix}__RepoDb_OrderColumn_{index}", " AS ", "OrderColumn".AsQuoted(DbSetting)));
-                }
+            //// Set the type
+            //if (identityField != null)
+            //{
+            //    var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
+            //    if (dbType != null)
+            //    {
+            //        databaseType = new DbTypeToSqLiteStringNameResolver().Resolve(dbType.Value);
+            //    }
+            //}
 
-                // End the builder
-                builder
-                    .End();
-            }
+            //// Clear the builder
+            //builder.Clear();
 
-            // Return the query
-            return builder.GetString();
-        }
+            //// Iterate the indexes
+            //for (var index = 0; index < batchSize; index++)
+            //{
+            //    // Build the query
+            //    builder
+            //        .Insert()
+            //        .Or()
+            //        .Replace()
+            //        .Into()
+            //        .TableNameFrom(tableName, DbSetting)
+            //        .OpenParen()
+            //        .FieldsFrom(fields, DbSetting)
+            //        .CloseParen()
+            //        .Values()
+            //        .OpenParen()
+            //        .ParametersFrom(fields, index, DbSetting)
+            //        .CloseParen()
+            //        .End();
 
-        #endregion
+            //    // Check both primary and identity
+            //    if (identityField != null)
+            //    {
+            //        result = string.Concat($"CAST(COALESCE(last_insert_rowid(), {primaryField.Name.AsParameter(index, DbSetting)}) AS {databaseType})");
+            //    }
+            //    else
+            //    {
+            //        result = string.Concat($"CAST({primaryField.Name.AsParameter(index, DbSetting)} AS {databaseType})");
+            //    }
 
-        #region CreateMin
+            //    if (!string.IsNullOrEmpty(result))
+            //    {
+            //        // Set the result
+            //        builder
+            //            .Select()
+            //            .WriteText(result)
+            //            .As("Result".AsQuoted(DbSetting))
+            //            .End();
+            //    }
+            //}
 
-        /// <summary>
-        /// Creates a SQL Statement for minimum operation.
-        /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="field">The field to be minimumd.</param>
-        /// <param name="where">The query expression.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <returns>A sql statement for minimum operation.</returns>
-        public override string CreateMin(QueryBuilder queryBuilder,
-            string tableName,
-            Field field,
-            QueryGroup where = null,
-            string hints = null)
-        {
-            var result = base.CreateMin(queryBuilder,
-                tableName,
-                field,
-                where,
-                hints);
-
-            // Return the query
-            return result.Replace("MIN (", "MIN(");
-        }
-
-        #endregion
-
-        #region CreateMinAll
-
-        /// <summary>
-        /// Creates a SQL Statement for minimum-all operation.
-        /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="field">The field to be minimumd.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <returns>A sql statement for minimum-all operation.</returns>
-        public override string CreateMinAll(QueryBuilder queryBuilder,
-            string tableName,
-            Field field,
-            string hints = null)
-        {
-            var result = base.CreateMinAll(queryBuilder,
-                tableName,
-                field,
-                hints);
-
-            // Return the query
-            return result.Replace("MIN (", "MIN(");
+            //// Return the query
+            //return builder.GetString();
         }
 
         #endregion
@@ -666,7 +565,6 @@ namespace RepoDb.StatementBuilders
                 .FieldsFrom(fields, DbSetting)
                 .From()
                 .TableNameFrom(tableName, DbSetting)
-                .HintsFrom(hints)
                 .WhereFrom(where, DbSetting)
                 .OrderByFrom(orderBy, DbSetting);
             if (top > 0)
@@ -681,57 +579,35 @@ namespace RepoDb.StatementBuilders
 
         #endregion
 
-        #region CreateSum
+        #region CreateTruncate
 
         /// <summary>
-        /// Creates a SQL Statement for sum operation.
+        /// Creates a SQL Statement for truncate operation.
         /// </summary>
         /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
-        /// <param name="field">The field to be sumd.</param>
-        /// <param name="where">The query expression.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <returns>A sql statement for sum operation.</returns>
-        public override string CreateSum(QueryBuilder queryBuilder,
-            string tableName,
-            Field field,
-            QueryGroup where = null,
-            string hints = null)
+        /// <returns>A sql statement for truncate operation.</returns>
+        public override string CreateTruncate(QueryBuilder queryBuilder,
+            string tableName)
         {
-            var result = base.CreateSum(queryBuilder,
-                tableName,
-                field,
-                where,
-                hints);
+            // Ensure with guards
+            GuardTableName(tableName);
+
+            // Initialize the builder
+            var builder = queryBuilder ?? new QueryBuilder();
+
+            // Build the query
+            builder.Clear()
+                .Clear()
+                .Delete()
+                .From()
+                .TableNameFrom(tableName, DbSetting)
+                .End()
+                .WriteText("VACUUM")
+                .End();
 
             // Return the query
-            return result.Replace("SUM (", "SUM(");
-        }
-
-        #endregion
-
-        #region CreateSumAll
-
-        /// <summary>
-        /// Creates a SQL Statement for sum-all operation.
-        /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
-        /// <param name="tableName">The name of the target table.</param>
-        /// <param name="field">The field to be sumd.</param>
-        /// <param name="hints">The table hints to be used.</param>
-        /// <returns>A sql statement for sum-all operation.</returns>
-        public override string CreateSumAll(QueryBuilder queryBuilder,
-            string tableName,
-            Field field,
-            string hints = null)
-        {
-            var result = base.CreateSumAll(queryBuilder,
-                tableName,
-                field,
-                hints);
-
-            // Return the query
-            return result.Replace("SUM (", "SUM(");
+            return builder.GetString();
         }
 
         #endregion
