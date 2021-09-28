@@ -35,7 +35,7 @@ RepoDB is an open-source .NET ORM library that bridges the gaps of micro-ORMs an
 - [Transaction](http://repodb.net/feature/transaction)
 - [Type Mapping](http://repodb.net/feature/typemapping)
 
-## Community engagements
+## Community Engagements
 
 - [GitHub](https://github.com/mikependon/RepoDb/issues) - for any issues, requests and problems.
 - [StackOverflow](https://stackoverflow.com/search?q=RepoDB) - for any technical questions.

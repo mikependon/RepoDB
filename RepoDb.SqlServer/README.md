@@ -5,7 +5,7 @@
 [![SqlServerUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-iqu81?&logo=appveyor&label=unit%20tests)](https://ci.appveyor.com/project/mikependon/repodb-iqu81/build/tests)
 [![SqlServerIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-qja7a?&logo=appveyor&label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-qja7a/build/tests)
 
-# RepoDb.SqlServer - a hybrid .NET ORM library for SqlServer.
+# [RepoDb.SqlServer](https://repodb.net/tutorial/get-started-sqlserver) - a hybrid .NET ORM library for SQL Server.
 
 RepoDB is an open-source .NET ORM library that bridges the gaps of micro-ORMs and full-ORMs. It helps you simplify the switch-over of when to use the BASIC and ADVANCE operations during the development.
 
@@ -14,7 +14,7 @@ RepoDB is an open-source .NET ORM library that bridges the gaps of micro-ORMs an
 - [GitHub Home Page](https://github.com/mikependon/RepoDb) - to learn more about the core library.
 - [Website](http://repodb.net) - docs, features, classes, references, releases and blogs.
 
-## Community engagements
+## Community Engagements
 
 - [GitHub](https://github.com/mikependon/RepoDb/issues) - for any issues, requests and problems.
 - [StackOverflow](https://stackoverflow.com/search?q=RepoDB) - for any technical questions.

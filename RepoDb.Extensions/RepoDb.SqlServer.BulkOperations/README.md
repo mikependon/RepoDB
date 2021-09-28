@@ -31,7 +31,7 @@ The bulk operations can hugely improve the performance by more than 90% when pro
 - [BulkMerge](#bulkmerge)
 - [BulkUpdate](#bulkupdate)
 
-## Community engagements
+## Community Engagements
 
 - [GitHub](https://github.com/mikependon/RepoDb/issues) - for any issues, requests and problems.
 - [StackOverflow](https://stackoverflow.com/search?q=RepoDB) - for any technical questions.
