@@ -5,7 +5,7 @@
 [![PostgreSqlUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-a63f5?&logo=appveyor&label=unit%20tests)](https://ci.appveyor.com/project/mikependon/repodb-a63f5/build/tests)
 [![PostgreSqlIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-uf6o7?&logo=appveyor&label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-uf6o7/build/tests)
 
-# RepoDb.PostgreSql - a hybrid .NET ORM library for PostgreSQL.
+# [RepoDb.PostgreSql](https://repodb.net/tutorial/get-started-postgresql) - a hybrid .NET ORM library for PostgreSQL.
 
 RepoDB is an open-source .NET ORM library that bridges the gaps of micro-ORMs and full-ORMs. It helps you simplify the switch-over of when to use the BASIC and ADVANCE operations during the development.
 
@@ -14,7 +14,7 @@ RepoDB is an open-source .NET ORM library that bridges the gaps of micro-ORMs an
 - [GitHub Home Page](https://github.com/mikependon/RepoDb) - to learn more about the core library.
 - [Website](http://repodb.net) - docs, features, classes, references, releases and blogs.
 
-## Community engagements
+## Community Engagements
 
 - [GitHub](https://github.com/mikependon/RepoDb/issues) - for any issues, requests and problems.
 - [StackOverflow](https://stackoverflow.com/search?q=RepoDB) - for any technical questions.

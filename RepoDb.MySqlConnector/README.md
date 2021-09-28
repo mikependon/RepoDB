@@ -5,7 +5,7 @@
 [![MySqlConnectorUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-pqvj7?&logo=appveyor&label=unit%20tests)](https://ci.appveyor.com/project/mikependon/repodb-pqvj7/build/tests)
 [![MySqlConnectorIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-4iutn?&logo=appveyor&label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-4iutn/build/tests)
 
-# RepoDb.MySqlConnector - a hybrid .NET ORM library for MySQL (using MySqlConnector)
+# [RepoDb.MySqlConnector](https://repodb.net/tutorial/get-started-mysql) - a hybrid .NET ORM library for MySQL (using MySqlConnector)
 
 RepoDB is an open-source .NET ORM library that bridges the gaps of micro-ORMs and full-ORMs. It helps you simplify the switch-over of when to use the BASIC and ADVANCE operations during the development.
 
@@ -14,7 +14,7 @@ RepoDB is an open-source .NET ORM library that bridges the gaps of micro-ORMs an
 - [GitHub Home Page](https://github.com/mikependon/RepoDb) - to learn more about the core library.
 - [Website](http://repodb.net) - docs, features, classes, references, releases and blogs.
 
-## Community engagements
+## Community Engagements
 
 - [GitHub](https://github.com/mikependon/RepoDb/issues) - for any issues, requests and problems.
 - [StackOverflow](https://stackoverflow.com/search?q=RepoDB) - for any technical questions.

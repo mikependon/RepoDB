@@ -1,11 +1,11 @@
-[![SqLiteBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-o6787?&logo=appveyor)](https://ci.appveyor.com/project/mikependon/repodb-o6787)
-[![SqLiteHome](https://img.shields.io/badge/home-github-important?&logo=github)](https://github.com/mikependon/RepoDb)
-[![SqLiteVersion](https://img.shields.io/nuget/v/RepoDb.SqLite?&logo=nuget)](https://www.nuget.org/packages/RepoDb.SqLite)
-[![SqLiteReleases](https://img.shields.io/badge/releases-core-important?&logo=nuget)](http://repodb.net/release/sqlite)
-[![SqLiteUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-mhpo4?&logo=appveyor&label=unit%20tests)](https://ci.appveyor.com/project/mikependon/repodb-mhpo4/build/tests)
-[![SqLiteIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-eg27p?&logo=appveyor&label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-eg27p/build/tests)
+[![SqLiteSystemBuild](https://img.shields.io/appveyor/ci/mikependon/repodb-n4lwf?&logo=appveyor)](https://ci.appveyor.com/project/mikependon/repodb-n4lwf)
+[![SqLiteSystemHome](https://img.shields.io/badge/home-github-important?&logo=github)](https://github.com/mikependon/RepoDb)
+[![SqLiteSystemVersion](https://img.shields.io/nuget/v/RepoDb.SQLite.System?&logo=nuget)](https://www.nuget.org/packages/RepoDb.SQLite.System)
+[![SqLiteSystemReleases](https://img.shields.io/badge/releases-core-important?&logo=nuget)](http://repodb.net/release/sqlite)
+[![SqLiteSystemUnitTests](https://img.shields.io/appveyor/tests/mikependon/repodb-pb8kh?&logo=appveyor&label=unit%20tests)](https://ci.appveyor.com/project/mikependon/repodb-pb8kh/build/tests)
+[![SqLiteSystemIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-n01df?&logo=appveyor&label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-n01df/build/tests)
 
-# RepoDb.SqLite - a hybrid .NET ORM library for SQLite.
+# [RepoDb.SQLite.System](https://repodb.net/tutorial/get-started-sqlite) - a hybrid .NET ORM library for SQLite (using System.Data.SQLite.Core).
 
 RepoDB is an open-source .NET ORM library that bridges the gaps of micro-ORMs and full-ORMs. It helps you simplify the switch-over of when to use the BASIC and ADVANCE operations during the development.
 
@@ -14,7 +14,7 @@ RepoDB is an open-source .NET ORM library that bridges the gaps of micro-ORMs an
 - [GitHub Home Page](https://github.com/mikependon/RepoDb) - to learn more about the core library.
 - [Website](http://repodb.net) - docs, features, classes, references, releases and blogs.
 
-## Community engagements
+## Community Engagements
 
 - [GitHub](https://github.com/mikependon/RepoDb/issues) - for any issues, requests and problems.
 - [StackOverflow](https://stackoverflow.com/search?q=RepoDB) - for any technical questions.
@@ -24,7 +24,7 @@ RepoDB is an open-source .NET ORM library that bridges the gaps of micro-ORMs an
 ## Dependencies
 
 - [RepoDb](https://www.nuget.org/packages/RepoDb/) - the core library of RepoDB.
-- [System.Data.SQLite.Core](https://www.nuget.org/packages/System.Data.SQLite.Core/) - the data provider used for SqLite (SQLite).
+- [System.Data.SQLite.Core](https://www.nuget.org/packages/System.Data.SQLite.Core/) - the data provider used for SQLite (System).
 
 ## License
 
