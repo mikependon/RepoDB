@@ -1999,10 +1999,21 @@ namespace RepoDb
         ///
         /// </summary>
         /// <param name="tableName"></param>
+        /// <param name="dbField"></param>
+        /// <returns></returns>
+        internal static DbField GetAndGuardPrimaryKeyOrIdentityKey(string tableName,
+            DbField dbField) =>
+            dbField ?? throw GetKeyFieldNotFoundException(tableName);
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="tableName"></param>
         /// <param name="field"></param>
         /// <returns></returns>
-        internal static Field GetAndGuardPrimaryKeyOrIdentityKey(string tableName, Field field) =>
-            field ?? throw new KeyFieldNotFoundException($"No primary key and identity key found at the table '{tableName}'.");
+        internal static Field GetAndGuardPrimaryKeyOrIdentityKey(string tableName,
+            Field field) =>
+            field ?? throw GetKeyFieldNotFoundException(tableName);
 
         /// <summary>
         ///
@@ -2011,69 +2022,92 @@ namespace RepoDb
         /// <param name="dbFields"></param>
         /// <returns></returns>
         internal static Field GetAndGuardPrimaryKeyOrIdentityKey(Type entityType,
+            IEnumerable<DbField> dbFields) =>
+            entityType == null ? null :
+            entityType.IsDictionaryStringObject() ?
+                GetAndGuardPrimaryKeyOrIdentityKeyForDictionaryStringObject(entityType, dbFields) :
+                GetAndGuardPrimaryKeyOrIdentityKeyForEntity(entityType, dbFields);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="dbFields"></param>
+        /// <returns></returns>
+        internal static Field GetAndGuardPrimaryKeyOrIdentityKeyForDictionaryStringObject(Type type,
             IEnumerable<DbField> dbFields)
         {
-            if (entityType == null)
+            // Primary/Identity
+            var dbField = dbFields?.FirstOrDefault(df => df.IsPrimary == true) ??
+                dbFields?.FirstOrDefault(df => df.IsPrimary == true) ??
+                dbFields?.FirstOrDefault(df => df.Name == "Id");
+
+            // Return
+            if (dbField == null)
             {
-                return null;
-            }
-
-            // Properties
-            var key = (Field)null;
-
-            if (entityType.IsDictionaryStringObject())
-            {
-                // Primary/Identity
-                var dbField = dbFields?.FirstOrDefault(df => df.IsPrimary == true) ??
-                    dbFields?.FirstOrDefault(df => df.IsPrimary == true) ??
-                    dbFields?.FirstOrDefault(df => df.Name == "Id");
-
-                // Set the key
-                key = dbField?.AsField();
-
-                // Return
-                if (key == null)
-                {
-                    throw new KeyFieldNotFoundException($"No primary key and identify found at the target table and also to the given '{entityType.FullName}' object.");
-                }
-            }
-            else
-            {
-                // Properties
-                var properties = PropertyCache.Get(entityType) ?? entityType.GetClassProperties();
-                var property = (ClassProperty)null;
-
-                // Primary
-                if (property == null)
-                {
-                    var dbField = dbFields?.FirstOrDefault(df => df.IsPrimary == true);
-                    property = properties?.FirstOrDefault(p =>
-                         string.Equals(p.GetMappedName(), dbField?.Name, StringComparison.OrdinalIgnoreCase)) ??
-                         PrimaryCache.Get(entityType);
-                }
-
-                // Identity
-                if (property == null)
-                {
-                    var dbField = dbFields?.FirstOrDefault(df => df.IsIdentity == true);
-                    property = properties?.FirstOrDefault(p =>
-                         string.Equals(p.GetMappedName(), dbField?.Name, StringComparison.OrdinalIgnoreCase)) ??
-                         PrimaryCache.Get(entityType);
-                }
-
-                // Set the key
-                key = property?.AsField();
-
-                // Return
-                if (key == null)
-                {
-                    throw new KeyFieldNotFoundException($"No primary key and identify found at type '{entityType.FullName}'.");
-                }
+                throw GetKeyFieldNotFoundException(type);
             }
 
             // Return
-            return key;
+            return dbField?.AsField();
         }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="dbFields"></param>
+        /// <returns></returns>
+        internal static Field GetAndGuardPrimaryKeyOrIdentityKeyForEntity(Type type,
+            IEnumerable<DbField> dbFields)
+        {
+            // Properties
+            var properties = PropertyCache.Get(type) ?? type.GetClassProperties();
+            var property = (ClassProperty)null;
+
+            // Primary
+            if (property == null)
+            {
+                var dbField = dbFields?.FirstOrDefault(df => df.IsPrimary == true);
+                property = properties?.FirstOrDefault(p =>
+                     string.Equals(p.GetMappedName(), dbField?.Name, StringComparison.OrdinalIgnoreCase)) ??
+                     PrimaryCache.Get(type);
+            }
+
+            // Identity
+            if (property == null)
+            {
+                var dbField = dbFields?.FirstOrDefault(df => df.IsIdentity == true);
+                property = properties?.FirstOrDefault(p =>
+                     string.Equals(p.GetMappedName(), dbField?.Name, StringComparison.OrdinalIgnoreCase)) ??
+                     PrimaryCache.Get(type);
+            }
+
+            // Return
+            if (property == null)
+            {
+                throw GetKeyFieldNotFoundException(type);
+            }
+
+            // Return
+            return property?.AsField();
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        internal static KeyFieldNotFoundException GetKeyFieldNotFoundException(string context) =>
+            new KeyFieldNotFoundException($"No primary key and identity key found at the '{context}'.");
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        internal static KeyFieldNotFoundException GetKeyFieldNotFoundException(Type type) =>
+            new KeyFieldNotFoundException($"No primary key and identify found at the target table and also to the given '{type.FullName}' object.");
 
         /// <summary>
         ///
@@ -2107,22 +2141,6 @@ namespace RepoDb
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
             var dbField = dbFields?.FirstOrDefault(df => df.IsPrimary == true) ?? dbFields?.FirstOrDefault(df => df.IsIdentity == true);
             return GetAndGuardPrimaryKeyOrIdentityKey(tableName, dbField);
-        }
-
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="tableName"></param>
-        /// <param name="dbField"></param>
-        /// <returns></returns>
-        internal static DbField GetAndGuardPrimaryKeyOrIdentityKey(string tableName,
-            DbField dbField)
-        {
-            if (dbField == null)
-            {
-                throw new KeyFieldNotFoundException($"No primary key and identity key found at the table '{tableName}'.");
-            }
-            return dbField;
         }
 
         #endregion
