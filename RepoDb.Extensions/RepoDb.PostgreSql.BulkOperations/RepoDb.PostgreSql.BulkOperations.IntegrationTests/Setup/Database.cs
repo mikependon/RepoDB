@@ -14,33 +14,29 @@ namespace RepoDb.IntegrationTests.Setup
         /// </summary>
         public static void Initialize()
         {
-            // Get the connection string
-            var connectionStringForMaster = Environment.GetEnvironmentVariable("REPODB_CONSTR_MASTER", EnvironmentVariableTarget.Process);
-            var connectionString = Environment.GetEnvironmentVariable("REPODB_CONSTR", EnvironmentVariableTarget.Process);
-
-            // Master connection
-            ConnectionStringForMaster = (connectionStringForMaster ?? @"Server=(local);Database=master;Integrated Security=False;User Id=michael;Password=Password123;");
-
-            // RepoDb connection
-            ConnectionStringForRepoDb = (connectionString ?? @"Server=(local);Database=RepoDb;Integrated Security=False;User Id=michael;Password=Password123;");
-
-            // Initialize the SqlServer
+            // Set the connection string
+            ConnectionStringForPosgres = Environment.GetEnvironmentVariable("REPODB_CONSTR_POSTGRESDB", EnvironmentVariableTarget.Process) ??
+                "Server=127.0.0.1;Port=5432;Database=postgres;User Id=postgres;Password=Password123;";
+            ConnectionStringForRepoDb = Environment.GetEnvironmentVariable("REPODB_CONSTR", EnvironmentVariableTarget.Process)??
+                "Server=127.0.0.1;Port=5432;Database=RepoDb;User Id=postgres;Password=Password123;";
+            
+            // Initialize PostgreSql
             PostgreSqlBootstrap.Initialize();
 
-            // Create the database first
+            // Create databases
             CreateDatabase();
 
-            // Create the tables
+            // Create tables
             CreateTables();
         }
 
         /// <summary>
-        /// Gets the connection string for master.
+        /// Gets or sets the connection string to be used for Postgres database.
         /// </summary>
-        public static string ConnectionStringForMaster { get; private set; }
+        public static string ConnectionStringForPosgres { get; private set; }
 
         /// <summary>
-        /// Gets the connection string for RepoDb.
+        /// Gets or sets the connection string to be used.
         /// </summary>
         public static string ConnectionStringForRepoDb { get; private set; }
 
@@ -51,13 +47,16 @@ namespace RepoDb.IntegrationTests.Setup
         /// </summary>
         public static void CreateDatabase()
         {
-            var commandText = @"IF (NOT EXISTS(SELECT * FROM sys.databases WHERE name = 'RepoDb'))
-                BEGIN
-	                CREATE DATABASE [RepoDb];
-                END";
-            using (var connection = new NpgsqlConnection(ConnectionStringForMaster).EnsureOpen())
+            using (var connection = new NpgsqlConnection(ConnectionStringForPosgres))
             {
-                connection.ExecuteNonQuery(commandText);
+                var recordCount = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM pg_database WHERE datname = 'RepoDb';");
+                if (recordCount <= 0)
+                {
+                    connection.ExecuteNonQuery(@"CREATE DATABASE ""RepoDb""
+                        WITH OWNER = ""postgres""
+                        ENCODING = ""UTF8""
+                        CONNECTION LIMIT = -1;");
+                }
             }
         }
 
@@ -89,27 +88,34 @@ namespace RepoDb.IntegrationTests.Setup
         /// </summary>
         public static void CreateBulkOperationIdentityTable()
         {
-            var commandText = @"IF (NOT EXISTS(SELECT 1 FROM [sys].[objects] WHERE type = 'U' AND name = 'BulkOperationIdentityTable'))
-                BEGIN
-	                CREATE TABLE [dbo].[BulkOperationIdentityTable]
-	                (
-		                [Id] BIGINT NOT NULL IDENTITY(1, 1),
-                        [RowGuid] UNIQUEIDENTIFIER NOT NULL,
-		                [ColumnBit] BIT NULL,
-		                [ColumnDateTime] DATETIME NULL,
-		                [ColumnDateTime2] DATETIME2(7) NULL,
-		                [ColumnDecimal] DECIMAL(18, 2) NULL,
-		                [ColumnFloat] FLOAT NULL,
-		                [ColumnInt] INT NULL,
-		                [ColumnNVarChar] NVARCHAR(MAX) NULL,
-                        CONSTRAINT [PK_BulkOperationIdentityTable] PRIMARY KEY CLUSTERED 
-                        (
-	                        [Id] ASC
-                        )
-                        WITH (FILLFACTOR = 90) ON [PRIMARY]
-	                ) ON [PRIMARY];
-                END";
-            using (var connection = new NpgsqlConnection(ConnectionStringForRepoDb).EnsureOpen())
+            var commandText = @"CREATE TABLE IF NOT EXISTS public.""BulkOperationIdentityTable""
+                (
+                        ""Id"" bigint GENERATED ALWAYS AS IDENTITY,
+                        ""ColumnChar"" ""char"",
+                        ""ColumnBigInt"" bigint,
+                        ""ColumnBit"" bit(1),
+                        ""ColumnBoolean"" boolean,
+                        ""ColumnDate"" date,
+                        ""ColumnInteger"" integer,
+                        ""ColumnMoney"" money,
+                        ""ColumnNumeric"" numeric,
+                        ""ColumnReal"" real,
+                        ""ColumnSerial"" integer,
+                        ""ColumnSmallInt"" smallint,
+                        ""ColumnSmallSerial"" smallint,
+                        ""ColumnText"" text COLLATE pg_catalog.""default"",
+                        ""ColumnTimeWithTimeZone"" time with time zone,
+                        ""ColumnTimeWithoutTimeZone"" time without time zone,
+                        ""ColumnTimestampWithTimeZone"" timestamp with time zone,
+                        ""ColumnTimestampWithoutTimeZone"" timestamp without time zone,
+                        CONSTRAINT ""BulkOperationIdentityTable_PrimaryKey"" PRIMARY KEY (""Id"")
+                    )
+
+                    TABLESPACE pg_default;
+
+                    ALTER TABLE public.""BulkOperationIdentityTable""
+                        OWNER to postgres;";
+            using (var connection = new NpgsqlConnection(ConnectionStringForRepoDb))
             {
                 connection.ExecuteNonQuery(commandText);
             }

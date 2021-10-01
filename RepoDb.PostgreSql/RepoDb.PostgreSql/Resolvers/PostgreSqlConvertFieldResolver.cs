@@ -6,7 +6,7 @@ using System.Data;
 namespace RepoDb.Resolvers
 {
     /// <summary>
-    /// A class used to resolve the <see cref="Field"/> name conversion for PostgreSql.
+    /// A class that is being used to resolve the <see cref="Field"/> name conversion for PostgreSql.
     /// </summary>
     public class PostgreSqlConvertFieldResolver : DbConvertFieldResolver
     {

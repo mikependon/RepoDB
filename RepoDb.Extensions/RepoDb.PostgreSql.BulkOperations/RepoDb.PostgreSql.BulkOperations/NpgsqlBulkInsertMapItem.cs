@@ -1,4 +1,6 @@
 ﻿using NpgsqlTypes;
+using RepoDb.Resolvers;
+using System;
 
 namespace RepoDb.PostgreSql.BulkOperations
 {
@@ -12,7 +14,22 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// </summary>
         /// <param name="sourceColumn">The name of the source column or property. This respects the mapping of the properties if the source type is an entity model.</param>
         /// <param name="destinationColumn">The name of the destination column in the database.</param>
-        /// <param name="npgsqlDbType">The <see cref="NpgsqlDbType"/> type value to be used when writing.</param>
+        /// <param name="type">
+        /// The type to be identified for <see cref="NpgsqlTypes.NpgsqlDbType"/>. The <see cref="ClientTypeToNpgsqlDbTypeResolver"/> object
+        /// is used for identification.
+        /// </param>
+        public NpgsqlBulkInsertMapItem(string sourceColumn,
+            string destinationColumn,
+            Type type) :
+            this(sourceColumn, destinationColumn, new ClientTypeToNpgsqlDbTypeResolver().Resolve(type))
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="BulkInsertMapItem"/> object.
+        /// </summary>
+        /// <param name="sourceColumn">The name of the source column or property. This respects the mapping of the properties if the source type is an entity model.</param>
+        /// <param name="destinationColumn">The name of the destination column in the database.</param>
+        /// <param name="npgsqlDbType">The <see cref="NpgsqlTypes.NpgsqlDbType"/> value to be used when writing.</param>
         public NpgsqlBulkInsertMapItem(string sourceColumn,
             string destinationColumn,
             NpgsqlDbType? npgsqlDbType) :

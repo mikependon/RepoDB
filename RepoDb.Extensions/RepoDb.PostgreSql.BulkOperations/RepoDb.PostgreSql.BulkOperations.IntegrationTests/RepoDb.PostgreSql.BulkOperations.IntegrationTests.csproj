@@ -7,9 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Operations\System.Data.SqlClient\**" />
-    <EmbeddedResource Remove="Operations\System.Data.SqlClient\**" />
-    <None Remove="Operations\System.Data.SqlClient\**" />
+    <Compile Remove="Operations\**" />
+    <EmbeddedResource Remove="Operations\**" />
+    <None Remove="Operations\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Helper.cs" />
   </ItemGroup>
 
   <ItemGroup>

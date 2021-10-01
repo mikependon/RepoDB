@@ -5,13 +5,22 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Models
     public class BulkOperationIdentityTable
     {
         public long Id { get; set; }
-        public Guid RowGuid { get; set; }
+        public char? ColumnChar { get; set; }
+        public long? ColumnBigInt { get; set; }
         public bool? ColumnBit { get; set; }
-        public DateTime? ColumnDateTime { get; set; }
-        public DateTime? ColumnDateTime2 { get; set; }
-        public decimal? ColumnDecimal { get; set; }
-        public double? ColumnFloat { get; set; }
-        public int? ColumnInt { get; set; }
-        public string ColumnNVarChar { get; set; }
+        public bool? ColumnBoolean { get; set; }
+        public DateTime? ColumnDate { get; set; }
+        public int? ColumnInteger { get; set; }
+        public decimal ColumnMoney { get; set; }
+        public decimal? ColumnNumeric { get; set; }
+        public decimal? ColumnReal { get; set; }
+        public int? ColumnSerial { get; set; }
+        public short? ColumnSmallInt { get; set; }
+        public short? ColumnSmallSerial { get; set; }
+        public string ColumnText { get; set; }
+        public DateTime? ColumnTimeWithTimeZone { get; set; }
+        public DateTime? ColumnTimeWithoutTimeZone { get; set; }
+        public DateTime? ColumnTimestampWithTimeZone { get; set; }
+        public DateTime? ColumnTimestampWithoutTimeZone { get; set; }
     }
 }
