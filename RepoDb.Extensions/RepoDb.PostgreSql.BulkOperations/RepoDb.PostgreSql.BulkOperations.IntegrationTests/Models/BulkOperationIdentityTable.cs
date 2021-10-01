@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Models
+namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Models
 {
     public class BulkOperationIdentityTable
     {

@@ -7,17 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Operations\Microsoft.Data.SqlClient\BaseRepository\**" />
-    <Compile Remove="Operations\Microsoft.Data.SqlClient\DbRepository\**" />
-    <Compile Remove="Operations\Microsoft.Data.SqlClient\SqlConnection\**" />
     <Compile Remove="Operations\System.Data.SqlClient\**" />
-    <EmbeddedResource Remove="Operations\Microsoft.Data.SqlClient\BaseRepository\**" />
-    <EmbeddedResource Remove="Operations\Microsoft.Data.SqlClient\DbRepository\**" />
-    <EmbeddedResource Remove="Operations\Microsoft.Data.SqlClient\SqlConnection\**" />
     <EmbeddedResource Remove="Operations\System.Data.SqlClient\**" />
-    <None Remove="Operations\Microsoft.Data.SqlClient\BaseRepository\**" />
-    <None Remove="Operations\Microsoft.Data.SqlClient\DbRepository\**" />
-    <None Remove="Operations\Microsoft.Data.SqlClient\SqlConnection\**" />
     <None Remove="Operations\System.Data.SqlClient\**" />
   </ItemGroup>
 
@@ -33,8 +24,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
-    <ProjectReference Include="..\..\..\RepoDb.SqlServer\RepoDb.SqlServer\RepoDb.SqlServer.csproj" />
-    <ProjectReference Include="..\RepoDb.SqlServer.BulkOperations\RepoDb.SqlServer.BulkOperations.csproj" />
+    <ProjectReference Include="..\..\..\RepoDb.PostgreSql\RepoDb.PostgreSql\RepoDb.PostgreSql.csproj" />
+    <ProjectReference Include="..\RepoDb.PostgreSql.BulkOperations\RepoDb.PostgreSql.BulkOperations.csproj" />
   </ItemGroup>
 
 </Project>

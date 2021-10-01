@@ -1,19 +1,18 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RepoDb.Exceptions;
+using Npgsql;
 using RepoDb.Extensions;
 using RepoDb.IntegrationTests.Setup;
-using RepoDb.SqlServer.BulkOperations.IntegrationTests.Models;
+using RepoDb.PostgreSql.BulkOperations.IntegrationTests.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using Microsoft.Data.SqlClient;
 using System.Linq;
 
-namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
+namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
 {
     [TestClass]
-    public class MicrosoftSqlConnectionBulkUpdateOperationsTest
+    public class NpgsqlConnectionBulkDeleteOperationsTest
     {
         [TestInitialize]
         public void Initialize()
@@ -28,108 +27,115 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             Database.Cleanup();
         }
 
-        #region BulkUpdate<TEntity>
+        #region BulkDelete<TEntity>
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateForEntities()
+        public void TestNpgsqlConnectionBulkDeleteForEntitiesViaPrimaryKeys()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 connection.InsertAll(tables);
 
                 // Setup
-                Helper.UpdateBulkOperationIdentityTables(tables);
+                var primaryKeys = tables.Select(e => (object)e.Id);
 
                 // Act
-                var bulkUpdateResult = connection.BulkUpdate(tables);
+                var bulkDeleteResult = connection.BulkDelete<BulkOperationIdentityTable>(primaryKeys);
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
 
                 // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+                var countResult = connection.CountAll<BulkOperationIdentityTable>();
 
                 // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
-                });
+                Assert.AreEqual(0, countResult);
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateForEntitiesWithQualifiers()
+        public void TestNpgsqlConnectionBulkDeleteForEntities()
         {
             // Setup
-            var tables = Helper.CreateBulkOperationIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 connection.InsertAll(tables);
 
-                // Setup
-                Helper.UpdateBulkOperationIdentityTables(tables);
+                // Act
+                var bulkDeleteResult = connection.BulkDelete(tables);
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
 
                 // Act
-                var bulkUpdateResult = connection.BulkUpdate(tables,
+                var countResult = connection.CountAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(0, countResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestNpgsqlConnectionBulkDeleteForEntitiesWithQualifiers()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10).AsList();
+
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var bulkDeleteResult = connection.BulkDelete(tables,
                     qualifiers: e => new { e.RowGuid, e.ColumnInt });
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
 
                 // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+                var countResult = connection.CountAll<BulkOperationIdentityTable>();
 
                 // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
-                });
+                Assert.AreEqual(0, countResult);
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateForEntitiesWithUsePhysicalPseudoTempTable()
+        public void TestNpgsqlConnectionBulkDeleteForEntitiesWithUsePhysicalPseudoTempTable()
         {
             // Setup
-            var tables = Helper.CreateBulkOperationIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 connection.InsertAll(tables);
 
-                // Setup
-                Helper.UpdateBulkOperationIdentityTables(tables);
-
                 // Act
-                var bulkUpdateResult = connection.BulkUpdate(tables,
+                var bulkDeleteResult = connection.BulkDelete(tables,
                     usePhysicalPseudoTempTable: true);
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
 
                 // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+                var countResult = connection.CountAll<BulkOperationIdentityTable>();
 
                 // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
-                });
+                Assert.AreEqual(0, countResult);
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateForEntitiesWithMappings()
+        public void TestNpgsqlConnectionBulkDeleteForEntitiesWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -137,7 +143,6 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
 
             // Add the mappings
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
@@ -146,176 +151,140 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 connection.InsertAll(tables);
 
-                // Setup
-                Helper.UpdateBulkOperationIdentityTables(tables);
-
                 // Act
-                var bulkUpdateResult = connection.BulkUpdate(tables, mappings: mappings);
+                var bulkDeleteResult = connection.BulkDelete(tables);
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
 
                 // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+                var countResult = connection.CountAll<BulkOperationIdentityTable>();
 
                 // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
-                });
+                Assert.AreEqual(0, countResult);
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateForMappedEntities()
+        public void TestNpgsqlConnectionBulkDeleteForMappedEntities()
         {
             // Setup
-            var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
+            var tables = Helper.CreateBulkOperationMappedIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 connection.InsertAll(tables);
 
-                // Setup
-                Helper.UpdateBulkOperationMappedIdentityTables(tables);
-
                 // Act
-                var bulkUpdateResult = connection.BulkUpdate(tables);
+                var bulkDeleteResult = connection.BulkDelete(tables);
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
 
                 // Act
-                var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>();
+                var countResult = connection.CountAll<BulkOperationMappedIdentityTable>();
 
                 // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
-                });
+                Assert.AreEqual(0, countResult);
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateForMappedEntitiesWithQualifiers()
+        public void TestNpgsqlConnectionBulkDeleteForMappedEntitiesWithQualifiers()
         {
             // Setup
-            var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
+            var tables = Helper.CreateBulkOperationMappedIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 connection.InsertAll(tables);
 
-                // Setup
-                Helper.UpdateBulkOperationMappedIdentityTables(tables);
-
                 // Act
-                var bulkUpdateResult = connection.BulkUpdate(tables,
+                var bulkDeleteResult = connection.BulkDelete(tables,
                     qualifiers: e => new { e.RowGuidMapped, e.ColumnIntMapped });
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
 
                 // Act
-                var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>();
+                var countResult = connection.CountAll<BulkOperationMappedIdentityTable>();
 
                 // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
-                });
+                Assert.AreEqual(0, countResult);
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateForMappedEntitiesWithUsePhysicalPseudoTempTable()
+        public void TestNpgsqlConnectionBulkDeleteForMappedEntitiesWithUsePhysicalPseudoTempTable()
         {
             // Setup
-            var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
+            var tables = Helper.CreateBulkOperationMappedIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 connection.InsertAll(tables);
 
-                // Setup
-                Helper.UpdateBulkOperationMappedIdentityTables(tables);
-
                 // Act
-                var bulkUpdateResult = connection.BulkUpdate(tables,
+                var bulkDeleteResult = connection.BulkDelete(tables,
                     usePhysicalPseudoTempTable: true);
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
 
                 // Act
-                var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>();
+                var countResult = connection.CountAll<BulkOperationMappedIdentityTable>();
 
                 // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
-                });
+                Assert.AreEqual(0, countResult);
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateForMappedEntitiesWithMappings()
+        public void TestNpgsqlConnectionBulkDeleteForMappedEntitiesWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.IdMapped), nameof(BulkOperationIdentityTable.Id)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnBitMapped), nameof(BulkOperationIdentityTable.ColumnBit)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnDateTimeMapped), nameof(BulkOperationIdentityTable.ColumnDateTime)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnDateTime2Mapped), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnDecimalMapped), nameof(BulkOperationIdentityTable.ColumnDecimal)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnFloatMapped), nameof(BulkOperationIdentityTable.ColumnFloat)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnIntMapped), nameof(BulkOperationIdentityTable.ColumnInt)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnNVarCharMapped), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 connection.InsertAll(tables);
 
-                // Setup
-                Helper.UpdateBulkOperationMappedIdentityTables(tables);
-
                 // Act
-                var bulkUpdateResult = connection.BulkUpdate(tables, mappings: mappings);
+                var bulkDeleteResult = connection.BulkDelete(tables);
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
 
                 // Act
-                var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>();
+                var countResult = connection.CountAll<BulkOperationMappedIdentityTable>();
 
                 // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
-                });
+                Assert.AreEqual(0, countResult);
             }
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateForEntitiesIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnNpgsqlConnectionBulkDeleteForEntitiesIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -332,46 +301,52 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.BulkUpdate(tables, mappings: mappings);
+                connection.BulkDelete(tables, null, mappings);
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateForEntitiesDbDataReader()
+        public void TestNpgsqlConnectionBulkDeleteForEntitiesDbDataReader()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    using (var destinationConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkUpdateResult = destinationConnection.BulkUpdate<BulkOperationIdentityTable>((DbDataReader)reader);
+                        var bulkDeleteResult = destinationConnection.BulkDelete<BulkOperationIdentityTable>((DbDataReader)reader);
 
                         // Assert
-                        Assert.AreEqual(tables.Count, bulkUpdateResult);
+                        Assert.AreEqual(tables.Count, bulkDeleteResult);
+
+                        // Act
+                        var countResult = destinationConnection.CountAll<BulkOperationIdentityTable>();
+
+                        // Assert
+                        Assert.AreEqual(0, countResult);
                     }
                 }
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateForEntitiesDbDataReaderWithMappings()
+        public void TestNpgsqlConnectionBulkDeleteForEntitiesDbDataReaderWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -389,33 +364,38 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    using (var destinationConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkUpdateResult = destinationConnection.BulkUpdate<BulkOperationIdentityTable>((DbDataReader)reader,
-                            mappings: mappings);
+                        var bulkDeleteResult = destinationConnection.BulkDelete<BulkOperationIdentityTable>((DbDataReader)reader, null, mappings);
 
                         // Assert
-                        Assert.AreEqual(tables.Count, bulkUpdateResult);
+                        Assert.AreEqual(tables.Count, bulkDeleteResult);
+
+                        // Act
+                        var countResult = destinationConnection.CountAll<BulkOperationIdentityTable>();
+
+                        // Assert
+                        Assert.AreEqual(0, countResult);
                     }
                 }
             }
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateForEntitiesDbDataReaderIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnNpgsqlConnectionBulkDeleteForEntitiesDbDataReaderIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -433,42 +413,41 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    using (var destinationConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        destinationConnection.BulkUpdate<BulkOperationIdentityTable>((DbDataReader)reader,
-                            mappings: mappings);
+                        destinationConnection.BulkDelete<BulkOperationIdentityTable>((DbDataReader)reader, null, mappings);
                     }
                 }
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateForEntitiesDataTable()
+        public void TestNpgsqlConnectionBulkDeleteForEntitiesDataTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
@@ -478,13 +457,19 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        using (var destinationConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkUpdateResult = destinationConnection.BulkUpdate<BulkOperationIdentityTable>(table);
+                            var bulkDeleteResult = destinationConnection.BulkDelete<BulkOperationIdentityTable>(table);
 
                             // Assert
-                            Assert.AreEqual(tables.Count, bulkUpdateResult);
+                            Assert.AreEqual(tables.Count, bulkDeleteResult);
+
+                            // Act
+                            var countResult = destinationConnection.CountAll<BulkOperationIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(0, countResult);
                         }
                     }
                 }
@@ -492,7 +477,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateForEntitiesDataTableWithMappings()
+        public void TestNpgsqlConnectionBulkDeleteForEntitiesDataTableWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -510,13 +495,13 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
@@ -526,14 +511,19 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        using (var destinationConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkUpdateResult = destinationConnection.BulkUpdate<BulkOperationIdentityTable>(table,
-                                mappings: mappings);
+                            var bulkDeleteResult = destinationConnection.BulkDelete<BulkOperationIdentityTable>(table, null, DataRowState.Unchanged, mappings);
 
                             // Assert
-                            Assert.AreEqual(tables.Count, bulkUpdateResult);
+                            Assert.AreEqual(tables.Count, bulkDeleteResult);
+
+                            // Act
+                            var countResult = destinationConnection.CountAll<BulkOperationIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(0, countResult);
                         }
                     }
                 }
@@ -541,7 +531,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateForEntitiesDataTableIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnNpgsqlConnectionBulkDeleteForEntitiesDataTableIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -559,13 +549,13 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
@@ -575,11 +565,10 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        using (var destinationConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            destinationConnection.BulkUpdate<BulkOperationIdentityTable>(table,
-                                mappings: mappings);
+                            destinationConnection.BulkDelete<BulkOperationIdentityTable>(table, null, DataRowState.Unchanged, mappings);
                         }
                     }
                 }
@@ -587,87 +576,81 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateForNullEntities()
+        public void ThrowExceptionOnNpgsqlConnectionBulkDeleteForNullEntities()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
-                connection.BulkUpdate((IEnumerable<BulkOperationIdentityTable>)null);
+                connection.BulkDelete((IEnumerable<BulkOperationIdentityTable>)null);
             }
         }
 
         //[TestMethod, ExpectedException(typeof(EmptyException))]
-        //public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateForEmptyEntities()
+        //public void ThrowExceptionOnNpgsqlConnectionBulkDeleteForEmptyEntities()
         //{
-        //    using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+        //    using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
         //    {
-        //        connection.BulkUpdate(Enumerable.Empty<BulkOperationIdentityTable>());
+        //        connection.BulkDelete(Enumerable.Empty<BulkOperationIdentityTable>());
         //    }
         //}
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateForNullDataReader()
+        public void ThrowExceptionOnNpgsqlConnectionBulkDeleteForNullDataReader()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
-                connection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                connection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                     (DbDataReader)null);
             }
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateForNullDataTable()
+        public void ThrowExceptionOnNpgsqlConnectionBulkDeleteForNullDataTable()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
-                connection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                connection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                     (DataTable)null);
             }
         }
 
         #endregion
 
-        #region BulkUpdate<TEntity>(Extra Fields)
+        #region BulkDelete<TEntity>(Extra Fields)
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateForEntitiesWithExtraFields()
+        public void TestNpgsqlConnectionBulkDeleteForEntitiesWithExtraFields()
         {
             // Setup
             var tables = Helper.CreateWithExtraFieldsBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
-                // Setup
+                // Act
                 connection.InsertAll(tables);
 
-                // Setup
-                Helper.UpdateWithExtraFieldsBulkOperationIdentityTables(tables);
-
                 // Act
-                var bulkUpdateResult = connection.BulkUpdate(tables);
+                var bulkDeleteResult = connection.BulkDelete(tables);
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
 
                 // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+                var countResult = connection.CountAll<BulkOperationIdentityTable>();
 
                 // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
-                });
+                Assert.AreEqual(0, countResult);
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateForEntitiesWithExtraFieldsWithMappings()
+        public void TestNpgsqlConnectionBulkDeleteForEntitiesWithExtraFieldsWithMappings()
         {
             // Setup
             var tables = Helper.CreateWithExtraFieldsBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
@@ -676,43 +659,65 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
-                // Setup
+                // Act
                 connection.InsertAll(tables);
 
-                // Setup
-                Helper.UpdateWithExtraFieldsBulkOperationIdentityTables(tables);
-
                 // Act
-                var bulkUpdateResult = connection.BulkUpdate(tables);
+                var bulkDeleteResult = connection.BulkDelete(tables);
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
 
                 // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+                var countResult = connection.CountAll<BulkOperationIdentityTable>();
 
                 // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
-                });
+                Assert.AreEqual(0, countResult);
             }
         }
 
         #endregion
 
-        #region BulkUpdate(TableName)
+        #region BulkDelete(TableName)
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateForTableNameExpandoObjects()
+        public void TestNpgsqlConnectionBulkDeleteForTableNameEntitiesViaPrimaryKeys()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Setup
+                var primaryKeys = tables.Select(e => (object)e.Id);
+
+                // Act
+                var bulkDeleteResult = connection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                    primaryKeys: primaryKeys);
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
+
+                // Act
+                var countResult = connection.CountAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(0, countResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestNpgsqlConnectionBulkDeleteForTableNameExpandoObjects()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -721,30 +726,26 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 var entities = Helper.CreateBulkOperationExpandoObjectIdentityTables(10, true);
 
                 // Act
-                var bulkUpdateResult = connection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), entities);
+                var bulkDeleteResult = connection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), entities);
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
 
                 // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+                var countResult = connection.CountAll<BulkOperationIdentityTable>();
 
                 // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                entities.AsList().ForEach(t =>
-                {
-                    Helper.AssertMembersEquality(t, queryResult.ElementAt(entities.IndexOf(t)));
-                });
+                Assert.AreEqual(0, countResult);
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateForTableNameAnonymousObjects()
+        public void TestNpgsqlConnectionBulkDeleteForTableNameAnonymousObjects()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -753,157 +754,137 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 var entities = Helper.CreateBulkOperationAnonymousObjectIdentityTables(10, true);
 
                 // Act
-                var bulkUpdateResult = connection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), entities);
+                var bulkDeleteResult = connection.BulkDelete<object>(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), entities);
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
 
                 // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+                var countResult = connection.CountAll<BulkOperationIdentityTable>();
 
                 // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                entities.AsList().ForEach(t =>
-                {
-                    Helper.AssertMembersEquality(t, queryResult.ElementAt((int)entities.IndexOf(t)));
-                });
+                Assert.AreEqual(0, countResult);
             }
         }
 
         [TestMethod]
-        public void TestSystemSqlConnectionBulkUpdateForTableNameDataEntities()
+        public void TestSystemSqlConnectionBulkDeleteForTableNameDataEntities()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 connection.InsertAll(tables);
 
-                // Setup
-                Helper.UpdateBulkOperationIdentityTables(tables);
-
                 // Act
-                var bulkUpdateResult = connection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables);
+                var bulkDeleteResult = connection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables);
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
 
                 // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+                var countResult = connection.CountAll<BulkOperationIdentityTable>();
 
                 // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
-                });
+                Assert.AreEqual(0, countResult);
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateForTableNameDataEntitiesWithQualifiers()
+        public void TestNpgsqlConnectionBulkDeleteForTableNameDataEntitiesWithQualifiers()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 connection.InsertAll(tables);
 
-                // Setup
-                Helper.UpdateBulkOperationIdentityTables(tables);
-
                 // Act
-                var bulkUpdateResult = connection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
-                    tables,
+                var bulkDeleteResult = connection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                    entities: tables,
                     qualifiers: e => new { e.RowGuid, e.ColumnInt });
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
 
                 // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+                var countResult = connection.CountAll<BulkOperationIdentityTable>();
 
                 // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
-                });
+                Assert.AreEqual(0, countResult);
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateForTableNameDataEntitiesWithUsePhysicalPseudoTempTable()
+        public void TestNpgsqlConnectionBulkDeleteForTableNameDataEntitiesWithUsePhysicalPseudoTempTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 connection.InsertAll(tables);
 
-                // Setup
-                Helper.UpdateBulkOperationIdentityTables(tables);
-
                 // Act
-                var bulkUpdateResult = connection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
-                    tables,
+                var bulkDeleteResult = connection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                    entities: tables,
                     usePhysicalPseudoTempTable: true);
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
 
                 // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+                var countResult = connection.CountAll<BulkOperationIdentityTable>();
 
                 // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
-                });
+                Assert.AreEqual(0, countResult);
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateForTableNameDbDataReader()
+        public void TestNpgsqlConnectionBulkDeleteForTableNameDbDataReader()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    using (var destinationConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkUpdateResult = destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
-                            (DbDataReader)reader);
+                        var bulkDeleteResult = destinationConnection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), (DbDataReader)reader);
 
                         // Assert
-                        Assert.AreEqual(tables.Count, bulkUpdateResult);
+                        Assert.AreEqual(tables.Count, bulkDeleteResult);
+
+                        // Act
+                        var countResult = destinationConnection.CountAll<BulkOperationIdentityTable>();
+
+                        // Assert
+                        Assert.AreEqual(0, countResult);
                     }
                 }
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateForTableNameDbDataReaderWithMappings()
+        public void TestNpgsqlConnectionBulkDeleteForTableNameDbDataReaderWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -921,34 +902,41 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    using (var destinationConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkUpdateResult = destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                        var bulkDeleteResult = destinationConnection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                             (DbDataReader)reader,
-                            mappings: mappings);
+                            null,
+                            mappings);
 
                         // Assert
-                        Assert.AreEqual(tables.Count, bulkUpdateResult);
+                        Assert.AreEqual(tables.Count, bulkDeleteResult);
+
+                        // Act
+                        var countResult = destinationConnection.CountAll<BulkOperationIdentityTable>();
+
+                        // Assert
+                        Assert.AreEqual(0, countResult);
                     }
                 }
             }
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateForTableNameDbDataReaderIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnNpgsqlConnectionBulkDeleteForTableNameDbDataReaderIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -966,102 +954,47 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    using (var destinationConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkUpdateResult = destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                        var bulkDeleteResult = destinationConnection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                             (DbDataReader)reader,
-                            mappings: mappings);
+                            null,
+                            mappings);
 
                         // Assert
-                        Assert.AreEqual(tables.Count, bulkUpdateResult);
-                    }
-                }
-            }
-        }
-
-        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateForTableNameDbDataReaderIfTheTableNameIsNotValid()
-        {
-            // Setup
-            var tables = Helper.CreateBulkOperationIdentityTables(10);
-
-            // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
-            {
-                connection.InsertAll(tables);
-            }
-
-            // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
-            {
-                // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
-                {
-                    // Open the destination connection
-                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
-                    {
-                        // Act
-                        destinationConnection.BulkUpdate("InvalidTable", (DbDataReader)reader);
-                    }
-                }
-            }
-        }
-
-        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateForTableNameDbDataReaderIfTheTableNameIsMissing()
-        {
-            // Setup
-            var tables = Helper.CreateBulkOperationIdentityTables(10);
-
-            // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
-            {
-                connection.InsertAll(tables);
-            }
-
-            // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
-            {
-                // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
-                {
-                    // Open the destination connection
-                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
-                    {
-                        // Act
-                        destinationConnection.BulkUpdate("MissingTable", (DbDataReader)reader);
+                        Assert.AreEqual(tables.Count, bulkDeleteResult);
                     }
                 }
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateForTableNameDbDataTable()
+        public void TestNpgsqlConnectionBulkDeleteForTableNameDbDataTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
@@ -1071,13 +1004,19 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        using (var destinationConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkUpdateResult = destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table);
+                            var bulkDeleteResult = destinationConnection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table);
 
                             // Assert
-                            Assert.AreEqual(tables.Count, bulkUpdateResult);
+                            Assert.AreEqual(tables.Count, bulkDeleteResult);
+
+                            // Act
+                            var countResult = destinationConnection.CountAll<BulkOperationIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(0, countResult);
                         }
                     }
                 }
@@ -1085,7 +1024,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateForTableNameDbDataTableWithMappings()
+        public void TestNpgsqlConnectionBulkDeleteForTableNameDbDataTableWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -1103,13 +1042,13 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
@@ -1119,15 +1058,23 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        using (var destinationConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkUpdateResult = destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                            var bulkDeleteResult = destinationConnection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                                 table,
-                                mappings: mappings);
+                                null,
+                                DataRowState.Unchanged,
+                                mappings);
 
                             // Assert
-                            Assert.AreEqual(tables.Count, bulkUpdateResult);
+                            Assert.AreEqual(tables.Count, bulkDeleteResult);
+
+                            // Act
+                            var countResult = destinationConnection.CountAll<BulkOperationIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(0, countResult);
                         }
                     }
                 }
@@ -1135,7 +1082,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateForTableNameDbDataTableIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnNpgsqlConnectionBulkDeleteForTableNameDbDataTableIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -1153,13 +1100,13 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
@@ -1169,83 +1116,17 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        using (var destinationConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkUpdateResult = destinationConnection.BulkUpdate(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                            var bulkDeleteResult = destinationConnection.BulkDelete(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                                 table,
-                                mappings: mappings);
+                                null,
+                                DataRowState.Unchanged,
+                                mappings);
 
                             // Assert
-                            Assert.AreEqual(tables.Count, bulkUpdateResult);
-                        }
-                    }
-                }
-            }
-        }
-
-        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateForTableNameDbDataTableIfTheTableNameIsNotValid()
-        {
-            // Setup
-            var tables = Helper.CreateBulkOperationIdentityTables(10);
-
-            // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
-            {
-                connection.InsertAll(tables);
-            }
-
-            // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
-            {
-                // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
-                {
-                    using (var table = new DataTable())
-                    {
-                        table.Load(reader);
-
-                        // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
-                        {
-                            // Act
-                            destinationConnection.BulkUpdate("InvalidTable",
-                                table);
-                        }
-                    }
-                }
-            }
-        }
-
-        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateForTableNameDbDataTableIfTheTableNameIsMissing()
-        {
-            // Setup
-            var tables = Helper.CreateBulkOperationIdentityTables(10);
-
-            // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
-            {
-                connection.InsertAll(tables);
-            }
-
-            // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
-            {
-                // Read the data from source connection
-                using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
-                {
-                    using (var table = new DataTable())
-                    {
-                        table.Load(reader);
-
-                        // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
-                        {
-                            // Act
-                            destinationConnection.BulkUpdate("MissingTable",
-                                table);
+                            Assert.AreEqual(tables.Count, bulkDeleteResult);
                         }
                     }
                 }
@@ -1254,108 +1135,115 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
 
         #endregion
 
-        #region BulkUpdateAsync<TEntity>
+        #region BulkDeleteAsync<TEntity>
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateAsyncForEntities()
+        public void TestNpgsqlConnectionBulkDeleteAsyncForEntitiesViaPrimaryKeys()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 connection.InsertAll(tables);
 
                 // Setup
-                Helper.UpdateBulkOperationIdentityTables(tables);
+                var primaryKeys = tables.Select(e => (object)e.Id);
 
                 // Act
-                var bulkUpdateResult = connection.BulkUpdateAsync(tables).Result;
+                var bulkDeleteResult = connection.BulkDeleteAsync<BulkOperationIdentityTable>(primaryKeys).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
 
                 // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+                var countResult = connection.CountAll<BulkOperationIdentityTable>();
 
                 // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
-                });
+                Assert.AreEqual(0, countResult);
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateAsyncForEntitiesWithQualifiers()
+        public void TestNpgsqlConnectionBulkDeleteAsyncForEntities()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 connection.InsertAll(tables);
 
-                // Setup
-                Helper.UpdateBulkOperationIdentityTables(tables);
+                // Act
+                var bulkDeleteResult = connection.BulkDeleteAsync(tables).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
 
                 // Act
-                var bulkUpdateResult = connection.BulkUpdateAsync(tables,
+                var countResult = connection.CountAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(0, countResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestNpgsqlConnectionBulkDeleteAsyncForEntitiesWithQualifiers()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10).AsList();
+
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var bulkDeleteResult = connection.BulkDeleteAsync(tables,
                     qualifiers: e => new { e.RowGuid, e.ColumnInt }).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
 
                 // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+                var countResult = connection.CountAll<BulkOperationIdentityTable>();
 
                 // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
-                });
+                Assert.AreEqual(0, countResult);
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateAsyncForEntitiesWithUsePhysicalPseudoTempTable()
+        public void TestNpgsqlConnectionBulkDeleteAsyncForEntitiesWithUsePhysicalPseudoTempTable()
         {
             // Setup
-            var tables = Helper.CreateBulkOperationIdentityTables(10);
+            var tables = Helper.CreateBulkOperationIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 connection.InsertAll(tables);
 
-                // Setup
-                Helper.UpdateBulkOperationIdentityTables(tables);
-
                 // Act
-                var bulkUpdateResult = connection.BulkUpdateAsync(tables,
+                var bulkDeleteResult = connection.BulkDeleteAsync(tables,
                     usePhysicalPseudoTempTable: true).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
 
                 // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+                var countResult = connection.CountAll<BulkOperationIdentityTable>();
 
                 // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
-                });
+                Assert.AreEqual(0, countResult);
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateAsyncForEntitiesWithMappings()
+        public void TestNpgsqlConnectionBulkDeleteAsyncForEntitiesWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -1363,7 +1251,6 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
 
             // Add the mappings
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
@@ -1372,173 +1259,140 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
-                // Setup
+                // Act
                 connection.InsertAll(tables);
 
                 // Act
-                var bulkUpdateResult = connection.BulkUpdateAsync(tables, mappings: mappings).Result;
+                var bulkDeleteResult = connection.BulkDeleteAsync(tables).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
 
                 // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+                var countResult = connection.CountAll<BulkOperationIdentityTable>();
 
                 // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
-                });
+                Assert.AreEqual(0, countResult);
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateAsyncForMappedEntities()
+        public void TestNpgsqlConnectionBulkDeleteAsyncForMappedEntities()
         {
             // Setup
-            var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
+            var tables = Helper.CreateBulkOperationMappedIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 connection.InsertAll(tables);
 
-                // Setup
-                Helper.UpdateBulkOperationMappedIdentityTables(tables);
-
                 // Act
-                var bulkUpdateResult = connection.BulkUpdateAsync(tables).Result;
+                var bulkDeleteResult = connection.BulkDeleteAsync(tables).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
 
                 // Act
-                var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>();
+                var countResult = connection.CountAll<BulkOperationMappedIdentityTable>();
 
                 // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
-                });
+                Assert.AreEqual(0, countResult);
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateAsyncForMappedEntitiesWithQualifiers()
+        public void TestNpgsqlConnectionBulkDeleteAsyncForMappedEntitiesWithQualifiers()
         {
             // Setup
-            var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
+            var tables = Helper.CreateBulkOperationMappedIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 connection.InsertAll(tables);
 
-                // Setup
-                Helper.UpdateBulkOperationMappedIdentityTables(tables);
-
                 // Act
-                var bulkUpdateResult = connection.BulkUpdateAsync(tables,
+                var bulkDeleteResult = connection.BulkDeleteAsync(tables,
                     qualifiers: e => new { e.RowGuidMapped, e.ColumnIntMapped }).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
 
                 // Act
-                var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>();
+                var countResult = connection.CountAll<BulkOperationMappedIdentityTable>();
 
                 // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
-                });
+                Assert.AreEqual(0, countResult);
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateAsyncForMappedEntitiesWithUsePhysicalPseudoTempTable()
+        public void TestNpgsqlConnectionBulkDeleteAsyncForMappedEntitiesWithUsePhysicalPseudoTempTable()
         {
             // Setup
-            var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
+            var tables = Helper.CreateBulkOperationMappedIdentityTables(10).AsList();
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 connection.InsertAll(tables);
 
-                // Setup
-                Helper.UpdateBulkOperationMappedIdentityTables(tables);
-
                 // Act
-                var bulkUpdateResult = connection.BulkUpdateAsync(tables,
+                var bulkDeleteResult = connection.BulkDeleteAsync(tables,
                     usePhysicalPseudoTempTable: true).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
 
                 // Act
-                var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>();
+                var countResult = connection.CountAll<BulkOperationMappedIdentityTable>();
 
                 // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
-                });
+                Assert.AreEqual(0, countResult);
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateAsyncForMappedEntitiesWithMappings()
+        public void TestNpgsqlConnectionBulkDeleteAsyncForMappedEntitiesWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationMappedIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.RowGuid), nameof(BulkOperationIdentityTable.RowGuid)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime2), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDecimal), nameof(BulkOperationIdentityTable.ColumnDecimal)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnFloat), nameof(BulkOperationIdentityTable.ColumnFloat)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
-            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.IdMapped), nameof(BulkOperationIdentityTable.Id)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnBitMapped), nameof(BulkOperationIdentityTable.ColumnBit)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnDateTimeMapped), nameof(BulkOperationIdentityTable.ColumnDateTime)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnDateTime2Mapped), nameof(BulkOperationIdentityTable.ColumnDateTime2)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnDecimalMapped), nameof(BulkOperationIdentityTable.ColumnDecimal)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnFloatMapped), nameof(BulkOperationIdentityTable.ColumnFloat)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnIntMapped), nameof(BulkOperationIdentityTable.ColumnInt)));
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationMappedIdentityTable.ColumnNVarCharMapped), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 connection.InsertAll(tables);
 
-                // Setup
-                Helper.UpdateBulkOperationMappedIdentityTables(tables);
-
                 // Act
-                var bulkUpdateResult = connection.BulkUpdateAsync(tables, mappings: mappings).Result;
+                var bulkDeleteResult = connection.BulkDeleteAsync(tables).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
 
                 // Act
-                var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>();
+                var countResult = connection.CountAll<BulkOperationMappedIdentityTable>();
 
                 // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
-                });
+                Assert.AreEqual(0, countResult);
             }
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateAsyncForEntitiesIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnNpgsqlConnectionBulkDeleteAsyncForEntitiesIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -1555,50 +1409,57 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var bulkUpdateResult = connection.BulkUpdateAsync(tables,
-                    mappings: mappings);
+                var bulkDeleteResult = connection.BulkDeleteAsync(tables,
+                    null,
+                    mappings);
 
                 // Trigger
-                var result = bulkUpdateResult.Result;
+                var result = bulkDeleteResult.Result;
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateAsyncForEntitiesDbDataReader()
+        public void TestNpgsqlConnectionBulkDeleteAsyncForEntitiesDbDataReader()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    using (var destinationConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkUpdateResult = destinationConnection.BulkUpdateAsync<BulkOperationIdentityTable>((DbDataReader)reader).Result;
+                        var bulkDeleteResult = destinationConnection.BulkDeleteAsync<BulkOperationIdentityTable>((DbDataReader)reader).Result;
 
                         // Assert
-                        Assert.AreEqual(tables.Count, bulkUpdateResult);
+                        Assert.AreEqual(tables.Count, bulkDeleteResult);
+
+                        // Act
+                        var countResult = destinationConnection.CountAll<BulkOperationIdentityTable>();
+
+                        // Assert
+                        Assert.AreEqual(0, countResult);
                     }
                 }
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateAsyncForEntitiesDbDataReaderWithMappings()
+        public void TestNpgsqlConnectionBulkDeleteAsyncForEntitiesDbDataReaderWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -1616,33 +1477,40 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    using (var destinationConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkUpdateResult = destinationConnection.BulkUpdateAsync<BulkOperationIdentityTable>((DbDataReader)reader,
-                            mappings: mappings).Result;
+                        var bulkDeleteResult = destinationConnection.BulkDeleteAsync<BulkOperationIdentityTable>((DbDataReader)reader,
+                            null,
+                            mappings).Result;
 
                         // Assert
-                        Assert.AreEqual(tables.Count, bulkUpdateResult);
+                        Assert.AreEqual(tables.Count, bulkDeleteResult);
+
+                        // Act
+                        var countResult = destinationConnection.CountAll<BulkOperationIdentityTable>();
+
+                        // Assert
+                        Assert.AreEqual(0, countResult);
                     }
                 }
             }
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateAsyncForEntitiesDbDataReaderIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnNpgsqlConnectionBulkDeleteAsyncForEntitiesDbDataReaderIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -1660,45 +1528,46 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    using (var destinationConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkUpdateResult = destinationConnection.BulkUpdateAsync<BulkOperationIdentityTable>((DbDataReader)reader,
-                            mappings: mappings);
+                        var bulkDeleteResult = destinationConnection.BulkDeleteAsync<BulkOperationIdentityTable>((DbDataReader)reader,
+                            null,
+                            mappings);
 
                         // Trigger
-                        var result = bulkUpdateResult.Result;
+                        var result = bulkDeleteResult.Result;
                     }
                 }
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateAsyncForEntitiesDataTable()
+        public void TestNpgsqlConnectionBulkDeleteAsyncForEntitiesDataTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
@@ -1708,13 +1577,19 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        using (var destinationConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkUpdateResult = destinationConnection.BulkUpdateAsync<BulkOperationIdentityTable>(table).Result;
+                            var bulkDeleteResult = destinationConnection.BulkDeleteAsync<BulkOperationIdentityTable>(table).Result;
 
                             // Assert
-                            Assert.AreEqual(tables.Count, bulkUpdateResult);
+                            Assert.AreEqual(tables.Count, bulkDeleteResult);
+
+                            // Act
+                            var countResult = destinationConnection.CountAll<BulkOperationIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(0, countResult);
                         }
                     }
                 }
@@ -1722,7 +1597,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateAsyncForEntitiesDataTableWithMappings()
+        public void TestNpgsqlConnectionBulkDeleteAsyncForEntitiesDataTableWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -1740,13 +1615,13 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
@@ -1756,14 +1631,22 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        using (var destinationConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkUpdateResult = destinationConnection.BulkUpdateAsync<BulkOperationIdentityTable>(table,
-                                mappings: mappings).Result;
+                            var bulkDeleteResult = destinationConnection.BulkDeleteAsync<BulkOperationIdentityTable>(table,
+                                null,
+                                DataRowState.Unchanged,
+                                mappings).Result;
 
                             // Assert
-                            Assert.AreEqual(tables.Count, bulkUpdateResult);
+                            Assert.AreEqual(tables.Count, bulkDeleteResult);
+
+                            // Act
+                            var countResult = destinationConnection.CountAll<BulkOperationIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(0, countResult);
                         }
                     }
                 }
@@ -1771,7 +1654,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateAsyncForEntitiesDataTableIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnNpgsqlConnectionBulkDeleteAsyncForEntitiesDataTableIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -1789,13 +1672,13 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
@@ -1805,14 +1688,16 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        using (var destinationConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkUpdateResult = destinationConnection.BulkUpdateAsync<BulkOperationIdentityTable>(table,
-                                mappings: mappings);
+                            var bulkDeleteResult = destinationConnection.BulkDeleteAsync<BulkOperationIdentityTable>(table,
+                                null,
+                                DataRowState.Unchanged,
+                                mappings);
 
                             // Trigger
-                            var result = bulkUpdateResult.Result;
+                            var result = bulkDeleteResult.Result;
                         }
                     }
                 }
@@ -1820,87 +1705,81 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateAsyncForNullEntities()
+        public void ThrowExceptionOnNpgsqlConnectionBulkDeleteAsyncForNullEntities()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
-                connection.BulkUpdateAsync((IEnumerable<BulkOperationIdentityTable>)null).Wait();
+                connection.BulkDeleteAsync((IEnumerable<BulkOperationIdentityTable>)null).Wait();
             }
         }
 
         //[TestMethod, ExpectedException(typeof(AggregateException))]
-        //public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateAsyncForEmptyEntities()
+        //public void ThrowExceptionOnNpgsqlConnectionBulkDeleteAsyncForEmptyEntities()
         //{
-        //    using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+        //    using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
         //    {
-        //        connection.BulkUpdateAsync(Enumerable.Empty<BulkOperationIdentityTable>()).Wait();
+        //        connection.BulkDeleteAsync(Enumerable.Empty<BulkOperationIdentityTable>()).Wait();
         //    }
         //}
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateAsyncForNullDataReader()
+        public void ThrowExceptionOnNpgsqlConnectionBulkDeleteAsyncForNullDataReader()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
-                connection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                connection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                     (DbDataReader)null).Wait();
             }
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateAsyncForNullDataTable()
+        public void ThrowExceptionOnNpgsqlConnectionBulkDeleteAsyncForNullDataTable()
         {
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
-                connection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                connection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                     (DataTable)null).Wait();
             }
         }
 
         #endregion
 
-        #region BulkUpdateAsync<TEntity>(Extra Fields)
+        #region BulkDeleteAsync<TEntity>(Extra Fields)
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateAsyncForEntitiesWithExtraFields()
+        public void TestNpgsqlConnectionBulkDeleteAsyncForEntitiesWithExtraFields()
         {
             // Setup
             var tables = Helper.CreateWithExtraFieldsBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
-                // Setup
+                // Act
                 connection.InsertAll(tables);
 
-                // Setup
-                Helper.UpdateWithExtraFieldsBulkOperationIdentityTables(tables);
-
                 // Act
-                var bulkUpdateResult = connection.BulkUpdateAsync(tables).Result;
+                var bulkDeleteResult = connection.BulkDeleteAsync(tables).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
 
                 // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+                var countResult = connection.CountAll<BulkOperationIdentityTable>();
 
                 // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
-                });
+                Assert.AreEqual(0, countResult);
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateAsyncForEntitiesWithExtraFieldsWithMappings()
+        public void TestNpgsqlConnectionBulkDeleteAsyncForEntitiesWithExtraFieldsWithMappings()
         {
             // Setup
             var tables = Helper.CreateWithExtraFieldsBulkOperationIdentityTables(10);
             var mappings = new List<BulkInsertMapItem>();
 
             // Add the mappings
+            mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.Id), nameof(BulkOperationIdentityTable.Id)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnBit), nameof(BulkOperationIdentityTable.ColumnBit)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnDateTime), nameof(BulkOperationIdentityTable.ColumnDateTime)));
@@ -1910,43 +1789,65 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnInt), nameof(BulkOperationIdentityTable.ColumnInt)));
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
-                // Setup
+                // Act
                 connection.InsertAll(tables);
 
-                // Setup
-                Helper.UpdateWithExtraFieldsBulkOperationIdentityTables(tables);
-
                 // Act
-                var bulkUpdateResult = connection.BulkUpdateAsync(tables).Result;
+                var bulkDeleteResult = connection.BulkDeleteAsync(tables).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
 
                 // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+                var countResult = connection.CountAll<BulkOperationIdentityTable>();
 
                 // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
-                });
+                Assert.AreEqual(0, countResult);
             }
         }
 
         #endregion
 
-        #region BulkUpdateAsync(TableName)
+        #region BulkDeleteAsync(TableName)
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateAsyncForTableNameExpandoObjects()
+        public void TestNpgsqlConnectionBulkDeleteAsyncForTableNameEntitiesViaPrimaryKeys()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Setup
+                var primaryKeys = tables.Select(e => (object)e.Id);
+
+                // Act
+                var bulkDeleteResult = connection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                    primaryKeys: primaryKeys).Result;
+
+                // Assert
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
+
+                // Act
+                var countResult = connection.CountAll<BulkOperationIdentityTable>();
+
+                // Assert
+                Assert.AreEqual(0, countResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestNpgsqlConnectionBulkDeleteAsyncForTableNameExpandoObjects()
+        {
+            // Setup
+            var tables = Helper.CreateBulkOperationIdentityTables(10);
+
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -1955,30 +1856,26 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 var entities = Helper.CreateBulkOperationExpandoObjectIdentityTables(10, true);
 
                 // Act
-                var bulkUpdateResult = connection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), entities).Result;
+                var bulkDeleteResult = connection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), entities).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
 
                 // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+                var countResult = connection.CountAll<BulkOperationIdentityTable>();
 
                 // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                entities.AsList().ForEach(t =>
-                {
-                    Helper.AssertMembersEquality(t, queryResult.ElementAt(entities.IndexOf(t)));
-                });
+                Assert.AreEqual(0, countResult);
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateAsyncForTableNameAnonymousObjects()
+        public void TestNpgsqlConnectionBulkDeleteAsyncForTableNameAnonymousObjects()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 connection.InsertAll(tables);
@@ -1987,156 +1884,137 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                 var entities = Helper.CreateBulkOperationAnonymousObjectIdentityTables(10, true);
 
                 // Act
-                var bulkUpdateResult = connection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), entities).Result;
+                var bulkDeleteResult = connection.BulkDeleteAsync<object>(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), entities).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
 
                 // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+                var countResult = connection.CountAll<BulkOperationIdentityTable>();
 
                 // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                entities.AsList().ForEach(t =>
-                {
-                    Helper.AssertMembersEquality(t, queryResult.ElementAt((int)entities.IndexOf(t)));
-                });
+                Assert.AreEqual(0, countResult);
             }
         }
 
         [TestMethod]
-        public void TestSystemSqlConnectionBulkUpdateAsyncForTableNameDataEntities()
+        public void TestSystemSqlConnectionBulkDeleteAsyncForTableNameDataEntities()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 connection.InsertAll(tables);
 
-                // Setup
-                Helper.UpdateBulkOperationIdentityTables(tables);
-
                 // Act
-                var bulkUpdateResult = connection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables).Result;
+                var bulkDeleteResult = connection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), tables).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
 
                 // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+                var countResult = connection.CountAll<BulkOperationIdentityTable>();
 
                 // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
-                });
+                Assert.AreEqual(0, countResult);
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateAsyncForTableNameDataEntitiesWithQualifiers()
+        public void TestNpgsqlConnectionBulkDeleteAsyncForTableNameDataEntitiesWithQualifiers()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 connection.InsertAll(tables);
 
-                // Setup
-                Helper.UpdateBulkOperationIdentityTables(tables);
-
                 // Act
-                var bulkUpdateResult = connection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
-                    tables,
+                var bulkDeleteResult = connection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                    entities: tables,
                     qualifiers: e => new { e.RowGuid, e.ColumnInt }).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
 
                 // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+                var countResult = connection.CountAll<BulkOperationIdentityTable>();
 
                 // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
-                });
+                Assert.AreEqual(0, countResult);
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateAsyncForTableNameDataEntitiesWithUsePhysicalPseudoTempTable()
+        public void TestNpgsqlConnectionBulkDeleteAsyncForTableNameDataEntitiesWithUsePhysicalPseudoTempTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 connection.InsertAll(tables);
 
-                // Setup
-                Helper.UpdateBulkOperationIdentityTables(tables);
-
                 // Act
-                var bulkUpdateResult = connection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
-                    tables,
+                var bulkDeleteResult = connection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                    entities: tables,
                     usePhysicalPseudoTempTable: true).Result;
 
                 // Assert
-                Assert.AreEqual(tables.Count, bulkUpdateResult);
+                Assert.AreEqual(tables.Count, bulkDeleteResult);
 
                 // Act
-                var queryResult = connection.QueryAll<BulkOperationIdentityTable>();
+                var countResult = connection.CountAll<BulkOperationIdentityTable>();
 
                 // Assert
-                Assert.AreEqual(tables.Count, queryResult.Count());
-                tables.AsList().ForEach(t =>
-                {
-                    Helper.AssertPropertiesEquality(t, queryResult.ElementAt(tables.IndexOf(t)));
-                });
+                Assert.AreEqual(0, countResult);
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateAsyncForTableNameDbDataReader()
+        public void TestNpgsqlConnectionBulkDeleteAsyncForTableNameDbDataReader()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    using (var destinationConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkUpdateResult = destinationConnection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), (DbDataReader)reader).Result;
+                        var bulkDeleteResult = destinationConnection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), (DbDataReader)reader).Result;
 
                         // Assert
-                        Assert.AreEqual(tables.Count, bulkUpdateResult);
+                        Assert.AreEqual(tables.Count, bulkDeleteResult);
+
+                        // Act
+                        var countResult = destinationConnection.CountAll<BulkOperationIdentityTable>();
+
+                        // Assert
+                        Assert.AreEqual(0, countResult);
                     }
                 }
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateAsyncForTableNameDbDataReaderWithMappings()
+        public void TestNpgsqlConnectionBulkDeleteAsyncForTableNameDbDataReaderWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -2154,34 +2032,41 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    using (var destinationConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkUpdateResult = destinationConnection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                        var bulkDeleteResult = destinationConnection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                             (DbDataReader)reader,
-                            mappings: mappings).Result;
+                            null,
+                            mappings).Result;
 
                         // Assert
-                        Assert.AreEqual(tables.Count, bulkUpdateResult);
+                        Assert.AreEqual(tables.Count, bulkDeleteResult);
+
+                        // Act
+                        var countResult = destinationConnection.CountAll<BulkOperationIdentityTable>();
+
+                        // Assert
+                        Assert.AreEqual(0, countResult);
                     }
                 }
             }
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateAsyncForTableNameDbDataReaderIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnNpgsqlConnectionBulkDeleteAsyncForTableNameDbDataReaderIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -2199,108 +2084,109 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    using (var destinationConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkUpdateResult = destinationConnection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                        var bulkDeleteResult = destinationConnection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                             (DbDataReader)reader,
-                            mappings: mappings);
+                            null,
+                            mappings);
 
                         // Trigger
-                        var result = bulkUpdateResult.Result;
+                        var result = bulkDeleteResult.Result;
                     }
                 }
             }
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateAsyncForTableNameDbDataReaderIfTheTableNameIsNotValid()
+        public void ThrowExceptionOnNpgsqlConnectionBulkDeleteAsyncForTableNameDbDataReaderIfTheTableNameIsNotValid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    using (var destinationConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkUpdateResult = destinationConnection.BulkUpdateAsync("InvalidTable", (DbDataReader)reader);
+                        var bulkDeleteResult = destinationConnection.BulkDeleteAsync("InvalidTable", (DbDataReader)reader);
 
                         // Trigger
-                        var result = bulkUpdateResult.Result;
+                        var result = bulkDeleteResult.Result;
                     }
                 }
             }
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateAsyncForTableNameDbDataReaderIfTheTableNameIsMissing()
+        public void ThrowExceptionOnNpgsqlConnectionBulkDeleteAsyncForTableNameDbDataReaderIfTheTableNameIsMissing()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
                 {
                     // Open the destination connection
-                    using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                    using (var destinationConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
                     {
                         // Act
-                        var bulkUpdateResult = destinationConnection.BulkUpdateAsync("MissingTable", (DbDataReader)reader);
+                        var bulkDeleteResult = destinationConnection.BulkDeleteAsync("MissingTable", (DbDataReader)reader);
 
                         // Trigger
-                        var result = bulkUpdateResult.Result;
+                        var result = bulkDeleteResult.Result;
                     }
                 }
             }
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateAsyncForTableNameDataTable()
+        public void TestNpgsqlConnectionBulkDeleteAsyncForTableNameDataTable()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
@@ -2310,13 +2196,19 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        using (var destinationConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkUpdateResult = destinationConnection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table).Result;
+                            var bulkDeleteResult = destinationConnection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(), table).Result;
 
                             // Assert
-                            Assert.AreEqual(tables.Count, bulkUpdateResult);
+                            Assert.AreEqual(tables.Count, bulkDeleteResult);
+
+                            // Act
+                            var countResult = destinationConnection.CountAll<BulkOperationIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(0, countResult);
                         }
                     }
                 }
@@ -2324,7 +2216,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMicrosoftSqlConnectionBulkUpdateAsyncForTableNameDataTableWithMappings()
+        public void TestNpgsqlConnectionBulkDeleteAsyncForTableNameDataTableWithMappings()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -2342,13 +2234,13 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnNVarChar)));
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
@@ -2358,15 +2250,23 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        using (var destinationConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkUpdateResult = destinationConnection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                            var bulkDeleteResult = destinationConnection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                                 table,
-                                mappings: mappings).Result;
+                                null,
+                                DataRowState.Unchanged,
+                                mappings).Result;
 
                             // Assert
-                            Assert.AreEqual(tables.Count, bulkUpdateResult);
+                            Assert.AreEqual(tables.Count, bulkDeleteResult);
+
+                            // Act
+                            var countResult = destinationConnection.CountAll<BulkOperationIdentityTable>();
+
+                            // Assert
+                            Assert.AreEqual(0, countResult);
                         }
                     }
                 }
@@ -2374,7 +2274,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateAsyncForTableNameDataTableIfTheMappingsAreInvalid()
+        public void ThrowExceptionOnNpgsqlConnectionBulkDeleteAsyncForTableNameDataTableIfTheMappingsAreInvalid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
@@ -2392,13 +2292,13 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
             mappings.Add(new BulkInsertMapItem(nameof(BulkOperationIdentityTable.ColumnNVarChar), nameof(BulkOperationIdentityTable.ColumnInt)));
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
@@ -2408,15 +2308,17 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        using (var destinationConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkUpdateResult = destinationConnection.BulkUpdateAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
+                            var bulkDeleteResult = destinationConnection.BulkDeleteAsync(ClassMappedNameCache.Get<BulkOperationIdentityTable>(),
                                 table,
-                                mappings: mappings);
+                                null,
+                                DataRowState.Unchanged,
+                                mappings);
 
                             // Trigger
-                            var result = bulkUpdateResult.Result;
+                            var result = bulkDeleteResult.Result;
                         }
                     }
                 }
@@ -2424,19 +2326,19 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateAsyncForTableNameDataTableIfTheTableNameIsNotValid()
+        public void ThrowExceptionOnNpgsqlConnectionBulkDeleteAsyncForTableNameDataTableIfTheTableNameIsNotValid()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
@@ -2446,13 +2348,13 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        using (var destinationConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkUpdateResult = destinationConnection.BulkUpdateAsync("InvalidTable", table);
+                            var bulkDeleteResult = destinationConnection.BulkDeleteAsync("InvalidTable", table);
 
                             // Trigger
-                            var result = bulkUpdateResult.Result;
+                            var result = bulkDeleteResult.Result;
                         }
                     }
                 }
@@ -2460,19 +2362,19 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnMicrosoftSqlConnectionBulkUpdateAsyncForTableNameDataTableIfTheTableNameIsMissing()
+        public void ThrowExceptionOnNpgsqlConnectionBulkDeleteAsyncForTableNameDataTableIfTheTableNameIsMissing()
         {
             // Setup
             var tables = Helper.CreateBulkOperationIdentityTables(10);
 
             // Insert the records first
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 connection.InsertAll(tables);
             }
 
             // Open the source connection
-            using (var sourceConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            using (var sourceConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Read the data from source connection
                 using (var reader = sourceConnection.ExecuteReader("SELECT * FROM [dbo].[BulkOperationIdentityTable];"))
@@ -2482,14 +2384,16 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Operations
                         table.Load(reader);
 
                         // Open the destination connection
-                        using (var destinationConnection = new SqlConnection(Database.ConnectionStringForRepoDb))
+                        using (var destinationConnection = new NpgsqlConnection(Database.ConnectionStringForRepoDb))
                         {
                             // Act
-                            var bulkUpdateResult = destinationConnection.BulkUpdateAsync("MissingTable",
-                                table);
+                            var bulkDeleteResult = destinationConnection.BulkDeleteAsync("MissingTable",
+                                table,
+                                null,
+                                DataRowState.Unchanged);
 
                             // Trigger
-                            var result = bulkUpdateResult.Result;
+                            var result = bulkDeleteResult.Result;
                         }
                     }
                 }

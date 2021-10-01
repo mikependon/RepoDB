@@ -1,6 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
-using RepoDb.SqlServer;
-using RepoDb.SqlServer.BulkOperations.IntegrationTests.Models;
+﻿using Npgsql;
+using RepoDb.PostgreSql.BulkOperations.IntegrationTests.Models;
 using System;
 
 namespace RepoDb.IntegrationTests.Setup
@@ -26,7 +25,7 @@ namespace RepoDb.IntegrationTests.Setup
             ConnectionStringForRepoDb = (connectionString ?? @"Server=(local);Database=RepoDb;Integrated Security=False;User Id=michael;Password=Password123;");
 
             // Initialize the SqlServer
-            SqlServerBootstrap.Initialize();
+            PostgreSqlBootstrap.Initialize();
 
             // Create the database first
             CreateDatabase();
@@ -56,7 +55,7 @@ namespace RepoDb.IntegrationTests.Setup
                 BEGIN
 	                CREATE DATABASE [RepoDb];
                 END";
-            using (var connection = new SqlConnection(ConnectionStringForMaster).EnsureOpen())
+            using (var connection = new NpgsqlConnection(ConnectionStringForMaster).EnsureOpen())
             {
                 connection.ExecuteNonQuery(commandText);
             }
@@ -75,7 +74,7 @@ namespace RepoDb.IntegrationTests.Setup
         /// </summary>
         public static void Cleanup()
         {
-            using (var connection = new SqlConnection(ConnectionStringForRepoDb))
+            using (var connection = new NpgsqlConnection(ConnectionStringForRepoDb))
             {
                 connection.Truncate<BulkOperationIdentityTable>();
             }
@@ -110,7 +109,7 @@ namespace RepoDb.IntegrationTests.Setup
                         WITH (FILLFACTOR = 90) ON [PRIMARY]
 	                ) ON [PRIMARY];
                 END";
-            using (var connection = new SqlConnection(ConnectionStringForRepoDb).EnsureOpen())
+            using (var connection = new NpgsqlConnection(ConnectionStringForRepoDb).EnsureOpen())
             {
                 connection.ExecuteNonQuery(commandText);
             }

@@ -1,7 +1,7 @@
 ﻿using RepoDb.Attributes;
 using System;
 
-namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Models
+namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Models
 {
     [Map("[dbo].[BulkOperationIdentityTable]")]
     public class BulkOperationMappedIdentityTable

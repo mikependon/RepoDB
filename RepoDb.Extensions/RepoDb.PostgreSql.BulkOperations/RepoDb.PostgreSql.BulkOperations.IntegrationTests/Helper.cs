@@ -1,14 +1,14 @@
-﻿using Microsoft.Data.SqlClient;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Npgsql;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
-using RepoDb.SqlServer.BulkOperations.IntegrationTests.Models;
+using RepoDb.PostgreSql.BulkOperations.IntegrationTests.Models;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 
-namespace RepoDb.SqlServer.BulkOperations.IntegrationTests
+namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 {
     /// <summary>
     /// A helper class for the integration testing.
@@ -17,7 +17,7 @@ namespace RepoDb.SqlServer.BulkOperations.IntegrationTests
     {
         static Helper()
         {
-            StatementBuilder = StatementBuilderMapper.Get<SqlConnection>();
+            StatementBuilder = StatementBuilderMapper.Get<NpgsqlConnection>();
             EpocDate = new DateTime(1970, 1, 1, 0, 0, 0);
         }
 

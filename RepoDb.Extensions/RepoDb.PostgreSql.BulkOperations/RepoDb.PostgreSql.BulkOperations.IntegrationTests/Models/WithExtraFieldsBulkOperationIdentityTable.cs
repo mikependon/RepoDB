@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace RepoDb.SqlServer.BulkOperations.IntegrationTests.Models
+namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Models
 {
     [Map("[dbo].[BulkOperationIdentityTable]")]
     public class WithExtraFieldsBulkOperationIdentityTable
