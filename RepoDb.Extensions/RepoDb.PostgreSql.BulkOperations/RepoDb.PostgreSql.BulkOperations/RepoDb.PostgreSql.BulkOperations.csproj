@@ -14,9 +14,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Operations\**" />
     <Compile Remove="System.Data.SqlClient\**" />
+    <EmbeddedResource Remove="Operations\**" />
     <EmbeddedResource Remove="System.Data.SqlClient\**" />
+    <None Remove="Operations\**" />
     <None Remove="System.Data.SqlClient\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Base\BulkDelete.cs" />
+    <Compile Remove="Base\BulkInsert.cs" />
+    <Compile Remove="Base\BulkMerge.cs" />
+    <Compile Remove="Base\BulkUpdate.cs" />
   </ItemGroup>
 
   <ItemGroup>
