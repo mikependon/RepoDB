@@ -763,17 +763,17 @@ namespace RepoDb
                     cancellationToken);
 
                 // Commit the transaction
-                if (hasTransaction == false && transaction != null)
+                if (hasTransaction == false)
                 {
-                    await transaction.CommitAsync(cancellationToken);
+                    transaction.Commit();
                 }
             }
             catch
             {
                 // Rollback the transaction
-                if (hasTransaction == false && transaction != null)
+                if (hasTransaction == false)
                 {
-                    await transaction.RollbackAsync(cancellationToken);
+                    transaction.Rollback();
                 }
 
                 // Throw
@@ -782,9 +782,9 @@ namespace RepoDb
             finally
             {
                 // Dispose the transaction
-                if (hasTransaction == false && transaction != null)
+                if (hasTransaction == false)
                 {
-                    await transaction.DisposeAsync();
+                    transaction.Dispose();
                 }
             }
 
@@ -944,9 +944,9 @@ namespace RepoDb
                 }
 
                 // Commit the transaction
-                if (hasTransaction == false && transaction != null)
+                if (hasTransaction == false)
                 {
-                    await transaction.CommitAsync(cancellationToken);
+                    transaction.Commit();
                 }
 
                 // Return the result
@@ -955,9 +955,9 @@ namespace RepoDb
             catch
             {
                 // Rollback the transaction
-                if (hasTransaction == false && transaction != null)
+                if (hasTransaction == false)
                 {
-                    await transaction.RollbackAsync(cancellationToken);
+                    transaction.Rollback();
                 }
 
                 // Throw
@@ -966,9 +966,9 @@ namespace RepoDb
             finally
             {
                 // Dispose the transaction
-                if (hasTransaction == false && transaction != null)
+                if (hasTransaction == false)
                 {
-                    await transaction.DisposeAsync();
+                    transaction.Dispose();
                 }
             }
         }

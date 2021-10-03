@@ -830,7 +830,7 @@ namespace RepoDb
                 }
                 else
                 {
-                    await using var reader = (DbDataReader)await connection.ExecuteReaderAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, cancellationToken: cancellationToken);
+                    using var reader = (DbDataReader)await connection.ExecuteReaderAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, cancellationToken: cancellationToken);
 
                     result = await SetIdentityForEntitiesAsync(entities, reader, identityDbField, cancellationToken);
                 }
@@ -840,17 +840,17 @@ namespace RepoDb
                 await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
 
                 // Commit the transaction
-                if (hasTransaction == false && transaction != null)
+                if (hasTransaction == false)
                 {
-                    await transaction.CommitAsync(cancellationToken);
+                    transaction.Commit();
                 }
             }
             catch
             {
                 // Rollback the transaction
-                if (hasTransaction == false && transaction != null)
+                if (hasTransaction == false)
                 {
-                    await transaction.RollbackAsync(cancellationToken);
+                    transaction.Rollback();
                 }
 
                 // Throw
@@ -859,9 +859,9 @@ namespace RepoDb
             finally
             {
                 // Dispose the transaction
-                if (hasTransaction == false && transaction != null)
+                if (hasTransaction == false)
                 {
-                    await transaction.DisposeAsync();
+                    transaction.Dispose();
                 }
             }
 
@@ -1039,17 +1039,17 @@ namespace RepoDb
                 await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
 
                 // Commit the transaction
-                if (hasTransaction == false && transaction != null)
+                if (hasTransaction == false)
                 {
-                    await transaction.CommitAsync(cancellationToken);
+                    transaction?.Commit();
                 }
             }
             catch
             {
                 // Rollback the transaction
-                if (hasTransaction == false && transaction != null)
+                if (hasTransaction == false)
                 {
-                    await transaction.RollbackAsync(cancellationToken);
+                    transaction?.Rollback();
                 }
 
                 // Throw
@@ -1058,9 +1058,9 @@ namespace RepoDb
             finally
             {
                 // Dispose the transaction
-                if (hasTransaction == false && transaction != null)
+                if (hasTransaction == false)
                 {
-                    await transaction.DisposeAsync();
+                    transaction?.Dispose();
                 }
             }
 
@@ -1262,17 +1262,17 @@ namespace RepoDb
                 await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
 
                 // Commit the transaction
-                if (hasTransaction == false && transaction != null)
+                if (hasTransaction == false)
                 {
-                    await transaction.CommitAsync(cancellationToken);
+                    transaction?.Commit();
                 }
             }
             catch
             {
                 // Rollback the transaction
-                if (hasTransaction == false && transaction != null)
+                if (hasTransaction == false)
                 {
-                    await transaction.RollbackAsync(cancellationToken);
+                    transaction?.Rollback();
                 }
 
                 // Throw
@@ -1281,9 +1281,9 @@ namespace RepoDb
             finally
             {
                 // Dispose the transaction
-                if (hasTransaction == false && transaction != null)
+                if (hasTransaction == false)
                 {
-                    await transaction.DisposeAsync();
+                    transaction?.Dispose();
                 }
             }
 

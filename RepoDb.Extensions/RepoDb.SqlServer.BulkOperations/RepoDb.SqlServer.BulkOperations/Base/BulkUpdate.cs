@@ -578,17 +578,17 @@ namespace RepoDb
                 await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
 
                 // Commit the transaction
-                if (hasTransaction == false && transaction != null)
+                if (hasTransaction == false)
                 {
-                    await transaction.CommitAsync(cancellationToken);
+                    transaction?.Commit();
                 }
             }
             catch
             {
                 // Rollback the transaction
-                if (hasTransaction == false && transaction != null)
+                if (hasTransaction == false)
                 {
-                    await transaction.RollbackAsync(cancellationToken);
+                    transaction?.Rollback();
                 }
 
                 // Throw
@@ -597,9 +597,9 @@ namespace RepoDb
             finally
             {
                 // Dispose the transaction
-                if (hasTransaction == false && transaction != null)
+                if (hasTransaction == false)
                 {
-                    await transaction.DisposeAsync();
+                    transaction?.Dispose();
                 }
             }
 
@@ -778,17 +778,17 @@ namespace RepoDb
                 await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
 
                 // Commit the transaction
-                if (hasTransaction == false && transaction != null)
-                {
-                    await transaction.CommitAsync(cancellationToken);
+                if (hasTransaction == false)
+                { 
+                    transaction?.Commit();
                 }
             }
             catch
             {
                 // Rollback the transaction
-                if (hasTransaction == false && transaction != null)
-                {
-                    await transaction.RollbackAsync(cancellationToken);
+                if (hasTransaction == false)
+                { 
+                    transaction?.Rollback();
                 }
 
                 // Throw
@@ -797,9 +797,9 @@ namespace RepoDb
             finally
             {
                 // Dispose the transaction
-                if (hasTransaction == false && transaction != null)
-                {
-                    await transaction.DisposeAsync();
+                if (hasTransaction == false)
+                { 
+                    transaction?.Dispose();
                 }
             }
 
