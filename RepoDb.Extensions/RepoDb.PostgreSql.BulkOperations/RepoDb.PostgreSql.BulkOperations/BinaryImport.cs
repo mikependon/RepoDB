@@ -1,5 +1,6 @@
 ﻿using Npgsql;
 using RepoDb.Extensions;
+using RepoDb.Interfaces;
 using RepoDb.PostgreSql.BulkOperations;
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,6 @@ namespace RepoDb
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
-        /// <param name="hasOrderingColumn"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
         public static int BinaryImport<TEntity>(NpgsqlConnection connection,
@@ -30,7 +30,6 @@ namespace RepoDb
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool hasOrderingColumn = false,
             NpgsqlTransaction transaction = null)
             where TEntity : class
         {
@@ -58,10 +57,9 @@ namespace RepoDb
                         tableName,
                         ref mappings,
                         bulkCopyTimeout,
-                        hasOrderingColumn,
                         transaction))
                     {
-                        result += BinaryImport(connection, importer, tableName, batch, mappings, transaction);
+                        result += BinaryImport<TEntity>(connection, importer, tableName, batch, mappings, transaction);
                     }
                 }
 
@@ -84,10 +82,10 @@ namespace RepoDb
             }
             finally
             {
-                // Commit
+                // Dispose
                 if (hasTransaction == false)
                 {
-                    transaction.Rollback();
+                    transaction.Dispose();
                 }
             }
 
@@ -111,14 +109,12 @@ namespace RepoDb
         /// <param name="tableName"></param>
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
-        /// <param name="hasOrderingColumn"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
         private static NpgsqlBinaryImporter GetNpgsqlBinaryImporter<TEntity>(NpgsqlConnection connection,
             string tableName,
             ref IEnumerable<NpgsqlBulkInsertMapItem> mappings,
             int? bulkCopyTimeout = null,
-            bool hasOrderingColumn = false,
             NpgsqlTransaction transaction = null)
             where TEntity : class
         {
@@ -129,12 +125,6 @@ namespace RepoDb
             if (bulkCopyTimeout.HasValue)
             {
                 importer.Timeout = TimeSpan.FromSeconds(bulkCopyTimeout.Value);
-            }
-
-            // Order column
-            if (hasOrderingColumn)
-            {
-                //mappings = AddOrderColumnMapping(mappings);
             }
 
             // Return
@@ -164,13 +154,13 @@ namespace RepoDb
 
             if (mappings?.Any() == true)
             {
-                return BinaryImport(importer, tableName, entities, mappings);
+                return BinaryImport<TEntity>(importer, tableName, entities, mappings);
             }
             else
             {
                 var dbFields = DbFieldCache.Get(connection, tableName ?? ClassMappedNameCache.Get(entityType), transaction);
-                var fields = FieldCache.Get(entityType);
-                return BinaryImport(importer, tableName, entities, dbFields, fields);
+                var properties = PropertyCache.Get(entityType);
+                return BinaryImport<TEntity>(importer, tableName, entities, dbFields, properties, connection.GetDbSetting());
             }
         }
 
@@ -210,15 +200,28 @@ namespace RepoDb
         /// <param name="tableName"></param>
         /// <param name="entities"></param>
         /// <param name="dbFields"></param>
-        /// <param name="fields"></param>
+        /// <param name="properties"></param>
+        /// <param name="dbSetting"></param>
         private static int BinaryImport<TEntity>(NpgsqlBinaryImporter importer,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<DbField> dbFields,
-            IEnumerable<Field> fields)
+            IEnumerable<ClassProperty> properties,
+            IDbSetting dbSetting)
             where TEntity : class
         {
-            throw new NotImplementedException();
+            var func = Compiler.GetNpgsqlBinaryImporterWriteFunc<TEntity>(tableName, dbFields, properties, dbSetting);
+            var result = 0;
+
+            foreach (var entity in entities)
+            {
+                importer.StartRow();
+                func(importer, entity);
+                result++;
+            }
+
+            importer.Complete();
+            return result;
         }
 
         #endregion

@@ -77,9 +77,9 @@ namespace RepoDb
             {
                 // DB/Entity Fields
                 var dbFields = DbFieldCache.Get(connection, tableName ?? ClassMappedNameCache.Get(entityType), transaction);
-                var fields = FieldCache.Get(entityType);
+                var properties = PropertyCache.Get(entityType);
 
-                return GetMatchingTextColumns(dbFields, fields, dbSetting);
+                return GetMatchingTextColumns(dbFields, properties, dbSetting);
             }
         }
 
@@ -96,29 +96,29 @@ namespace RepoDb
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="fields"></param>
+        /// <param name="properties"></param>
         /// <param name="dbFields"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         private static string GetMatchingTextColumns(IEnumerable<DbField> dbFields,
-            IEnumerable<Field> fields,
+            IEnumerable<ClassProperty> properties,
             IDbSetting dbSetting) =>
-            GetMatchedFields(dbFields, fields, dbSetting)?.Select(field => field.Name.AsQuoted(true, dbSetting)).Join(", ");
+            GetMatchedProperties(dbFields, properties, dbSetting)?.Select(property => property.GetMappedName().AsQuoted(true, dbSetting)).Join(", ");
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="dbFields"></param>
-        /// <param name="fields"></param>
+        /// <param name="properties"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        private static IEnumerable<Field> GetMatchedFields(IEnumerable<DbField> dbFields,
-            IEnumerable<Field> fields,
+        internal static IEnumerable<ClassProperty> GetMatchedProperties(IEnumerable<DbField> dbFields,
+            IEnumerable<ClassProperty> properties,
             IDbSetting dbSetting) =>
-            dbFields?.Any() != true ? fields : dbFields?
-                .Where(dbField =>
-                    fields?.FirstOrDefault(field =>
-                        string.Equals(field.Name.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
-                .AsFields();
+            properties?
+                .Where(property =>
+                    dbFields?.FirstOrDefault(dbField =>
+                        dbField.IsIdentity == false &&
+                        string.Equals(property.GetMappedName().AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Npgsql;
+using RepoDb.PostgreSql.BulkOperations;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -29,7 +30,7 @@ namespace RepoDb
         public static int BulkUpdate<TEntity>(this BaseRepository<TEntity, NpgsqlConnection> repository,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
             NpgsqlTransaction transaction = null)
@@ -60,7 +61,7 @@ namespace RepoDb
             string tableName,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
             NpgsqlTransaction transaction = null)
@@ -95,7 +96,7 @@ namespace RepoDb
         public static Task<int> BulkUpdateAsync<TEntity>(this BaseRepository<TEntity, NpgsqlConnection> repository,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
             NpgsqlTransaction transaction = null,
@@ -129,7 +130,7 @@ namespace RepoDb
             string tableName,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
             NpgsqlTransaction transaction = null,

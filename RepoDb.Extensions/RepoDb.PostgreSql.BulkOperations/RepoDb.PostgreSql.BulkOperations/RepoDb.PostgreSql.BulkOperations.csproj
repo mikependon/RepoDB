@@ -46,4 +46,8 @@
     <ProjectReference Include="..\..\..\RepoDb.PostgreSql\RepoDb.PostgreSql\RepoDb.PostgreSql.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Base\" />
+  </ItemGroup>
+
 </Project>

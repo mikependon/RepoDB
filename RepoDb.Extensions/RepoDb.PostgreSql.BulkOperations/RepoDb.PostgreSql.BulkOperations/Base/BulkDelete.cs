@@ -110,7 +110,7 @@ namespace RepoDb
                 {
                     var options = primaryOrIdentityDbField.IsIdentity == true ?
                         Compiler.GetEnumFunc<TSqlBulkCopyOptions>("KeepIdentity")() : default;
-                    var mappings = new[] { new BulkInsertMapItem(primaryOrIdentityField.Name, primaryOrIdentityField.Name) };
+                    var mappings = new[] { new NpgsqlBulkInsertMapItem(primaryOrIdentityField.Name, primaryOrIdentityField.Name) };
 
                     // WriteToServer
                     WriteToServerInternal<TSqlBulkCopy, TSqlBulkCopyOptions, TSqlBulkCopyColumnMappingCollection,
@@ -199,7 +199,7 @@ namespace RepoDb
             string tableName,
             DbDataReader reader,
             IEnumerable<Field> qualifiers = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             TSqlBulkCopyOptions options = default,
             string hints = null,
             int? bulkCopyTimeout = null,
@@ -291,7 +291,7 @@ namespace RepoDb
                     // Filter the fields (based on the data table)
                     mappings = fields?
                         .Select(e =>
-                            new BulkInsertMapItem(e.Name, e.Name));
+                            new NpgsqlBulkInsertMapItem(e.Name, e.Name));
                 }
 
                 // Throw an error if there are no fields
@@ -409,7 +409,7 @@ namespace RepoDb
             DataTable dataTable,
             IEnumerable<Field> qualifiers = null,
             DataRowState? rowState = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             TSqlBulkCopyOptions options = default,
             string hints = null,
             int? bulkCopyTimeout = null,
@@ -501,7 +501,7 @@ namespace RepoDb
                     // Filter the fields (based on the data table)
                     mappings = fields?
                         .Select(e =>
-                            new BulkInsertMapItem(e.Name, e.Name));
+                            new NpgsqlBulkInsertMapItem(e.Name, e.Name));
                 }
 
                 // Throw an error if there are no fields
@@ -694,7 +694,7 @@ namespace RepoDb
                 {
                     var options = primaryOrIdentityDbField.IsIdentity == true ?
                         Compiler.GetEnumFunc<TSqlBulkCopyOptions>("KeepIdentity")() : default;
-                    var mappings = new[] { new BulkInsertMapItem(primaryOrIdentityField.Name, primaryOrIdentityField.Name) };
+                    var mappings = new[] { new NpgsqlBulkInsertMapItem(primaryOrIdentityField.Name, primaryOrIdentityField.Name) };
 
                     // WriteToServer
                     await WriteToServerAsyncInternal<TSqlBulkCopy, TSqlBulkCopyOptions, TSqlBulkCopyColumnMappingCollection,
@@ -785,7 +785,7 @@ namespace RepoDb
             string tableName,
             DbDataReader reader,
             IEnumerable<Field> qualifiers = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             TSqlBulkCopyOptions options = default,
             string hints = null,
             int? bulkCopyTimeout = null,
@@ -878,7 +878,7 @@ namespace RepoDb
                     // Filter the fields (based on the data table)
                     mappings = fields?
                         .Select(e =>
-                            new BulkInsertMapItem(e.Name, e.Name));
+                            new NpgsqlBulkInsertMapItem(e.Name, e.Name));
                 }
 
                 // Throw an error if there are no fields
@@ -998,7 +998,7 @@ namespace RepoDb
             DataTable dataTable,
             IEnumerable<Field> qualifiers = null,
             DataRowState? rowState = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             TSqlBulkCopyOptions options = default,
             string hints = null,
             int? bulkCopyTimeout = null,
@@ -1091,7 +1091,7 @@ namespace RepoDb
                     // Filter the fields (based on the data table)
                     mappings = fields?
                         .Select(e =>
-                            new BulkInsertMapItem(e.Name, e.Name));
+                            new NpgsqlBulkInsertMapItem(e.Name, e.Name));
                 }
 
                 // Throw an error if there are no fields

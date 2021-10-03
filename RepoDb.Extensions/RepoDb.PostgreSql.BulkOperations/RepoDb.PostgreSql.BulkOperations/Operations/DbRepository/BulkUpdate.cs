@@ -1,5 +1,6 @@
 ﻿using Npgsql;
 using RepoDb.Enumerations;
+using RepoDb.PostgreSql.BulkOperations;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -32,7 +33,7 @@ namespace RepoDb
         public static int BulkUpdate<TEntity>(this DbRepository<NpgsqlConnection> repository,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
             NpgsqlTransaction transaction = null)
@@ -82,7 +83,7 @@ namespace RepoDb
             string tableName,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
             NpgsqlTransaction transaction = null)
@@ -131,7 +132,7 @@ namespace RepoDb
         public static int BulkUpdate<TEntity>(this DbRepository<NpgsqlConnection> repository,
             DbDataReader reader,
             Expression<Func<TEntity, object>> qualifiers = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
             NpgsqlTransaction transaction = null)
@@ -184,7 +185,7 @@ namespace RepoDb
             string tableName,
             DbDataReader reader,
             IEnumerable<Field> qualifiers = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
             NpgsqlTransaction transaction = null)
@@ -234,7 +235,7 @@ namespace RepoDb
             DataTable dataTable,
             IEnumerable<Field> qualifiers = null,
             DataRowState? rowState = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
             NpgsqlTransaction transaction = null)
@@ -286,7 +287,7 @@ namespace RepoDb
             DataTable dataTable,
             IEnumerable<Field> qualifiers = null,
             DataRowState? rowState = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
             NpgsqlTransaction transaction = null)
@@ -340,7 +341,7 @@ namespace RepoDb
         public static async Task<int> BulkUpdateAsync<TEntity>(this DbRepository<NpgsqlConnection> repository,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
             NpgsqlTransaction transaction = null,
@@ -393,7 +394,7 @@ namespace RepoDb
             string tableName,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
             NpgsqlTransaction transaction = null,
@@ -445,7 +446,7 @@ namespace RepoDb
         public static async Task<int> BulkUpdateAsync<TEntity>(this DbRepository<NpgsqlConnection> repository,
             DbDataReader reader,
             Expression<Func<TEntity, object>> qualifiers = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
             NpgsqlTransaction transaction = null,
@@ -501,7 +502,7 @@ namespace RepoDb
             string tableName,
             DbDataReader reader,
             IEnumerable<Field> qualifiers = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
             NpgsqlTransaction transaction = null,
@@ -554,7 +555,7 @@ namespace RepoDb
             DataTable dataTable,
             IEnumerable<Field> qualifiers = null,
             DataRowState? rowState = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
             NpgsqlTransaction transaction = null,
@@ -609,7 +610,7 @@ namespace RepoDb
             DataTable dataTable,
             IEnumerable<Field> qualifiers = null,
             DataRowState? rowState = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
             NpgsqlTransaction transaction = null,

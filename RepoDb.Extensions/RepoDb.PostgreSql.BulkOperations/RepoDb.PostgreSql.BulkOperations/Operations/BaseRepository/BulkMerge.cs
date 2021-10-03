@@ -1,4 +1,5 @@
 ﻿using Npgsql;
+using RepoDb.PostgreSql.BulkOperations;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -30,7 +31,7 @@ namespace RepoDb
         public static int BulkMerge<TEntity>(this BaseRepository<TEntity, NpgsqlConnection> repository,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? batchSize = null,
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
@@ -64,7 +65,7 @@ namespace RepoDb
             string tableName,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? batchSize = null,
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
@@ -102,7 +103,7 @@ namespace RepoDb
         public static Task<int> BulkMergeAsync<TEntity>(this BaseRepository<TEntity, NpgsqlConnection> repository,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? batchSize = null,
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
@@ -139,7 +140,7 @@ namespace RepoDb
             string tableName,
             IEnumerable<TEntity> entities,
             Expression<Func<TEntity, object>> qualifiers = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? batchSize = null,
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,

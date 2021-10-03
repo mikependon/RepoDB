@@ -13,7 +13,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Models
         public int? ColumnInteger { get; set; }
         public decimal ColumnMoney { get; set; }
         public decimal? ColumnNumeric { get; set; }
-        public decimal? ColumnReal { get; set; }
+        public float? ColumnReal { get; set; }
         public int? ColumnSerial { get; set; }
         public short? ColumnSmallInt { get; set; }
         public short? ColumnSmallSerial { get; set; }

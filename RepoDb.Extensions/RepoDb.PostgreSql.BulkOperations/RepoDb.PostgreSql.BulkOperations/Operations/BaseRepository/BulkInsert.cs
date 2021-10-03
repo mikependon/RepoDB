@@ -1,4 +1,5 @@
 ﻿using Npgsql;
+using RepoDb.PostgreSql.BulkOperations;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,7 +27,7 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         public static int BulkInsert<TEntity>(this BaseRepository<TEntity, NpgsqlConnection> repository,
             IEnumerable<TEntity> entities,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? batchSize = null,
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
@@ -57,7 +58,7 @@ namespace RepoDb
         public static int BulkInsert<TEntity>(this BaseRepository<TEntity, NpgsqlConnection> repository,
             string tableName,
             IEnumerable<TEntity> entities,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? batchSize = null,
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
@@ -92,7 +93,7 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         public static Task<int> BulkInsertAsync<TEntity>(this BaseRepository<TEntity, NpgsqlConnection> repository,
             IEnumerable<TEntity> entities,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? batchSize = null,
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
@@ -126,7 +127,7 @@ namespace RepoDb
         public static Task<int> BulkInsertAsync<TEntity>(this BaseRepository<TEntity, NpgsqlConnection> repository,
             string tableName,
             IEnumerable<TEntity> entities,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? batchSize = null,
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,

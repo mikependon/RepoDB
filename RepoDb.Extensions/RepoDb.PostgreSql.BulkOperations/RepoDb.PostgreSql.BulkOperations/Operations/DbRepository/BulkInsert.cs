@@ -1,5 +1,6 @@
 ﻿using Npgsql;
 using RepoDb.Enumerations;
+using RepoDb.PostgreSql.BulkOperations;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -29,7 +30,7 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         public static int BulkInsert<TEntity>(this DbRepository<NpgsqlConnection> repository,
             IEnumerable<TEntity> entities,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? batchSize = null,
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
@@ -79,7 +80,7 @@ namespace RepoDb
         public static int BulkInsert<TEntity>(this DbRepository<NpgsqlConnection> repository,
             string tableName,
             IEnumerable<TEntity> entities,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? batchSize = null,
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
@@ -126,7 +127,7 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         public static int BulkInsert<TEntity>(this DbRepository<NpgsqlConnection> repository,
             DbDataReader reader,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? batchSize = null,
             NpgsqlTransaction transaction = null)
             where TEntity : class
@@ -173,7 +174,7 @@ namespace RepoDb
         public static int BulkInsert(this DbRepository<NpgsqlConnection> repository,
             string tableName,
             DbDataReader reader,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? batchSize = null,
             NpgsqlTransaction transaction = null)
         {
@@ -219,7 +220,7 @@ namespace RepoDb
         public static int BulkInsert<TEntity>(this DbRepository<NpgsqlConnection> repository,
             DataTable dataTable,
             DataRowState? rowState = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? batchSize = null,
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
@@ -271,7 +272,7 @@ namespace RepoDb
             string tableName,
             DataTable dataTable,
             DataRowState? rowState = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? batchSize = null,
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
@@ -325,7 +326,7 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkInsertAsync<TEntity>(this DbRepository<NpgsqlConnection> repository,
             IEnumerable<TEntity> entities,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? batchSize = null,
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
@@ -378,7 +379,7 @@ namespace RepoDb
         public static async Task<int> BulkInsertAsync<TEntity>(this DbRepository<NpgsqlConnection> repository,
             string tableName,
             IEnumerable<TEntity> entities,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? batchSize = null,
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
@@ -428,7 +429,7 @@ namespace RepoDb
         /// <returns>The number of rows affected by the execution.</returns>
         public static async Task<int> BulkInsertAsync<TEntity>(this DbRepository<NpgsqlConnection> repository,
             DbDataReader reader,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? batchSize = null,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
@@ -478,7 +479,7 @@ namespace RepoDb
         public static async Task<int> BulkInsertAsync(this DbRepository<NpgsqlConnection> repository,
             string tableName,
             DbDataReader reader,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? batchSize = null,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
@@ -527,7 +528,7 @@ namespace RepoDb
         public static async Task<int> BulkInsertAsync<TEntity>(this DbRepository<NpgsqlConnection> repository,
             DataTable dataTable,
             DataRowState? rowState = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? batchSize = null,
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
@@ -582,7 +583,7 @@ namespace RepoDb
             string tableName,
             DataTable dataTable,
             DataRowState? rowState = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? batchSize = null,
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,

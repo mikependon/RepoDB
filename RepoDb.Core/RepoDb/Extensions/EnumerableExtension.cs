@@ -20,7 +20,7 @@ namespace RepoDb.Extensions
             int sizePerSplit)
         {
             var list = value?.AsList();
-            if (list.Count <= sizePerSplit)
+            if (sizePerSplit == 0 || list.Count <= sizePerSplit)
             {
                 return new[] { value };
             }
@@ -90,7 +90,7 @@ namespace RepoDb.Extensions
         /// <typeparam name="T">The actual enumerable instance.</typeparam>
         /// <returns>A value indicating whether the collection is null or empty.</returns>
         public static bool IsNullOrEmpty<T>(this IEnumerable<T> value) => !value?.Any() ?? true;
-        
+
 #if NETSTANDARD2_0
         /// <summary>
         /// 

@@ -41,7 +41,7 @@ namespace RepoDb
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             TSqlBulkCopyOptions options = default,
             string hints = null,
             int? bulkCopyTimeout = null,
@@ -136,7 +136,7 @@ namespace RepoDb
                     // Explicitly define the mappings
                     mappings = fields?
                         .Select(e =>
-                            new BulkInsertMapItem(e.Name, e.Name));
+                            new NpgsqlBulkInsertMapItem(e.Name, e.Name));
                 }
 
                 // Throw an error if there are no fields
@@ -165,17 +165,17 @@ namespace RepoDb
                     options = Compiler.GetEnumFunc<TSqlBulkCopyOptions>("KeepIdentity")();
                 }
 
-                // WriteToServer
-                WriteToServerInternal<TEntity, TSqlBulkCopy, TSqlBulkCopyOptions, TSqlBulkCopyColumnMappingCollection,
-                    TSqlBulkCopyColumnMapping, TSqlTransaction>(connection,
-                    (tempTableName ?? tableName),
-                    entities,
-                    mappings,
-                    options,
-                    bulkCopyTimeout,
-                    batchSize,
-                    hasOrderingColumn,
-                    transaction);
+                //// WriteToServer
+                //WriteToServerInternal<TEntity, TSqlBulkCopy, TSqlBulkCopyOptions, TSqlBulkCopyColumnMappingCollection,
+                //    TSqlBulkCopyColumnMapping, TSqlTransaction>(connection,
+                //    (tempTableName ?? tableName),
+                //    entities,
+                //    mappings,
+                //    options,
+                //    bulkCopyTimeout,
+                //    batchSize,
+                //    hasOrderingColumn,
+                //    transaction);
 
                 // Create the clustered index
                 sql = GetCreateTemporaryTableClusteredIndexSqlText(tempTableName,
@@ -267,7 +267,7 @@ namespace RepoDb
             string tableName,
             DbDataReader reader,
             IEnumerable<Field> qualifiers = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             TSqlBulkCopyOptions options = default,
             string hints = null,
             int? bulkCopyTimeout = null,
@@ -359,7 +359,7 @@ namespace RepoDb
                     // Explicitly define the mappings
                     mappings = fields?
                         .Select(e =>
-                            new BulkInsertMapItem(e.Name, e.Name));
+                            new NpgsqlBulkInsertMapItem(e.Name, e.Name));
                 }
 
                 // Throw an error if there are no fields
@@ -478,7 +478,7 @@ namespace RepoDb
             DataTable dataTable,
             IEnumerable<Field> qualifiers = null,
             DataRowState? rowState = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             TSqlBulkCopyOptions options = default,
             string hints = null,
             int? bulkCopyTimeout = null,
@@ -571,7 +571,7 @@ namespace RepoDb
                     // Explicitly define the mappings
                     mappings = fields?
                         .Select(e =>
-                            new BulkInsertMapItem(e.Name, e.Name));
+                            new NpgsqlBulkInsertMapItem(e.Name, e.Name));
                 }
 
                 // Throw an error if there are no fields
@@ -714,7 +714,7 @@ namespace RepoDb
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             TSqlBulkCopyOptions options = default,
             string hints = null,
             int? bulkCopyTimeout = null,
@@ -810,7 +810,7 @@ namespace RepoDb
                     // Explicitly define the mappings
                     mappings = fields?
                         .Select(e =>
-                            new BulkInsertMapItem(e.Name, e.Name));
+                            new NpgsqlBulkInsertMapItem(e.Name, e.Name));
                 }
 
                 // Throw an error if there are no fields
@@ -942,7 +942,7 @@ namespace RepoDb
             string tableName,
             DbDataReader reader,
             IEnumerable<Field> qualifiers = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             TSqlBulkCopyOptions options = default,
             string hints = null,
             int? bulkCopyTimeout = null,
@@ -1035,7 +1035,7 @@ namespace RepoDb
                     // Explicitly define the mappings
                     mappings = fields?
                         .Select(e =>
-                            new BulkInsertMapItem(e.Name, e.Name));
+                            new NpgsqlBulkInsertMapItem(e.Name, e.Name));
                 }
 
                 // Throw an error if there are no fields
@@ -1156,7 +1156,7 @@ namespace RepoDb
             DataTable dataTable,
             IEnumerable<Field> qualifiers = null,
             DataRowState? rowState = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             TSqlBulkCopyOptions options = default,
             string hints = null,
             int? bulkCopyTimeout = null,
@@ -1250,7 +1250,7 @@ namespace RepoDb
                     // Explicitly define the mappings
                     mappings = fields?
                         .Select(e =>
-                            new BulkInsertMapItem(e.Name, e.Name));
+                            new NpgsqlBulkInsertMapItem(e.Name, e.Name));
                 }
 
                 // Throw an error if there are no fields

@@ -1,6 +1,8 @@
 ﻿using Npgsql;
 using NpgsqlTypes;
 using RepoDb.Exceptions;
+using RepoDb.Extensions;
+using RepoDb.Interfaces;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -15,7 +17,7 @@ namespace RepoDb.PostgreSql.BulkOperations
     /// </summary>
     internal static class Compiler
     {
-        #region GetWriteFunc
+        #region GetNpgsqlBinaryImporterWriteFunc (Mappings)
 
         /// <summary>
         /// 
@@ -33,6 +35,22 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// 
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tableName"></param>
+        /// <param name="dbFields"></param>
+        /// <param name="properties"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
+        internal static Action<NpgsqlBinaryImporter, TEntity> GetNpgsqlBinaryImporterWriteFunc<TEntity>(string tableName,
+            IEnumerable<DbField> dbFields,
+            IEnumerable<ClassProperty> properties,
+            IDbSetting dbSetting)
+            where TEntity : class =>
+            GetNpgsqlBinaryImporterWriteFuncCache<TEntity>.Get(tableName, dbFields, properties, dbSetting);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
         private static class GetNpgsqlBinaryImporterWriteFuncCache<TEntity>
             where TEntity : class
         {
@@ -45,12 +63,40 @@ namespace RepoDb.PostgreSql.BulkOperations
             /// <param name="mappings"></param>
             /// <returns></returns>
             public static Action<NpgsqlBinaryImporter, TEntity> Get(string tableName,
+                IEnumerable<NpgsqlBulkInsertMapItem> mappings) =>
+                GetFunc(tableName, mappings);
+
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="tableName"></param>
+            /// <param name="dbFields"></param>
+            /// <param name="properties"></param>
+            /// <param name="dbSetting"></param>
+            /// <returns></returns>
+            public static Action<NpgsqlBinaryImporter, TEntity> Get(string tableName,
+                IEnumerable<DbField> dbFields,
+                IEnumerable<ClassProperty> properties,
+                IDbSetting dbSetting)
+            {
+                var matchedProperties = NpgsqlConnectionExtension.GetMatchedProperties(dbFields, properties, dbSetting);
+                var mappings = matchedProperties.Select(property => new NpgsqlBulkInsertMapItem(property.PropertyInfo.Name, property.GetMappedName()));
+                return GetFunc(tableName, mappings);
+            }
+
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="tableName"></param>
+            /// <param name="mappings"></param>
+            /// <returns></returns>
+            private static Action<NpgsqlBinaryImporter, TEntity> GetFunc(string tableName,
                 IEnumerable<NpgsqlBulkInsertMapItem> mappings)
             {
                 var targetTableName = tableName ?? ClassMappedNameCache.Get<TEntity>();
-                var key = GetHashCode<TEntity>(targetTableName, mappings);
+                var hashCode = GetHashCode<TEntity>(targetTableName, mappings);
 
-                if (cache.TryGetValue(key, out var value))
+                if (cache.TryGetValue(hashCode, out var value))
                 {
                     return value;
                 }
@@ -80,12 +126,12 @@ namespace RepoDb.PostgreSql.BulkOperations
                         .Compile();
                 }
 
-                if (cache.TryAdd(key, func))
+                if (cache.TryAdd(hashCode, func))
                 {
                     return func;
                 }
 
-                throw new InvalidOperationException($"Failed to add a compiled '{importerType.FullName}.Write' function for entity '{targetTableName}'.");
+                throw new InvalidOperationException($"Failed to add a compiled '{importerType.FullName}.Write' function for '{tableName}'.");
             }
         }
 
@@ -147,18 +193,60 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="tableName"></param>
+        /// <returns></returns>
+        private static int GetHashCode<TEntity>(string tableName) =>
+            (tableName ?? ClassMappedNameCache.Get<TEntity>()).GetHashCode();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tableName"></param>
         /// <param name="mappings"></param>
         /// <returns></returns>
         private static int GetHashCode<TEntity>(string tableName,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings)
         {
-            var hashCode = (tableName ?? ClassMappedNameCache.Get<TEntity>()).GetHashCode();
+            var hashCode = GetHashCode<TEntity>(tableName);
 
             if (mappings?.Any() == true)
             {
                 foreach (var mapping in mappings)
                 {
                     hashCode += HashCode.Combine(hashCode, mapping.GetHashCode());
+                }
+            }
+
+            return hashCode;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tableName"></param>
+        /// <param name="dbFields"></param>
+        /// <param name="fields"></param>
+        /// <returns></returns>
+        private static int GetHashCode<TEntity>(string tableName,
+            IEnumerable<DbField> dbFields,
+            IEnumerable<ClassProperty> fields)
+        {
+            var hashCode = GetHashCode<TEntity>(tableName);
+
+            if (dbFields?.Any() == true)
+            {
+                foreach (var dbField in dbFields)
+                {
+                    hashCode += HashCode.Combine(hashCode, dbField.GetHashCode());
+                }
+            }
+
+            if (fields?.Any() == true)
+            {
+                foreach (var field in fields)
+                {
+                    hashCode += HashCode.Combine(hashCode, field.GetHashCode());
                 }
             }
 
