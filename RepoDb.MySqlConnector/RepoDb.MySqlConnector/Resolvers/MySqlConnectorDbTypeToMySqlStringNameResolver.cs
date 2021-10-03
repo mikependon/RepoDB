@@ -5,7 +5,7 @@ using System.Data;
 namespace RepoDb.Resolvers
 {
     /// <summary>
-    /// A class used to resolve the <see cref="DbType"/> into its equivalent database string name.
+    /// A class that is being used to resolve the <see cref="DbType"/> into its equivalent database string name.
     /// </summary>
     public class MySqlConnectorDbTypeToMySqlStringNameResolver : IResolver<MySqlDbType, string>
     {

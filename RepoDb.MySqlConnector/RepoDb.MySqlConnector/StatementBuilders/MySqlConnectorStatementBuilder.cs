@@ -9,7 +9,7 @@ using System.Linq;
 namespace RepoDb.StatementBuilders
 {
     /// <summary>
-    /// A class used to build a SQL Statement for MySql.
+    /// A class that is being used to build a SQL Statement for MySql.
     /// </summary>
     public sealed class MySqlConnectorStatementBuilder : BaseStatementBuilder
     {

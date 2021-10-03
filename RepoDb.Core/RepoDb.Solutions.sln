@@ -12,8 +12,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Base", "RepoDb.Base"
 		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.SqLite", "..\RepoDb.SqLite\RepoDb.SqLite\RepoDb.SqLite.csproj", "{1BD00E8B-7E72-48E2-BFAB-E12F34A96D3D}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.MySql", "..\RepoDb.MySql\RepoDb.MySql\RepoDb.MySql.csproj", "{C6E790E9-1DB0-4953-B5A4-ABC517C0C19F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Nuget", "RepoDb.Nuget", "{006AD8A9-75F1-4F67-AF75-0B5204E2E0A4}"
@@ -37,11 +35,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Docs", "RepoDb.Docs"
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "READMEs", "READMEs", "{5EA323B8-B4B6-4083-97A3-018C9423B20A}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SqLite", "SqLite", "{D203DBE3-A86A-4F48-AE16-3CCCCA443ABC}"
-	ProjectSection(SolutionItems) = preProject
-		..\RepoDb.SqLite\README.md = ..\RepoDb.SqLite\README.md
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MySql", "MySql", "{97CDB540-A186-42B9-9492-608A2392A8C5}"
 	ProjectSection(SolutionItems) = preProject
@@ -86,6 +79,20 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\Directory.Build.props = ..\Directory.Build.props
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sqlite.Microsoft", "Sqlite.Microsoft", "{33D8E1C3-814F-4E46-90C6-793DDBCE0793}"
+	ProjectSection(SolutionItems) = preProject
+		..\RepoDb.Sqlite.Microsoft\README.md = ..\RepoDb.Sqlite.Microsoft\README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SQLite.System", "SQLite.System", "{33D9D9D0-2A18-4F7D-8059-7B3679B6D1ED}"
+	ProjectSection(SolutionItems) = preProject
+		..\RepoDb.SQLite.System\README.md = ..\RepoDb.SQLite.System\README.md
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.Sqlite.Microsoft", "..\RepoDb.Sqlite.Microsoft\RepoDb.Sqlite.Microsoft\RepoDb.Sqlite.Microsoft.csproj", "{7BD208E0-F037-496D-B7D7-1BBA62A18FBB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.SQLite.System", "..\RepoDb.SQLite.System\RepoDb.SQLite.System\RepoDb.SQLite.System.csproj", "{A52DA818-69DD-4A13-B2C7-F398EBA1E9D5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -96,10 +103,6 @@ Global
 		{848A3476-B319-4BCC-A9CB-572182785B58}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{848A3476-B319-4BCC-A9CB-572182785B58}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{848A3476-B319-4BCC-A9CB-572182785B58}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1BD00E8B-7E72-48E2-BFAB-E12F34A96D3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1BD00E8B-7E72-48E2-BFAB-E12F34A96D3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1BD00E8B-7E72-48E2-BFAB-E12F34A96D3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1BD00E8B-7E72-48E2-BFAB-E12F34A96D3D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C6E790E9-1DB0-4953-B5A4-ABC517C0C19F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C6E790E9-1DB0-4953-B5A4-ABC517C0C19F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6E790E9-1DB0-4953-B5A4-ABC517C0C19F}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -120,19 +123,28 @@ Global
 		{C63D73DF-E9CC-4DC7-A2AC-44FD7A378090}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C63D73DF-E9CC-4DC7-A2AC-44FD7A378090}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C63D73DF-E9CC-4DC7-A2AC-44FD7A378090}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7BD208E0-F037-496D-B7D7-1BBA62A18FBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BD208E0-F037-496D-B7D7-1BBA62A18FBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BD208E0-F037-496D-B7D7-1BBA62A18FBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BD208E0-F037-496D-B7D7-1BBA62A18FBB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A52DA818-69DD-4A13-B2C7-F398EBA1E9D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A52DA818-69DD-4A13-B2C7-F398EBA1E9D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A52DA818-69DD-4A13-B2C7-F398EBA1E9D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A52DA818-69DD-4A13-B2C7-F398EBA1E9D5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{5EA323B8-B4B6-4083-97A3-018C9423B20A} = {810FF947-4368-477F-9193-07532892B492}
-		{D203DBE3-A86A-4F48-AE16-3CCCCA443ABC} = {5EA323B8-B4B6-4083-97A3-018C9423B20A}
 		{97CDB540-A186-42B9-9492-608A2392A8C5} = {5EA323B8-B4B6-4083-97A3-018C9423B20A}
 		{97F2640B-CD0C-430E-8E18-D948A6966C85} = {5EA323B8-B4B6-4083-97A3-018C9423B20A}
 		{FCAEE688-26E0-490C-9C70-0A52AA7AFF62} = {5EA323B8-B4B6-4083-97A3-018C9423B20A}
 		{B57B1387-2718-46F0-9608-11746ECB4DF2} = {5EA323B8-B4B6-4083-97A3-018C9423B20A}
 		{1E85E11D-431C-4969-B2EE-C82EB0D92DC7} = {5EA323B8-B4B6-4083-97A3-018C9423B20A}
 		{419BA40B-7803-4E45-893F-FB8A6E81FAC5} = {5EA323B8-B4B6-4083-97A3-018C9423B20A}
+		{33D8E1C3-814F-4E46-90C6-793DDBCE0793} = {5EA323B8-B4B6-4083-97A3-018C9423B20A}
+		{33D9D9D0-2A18-4F7D-8059-7B3679B6D1ED} = {5EA323B8-B4B6-4083-97A3-018C9423B20A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D15A7161-5524-45B7-A22A-EA6C877AA840}

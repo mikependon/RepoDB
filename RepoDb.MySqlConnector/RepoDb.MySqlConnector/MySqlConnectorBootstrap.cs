@@ -6,7 +6,7 @@ using RepoDb.StatementBuilders;
 namespace RepoDb
 {
     /// <summary>
-    /// A class used to initialize necessary objects that is connected to <see cref="MySqlConnection"/> object.
+    /// A class that is being used to initialize necessary objects that is connected to <see cref="MySqlConnection"/> object.
     /// </summary>
     public static class MySqlConnectorBootstrap
     {

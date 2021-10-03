@@ -4,7 +4,7 @@ using System;
 namespace RepoDb.Resolvers
 {
     /// <summary>
-    /// A class used to resolve the MySql Database Types into its equivalent .NET CLR Types.
+    /// A class that is being used to resolve the MySql Database Types into its equivalent .NET CLR Types.
     /// </summary>
     public class MySqlConnectorDbTypeNameToClientTypeResolver : IResolver<string, Type>
     {
