@@ -600,8 +600,7 @@ namespace RepoDb
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null)
             where TEntity : class =>
-            BulkMergeInternalBase<TEntity, SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
-                SqlBulkCopyColumnMapping, SqlTransaction>(connection,
+            BulkMergeInternalBase<TEntity>(connection,
                 tableName,
                 entities,
                 qualifiers,
@@ -640,8 +639,7 @@ namespace RepoDb
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null) =>
-            BulkMergeInternalBase<SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
-                SqlBulkCopyColumnMapping, SqlTransaction>(connection,
+            BulkMergeInternalBase(connection,
                 tableName,
                 reader,
                 qualifiers,
@@ -683,8 +681,7 @@ namespace RepoDb
             bool? isReturnIdentity = null,
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null) =>
-            BulkMergeInternalBase<SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
-                SqlBulkCopyColumnMapping, SqlTransaction>(connection,
+            BulkMergeInternalBase(connection,
                 tableName,
                 dataTable,
                 qualifiers,
@@ -734,8 +731,7 @@ namespace RepoDb
             SqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            BulkMergeAsyncInternalBase<TEntity, SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
-                SqlBulkCopyColumnMapping, SqlTransaction>(connection,
+            BulkMergeAsyncInternalBase(connection,
                 tableName,
                 entities,
                 qualifiers,
@@ -777,8 +773,7 @@ namespace RepoDb
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            BulkMergeAsyncInternalBase<SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
-                SqlBulkCopyColumnMapping, SqlTransaction>(connection,
+            BulkMergeAsyncInternalBase(connection,
                 tableName,
                 reader,
                 qualifiers,
@@ -823,8 +818,7 @@ namespace RepoDb
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            BulkMergeAsyncInternalBase<SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
-                SqlBulkCopyColumnMapping, SqlTransaction>(connection,
+            BulkMergeAsyncInternalBase(connection,
                 tableName,
                 dataTable,
                 qualifiers,

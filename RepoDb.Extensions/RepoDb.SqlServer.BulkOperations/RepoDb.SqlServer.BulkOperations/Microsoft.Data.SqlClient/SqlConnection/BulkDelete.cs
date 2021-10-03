@@ -704,8 +704,7 @@ namespace RepoDb
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null) =>
-            BulkDeleteInternalBase<SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
-            SqlBulkCopyColumnMapping, SqlTransaction>(connection,
+            BulkDeleteInternalBase(connection,
                 tableName,
                 primaryKeys,
                 hints,
@@ -740,8 +739,7 @@ namespace RepoDb
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null) =>
-            BulkDeleteInternalBase<SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
-            SqlBulkCopyColumnMapping, SqlTransaction>(connection,
+            BulkDeleteInternalBase(connection,
                 tableName,
                 reader,
                 qualifiers,
@@ -781,8 +779,7 @@ namespace RepoDb
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null) =>
-            BulkDeleteInternalBase<SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
-            SqlBulkCopyColumnMapping, SqlTransaction>(connection,
+            BulkDeleteInternalBase(connection,
                 tableName,
                 dataTable,
                 qualifiers,
@@ -821,8 +818,7 @@ namespace RepoDb
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            BulkDeleteAsyncInternalBase<SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
-            SqlBulkCopyColumnMapping, SqlTransaction>(connection,
+            BulkDeleteAsyncInternalBase(connection,
                 tableName,
                 primaryKeys,
                 hints,
@@ -860,8 +856,7 @@ namespace RepoDb
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            BulkDeleteAsyncInternalBase<SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
-            SqlBulkCopyColumnMapping, SqlTransaction>(connection,
+            BulkDeleteAsyncInternalBase(connection,
                 tableName,
                 reader,
                 qualifiers,
@@ -904,8 +899,7 @@ namespace RepoDb
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            BulkDeleteAsyncInternalBase<SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
-            SqlBulkCopyColumnMapping, SqlTransaction>(connection,
+            BulkDeleteAsyncInternalBase(connection,
                 tableName,
                 dataTable,
                 qualifiers,

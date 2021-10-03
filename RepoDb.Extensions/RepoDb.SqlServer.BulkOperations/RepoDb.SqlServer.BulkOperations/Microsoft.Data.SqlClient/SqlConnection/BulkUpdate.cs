@@ -580,8 +580,7 @@ namespace RepoDb
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null) =>
-            BulkUpdateInternalBase<SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
-                SqlBulkCopyColumnMapping, SqlTransaction>(connection,
+            BulkUpdateInternalBase(connection,
                 tableName,
                 reader,
                 qualifiers,
@@ -621,8 +620,7 @@ namespace RepoDb
             int? batchSize = null,
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null) =>
-            BulkUpdateInternalBase<SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
-                SqlBulkCopyColumnMapping, SqlTransaction>(connection,
+            BulkUpdateInternalBase(connection,
                 tableName,
                 dataTable,
                 qualifiers,
@@ -667,8 +665,7 @@ namespace RepoDb
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            BulkUpdateAsyncInternalBase<SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
-                SqlBulkCopyColumnMapping, SqlTransaction>(connection,
+            BulkUpdateAsyncInternalBase(connection,
                 tableName,
                 reader,
                 qualifiers,
@@ -711,8 +708,7 @@ namespace RepoDb
             bool? usePhysicalPseudoTempTable = null,
             SqlTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            BulkUpdateAsyncInternalBase<SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
-                SqlBulkCopyColumnMapping, SqlTransaction>(connection,
+            BulkUpdateAsyncInternalBase(connection,
                 tableName,
                 dataTable,
                 qualifiers,
