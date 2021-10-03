@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Npgsql;
+using NpgsqlTypes;
+using RepoDb.Exceptions;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +15,164 @@ namespace RepoDb.PostgreSql.BulkOperations
     /// </summary>
     internal static class Compiler
     {
+        #region GetWriteFunc
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tableName"></param>
+        /// <param name="mappings"></param>
+        /// <returns></returns>
+        internal static Action<NpgsqlBinaryImporter, TEntity> GetNpgsqlBinaryImporterWriteFunc<TEntity>(string tableName,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings)
+            where TEntity : class =>
+            GetNpgsqlBinaryImporterWriteFuncCache<TEntity>.Get(tableName, mappings);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        private static class GetNpgsqlBinaryImporterWriteFuncCache<TEntity>
+            where TEntity : class
+        {
+            private static ConcurrentDictionary<int, Action<NpgsqlBinaryImporter, TEntity>> cache = new();
+
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="tableName"></param>
+            /// <param name="mappings"></param>
+            /// <returns></returns>
+            public static Action<NpgsqlBinaryImporter, TEntity> Get(string tableName,
+                IEnumerable<NpgsqlBulkInsertMapItem> mappings)
+            {
+                var targetTableName = tableName ?? ClassMappedNameCache.Get<TEntity>();
+                var key = GetHashCode<TEntity>(targetTableName, mappings);
+
+                if (cache.TryGetValue(key, out var value))
+                {
+                    return value;
+                }
+
+                var func = (Action<NpgsqlBinaryImporter, TEntity>)null;
+                var importerType = typeof(NpgsqlBinaryImporter);
+                var entityType = typeof(TEntity);
+                var importerExpression = Expression.Parameter(importerType, "importer");
+                var entityExpression = Expression.Parameter(entityType, "entity");
+                var expressions = new List<Expression>();
+
+                foreach (var mapping in mappings)
+                {
+                    var propertyExpression = Expression.Convert(GetEntityPropertyExpression<TEntity>(entityExpression, mapping.SourceColumn), typeof(object));
+                    var parameters = mapping.NpgsqlDbType.HasValue ? new Expression[] { propertyExpression, Expression.Constant(mapping.NpgsqlDbType) } :
+                        new[] { propertyExpression };
+                    var writeMethod = mapping.NpgsqlDbType.HasValue ?
+                        GetNpgsqlBinaryImporterWriteWithNpgsqlDbTypeMethod() : GetNpgsqlBinaryImporterWriteMethod();
+
+                    expressions.Add(Expression.Call(importerExpression, writeMethod.MakeGenericMethod(new[] { typeof(object) }), parameters));
+                }
+
+                if (expressions.Any())
+                {
+                    func = Expression
+                        .Lambda<Action<NpgsqlBinaryImporter, TEntity>>(Expression.Block(expressions), importerExpression, entityExpression)
+                        .Compile();
+                }
+
+                if (cache.TryAdd(key, func))
+                {
+                    return func;
+                }
+
+                throw new InvalidOperationException($"Failed to add a compiled '{importerType.FullName}.Write' function for entity '{targetTableName}'.");
+            }
+        }
+
+        #endregion
+
+        #region Helpers
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        private static MethodInfo GetNpgsqlBinaryImporterWriteMethod() =>
+            typeof(NpgsqlBinaryImporter)
+                .GetMethods()
+                .Where(method =>
+                    string.Equals("Write", method.Name, StringComparison.OrdinalIgnoreCase))
+                .First(method => method.GetParameters().Length == 1);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        private static MethodInfo GetNpgsqlBinaryImporterWriteWithNpgsqlDbTypeMethod()
+        {
+            var methods = typeof(NpgsqlBinaryImporter)
+                .GetMethods()
+                .Where(method => string.Equals("Write", method.Name, StringComparison.OrdinalIgnoreCase));
+
+            return methods.First(method =>
+            {
+                var parameters = method.GetParameters();
+
+                return parameters.Length == 2 &&
+                    parameters[1].ParameterType == typeof(NpgsqlDbType);
+            });
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entityExpression"></param>
+        /// <param name="propertyName"></param>
+        /// <returns></returns>
+        private static Expression GetEntityPropertyExpression<TEntity>(Expression entityExpression,
+            string propertyName)
+            where TEntity : class
+        {
+            var classProperty = PropertyCache.Get<TEntity>(propertyName);
+            if (classProperty == null)
+            {
+                throw new PropertyNotFoundException($"Property '{propertyName}' is not found from type '{typeof(TEntity).FullName}'.");
+            }
+            return Expression.Property(entityExpression, propertyName);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tableName"></param>
+        /// <param name="mappings"></param>
+        /// <returns></returns>
+        private static int GetHashCode<TEntity>(string tableName,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings)
+        {
+            var hashCode = (tableName ?? ClassMappedNameCache.Get<TEntity>()).GetHashCode();
+
+            if (mappings?.Any() == true)
+            {
+                foreach (var mapping in mappings)
+                {
+                    hashCode += HashCode.Combine(hashCode, mapping.GetHashCode());
+                }
+            }
+
+            return hashCode;
+        }
+
+        #endregion
+
+
+
+
+
+
+
         #region GetMethodFunc
 
         /// <summary>
