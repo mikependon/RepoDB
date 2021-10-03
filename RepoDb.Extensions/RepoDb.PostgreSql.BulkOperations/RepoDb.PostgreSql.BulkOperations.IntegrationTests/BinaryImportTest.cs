@@ -25,7 +25,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
         private NpgsqlConnection GetConnection() =>
             (NpgsqlConnection)(new NpgsqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen());
 
-        #region Entity
+        #region BinaryImport<TEntity>
 
         [TestMethod]
         public void TestBinaryImport()
@@ -110,6 +110,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 }
             }
         }
+
+        #endregion
+
+        #region BinaryImportAsync<TEntity>
 
         #endregion
     }

@@ -10,21 +10,22 @@ namespace RepoDb
 {
     public static partial class NpgsqlConnectionExtension
     {
-        #region BinaryImport
+        #region BinaryImport<TEntity>
 
         /// <summary>
-        /// 
+        /// Inserts a list of entities into the target table by bulk. Underneath this operation is a call directly to the existing
+        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method.
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="connection"></param>
-        /// <param name="tableName"></param>
-        /// <param name="entities"></param>
-        /// <param name="mappings"></param>
-        /// <param name="bulkCopyTimeout"></param>
-        /// <param name="batchSize"></param>
-        /// <param name="transaction"></param>
-        /// <returns></returns>
-        public static int BinaryImport<TEntity>(NpgsqlConnection connection,
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <param name="connection">The current connection object in used.</param>
+        /// <param name="tableName">The target table.</param>
+        /// <param name="entities">The list of entities.</param>
+        /// <param name="mappings">The list of mappings.</param>
+        /// <param name="bulkCopyTimeout">The timeout expiration of the operation.</param>
+        /// <param name="batchSize">The size per batch to be sent to the database.</param>
+        /// <param name="transaction">The current transaction object in used. If not provided, an implicit transaction will be created.</param>
+        /// <returns>The number of rows inserted into the target table.</returns>
+        public static int BinaryImport<TEntity>(this NpgsqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
@@ -95,8 +96,7 @@ namespace RepoDb
 
         #endregion
 
-        #region WriteToServerAsync
-
+        #region BinaryImportAsync<TEntity>
         #endregion
 
         #region Helpers
