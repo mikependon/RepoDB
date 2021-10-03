@@ -36,29 +36,58 @@ namespace RepoDb
         {
             // Variables
             var result = default(int);
+            var hasTransaction = transaction != null;
 
             // Open
             connection.EnsureOpen();
 
-            // Actual Execution
-            using (var importer = GetBinaryImporter<TEntity>(connection,
-                tableName,
-                ref mappings,
-                bulkCopyTimeout,
-                hasOrderingColumn,
-                transaction))
+            // Ensure transaction
+            if (hasTransaction == false)
             {
+                transaction = connection.BeginTransaction();
+            }
+
+            try
+            {
+                // Each batch requires an importer
                 var batches = entities.Split(batchSize.GetValueOrDefault());
-                if (batches?.Any() == true)
+                foreach (var batch in batches)
                 {
-                    foreach (var batch in batches)
+                    // Actual Execution
+                    using (var importer = GetNpgsqlBinaryImporter<TEntity>(connection,
+                        tableName,
+                        ref mappings,
+                        bulkCopyTimeout,
+                        hasOrderingColumn,
+                        transaction))
                     {
-                        result += BinaryImport(importer, batch);
+                        result += BinaryImport(connection, importer, tableName, batch, mappings, transaction);
                     }
                 }
-                else
+
+                // Commit
+                if (hasTransaction == false)
                 {
-                    result = BinaryImport(importer, entities);
+                    transaction.Commit();
+                }
+            }
+            catch
+            {
+                // Rollback
+                if (hasTransaction == false)
+                {
+                    transaction.Rollback();
+                }
+
+                // Throw
+                throw;
+            }
+            finally
+            {
+                // Commit
+                if (hasTransaction == false)
+                {
+                    transaction.Rollback();
                 }
             }
 
@@ -85,7 +114,7 @@ namespace RepoDb
         /// <param name="hasOrderingColumn"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static NpgsqlBinaryImporter GetBinaryImporter<TEntity>(NpgsqlConnection connection,
+        private static NpgsqlBinaryImporter GetNpgsqlBinaryImporter<TEntity>(NpgsqlConnection connection,
             string tableName,
             ref IEnumerable<NpgsqlBulkInsertMapItem> mappings,
             int? bulkCopyTimeout = null,
@@ -105,7 +134,7 @@ namespace RepoDb
             // Order column
             if (hasOrderingColumn)
             {
-                mappings = AddOrderColumnMapping(mappings);
+                //mappings = AddOrderColumnMapping(mappings);
             }
 
             // Return
@@ -116,15 +145,80 @@ namespace RepoDb
         /// 
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
         /// <param name="importer"></param>
+        /// <param name="tableName"></param>
         /// <param name="entities"></param>
+        /// <param name="mappings"></param>
+        /// <param name="transaction"></param>
         /// <returns></returns>
-        private static int BinaryImport<TEntity>(NpgsqlBinaryImporter importer,
-            IEnumerable<TEntity> entities)
+        private static int BinaryImport<TEntity>(NpgsqlConnection connection,
+            NpgsqlBinaryImporter importer,
+            string tableName,
+            IEnumerable<TEntity> entities,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+            NpgsqlTransaction transaction = null)
             where TEntity : class
         {
+            var entityType = typeof(TEntity);
+
+            if (mappings?.Any() == true)
+            {
+                return BinaryImport(importer, tableName, entities, mappings);
+            }
+            else
+            {
+                var dbFields = DbFieldCache.Get(connection, tableName ?? ClassMappedNameCache.Get(entityType), transaction);
+                var fields = FieldCache.Get(entityType);
+                return BinaryImport(importer, tableName, entities, dbFields, fields);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="importer"></param>
+        /// <param name="tableName"></param>
+        /// <param name="entities"></param>
+        /// <param name="mappings"></param>
+        private static int BinaryImport<TEntity>(NpgsqlBinaryImporter importer,
+            string tableName,
+            IEnumerable<TEntity> entities,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings)
+            where TEntity : class
+        {
+            var func = Compiler.GetNpgsqlBinaryImporterWriteFunc<TEntity>(tableName, mappings);
+            var result = 0;
+
+            foreach (var entity in entities)
+            {
+                importer.StartRow();
+                func(importer, entity);
+                result++;
+            }
+
             importer.Complete();
-            return entities.Count();
+            return result;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="importer"></param>
+        /// <param name="tableName"></param>
+        /// <param name="entities"></param>
+        /// <param name="dbFields"></param>
+        /// <param name="fields"></param>
+        private static int BinaryImport<TEntity>(NpgsqlBinaryImporter importer,
+            string tableName,
+            IEnumerable<TEntity> entities,
+            IEnumerable<DbField> dbFields,
+            IEnumerable<Field> fields)
+            where TEntity : class
+        {
+            throw new NotImplementedException();
         }
 
         #endregion
