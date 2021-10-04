@@ -19,6 +19,24 @@ namespace RepoDb
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
+        /// <param name="mappings"></param>
+        /// <returns></returns>
+        private static string GetBinaryImportCopyCommand(NpgsqlConnection connection,
+            string tableName,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings)
+        {
+            var dbSetting = connection.GetDbSetting();
+            var targetTableName = tableName.AsQuoted(true, dbSetting);
+            var textColumns = GetMappingsTextColumns(mappings, dbSetting);
+
+            return $"COPY {targetTableName} ({textColumns}) FROM STDIN (FORMAT BINARY)";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
         /// <param name="entityType"></param>
         /// <param name="mappings"></param>
         /// <param name="transaction"></param>
@@ -61,18 +79,9 @@ namespace RepoDb
             {
                 var dbFields = DbFieldCache.Get(connection, tableName ?? ClassMappedNameCache.Get(entityType), transaction);
 
-                //if (entityType.IsDictionaryStringObject())
-                //{
-                //    // Dictionary/ExpandoObject
-                //    var fields = (IEnumerable<Field>)null;
-                //    return GetMatchingTextColumns(dbFields, fields, dbSetting);
-                //}
-                //else
-                //{
                 // DB/Entity Fields
                 var properties = PropertyCache.Get(entityType);
                 return GetMatchingTextColumns(dbFields, properties, dbSetting);
-                //}
             }
         }
 

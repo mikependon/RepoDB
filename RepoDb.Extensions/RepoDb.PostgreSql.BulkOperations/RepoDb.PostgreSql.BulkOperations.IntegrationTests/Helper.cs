@@ -5,6 +5,7 @@ using RepoDb.Interfaces;
 using RepoDb.PostgreSql.BulkOperations.IntegrationTests.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Dynamic;
 using System.Linq;
 
@@ -156,6 +157,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #endregion
 
+        #region Entity
+
         #region BulkOperationIdentityTable
 
         /// <summary>
@@ -265,7 +268,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #endregion
 
-        #region CreateBulkOperationUnmatchedIdentityTables
+        #region BulkOperationUnmatchedIdentityTable
 
         /// <summary>
         /// 
@@ -298,7 +301,11 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #endregion
 
-        #region CreateBulkOperationAnonymousLightIdentityTable
+        #endregion
+
+        #region Anonymous
+
+        #region BulkOperationAnonymousLightIdentityTable
 
         /// <summary>
         /// 
@@ -331,7 +338,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #endregion
 
-        #region CreateBulkOperationAnonymousUnmatchedIdentityTable
+        #region BulkOperationAnonymousUnmatchedIdentityTable
 
         /// <summary>
         /// 
@@ -364,7 +371,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #endregion
 
-        #region CreateBulkOperationExpandoObjectLightIdentityTable
+        #region BulkOperationExpandoObjectLightIdentityTable
 
         /// <summary>
         /// 
@@ -398,7 +405,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #endregion
 
-        #region CreateBulkOperationExpandoObjectUnmatchedIdentityTable
+        #region BulkOperationExpandoObjectUnmatchedIdentityTable
 
         /// <summary>
         /// 
@@ -429,6 +436,49 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
             }
             return tables;
         }
+
+        #endregion
+
+        #endregion
+
+        #region DataTable
+
+        #region BulkOperationDataTableIdentityTable
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="count"></param>
+        /// <param name="hasId"></param>
+        /// <returns></returns>
+        public static DataTable CreateBulkOperationDataTableIdentityTables(int count,
+            bool hasId = false)
+        {
+            var tables = CreateBulkOperationLightIdentityTables(count, hasId);
+            var table = new DataTable() { TableName = "BulkOperationIdentityTable" };
+            var properties = PropertyCache.Get<BulkOperationLightIdentityTable>();
+
+            foreach (var property in properties)
+            {
+                table.Columns.Add(property.PropertyInfo.Name, property.PropertyInfo.PropertyType.GetUnderlyingType());
+            }
+
+            foreach (var entity in tables)
+            {
+                var row = table.NewRow();
+
+                foreach (var property in properties)
+                {
+                    row[property.PropertyInfo.Name] = property.PropertyInfo.GetValue(entity);
+                }
+
+                table.Rows.Add(row);
+            }
+
+            return table;
+        }
+
+        #endregion
 
         #endregion
     }

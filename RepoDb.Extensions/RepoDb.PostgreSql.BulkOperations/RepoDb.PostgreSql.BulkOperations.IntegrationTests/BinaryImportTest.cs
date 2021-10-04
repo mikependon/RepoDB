@@ -25,7 +25,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
         private NpgsqlConnection GetConnection() =>
             (NpgsqlConnection)(new NpgsqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen());
 
-        #region BinaryImport<TEntity>
+        #region BinaryImport<TEntity/Anonymous/IDictionary<string, object>>
 
         [TestMethod]
         public void TestBinaryImport()
@@ -40,6 +40,31 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 NpgsqlConnectionExtension.BinaryImport<BulkOperationLightIdentityTable>(connection,
                     tableName,
                     entities: entities);
+
+                // Assert
+                var result = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
+                Assert.AreEqual(entities.Count(), result.Count());
+                for (var i = 0; i < entities.Count; i++)
+                {
+                    Helper.AssertPropertiesEquality(entities[i], result[i]);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestBinaryImportWithBatchSize()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = Helper.CreateBulkOperationLightIdentityTables(99, true);
+                var tableName = "BulkOperationIdentityTable";
+
+                // Act
+                NpgsqlConnectionExtension.BinaryImport<BulkOperationLightIdentityTable>(connection,
+                    tableName,
+                    entities: entities,
+                    batchSize: 10);
 
                 // Assert
                 var result = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
@@ -173,7 +198,27 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #endregion
 
-        #region BinaryImportAsync<TEntity>
+        #region BinaryImport<DataTable>
+
+        [TestMethod]
+        public void TestBinaryImportViaDataTable()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var table = Helper.CreateBulkOperationDataTableIdentityTables(10, true);
+                var tableName = "BulkOperationIdentityTable";
+
+                // Act
+                NpgsqlConnectionExtension.BinaryImport(connection,
+                    tableName,
+                    table: table);
+
+                // Assert
+                var result = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
+                Assert.AreEqual(table.Rows.Count, result.Count());
+            }
+        }
 
         #endregion
     }
