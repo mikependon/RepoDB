@@ -22,14 +22,15 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
         /// <param name="tableName"></param>
         /// <param name="mappings"></param>
+        /// <param name="entityType"></param>
         /// <returns></returns>
         internal static Action<NpgsqlBinaryImporter, TEntity> GetNpgsqlBinaryImporterWriteFunc<TEntity>(string tableName,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings)
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+            Type entityType)
             where TEntity : class =>
-            GetNpgsqlBinaryImporterWriteFuncCache<TEntity>.Get(tableName, mappings);
+            GetNpgsqlBinaryImporterWriteFuncCache<TEntity>.Get(tableName, mappings, entityType);
 
         /// <summary>
         /// 
@@ -38,14 +39,16 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// <param name="tableName"></param>
         /// <param name="dbFields"></param>
         /// <param name="properties"></param>
+        /// <param name="entityType"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         internal static Action<NpgsqlBinaryImporter, TEntity> GetNpgsqlBinaryImporterWriteFunc<TEntity>(string tableName,
             IEnumerable<DbField> dbFields,
             IEnumerable<ClassProperty> properties,
+            Type entityType,
             IDbSetting dbSetting)
             where TEntity : class =>
-            GetNpgsqlBinaryImporterWriteFuncCache<TEntity>.Get(tableName, dbFields, properties, dbSetting);
+            GetNpgsqlBinaryImporterWriteFuncCache<TEntity>.Get(tableName, dbFields, properties, entityType, dbSetting);
 
         /// <summary>
         /// 
@@ -61,10 +64,12 @@ namespace RepoDb.PostgreSql.BulkOperations
             /// </summary>
             /// <param name="tableName"></param>
             /// <param name="mappings"></param>
+            /// <param name="entityType"></param>
             /// <returns></returns>
             public static Action<NpgsqlBinaryImporter, TEntity> Get(string tableName,
-                IEnumerable<NpgsqlBulkInsertMapItem> mappings) =>
-                GetFunc(tableName, mappings);
+                IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+                Type entityType) =>
+                GetFunc(tableName, mappings, entityType);
 
             /// <summary>
             /// 
@@ -72,16 +77,18 @@ namespace RepoDb.PostgreSql.BulkOperations
             /// <param name="tableName"></param>
             /// <param name="dbFields"></param>
             /// <param name="properties"></param>
+            /// <param name="entityType"></param>
             /// <param name="dbSetting"></param>
             /// <returns></returns>
             public static Action<NpgsqlBinaryImporter, TEntity> Get(string tableName,
                 IEnumerable<DbField> dbFields,
                 IEnumerable<ClassProperty> properties,
+                Type entityType,
                 IDbSetting dbSetting)
             {
                 var matchedProperties = NpgsqlConnectionExtension.GetMatchedProperties(dbFields, properties, dbSetting);
                 var mappings = matchedProperties.Select(property => new NpgsqlBulkInsertMapItem(property.PropertyInfo.Name, property.GetMappedName()));
-                return GetFunc(tableName, mappings);
+                return GetFunc(tableName, mappings, entityType);
             }
 
             /// <summary>
@@ -89,9 +96,11 @@ namespace RepoDb.PostgreSql.BulkOperations
             /// </summary>
             /// <param name="tableName"></param>
             /// <param name="mappings"></param>
+            /// <param name="entityType"></param>
             /// <returns></returns>
             private static Action<NpgsqlBinaryImporter, TEntity> GetFunc(string tableName,
-                IEnumerable<NpgsqlBulkInsertMapItem> mappings)
+                IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+                Type entityType)
             {
                 var targetTableName = tableName ?? ClassMappedNameCache.Get<TEntity>();
                 var hashCode = GetHashCode<TEntity>(targetTableName, mappings);
@@ -101,36 +110,57 @@ namespace RepoDb.PostgreSql.BulkOperations
                     return value;
                 }
 
-                var func = (Action<NpgsqlBinaryImporter, TEntity>)null;
+                // Entity types (covering the anonymous)
+                var typeOfEntity = typeof(TEntity);
+                entityType ??= typeOfEntity;
+
+                // Variables
                 var importerType = typeof(NpgsqlBinaryImporter);
-                var entityType = typeof(TEntity);
-                var importerExpression = Expression.Parameter(importerType, "importer");
-                var entityExpression = Expression.Parameter(entityType, "entity");
+                var importerParameterExpression = Expression.Parameter(importerType, "importer");
+                var entityParameterExpression = Expression.Parameter(typeOfEntity, "entity");
                 var expressions = new List<Expression>();
 
+                // Anonymous
+                var entityExpression = (Expression)entityParameterExpression;
+                if (typeOfEntity != entityType)
+                {
+                    entityExpression = Expression.Convert(entityParameterExpression, entityType);
+                }
+
+                // Mappings
                 foreach (var mapping in mappings)
                 {
-                    var propertyExpression = Expression.Convert(GetEntityPropertyExpression<TEntity>(entityExpression, mapping.SourceColumn), typeof(object));
+                    var propertyExpression = Expression.Convert(GetEntityPropertyExpression(entityExpression, entityType, mapping.SourceColumn), typeof(object));
                     var parameters = mapping.NpgsqlDbType.HasValue ? new Expression[] { propertyExpression, Expression.Constant(mapping.NpgsqlDbType) } :
                         new[] { propertyExpression };
                     var writeMethod = mapping.NpgsqlDbType.HasValue ?
                         GetNpgsqlBinaryImporterWriteWithNpgsqlDbTypeMethod() : GetNpgsqlBinaryImporterWriteMethod();
 
-                    expressions.Add(Expression.Call(importerExpression, writeMethod.MakeGenericMethod(new[] { typeof(object) }), parameters));
+                    expressions.Add(Expression.Call(importerParameterExpression, writeMethod.MakeGenericMethod(new[] { typeof(object) }), parameters));
                 }
 
+                // Check
+                Action<NpgsqlBinaryImporter, TEntity> func;
                 if (expressions.Any())
                 {
                     func = Expression
-                        .Lambda<Action<NpgsqlBinaryImporter, TEntity>>(Expression.Block(expressions), importerExpression, entityExpression)
+                        .Lambda<Action<NpgsqlBinaryImporter, TEntity>>(Expression.Block(expressions), importerParameterExpression, entityParameterExpression)
                         .Compile();
                 }
+                else
+                {
+                    throw new InvalidOperationException($"There are no compiled expressions found for '{entityType.FullName}'. " +
+                        $"Please check whether you had provided the proper 'mappings' or ensure that the entity properties are " +
+                        $"matching with the table columns.");
+                }
 
+                // Cache
                 if (cache.TryAdd(hashCode, func))
                 {
                     return func;
                 }
 
+                // Throw an error
                 throw new InvalidOperationException($"Failed to add a compiled '{importerType.FullName}.Write' function for '{tableName}'.");
             }
         }
@@ -172,18 +202,18 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
         /// <param name="entityExpression"></param>
+        /// <param name="entityType"></param>
         /// <param name="propertyName"></param>
         /// <returns></returns>
-        private static Expression GetEntityPropertyExpression<TEntity>(Expression entityExpression,
+        private static Expression GetEntityPropertyExpression(Expression entityExpression,
+            Type entityType,
             string propertyName)
-            where TEntity : class
         {
-            var classProperty = PropertyCache.Get<TEntity>(propertyName);
+            var classProperty = PropertyCache.Get(entityType);
             if (classProperty == null)
             {
-                throw new PropertyNotFoundException($"Property '{propertyName}' is not found from type '{typeof(TEntity).FullName}'.");
+                throw new PropertyNotFoundException($"Property '{propertyName}' is not found from type '{entityType.FullName}'.");
             }
             return Expression.Property(entityExpression, propertyName);
         }
@@ -195,7 +225,17 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// <param name="tableName"></param>
         /// <returns></returns>
         private static int GetHashCode<TEntity>(string tableName) =>
-            (tableName ?? ClassMappedNameCache.Get<TEntity>()).GetHashCode();
+            GetHashCode(typeof(TEntity), tableName);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entityType"></param>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        private static int GetHashCode(Type entityType,
+            string tableName) =>
+            (tableName ?? ClassMappedNameCache.Get(entityType)).GetHashCode();
 
         /// <summary>
         /// 
@@ -205,9 +245,21 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// <param name="mappings"></param>
         /// <returns></returns>
         private static int GetHashCode<TEntity>(string tableName,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings) =>
+            GetHashCode(typeof(TEntity), tableName, mappings);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entityType"></param>
+        /// <param name="tableName"></param>
+        /// <param name="mappings"></param>
+        /// <returns></returns>
+        private static int GetHashCode(Type entityType,
+            string tableName,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings)
         {
-            var hashCode = GetHashCode<TEntity>(tableName);
+            var hashCode = GetHashCode(entityType, tableName);
 
             if (mappings?.Any() == true)
             {
@@ -220,38 +272,38 @@ namespace RepoDb.PostgreSql.BulkOperations
             return hashCode;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="tableName"></param>
-        /// <param name="dbFields"></param>
-        /// <param name="fields"></param>
-        /// <returns></returns>
-        private static int GetHashCode<TEntity>(string tableName,
-            IEnumerable<DbField> dbFields,
-            IEnumerable<ClassProperty> fields)
-        {
-            var hashCode = GetHashCode<TEntity>(tableName);
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <typeparam name="TEntity"></typeparam>
+        ///// <param name="tableName"></param>
+        ///// <param name="dbFields"></param>
+        ///// <param name="fields"></param>
+        ///// <returns></returns>
+        //private static int GetHashCode<TEntity>(string tableName,
+        //    IEnumerable<DbField> dbFields,
+        //    IEnumerable<ClassProperty> fields)
+        //{
+        //    var hashCode = GetHashCode<TEntity>(tableName);
 
-            if (dbFields?.Any() == true)
-            {
-                foreach (var dbField in dbFields)
-                {
-                    hashCode += HashCode.Combine(hashCode, dbField.GetHashCode());
-                }
-            }
+        //    if (dbFields?.Any() == true)
+        //    {
+        //        foreach (var dbField in dbFields)
+        //        {
+        //            hashCode += HashCode.Combine(hashCode, dbField.GetHashCode());
+        //        }
+        //    }
 
-            if (fields?.Any() == true)
-            {
-                foreach (var field in fields)
-                {
-                    hashCode += HashCode.Combine(hashCode, field.GetHashCode());
-                }
-            }
+        //    if (fields?.Any() == true)
+        //    {
+        //        foreach (var field in fields)
+        //        {
+        //            hashCode += HashCode.Combine(hashCode, field.GetHashCode());
+        //        }
+        //    }
 
-            return hashCode;
-        }
+        //    return hashCode;
+        //}
 
         #endregion
 

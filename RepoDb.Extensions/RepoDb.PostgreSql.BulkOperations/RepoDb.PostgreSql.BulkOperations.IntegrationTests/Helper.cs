@@ -35,7 +35,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #endregion
 
-        #region Methods
+        #region Asserts
 
         /// <summary>
         /// Asserts the properties equality of 2 types.
@@ -232,7 +232,6 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #endregion
 
-
         #region BulkOperationMappedIdentityTable
 
         /// <summary>
@@ -260,6 +259,173 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                     ColumnSmallIntMapped = (short)random.Next(100),
                     ColumnTextMapped = $"Text-{index}",
                 });
+            }
+            return tables;
+        }
+
+        #endregion
+
+        #region CreateBulkOperationUnmatchedIdentityTables
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="count"></param>
+        /// <param name="hasId"></param>
+        /// <returns></returns>
+        public static List<BulkOperationUnmatchedIdentityTable> CreateBulkOperationUnmatchedIdentityTables(int count,
+            bool hasId = false)
+        {
+            var random = new Random();
+            var tables = new List<BulkOperationUnmatchedIdentityTable>();
+            for (var i = 0; i < count; i++)
+            {
+                var index = i + 1;
+                tables.Add(new BulkOperationUnmatchedIdentityTable
+                {
+                    IdMapped = hasId ? index : 0,
+                    ColumnBigIntMapped = (long)random.Next(100),
+                    ColumnBooleanMapped = true,
+                    ColumnIntegerMapped = random.Next(100),
+                    ColumnNumericMapped = (decimal)random.Next(100),
+                    ColumnRealMapped = (float)random.Next(100),
+                    ColumnSmallIntMapped = (short)random.Next(100),
+                    ColumnTextMapped = $"Text-{index}",
+                });
+            }
+            return tables;
+        }
+
+        #endregion
+
+        #region CreateBulkOperationAnonymousLightIdentityTable
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="count"></param>
+        /// <param name="hasId"></param>
+        /// <returns></returns>
+        public static List<dynamic> CreateBulkOperationAnonymousLightIdentityTables(int count,
+            bool hasId = false)
+        {
+            var random = new Random();
+            var tables = new List<dynamic>();
+            for (var i = 0; i < count; i++)
+            {
+                var index = i + 1;
+                tables.Add(new
+                {
+                    Id = hasId ? index : 0,
+                    ColumnBigInt = (long)random.Next(100),
+                    ColumnBoolean = true,
+                    ColumnInteger = random.Next(100),
+                    ColumnNumeric = (decimal)random.Next(100),
+                    ColumnReal = (float)random.Next(100),
+                    ColumnSmallInt = (short)random.Next(100),
+                    ColumnText = $"Text-{index}",
+                });
+            }
+            return tables;
+        }
+
+        #endregion
+
+        #region CreateBulkOperationAnonymousUnmatchedIdentityTable
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="count"></param>
+        /// <param name="hasId"></param>
+        /// <returns></returns>
+        public static List<dynamic> CreateBulkOperationAnonymousUnmatchedIdentityTables(int count,
+            bool hasId = false)
+        {
+            var random = new Random();
+            var tables = new List<dynamic>();
+            for (var i = 0; i < count; i++)
+            {
+                var index = i + 1;
+                tables.Add(new
+                {
+                    IdMapped = (long)(hasId ? index : 0),
+                    ColumnBigIntMapped = (long)random.Next(100),
+                    ColumnBooleanMapped = true,
+                    ColumnIntegerMapped = random.Next(100),
+                    ColumnNumericMapped = (decimal)random.Next(100),
+                    ColumnRealMapped = (float)random.Next(100),
+                    ColumnSmallIntMapped = (short)random.Next(100),
+                    ColumnTextMapped = $"Text-{index}",
+                });
+            }
+            return tables;
+        }
+
+        #endregion
+
+        #region CreateBulkOperationExpandoObjectLightIdentityTable
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="count"></param>
+        /// <param name="hasId"></param>
+        /// <returns></returns>
+        public static List<ExpandoObject> CreateBulkOperationExpandoObjectLightIdentityTables(int count,
+            bool hasId = false)
+        {
+            var random = new Random();
+            var tables = new List<ExpandoObject>();
+            for (var i = 0; i < count; i++)
+            {
+                var expandoObject = new ExpandoObject() as IDictionary<string, object>;
+                var index = i + 1;
+
+                expandoObject["Id"] = hasId ? index : 0;
+                expandoObject["ColumnBigInt"] = (long)random.Next(100);
+                expandoObject["ColumnBoolean"] = true;
+                expandoObject["ColumnInteger"] = random.Next(100);
+                expandoObject["ColumnNumeric"] = (decimal)random.Next(100);
+                expandoObject["ColumnReal"] = (float)random.Next(100);
+                expandoObject["ColumnSmallInt"] = (short)random.Next(100);
+                expandoObject["ColumnText"] = $"Text -{index}";
+
+                tables.Add((ExpandoObject)expandoObject);
+            }
+            return tables;
+        }
+
+        #endregion
+
+        #region CreateBulkOperationExpandoObjectUnmatchedIdentityTable
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="count"></param>
+        /// <param name="hasId"></param>
+        /// <returns></returns>
+        public static List<ExpandoObject> CreateBulkOperationExpandoObjectUnmatchedIdentityTables(int count,
+            bool hasId = false)
+        {
+            var random = new Random();
+            var tables = new List<ExpandoObject>();
+            for (var i = 0; i < count; i++)
+            {
+                var expandoObject = new ExpandoObject() as IDictionary<string, object>;
+                var index = i + 1;
+
+                expandoObject["IdMapped"] = hasId ? index : 0;
+                expandoObject["ColumnBigIntMapped"] = (long)random.Next(100);
+                expandoObject["ColumnBooleanMapped"] = true;
+                expandoObject["ColumnIntegerMapped"] = random.Next(100);
+                expandoObject["ColumnNumericMapped"] = (decimal)random.Next(100);
+                expandoObject["ColumnRealMapped"] = (float)random.Next(100);
+                expandoObject["ColumnSmallIntMapped"] = (short)random.Next(100);
+                expandoObject["ColumnTextMapped"] = $"Text -{index}";
+
+                tables.Add((ExpandoObject)expandoObject);
             }
             return tables;
         }

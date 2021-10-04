@@ -17,22 +17,6 @@ namespace RepoDb
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="connection"></param>
-        /// <param name="tableName"></param>
-        /// <param name="mappings"></param>
-        /// <param name="transaction"></param>
-        /// <returns></returns>
-        private static string GetBinaryImportCopyCommand<TEntity>(NpgsqlConnection connection,
-            string tableName,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings,
-            NpgsqlTransaction transaction)
-            where TEntity : class =>
-            GetBinaryImportCopyCommand(connection, tableName, typeof(TEntity), mappings, transaction);
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="entityType"></param>
@@ -75,11 +59,20 @@ namespace RepoDb
             }
             else
             {
-                // DB/Entity Fields
                 var dbFields = DbFieldCache.Get(connection, tableName ?? ClassMappedNameCache.Get(entityType), transaction);
-                var properties = PropertyCache.Get(entityType);
 
+                //if (entityType.IsDictionaryStringObject())
+                //{
+                //    // Dictionary/ExpandoObject
+                //    var fields = (IEnumerable<Field>)null;
+                //    return GetMatchingTextColumns(dbFields, fields, dbSetting);
+                //}
+                //else
+                //{
+                // DB/Entity Fields
+                var properties = PropertyCache.Get(entityType);
                 return GetMatchingTextColumns(dbFields, properties, dbSetting);
+                //}
             }
         }
 
@@ -96,14 +89,28 @@ namespace RepoDb
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="properties"></param>
         /// <param name="dbFields"></param>
+        /// <param name="properties"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         private static string GetMatchingTextColumns(IEnumerable<DbField> dbFields,
             IEnumerable<ClassProperty> properties,
             IDbSetting dbSetting) =>
-            GetMatchedProperties(dbFields, properties, dbSetting)?.Select(property => property.GetMappedName().AsQuoted(true, dbSetting)).Join(", ");
+            GetMatchedProperties(dbFields, properties, dbSetting)
+                .Select(property => property.GetMappedName().AsQuoted(true, dbSetting)).Join(", ");
+
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <param name="dbFields"></param>
+        ///// <param name="fields"></param>
+        ///// <param name="dbSetting"></param>
+        ///// <returns></returns>
+        //private static string GetMatchingTextColumns(IEnumerable<DbField> dbFields,
+        //    IEnumerable<Field> fields,
+        //    IDbSetting dbSetting) =>
+        //    GetMatchedFields(dbFields, fields, dbSetting)
+        //        .Select(field => field.Name.AsQuoted(true, dbSetting)).Join(", ");
 
         /// <summary>
         /// 
@@ -114,11 +121,47 @@ namespace RepoDb
         /// <returns></returns>
         internal static IEnumerable<ClassProperty> GetMatchedProperties(IEnumerable<DbField> dbFields,
             IEnumerable<ClassProperty> properties,
-            IDbSetting dbSetting) =>
-            properties?
+            IDbSetting dbSetting)
+        {
+            var matchedProperties = properties?
                 .Where(property =>
                     dbFields?.FirstOrDefault(dbField =>
                         dbField.IsIdentity == false &&
                         string.Equals(property.GetMappedName().AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null);
+
+            if (matchedProperties?.Any() != true)
+            {
+                throw new InvalidOperationException($"There are no matching properties/columns found between the " +
+                    $"entity model and the underlying table.");
+            }
+
+            return matchedProperties;
+        }
+
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <param name="dbFields"></param>
+        ///// <param name="fields"></param>
+        ///// <param name="dbSetting"></param>
+        ///// <returns></returns>
+        //internal static IEnumerable<Field> GetMatchedFields(IEnumerable<DbField> dbFields,
+        //    IEnumerable<Field> fields,
+        //    IDbSetting dbSetting)
+        //{
+        //    var matchedFields = fields?
+        //        .Where(field =>
+        //            dbFields?.FirstOrDefault(dbField =>
+        //                dbField.IsIdentity == false &&
+        //                string.Equals(field.Name.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null);
+
+        //    if (matchedFields?.Any() != true)
+        //    {
+        //        throw new InvalidOperationException($"There are no matching properties/columns found between the " +
+        //            $"dictionary and the underlying table.");
+        //    }
+
+        //    return matchedFields;
+        //}
     }
 }

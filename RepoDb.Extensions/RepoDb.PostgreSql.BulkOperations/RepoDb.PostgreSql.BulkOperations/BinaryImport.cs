@@ -49,18 +49,44 @@ namespace RepoDb
 
             try
             {
+                // Solving the anonymous types
+                var entityType = (entities?.First()?.GetType() ?? typeof(TEntity));
+                var isDictionary = entityType.IsDictionaryStringObject();
+
+                // ExpandoObject/Dictionary
+                if (isDictionary && mappings.Any() != true)
+                {
+                    mappings = GetMappingsFromDictionary(entities?.First() as IDictionary<string, object>);
+                }
+
                 // Each batch requires an importer
                 var batches = entities.Split(batchSize.GetValueOrDefault());
                 foreach (var batch in batches)
                 {
                     // Actual Execution
-                    using (var importer = GetNpgsqlBinaryImporter<TEntity>(connection,
+                    using (var importer = GetNpgsqlBinaryImporter(connection,
                         tableName,
-                        ref mappings,
+                        mappings,
+                        entityType,
                         bulkCopyTimeout,
                         transaction))
                     {
-                        result += BinaryImport<TEntity>(connection, importer, tableName, batch, mappings, transaction);
+                        if (isDictionary)
+                        {
+                            result += BinaryImportDictionary(importer,
+                                entities?.Select(entity => entity as IDictionary<string, object>),
+                                mappings);
+                        }
+                        else
+                        {
+                            result += BinaryImport<TEntity>(connection,
+                                importer,
+                                tableName,
+                                batch,
+                                mappings,
+                                entityType,
+                                transaction);
+                        }
                     }
                 }
 
@@ -97,6 +123,7 @@ namespace RepoDb
         #endregion
 
         #region BinaryImportAsync<TEntity>
+
         #endregion
 
         #region Helpers
@@ -104,21 +131,29 @@ namespace RepoDb
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="dictionary"></param>
+        /// <returns></returns>
+        private static IEnumerable<NpgsqlBulkInsertMapItem> GetMappingsFromDictionary(IDictionary<string, object> dictionary) =>
+            dictionary?.Keys.Select(key => new NpgsqlBulkInsertMapItem(key, key, dictionary[key]?.GetType()));
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="mappings"></param>
+        /// <param name="entityType"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static NpgsqlBinaryImporter GetNpgsqlBinaryImporter<TEntity>(NpgsqlConnection connection,
+        private static NpgsqlBinaryImporter GetNpgsqlBinaryImporter(NpgsqlConnection connection,
             string tableName,
-            ref IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+            Type entityType = null,
             int? bulkCopyTimeout = null,
             NpgsqlTransaction transaction = null)
-            where TEntity : class
         {
-            var copyCommand = GetBinaryImportCopyCommand<TEntity>(connection, tableName, mappings, transaction);
+            var copyCommand = GetBinaryImportCopyCommand(connection, tableName, entityType, mappings, transaction);
             var importer = connection.BeginBinaryImport(copyCommand);
 
             // Timeout
@@ -140,6 +175,7 @@ namespace RepoDb
         /// <param name="tableName"></param>
         /// <param name="entities"></param>
         /// <param name="mappings"></param>
+        /// <param name="entityType"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
         private static int BinaryImport<TEntity>(NpgsqlConnection connection,
@@ -147,20 +183,30 @@ namespace RepoDb
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+            Type entityType = null,
             NpgsqlTransaction transaction = null)
             where TEntity : class
         {
-            var entityType = typeof(TEntity);
-
             if (mappings?.Any() == true)
             {
-                return BinaryImport<TEntity>(importer, tableName, entities, mappings);
+                return BinaryImport<TEntity>(importer,
+                    tableName,
+                    entities,
+                    mappings,
+                    entityType);
             }
             else
             {
                 var dbFields = DbFieldCache.Get(connection, tableName ?? ClassMappedNameCache.Get(entityType), transaction);
                 var properties = PropertyCache.Get(entityType);
-                return BinaryImport<TEntity>(importer, tableName, entities, dbFields, properties, connection.GetDbSetting());
+
+                return BinaryImport<TEntity>(importer,
+                    tableName,
+                    entities,
+                    dbFields,
+                    properties,
+                    entityType,
+                    connection.GetDbSetting());
             }
         }
 
@@ -172,13 +218,17 @@ namespace RepoDb
         /// <param name="tableName"></param>
         /// <param name="entities"></param>
         /// <param name="mappings"></param>
+        /// <param name="entityType"></param>
         private static int BinaryImport<TEntity>(NpgsqlBinaryImporter importer,
             string tableName,
             IEnumerable<TEntity> entities,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings)
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+            Type entityType)
             where TEntity : class
         {
-            var func = Compiler.GetNpgsqlBinaryImporterWriteFunc<TEntity>(tableName, mappings);
+            var func = Compiler.GetNpgsqlBinaryImporterWriteFunc<TEntity>(tableName,
+                mappings,
+                entityType);
             var result = 0;
 
             foreach (var entity in entities)
@@ -201,22 +251,57 @@ namespace RepoDb
         /// <param name="entities"></param>
         /// <param name="dbFields"></param>
         /// <param name="properties"></param>
+        /// <param name="entityType"></param>
         /// <param name="dbSetting"></param>
         private static int BinaryImport<TEntity>(NpgsqlBinaryImporter importer,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<DbField> dbFields,
             IEnumerable<ClassProperty> properties,
+            Type entityType,
             IDbSetting dbSetting)
             where TEntity : class
         {
-            var func = Compiler.GetNpgsqlBinaryImporterWriteFunc<TEntity>(tableName, dbFields, properties, dbSetting);
+            var func = Compiler.GetNpgsqlBinaryImporterWriteFunc<TEntity>(tableName,
+                dbFields,
+                properties,
+                entityType,
+                dbSetting);
             var result = 0;
 
             foreach (var entity in entities)
             {
                 importer.StartRow();
                 func(importer, entity);
+                result++;
+            }
+
+            importer.Complete();
+            return result;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="importer"></param>
+        /// <param name="entities"></param>
+        /// <param name="mappings"></param>
+        private static int BinaryImportDictionary(NpgsqlBinaryImporter importer,
+            IEnumerable<IDictionary<string, object>> entities,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings)
+        {
+            var result = 0;
+
+            foreach (var entity in entities)
+            {
+                importer.StartRow();
+
+                foreach (var mapping in mappings)
+                {
+                    var data = entity[mapping.SourceColumn];
+                    importer.Write(data);
+                }
+
                 result++;
             }
 
