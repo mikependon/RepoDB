@@ -37,7 +37,7 @@ namespace RepoDb
             SqlTransaction transaction = null)
             where TEntity : class
         {
-            return repository.DbRepository.BulkInsert<TEntity>(entities: entities,
+            return repository.DbRepository.BulkInsert(entities: entities,
                 mappings: mappings,
                 options: options,
                 hints: hints,
@@ -74,7 +74,7 @@ namespace RepoDb
             SqlTransaction transaction = null)
             where TEntity : class
         {
-            return repository.DbRepository.BulkInsert<TEntity>(tableName: tableName,
+            return repository.DbRepository.BulkInsert(tableName: tableName,
                 entities: entities,
                 mappings: mappings,
                 options: options,
@@ -116,7 +116,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            return repository.DbRepository.BulkInsertAsync<TEntity>(entities: entities,
+            return repository.DbRepository.BulkInsertAsync(entities: entities,
                 mappings: mappings,
                 options: options,
                 hints: hints,
@@ -156,7 +156,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            return repository.DbRepository.BulkInsertAsync<TEntity>(tableName: tableName,
+            return repository.DbRepository.BulkInsertAsync(tableName: tableName,
                 entities: entities,
                 mappings: mappings,
                 options: options,

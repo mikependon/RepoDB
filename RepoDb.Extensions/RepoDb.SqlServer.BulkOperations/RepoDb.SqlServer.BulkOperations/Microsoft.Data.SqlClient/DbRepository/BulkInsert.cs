@@ -46,7 +46,7 @@ namespace RepoDb
             try
             {
                 // Call the method
-                return connection.BulkInsert<TEntity>(entities: entities,
+                return connection.BulkInsert(entities: entities,
                     mappings: mappings,
                     options: options,
                     hints: hints,
@@ -97,12 +97,12 @@ namespace RepoDb
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? repository.CreateConnection());
+            var connection = transaction?.Connection ?? repository.CreateConnection();
 
             try
             {
                 // Call the method
-                return connection.BulkInsert<TEntity>(tableName: tableName,
+                return connection.BulkInsert(tableName: tableName,
                     entities: entities,
                     mappings: mappings,
                     options: options,
@@ -146,7 +146,7 @@ namespace RepoDb
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? repository.CreateConnection());
+            var connection = transaction?.Connection ?? repository.CreateConnection();
 
             try
             {
@@ -195,7 +195,7 @@ namespace RepoDb
             SqlTransaction transaction = null)
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? repository.CreateConnection());
+            var connection = transaction?.Connection ?? repository.CreateConnection();
 
             try
             {
@@ -249,7 +249,7 @@ namespace RepoDb
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? repository.CreateConnection());
+            var connection = transaction?.Connection ?? repository.CreateConnection();
 
             try
             {
@@ -306,7 +306,7 @@ namespace RepoDb
             SqlTransaction transaction = null)
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? repository.CreateConnection());
+            var connection = transaction?.Connection ?? repository.CreateConnection();
 
             try
             {
@@ -368,12 +368,12 @@ namespace RepoDb
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? repository.CreateConnection());
+            var connection = transaction?.Connection ?? repository.CreateConnection();
 
             try
             {
                 // Call the method
-                return await connection.BulkInsertAsync<TEntity>(entities: entities,
+                return await connection.BulkInsertAsync(entities: entities,
                     mappings: mappings,
                     options: options,
                     hints: hints,
@@ -427,12 +427,12 @@ namespace RepoDb
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? repository.CreateConnection());
+            var connection = transaction?.Connection ?? repository.CreateConnection();
 
             try
             {
                 // Call the method
-                return await connection.BulkInsertAsync<TEntity>(tableName: tableName,
+                return await connection.BulkInsertAsync(tableName: tableName,
                     entities: entities,
                     mappings: mappings,
                     options: options,
@@ -479,7 +479,7 @@ namespace RepoDb
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? repository.CreateConnection());
+            var connection = transaction?.Connection ?? repository.CreateConnection();
 
             try
             {
@@ -531,7 +531,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? repository.CreateConnection());
+            var connection = transaction?.Connection ?? repository.CreateConnection();
 
             try
             {

@@ -65,7 +65,7 @@ namespace RepoDb
             SqlTransaction transaction = null)
             where TEntity : class
         {
-            return repository.DbRepository.BulkDelete<TEntity>(entities: entities,
+            return repository.DbRepository.BulkDelete(entities: entities,
                 qualifiers: qualifiers,
                 mappings: mappings,
                 options: options,
@@ -102,7 +102,7 @@ namespace RepoDb
             SqlTransaction transaction = null)
             where TEntity : class
         {
-            return repository.DbRepository.BulkDelete<TEntity>(tableName: tableName,
+            return repository.DbRepository.BulkDelete(tableName: tableName,
                 entities: entities,
                 qualifiers: qualifiers,
                 mappings: mappings,
@@ -173,7 +173,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            return repository.DbRepository.BulkDeleteAsync<TEntity>(entities: entities,
+            return repository.DbRepository.BulkDeleteAsync(entities: entities,
                 qualifiers: qualifiers,
                 mappings: mappings,
                 options: options,
@@ -213,7 +213,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            return repository.DbRepository.BulkDeleteAsync<TEntity>(tableName: tableName,
+            return repository.DbRepository.BulkDeleteAsync(tableName: tableName,
                 entities: entities,
                 qualifiers: qualifiers,
                 mappings: mappings,

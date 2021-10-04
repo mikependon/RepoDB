@@ -39,7 +39,7 @@ namespace RepoDb
             SqlTransaction transaction = null)
             where TEntity : class
         {
-            return repository.DbRepository.BulkUpdate<TEntity>(entities: entities,
+            return repository.DbRepository.BulkUpdate(entities: entities,
                 qualifiers: qualifiers,
                 mappings: mappings,
                 options: options,
@@ -76,7 +76,7 @@ namespace RepoDb
             SqlTransaction transaction = null)
             where TEntity : class
         {
-            return repository.DbRepository.BulkUpdate<TEntity>(tableName: tableName,
+            return repository.DbRepository.BulkUpdate(tableName: tableName,
                 entities: entities,
                 qualifiers: qualifiers,
                 mappings: mappings,
@@ -118,7 +118,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            return repository.DbRepository.BulkUpdateAsync<TEntity>(entities: entities,
+            return repository.DbRepository.BulkUpdateAsync(entities: entities,
                 qualifiers: qualifiers,
                 mappings: mappings,
                 options: options,
@@ -158,7 +158,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            return repository.DbRepository.BulkUpdateAsync<TEntity>(tableName: tableName,
+            return repository.DbRepository.BulkUpdateAsync(tableName: tableName,
                 entities: entities,
                 qualifiers: qualifiers,
                 mappings: mappings,

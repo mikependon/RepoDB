@@ -37,7 +37,7 @@ namespace RepoDb
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? repository.CreateConnection());
+            var connection = transaction?.Connection ?? repository.CreateConnection();
 
             try
             {
@@ -88,12 +88,12 @@ namespace RepoDb
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? repository.CreateConnection());
+            var connection = transaction?.Connection ?? repository.CreateConnection();
 
             try
             {
                 // Call the method
-                return connection.BulkDelete<TEntity>(entities: entities,
+                return connection.BulkDelete(entities: entities,
                     qualifiers: qualifiers,
                     mappings: mappings,
                     options: options,
@@ -144,12 +144,12 @@ namespace RepoDb
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? repository.CreateConnection());
+            var connection = transaction?.Connection ?? repository.CreateConnection();
 
             try
             {
                 // Call the method
-                return connection.BulkDelete<TEntity>(tableName: tableName,
+                return connection.BulkDelete(tableName: tableName,
                     entities: entities,
                     qualifiers: qualifiers,
                     mappings: mappings,
@@ -199,12 +199,12 @@ namespace RepoDb
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? repository.CreateConnection());
+            var connection = transaction?.Connection ?? repository.CreateConnection();
 
             try
             {
                 // Call the method
-                return connection.BulkDelete<TEntity>(reader: reader,
+                return connection.BulkDelete(reader: reader,
                     qualifiers: qualifiers,
                     mappings: mappings,
                     options: options,

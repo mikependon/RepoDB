@@ -45,12 +45,12 @@ namespace RepoDb
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? repository.CreateConnection());
+            var connection = transaction?.Connection ?? repository.CreateConnection();
 
             try
             {
                 // Call the method
-                return connection.BulkMerge<TEntity>(entities: entities,
+                return connection.BulkMerge(entities: entities,
                     qualifiers: qualifiers,
                     mappings: mappings,
                     options: options,
@@ -104,12 +104,12 @@ namespace RepoDb
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? repository.CreateConnection());
+            var connection = transaction?.Connection ?? repository.CreateConnection();
 
             try
             {
                 // Call the method
-                return connection.BulkMerge<TEntity>(tableName: tableName,
+                return connection.BulkMerge(tableName: tableName,
                     entities: entities,
                     qualifiers: qualifiers,
                     mappings: mappings,
@@ -160,12 +160,12 @@ namespace RepoDb
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? repository.CreateConnection());
+            var connection = transaction?.Connection ?? repository.CreateConnection();
 
             try
             {
                 // Call the method
-                return connection.BulkMerge<TEntity>(reader: reader,
+                return connection.BulkMerge(reader: reader,
                     qualifiers: qualifiers,
                     mappings: mappings,
                     options: options,
@@ -218,7 +218,7 @@ namespace RepoDb
             SqlTransaction transaction = null)
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? repository.CreateConnection());
+            var connection = transaction?.Connection ?? repository.CreateConnection();
 
             try
             {
@@ -277,7 +277,7 @@ namespace RepoDb
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? repository.CreateConnection());
+            var connection = transaction?.Connection ?? repository.CreateConnection();
 
             try
             {
@@ -337,7 +337,7 @@ namespace RepoDb
             SqlTransaction transaction = null)
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? repository.CreateConnection());
+            var connection = transaction?.Connection ?? repository.CreateConnection();
 
             try
             {
@@ -402,12 +402,12 @@ namespace RepoDb
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? repository.CreateConnection());
+            var connection = transaction?.Connection ?? repository.CreateConnection();
 
             try
             {
                 // Call the method
-                return await connection.BulkMergeAsync<TEntity>(entities: entities,
+                return await connection.BulkMergeAsync(entities: entities,
                     qualifiers: qualifiers,
                     mappings: mappings,
                     options: options,
@@ -464,12 +464,12 @@ namespace RepoDb
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? repository.CreateConnection());
+            var connection = transaction?.Connection ?? repository.CreateConnection();
 
             try
             {
                 // Call the method
-                return await connection.BulkMergeAsync<TEntity>(tableName: tableName,
+                return await connection.BulkMergeAsync(tableName: tableName,
                     entities: entities,
                     qualifiers: qualifiers,
                     mappings: mappings,
@@ -523,12 +523,12 @@ namespace RepoDb
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? repository.CreateConnection());
+            var connection = transaction?.Connection ?? repository.CreateConnection();
 
             try
             {
                 // Call the method
-                return await connection.BulkMergeAsync<TEntity>(reader: reader,
+                return await connection.BulkMergeAsync(reader: reader,
                     qualifiers: qualifiers,
                     mappings: mappings,
                     options: options,
@@ -584,7 +584,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? repository.CreateConnection());
+            var connection = transaction?.Connection ?? repository.CreateConnection();
 
             try
             {
@@ -646,7 +646,7 @@ namespace RepoDb
             where TEntity : class
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? repository.CreateConnection());
+            var connection = transaction?.Connection ?? repository.CreateConnection();
 
             try
             {
