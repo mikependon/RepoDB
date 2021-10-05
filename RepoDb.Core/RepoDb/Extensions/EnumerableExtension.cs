@@ -19,18 +19,18 @@ namespace RepoDb.Extensions
         public static IEnumerable<IEnumerable<T>> Split<T>(this IEnumerable<T> value,
             int sizePerSplit)
         {
-            var list = value?.AsList();
-            if (sizePerSplit == 0 || list.Count <= sizePerSplit)
+            var count = value?.Count() ?? 0;
+            if (sizePerSplit == 0 || count <= sizePerSplit)
             {
                 return new[] { value };
             }
             else
             {
-                var batchCount = Convert.ToInt32(list.Count / sizePerSplit) + ((list.Count % sizePerSplit) != 0 ? 1 : 0);
+                var batchCount = Convert.ToInt32(count / sizePerSplit) + ((count % sizePerSplit) != 0 ? 1 : 0);
                 var array = new IEnumerable<T>[batchCount];
                 for (var i = 0; i < batchCount; i++)
                 {
-                    array[i] = list.Where((_, index) =>
+                    array[i] = value.Where((_, index) =>
                         {
                             return index >= (sizePerSplit * i) &&
                                 index < (sizePerSplit * i) + sizePerSplit;

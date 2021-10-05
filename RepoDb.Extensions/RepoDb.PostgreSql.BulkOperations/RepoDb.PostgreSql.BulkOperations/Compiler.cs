@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace RepoDb.PostgreSql.BulkOperations
 {
@@ -167,6 +169,160 @@ namespace RepoDb.PostgreSql.BulkOperations
 
         #endregion
 
+        #region GetNpgsqlBinaryImporterWriteAsyncFunc (Mappings)
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="mappings"></param>
+        /// <param name="entityType"></param>
+        /// <returns></returns>
+        internal static Func<NpgsqlBinaryImporter, TEntity, CancellationToken, Task> GetNpgsqlBinaryImporterWriteAsyncFunc<TEntity>(string tableName,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+            Type entityType)
+            where TEntity : class =>
+            GetNpgsqlBinaryImporterWriteAsyncFuncCache<TEntity>.Get(tableName, mappings, entityType);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tableName"></param>
+        /// <param name="dbFields"></param>
+        /// <param name="properties"></param>
+        /// <param name="entityType"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
+        internal static Func<NpgsqlBinaryImporter, TEntity, CancellationToken, Task> GetNpgsqlBinaryImporterWriteAsyncFunc<TEntity>(string tableName,
+            IEnumerable<DbField> dbFields,
+            IEnumerable<ClassProperty> properties,
+            Type entityType,
+            IDbSetting dbSetting)
+            where TEntity : class =>
+            GetNpgsqlBinaryImporterWriteAsyncFuncCache<TEntity>.Get(tableName, dbFields, properties, entityType, dbSetting);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        private static class GetNpgsqlBinaryImporterWriteAsyncFuncCache<TEntity>
+            where TEntity : class
+        {
+            private static ConcurrentDictionary<int,
+                Func<NpgsqlBinaryImporter, TEntity, CancellationToken, Task>> cache = new();
+
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="tableName"></param>
+            /// <param name="mappings"></param>
+            /// <param name="entityType"></param>
+            /// <returns></returns>
+            public static Func<NpgsqlBinaryImporter, TEntity, CancellationToken, Task> Get(string tableName,
+                IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+                Type entityType) =>
+                GetFunc(tableName, mappings, entityType);
+
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="tableName"></param>
+            /// <param name="dbFields"></param>
+            /// <param name="properties"></param>
+            /// <param name="entityType"></param>
+            /// <param name="dbSetting"></param>
+            /// <returns></returns>
+            public static Func<NpgsqlBinaryImporter, TEntity, CancellationToken, Task> Get(string tableName,
+                IEnumerable<DbField> dbFields,
+                IEnumerable<ClassProperty> properties,
+                Type entityType,
+                IDbSetting dbSetting)
+            {
+                var matchedProperties = NpgsqlConnectionExtension.GetMatchedProperties(dbFields, properties, dbSetting);
+                var mappings = matchedProperties.Select(property => new NpgsqlBulkInsertMapItem(property.PropertyInfo.Name, property.GetMappedName()));
+                return GetFunc(tableName, mappings, entityType);
+            }
+
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="tableName"></param>
+            /// <param name="mappings"></param>
+            /// <param name="entityType"></param>
+            /// <returns></returns>
+            private static Func<NpgsqlBinaryImporter, TEntity, CancellationToken, Task> GetFunc(string tableName,
+                IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+                Type entityType)
+            {
+                var targetTableName = tableName ?? ClassMappedNameCache.Get<TEntity>();
+                var hashCode = GetHashCode<TEntity>(targetTableName, mappings);
+
+                if (cache.TryGetValue(hashCode, out var value))
+                {
+                    return value;
+                }
+
+                // Entity types (covering the anonymous)
+                var typeOfEntity = typeof(TEntity);
+                entityType ??= typeOfEntity;
+
+                // Variables
+                var importerType = typeof(NpgsqlBinaryImporter);
+                var importerParameterExpression = Expression.Parameter(importerType, "importer");
+                var entityParameterExpression = Expression.Parameter(typeOfEntity, "entity");
+                var cancellationTokenExpression = Expression.Parameter(typeof(CancellationToken), "cancellationToken");
+                var expressions = new List<Expression>();
+
+                // Anonymous
+                var entityExpression = (Expression)entityParameterExpression;
+                if (typeOfEntity != entityType)
+                {
+                    entityExpression = Expression.Convert(entityParameterExpression, entityType);
+                }
+
+                // Mappings
+                foreach (var mapping in mappings)
+                {
+                    var propertyExpression = Expression.Convert(GetEntityPropertyExpression(entityExpression, entityType, mapping.SourceColumn), typeof(object));
+                    var parameters = mapping.NpgsqlDbType.HasValue ?
+                        new Expression[] { propertyExpression, Expression.Constant(mapping.NpgsqlDbType), cancellationTokenExpression } :
+                        new Expression[] { propertyExpression, cancellationTokenExpression };
+                    var writeMethod = mapping.NpgsqlDbType.HasValue ?
+                        GetNpgsqlBinaryImporterWriteAsyncWithNpgsqlDbTypeMethod() : GetNpgsqlBinaryImporterWriteAsyncMethod();
+
+                    expressions.Add(Expression.Call(importerParameterExpression, writeMethod.MakeGenericMethod(new[] { typeof(object) }), parameters));
+                }
+
+                // Check
+                Func<NpgsqlBinaryImporter, TEntity, CancellationToken, Task> func;
+                if (expressions.Any())
+                {
+                    func = Expression
+                        .Lambda<Func<NpgsqlBinaryImporter, TEntity, CancellationToken, Task>>(Expression.Block(expressions),
+                            importerParameterExpression, entityParameterExpression, cancellationTokenExpression)
+                        .Compile();
+                }
+                else
+                {
+                    throw new InvalidOperationException($"There are no compiled expressions found for '{entityType.FullName}'. " +
+                        $"Please check whether you had provided the proper 'mappings' or ensure that the entity properties are " +
+                        $"matching with the table columns.");
+                }
+
+                // Cache
+                if (cache.TryAdd(hashCode, func))
+                {
+                    return func;
+                }
+
+                // Throw an error
+                throw new InvalidOperationException($"Failed to add a compiled '{importerType.FullName}.Write' function for '{tableName}'.");
+            }
+        }
+
+        #endregion
+
         #region Helpers
 
         /// <summary>
@@ -184,6 +340,22 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// 
         /// </summary>
         /// <returns></returns>
+        private static MethodInfo GetNpgsqlBinaryImporterWriteAsyncMethod() =>
+            typeof(NpgsqlBinaryImporter)
+                .GetMethods()
+                .Where(method =>
+                    string.Equals("WriteAsync", method.Name, StringComparison.OrdinalIgnoreCase))
+                .First(method =>
+                {
+                    var parameters = method.GetParameters();
+                    return parameters.Length == 2 &&
+                        parameters[1].ParameterType == typeof(CancellationToken);
+                });
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         private static MethodInfo GetNpgsqlBinaryImporterWriteWithNpgsqlDbTypeMethod()
         {
             var methods = typeof(NpgsqlBinaryImporter)
@@ -193,9 +365,27 @@ namespace RepoDb.PostgreSql.BulkOperations
             return methods.First(method =>
             {
                 var parameters = method.GetParameters();
-
                 return parameters.Length == 2 &&
                     parameters[1].ParameterType == typeof(NpgsqlDbType);
+            });
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        private static MethodInfo GetNpgsqlBinaryImporterWriteAsyncWithNpgsqlDbTypeMethod()
+        {
+            var methods = typeof(NpgsqlBinaryImporter)
+                .GetMethods()
+                .Where(method => string.Equals("Write", method.Name, StringComparison.OrdinalIgnoreCase));
+
+            return methods.First(method =>
+            {
+                var parameters = method.GetParameters();
+                return parameters.Length == 3 &&
+                    parameters[1].ParameterType == typeof(NpgsqlDbType) &&
+                    parameters[2].ParameterType == typeof(CancellationToken);
             });
         }
 

@@ -448,22 +448,24 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="count"></param>
-        /// <param name="hasId"></param>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entities"></param>
         /// <returns></returns>
-        public static DataTable CreateBulkOperationDataTableIdentityTables(int count,
-            bool hasId = false)
+        private static DataTable ToDataTable<TEntity>(string tableName,
+            IEnumerable<TEntity> entities)
+            where TEntity : class
         {
-            var tables = CreateBulkOperationLightIdentityTables(count, hasId);
-            var table = new DataTable() { TableName = "BulkOperationIdentityTable" };
-            var properties = PropertyCache.Get<BulkOperationLightIdentityTable>();
+            var table = new DataTable() { TableName = tableName ?? ClassMappedNameCache.Get<TEntity>() };
+            var properties = PropertyCache.Get<TEntity>();
 
+            // Columns
             foreach (var property in properties)
             {
                 table.Columns.Add(property.PropertyInfo.Name, property.PropertyInfo.PropertyType.GetUnderlyingType());
             }
 
-            foreach (var entity in tables)
+            // Rows
+            foreach (var entity in entities)
             {
                 var row = table.NewRow();
 
@@ -475,7 +477,34 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 table.Rows.Add(row);
             }
 
+            // Return
             return table;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="count"></param>
+        /// <param name="hasId"></param>
+        /// <returns></returns>
+        public static DataTable CreateBulkOperationDataTableLightIdentityTables(int count,
+            bool hasId = false)
+        {
+            var tables = CreateBulkOperationLightIdentityTables(count, hasId);
+            return ToDataTable("BulkOperationIdentityTable", tables);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="count"></param>
+        /// <param name="hasId"></param>
+        /// <returns></returns>
+        public static DataTable CreateBulkOperationDataTableUnmatchedIdentityTables(int count,
+            bool hasId = false)
+        {
+            var tables = CreateBulkOperationUnmatchedIdentityTables(count, hasId);
+            return ToDataTable("BulkOperationIdentityTable", tables);
         }
 
         #endregion
