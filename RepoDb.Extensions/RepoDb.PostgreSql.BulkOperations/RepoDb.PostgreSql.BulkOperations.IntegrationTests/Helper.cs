@@ -323,7 +323,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var index = i + 1;
                 tables.Add(new
                 {
-                    Id = hasId ? index : 0,
+                    Id = (long)(hasId ? index : 0),
                     ColumnBigInt = (long)random.Next(100),
                     ColumnBoolean = true,
                     ColumnInteger = random.Next(100),
