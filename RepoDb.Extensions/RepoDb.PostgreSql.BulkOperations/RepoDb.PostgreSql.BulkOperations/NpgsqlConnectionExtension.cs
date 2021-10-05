@@ -26,12 +26,14 @@ namespace RepoDb
         /// <param name="tableName"></param>
         /// <param name="entityType"></param>
         /// <param name="mappings"></param>
+        /// <param name="keepIdentity"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
         private static string GetBinaryImportCopyCommand(NpgsqlConnection connection,
             string tableName,
             Type entityType,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+            bool keepIdentity,
             NpgsqlTransaction transaction)
         {
             var targetTableName = (tableName ?? ClassMappedNameCache.Get(entityType)).AsQuoted(true, connection.GetDbSetting());
@@ -39,6 +41,7 @@ namespace RepoDb
                 tableName,
                 entityType,
                 mappings,
+                keepIdentity,
                 transaction);
 
             return $"COPY {targetTableName} ({textColumns}) FROM STDIN (FORMAT BINARY)";
@@ -51,6 +54,7 @@ namespace RepoDb
         /// <param name="tableName"></param>
         /// <param name="entityType"></param>
         /// <param name="mappings"></param>
+        /// <param name="keepIdentity"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
@@ -58,6 +62,7 @@ namespace RepoDb
             string tableName,
             Type entityType,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+            bool keepIdentity,
             NpgsqlTransaction transaction,
             CancellationToken cancellationToken = default)
         {
@@ -66,6 +71,7 @@ namespace RepoDb
                 tableName,
                 entityType,
                 mappings,
+                keepIdentity,
                 transaction,
                 cancellationToken);
 
@@ -83,12 +89,14 @@ namespace RepoDb
         /// <param name="tableName"></param>
         /// <param name="entityType"></param>
         /// <param name="mappings"></param>
+        /// <param name="keepIdentity"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
         private static string GetTextColumns(NpgsqlConnection connection,
             string tableName,
             Type entityType,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+            bool keepIdentity,
             NpgsqlTransaction transaction)
         {
             var dbSetting = connection.GetDbSetting();
@@ -102,7 +110,7 @@ namespace RepoDb
                 var dbFields = DbFieldCache.Get(connection,
                     (tableName ?? ClassMappedNameCache.Get(entityType)),
                     transaction);
-                return GetTextColumns(dbFields, PropertyCache.Get(entityType), dbSetting);
+                return GetTextColumns(dbFields, PropertyCache.Get(entityType), keepIdentity, dbSetting);
             }
         }
 
@@ -113,6 +121,7 @@ namespace RepoDb
         /// <param name="tableName"></param>
         /// <param name="entityType"></param>
         /// <param name="mappings"></param>
+        /// <param name="keepIdentity"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
@@ -120,6 +129,7 @@ namespace RepoDb
             string tableName,
             Type entityType,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+            bool keepIdentity,
             NpgsqlTransaction transaction,
             CancellationToken cancellationToken = default)
         {
@@ -135,7 +145,7 @@ namespace RepoDb
                     (tableName ?? ClassMappedNameCache.Get(entityType)),
                     transaction,
                     cancellationToken);
-                return GetTextColumns(dbFields, PropertyCache.Get(entityType), dbSetting);
+                return GetTextColumns(dbFields, PropertyCache.Get(entityType), keepIdentity, dbSetting);
             }
         }
 
@@ -154,12 +164,14 @@ namespace RepoDb
         /// </summary>
         /// <param name="dbFields"></param>
         /// <param name="properties"></param>
+        /// <param name="keepIdentity"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         private static string GetTextColumns(IEnumerable<DbField> dbFields,
             IEnumerable<ClassProperty> properties,
+            bool keepIdentity,
             IDbSetting dbSetting) =>
-            GetMatchedProperties(dbFields, properties, dbSetting)
+            GetMatchedProperties(dbFields, properties, keepIdentity, dbSetting)
                 .Select(property => property.GetMappedName().AsQuoted(true, dbSetting)).Join(", ");
 
         /*
@@ -171,17 +183,20 @@ namespace RepoDb
         /// </summary>
         /// <param name="dbFields"></param>
         /// <param name="properties"></param>
+        /// <param name="keepIdentity"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         internal static IEnumerable<ClassProperty> GetMatchedProperties(IEnumerable<DbField> dbFields,
             IEnumerable<ClassProperty> properties,
+            bool keepIdentity,
             IDbSetting dbSetting)
         {
             var matchedProperties = properties?
                 .Where(property =>
                     dbFields?.FirstOrDefault(dbField =>
-                        dbField.IsIdentity == false &&
-                        string.Equals(property.GetMappedName().AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null);
+                        (dbField.IsIdentity == false || (keepIdentity && dbField.IsIdentity)) &&
+                        string.Equals(property.GetMappedName().AsUnquoted(true, dbSetting),
+                            dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null);
 
             if (matchedProperties?.Any() != true)
             {

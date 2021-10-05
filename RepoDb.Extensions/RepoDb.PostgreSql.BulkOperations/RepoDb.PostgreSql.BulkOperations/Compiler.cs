@@ -42,15 +42,17 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// <param name="dbFields"></param>
         /// <param name="properties"></param>
         /// <param name="entityType"></param>
+        /// <param name="keepIdentity"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         internal static Action<NpgsqlBinaryImporter, TEntity> GetNpgsqlBinaryImporterWriteFunc<TEntity>(string tableName,
             IEnumerable<DbField> dbFields,
             IEnumerable<ClassProperty> properties,
             Type entityType,
+            bool keepIdentity,
             IDbSetting dbSetting)
             where TEntity : class =>
-            GetNpgsqlBinaryImporterWriteFuncCache<TEntity>.Get(tableName, dbFields, properties, entityType, dbSetting);
+            GetNpgsqlBinaryImporterWriteFuncCache<TEntity>.Get(tableName, dbFields, properties, entityType, keepIdentity, dbSetting);
 
         /// <summary>
         /// 
@@ -80,16 +82,23 @@ namespace RepoDb.PostgreSql.BulkOperations
             /// <param name="dbFields"></param>
             /// <param name="properties"></param>
             /// <param name="entityType"></param>
+            /// <param name="keepIdentity"></param>
             /// <param name="dbSetting"></param>
             /// <returns></returns>
             public static Action<NpgsqlBinaryImporter, TEntity> Get(string tableName,
                 IEnumerable<DbField> dbFields,
                 IEnumerable<ClassProperty> properties,
                 Type entityType,
+                bool keepIdentity,
                 IDbSetting dbSetting)
             {
-                var matchedProperties = NpgsqlConnectionExtension.GetMatchedProperties(dbFields, properties, dbSetting);
-                var mappings = matchedProperties.Select(property => new NpgsqlBulkInsertMapItem(property.PropertyInfo.Name, property.GetMappedName()));
+                var matchedProperties = NpgsqlConnectionExtension.GetMatchedProperties(dbFields,
+                    properties,
+                    keepIdentity,
+                    dbSetting);
+                var mappings = matchedProperties.Select(property =>
+                    new NpgsqlBulkInsertMapItem(property.PropertyInfo.Name, property.GetMappedName()));
+
                 return GetFunc(tableName, mappings, entityType);
             }
 
@@ -192,15 +201,17 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// <param name="dbFields"></param>
         /// <param name="properties"></param>
         /// <param name="entityType"></param>
+        /// <param name="keepIdentity"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         internal static Func<NpgsqlBinaryImporter, TEntity, CancellationToken, Task> GetNpgsqlBinaryImporterWriteAsyncFunc<TEntity>(string tableName,
             IEnumerable<DbField> dbFields,
             IEnumerable<ClassProperty> properties,
             Type entityType,
+            bool keepIdentity,
             IDbSetting dbSetting)
             where TEntity : class =>
-            GetNpgsqlBinaryImporterWriteAsyncFuncCache<TEntity>.Get(tableName, dbFields, properties, entityType, dbSetting);
+            GetNpgsqlBinaryImporterWriteAsyncFuncCache<TEntity>.Get(tableName, dbFields, properties, entityType, keepIdentity, dbSetting);
 
         /// <summary>
         /// 
@@ -231,16 +242,23 @@ namespace RepoDb.PostgreSql.BulkOperations
             /// <param name="dbFields"></param>
             /// <param name="properties"></param>
             /// <param name="entityType"></param>
+            /// <param name="keepIdentity"></param>
             /// <param name="dbSetting"></param>
             /// <returns></returns>
             public static Func<NpgsqlBinaryImporter, TEntity, CancellationToken, Task> Get(string tableName,
                 IEnumerable<DbField> dbFields,
                 IEnumerable<ClassProperty> properties,
                 Type entityType,
+                bool keepIdentity,
                 IDbSetting dbSetting)
             {
-                var matchedProperties = NpgsqlConnectionExtension.GetMatchedProperties(dbFields, properties, dbSetting);
-                var mappings = matchedProperties.Select(property => new NpgsqlBulkInsertMapItem(property.PropertyInfo.Name, property.GetMappedName()));
+                var matchedProperties = NpgsqlConnectionExtension.GetMatchedProperties(dbFields,
+                    properties,
+                    keepIdentity,
+                    dbSetting);
+                var mappings = matchedProperties.Select(property =>
+                    new NpgsqlBulkInsertMapItem(property.PropertyInfo.Name, property.GetMappedName()));
+
                 return GetFunc(tableName, mappings, entityType);
             }
 

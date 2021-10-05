@@ -2,31 +2,23 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net5.0</TargetFrameworks>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Description>An extension library that contains the official Bulk Operations of RepoDb for SQL Server.</Description>
+    <Version>0.0.1</Version>
+    <FileVersion>0.0.1</FileVersion>
+    <AssemblyVersion>0.0.1</AssemblyVersion>
+    <Description>An extension library that contains the official Bulk Operations of RepoDb for PostgreSQL.</Description>
     <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.PostgreSql.BulkOperations</RepositoryUrl>
     <PackageTags>orm orm-framework orm-library hybrid-orm bulk bulk-operations</PackageTags>
-    <PackageReleaseNotes>http://repodb.net/release/sqlserverbulk</PackageReleaseNotes>
-    <Version>1.1.6-beta1</Version>
-    <FileVersion>1.1.6.1</FileVersion>
-    <AssemblyVersion>1.1.6.1</AssemblyVersion>
+    <PackageReleaseNotes>http://repodb.net/release/postgresqlbulk</PackageReleaseNotes>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageProjectUrl>https://repodb.net/tutorial/get-started-postgresql</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Base\**" />
     <Compile Remove="Operations\**" />
-    <Compile Remove="System.Data.SqlClient\**" />
+    <EmbeddedResource Remove="Base\**" />
     <EmbeddedResource Remove="Operations\**" />
-    <EmbeddedResource Remove="System.Data.SqlClient\**" />
-    <None Remove="Operations\**" />
-    <None Remove="System.Data.SqlClient\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="Base\BulkDelete.cs" />
-    <Compile Remove="Base\BulkInsert.cs" />
-    <Compile Remove="Base\BulkMerge.cs" />
-    <Compile Remove="Base\BulkUpdate.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -44,10 +36,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
     <ProjectReference Include="..\..\..\RepoDb.PostgreSql\RepoDb.PostgreSql\RepoDb.PostgreSql.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Base\" />
   </ItemGroup>
 
 </Project>
