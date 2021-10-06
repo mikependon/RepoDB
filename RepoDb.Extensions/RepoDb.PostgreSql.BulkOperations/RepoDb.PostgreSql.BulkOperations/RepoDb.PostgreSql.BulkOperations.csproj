@@ -22,6 +22,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="Base\BinaryImport.cs" />
+    <Compile Include="Base\BulkInsert.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="RepoDb" Version="1.12.9" />
     <PackageReference Include="RepoDb.PostgreSql" Version="1.1.4" />
   </ItemGroup>
