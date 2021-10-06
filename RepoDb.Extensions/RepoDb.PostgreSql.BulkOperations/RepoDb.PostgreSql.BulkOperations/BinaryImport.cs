@@ -2,6 +2,7 @@
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.PostgreSql.BulkOperations;
+using RepoDb.PostgreSql.BulkOperations.Enumerations;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -32,7 +33,7 @@ namespace RepoDb
         /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used.</param>
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
         /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the rows of the table will be sent together.</param>
-        /// <param name="keepIdentity">A value that indicates whether the identity property/column will be kept and used.</param>
+        /// <param name="identityBehavior">A value that indicates the behavior of the identity property/column.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows inserted into the target table.</returns>
         public static int BinaryImport<TEntity>(this NpgsqlConnection connection,
@@ -41,7 +42,7 @@ namespace RepoDb
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool keepIdentity = false,
+            BulkImportIdentityBehavior identityBehavior = default,
             NpgsqlTransaction transaction = null)
             where TEntity : class
         {
@@ -78,7 +79,7 @@ namespace RepoDb
                         mappings,
                         entityType,
                         bulkCopyTimeout,
-                        keepIdentity,
+                        identityBehavior,
                         transaction))
                     {
                         if (isDictionary)
@@ -95,7 +96,7 @@ namespace RepoDb
                                 batch,
                                 mappings,
                                 entityType,
-                                keepIdentity,
+                                identityBehavior,
                                 transaction);
                         }
                     }
@@ -146,7 +147,7 @@ namespace RepoDb
         /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used.</param>
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
         /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the rows of the table will be sent together.</param>
-        /// <param name="keepIdentity">A value that indicates whether the identity property/column will be kept and used.</param>
+        /// <param name="identityBehavior">A value that indicates the behavior of the identity property/column.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows inserted into the target table.</returns>
         public static int BinaryImport(this NpgsqlConnection connection,
@@ -156,7 +157,7 @@ namespace RepoDb
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool keepIdentity = false,
+            BulkImportIdentityBehavior identityBehavior = default,
             NpgsqlTransaction transaction = null)
         {
             // Variables
@@ -189,7 +190,7 @@ namespace RepoDb
                         mappings,
                         null,
                         bulkCopyTimeout,
-                        keepIdentity,
+                        identityBehavior,
                         transaction))
                     {
                         result += BinaryImportExplicit(importer,
@@ -241,7 +242,7 @@ namespace RepoDb
         /// <param name="reader">The instance of <see cref="DbDataReader"/> object that contains the rows to be bulk-inserted to the target table.</param>
         /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used.</param>
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
-        /// <param name="keepIdentity">A value that indicates whether the identity property/column will be kept and used.</param>
+        /// <param name="identityBehavior">A value that indicates the behavior of the identity property/column.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows inserted into the target table.</returns>
         public static int BinaryImport(this NpgsqlConnection connection,
@@ -249,7 +250,7 @@ namespace RepoDb
             DbDataReader reader,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
-            bool keepIdentity = false,
+            BulkImportIdentityBehavior identityBehavior = default,
             NpgsqlTransaction transaction = null)
         {
             // Variables
@@ -276,7 +277,7 @@ namespace RepoDb
                     mappings,
                     null,
                     bulkCopyTimeout,
-                    keepIdentity,
+                    identityBehavior,
                     transaction))
                 {
                     result += BinaryImportExplicit(importer,
@@ -335,7 +336,7 @@ namespace RepoDb
         /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used.</param>
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
         /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the rows of the table will be sent together.</param>
-        /// <param name="keepIdentity">A value that indicates whether the identity property/column will be kept and used.</param>
+        /// <param name="identityBehavior">A value that indicates the behavior of the identity property/column.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows inserted into the target table.</returns>
@@ -345,7 +346,7 @@ namespace RepoDb
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool keepIdentity = false,
+            BulkImportIdentityBehavior identityBehavior = default,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -387,7 +388,7 @@ namespace RepoDb
                         mappings,
                         entityType,
                         bulkCopyTimeout,
-                        keepIdentity,
+                        identityBehavior,
                         transaction))
                     {
                         if (isDictionary)
@@ -405,7 +406,7 @@ namespace RepoDb
                                 batch,
                                 mappings,
                                 entityType,
-                                keepIdentity,
+                                identityBehavior,
                                 transaction,
                                 cancellationToken);
                         }
@@ -457,7 +458,7 @@ namespace RepoDb
         /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used.</param>
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
         /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the rows of the table will be sent together.</param>
-        /// <param name="keepIdentity">A value that indicates whether the identity property/column will be kept and used.</param>
+        /// <param name="identityBehavior">A value that indicates the behavior of the identity property/column.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows inserted into the target table.</returns>
@@ -468,7 +469,7 @@ namespace RepoDb
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool keepIdentity = false,
+            BulkImportIdentityBehavior identityBehavior = default,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -506,7 +507,7 @@ namespace RepoDb
                         mappings,
                         null,
                         bulkCopyTimeout,
-                        keepIdentity,
+                        identityBehavior,
                         transaction,
                         cancellationToken))
                     {
@@ -560,7 +561,7 @@ namespace RepoDb
         /// <param name="reader">The instance of <see cref="DbDataReader"/> object that contains the rows to be bulk-inserted to the target table.</param>
         /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used.</param>
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
-        /// <param name="keepIdentity">A value that indicates whether the identity property/column will be kept and used.</param>
+        /// <param name="identityBehavior">A value that indicates the behavior of the identity property/column.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows inserted into the target table.</returns>
@@ -569,7 +570,7 @@ namespace RepoDb
             DbDataReader reader,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
-            bool keepIdentity = false,
+            BulkImportIdentityBehavior identityBehavior = default,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -601,7 +602,7 @@ namespace RepoDb
                     mappings,
                     null,
                     bulkCopyTimeout,
-                    keepIdentity,
+                    identityBehavior,
                     transaction,
                     cancellationToken))
                 {
@@ -657,6 +658,7 @@ namespace RepoDb
         /// <param name="mappings"></param>
         /// <param name="entityType"></param>
         /// <param name="bulkCopyTimeout"></param>
+        /// <param name="identityBehavior"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
         private static NpgsqlBinaryImporter GetNpgsqlBinaryImporter(NpgsqlConnection connection,
@@ -664,14 +666,14 @@ namespace RepoDb
             IEnumerable<NpgsqlBulkInsertMapItem> mappings,
             Type entityType = null,
             int? bulkCopyTimeout = null,
-            bool keepIdentity = false,
+            BulkImportIdentityBehavior identityBehavior = default,
             NpgsqlTransaction transaction = null)
         {
             var copyCommand = GetBinaryImportCopyCommand(connection,
                 tableName,
                 entityType,
                 mappings,
-                keepIdentity,
+                identityBehavior,
                 transaction);
             var importer = connection.BeginBinaryImport(copyCommand);
 
@@ -695,7 +697,7 @@ namespace RepoDb
         /// <param name="entities"></param>
         /// <param name="mappings"></param>
         /// <param name="entityType"></param>
-        /// <param name="keepIdentity"></param>
+        /// <param name="identityBehavior"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
         private static int BinaryImport<TEntity>(NpgsqlConnection connection,
@@ -704,7 +706,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings,
             Type entityType = null,
-            bool keepIdentity = false,
+            BulkImportIdentityBehavior identityBehavior = default,
             NpgsqlTransaction transaction = null)
             where TEntity : class
         {
@@ -729,7 +731,7 @@ namespace RepoDb
                     dbFields,
                     properties,
                     entityType,
-                    keepIdentity,
+                    identityBehavior,
                     connection.GetDbSetting());
             }
         }
@@ -771,7 +773,7 @@ namespace RepoDb
         /// <param name="dbFields"></param>
         /// <param name="properties"></param>
         /// <param name="entityType"></param>
-        /// <param name="keepIdentity"></param>
+        /// <param name="identityBehavior"></param>
         /// <param name="dbSetting"></param>
         private static int BinaryImport<TEntity>(NpgsqlBinaryImporter importer,
             string tableName,
@@ -779,15 +781,15 @@ namespace RepoDb
             IEnumerable<DbField> dbFields,
             IEnumerable<ClassProperty> properties,
             Type entityType,
-            bool keepIdentity,
-            IDbSetting dbSetting)
+            BulkImportIdentityBehavior identityBehavior = default,
+            IDbSetting dbSetting = null)
             where TEntity : class
         {
             var func = Compiler.GetNpgsqlBinaryImporterWriteFunc<TEntity>(tableName,
                 dbFields,
                 properties,
                 entityType,
-                keepIdentity,
+                identityBehavior,
                 dbSetting);
             var enumerator = entities.GetEnumerator();
 
@@ -915,7 +917,7 @@ namespace RepoDb
             IEnumerable<NpgsqlBulkInsertMapItem> mappings,
             Type entityType = null,
             int? bulkCopyTimeout = null,
-            bool keepIdentity = false,
+            BulkImportIdentityBehavior identityBehavior = default,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -923,7 +925,7 @@ namespace RepoDb
                 tableName,
                 entityType,
                 mappings,
-                keepIdentity,
+                identityBehavior,
                 transaction,
                 cancellationToken);
 #if NET6_0
@@ -952,7 +954,7 @@ namespace RepoDb
         /// <param name="entities"></param>
         /// <param name="mappings"></param>
         /// <param name="entityType"></param>
-        /// <param name="keepIdentity"></param>
+        /// <param name="identityBehavior"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
@@ -962,7 +964,7 @@ namespace RepoDb
             IEnumerable<TEntity> entities,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings,
             Type entityType = null,
-            bool keepIdentity = false,
+            BulkImportIdentityBehavior identityBehavior = default,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -990,7 +992,7 @@ namespace RepoDb
                     dbFields,
                     properties,
                     entityType,
-                    keepIdentity,
+                    identityBehavior,
                     connection.GetDbSetting(),
                     cancellationToken);
             }
@@ -1036,7 +1038,7 @@ namespace RepoDb
         /// <param name="dbFields"></param>
         /// <param name="properties"></param>
         /// <param name="entityType"></param>
-        /// <param name="keepIdentity"></param>
+        /// <param name="identityBehavior"></param>
         /// <param name="dbSetting"></param>
         /// <param name="cancellationToken"></param>
         private static async Task<int> BinaryImportAsync<TEntity>(NpgsqlBinaryImporter importer,
@@ -1045,8 +1047,8 @@ namespace RepoDb
             IEnumerable<DbField> dbFields,
             IEnumerable<ClassProperty> properties,
             Type entityType,
-            bool keepIdentity,
-            IDbSetting dbSetting,
+            BulkImportIdentityBehavior identityBehavior = default,
+            IDbSetting dbSetting = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -1054,7 +1056,7 @@ namespace RepoDb
                 dbFields,
                 properties,
                 entityType,
-                keepIdentity,
+                identityBehavior,
                 dbSetting);
             var enumerator = entities.GetEnumerator();
 
