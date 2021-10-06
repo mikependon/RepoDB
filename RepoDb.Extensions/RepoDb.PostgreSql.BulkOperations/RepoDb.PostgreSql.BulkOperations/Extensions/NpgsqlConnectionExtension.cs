@@ -17,7 +17,6 @@ namespace RepoDb
     /// </summary>
     public static partial class NpgsqlConnectionExtension
     {
-
         #region Sync
 
         /// <summary>
@@ -26,25 +25,27 @@ namespace RepoDb
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="mappings"></param>
+        /// <param name="dbFields"></param>
         /// <param name="entityType"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="keepIdentity"></param>
-        /// <param name="transaction"></param>
+        /// <param name="dbSetting"></param>
         /// <returns></returns>
         private static NpgsqlBinaryImporter GetNpgsqlBinaryImporter(NpgsqlConnection connection,
             string tableName,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings,
-            Type entityType = null,
-            int? bulkCopyTimeout = null,
-            bool keepIdentity = false,
-            NpgsqlTransaction transaction = null)
+            IEnumerable<DbField> dbFields,
+            Type entityType,
+            int? bulkCopyTimeout,
+            bool keepIdentity,
+            IDbSetting dbSetting)
         {
-            var copyCommand = GetBinaryImportCopyCommand(connection,
-                tableName,
-                entityType,
+            var copyCommand = GetBinaryImportCopyCommand(tableName,
                 mappings,
+                dbFields,
+                PropertyCache.Get(entityType),
                 keepIdentity,
-                transaction);
+                dbSetting);
             var importer = connection.BeginBinaryImport(copyCommand);
 
             // Timeout
@@ -61,23 +62,23 @@ namespace RepoDb
         /// 
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
-        /// <param name="connection"></param>
         /// <param name="importer"></param>
         /// <param name="tableName"></param>
         /// <param name="entities"></param>
         /// <param name="mappings"></param>
+        /// <param name="dbFields"></param>
         /// <param name="entityType"></param>
         /// <param name="keepIdentity"></param>
-        /// <param name="transaction"></param>
+        /// <param name="dbSetting"></param>
         /// <returns></returns>
-        private static int BinaryImport<TEntity>(NpgsqlConnection connection,
-            NpgsqlBinaryImporter importer,
+        private static int BinaryImport<TEntity>(NpgsqlBinaryImporter importer,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings,
-            Type entityType = null,
-            bool keepIdentity = false,
-            NpgsqlTransaction transaction = null)
+            IEnumerable<DbField> dbFields,
+            Type entityType,
+            bool keepIdentity,
+            IDbSetting dbSetting)
             where TEntity : class
         {
             if (mappings?.Any() == true)
@@ -90,11 +91,7 @@ namespace RepoDb
             }
             else
             {
-                var dbFields = DbFieldCache.Get(connection,
-                    (tableName ?? ClassMappedNameCache.Get(entityType)),
-                    transaction);
                 var properties = PropertyCache.Get(entityType);
-
                 return BinaryImport<TEntity>(importer,
                     tableName,
                     entities,
@@ -102,7 +99,7 @@ namespace RepoDb
                     properties,
                     entityType,
                     keepIdentity,
-                    connection.GetDbSetting());
+                    dbSetting);
             }
         }
 
@@ -151,8 +148,8 @@ namespace RepoDb
             IEnumerable<DbField> dbFields,
             IEnumerable<ClassProperty> properties,
             Type entityType,
-            bool keepIdentity = false,
-            IDbSetting dbSetting = null)
+            bool keepIdentity,
+            IDbSetting dbSetting)
             where TEntity : class
         {
             var func = Compiler.GetNpgsqlBinaryImporterWriteFunc<TEntity>(tableName,
@@ -175,7 +172,7 @@ namespace RepoDb
         /// <param name="importer"></param>
         /// <param name="dictionaries"></param>
         /// <param name="mappings"></param>
-        private static int BinaryImportExplicit(NpgsqlBinaryImporter importer,
+        private static int BinaryImport(NpgsqlBinaryImporter importer,
             IEnumerable<IDictionary<string, object>> dictionaries,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings)
         {
@@ -199,7 +196,7 @@ namespace RepoDb
         /// <param name="importer"></param>
         /// <param name="rows"></param>
         /// <param name="mappings"></param>
-        private static int BinaryImportExplicit(NpgsqlBinaryImporter importer,
+        private static int BinaryImport(NpgsqlBinaryImporter importer,
             IEnumerable<DataRow> rows,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings)
         {
@@ -223,7 +220,7 @@ namespace RepoDb
         /// <param name="importer"></param>
         /// <param name="reader"></param>
         /// <param name="mappings"></param>
-        private static int BinaryImportExplicit(NpgsqlBinaryImporter importer,
+        private static int BinaryImport(NpgsqlBinaryImporter importer,
             DbDataReader reader,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings)
         {
@@ -278,30 +275,32 @@ namespace RepoDb
         /// <param name="tableName"></param>
         /// <param name="mappings"></param>
         /// <param name="entityType"></param>
+        /// <param name="dbFields"></param>
         /// <param name="bulkCopyTimeout"></param>
-        /// <param name="transaction"></param>
+        /// <param name="keepIdentity"></param>
+        /// <param name="dbSetting"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         private static async Task<NpgsqlBinaryImporter> GetNpgsqlBinaryImporterAsync(NpgsqlConnection connection,
             string tableName,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings,
-            Type entityType = null,
-            int? bulkCopyTimeout = null,
-            bool keepIdentity = false,
-            NpgsqlTransaction transaction = null,
+            IEnumerable<DbField> dbFields,
+            Type entityType,
+            int? bulkCopyTimeout,
+            bool keepIdentity,
+            IDbSetting dbSetting,
             CancellationToken cancellationToken = default)
         {
-            var copyCommand = await GetBinaryImportCopyCommandAsync(connection,
-                tableName,
-                entityType,
+            var copyCommand = GetBinaryImportCopyCommand(tableName,
                 mappings,
+                dbFields,
+                PropertyCache.Get(entityType),
                 keepIdentity,
-                transaction,
-                cancellationToken);
+                dbSetting);
 #if NET6_0
-            var importer = await connection.BeginBinaryImportAsync(copyCommand);
+            var importer = await connection.BeginBinaryImportAsync(copyCommand, cancellationToken);
 #else
-            var importer = connection.BeginBinaryImport(copyCommand);
+            var importer = await Task.FromResult(connection.BeginBinaryImport(copyCommand));
 #endif
 
             // Timeout
@@ -318,24 +317,24 @@ namespace RepoDb
         /// 
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
-        /// <param name="connection"></param>
         /// <param name="importer"></param>
         /// <param name="tableName"></param>
         /// <param name="entities"></param>
         /// <param name="mappings"></param>
+        /// <param name="dbFields"></param>
         /// <param name="entityType"></param>
         /// <param name="keepIdentity"></param>
-        /// <param name="transaction"></param>
+        /// <param name="dbSetting"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<int> BinaryImportAsync<TEntity>(NpgsqlConnection connection,
-            NpgsqlBinaryImporter importer,
+        private static async Task<int> BinaryImportAsync<TEntity>(NpgsqlBinaryImporter importer,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings,
-            Type entityType = null,
-            bool keepIdentity = false,
-            NpgsqlTransaction transaction = null,
+            IEnumerable<DbField> dbFields,
+            Type entityType,
+            bool keepIdentity,
+            IDbSetting dbSetting,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -350,12 +349,7 @@ namespace RepoDb
             }
             else
             {
-                var dbFields = await DbFieldCache.GetAsync(connection,
-                    (tableName ?? ClassMappedNameCache.Get(entityType)),
-                    transaction,
-                    cancellationToken);
                 var properties = PropertyCache.Get(entityType);
-
                 return await BinaryImportAsync<TEntity>(importer,
                     tableName,
                     entities,
@@ -363,7 +357,7 @@ namespace RepoDb
                     properties,
                     entityType,
                     keepIdentity,
-                    connection.GetDbSetting(),
+                    dbSetting,
                     cancellationToken);
             }
         }
@@ -417,8 +411,8 @@ namespace RepoDb
             IEnumerable<DbField> dbFields,
             IEnumerable<ClassProperty> properties,
             Type entityType,
-            bool keepIdentity = false,
-            IDbSetting dbSetting = null,
+            bool keepIdentity,
+            IDbSetting dbSetting,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -472,7 +466,7 @@ namespace RepoDb
         /// <param name="rows"></param>
         /// <param name="mappings"></param>
         /// <param name="cancellationToken"></param>
-        private static async Task<int> BinaryImportExplicitAsync(NpgsqlBinaryImporter importer,
+        private static async Task<int> BinaryImportAsync(NpgsqlBinaryImporter importer,
             IEnumerable<DataRow> rows,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings,
             CancellationToken cancellationToken = default)
@@ -499,7 +493,7 @@ namespace RepoDb
         /// <param name="reader"></param>
         /// <param name="mappings"></param>
         /// <param name="cancellationToken"></param>
-        private static async Task<int> BinaryImportExplicitAsync(NpgsqlBinaryImporter importer,
+        private static async Task<int> BinaryImportAsync(NpgsqlBinaryImporter importer,
             DbDataReader reader,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings,
             CancellationToken cancellationToken = default)
@@ -554,126 +548,51 @@ namespace RepoDb
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="connection"></param>
         /// <param name="tableName"></param>
-        /// <param name="entityType"></param>
         /// <param name="mappings"></param>
+        /// <param name="dbFields"></param>
+        /// <param name="properties"></param>
         /// <param name="keepIdentity"></param>
-        /// <param name="transaction"></param>
+        /// <param name="dbSetting"></param>
         /// <returns></returns>
-        private static string GetBinaryImportCopyCommand(NpgsqlConnection connection,
-            string tableName,
-            Type entityType,
+        private static string GetBinaryImportCopyCommand(string tableName,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings,
-            bool keepIdentity = false,
-            NpgsqlTransaction transaction = null)
+            IEnumerable<DbField> dbFields,
+            IEnumerable<ClassProperty> properties,
+            bool keepIdentity,
+            IDbSetting dbSetting)
         {
-            var targetTableName = (tableName ?? ClassMappedNameCache.Get(entityType)).AsQuoted(true, connection.GetDbSetting());
-            var textColumns = GetTextColumns(connection,
-                tableName,
-                entityType,
-                mappings,
+            var textColumns = GetTextColumns(mappings,
+                dbFields,
+                properties,
                 keepIdentity,
-                transaction);
+                dbSetting);
 
-            return $"COPY {targetTableName} ({textColumns}) FROM STDIN (FORMAT BINARY)";
+            return $"COPY {tableName.AsQuoted(true, dbSetting)} ({textColumns}) FROM STDIN (FORMAT BINARY)";
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="tableName"></param>
-        /// <param name="entityType"></param>
         /// <param name="mappings"></param>
+        /// <param name="dbFields"></param>
+        /// <param name="properties"></param>
         /// <param name="keepIdentity"></param>
-        /// <param name="transaction"></param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="dbSetting"></param>
         /// <returns></returns>
-        private static async Task<string> GetBinaryImportCopyCommandAsync(NpgsqlConnection connection,
-            string tableName,
-            Type entityType,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings,
-            bool keepIdentity = false,
-            NpgsqlTransaction transaction = null,
-            CancellationToken cancellationToken = default)
+        private static string GetTextColumns(IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+            IEnumerable<DbField> dbFields,
+            IEnumerable<ClassProperty> properties,
+            bool keepIdentity,
+            IDbSetting dbSetting)
         {
-            var targetTableName = (tableName ?? ClassMappedNameCache.Get(entityType)).AsQuoted(true, connection.GetDbSetting());
-            var textColumns = await GetTextColumnsAsync(connection,
-                tableName,
-                entityType,
-                mappings,
-                keepIdentity,
-                transaction,
-                cancellationToken);
-
-            return $"COPY {targetTableName} ({textColumns}) FROM STDIN (FORMAT BINARY)";
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="tableName"></param>
-        /// <param name="entityType"></param>
-        /// <param name="mappings"></param>
-        /// <param name="keepIdentity"></param>
-        /// <param name="transaction"></param>
-        /// <returns></returns>
-        private static string GetTextColumns(NpgsqlConnection connection,
-            string tableName,
-            Type entityType,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings,
-            bool keepIdentity = false,
-            NpgsqlTransaction transaction = null)
-        {
-            var dbSetting = connection.GetDbSetting();
-
             if (mappings?.Any() == true)
             {
                 return GetTextColumns(mappings, dbSetting);
             }
             else
             {
-                var dbFields = DbFieldCache.Get(connection,
-                    (tableName ?? ClassMappedNameCache.Get(entityType)),
-                    transaction);
-                return GetTextColumns(dbFields, PropertyCache.Get(entityType), keepIdentity, dbSetting);
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="tableName"></param>
-        /// <param name="entityType"></param>
-        /// <param name="mappings"></param>
-        /// <param name="keepIdentity"></param>
-        /// <param name="transaction"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        private static async Task<string> GetTextColumnsAsync(NpgsqlConnection connection,
-            string tableName,
-            Type entityType,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings,
-            bool keepIdentity = false,
-            NpgsqlTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-        {
-            var dbSetting = connection.GetDbSetting();
-
-            if (mappings?.Any() == true)
-            {
-                return GetTextColumns(mappings, dbSetting);
-            }
-            else
-            {
-                var dbFields = await DbFieldCache.GetAsync(connection,
-                    (tableName ?? ClassMappedNameCache.Get(entityType)),
-                    transaction,
-                    cancellationToken);
-                return GetTextColumns(dbFields, PropertyCache.Get(entityType), keepIdentity, dbSetting);
+                return GetTextColumns(dbFields, properties, keepIdentity, dbSetting);
             }
         }
 
@@ -697,8 +616,8 @@ namespace RepoDb
         /// <returns></returns>
         private static string GetTextColumns(IEnumerable<DbField> dbFields,
             IEnumerable<ClassProperty> properties,
-            bool keepIdentity = false,
-            IDbSetting dbSetting = null) =>
+            bool keepIdentity,
+            IDbSetting dbSetting) =>
             GetMatchedProperties(dbFields, properties, keepIdentity, dbSetting)
                 .Select(property => property.GetMappedName().AsQuoted(true, dbSetting)).Join(", ");
 

@@ -23,7 +23,7 @@
 
   <ItemGroup>
     <Compile Include="Base\BinaryImport.cs" />
-    <Compile Include="Base\BulkInsert.cs" />
+    <Compile Include="Base\BinaryBulkInsert.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -5,7 +5,7 @@ using RepoDb.PostgreSql.BulkOperations.IntegrationTests.Models;
 using System;
 using System.Linq;
 
-namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
+namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
 {
     [TestClass]
     public class BinaryImportTest

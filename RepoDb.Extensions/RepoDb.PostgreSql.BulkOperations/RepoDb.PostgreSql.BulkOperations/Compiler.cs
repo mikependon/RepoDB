@@ -1,9 +1,7 @@
 ﻿using Npgsql;
 using NpgsqlTypes;
 using RepoDb.Exceptions;
-using RepoDb.Extensions;
 using RepoDb.Interfaces;
-using RepoDb.PostgreSql.BulkOperations.Enumerations;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;

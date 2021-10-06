@@ -1,4 +1,4 @@
-﻿namespace RepoDb.PostgreSql.BulkOperations.Enumerations
+﻿namespace RepoDb.Enumerations.PostgreSql
 {
     /// <summary>
     /// An enumeration that is being used to define the behavior of the identity property/column

@@ -1,4 +1,5 @@
-﻿using RepoDb.Extensions;
+﻿using RepoDb.Enumerations.PostgreSql;
+using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.PostgreSql.BulkOperations;
 using System;
@@ -104,5 +105,16 @@ namespace RepoDb
             list.Add(new NpgsqlBulkInsertMapItem("__RepoDb_OrderColumn", "__RepoDb_OrderColumn", NpgsqlTypes.NpgsqlDbType.Integer));
             return list;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="tableName"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
+        private static string GetBinaryInsertPseudoTableName<TEntity>(string tableName,
+            IDbSetting dbSetting) =>
+            $"_RepoDb_BinaryBulkInsert_{(tableName ?? ClassMappedNameCache.Get<TEntity>()).AsUnquoted(true, dbSetting)}";
     }
 }
