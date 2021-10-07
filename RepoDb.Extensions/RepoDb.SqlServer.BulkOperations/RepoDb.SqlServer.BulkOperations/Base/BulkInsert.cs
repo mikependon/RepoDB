@@ -154,32 +154,18 @@ namespace RepoDb
                     connection.ExecuteNonQuery(sql, transaction: transaction);
                 }
 
-                // Commit the transaction
-                if (hasTransaction == false)
-                {
-                    transaction?.Commit();
-                }
+                CommitTransaction(transaction, hasTransaction);
             }
             catch
             {
-                // Rollback the transaction
-                if (hasTransaction == false)
-                {
-                    transaction?.Rollback();
-                }
-
-                // Throw
+                RollbackTransaction(transaction, hasTransaction);
                 throw;
             }
             finally
             {
-                // Dispose the transaction
-                if (hasTransaction == false)
-                {
-                    transaction?.Dispose();
-                }
+                DisposeTransaction(transaction, hasTransaction);
             }
-
+            
             // Return the result
             return result;
         }
@@ -279,32 +265,18 @@ namespace RepoDb
                     batchSize,
                     transaction);
 
-                // Commit the transaction
-                if (hasTransaction == false)
-                {
-                    transaction.Commit();
-                }
+                CommitTransaction(transaction, hasTransaction);
             }
             catch
             {
-                // Rollback the transaction
-                if (hasTransaction == false)
-                {
-                    transaction?.Rollback();
-                }
-
-                // Throw
+                RollbackTransaction(transaction, hasTransaction);
                 throw;
             }
             finally
             {
-                // Dispose the transaction
-                if (hasTransaction == false)
-                {
-                    transaction?.Dispose();
-                }
+                DisposeTransaction(transaction, hasTransaction);
             }
-
+            
             // Return the result
             return result;
         }
@@ -457,34 +429,20 @@ namespace RepoDb
                     }
                 }
 
-                // Commit the transaction
-                if (hasTransaction == false)
-                {
-                    transaction?.Commit();
-                }
-
-                // Return the result
-                return result;
+                CommitTransaction(transaction, hasTransaction);
             }
             catch
             {
-                // Rollback the transaction
-                if (hasTransaction == false)
-                {
-                    transaction?.Rollback();
-                }
-
-                // Throw
+                RollbackTransaction(transaction, hasTransaction);
                 throw;
             }
             finally
             {
-                // Dispose the transaction
-                if (hasTransaction == false)
-                {
-                    transaction?.Dispose();
-                }
+                DisposeTransaction(transaction, hasTransaction);
             }
+            
+            // Return the result
+            return result;
         }
 
         #endregion
@@ -634,32 +592,18 @@ namespace RepoDb
                     await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
                 }
 
-                // Commit the transaction
-                if (hasTransaction == false)
-                {
-                    transaction?.Commit();
-                }
+                CommitTransaction(transaction, hasTransaction);
             }
             catch
             {
-                // Rollback the transaction
-                if (hasTransaction == false)
-                {
-                    transaction?.Rollback();
-                }
-
-                // Throw
+                RollbackTransaction(transaction, hasTransaction);
                 throw;
             }
             finally
             {
-                // Dispose the transaction
-                if (hasTransaction == false)
-                {
-                    transaction?.Dispose();
-                }
+                DisposeTransaction(transaction, hasTransaction);
             }
-
+            
             // Return the result
             return result;
         }
@@ -762,32 +706,18 @@ namespace RepoDb
                     transaction,
                     cancellationToken);
 
-                // Commit the transaction
-                if (hasTransaction == false)
-                {
-                    transaction.Commit();
-                }
+                CommitTransaction(transaction, hasTransaction);
             }
             catch
             {
-                // Rollback the transaction
-                if (hasTransaction == false)
-                {
-                    transaction.Rollback();
-                }
-
-                // Throw
+                RollbackTransaction(transaction, hasTransaction);
                 throw;
             }
             finally
             {
-                // Dispose the transaction
-                if (hasTransaction == false)
-                {
-                    transaction.Dispose();
-                }
+                DisposeTransaction(transaction, hasTransaction);
             }
-
+            
             // Return the result
             return result;
         }
@@ -834,6 +764,7 @@ namespace RepoDb
             // Variables needed
             var dbSetting = connection.GetDbSetting();
             var hasTransaction = transaction != null;
+            int result;
 
             // Check the transaction
             if (transaction == null)
@@ -899,8 +830,8 @@ namespace RepoDb
                     cancellationToken);
 
                 // WriteToServer
-                var result = await WriteToServerAsyncInternal(connection,
-                    (tempTableName ?? tableName),
+                result = await WriteToServerAsyncInternal(connection,
+                    tempTableName ?? tableName,
                     dataTable,
                     rowState,
                     mappings,
@@ -943,34 +874,20 @@ namespace RepoDb
                     }
                 }
 
-                // Commit the transaction
-                if (hasTransaction == false)
-                {
-                    transaction.Commit();
-                }
-
-                // Return the result
-                return result;
+                CommitTransaction(transaction, hasTransaction);
             }
             catch
             {
-                // Rollback the transaction
-                if (hasTransaction == false)
-                {
-                    transaction.Rollback();
-                }
-
-                // Throw
+                RollbackTransaction(transaction, hasTransaction);
                 throw;
             }
             finally
             {
-                // Dispose the transaction
-                if (hasTransaction == false)
-                {
-                    transaction.Dispose();
-                }
+                DisposeTransaction(transaction, hasTransaction);
             }
+            
+            // Return the result
+            return result;
         }
 
         #endregion

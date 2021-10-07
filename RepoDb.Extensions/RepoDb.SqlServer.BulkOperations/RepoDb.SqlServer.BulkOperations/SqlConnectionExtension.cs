@@ -350,6 +350,34 @@ namespace RepoDb
             }
         }
         
+        private static void CommitTransaction(SqlTransaction transaction, bool hasTransaction)
+        {
+            if (hasTransaction == false)
+            {
+                transaction?.Commit();
+            }
+        }
+
+        private static void RollbackTransaction(SqlTransaction transaction, bool hasTransaction)
+        {
+            if (hasTransaction == false)
+            {
+                transaction?.Rollback();
+            }
+        }
+
+        private static void DisposeTransaction(SqlTransaction transaction, bool hasTransaction)
+        {
+            if (hasTransaction == false)
+            {
+                transaction?.Dispose();
+            }
+        }
+        
+        #endregion
+
+        #region SQL Helpers
+
         private static string CreateBulkUpdateTempTableName(string tableName, bool? usePhysicalPseudoTempTable, IDbSetting dbSetting) => 
             CreateBulkTempTableName(tableName, "Update", usePhysicalPseudoTempTable, dbSetting);
         
@@ -379,11 +407,7 @@ namespace RepoDb
 
             return tempTableName.ToString();
         }
-
-        #endregion
-
-        #region SQL Helpers
-
+        
         /// <summary>
         /// 
         /// </summary>

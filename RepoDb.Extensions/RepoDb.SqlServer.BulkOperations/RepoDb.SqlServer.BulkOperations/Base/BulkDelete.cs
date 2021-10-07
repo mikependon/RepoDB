@@ -126,33 +126,19 @@ namespace RepoDb
                 sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
                 connection.ExecuteNonQuery(sql, transaction: transaction);
 
-                // Commit the transaction
-                if (hasTransaction == false)
-                {
-                    transaction?.Commit();
-                }
+                CommitTransaction(transaction, hasTransaction);
             }
             catch
             {
-                // Rollback the transaction
-                if (hasTransaction == false)
-                {
-                    transaction?.Rollback();
-                }
-
-                // Throw
+                RollbackTransaction(transaction, hasTransaction);
                 throw;
             }
             finally
             {
-                // Dispose the transaction
-                if (hasTransaction == false)
-                {
-                    transaction?.Dispose();
-                }
+                DisposeTransaction(transaction, hasTransaction);
             }
-
-            // Result
+            
+            // Return the result
             return result;
         }
 
@@ -315,33 +301,19 @@ namespace RepoDb
                 sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
                 connection.ExecuteNonQuery(sql, transaction: transaction);
 
-                // Commit the transaction
-                if (hasTransaction == false)
-                {
-                    transaction?.Commit();
-                }
+                CommitTransaction(transaction, hasTransaction);
             }
             catch
             {
-                // Rollback the transaction
-                if (hasTransaction == false)
-                {
-                    transaction?.Rollback();
-                }
-
-                // Throw
+                RollbackTransaction(transaction, hasTransaction);
                 throw;
             }
             finally
             {
-                // Dispose the transaction
-                if (hasTransaction == false)
-                {
-                    transaction?.Dispose();
-                }
+                DisposeTransaction(transaction, hasTransaction);
             }
-
-            // Result
+            
+            // Return the result
             return result;
         }
 
@@ -508,33 +480,19 @@ namespace RepoDb
                 sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
                 connection.ExecuteNonQuery(sql, transaction: transaction);
 
-                // Commit the transaction
-                if (hasTransaction == false)
-                {
-                    transaction?.Commit();
-                }
+                CommitTransaction(transaction, hasTransaction);
             }
             catch
             {
-                // Rollback the transaction
-                if (hasTransaction == false)
-                {
-                    transaction?.Rollback();
-                }
-
-                // Throw
+                RollbackTransaction(transaction, hasTransaction);
                 throw;
             }
             finally
             {
-                // Dispose the transaction
-                if (hasTransaction == false)
-                {
-                    transaction?.Dispose();
-                }
+                DisposeTransaction(transaction, hasTransaction);
             }
-
-            // Result
+            
+            // Return the result
             return result;
         }
 
@@ -654,33 +612,19 @@ namespace RepoDb
                 sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
                 await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
 
-                // Commit the transaction
-                if (hasTransaction == false)
-                {
-                    transaction?.Commit();
-                }
+                CommitTransaction(transaction, hasTransaction);
             }
             catch
             {
-                // Rollback the transaction
-                if (hasTransaction == false)
-                {
-                    transaction?.Rollback();
-                }
-
-                // Throw
+                RollbackTransaction(transaction, hasTransaction);
                 throw;
             }
             finally
             {
-                // Dispose the transaction
-                if (hasTransaction == false)
-                {
-                    transaction?.Dispose();
-                }
+                DisposeTransaction(transaction, hasTransaction);
             }
-
-            // Result
+            
+            // Return the result
             return result;
         }
 
@@ -846,33 +790,19 @@ namespace RepoDb
                 sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
                 await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
 
-                // Commit the transaction
-                if (hasTransaction == false)
-                {
-                    transaction?.Commit();
-                }
+                CommitTransaction(transaction, hasTransaction);
             }
             catch
             {
-                // Rollback the transaction
-                if (hasTransaction == false)
-                {
-                    transaction?.Rollback();
-                }
-
-                // Throw
+                RollbackTransaction(transaction, hasTransaction);
                 throw;
             }
             finally
             {
-                // Dispose the transaction
-                if (hasTransaction == false)
-                {
-                    transaction?.Dispose();
-                }
+                DisposeTransaction(transaction, hasTransaction);
             }
-
-            // Result
+            
+            // Return the result
             return result;
         }
 
@@ -1042,33 +972,19 @@ namespace RepoDb
                 sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
                 await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
 
-                // Commit the transaction
-                if (hasTransaction == false)
-                {
-                    transaction?.Commit();
-                }
+                CommitTransaction(transaction, hasTransaction);
             }
             catch
             {
-                // Rollback the transaction
-                if (hasTransaction == false)
-                {
-                    transaction?.Rollback();
-                }
-
-                // Throw
+                RollbackTransaction(transaction, hasTransaction);
                 throw;
             }
             finally
             {
-                // Dispose the transaction
-                if (hasTransaction == false)
-                {
-                    transaction?.Dispose();
-                }
+                DisposeTransaction(transaction, hasTransaction);
             }
-
-            // Result
+            
+            // Return the result
             return result;
         }
 
