@@ -1,5 +1,6 @@
 ﻿using Npgsql;
 using NpgsqlTypes;
+using RepoDb.Enumerations.PostgreSql;
 using RepoDb.Exceptions;
 using RepoDb.Interfaces;
 using System;
@@ -41,17 +42,17 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// <param name="dbFields"></param>
         /// <param name="properties"></param>
         /// <param name="entityType"></param>
-        /// <param name="keepIdentity"></param>
+        /// <param name="identityBehavior"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         internal static Action<NpgsqlBinaryImporter, TEntity> GetNpgsqlBinaryImporterWriteFunc<TEntity>(string tableName,
             IEnumerable<DbField> dbFields,
             IEnumerable<ClassProperty> properties,
             Type entityType,
-            bool keepIdentity = false,
+            BulkImportIdentityBehavior identityBehavior,
             IDbSetting dbSetting = null)
             where TEntity : class =>
-            GetNpgsqlBinaryImporterWriteFuncCache<TEntity>.Get(tableName, dbFields, properties, entityType, keepIdentity, dbSetting);
+            GetNpgsqlBinaryImporterWriteFuncCache<TEntity>.Get(tableName, dbFields, properties, entityType, identityBehavior, dbSetting);
 
         /// <summary>
         /// 
@@ -81,19 +82,19 @@ namespace RepoDb.PostgreSql.BulkOperations
             /// <param name="dbFields"></param>
             /// <param name="properties"></param>
             /// <param name="entityType"></param>
-            /// <param name="keepIdentity"></param>
+            /// <param name="identityBehavior"></param>
             /// <param name="dbSetting"></param>
             /// <returns></returns>
             public static Action<NpgsqlBinaryImporter, TEntity> Get(string tableName,
                 IEnumerable<DbField> dbFields,
                 IEnumerable<ClassProperty> properties,
                 Type entityType,
-                bool keepIdentity = false,
+                BulkImportIdentityBehavior identityBehavior,
                 IDbSetting dbSetting = null)
             {
                 var matchedProperties = NpgsqlConnectionExtension.GetMatchedProperties(dbFields,
                     properties,
-                    keepIdentity,
+                    (identityBehavior == BulkImportIdentityBehavior.KeepIdentity),
                     dbSetting);
                 var mappings = matchedProperties.Select(property =>
                     new NpgsqlBulkInsertMapItem(property.PropertyInfo.Name, property.GetMappedName()));
@@ -200,17 +201,17 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// <param name="dbFields"></param>
         /// <param name="properties"></param>
         /// <param name="entityType"></param>
-        /// <param name="keepIdentity"></param>
+        /// <param name="identityBehavior"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         internal static Func<NpgsqlBinaryImporter, TEntity, CancellationToken, Task> GetNpgsqlBinaryImporterWriteAsyncFunc<TEntity>(string tableName,
             IEnumerable<DbField> dbFields,
             IEnumerable<ClassProperty> properties,
             Type entityType,
-            bool keepIdentity = false,
+            BulkImportIdentityBehavior identityBehavior,
             IDbSetting dbSetting = null)
             where TEntity : class =>
-            GetNpgsqlBinaryImporterWriteAsyncFuncCache<TEntity>.Get(tableName, dbFields, properties, entityType, keepIdentity, dbSetting);
+            GetNpgsqlBinaryImporterWriteAsyncFuncCache<TEntity>.Get(tableName, dbFields, properties, entityType, identityBehavior, dbSetting);
 
         /// <summary>
         /// 
@@ -241,19 +242,19 @@ namespace RepoDb.PostgreSql.BulkOperations
             /// <param name="dbFields"></param>
             /// <param name="properties"></param>
             /// <param name="entityType"></param>
-            /// <param name="keepIdentity"></param>
+            /// <param name="identityBehavior"></param>
             /// <param name="dbSetting"></param>
             /// <returns></returns>
             public static Func<NpgsqlBinaryImporter, TEntity, CancellationToken, Task> Get(string tableName,
                 IEnumerable<DbField> dbFields,
                 IEnumerable<ClassProperty> properties,
                 Type entityType,
-                bool keepIdentity = false,
+                BulkImportIdentityBehavior identityBehavior,
                 IDbSetting dbSetting = null)
             {
                 var matchedProperties = NpgsqlConnectionExtension.GetMatchedProperties(dbFields,
                     properties,
-                    keepIdentity,
+                    (identityBehavior == BulkImportIdentityBehavior.KeepIdentity),
                     dbSetting);
                 var mappings = matchedProperties.Select(property =>
                     new NpgsqlBulkInsertMapItem(property.PropertyInfo.Name, property.GetMappedName()));
@@ -395,7 +396,7 @@ namespace RepoDb.PostgreSql.BulkOperations
         {
             var methods = typeof(NpgsqlBinaryImporter)
                 .GetMethods()
-                .Where(method => string.Equals("Write", method.Name, StringComparison.OrdinalIgnoreCase));
+                .Where(method => string.Equals("WriteAsync", method.Name, StringComparison.OrdinalIgnoreCase));
 
             return methods.First(method =>
             {

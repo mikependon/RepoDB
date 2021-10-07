@@ -2,7 +2,10 @@
 using RepoDb.Enumerations.PostgreSql;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
+using RepoDb.PostgreSql.BulkOperations;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace RepoDb
 {
@@ -13,32 +16,33 @@ namespace RepoDb
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="getPseudoTableName"></param>
+        /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="identityBehavior"></param>
-        /// <param name="usePhysicalPseudoTempTable"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="dbSetting"></param>
         /// <param name="transaction"></param>
-        private static void EnsurePseudoTable<TEntity>(NpgsqlConnection connection,
+        private static void CreatePseudoTable(NpgsqlConnection connection,
             string tableName,
             Func<string> getPseudoTableName,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings,
             int? bulkCopyTimeout = null,
             BulkImportIdentityBehavior identityBehavior = default,
-            bool? usePhysicalPseudoTempTable = null,
+            BulkImportPseudoTableType pseudoTableType = default,
+            IDbSetting dbSetting = null,
             NpgsqlTransaction transaction = null)
-            where TEntity : class
         {
             if (identityBehavior != BulkImportIdentityBehavior.ReturnIdentity)
             {
                 return;
             }
 
-            var dbSetting = connection.GetDbSetting();
-            var commandText = usePhysicalPseudoTempTable == true ?
-                GetCreatePseudoTableCommandText<TEntity>(tableName, getPseudoTableName(), dbSetting) :
-                GetCreatePseudoTemporaryTableCommandText<TEntity>(tableName, getPseudoTableName(), dbSetting);
+            var commandText = pseudoTableType == BulkImportPseudoTableType.Physical ?
+                GetCreatePseudoTableCommandText(tableName, getPseudoTableName(), mappings, identityBehavior, dbSetting) :
+                GetCreatePseudoTemporaryTableCommandText(tableName, getPseudoTableName(), mappings, identityBehavior, dbSetting);
 
             connection.ExecuteNonQuery(commandText, bulkCopyTimeout, transaction: transaction);
         }
@@ -46,16 +50,41 @@ namespace RepoDb
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="transaction"></param>
+        private static void DropPseudoTable(NpgsqlConnection connection,
+            string tableName,
+            int? bulkCopyTimeout = null,
+            NpgsqlTransaction transaction = null)
+        {
+            if (string.IsNullOrWhiteSpace(tableName))
+            {
+                return;
+            }
+
+            var dbSetting = connection.GetDbSetting();
+            var commandText = GetDropPseudoTemporaryTableCommandText(tableName, dbSetting);
+
+            connection.ExecuteNonQuery(commandText, bulkCopyTimeout, transaction: transaction);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="tableName"></param>
         /// <param name="pseudoTableName"></param>
+        /// <param name="mappings"></param>
+        /// <param name="identityBehavior"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        private static string GetCreatePseudoTableCommandText<TEntity>(string tableName,
+        private static string GetCreatePseudoTableCommandText(string tableName,
             string pseudoTableName,
-            IDbSetting dbSetting)
-            where TEntity : class =>
-            $"SELECT * " +
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+            BulkImportIdentityBehavior identityBehavior,
+            IDbSetting dbSetting) =>
+            $"SELECT {GetCreatePseudoTableQueryColumns(mappings, identityBehavior, dbSetting)} " +
             $"INTO {pseudoTableName.AsQuoted(true, dbSetting)} " +
             $"FROM {tableName.AsQuoted(true, dbSetting)} " +
             $"WHERE (1 = 0);";
@@ -63,19 +92,46 @@ namespace RepoDb
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
         /// <param name="tableName"></param>
         /// <param name="pseudoTableName"></param>
+        /// <param name="mappings"></param>
+        /// <param name="identityBehavior"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        private static string GetCreatePseudoTemporaryTableCommandText<TEntity>(string tableName,
+        private static string GetCreatePseudoTemporaryTableCommandText(string tableName,
             string pseudoTableName,
-            IDbSetting dbSetting)
-            where TEntity : class =>
-            $"SELECT * " +
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+            BulkImportIdentityBehavior identityBehavior,
+            IDbSetting dbSetting) =>
+            $"SELECT {GetCreatePseudoTableQueryColumns(mappings, identityBehavior, dbSetting)} " +
             $"INTO TEMPORARY {pseudoTableName.AsQuoted(true, dbSetting)} " +
             $"FROM {tableName.AsQuoted(true, dbSetting)} " +
             $"WHERE (1 = 0);";
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="mappings"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
+        private static string GetCreatePseudoTableQueryColumns(IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+            BulkImportIdentityBehavior identityBehavior,
+            IDbSetting dbSetting) =>
+            identityBehavior != BulkImportIdentityBehavior.ReturnIdentity ?
+                mappings.Select(field => field.DestinationColumn.AsQuoted(true, dbSetting)).Join(", ") :
+                $"0 AS {"__RepoDb_OrderColumn".AsQuoted(dbSetting)}, " +
+                    $"{mappings.Select(field => field.DestinationColumn.AsQuoted(true, dbSetting)).Join(", ")}";
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
+        private static string GetDropPseudoTemporaryTableCommandText(string tableName,
+            IDbSetting dbSetting) =>
+            $"DROP TABLE IF EXISTS {tableName.AsQuoted(true, dbSetting)};";
 
         #endregion
     }

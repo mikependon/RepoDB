@@ -1,5 +1,7 @@
 ﻿using Npgsql;
+using RepoDb.Enumerations.PostgreSql;
 using RepoDb.Extensions;
+using RepoDb.Interfaces;
 using RepoDb.PostgreSql.BulkOperations;
 using System.Collections.Generic;
 using System.Data;
@@ -46,10 +48,11 @@ namespace RepoDb
                 tableName,
                 entities,
                 mappings,
-                DbFieldCache.Get(connection, (tableName ?? ClassMappedNameCache.Get<TEntity>()), transaction),
+                DbFieldCache.Get(connection, tableName, transaction),
                 bulkCopyTimeout,
                 batchSize,
-                keepIdentity,
+                (keepIdentity ? BulkImportIdentityBehavior.KeepIdentity : default),
+                connection.GetDbSetting(),
                 transaction);
 
         /// <summary>
@@ -63,7 +66,8 @@ namespace RepoDb
         /// <param name="dbFields"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
-        /// <param name="keepIdentity"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="dbSetting"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
         private static int BinaryImport<TEntity>(this NpgsqlConnection connection,
@@ -73,7 +77,8 @@ namespace RepoDb
             IEnumerable<DbField> dbFields = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool keepIdentity = false,
+            BulkImportIdentityBehavior identityBehavior = default,
+            IDbSetting dbSetting = null,
             NpgsqlTransaction transaction = null)
             where TEntity : class
         {
@@ -92,16 +97,19 @@ namespace RepoDb
 
             try
             {
-                // Solving the anonymous types
-                var entityType = (entities?.First()?.GetType() ?? typeof(TEntity));
+                // Variables
+                var entityType = (entities?.First()?.GetType() ?? typeof(TEntity)); // Solving the anonymous types
                 var isDictionary = entityType.IsDictionaryStringObject();
+                var properties = PropertyCache.Get(entityType);
 
                 // Mappings (Dictionary<string, object>)
-                mappings = isDictionary && mappings?.Any() != true ?
-                    GetMappings(entities?.First() as IDictionary<string, object>) : mappings;
-
-                // Database Setting
-                var dbSetting = connection.GetDbSetting();
+                mappings = mappings?.Any() == true ? mappings :
+                    isDictionary ?
+                    GetMappings(entities?.First() as IDictionary<string, object>, dbFields, dbSetting) :
+                    GetMappings(dbFields,
+                        properties,
+                        (identityBehavior == BulkImportIdentityBehavior.KeepIdentity),
+                        dbSetting);
 
                 // Each batch requires an importer
                 var batches = entities.Split(batchSize.GetValueOrDefault());
@@ -111,17 +119,16 @@ namespace RepoDb
                     using (var importer = GetNpgsqlBinaryImporter(connection,
                         tableName,
                         mappings,
-                        dbFields,
-                        entityType,
                         bulkCopyTimeout,
-                        keepIdentity,
+                        identityBehavior,
                         dbSetting))
                     {
                         if (isDictionary)
                         {
                             result += BinaryImport(importer,
                                 entities?.Select(entity => entity as IDictionary<string, object>),
-                                mappings);
+                                mappings,
+                                identityBehavior);
                         }
                         else
                         {
@@ -129,10 +136,8 @@ namespace RepoDb
                                 tableName,
                                 batch,
                                 mappings,
-                                dbFields,
                                 entityType,
-                                keepIdentity,
-                                dbSetting);
+                                identityBehavior);
                         }
                     }
                 }
@@ -202,7 +207,8 @@ namespace RepoDb
                 DbFieldCache.Get(connection, tableName, transaction),
                 bulkCopyTimeout,
                 batchSize,
-                keepIdentity,
+                (keepIdentity ? BulkImportIdentityBehavior.KeepIdentity : default),
+                connection.GetDbSetting(),
                 transaction);
 
         /// <summary>
@@ -216,7 +222,8 @@ namespace RepoDb
         /// <param name="dbFields"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
-        /// <param name="keepIdentity"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="dbSetting"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
         private static int BinaryImport(this NpgsqlConnection connection,
@@ -227,7 +234,8 @@ namespace RepoDb
             IEnumerable<DbField> dbFields = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool keepIdentity = false,
+            BulkImportIdentityBehavior identityBehavior = default,
+            IDbSetting dbSetting = null,
             NpgsqlTransaction transaction = null)
         {
             // Variables
@@ -246,10 +254,8 @@ namespace RepoDb
             try
             {
                 // Mappings (DataTable)
-                mappings = mappings?.Any() != true ? GetMappings(table).ToList() : mappings;
-
-                // Database Setting
-                var dbSetting = connection.GetDbSetting();
+                mappings = mappings?.Any() == true ? mappings :
+                    GetMappings(table, dbFields, dbSetting).ToList();
 
                 // Rows
                 var rows = GetRows(table, rowState).ToList();
@@ -261,15 +267,14 @@ namespace RepoDb
                     using (var importer = GetNpgsqlBinaryImporter(connection,
                         tableName ?? table?.TableName,
                         mappings,
-                        dbFields,
-                        null,
                         bulkCopyTimeout,
-                        keepIdentity,
+                        identityBehavior,
                         dbSetting))
                     {
                         result += BinaryImport(importer,
                             batch,
-                            mappings);
+                            mappings,
+                            identityBehavior);
                     }
                 }
 
@@ -332,7 +337,8 @@ namespace RepoDb
                 mappings,
                 DbFieldCache.Get(connection, tableName, transaction),
                 bulkCopyTimeout,
-                keepIdentity,
+                (keepIdentity ? BulkImportIdentityBehavior.KeepIdentity : default),
+                connection.GetDbSetting(),
                 transaction);
 
         /// <summary>
@@ -344,7 +350,8 @@ namespace RepoDb
         /// <param name="mappings"></param>
         /// <param name="dbFields"></param>
         /// <param name="bulkCopyTimeout"></param>
-        /// <param name="keepIdentity"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="dbSetting"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
         private static int BinaryImport(this NpgsqlConnection connection,
@@ -353,7 +360,8 @@ namespace RepoDb
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             IEnumerable<DbField> dbFields = null,
             int? bulkCopyTimeout = null,
-            bool keepIdentity = false,
+            BulkImportIdentityBehavior identityBehavior = default,
+            IDbSetting dbSetting = null,
             NpgsqlTransaction transaction = null)
         {
             // Variables
@@ -372,24 +380,21 @@ namespace RepoDb
             try
             {
                 // Mappings (DataTable)
-                mappings = mappings?.Any() != true ? GetMappings(reader).ToList() : mappings;
-
-                // Database Setting
-                var dbSetting = connection.GetDbSetting();
+                mappings = mappings?.Any() == true ? mappings :
+                    GetMappings(reader, dbFields, dbSetting).ToList();
 
                 // BinaryImport
                 using (var importer = GetNpgsqlBinaryImporter(connection,
                     tableName,
                     mappings,
-                    dbFields,
-                    null,
                     bulkCopyTimeout,
-                    keepIdentity,
+                        identityBehavior,
                     dbSetting))
                 {
                     result += BinaryImport(importer,
                         reader,
-                        mappings);
+                        mappings,
+                        identityBehavior);
                 }
 
                 // Commit
@@ -461,10 +466,11 @@ namespace RepoDb
                 tableName,
                 entities,
                 mappings,
-                await DbFieldCache.GetAsync(connection, (tableName ?? ClassMappedNameCache.Get<TEntity>()), transaction, cancellationToken),
+                await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken),
                 bulkCopyTimeout,
                 batchSize,
-                keepIdentity,
+                (keepIdentity ? BulkImportIdentityBehavior.KeepIdentity : default),
+                connection.GetDbSetting(),
                 transaction,
                 cancellationToken);
 
@@ -479,7 +485,8 @@ namespace RepoDb
         /// <param name="dbFields"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
-        /// <param name="keepIdentity"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="dbSetting"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
@@ -490,7 +497,8 @@ namespace RepoDb
             IEnumerable<DbField> dbFields = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool keepIdentity = false,
+            BulkImportIdentityBehavior identityBehavior = default,
+            IDbSetting dbSetting = null,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -514,16 +522,19 @@ namespace RepoDb
 
             try
             {
-                // Solving the anonymous types
-                var entityType = (entities?.First()?.GetType() ?? typeof(TEntity));
+                // Variables
+                var entityType = (entities?.First()?.GetType() ?? typeof(TEntity)); // Solving the anonymous types
                 var isDictionary = entityType.IsDictionaryStringObject();
-
-                // Database Setting
-                var dbSetting = connection.GetDbSetting();
+                var properties = PropertyCache.Get(entityType);
 
                 // Mappings (Dictionary<string, object>)
-                mappings = isDictionary && mappings?.Any() != true ?
-                    GetMappings(entities?.First() as IDictionary<string, object>) : mappings;
+                mappings = mappings?.Any() == true ? mappings :
+                    isDictionary ?
+                    GetMappings(entities?.First() as IDictionary<string, object>, dbFields, dbSetting) :
+                    GetMappings(dbFields,
+                        properties,
+                        (identityBehavior == BulkImportIdentityBehavior.KeepIdentity),
+                        dbSetting);
 
                 // Each batch requires an importer
                 var batches = entities.Split(batchSize.GetValueOrDefault());
@@ -533,10 +544,8 @@ namespace RepoDb
                     using (var importer = await GetNpgsqlBinaryImporterAsync(connection,
                         tableName,
                         mappings,
-                        dbFields,
-                        entityType,
                         bulkCopyTimeout,
-                        keepIdentity,
+                        identityBehavior,
                         dbSetting,
                         cancellationToken))
                     {
@@ -545,6 +554,7 @@ namespace RepoDb
                             result += await BinaryImportExplicitAsync(importer,
                                 entities?.Select(entity => entity as IDictionary<string, object>),
                                 mappings,
+                                identityBehavior,
                                 cancellationToken);
                         }
                         else
@@ -553,10 +563,8 @@ namespace RepoDb
                                 tableName,
                                 batch,
                                 mappings,
-                                dbFields,
                                 entityType,
-                                keepIdentity,
-                                dbSetting,
+                                identityBehavior,
                                 cancellationToken);
                         }
                     }
@@ -629,7 +637,8 @@ namespace RepoDb
                 await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken),
                 bulkCopyTimeout,
                 batchSize,
-                keepIdentity,
+                (keepIdentity ? BulkImportIdentityBehavior.KeepIdentity : default),
+                connection.GetDbSetting(),
                 transaction,
                 cancellationToken);
 
@@ -644,7 +653,8 @@ namespace RepoDb
         /// <param name="dbFields"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
-        /// <param name="keepIdentity"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="dbSetting"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
@@ -656,7 +666,8 @@ namespace RepoDb
             IEnumerable<DbField> dbFields = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool keepIdentity = false,
+            BulkImportIdentityBehavior identityBehavior = default,
+            IDbSetting dbSetting = null,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -680,10 +691,8 @@ namespace RepoDb
             try
             {
                 // Mappings (DataTable)
-                mappings = mappings?.Any() != true ? GetMappings(table).ToList() : mappings;
-
-                // Database Setting
-                var dbSetting = connection.GetDbSetting();
+                mappings = mappings?.Any() == true ? mappings :
+                    GetMappings(table, dbFields, dbSetting).ToList();
 
                 // Rows
                 var rows = GetRows(table, rowState).ToList();
@@ -695,16 +704,15 @@ namespace RepoDb
                     using (var importer = await GetNpgsqlBinaryImporterAsync(connection,
                         tableName ?? table?.TableName,
                         mappings,
-                        dbFields,
-                        null,
                         bulkCopyTimeout,
-                        keepIdentity,
+                        identityBehavior,
                         dbSetting,
                         cancellationToken))
                     {
                         result += await BinaryImportAsync(importer,
                             batch,
                             mappings,
+                            identityBehavior,
                             cancellationToken);
                     }
                 }
@@ -770,7 +778,8 @@ namespace RepoDb
                 mappings,
                 await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken),
                 bulkCopyTimeout,
-                keepIdentity,
+                (keepIdentity ? BulkImportIdentityBehavior.KeepIdentity : default),
+                connection.GetDbSetting(),
                 transaction,
                 cancellationToken);
 
@@ -783,7 +792,8 @@ namespace RepoDb
         /// <param name="mappings"></param>
         /// <param name="dbFields"></param>
         /// <param name="bulkCopyTimeout"></param>
-        /// <param name="keepIdentity"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="dbSetting"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
@@ -793,7 +803,8 @@ namespace RepoDb
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             IEnumerable<DbField> dbFields = null,
             int? bulkCopyTimeout = null,
-            bool keepIdentity = false,
+            BulkImportIdentityBehavior identityBehavior = default,
+            IDbSetting dbSetting = null,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -817,25 +828,22 @@ namespace RepoDb
             try
             {
                 // Mappings (DataTable)
-                mappings = mappings?.Any() != true ? GetMappings(reader).ToList() : mappings;
-
-                // Database Setting
-                var dbSetting = connection.GetDbSetting();
+                mappings = mappings?.Any() == true ? mappings :
+                    GetMappings(reader, dbFields, dbSetting).ToList();
 
                 // BinaryImport
                 using (var importer = await GetNpgsqlBinaryImporterAsync(connection,
                     tableName,
                     mappings,
-                    dbFields,
-                    null,
                     bulkCopyTimeout,
-                    keepIdentity,
+                    identityBehavior,
                     dbSetting,
                     cancellationToken))
                 {
                     result += await BinaryImportAsync(importer,
                         reader,
                         mappings,
+                        identityBehavior,
                         cancellationToken);
                 }
 
