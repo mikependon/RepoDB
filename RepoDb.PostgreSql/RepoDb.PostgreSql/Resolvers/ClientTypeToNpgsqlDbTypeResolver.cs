@@ -7,14 +7,14 @@ namespace RepoDb.Resolvers
     /// <summary>
     /// A class that is being used to resolve the .NET CLR Type into its equivalent <see cref="NpgsqlDbType"/>.
     /// </summary>
-    public class ClientTypeToNpgsqlDbTypeResolver : IResolver<Type, NpgsqlDbType>
+    public class ClientTypeToNpgsqlDbTypeResolver : IResolver<Type, NpgsqlDbType?>
     {
         /// <summary>
         /// Returns the equivalent <see cref="NpgsqlDbType"/> based from the .NET CLR Type.
         /// </summary>
         /// <param name="type">The target .NET CLR type.</param>
         /// <returns>The equivalent <see cref="NpgsqlDbType"/>.</returns>
-        public virtual NpgsqlDbType Resolve(Type type)
+        public virtual NpgsqlDbType? Resolve(Type type)
         {
             if (type == null)
             {

@@ -1,12 +1,11 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Npgsql;
 using RepoDb.IntegrationTests.Setup;
-using RepoDb.PostgreSql.BulkOperations.Enumerations;
 using RepoDb.PostgreSql.BulkOperations.IntegrationTests.Models;
 using System;
 using System.Linq;
 
-namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
+namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
 {
     [TestClass]
     public class BinaryImportTest
@@ -236,7 +235,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 NpgsqlConnectionExtension.BinaryImport<BulkOperationLightIdentityTable>(connection,
                     tableName,
                     entities: entities,
-                    identityBehavior: BulkImportIdentityBehavior.KeepIdentity);
+                    keepIdentity: true);
             }
         }
 
@@ -340,7 +339,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 NpgsqlConnectionExtension.BinaryImport(connection,
                     table.TableName,
                     table: table,
-                    identityBehavior: BulkImportIdentityBehavior.KeepIdentity);
+                    keepIdentity: true);
             }
         }
 
@@ -436,7 +435,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                     NpgsqlConnectionExtension.BinaryImport(connection,
                         tableName,
                         reader: reader,
-                        identityBehavior: BulkImportIdentityBehavior.KeepIdentity);
+                        keepIdentity: true);
                 }
             }
         }
@@ -654,7 +653,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 NpgsqlConnectionExtension.BinaryImportAsync<BulkOperationLightIdentityTable>(connection,
                     tableName,
                     entities: entities,
-                    identityBehavior: BulkImportIdentityBehavior.KeepIdentity).Wait();
+                    keepIdentity: true).Wait();
             }
         }
 
@@ -758,7 +757,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 NpgsqlConnectionExtension.BinaryImportAsync(connection,
                     table.TableName,
                     table: table,
-                    identityBehavior: BulkImportIdentityBehavior.KeepIdentity).Wait();
+                    keepIdentity: true).Wait();
             }
         }
 
@@ -854,7 +853,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                     NpgsqlConnectionExtension.BinaryImportAsync(connection,
                         tableName,
                         reader: reader,
-                        identityBehavior: BulkImportIdentityBehavior.KeepIdentity).Wait();
+                        keepIdentity: true).Wait();
                 }
             }
         }
