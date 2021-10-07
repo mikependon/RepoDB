@@ -8,6 +8,7 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
@@ -347,6 +348,36 @@ namespace RepoDb
             {
                 throw new EmptyException("The entities must not be empty.");
             }
+        }
+        
+        private static string CreateBulkUpdateTempTableName(string tableName, bool? usePhysicalPseudoTempTable, IDbSetting dbSetting) => 
+            CreateBulkTempTableName(tableName, "Update", usePhysicalPseudoTempTable, dbSetting);
+        
+        private static string CreateBulkMergeTempTableName(string tableName, bool? usePhysicalPseudoTempTable, IDbSetting dbSetting) => 
+            CreateBulkTempTableName(tableName, "Merge", usePhysicalPseudoTempTable, dbSetting);
+
+        private static string CreateBulkInsertTempTableName(string tableName, bool? usePhysicalPseudoTempTable, IDbSetting dbSetting) => 
+            CreateBulkTempTableName(tableName, "Insert", usePhysicalPseudoTempTable, dbSetting);
+        
+        private static string CreateBulkDeleteTempTableName(string tableName, bool? usePhysicalPseudoTempTable, IDbSetting dbSetting) => 
+            CreateBulkTempTableName(tableName, "Delete", usePhysicalPseudoTempTable, dbSetting);
+
+        private static string CreateBulkTempTableName(string tableName, string operation, bool? usePhysicalPseudoTempTable, IDbSetting dbSetting)
+        {
+            var tempTableName = new StringBuilder();
+            
+            // Must be fixed name so the RepoDb.Core caches will not be bloated
+            tempTableName
+                .Append("_RepoDb_Bulk")
+                .Append(operation)
+                .Append('_')
+                .Append(GetTableName(tableName, dbSetting));
+            
+            // Add a # prefix if not physical
+            if (usePhysicalPseudoTempTable != true) 
+                tempTableName.Insert(0, '#');
+
+            return tempTableName.ToString();
         }
 
         #endregion

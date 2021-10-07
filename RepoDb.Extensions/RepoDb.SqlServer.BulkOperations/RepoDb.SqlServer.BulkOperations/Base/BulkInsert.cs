@@ -110,7 +110,7 @@ namespace RepoDb
 
                 // Pseudo temp table
                 var withPseudoExecution = isReturnIdentity == true && identityDbField != null;
-                var tempTableName = CreateTempTableIfNecessary(connection,
+                var tempTableName = CreateBulkInsertTempTableIfNecessary(connection,
                     tableName,
                     usePhysicalPseudoTempTable,
                     transaction,
@@ -119,7 +119,7 @@ namespace RepoDb
                     fields);
 
                 // WriteToServer
-                result = WriteToServerInternal<TEntity>(connection,
+                result = WriteToServerInternal(connection,
                     tempTableName ?? tableName,
                     entities,
                     mappings,
@@ -405,7 +405,7 @@ namespace RepoDb
 
                 // Pseudo temp table
                 var withPseudoExecution = (isReturnIdentity == true && identityDbField != null);
-                var tempTableName = CreateTempTableIfNecessary(connection,
+                var tempTableName = CreateBulkInsertTempTableIfNecessary(connection,
                     tableName,
                     usePhysicalPseudoTempTable,
                     transaction,
@@ -590,7 +590,7 @@ namespace RepoDb
                 }
 
                 var withPseudoExecution = isReturnIdentity == true && identityDbField != null;
-                var tempTableName = await CreateTempTableIfNecessaryAsync(connection,
+                var tempTableName = await CreateBulkInsertTempTableIfNecessaryAsync(connection,
                     tableName,
                     usePhysicalPseudoTempTable,
                     transaction,
@@ -889,7 +889,7 @@ namespace RepoDb
 
                 // Pseudo temp table
                 var withPseudoExecution = isReturnIdentity == true && identityDbField != null;
-                var tempTableName = await CreateTempTableIfNecessaryAsync(connection, 
+                var tempTableName = await CreateBulkInsertTempTableIfNecessaryAsync(connection, 
                     tableName,
                     usePhysicalPseudoTempTable,
                     transaction,
@@ -975,7 +975,7 @@ namespace RepoDb
 
         #endregion
         
-        private static string CreateTempTableIfNecessary<TSqlTransaction>(
+        private static string CreateBulkInsertTempTableIfNecessary<TSqlTransaction>(
             IDbConnection connection,
             string tableName,
             bool? usePhysicalPseudoTempTable,
@@ -988,7 +988,7 @@ namespace RepoDb
             if (withPseudoExecution == false) 
                 return null;
 
-            var tempTableName = CreateTempTableName(tableName, usePhysicalPseudoTempTable, dbSetting);
+            var tempTableName = CreateBulkInsertTempTableName(tableName, usePhysicalPseudoTempTable, dbSetting);
             var sql = GetCreateTemporaryTableSqlText(tableName, tempTableName, fields, dbSetting, true);
 
             connection.ExecuteNonQuery(sql, transaction: transaction);
@@ -996,7 +996,7 @@ namespace RepoDb
             return tempTableName;
         }
 
-        private static async Task<string> CreateTempTableIfNecessaryAsync<TSqlTransaction>(IDbConnection connection,
+        private static async Task<string> CreateBulkInsertTempTableIfNecessaryAsync<TSqlTransaction>(IDbConnection connection,
             string tableName,
             bool? usePhysicalPseudoTempTable,
             TSqlTransaction transaction,
@@ -1009,23 +1009,11 @@ namespace RepoDb
             if (withPseudoExecution == false) 
                 return null;
 
-            var tempTableName = CreateTempTableName(tableName, usePhysicalPseudoTempTable, dbSetting);
+            var tempTableName = CreateBulkInsertTempTableName(tableName, usePhysicalPseudoTempTable, dbSetting);
             var sql = GetCreateTemporaryTableSqlText(tableName, tempTableName, fields, dbSetting, true);
 
             await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
 
-            return tempTableName;
-        }
-        
-        private static string CreateTempTableName(string tableName, bool? usePhysicalPseudoTempTable, IDbSetting dbSetting)
-        {
-            // Must be fixed name so the RepoDb.Core caches will not be bloated
-            var tempTableName = string.Concat("_RepoDb_BulkInsert_", GetTableName(tableName, dbSetting));
-
-            // Add a # prefix if not physical
-            if (usePhysicalPseudoTempTable != true) 
-                tempTableName = string.Concat("#", tempTableName);
-            
             return tempTableName;
         }
     }

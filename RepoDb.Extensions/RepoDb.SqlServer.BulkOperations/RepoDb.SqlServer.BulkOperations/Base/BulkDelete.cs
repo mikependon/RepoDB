@@ -59,14 +59,7 @@ namespace RepoDb
                 ValidateTransactionConnectionObject(connection, transaction);
             }
 
-            // Must be fixed name so the RepoDb.Core caches will not be bloated
-            var tempTableName = string.Concat("_RepoDb_BulkDelete_", GetTableName(tableName, dbSetting));
-
-            // Add a # prefix if not physical
-            if (usePhysicalPseudoTempTable != true)
-            {
-                tempTableName = string.Concat("#", tempTableName);
-            }
+            var tempTableName = CreateBulkDeleteTempTableName(tableName, usePhysicalPseudoTempTable, dbSetting);
 
             try
             {
@@ -213,14 +206,7 @@ namespace RepoDb
                 ValidateTransactionConnectionObject(connection, transaction);
             }
 
-            // Must be fixed name so the RepoDb.Core caches will not be bloated
-            var tempTableName = string.Concat("_RepoDb_BulkDelete_", GetTableName(tableName, dbSetting));
-
-            // Add a # prefix if not physical
-            if (usePhysicalPseudoTempTable != true)
-            {
-                tempTableName = string.Concat("#", tempTableName);
-            }
+            var tempTableName = CreateBulkDeleteTempTableName(tableName, usePhysicalPseudoTempTable, dbSetting);
 
             try
             {
@@ -411,14 +397,7 @@ namespace RepoDb
                 ValidateTransactionConnectionObject(connection, transaction);
             }
 
-            // Must be fixed name so the RepoDb.Core caches will not be bloated
-            var tempTableName = string.Concat("_RepoDb_BulkDelete_", GetTableName(tableName, dbSetting));
-
-            // Add a # prefix if not physical
-            if (usePhysicalPseudoTempTable != true)
-            {
-                tempTableName = string.Concat("#", tempTableName);
-            }
+            var tempTableName = CreateBulkDeleteTempTableName(tableName, usePhysicalPseudoTempTable, dbSetting);
 
             try
             {
@@ -609,14 +588,7 @@ namespace RepoDb
                 ValidateTransactionConnectionObject(connection, transaction);
             }
 
-            // Must be fixed name so the RepoDb.Core caches will not be bloated
-            var tempTableName = string.Concat("_RepoDb_BulkDelete_", GetTableName(tableName, dbSetting));
-
-            // Add a # prefix if not physical
-            if (usePhysicalPseudoTempTable != true)
-            {
-                tempTableName = string.Concat("#", tempTableName);
-            }
+            var tempTableName = CreateBulkDeleteTempTableName(tableName, usePhysicalPseudoTempTable, dbSetting);
 
             try
             {
@@ -764,14 +736,7 @@ namespace RepoDb
                 ValidateTransactionConnectionObject(connection, transaction);
             }
 
-            // Must be fixed name so the RepoDb.Core caches will not be bloated
-            var tempTableName = string.Concat("_RepoDb_BulkDelete_", GetTableName(tableName, dbSetting));
-
-            // Add a # prefix if not physical
-            if (usePhysicalPseudoTempTable != true)
-            {
-                tempTableName = string.Concat("#", tempTableName);
-            }
+            var tempTableName = CreateBulkDeleteTempTableName(tableName, usePhysicalPseudoTempTable, dbSetting);
 
             try
             {
@@ -965,14 +930,7 @@ namespace RepoDb
                 ValidateTransactionConnectionObject(connection, transaction);
             }
 
-            // Must be fixed name so the RepoDb.Core caches will not be bloated
-            var tempTableName = string.Concat("_RepoDb_BulkDelete_", GetTableName(tableName, dbSetting));
-
-            // Add a # prefix if not physical
-            if (usePhysicalPseudoTempTable != true)
-            {
-                tempTableName = string.Concat("#", tempTableName);
-            }
+            var tempTableName = CreateBulkDeleteTempTableName(tableName, usePhysicalPseudoTempTable, dbSetting);
 
             try
             {
