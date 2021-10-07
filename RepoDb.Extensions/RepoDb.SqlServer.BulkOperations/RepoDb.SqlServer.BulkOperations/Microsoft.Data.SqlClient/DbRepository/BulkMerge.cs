@@ -1,5 +1,4 @@
 ﻿using Microsoft.Data.SqlClient;
-using RepoDb.Enumerations;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -45,33 +44,19 @@ namespace RepoDb
             where TEntity : class
         {
             // Create a connection
-            var connection = transaction?.Connection ?? repository.CreateConnection();
+            using var bulkDbConnector = new BulkDbConnector(transaction, repository);
 
-            try
-            {
-                // Call the method
-                return connection.BulkMerge(entities: entities,
-                    qualifiers: qualifiers,
-                    mappings: mappings,
-                    options: options,
-                    hints: hints,
-                    bulkCopyTimeout: repository.CommandTimeout,
-                    batchSize: batchSize,
-                    isReturnIdentity: isReturnIdentity,
-                    usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                    transaction: transaction);
-            }
-            finally
-            {
-                // Dispose the connection
-                if (repository.ConnectionPersistency == ConnectionPersistency.PerCall)
-                {
-                    if (transaction == null)
-                    {
-                        connection.Dispose();
-                    }
-                }
-            }
+            // Call the method
+            return bulkDbConnector.Connection.BulkMerge(entities: entities,
+                qualifiers: qualifiers,
+                mappings: mappings,
+                options: options,
+                hints: hints,
+                bulkCopyTimeout: repository.CommandTimeout,
+                batchSize: batchSize,
+                isReturnIdentity: isReturnIdentity,
+                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
+                transaction: transaction);
         }
 
         /// <summary>
@@ -104,34 +89,20 @@ namespace RepoDb
             where TEntity : class
         {
             // Create a connection
-            var connection = transaction?.Connection ?? repository.CreateConnection();
+            using var bulkDbConnector = new BulkDbConnector(transaction, repository);
 
-            try
-            {
-                // Call the method
-                return connection.BulkMerge(tableName: tableName,
-                    entities: entities,
-                    qualifiers: qualifiers,
-                    mappings: mappings,
-                    options: options,
-                    hints: hints,
-                    bulkCopyTimeout: repository.CommandTimeout,
-                    batchSize: batchSize,
-                    isReturnIdentity: isReturnIdentity,
-                    usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                    transaction: transaction);
-            }
-            finally
-            {
-                // Dispose the connection
-                if (repository.ConnectionPersistency == ConnectionPersistency.PerCall)
-                {
-                    if (transaction == null)
-                    {
-                        connection.Dispose();
-                    }
-                }
-            }
+            // Call the method
+            return bulkDbConnector.Connection.BulkMerge(tableName: tableName,
+                entities: entities,
+                qualifiers: qualifiers,
+                mappings: mappings,
+                options: options,
+                hints: hints,
+                bulkCopyTimeout: repository.CommandTimeout,
+                batchSize: batchSize,
+                isReturnIdentity: isReturnIdentity,
+                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
+                transaction: transaction);
         }
 
         /// <summary>
@@ -160,32 +131,18 @@ namespace RepoDb
             where TEntity : class
         {
             // Create a connection
-            var connection = transaction?.Connection ?? repository.CreateConnection();
+            using var bulkDbConnector = new BulkDbConnector(transaction, repository);
 
-            try
-            {
-                // Call the method
-                return connection.BulkMerge(reader: reader,
-                    qualifiers: qualifiers,
-                    mappings: mappings,
-                    options: options,
-                    hints: hints,
-                    bulkCopyTimeout: repository.CommandTimeout,
-                    batchSize: batchSize,
-                    usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                    transaction: transaction);
-            }
-            finally
-            {
-                // Dispose the connection
-                if (repository.ConnectionPersistency == ConnectionPersistency.PerCall)
-                {
-                    if (transaction == null)
-                    {
-                        connection.Dispose();
-                    }
-                }
-            }
+            // Call the method
+            return bulkDbConnector.Connection.BulkMerge(reader: reader,
+                qualifiers: qualifiers,
+                mappings: mappings,
+                options: options,
+                hints: hints,
+                bulkCopyTimeout: repository.CommandTimeout,
+                batchSize: batchSize,
+                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
+                transaction: transaction);
         }
 
         #endregion
@@ -218,33 +175,19 @@ namespace RepoDb
             SqlTransaction transaction = null)
         {
             // Create a connection
-            var connection = transaction?.Connection ?? repository.CreateConnection();
+            using var bulkDbConnector = new BulkDbConnector(transaction, repository);
 
-            try
-            {
-                // Call the method
-                return connection.BulkMerge(tableName: tableName,
-                    reader: reader,
-                    qualifiers: qualifiers,
-                    mappings: mappings,
-                    options: options,
-                    hints: hints,
-                    bulkCopyTimeout: repository.CommandTimeout,
-                    batchSize: batchSize,
-                    usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                    transaction: transaction);
-            }
-            finally
-            {
-                // Dispose the connection
-                if (repository.ConnectionPersistency == ConnectionPersistency.PerCall)
-                {
-                    if (transaction == null)
-                    {
-                        connection.Dispose();
-                    }
-                }
-            }
+            // Call the method
+            return bulkDbConnector.Connection.BulkMerge(tableName: tableName,
+                reader: reader,
+                qualifiers: qualifiers,
+                mappings: mappings,
+                options: options,
+                hints: hints,
+                bulkCopyTimeout: repository.CommandTimeout,
+                batchSize: batchSize,
+                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
+                transaction: transaction);
         }
 
         /// <summary>
@@ -277,34 +220,20 @@ namespace RepoDb
             where TEntity : class
         {
             // Create a connection
-            var connection = transaction?.Connection ?? repository.CreateConnection();
+            using var bulkDbConnector = new BulkDbConnector(transaction, repository);
 
-            try
-            {
-                // Call the method
-                return connection.BulkMerge<TEntity>(dataTable: dataTable,
-                    qualifiers: qualifiers,
-                    rowState: rowState,
-                    mappings: mappings,
-                    options: options,
-                    hints: hints,
-                    bulkCopyTimeout: repository.CommandTimeout,
-                    batchSize: batchSize,
-                    isReturnIdentity: isReturnIdentity,
-                    usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                    transaction: transaction);
-            }
-            finally
-            {
-                // Dispose the connection
-                if (repository.ConnectionPersistency == ConnectionPersistency.PerCall)
-                {
-                    if (transaction == null)
-                    {
-                        connection.Dispose();
-                    }
-                }
-            }
+            // Call the method
+            return bulkDbConnector.Connection.BulkMerge<TEntity>(dataTable: dataTable,
+                qualifiers: qualifiers,
+                rowState: rowState,
+                mappings: mappings,
+                options: options,
+                hints: hints,
+                bulkCopyTimeout: repository.CommandTimeout,
+                batchSize: batchSize,
+                isReturnIdentity: isReturnIdentity,
+                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
+                transaction: transaction);
         }
 
         /// <summary>
@@ -337,35 +266,21 @@ namespace RepoDb
             SqlTransaction transaction = null)
         {
             // Create a connection
-            var connection = transaction?.Connection ?? repository.CreateConnection();
+            using var bulkDbConnector = new BulkDbConnector(transaction, repository);
 
-            try
-            {
-                // Call the method
-                return connection.BulkMerge(tableName: tableName,
-                    dataTable: dataTable,
-                    qualifiers: qualifiers,
-                    rowState: rowState,
-                    mappings: mappings,
-                    options: options,
-                    hints: hints,
-                    bulkCopyTimeout: repository.CommandTimeout,
-                    batchSize: batchSize,
-                    isReturnIdentity: isReturnIdentity,
-                    usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                    transaction: transaction);
-            }
-            finally
-            {
-                // Dispose the connection
-                if (repository.ConnectionPersistency == ConnectionPersistency.PerCall)
-                {
-                    if (transaction == null)
-                    {
-                        connection.Dispose();
-                    }
-                }
-            }
+            // Call the method
+            return bulkDbConnector.Connection.BulkMerge(tableName: tableName,
+                dataTable: dataTable,
+                qualifiers: qualifiers,
+                rowState: rowState,
+                mappings: mappings,
+                options: options,
+                hints: hints,
+                bulkCopyTimeout: repository.CommandTimeout,
+                batchSize: batchSize,
+                isReturnIdentity: isReturnIdentity,
+                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
+                transaction: transaction);
         }
 
         #endregion
@@ -402,34 +317,20 @@ namespace RepoDb
             where TEntity : class
         {
             // Create a connection
-            var connection = transaction?.Connection ?? repository.CreateConnection();
+            using var bulkDbConnector = new BulkDbConnector(transaction, repository);
 
-            try
-            {
-                // Call the method
-                return await connection.BulkMergeAsync(entities: entities,
-                    qualifiers: qualifiers,
-                    mappings: mappings,
-                    options: options,
-                    hints: hints,
-                    bulkCopyTimeout: repository.CommandTimeout,
-                    batchSize: batchSize,
-                    isReturnIdentity: isReturnIdentity,
-                    usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                    transaction: transaction,
-                    cancellationToken: cancellationToken);
-            }
-            finally
-            {
-                // Dispose the connection
-                if (repository.ConnectionPersistency == ConnectionPersistency.PerCall)
-                {
-                    if (transaction == null)
-                    {
-                        connection.Dispose();
-                    }
-                }
-            }
+            // Call the method
+            return await bulkDbConnector.Connection.BulkMergeAsync(entities: entities,
+                qualifiers: qualifiers,
+                mappings: mappings,
+                options: options,
+                hints: hints,
+                bulkCopyTimeout: repository.CommandTimeout,
+                batchSize: batchSize,
+                isReturnIdentity: isReturnIdentity,
+                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -464,35 +365,21 @@ namespace RepoDb
             where TEntity : class
         {
             // Create a connection
-            var connection = transaction?.Connection ?? repository.CreateConnection();
+            using var bulkDbConnector = new BulkDbConnector(transaction, repository);
 
-            try
-            {
-                // Call the method
-                return await connection.BulkMergeAsync(tableName: tableName,
-                    entities: entities,
-                    qualifiers: qualifiers,
-                    mappings: mappings,
-                    options: options,
-                    hints: hints,
-                    bulkCopyTimeout: repository.CommandTimeout,
-                    batchSize: batchSize,
-                    isReturnIdentity: isReturnIdentity,
-                    usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                    transaction: transaction,
-                    cancellationToken: cancellationToken);
-            }
-            finally
-            {
-                // Dispose the connection
-                if (repository.ConnectionPersistency == ConnectionPersistency.PerCall)
-                {
-                    if (transaction == null)
-                    {
-                        connection.Dispose();
-                    }
-                }
-            }
+            // Call the method
+            return await bulkDbConnector.Connection.BulkMergeAsync(tableName: tableName,
+                entities: entities,
+                qualifiers: qualifiers,
+                mappings: mappings,
+                options: options,
+                hints: hints,
+                bulkCopyTimeout: repository.CommandTimeout,
+                batchSize: batchSize,
+                isReturnIdentity: isReturnIdentity,
+                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -523,33 +410,19 @@ namespace RepoDb
             where TEntity : class
         {
             // Create a connection
-            var connection = transaction?.Connection ?? repository.CreateConnection();
+            using var bulkDbConnector = new BulkDbConnector(transaction, repository);
 
-            try
-            {
-                // Call the method
-                return await connection.BulkMergeAsync(reader: reader,
-                    qualifiers: qualifiers,
-                    mappings: mappings,
-                    options: options,
-                    hints: hints,
-                    bulkCopyTimeout: repository.CommandTimeout,
-                    batchSize: batchSize,
-                    usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                    transaction: transaction,
-                    cancellationToken: cancellationToken);
-            }
-            finally
-            {
-                // Dispose the connection
-                if (repository.ConnectionPersistency == ConnectionPersistency.PerCall)
-                {
-                    if (transaction == null)
-                    {
-                        connection.Dispose();
-                    }
-                }
-            }
+            // Call the method
+            return await bulkDbConnector.Connection.BulkMergeAsync(reader: reader,
+                qualifiers: qualifiers,
+                mappings: mappings,
+                options: options,
+                hints: hints,
+                bulkCopyTimeout: repository.CommandTimeout,
+                batchSize: batchSize,
+                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         #endregion
@@ -584,34 +457,20 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
         {
             // Create a connection
-            var connection = transaction?.Connection ?? repository.CreateConnection();
+            using var bulkDbConnector = new BulkDbConnector(transaction, repository);
 
-            try
-            {
-                // Call the method
-                return await connection.BulkMergeAsync(tableName: tableName,
-                    reader: reader,
-                    qualifiers: qualifiers,
-                    mappings: mappings,
-                    options: options,
-                    hints: hints,
-                    bulkCopyTimeout: repository.CommandTimeout,
-                    batchSize: batchSize,
-                    usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                    transaction: transaction,
-                    cancellationToken: cancellationToken);
-            }
-            finally
-            {
-                // Dispose the connection
-                if (repository.ConnectionPersistency == ConnectionPersistency.PerCall)
-                {
-                    if (transaction == null)
-                    {
-                        connection.Dispose();
-                    }
-                }
-            }
+            // Call the method
+            return await bulkDbConnector.Connection.BulkMergeAsync(tableName: tableName,
+                reader: reader,
+                qualifiers: qualifiers,
+                mappings: mappings,
+                options: options,
+                hints: hints,
+                bulkCopyTimeout: repository.CommandTimeout,
+                batchSize: batchSize,
+                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -646,35 +505,21 @@ namespace RepoDb
             where TEntity : class
         {
             // Create a connection
-            var connection = transaction?.Connection ?? repository.CreateConnection();
+            using var bulkDbConnector = new BulkDbConnector(transaction, repository);
 
-            try
-            {
-                // Call the method
-                return await connection.BulkMergeAsync<TEntity>(dataTable: dataTable,
-                    qualifiers: qualifiers,
-                    rowState: rowState,
-                    mappings: mappings,
-                    options: options,
-                    hints: hints,
-                    bulkCopyTimeout: repository.CommandTimeout,
-                    batchSize: batchSize,
-                    isReturnIdentity: isReturnIdentity,
-                    usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                    transaction: transaction,
-                    cancellationToken: cancellationToken);
-            }
-            finally
-            {
-                // Dispose the connection
-                if (repository.ConnectionPersistency == ConnectionPersistency.PerCall)
-                {
-                    if (transaction == null)
-                    {
-                        connection.Dispose();
-                    }
-                }
-            }
+            // Call the method
+            return await bulkDbConnector.Connection.BulkMergeAsync<TEntity>(dataTable: dataTable,
+                qualifiers: qualifiers,
+                rowState: rowState,
+                mappings: mappings,
+                options: options,
+                hints: hints,
+                bulkCopyTimeout: repository.CommandTimeout,
+                batchSize: batchSize,
+                isReturnIdentity: isReturnIdentity,
+                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -709,36 +554,22 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
         {
             // Create a connection
-            var connection = (transaction?.Connection ?? repository.CreateConnection());
+            using var bulkDbConnector = new BulkDbConnector(transaction, repository);
 
-            try
-            {
-                // Call the method
-                return await connection.BulkMergeAsync(tableName: tableName,
-                    dataTable: dataTable,
-                    qualifiers: qualifiers,
-                    rowState: rowState,
-                    mappings: mappings,
-                    options: options,
-                    hints: hints,
-                    bulkCopyTimeout: repository.CommandTimeout,
-                    batchSize: batchSize,
-                    isReturnIdentity: isReturnIdentity,
-                    usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                    transaction: transaction,
-                    cancellationToken: cancellationToken);
-            }
-            finally
-            {
-                // Dispose the connection
-                if (repository.ConnectionPersistency == ConnectionPersistency.PerCall)
-                {
-                    if (transaction == null)
-                    {
-                        connection.Dispose();
-                    }
-                }
-            }
+            // Call the method
+            return await bulkDbConnector.Connection.BulkMergeAsync(tableName: tableName,
+                dataTable: dataTable,
+                qualifiers: qualifiers,
+                rowState: rowState,
+                mappings: mappings,
+                options: options,
+                hints: hints,
+                bulkCopyTimeout: repository.CommandTimeout,
+                batchSize: batchSize,
+                isReturnIdentity: isReturnIdentity,
+                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         #endregion
