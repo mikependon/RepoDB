@@ -50,15 +50,26 @@ namespace RepoDb
         /// <param name="sourceName"></param>
         /// <param name="destinationName"></param>
         /// <param name="dbFields"></param>
+        /// <param name="includeIdentity"></param>
         /// <param name="alternativeType"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         private static NpgsqlBulkInsertMapItem GetMapping(string sourceName,
             string destinationName,
             IEnumerable<DbField> dbFields,
+            bool includeIdentity,
             Type alternativeType,
             IDbSetting dbSetting)
         {
+            if (includeIdentity == false)
+            {
+                var identity = dbFields?.FirstOrDefault(dbField => dbField.IsIdentity);
+                if (identity != null && string.Equals(identity.Name.AsUnquoted(true, dbSetting), destinationName.AsUnquoted(true, dbSetting)))
+                {
+                    return null;
+                }
+            }
+
             var dbField = dbFields?.First(df => string.Equals(destinationName.AsUnquoted(true, dbSetting),
                 df.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase));
             var dbType = !string.IsNullOrWhiteSpace(dbField?.DatabaseType) ?
@@ -83,8 +94,8 @@ namespace RepoDb
         {
             var matchedProperties = GetMatchedProperties(dbFields, properties, includeIdentity, dbSetting);
             return matchedProperties
-                .Select(property => GetMapping(property.PropertyInfo.Name, property.GetMappedName(),
-                    dbFields, property.PropertyInfo.PropertyType, dbSetting));
+                .Select(property => GetMapping(property.PropertyInfo.Name, property.GetMappedName(), dbFields,
+                    includeIdentity, property.PropertyInfo.PropertyType, dbSetting));
         }
 
         /// <summary>
@@ -92,29 +103,55 @@ namespace RepoDb
         /// </summary>
         /// <param name="dictionary"></param>
         /// <param name="dbFields"></param>
+        /// <param name="includeIdentity"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         private static IEnumerable<NpgsqlBulkInsertMapItem> GetMappings(IDictionary<string, object> dictionary,
             IEnumerable<DbField> dbFields,
-            IDbSetting dbSetting) =>
-            dictionary?.Keys.Select(key =>
-                GetMapping(key, key, dbFields, dictionary[key]?.GetType().GetUnderlyingType(), dbSetting));
+            bool includeIdentity,
+            IDbSetting dbSetting)
+        {
+            foreach (var kvp in dictionary)
+            {
+                var mapping = GetMapping(kvp.Key,
+                    kvp.Key,
+                    dbFields,
+                    includeIdentity,
+                    kvp.Value?.GetType().GetUnderlyingType(), dbSetting);
+
+                if (mapping != null)
+                {
+                    yield return mapping;
+                }
+            }
+        }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="table"></param>
         /// <param name="dbFields"></param>
+        /// <param name="includeIdentity"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         private static IEnumerable<NpgsqlBulkInsertMapItem> GetMappings(DataTable table,
             IEnumerable<DbField> dbFields,
+            bool includeIdentity,
             IDbSetting dbSetting)
         {
             foreach (DataColumn column in table.Columns)
             {
-                yield return GetMapping(column.ColumnName, column.ColumnName, dbFields,
-                    column.DataType.GetUnderlyingType(), dbSetting);
+                var mapping = GetMapping(column.ColumnName,
+                    column.ColumnName,
+                    dbFields,
+                    includeIdentity,
+                    column.DataType.GetUnderlyingType(),
+                    dbSetting);
+
+                if (mapping != null)
+                {
+                    yield return mapping;
+                }
             }
         }
 
@@ -123,17 +160,28 @@ namespace RepoDb
         /// </summary>
         /// <param name="reader"></param>
         /// <param name="dbFields"></param>
+        /// <param name="includeIdentity"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         private static IEnumerable<NpgsqlBulkInsertMapItem> GetMappings(DbDataReader reader,
             IEnumerable<DbField> dbFields,
+            bool includeIdentity,
             IDbSetting dbSetting)
         {
             for (var i = 0; i < reader.FieldCount; i++)
             {
                 var name = reader.GetName(i);
-                yield return GetMapping(name, name, dbFields,
-                    reader.GetFieldType(i).GetUnderlyingType(), dbSetting);
+                var mapping = GetMapping(name,
+                    name,
+                    dbFields,
+                    includeIdentity,
+                    reader.GetFieldType(i).GetUnderlyingType(),
+                    dbSetting);
+
+                if (mapping != null)
+                {
+                    yield return mapping;
+                }
             }
         }
 
@@ -170,11 +218,105 @@ namespace RepoDb
         /// 
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
-        /// <param name="tableName"></param>
+        /// <param name="entities"></param>
+        /// <param name="dbFields"></param>
+        /// <param name="identities"></param>
+        /// <param name="dbSetting"></param>
+        private static void SetEntityIdentities<TEntity>(IEnumerable<TEntity> entities,
+            IEnumerable<DbField> dbFields,
+            IEnumerable<long> identities,
+            IDbSetting dbSetting)
+            where TEntity : class =>
+            SetEntityIdentities<TEntity>(entities, GetEntityIdentityField<TEntity>(dbFields, dbSetting), identities);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entities"></param>
+        /// <param name="identityField"></param>
+        /// <param name="identities"></param>
+        private static void SetEntityIdentities<TEntity>(IEnumerable<TEntity> entities,
+            Field identityField,
+            IEnumerable<long> identities)
+            where TEntity : class
+        {
+            if (identityField == null)
+            {
+                return;
+            }
+
+            var entityType = (entities?.FirstOrDefault().GetType() ?? typeof(TEntity));
+            if (entityType?.IsClassType() != true)
+            {
+                return;
+            }
+
+            var func = Compiler.GetPropertySetterFunc<TEntity>(identityField.Name);
+            if (func == null)
+            {
+                return;
+            }
+
+            var entityList = entities.AsList();
+            var identityList = identities.AsList();
+
+            for (var i = 0; i < identityList.Count; i++)
+            {
+                func(entityList[i], identityList[i]);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="dbFields"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        private static string GetBinaryInsertPseudoTableName<TEntity>(string tableName,
-            IDbSetting dbSetting) =>
-            $"_RepoDb_BinaryBulkInsert_{(tableName ?? ClassMappedNameCache.Get<TEntity>()).AsUnquoted(true, dbSetting)}";
+        private static Field GetEntityIdentityField<TEntity>(IEnumerable<DbField> dbFields,
+            IDbSetting dbSetting)
+            where TEntity : class
+        {
+            // We cannot use the ClassProperty.AsField() and PropertyInfo.AsField() as it is
+            // using the mappings. We need to get the identity class property name instead
+
+            var property = IdentityCache.Get<TEntity>() ??
+                    GetEntityIdentityProperty<TEntity>(dbFields, dbSetting);
+
+            if (property != null)
+            {
+                return new Field(property.PropertyInfo.Name);
+            }
+
+            return null;
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="dbFields"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
+        private static ClassProperty GetEntityIdentityProperty<TEntity>(IEnumerable<DbField> dbFields,
+            IDbSetting dbSetting)
+            where TEntity : class
+        {
+            var identityDbField = dbFields?.FirstOrDefault(dbField => dbField.IsIdentity);
+            ClassProperty property = null;
+
+            if (identityDbField != null)
+            {
+                property = PropertyCache
+                   .Get<TEntity>()
+                   .FirstOrDefault(p =>
+                       string.Equals(p.GetMappedName().AsUnquoted(true, dbSetting),
+                           identityDbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase));
+            }
+
+            return property;
+        }
     }
 }

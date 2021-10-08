@@ -16,9 +16,19 @@
 
   <ItemGroup>
     <Compile Remove="Base\**" />
-    <Compile Remove="Operations\**" />
+    <Compile Remove="Operations\BaseRepository\**" />
+    <Compile Remove="Operations\DbRepository\**" />
     <EmbeddedResource Remove="Base\**" />
-    <EmbeddedResource Remove="Operations\**" />
+    <EmbeddedResource Remove="Operations\BaseRepository\**" />
+    <EmbeddedResource Remove="Operations\DbRepository\**" />
+    <None Remove="Operations\BaseRepository\**" />
+    <None Remove="Operations\DbRepository\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Operations\NpgsqlConnection\BinaryBulkDelete.cs" />
+    <Compile Remove="Operations\NpgsqlConnection\BinaryBulkMerge.cs" />
+    <Compile Remove="Operations\NpgsqlConnection\BinaryBulkUpdate.cs" />
   </ItemGroup>
 
   <ItemGroup>
