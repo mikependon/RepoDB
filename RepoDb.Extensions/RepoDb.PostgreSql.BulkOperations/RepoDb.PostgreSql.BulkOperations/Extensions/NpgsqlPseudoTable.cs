@@ -35,16 +35,41 @@ namespace RepoDb
             IDbSetting dbSetting = null,
             NpgsqlTransaction transaction = null)
         {
-            if (identityBehavior != BulkImportIdentityBehavior.ReturnIdentity)
-            {
-                return;
-            }
-
             var commandText = pseudoTableType == BulkImportPseudoTableType.Physical ?
                 GetCreatePseudoTableCommandText(tableName, getPseudoTableName(), mappings, identityBehavior, dbSetting) :
                 GetCreatePseudoTemporaryTableCommandText(tableName, getPseudoTableName(), mappings, identityBehavior, dbSetting);
 
             connection.ExecuteNonQuery(commandText, bulkCopyTimeout, transaction: transaction);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="pseudoTableName"></param>
+        /// <param name="mappings"></param>
+        /// <param name="dbFields"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="dbSetting"></param>
+        /// <param name="transaction"></param>
+        private static IEnumerable<long> InsertPseudoTable(NpgsqlConnection connection,
+            string tableName,
+            string pseudoTableName,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+            IEnumerable<DbField> dbFields,
+            int? bulkCopyTimeout = null,
+            IDbSetting dbSetting = null,
+            NpgsqlTransaction transaction = null)
+        {
+            var identityField = dbFields.FirstOrDefault(dbField => dbField.IsIdentity)?.AsField();
+            var commandText = GetInsertCommand(pseudoTableName,
+                tableName,
+                mappings.Select(mapping => new Field(mapping.DestinationColumn)),
+                identityField,
+                dbSetting);
+
+            return connection.ExecuteQuery<long>(commandText, bulkCopyTimeout, transaction: transaction);
         }
 
         /// <summary>

@@ -371,6 +371,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #endregion
 
+        #endregion
+
+        #region ExpandoObject
+
         #region BulkOperationExpandoObjectLightIdentityTable
 
         /// <summary>
@@ -389,7 +393,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var expandoObject = new ExpandoObject() as IDictionary<string, object>;
                 var index = i + 1;
 
-                expandoObject["Id"] = hasId ? index : 0;
+                expandoObject["Id"] = (long)(hasId ? index : 0);
                 expandoObject["ColumnBigInt"] = (long)random.Next(100);
                 expandoObject["ColumnBoolean"] = true;
                 expandoObject["ColumnInteger"] = random.Next(100);
@@ -423,7 +427,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var expandoObject = new ExpandoObject() as IDictionary<string, object>;
                 var index = i + 1;
 
-                expandoObject["IdMapped"] = hasId ? index : 0;
+                expandoObject["IdMapped"] = (long)(hasId ? index : 0);
                 expandoObject["ColumnBigIntMapped"] = (long)random.Next(100);
                 expandoObject["ColumnBooleanMapped"] = true;
                 expandoObject["ColumnIntegerMapped"] = random.Next(100);
