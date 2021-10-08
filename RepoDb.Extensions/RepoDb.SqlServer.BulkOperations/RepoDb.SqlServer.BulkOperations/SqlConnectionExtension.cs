@@ -350,7 +350,7 @@ namespace RepoDb
             }
         }
         
-        private static void CommitTransaction(SqlTransaction transaction, bool hasTransaction)
+        private static void CommitTransaction(IDbTransaction transaction, bool hasTransaction)
         {
             if (hasTransaction == false)
             {
@@ -358,7 +358,7 @@ namespace RepoDb
             }
         }
 
-        private static void RollbackTransaction(SqlTransaction transaction, bool hasTransaction)
+        private static void RollbackTransaction(IDbTransaction transaction, bool hasTransaction)
         {
             if (hasTransaction == false)
             {
@@ -366,17 +366,46 @@ namespace RepoDb
             }
         }
 
-        private static void DisposeTransaction(SqlTransaction transaction, bool hasTransaction)
+        private static void DisposeTransaction(IDbTransaction transaction, bool hasTransaction)
         {
             if (hasTransaction == false)
             {
                 transaction?.Dispose();
             }
         }
-        
-        #endregion
 
-        #region SQL Helpers
+        private static T CreateOrValidateCurrentTransaction<T>(IDbConnection connection, T transaction)
+            where T : DbTransaction
+        {
+            // Check the transaction
+            if (transaction == null)
+            {
+                // Add the transaction if not present
+                return (T)connection.EnsureOpen().BeginTransaction();
+            }
+
+            // Validate the objects
+            ValidateTransactionConnectionObject(connection, transaction);
+
+            return transaction;
+        }
+        
+        private static async Task<T> CreateOrValidateCurrentTransactionAsync<T>(IDbConnection connection, T transaction, 
+            CancellationToken cancellationToken = default)
+            where T : DbTransaction
+        {
+            // Check the transaction
+            if (transaction == null)
+            {
+                // Add the transaction if not present
+                return (T)(await connection.EnsureOpenAsync(cancellationToken)).BeginTransaction();
+            }
+
+            // Validate the objects
+            ValidateTransactionConnectionObject(connection, transaction);
+
+            return transaction;
+        }
 
         private static string CreateBulkUpdateTempTableName(string tableName, bool? usePhysicalPseudoTempTable, IDbSetting dbSetting) => 
             CreateBulkTempTableName(tableName, "Update", usePhysicalPseudoTempTable, dbSetting);
@@ -408,6 +437,10 @@ namespace RepoDb
             return tempTableName.ToString();
         }
         
+        #endregion
+
+        #region SQL Helpers
+
         /// <summary>
         /// 
         /// </summary>

@@ -53,18 +53,7 @@ namespace RepoDb
             var hasTransaction = transaction != null;
             int result;
 
-            // Check the transaction
-            if (transaction == null)
-            {
-                // Add the transaction if not present
-                transaction = (SqlTransaction)connection.EnsureOpen().BeginTransaction();
-            }
-            else
-            {
-                // Validate the objects
-                ValidateTransactionConnectionObject(connection, transaction);
-            }
-
+            transaction = CreateOrValidateCurrentTransaction(connection, transaction);
             var tempTableName = CreateBulkUpdateTempTableName(tableName, usePhysicalPseudoTempTable, dbSetting);
 
             try
@@ -229,18 +218,7 @@ namespace RepoDb
             var hasTransaction = transaction != null;
             int result;
 
-            // Check the transaction
-            if (transaction == null)
-            {
-                // Add the transaction if not present
-                transaction = (SqlTransaction)connection.EnsureOpen().BeginTransaction();
-            }
-            else
-            {
-                // Validate the objects
-                ValidateTransactionConnectionObject(connection, transaction);
-            }
-
+            transaction = CreateOrValidateCurrentTransaction(connection, transaction);
             var tempTableName = CreateBulkUpdateTempTableName(tableName, usePhysicalPseudoTempTable, dbSetting);
 
             try
@@ -409,18 +387,7 @@ namespace RepoDb
             var hasTransaction = transaction != null;
             int result;
 
-            // Check the transaction
-            if (transaction == null)
-            {
-                // Add the transaction if not present
-                transaction = (SqlTransaction)(await connection.EnsureOpenAsync(cancellationToken)).BeginTransaction();
-            }
-            else
-            {
-                // Validate the objects
-                ValidateTransactionConnectionObject(connection, transaction);
-            }
-
+            transaction = await CreateOrValidateCurrentTransactionAsync(connection, transaction, cancellationToken);
             var tempTableName = CreateBulkUpdateTempTableName(tableName, usePhysicalPseudoTempTable, dbSetting);
 
             try
@@ -586,18 +553,7 @@ namespace RepoDb
             var hasTransaction = transaction != null;
             int result;
 
-            // Check the transaction
-            if (transaction == null)
-            {
-                // Add the transaction if not present
-                transaction = (SqlTransaction)(await connection.EnsureOpenAsync(cancellationToken)).BeginTransaction();
-            }
-            else
-            {
-                // Validate the objects
-                ValidateTransactionConnectionObject(connection, transaction);
-            }
-
+            transaction = await CreateOrValidateCurrentTransactionAsync(connection, transaction, cancellationToken);
             var tempTableName = CreateBulkUpdateTempTableName(tableName, usePhysicalPseudoTempTable, dbSetting);
 
             try
