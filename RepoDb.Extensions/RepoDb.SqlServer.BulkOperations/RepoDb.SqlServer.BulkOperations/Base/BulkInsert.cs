@@ -453,7 +453,8 @@ namespace RepoDb
             where TEntity : class
         {
             // Validate
-            if (entities?.Any() != true)
+            var firstEntity = entities?.FirstOrDefault();
+            if (firstEntity is null)
             {
                 return default;
             }
@@ -472,9 +473,9 @@ namespace RepoDb
 
                 // Variables needed
                 var identityDbField = dbFields?.FirstOrDefault(dbField => dbField.IsIdentity);
-                var entityType = entities.FirstOrDefault()?.GetType() ?? typeof(TEntity);
+                var entityType = firstEntity.GetType();
                 var entityFields = entityType.IsDictionaryStringObject() ?
-                    GetDictionaryStringObjectFields(entities.FirstOrDefault() as IDictionary<string, object>) :
+                    GetDictionaryStringObjectFields(firstEntity as IDictionary<string, object>) :
                     FieldCache.Get(entityType);
                 var fields = dbFields?.Select(dbField => dbField.AsField());
 
@@ -567,7 +568,7 @@ namespace RepoDb
             // Return the result
             return result;
         }
-
+        
         /// <summary>
         ///
         /// </summary>
