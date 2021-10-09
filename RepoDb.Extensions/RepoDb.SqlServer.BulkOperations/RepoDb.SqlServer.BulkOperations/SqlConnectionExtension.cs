@@ -8,8 +8,10 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
 
 namespace RepoDb
 {
@@ -160,20 +162,15 @@ namespace RepoDb
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TSqlBulkCopy"></typeparam>
-        /// <typeparam name="TSqlBulkCopyColumnMappingCollection"></typeparam>
-        /// <typeparam name="TSqlBulkCopyColumnMapping"></typeparam>
         /// <param name="sqlBulkCopy"></param>
         /// <param name="mappings"></param>
-        private static void AddMappings<TSqlBulkCopy, TSqlBulkCopyColumnMappingCollection, TSqlBulkCopyColumnMapping>(TSqlBulkCopy sqlBulkCopy,
+        private static void AddMappings(SqlBulkCopy sqlBulkCopy,
             IEnumerable<BulkInsertMapItem> mappings)
-            where TSqlBulkCopy : class
-            where TSqlBulkCopyColumnMappingCollection : class
         {
-            var columnMappingsProperty = Compiler.GetPropertyGetterFunc<TSqlBulkCopy, TSqlBulkCopyColumnMappingCollection>("ColumnMappings");
+            var columnMappingsProperty = Compiler.GetPropertyGetterFunc<SqlBulkCopy, SqlBulkCopyColumnMappingCollection>("ColumnMappings");
             var columnMappingsInstance = columnMappingsProperty(sqlBulkCopy);
             var types = new[] { typeof(string), typeof(string) };
-            var addMethod = Compiler.GetParameterizedMethodFunc<TSqlBulkCopyColumnMappingCollection, TSqlBulkCopyColumnMapping>("Add", types);
+            var addMethod = Compiler.GetParameterizedMethodFunc<SqlBulkCopyColumnMappingCollection, SqlBulkCopyColumnMapping>("Add", types);
             mappings
                 .AsList()
                 .ForEach(mapItem =>
@@ -352,7 +349,94 @@ namespace RepoDb
                 throw new EmptyException("The entities must not be empty.");
             }
         }
+        
+        private static void CommitTransaction(IDbTransaction transaction, bool hasTransaction)
+        {
+            if (hasTransaction == false)
+            {
+                transaction?.Commit();
+            }
+        }
 
+        private static void RollbackTransaction(IDbTransaction transaction, bool hasTransaction)
+        {
+            if (hasTransaction == false)
+            {
+                transaction?.Rollback();
+            }
+        }
+
+        private static void DisposeTransaction(IDbTransaction transaction, bool hasTransaction)
+        {
+            if (hasTransaction == false)
+            {
+                transaction?.Dispose();
+            }
+        }
+
+        private static T CreateOrValidateCurrentTransaction<T>(IDbConnection connection, T transaction)
+            where T : DbTransaction
+        {
+            // Check the transaction
+            if (transaction == null)
+            {
+                // Add the transaction if not present
+                return (T)connection.EnsureOpen().BeginTransaction();
+            }
+
+            // Validate the objects
+            ValidateTransactionConnectionObject(connection, transaction);
+
+            return transaction;
+        }
+        
+        private static async Task<T> CreateOrValidateCurrentTransactionAsync<T>(IDbConnection connection, T transaction, 
+            CancellationToken cancellationToken = default)
+            where T : DbTransaction
+        {
+            // Check the transaction
+            if (transaction == null)
+            {
+                // Add the transaction if not present
+                return (T)(await connection.EnsureOpenAsync(cancellationToken)).BeginTransaction();
+            }
+
+            // Validate the objects
+            ValidateTransactionConnectionObject(connection, transaction);
+
+            return transaction;
+        }
+
+        private static string CreateBulkUpdateTempTableName(string tableName, bool? usePhysicalPseudoTempTable, IDbSetting dbSetting) => 
+            CreateBulkTempTableName(tableName, "Update", usePhysicalPseudoTempTable, dbSetting);
+        
+        private static string CreateBulkMergeTempTableName(string tableName, bool? usePhysicalPseudoTempTable, IDbSetting dbSetting) => 
+            CreateBulkTempTableName(tableName, "Merge", usePhysicalPseudoTempTable, dbSetting);
+
+        private static string CreateBulkInsertTempTableName(string tableName, bool? usePhysicalPseudoTempTable, IDbSetting dbSetting) => 
+            CreateBulkTempTableName(tableName, "Insert", usePhysicalPseudoTempTable, dbSetting);
+        
+        private static string CreateBulkDeleteTempTableName(string tableName, bool? usePhysicalPseudoTempTable, IDbSetting dbSetting) => 
+            CreateBulkTempTableName(tableName, "Delete", usePhysicalPseudoTempTable, dbSetting);
+
+        private static string CreateBulkTempTableName(string tableName, string operation, bool? usePhysicalPseudoTempTable, IDbSetting dbSetting)
+        {
+            var tempTableName = new StringBuilder();
+            
+            // Must be fixed name so the RepoDb.Core caches will not be bloated
+            tempTableName
+                .Append("_RepoDb_Bulk")
+                .Append(operation)
+                .Append('_')
+                .Append(GetTableName(tableName, dbSetting));
+            
+            // Add a # prefix if not physical
+            if (usePhysicalPseudoTempTable != true) 
+                tempTableName.Insert(0, '#');
+
+            return tempTableName.ToString();
+        }
+        
         #endregion
 
         #region SQL Helpers

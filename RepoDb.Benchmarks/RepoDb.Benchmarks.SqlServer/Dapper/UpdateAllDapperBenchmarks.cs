@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
 using BenchmarkDotNet.Attributes;
 using Dapper;
 using Dapper.Contrib.Extensions;
+using Microsoft.Data.SqlClient;
 using RepoDb.Benchmarks.SqlServer.Models;
 using RepoDb.Benchmarks.SqlServer.Setup;
 

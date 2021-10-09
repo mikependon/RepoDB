@@ -41,7 +41,7 @@ namespace RepoDb
             SqlTransaction transaction = null)
             where TEntity : class
         {
-            return repository.DbRepository.BulkMerge<TEntity>(entities: entities,
+            return repository.DbRepository.BulkMerge(entities: entities,
                 qualifiers: qualifiers,
                 mappings: mappings,
                 options: options,
@@ -81,7 +81,7 @@ namespace RepoDb
             SqlTransaction transaction = null)
             where TEntity : class
         {
-            return repository.DbRepository.BulkMerge<TEntity>(tableName: tableName,
+            return repository.DbRepository.BulkMerge(tableName: tableName,
                 entities: entities,
                 qualifiers: qualifiers,
                 mappings: mappings,
@@ -126,7 +126,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            return repository.DbRepository.BulkMergeAsync<TEntity>(entities: entities,
+            return repository.DbRepository.BulkMergeAsync(entities: entities,
                 qualifiers: qualifiers,
                 mappings: mappings,
                 options: options,
@@ -169,7 +169,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            return repository.DbRepository.BulkMergeAsync<TEntity>(tableName: tableName,
+            return repository.DbRepository.BulkMergeAsync(tableName: tableName,
                 entities: entities,
                 qualifiers: qualifiers,
                 mappings: mappings,
