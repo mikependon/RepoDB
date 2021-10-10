@@ -50,9 +50,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
                 Assert.AreEqual(entities.Count(), queryResult.Count());
-                for (var i = 0; i < entities.Count; i++)
+                foreach (var entity in entities)
                 {
-                    Helper.AssertPropertiesEquality(entities[i], queryResult[i]);
+                    var item = queryResult.First(e => e.Id == entity.Id);
+                    Helper.AssertPropertiesEquality(entity, item);
                 }
             }
         }
@@ -78,9 +79,39 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
                 Assert.AreEqual(entities.Count(), queryResult.Count());
-                for (var i = 0; i < entities.Count; i++)
+                foreach (var entity in entities)
                 {
-                    Helper.AssertPropertiesEquality(entities[i], queryResult[i]);
+                    var item = queryResult.First(e => e.Id == entity.Id);
+                    Helper.AssertPropertiesEquality(entity, item);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestBinaryImportWithKeepIdentity()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = Helper.CreateBulkOperationLightIdentityTables(10, true, 100);
+                var tableName = "BulkOperationIdentityTable";
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryImport<BulkOperationLightIdentityTable>(connection,
+                    tableName,
+                    entities: entities,
+                    keepIdentity: true);
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+
+                // Assert
+                var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
+                Assert.AreEqual(entities.Count(), queryResult.Count());
+                foreach (var entity in entities)
+                {
+                    var item = queryResult.First(e => e.Id == entity.Id);
+                    Helper.AssertPropertiesEquality(entity, item);
                 }
             }
         }
@@ -105,9 +136,39 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>(tableName).ToList();
                 Assert.AreEqual(entities.Count(), queryResult.Count());
-                for (var i = 0; i < entities.Count; i++)
+                foreach (var entity in entities)
                 {
-                    Helper.AssertPropertiesEquality(entities[i], queryResult[i]);
+                    var item = queryResult.First(e => e.IdMapped == entity.IdMapped);
+                    Helper.AssertPropertiesEquality(entity, item);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestBinaryImportWithMappingsAndWithKeepIdentity()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = Helper.CreateBulkOperationMappedIdentityTables(10, true, 100);
+                var tableName = "BulkOperationIdentityTable";
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryImport<BulkOperationMappedIdentityTable>(connection,
+                    tableName,
+                    entities: entities,
+                    keepIdentity: true);
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+
+                // Assert
+                var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>(tableName).ToList();
+                Assert.AreEqual(entities.Count(), queryResult.Count());
+                foreach (var entity in entities)
+                {
+                    var item = queryResult.First(e => e.IdMapped == entity.IdMapped);
+                    Helper.AssertPropertiesEquality(entity, item);
                 }
             }
         }
@@ -151,6 +212,48 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
             }
         }
 
+        [TestMethod]
+        public void TestBinaryImportWithBulkInsertMapItemsWithKeepIdentity()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = Helper.CreateBulkOperationUnmatchedIdentityTables(10, true, 100);
+                var tableName = "BulkOperationIdentityTable";
+                var mappings = new[]
+                {
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.IdMapped), "Id"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnBigIntMapped), "ColumnBigInt"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnBooleanMapped), "ColumnBoolean"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnIntegerMapped), "ColumnInteger"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnNumericMapped), "ColumnNumeric"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnRealMapped), "ColumnReal"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnSmallIntMapped), "ColumnSmallInt"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnTextMapped), "ColumnText")
+                };
+                entities.ForEach(entity => entity.IdMapped += 100);
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryImport<BulkOperationUnmatchedIdentityTable>(connection,
+                    tableName,
+                    entities: entities,
+                    mappings: mappings,
+                    keepIdentity: true);
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+
+                // Assert
+                var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>(tableName).ToList();
+                Assert.AreEqual(entities.Count(), queryResult.Count());
+                foreach (var entity in entities)
+                {
+                    var item = queryResult.First(e => e.IdMapped == entity.IdMapped);
+                    Helper.AssertPropertiesEquality(entity, item);
+                }
+            }
+        }
+
         [TestMethod, ExpectedException(typeof(PostgresException))]
         public void ThrowExceptionOnBinaryImportWithDuplicateIdentityOnKeepIdentity()
         {
@@ -163,7 +266,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 // Act
                 NpgsqlConnectionExtension.BinaryImport<BulkOperationLightIdentityTable>(connection,
                     tableName,
-                    entities: entities);
+                    entities: entities,
+                    keepIdentity: true);
 
                 // Act (Trigger)
                 NpgsqlConnectionExtension.BinaryImport<BulkOperationLightIdentityTable>(connection,
@@ -174,6 +278,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
         }
 
         #endregion
+
+        // Use AssertMembersEqualities
 
         #region BinaryImport<Anonymous>
 
@@ -197,9 +303,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
                 Assert.AreEqual(entities.Count(), queryResult.Count());
-                for (var i = 0; i < entities.Count; i++)
+                foreach (var entity in entities)
                 {
-                    Helper.AssertPropertiesEquality(entities[i], queryResult[i]);
+                    var item = queryResult.First(e => e.Id == entity.Id);
+                    Helper.AssertPropertiesEquality(entity, item);
                 }
             }
         }
@@ -225,9 +332,39 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
                 Assert.AreEqual(entities.Count(), queryResult.Count());
-                for (var i = 0; i < entities.Count; i++)
+                foreach (var entity in entities)
                 {
-                    Helper.AssertPropertiesEquality(entities[i], queryResult[i]);
+                    var item = queryResult.First(e => e.Id == entity.Id);
+                    Helper.AssertPropertiesEquality(entity, item);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestBinaryImportViaAnonymousWithKeepIdentity()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = Helper.CreateBulkOperationAnonymousLightIdentityTables(10, true, 100);
+                var tableName = "BulkOperationIdentityTable";
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryImport(connection,
+                    tableName,
+                    entities: entities,
+                    keepIdentity: true);
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+
+                // Assert
+                var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
+                Assert.AreEqual(entities.Count(), queryResult.Count());
+                foreach (var entity in entities)
+                {
+                    var item = queryResult.First(e => e.Id == entity.Id);
+                    Helper.AssertPropertiesEquality(entity, item);
                 }
             }
         }
@@ -264,9 +401,52 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
                 Assert.AreEqual(entities.Count(), queryResult.Count());
-                for (var i = 0; i < entities.Count; i++)
+                foreach (var entity in entities)
                 {
-                    Helper.AssertPropertiesEquality(entities[i], queryResult[i]);
+                    var item = queryResult.First(e => e.Id == entity.IdMapped);
+                    Helper.AssertPropertiesEquality(entity, item);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestBinaryImportViaAnonymousWithBulkInsertMapItemsAndWithKeepIdentity()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = Helper.CreateBulkOperationAnonymousUnmatchedIdentityTables(10, true, 100);
+
+                // Prepare
+                var tableName = "BulkOperationIdentityTable";
+                var mappings = new[]
+                {
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.IdMapped), "Id"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnBigIntMapped), "ColumnBigInt"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnBooleanMapped), "ColumnBoolean"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnIntegerMapped), "ColumnInteger"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnNumericMapped), "ColumnNumeric"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnRealMapped), "ColumnReal"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnSmallIntMapped), "ColumnSmallInt"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnTextMapped), "ColumnText")
+                };
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryImport(connection,
+                    tableName,
+                    entities: entities,
+                    mappings: mappings);
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+
+                // Assert
+                var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
+                Assert.AreEqual(entities.Count(), queryResult.Count());
+                foreach (var entity in entities)
+                {
+                    var item = queryResult.First(e => e.Id == entity.IdMapped);
+                    Helper.AssertPropertiesEquality(entity, item);
                 }
             }
         }
@@ -283,7 +463,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 // Act
                 NpgsqlConnectionExtension.BinaryImport(connection,
                     tableName,
-                    entities: entities);
+                    entities: entities,
+                    keepIdentity: true);
 
                 // Act (Trigger)
                 NpgsqlConnectionExtension.BinaryImport(connection,
@@ -294,6 +475,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
         }
 
         #endregion
+
+        // Use AssertMembersEqualities
 
         #region BinaryImport<IDictionary<string,object>>
 
@@ -315,11 +498,12 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 Assert.AreEqual(entities.Count(), result);
 
                 // Assert
-                var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
+                var queryResult = connection.QueryAll(tableName).ToList();
                 Assert.AreEqual(entities.Count(), queryResult.Count());
-                for (var i = 0; i < entities.Count; i++)
+                foreach (var entity in entities)
                 {
-                    Helper.AssertPropertiesEquality(entities[i], queryResult[i]);
+                    var item = queryResult.First(e => e.Id == ((dynamic)entity).Id);
+                    Helper.AssertPropertiesEquality(entity, item);
                 }
             }
         }
@@ -348,6 +532,35 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 for (var i = 0; i < entities.Count; i++)
                 {
                     Helper.AssertPropertiesEquality(entities[i], queryResult[i]);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestBinaryImportViaExpandoObjectWithKeepIdentity()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = Helper.CreateBulkOperationExpandoObjectLightIdentityTables(10, true, 100);
+                var tableName = "BulkOperationIdentityTable";
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryImport(connection,
+                    tableName,
+                    entities: entities,
+                    keepIdentity: true);
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+
+                // Assert
+                var queryResult = connection.QueryAll(tableName).ToList();
+                Assert.AreEqual(entities.Count(), queryResult.Count());
+                foreach (var entity in entities)
+                {
+                    var item = queryResult.First(e => e.Id == ((dynamic)entity).Id);
+                    Helper.AssertPropertiesEquality(entity, item);
                 }
             }
         }
@@ -391,6 +604,46 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
             }
         }
 
+        [TestMethod]
+        public void TestBinaryImportViaExpandoObjectWithBulkInsertMapItemsAndWithKeepIdentity()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = Helper.CreateBulkOperationExpandoObjectUnmatchedIdentityTables(10, true, 100);
+                var tableName = "BulkOperationIdentityTable";
+                var mappings = new[]
+                {
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.IdMapped), "Id"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnBigIntMapped), "ColumnBigInt"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnBooleanMapped), "ColumnBoolean"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnIntegerMapped), "ColumnInteger"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnNumericMapped), "ColumnNumeric"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnRealMapped), "ColumnReal"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnSmallIntMapped), "ColumnSmallInt"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnTextMapped), "ColumnText")
+                };
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryImport(connection,
+                    tableName,
+                    entities: entities,
+                    mappings: mappings,
+                    keepIdentity: true);
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+
+                // Assert
+                var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
+                Assert.AreEqual(entities.Count(), queryResult.Count());
+                for (var i = 0; i < entities.Count; i++)
+                {
+                    Helper.AssertPropertiesEquality(entities[i], queryResult[i]);
+                }
+            }
+        }
+
         [TestMethod, ExpectedException(typeof(PostgresException))]
         public void ThrowExceptionOnBinaryImportViaExpandoObjectWithDuplicateIdentityOnKeepIdentity()
         {
@@ -403,7 +656,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 // Act
                 NpgsqlConnectionExtension.BinaryImport(connection,
                     tableName,
-                    entities: entities);
+                    entities: entities,
+                    keepIdentity: true);
 
                 // Act (Trigger)
                 NpgsqlConnectionExtension.BinaryImport(connection,
@@ -423,7 +677,9 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
             using (var connection = GetConnection())
             {
                 // Prepare
-                var table = Helper.CreateBulkOperationDataTableLightIdentityTables(10, true);
+                var entities = Helper.CreateBulkOperationLightIdentityTables(10, true);
+                var tableName = "BulkOperationIdentityTable";
+                var table = Helper.ToDataTable(tableName, entities);
 
                 // Act
                 var result = NpgsqlConnectionExtension.BinaryImport(connection,
@@ -434,8 +690,13 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 Assert.AreEqual(table.Rows.Count, result);
 
                 // Assert
-                var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(table.TableName).ToList();
-                Assert.AreEqual(table.Rows.Count, queryResult.Count());
+                var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
+                Assert.AreEqual(entities.Count(), queryResult.Count());
+                foreach (var entity in entities)
+                {
+                    var item = queryResult.First(e => e.Id == entity.Id);
+                    Helper.AssertPropertiesEquality(entity, item);
+                }
             }
         }
 
@@ -445,7 +706,9 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
             using (var connection = GetConnection())
             {
                 // Prepare
-                var table = Helper.CreateBulkOperationDataTableLightIdentityTables(99, true);
+                var entities = Helper.CreateBulkOperationLightIdentityTables(99, true);
+                var tableName = "BulkOperationIdentityTable";
+                var table = Helper.ToDataTable(tableName, entities);
 
                 // Act
                 var result = NpgsqlConnectionExtension.BinaryImport(connection,
@@ -457,8 +720,45 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 Assert.AreEqual(table.Rows.Count, result);
 
                 // Assert
-                var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(table.TableName).ToList();
-                Assert.AreEqual(table.Rows.Count, queryResult.Count());
+                var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
+                Assert.AreEqual(entities.Count(), queryResult.Count());
+                foreach (var entity in entities)
+                {
+                    var item = queryResult.First(e => e.Id == entity.Id);
+                    Helper.AssertPropertiesEquality(entity, item);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestBinaryImportViaDataTableWithKeepIdentity()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = Helper.CreateBulkOperationLightIdentityTables(10, true, 100);
+
+                // Prepare
+                var tableName = "BulkOperationIdentityTable";
+                var table = Helper.ToDataTable(tableName, entities);
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryImport(connection,
+                    table.TableName,
+                    table: table,
+                    keepIdentity: true);
+
+                // Assert
+                Assert.AreEqual(table.Rows.Count, result);
+
+                // Assert
+                var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
+                Assert.AreEqual(entities.Count(), queryResult.Count());
+                foreach (var entity in entities)
+                {
+                    var item = queryResult.First(e => e.Id == entity.Id);
+                    Helper.AssertPropertiesEquality(entity, item);
+                }
             }
         }
 
@@ -468,7 +768,9 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
             using (var connection = GetConnection())
             {
                 // Prepare
-                var table = Helper.CreateBulkOperationDataTableUnmatchedIdentityTables(10, true);
+                var entities = Helper.CreateBulkOperationUnmatchedIdentityTables(10, true);
+                var tableName = "BulkOperationIdentityTable";
+                var table = Helper.ToDataTable(tableName, entities);
                 var mappings = new[]
                 {
                     new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.IdMapped), "Id"),
@@ -491,8 +793,56 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 Assert.AreEqual(table.Rows.Count, result);
 
                 // Assert
-                var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(table.TableName).ToList();
-                Assert.AreEqual(table.Rows.Count, queryResult.Count());
+                var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
+                Assert.AreEqual(entities.Count(), queryResult.Count());
+                foreach (var entity in entities)
+                {
+                    var item = queryResult.First(e => e.Id == entity.IdMapped);
+                    Helper.AssertPropertiesEquality(entity, item);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestBinaryImportViaDataTableWithBulkInsertMapItemsAndWithKeepIdentity()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = Helper.CreateBulkOperationUnmatchedIdentityTables(10, true, 100);
+
+                // Prepare
+                var tableName = "BulkOperationIdentityTable";
+                var table = Helper.ToDataTable(tableName, entities);
+                var mappings = new[]
+                {
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.IdMapped), "Id"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnBigIntMapped), "ColumnBigInt"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnBooleanMapped), "ColumnBoolean"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnIntegerMapped), "ColumnInteger"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnNumericMapped), "ColumnNumeric"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnRealMapped), "ColumnReal"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnSmallIntMapped), "ColumnSmallInt"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnTextMapped), "ColumnText")
+                };
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryImport(connection,
+                    table.TableName,
+                    table: table,
+                    mappings: mappings);
+
+                // Assert
+                Assert.AreEqual(table.Rows.Count, result);
+
+                // Assert
+                var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
+                Assert.AreEqual(entities.Count(), queryResult.Count());
+                foreach (var entity in entities)
+                {
+                    var item = queryResult.First(e => e.Id == entity.IdMapped);
+                    Helper.AssertPropertiesEquality(entity, item);
+                }
             }
         }
 
@@ -507,7 +857,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 // Act
                 NpgsqlConnectionExtension.BinaryImport(connection,
                     table.TableName,
-                    table: table);
+                    table: table,
+                    keepIdentity: true);
 
                 // Act (Trigger)
                 NpgsqlConnectionExtension.BinaryImport(connection,
@@ -543,6 +894,43 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                     // Assert
                     var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
                     Assert.AreEqual(entities.Count(), queryResult.Count());
+                    foreach (var entity in entities)
+                    {
+                        var item = queryResult.First(e => e.Id == entity.Id);
+                        Helper.AssertPropertiesEquality(entity, item);
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestBinaryImportViaDbDataReaderWithKeepIdentity()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = Helper.CreateBulkOperationLightIdentityTables(10, true, 100);
+                var tableName = "BulkOperationIdentityTable";
+
+                using (var reader = new DataEntityDataReader<BulkOperationLightIdentityTable>(entities))
+                {
+                    // Act
+                    var result = NpgsqlConnectionExtension.BinaryImport(connection,
+                        tableName,
+                        reader: reader,
+                        keepIdentity: true);
+
+                    // Assert
+                    Assert.AreEqual(entities.Count(), result);
+
+                    // Assert
+                    var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
+                    Assert.AreEqual(entities.Count(), queryResult.Count());
+                    foreach (var entity in entities)
+                    {
+                        var item = queryResult.First(e => e.Id == entity.Id);
+                        Helper.AssertPropertiesEquality(entity, item);
+                    }
                 }
             }
         }
@@ -582,6 +970,56 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                     // Assert
                     var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
                     Assert.AreEqual(entities.Count(), queryResult.Count());
+                    foreach (var entity in entities)
+                    {
+                        var item = queryResult.First(e => e.Id == entity.IdMapped);
+                        Helper.AssertPropertiesEquality(entity, item);
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestBinaryImportViaDbDataReaderWithBulkInsertMapItemsWithKeepIdentity()
+        {
+
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = Helper.CreateBulkOperationUnmatchedIdentityTables(10, true, 100);
+                var tableName = "BulkOperationIdentityTable";
+                var mappings = new[]
+                {
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.IdMapped), "Id"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnBigIntMapped), "ColumnBigInt"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnBooleanMapped), "ColumnBoolean"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnIntegerMapped), "ColumnInteger"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnNumericMapped), "ColumnNumeric"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnRealMapped), "ColumnReal"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnSmallIntMapped), "ColumnSmallInt"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnTextMapped), "ColumnText")
+                };
+
+                using (var reader = new DataEntityDataReader<BulkOperationUnmatchedIdentityTable>(entities))
+                {
+                    // Act
+                    var result = NpgsqlConnectionExtension.BinaryImport(connection,
+                        tableName,
+                        reader: reader,
+                        mappings: mappings,
+                        keepIdentity: true);
+
+                    // Assert
+                    Assert.AreEqual(entities.Count(), result);
+
+                    // Assert
+                    var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
+                    Assert.AreEqual(entities.Count(), queryResult.Count());
+                    foreach (var entity in entities)
+                    {
+                        var item = queryResult.First(e => e.Id == entity.IdMapped);
+                        Helper.AssertPropertiesEquality(entity, item);
+                    }
                 }
             }
         }
@@ -600,7 +1038,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                     // Act
                     NpgsqlConnectionExtension.BinaryImport(connection,
                         tableName,
-                        reader: reader);
+                        reader: reader,
+                        keepIdentity: true);
                 }
 
                 using (var reader = new DataEntityDataReader<BulkOperationLightIdentityTable>(entities))
@@ -642,9 +1081,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
                 Assert.AreEqual(entities.Count(), queryResult.Count());
-                for (var i = 0; i < entities.Count; i++)
+                foreach (var entity in entities)
                 {
-                    Helper.AssertPropertiesEquality(entities[i], queryResult[i]);
+                    var item = queryResult.First(e => e.Id == entity.Id);
+                    Helper.AssertPropertiesEquality(entity, item);
                 }
             }
         }
@@ -670,9 +1110,39 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
                 Assert.AreEqual(entities.Count(), queryResult.Count());
-                for (var i = 0; i < entities.Count; i++)
+                foreach (var entity in entities)
                 {
-                    Helper.AssertPropertiesEquality(entities[i], queryResult[i]);
+                    var item = queryResult.First(e => e.Id == entity.Id);
+                    Helper.AssertPropertiesEquality(entity, item);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestBinaryImportAsyncWithKeepIdentity()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = Helper.CreateBulkOperationLightIdentityTables(10, true, 100);
+                var tableName = "BulkOperationIdentityTable";
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryImportAsync<BulkOperationLightIdentityTable>(connection,
+                    tableName,
+                    entities: entities,
+                    keepIdentity: true).Result;
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+
+                // Assert
+                var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
+                Assert.AreEqual(entities.Count(), queryResult.Count());
+                foreach (var entity in entities)
+                {
+                    var item = queryResult.First(e => e.Id == entity.Id);
+                    Helper.AssertPropertiesEquality(entity, item);
                 }
             }
         }
@@ -697,9 +1167,39 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>(tableName).ToList();
                 Assert.AreEqual(entities.Count(), queryResult.Count());
-                for (var i = 0; i < entities.Count; i++)
+                foreach (var entity in entities)
                 {
-                    Helper.AssertPropertiesEquality(entities[i], queryResult[i]);
+                    var item = queryResult.First(e => e.IdMapped == entity.IdMapped);
+                    Helper.AssertPropertiesEquality(entity, item);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestBinaryImportAsyncWithMappingsAndWithKeepIdentity()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = Helper.CreateBulkOperationMappedIdentityTables(10, true, 100);
+                var tableName = "BulkOperationIdentityTable";
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryImportAsync<BulkOperationMappedIdentityTable>(connection,
+                    tableName,
+                    entities: entities,
+                    keepIdentity: true).Result;
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+
+                // Assert
+                var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>(tableName).ToList();
+                Assert.AreEqual(entities.Count(), queryResult.Count());
+                foreach (var entity in entities)
+                {
+                    var item = queryResult.First(e => e.IdMapped == entity.IdMapped);
+                    Helper.AssertPropertiesEquality(entity, item);
                 }
             }
         }
@@ -736,9 +1236,51 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>(tableName).ToList();
                 Assert.AreEqual(entities.Count(), queryResult.Count());
-                for (var i = 0; i < entities.Count; i++)
+                foreach (var entity in entities)
                 {
-                    Helper.AssertPropertiesEquality(entities[i], queryResult[i]);
+                    var item = queryResult.First(e => e.IdMapped == entity.IdMapped);
+                    Helper.AssertPropertiesEquality(entity, item);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestBinaryImportAsyncWithBulkInsertMapItemsAndWithKeepIdentity()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = Helper.CreateBulkOperationUnmatchedIdentityTables(10, true, 100);
+                var tableName = "BulkOperationIdentityTable";
+                var mappings = new[]
+                {
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.IdMapped), "Id"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnBigIntMapped), "ColumnBigInt"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnBooleanMapped), "ColumnBoolean"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnIntegerMapped), "ColumnInteger"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnNumericMapped), "ColumnNumeric"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnRealMapped), "ColumnReal"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnSmallIntMapped), "ColumnSmallInt"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnTextMapped), "ColumnText")
+                };
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryImportAsync<BulkOperationUnmatchedIdentityTable>(connection,
+                    tableName,
+                    entities: entities,
+                    mappings: mappings,
+                    keepIdentity: true).Result;
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+
+                // Assert
+                var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>(tableName).ToList();
+                Assert.AreEqual(entities.Count(), queryResult.Count());
+                foreach (var entity in entities)
+                {
+                    var item = queryResult.First(e => e.IdMapped == entity.IdMapped);
+                    Helper.AssertPropertiesEquality(entity, item);
                 }
             }
         }
@@ -755,7 +1297,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 // Act
                 NpgsqlConnectionExtension.BinaryImportAsync<BulkOperationLightIdentityTable>(connection,
                     tableName,
-                    entities: entities).Wait();
+                    entities: entities,
+                    keepIdentity: true).Wait();
 
                 // Act (Trigger)
                 NpgsqlConnectionExtension.BinaryImportAsync<BulkOperationLightIdentityTable>(connection,
@@ -766,6 +1309,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
         }
 
         #endregion
+
+        // Use AssertMembersEqualities
 
         #region BinaryImportAsync<Anonymous>
 
@@ -789,9 +1334,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
                 Assert.AreEqual(entities.Count(), queryResult.Count());
-                for (var i = 0; i < entities.Count; i++)
+                foreach (var entity in entities)
                 {
-                    Helper.AssertPropertiesEquality(entities[i], queryResult[i]);
+                    var item = queryResult.First(e => e.Id == entity.Id);
+                    Helper.AssertPropertiesEquality(entity, item);
                 }
             }
         }
@@ -817,9 +1363,39 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
                 Assert.AreEqual(entities.Count(), queryResult.Count());
-                for (var i = 0; i < entities.Count; i++)
+                foreach (var entity in entities)
                 {
-                    Helper.AssertPropertiesEquality(entities[i], queryResult[i]);
+                    var item = queryResult.First(e => e.Id == entity.Id);
+                    Helper.AssertPropertiesEquality(entity, item);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestBinaryImportAsyncViaAnonymousAndWithKeepIdentity()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = Helper.CreateBulkOperationAnonymousLightIdentityTables(10, true, 100);
+                var tableName = "BulkOperationIdentityTable";
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryImportAsync(connection,
+                    tableName,
+                    entities: entities,
+                    keepIdentity: true).Result;
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+
+                // Assert
+                var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
+                Assert.AreEqual(entities.Count(), queryResult.Count());
+                foreach (var entity in entities)
+                {
+                    var item = queryResult.First(e => e.Id == entity.Id);
+                    Helper.AssertPropertiesEquality(entity, item);
                 }
             }
         }
@@ -856,9 +1432,53 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
                 Assert.AreEqual(entities.Count(), queryResult.Count());
-                for (var i = 0; i < entities.Count; i++)
+                foreach (var entity in entities)
                 {
-                    Helper.AssertPropertiesEquality(entities[i], queryResult[i]);
+                    var item = queryResult.First(e => e.Id == entity.IdMapped);
+                    Helper.AssertPropertiesEquality(entity, item);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestBinaryImportAsyncViaAnonymousWithBulkInsertMapItemsAndWithKeepIdentity()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = Helper.CreateBulkOperationAnonymousUnmatchedIdentityTables(10, true, 100);
+
+                // Prepare
+                var tableName = "BulkOperationIdentityTable";
+                var mappings = new[]
+                {
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.IdMapped), "Id"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnBigIntMapped), "ColumnBigInt"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnBooleanMapped), "ColumnBoolean"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnIntegerMapped), "ColumnInteger"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnNumericMapped), "ColumnNumeric"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnRealMapped), "ColumnReal"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnSmallIntMapped), "ColumnSmallInt"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnTextMapped), "ColumnText")
+                };
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryImportAsync(connection,
+                    tableName,
+                    entities: entities,
+                    mappings: mappings,
+                    keepIdentity: true).Result;
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+
+                // Assert
+                var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
+                Assert.AreEqual(entities.Count(), queryResult.Count());
+                foreach (var entity in entities)
+                {
+                    var item = queryResult.First(e => e.Id == entity.IdMapped);
+                    Helper.AssertPropertiesEquality(entity, item);
                 }
             }
         }
@@ -875,7 +1495,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 // Act
                 NpgsqlConnectionExtension.BinaryImportAsync(connection,
                     tableName,
-                    entities: entities).Wait();
+                    entities: entities,
+                    keepIdentity: true).Wait();
 
                 // Act (Trigger)
                 NpgsqlConnectionExtension.BinaryImportAsync(connection,
@@ -886,6 +1507,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
         }
 
         #endregion
+
+        // Use AssertMembersEqualities
 
         #region BinaryImportAsync<IDictionary<string,object>>
 
@@ -909,9 +1532,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
                 Assert.AreEqual(entities.Count(), queryResult.Count());
-                for (var i = 0; i < entities.Count; i++)
+                foreach (dynamic entity in entities)
                 {
-                    Helper.AssertPropertiesEquality(entities[i], queryResult[i]);
+                    var item = queryResult.First(e => e.Id == entity.Id);
+                    Helper.AssertPropertiesEquality(entity, item);
                 }
             }
         }
@@ -937,9 +1561,39 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
                 Assert.AreEqual(entities.Count(), queryResult.Count());
-                for (var i = 0; i < entities.Count; i++)
+                foreach (dynamic entity in entities)
                 {
-                    Helper.AssertPropertiesEquality(entities[i], queryResult[i]);
+                    var item = queryResult.First(e => e.Id == entity.Id);
+                    Helper.AssertPropertiesEquality(entity, item);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestBinaryImportAsyncViaExpandoObjectAndWithKeepIdentity()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = Helper.CreateBulkOperationExpandoObjectLightIdentityTables(10, true, 100);
+                var tableName = "BulkOperationIdentityTable";
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryImportAsync(connection,
+                    tableName,
+                    entities: entities,
+                    keepIdentity: true).Result;
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+
+                // Assert
+                var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
+                Assert.AreEqual(entities.Count(), queryResult.Count());
+                foreach (dynamic entity in entities)
+                {
+                    var item = queryResult.First(e => e.Id == entity.Id);
+                    Helper.AssertPropertiesEquality(entity, item);
                 }
             }
         }
@@ -976,9 +1630,51 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
                 Assert.AreEqual(entities.Count(), queryResult.Count());
-                for (var i = 0; i < entities.Count; i++)
+                foreach (dynamic entity in entities)
                 {
-                    Helper.AssertPropertiesEquality(entities[i], queryResult[i]);
+                    var item = queryResult.First(e => e.Id == entity.IdMapped);
+                    Helper.AssertPropertiesEquality(entity, item);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestBinaryImportAsyncViaExpandoObjectWithBulkInsertMapItemsAndWithKeepIdentity()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = Helper.CreateBulkOperationExpandoObjectUnmatchedIdentityTables(10, true, 100);
+                var tableName = "BulkOperationIdentityTable";
+                var mappings = new[]
+                {
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.IdMapped), "Id"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnBigIntMapped), "ColumnBigInt"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnBooleanMapped), "ColumnBoolean"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnIntegerMapped), "ColumnInteger"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnNumericMapped), "ColumnNumeric"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnRealMapped), "ColumnReal"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnSmallIntMapped), "ColumnSmallInt"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnTextMapped), "ColumnText")
+                };
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryImportAsync(connection,
+                    tableName,
+                    entities: entities,
+                    mappings: mappings,
+                    keepIdentity: true).Result;
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+
+                // Assert
+                var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
+                Assert.AreEqual(entities.Count(), queryResult.Count());
+                foreach (dynamic entity in entities)
+                {
+                    var item = queryResult.First(e => e.Id == entity.IdMapped);
+                    Helper.AssertPropertiesEquality(entity, item);
                 }
             }
         }
@@ -995,7 +1691,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 // Act
                 NpgsqlConnectionExtension.BinaryImportAsync(connection,
                     tableName,
-                    entities: entities).Wait();
+                    entities: entities,
+                    keepIdentity: true).Wait();
 
                 // Act (Trigger)
                 NpgsqlConnectionExtension.BinaryImportAsync(connection,
@@ -1015,7 +1712,9 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
             using (var connection = GetConnection())
             {
                 // Prepare
-                var table = Helper.CreateBulkOperationDataTableLightIdentityTables(10, true);
+                var entities = Helper.CreateBulkOperationLightIdentityTables(10, true);
+                var tableName = "BulkOperationIdentityTable";
+                var table = Helper.ToDataTable(tableName, entities);
 
                 // Act
                 var result = NpgsqlConnectionExtension.BinaryImportAsync(connection,
@@ -1026,8 +1725,13 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 Assert.AreEqual(table.Rows.Count, result);
 
                 // Assert
-                var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(table.TableName).ToList();
-                Assert.AreEqual(table.Rows.Count, queryResult.Count());
+                var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
+                Assert.AreEqual(entities.Count(), queryResult.Count());
+                foreach (var entity in entities)
+                {
+                    var item = queryResult.First(e => e.Id == entity.Id);
+                    Helper.AssertPropertiesEquality(entity, item);
+                }
             }
         }
 
@@ -1037,7 +1741,9 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
             using (var connection = GetConnection())
             {
                 // Prepare
-                var table = Helper.CreateBulkOperationDataTableLightIdentityTables(99, true);
+                var entities = Helper.CreateBulkOperationLightIdentityTables(99, true);
+                var tableName = "BulkOperationIdentityTable";
+                var table = Helper.ToDataTable(tableName, entities);
 
                 // Act
                 var result = NpgsqlConnectionExtension.BinaryImportAsync(connection,
@@ -1049,8 +1755,45 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 Assert.AreEqual(table.Rows.Count, result);
 
                 // Assert
-                var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(table.TableName).ToList();
-                Assert.AreEqual(table.Rows.Count, queryResult.Count());
+                var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
+                Assert.AreEqual(entities.Count(), queryResult.Count());
+                foreach (var entity in entities)
+                {
+                    var item = queryResult.First(e => e.Id == entity.Id);
+                    Helper.AssertPropertiesEquality(entity, item);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestBinaryImportAsyncViaDataTableAndWithKeepIdentity()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = Helper.CreateBulkOperationLightIdentityTables(10, true, 100);
+
+                // Prepare
+                var tableName = "BulkOperationIdentityTable";
+                var table = Helper.ToDataTable(tableName, entities);
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryImportAsync(connection,
+                    table.TableName,
+                    table: table,
+                    keepIdentity: true).Result;
+
+                // Assert
+                Assert.AreEqual(table.Rows.Count, result);
+
+                // Assert
+                var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
+                Assert.AreEqual(entities.Count(), queryResult.Count());
+                foreach (var entity in entities)
+                {
+                    var item = queryResult.First(e => e.Id == entity.Id);
+                    Helper.AssertPropertiesEquality(entity, item);
+                }
             }
         }
 
@@ -1060,7 +1803,9 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
             using (var connection = GetConnection())
             {
                 // Prepare
-                var table = Helper.CreateBulkOperationDataTableUnmatchedIdentityTables(10, true);
+                var entities = Helper.CreateBulkOperationUnmatchedIdentityTables(10, true);
+                var tableName = "BulkOperationIdentityTable";
+                var table = Helper.ToDataTable(tableName, entities);
                 var mappings = new[]
                 {
                     new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.IdMapped), "Id"),
@@ -1083,8 +1828,56 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 Assert.AreEqual(table.Rows.Count, result);
 
                 // Assert
-                var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(table.TableName).ToList();
-                Assert.AreEqual(table.Rows.Count, queryResult.Count());
+                var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
+                Assert.AreEqual(entities.Count(), queryResult.Count());
+                foreach (var entity in entities)
+                {
+                    var item = queryResult.First(e => e.Id == entity.IdMapped);
+                    Helper.AssertPropertiesEquality(entity, item);
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestBinaryImportAsyncViaDataTableWithBulkInsertMapItemsAndWithKeepIdentity()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = Helper.CreateBulkOperationUnmatchedIdentityTables(10, true, 100);
+
+                // Prepare
+                var tableName = "BulkOperationIdentityTable";
+                var table = Helper.ToDataTable(tableName, entities);
+                var mappings = new[]
+                {
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.IdMapped), "Id"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnBigIntMapped), "ColumnBigInt"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnBooleanMapped), "ColumnBoolean"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnIntegerMapped), "ColumnInteger"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnNumericMapped), "ColumnNumeric"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnRealMapped), "ColumnReal"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnSmallIntMapped), "ColumnSmallInt"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnTextMapped), "ColumnText")
+                };
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryImportAsync(connection,
+                    table.TableName,
+                    table: table,
+                    mappings: mappings).Result;
+
+                // Assert
+                Assert.AreEqual(table.Rows.Count, result);
+
+                // Assert
+                var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
+                Assert.AreEqual(entities.Count(), queryResult.Count());
+                foreach (var entity in entities)
+                {
+                    var item = queryResult.First(e => e.Id == entity.IdMapped);
+                    Helper.AssertPropertiesEquality(entity, item);
+                }
             }
         }
 
@@ -1099,7 +1892,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 // Act
                 NpgsqlConnectionExtension.BinaryImportAsync(connection,
                     table.TableName,
-                    table: table).Wait();
+                    table: table,
+                    keepIdentity: true).Wait();
 
                 // Act (Trigger)
                 NpgsqlConnectionExtension.BinaryImportAsync(connection,
@@ -1135,6 +1929,43 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                     // Assert
                     var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
                     Assert.AreEqual(entities.Count(), queryResult.Count());
+                    foreach (var entity in entities)
+                    {
+                        var item = queryResult.First(e => e.Id == entity.Id);
+                        Helper.AssertPropertiesEquality(entity, item);
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestBinaryImportAsyncViaDbDataReaderAndWithKeepIdentity()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = Helper.CreateBulkOperationLightIdentityTables(10, true, 100);
+                var tableName = "BulkOperationIdentityTable";
+
+                using (var reader = new DataEntityDataReader<BulkOperationLightIdentityTable>(entities))
+                {
+                    // Act
+                    var result = NpgsqlConnectionExtension.BinaryImportAsync(connection,
+                        tableName,
+                        reader: reader,
+                        keepIdentity: true).Result;
+
+                    // Assert
+                    Assert.AreEqual(entities.Count(), result);
+
+                    // Assert
+                    var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
+                    Assert.AreEqual(entities.Count(), queryResult.Count());
+                    foreach (var entity in entities)
+                    {
+                        var item = queryResult.First(e => e.Id == entity.Id);
+                        Helper.AssertPropertiesEquality(entity, item);
+                    }
                 }
             }
         }
@@ -1174,6 +2005,58 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                     // Assert
                     var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
                     Assert.AreEqual(entities.Count(), queryResult.Count());
+                    foreach (var entity in entities)
+                    {
+                        var item = queryResult.First(e => e.Id == entity.IdMapped);
+                        Helper.AssertPropertiesEquality(entity, item);
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void TestBinaryImportAsyncViaDbDataReaderWithBulkInsertMapItemsAndWithKeepIdentity()
+        {
+
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = Helper.CreateBulkOperationUnmatchedIdentityTables(10, true, 100);
+
+                // Prepare
+                var tableName = "BulkOperationIdentityTable";
+                var mappings = new[]
+                {
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.IdMapped), "Id"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnBigIntMapped), "ColumnBigInt"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnBooleanMapped), "ColumnBoolean"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnIntegerMapped), "ColumnInteger"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnNumericMapped), "ColumnNumeric"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnRealMapped), "ColumnReal"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnSmallIntMapped), "ColumnSmallInt"),
+                    new NpgsqlBulkInsertMapItem(nameof(BulkOperationUnmatchedIdentityTable.ColumnTextMapped), "ColumnText")
+                };
+
+                using (var reader = new DataEntityDataReader<BulkOperationUnmatchedIdentityTable>(entities))
+                {
+                    // Act
+                    var result = NpgsqlConnectionExtension.BinaryImportAsync(connection,
+                        tableName,
+                        reader: reader,
+                        mappings: mappings,
+                        keepIdentity: true).Result;
+
+                    // Assert
+                    Assert.AreEqual(entities.Count(), result);
+
+                    // Assert
+                    var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
+                    Assert.AreEqual(entities.Count(), queryResult.Count());
+                    foreach (var entity in entities)
+                    {
+                        var item = queryResult.First(e => e.Id == entity.IdMapped);
+                        Helper.AssertPropertiesEquality(entity, item);
+                    }
                 }
             }
         }
@@ -1192,7 +2075,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                     // Act
                     NpgsqlConnectionExtension.BinaryImportAsync(connection,
                         tableName,
-                        reader: reader).Wait();
+                        reader: reader,
+                        keepIdentity: true).Wait();
                 }
 
                 using (var reader = new DataEntityDataReader<BulkOperationLightIdentityTable>(entities))

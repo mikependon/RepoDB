@@ -166,9 +166,11 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
         /// </summary>
         /// <param name="count"></param>
         /// <param name="hasId"></param>
+        /// <param name="addToKey"></param>
         /// <returns></returns>
         public static List<BulkOperationIdentityTable> CreateBulkOperationIdentityTables(int count,
-            bool hasId = false)
+            bool hasId = false,
+            long addToKey = 0)
         {
             var random = new Random();
             var tables = new List<BulkOperationIdentityTable>();
@@ -177,7 +179,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var index = i + 1;
                 tables.Add(new BulkOperationIdentityTable
                 {
-                    Id = hasId ? index : 0,
+                    Id = hasId ? index + addToKey : 0,
                     ColumnBigInt = random.Next(100),
                     ColumnBit = true,
                     ColumnBoolean = true,
@@ -209,9 +211,11 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
         /// </summary>
         /// <param name="count"></param>
         /// <param name="hasId"></param>
+        /// <param name="addToKey"></param>
         /// <returns></returns>
         public static List<BulkOperationLightIdentityTable> CreateBulkOperationLightIdentityTables(int count,
-            bool hasId = false)
+            bool hasId = false,
+            long addToKey = 0)
         {
             var random = new Random();
             var tables = new List<BulkOperationLightIdentityTable>();
@@ -220,7 +224,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var index = i + 1;
                 tables.Add(new BulkOperationLightIdentityTable
                 {
-                    Id = hasId ? index : 0,
+                    Id = hasId ? index + addToKey : 0,
                     ColumnBigInt = random.Next(100),
                     ColumnBoolean = true,
                     ColumnInteger = random.Next(100),
@@ -242,9 +246,11 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
         /// </summary>
         /// <param name="count"></param>
         /// <param name="hasId"></param>
+        /// <param name="addToKey"></param>
         /// <returns></returns>
         public static List<BulkOperationMappedIdentityTable> CreateBulkOperationMappedIdentityTables(int count,
-            bool hasId = false)
+            bool hasId = false,
+            long addToKey = 0)
         {
             var random = new Random();
             var tables = new List<BulkOperationMappedIdentityTable>();
@@ -253,7 +259,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var index = i + 1;
                 tables.Add(new BulkOperationMappedIdentityTable
                 {
-                    IdMapped = hasId ? index : 0,
+                    IdMapped = hasId ? index + addToKey : 0,
                     ColumnBigIntMapped = random.Next(100),
                     ColumnBooleanMapped = true,
                     ColumnIntegerMapped = random.Next(100),
@@ -275,9 +281,11 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
         /// </summary>
         /// <param name="count"></param>
         /// <param name="hasId"></param>
+        /// <param name="addToKey"></param>
         /// <returns></returns>
         public static List<BulkOperationUnmatchedIdentityTable> CreateBulkOperationUnmatchedIdentityTables(int count,
-            bool hasId = false)
+            bool hasId = false,
+            long addToKey = 0)
         {
             var random = new Random();
             var tables = new List<BulkOperationUnmatchedIdentityTable>();
@@ -286,7 +294,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var index = i + 1;
                 tables.Add(new BulkOperationUnmatchedIdentityTable
                 {
-                    IdMapped = hasId ? index : 0,
+                    IdMapped = hasId ? index + addToKey : 0,
                     ColumnBigIntMapped = (long)random.Next(100),
                     ColumnBooleanMapped = true,
                     ColumnIntegerMapped = random.Next(100),
@@ -312,9 +320,11 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
         /// </summary>
         /// <param name="count"></param>
         /// <param name="hasId"></param>
+        /// <param name="addToKey"></param>
         /// <returns></returns>
         public static List<dynamic> CreateBulkOperationAnonymousLightIdentityTables(int count,
-            bool hasId = false)
+            bool hasId = false,
+            long addToKey = 0)
         {
             var random = new Random();
             var tables = new List<dynamic>();
@@ -323,7 +333,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var index = i + 1;
                 tables.Add(new
                 {
-                    Id = (long)(hasId ? index : 0),
+                    Id = (long)(hasId ? index + addToKey : 0),
                     ColumnBigInt = (long)random.Next(100),
                     ColumnBoolean = true,
                     ColumnInteger = random.Next(100),
@@ -345,9 +355,11 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
         /// </summary>
         /// <param name="count"></param>
         /// <param name="hasId"></param>
+        /// <param name="addToKey"></param>
         /// <returns></returns>
         public static List<dynamic> CreateBulkOperationAnonymousUnmatchedIdentityTables(int count,
-            bool hasId = false)
+            bool hasId = false,
+            long addToKey = 0)
         {
             var random = new Random();
             var tables = new List<dynamic>();
@@ -356,7 +368,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var index = i + 1;
                 tables.Add(new
                 {
-                    IdMapped = (long)(hasId ? index : 0),
+                    IdMapped = (long)(hasId ? index + addToKey : 0),
                     ColumnBigIntMapped = (long)random.Next(100),
                     ColumnBooleanMapped = true,
                     ColumnIntegerMapped = random.Next(100),
@@ -382,9 +394,11 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
         /// </summary>
         /// <param name="count"></param>
         /// <param name="hasId"></param>
+        /// <param name="addToKey"></param>
         /// <returns></returns>
         public static List<ExpandoObject> CreateBulkOperationExpandoObjectLightIdentityTables(int count,
-            bool hasId = false)
+            bool hasId = false,
+            long addToKey = 0)
         {
             var random = new Random();
             var tables = new List<ExpandoObject>();
@@ -393,7 +407,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var expandoObject = new ExpandoObject() as IDictionary<string, object>;
                 var index = i + 1;
 
-                expandoObject["Id"] = (long)(hasId ? index : 0);
+                expandoObject["Id"] = (long)(hasId ? index + addToKey : 0);
                 expandoObject["ColumnBigInt"] = (long)random.Next(100);
                 expandoObject["ColumnBoolean"] = true;
                 expandoObject["ColumnInteger"] = random.Next(100);
@@ -416,9 +430,11 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
         /// </summary>
         /// <param name="count"></param>
         /// <param name="hasId"></param>
+        /// <param name="addToKey"></param>
         /// <returns></returns>
         public static List<ExpandoObject> CreateBulkOperationExpandoObjectUnmatchedIdentityTables(int count,
-            bool hasId = false)
+            bool hasId = false,
+            long addToKey = 0)
         {
             var random = new Random();
             var tables = new List<ExpandoObject>();
@@ -427,7 +443,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var expandoObject = new ExpandoObject() as IDictionary<string, object>;
                 var index = i + 1;
 
-                expandoObject["IdMapped"] = (long)(hasId ? index : 0);
+                expandoObject["IdMapped"] = (long)(hasId ? index + addToKey : 0);
                 expandoObject["ColumnBigIntMapped"] = (long)random.Next(100);
                 expandoObject["ColumnBooleanMapped"] = true;
                 expandoObject["ColumnIntegerMapped"] = random.Next(100);
@@ -455,7 +471,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="entities"></param>
         /// <returns></returns>
-        private static DataTable ToDataTable<TEntity>(string tableName,
+        public static DataTable ToDataTable<TEntity>(string tableName,
             IEnumerable<TEntity> entities)
             where TEntity : class
         {
@@ -490,11 +506,13 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
         /// </summary>
         /// <param name="count"></param>
         /// <param name="hasId"></param>
+        /// <param name="addToKey"></param>
         /// <returns></returns>
         public static DataTable CreateBulkOperationDataTableLightIdentityTables(int count,
-            bool hasId = false)
+            bool hasId = false,
+            long addToKey = 0)
         {
-            var tables = CreateBulkOperationLightIdentityTables(count, hasId);
+            var tables = CreateBulkOperationLightIdentityTables(count, hasId, addToKey);
             return ToDataTable("BulkOperationIdentityTable", tables);
         }
 
@@ -503,11 +521,13 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
         /// </summary>
         /// <param name="count"></param>
         /// <param name="hasId"></param>
+        /// <param name="addToKey"></param>
         /// <returns></returns>
         public static DataTable CreateBulkOperationDataTableUnmatchedIdentityTables(int count,
-            bool hasId = false)
+            bool hasId = false,
+            long addToKey = 0)
         {
-            var tables = CreateBulkOperationUnmatchedIdentityTables(count, hasId);
+            var tables = CreateBulkOperationUnmatchedIdentityTables(count, hasId, addToKey);
             return ToDataTable("BulkOperationIdentityTable", tables);
         }
 
