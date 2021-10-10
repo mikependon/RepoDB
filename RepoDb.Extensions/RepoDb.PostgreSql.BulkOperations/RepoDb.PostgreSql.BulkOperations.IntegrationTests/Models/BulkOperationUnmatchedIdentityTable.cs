@@ -10,6 +10,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Models
     [Map("[dbo].[BulkOperationIdentityTable]")]
     public class BulkOperationUnmatchedIdentityTable
     {
+        [Identity]
         public long IdMapped { get; set; }
 
         public long? ColumnBigIntMapped { get; set; }

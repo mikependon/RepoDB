@@ -218,6 +218,33 @@ namespace RepoDb
         /// 
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entityType"></param>
+        /// <param name="entities"></param>
+        /// <param name="dbFields"></param>
+        /// <param name="identities"></param>
+        /// <param name="dbSetting"></param>
+        private static void SetIdentities<TEntity>(Type entityType,
+            IEnumerable<TEntity> entities,
+            IEnumerable<DbField> dbFields,
+            IEnumerable<long> identities,
+            IDbSetting dbSetting)
+            where TEntity : class
+        {
+            if (entityType.IsDictionaryStringObject())
+            {
+                var dictionaries = entities.Select(item => item as IDictionary<string, object>);
+                SetDictionaryIdentities(dictionaries, dbFields, identities, dbSetting);
+            }
+            else
+            {
+                SetEntityIdentities(entities, dbFields, identities, dbSetting);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
         /// <param name="entities"></param>
         /// <param name="dbFields"></param>
         /// <param name="identities"></param>
@@ -264,6 +291,34 @@ namespace RepoDb
             for (var i = 0; i < identityList.Count; i++)
             {
                 func(entityList[i], identityList[i]);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entities"></param>
+        /// <param name="dbFields"></param>
+        /// <param name="identities"></param>
+        /// <param name="dbSetting"></param>
+        private static void SetDictionaryIdentities(IEnumerable<IDictionary<string, object>> entities,
+            IEnumerable<DbField> dbFields,
+            IEnumerable<long> identities,
+            IDbSetting dbSetting)
+        {
+            var identityField = dbFields?.FirstOrDefault(dbField => dbField.IsIdentity).AsField();
+
+            if (identityField == null)
+            {
+                return;
+            }
+
+            var entityList = entities.AsList();
+            var identityList = identities.AsList();
+
+            for (var i = 0; i < identityList.Count; i++)
+            {
+                entityList[i][identityField.Name.AsUnquoted(true, dbSetting)] = identityList[i];
             }
         }
 

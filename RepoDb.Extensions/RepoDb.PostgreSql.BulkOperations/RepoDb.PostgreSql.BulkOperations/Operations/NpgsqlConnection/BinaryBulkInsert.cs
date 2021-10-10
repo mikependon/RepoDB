@@ -157,6 +157,7 @@ namespace RepoDb
             BinaryBulkInsertBase(connection: connection,
                 tableName: (tableName ?? table?.TableName),
                 table: table,
+                rowState: rowState,
                 mappings: mappings,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,

@@ -1,5 +1,6 @@
 ﻿using Npgsql;
 using RepoDb.Enumerations.PostgreSql;
+using RepoDb.Extensions;
 using RepoDb.PostgreSql.BulkOperations;
 using System.Collections.Generic;
 using System.Data;
@@ -41,6 +42,8 @@ namespace RepoDb
             NpgsqlTransaction transaction = null)
             where TEntity : class
         {
+            var entityType = entities?.First()?.GetType() ?? typeof(TEntity); // Solving the anonymous types
+            var isDictionary = entityType.IsDictionaryStringObject();
             var dbSetting = connection.GetDbSetting();
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
 
@@ -54,8 +57,16 @@ namespace RepoDb
 
                 // getMappings
                 () =>
-                    mappings?.Any() == true ? mappings : GetMappings(dbFields, PropertyCache.Get<TEntity>(),
-                        (identityBehavior == BulkImportIdentityBehavior.KeepIdentity), dbSetting),
+                    mappings = mappings?.Any() == true ? mappings :
+                        isDictionary ?
+                        GetMappings(entities?.First() as IDictionary<string, object>,
+                            dbFields,
+                            (identityBehavior == BulkImportIdentityBehavior.KeepIdentity),
+                            dbSetting) :
+                        GetMappings(dbFields,
+                            PropertyCache.Get(entityType),
+                            (identityBehavior == BulkImportIdentityBehavior.KeepIdentity),
+                            dbSetting),
 
                 dbFields,
 
@@ -73,7 +84,7 @@ namespace RepoDb
 
                 // setIdentities
                 (identities) =>
-                    SetEntityIdentities(entities, dbFields, identities, dbSetting),
+                    SetIdentities(entityType, entities, dbFields, identities, dbSetting),
 
                 identityBehavior,
                 pseudoTableType,
@@ -248,6 +259,8 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
+            var entityType = entities?.First()?.GetType() ?? typeof(TEntity); // Solving the anonymous types
+            var isDictionary = entityType.IsDictionaryStringObject();
             var dbSetting = connection.GetDbSetting();
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
 
@@ -261,8 +274,16 @@ namespace RepoDb
 
                 // getMappings
                 () =>
-                    mappings?.Any() == true ? mappings : GetMappings(dbFields, PropertyCache.Get<TEntity>(),
-                        (identityBehavior == BulkImportIdentityBehavior.KeepIdentity), dbSetting),
+                    mappings = mappings?.Any() == true ? mappings :
+                        isDictionary ?
+                        GetMappings(entities?.First() as IDictionary<string, object>,
+                            dbFields,
+                            (identityBehavior == BulkImportIdentityBehavior.KeepIdentity),
+                            dbSetting) :
+                        GetMappings(dbFields,
+                            PropertyCache.Get(entityType),
+                            (identityBehavior == BulkImportIdentityBehavior.KeepIdentity),
+                            dbSetting),
 
                 dbFields,
 
@@ -281,7 +302,7 @@ namespace RepoDb
 
                 // setIdentities
                 (identities) =>
-                    SetEntityIdentities(entities, dbFields, identities, dbSetting),
+                    SetIdentities(entityType, entities, dbFields, identities, dbSetting),
 
                 identityBehavior,
                 pseudoTableType,

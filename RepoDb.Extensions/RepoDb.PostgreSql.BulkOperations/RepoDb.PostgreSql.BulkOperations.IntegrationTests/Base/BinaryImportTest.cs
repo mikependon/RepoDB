@@ -49,12 +49,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
 
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
-                Assert.AreEqual(entities.Count(), queryResult.Count());
-                foreach (var entity in entities)
-                {
-                    var item = queryResult.First(e => e.Id == entity.Id);
-                    Helper.AssertPropertiesEquality(entity, item);
-                }
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => t1.Id == t2.Id);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -64,26 +60,22 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
             using (var connection = GetConnection())
             {
                 // Prepare
-                var entities = Helper.CreateBulkOperationLightIdentityTables(99, true);
+                var entities = Helper.CreateBulkOperationLightIdentityTables(10, true);
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
                 var result = NpgsqlConnectionExtension.BinaryImport<BulkOperationLightIdentityTable>(connection,
                     tableName,
                     entities: entities,
-                    batchSize: 10);
+                    batchSize: 3);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
 
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
-                Assert.AreEqual(entities.Count(), queryResult.Count());
-                foreach (var entity in entities)
-                {
-                    var item = queryResult.First(e => e.Id == entity.Id);
-                    Helper.AssertPropertiesEquality(entity, item);
-                }
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => t1.Id == t2.Id);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -107,12 +99,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
 
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
-                Assert.AreEqual(entities.Count(), queryResult.Count());
-                foreach (var entity in entities)
-                {
-                    var item = queryResult.First(e => e.Id == entity.Id);
-                    Helper.AssertPropertiesEquality(entity, item);
-                }
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => t1.Id == t2.Id);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -135,12 +123,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
 
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>(tableName).ToList();
-                Assert.AreEqual(entities.Count(), queryResult.Count());
-                foreach (var entity in entities)
-                {
-                    var item = queryResult.First(e => e.IdMapped == entity.IdMapped);
-                    Helper.AssertPropertiesEquality(entity, item);
-                }
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => t1.IdMapped == t2.IdMapped);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -164,12 +148,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
 
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>(tableName).ToList();
-                Assert.AreEqual(entities.Count(), queryResult.Count());
-                foreach (var entity in entities)
-                {
-                    var item = queryResult.First(e => e.IdMapped == entity.IdMapped);
-                    Helper.AssertPropertiesEquality(entity, item);
-                }
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => t1.IdMapped == t2.IdMapped);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -204,11 +184,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
 
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>(tableName).ToList();
-                Assert.AreEqual(entities.Count(), queryResult.Count());
-                for (var i = 0; i < entities.Count; i++)
-                {
-                    Helper.AssertPropertiesEquality(entities[i], queryResult[i]);
-                }
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => t1.IdMapped == t2.IdMapped);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -245,12 +222,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
 
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>(tableName).ToList();
-                Assert.AreEqual(entities.Count(), queryResult.Count());
-                foreach (var entity in entities)
-                {
-                    var item = queryResult.First(e => e.IdMapped == entity.IdMapped);
-                    Helper.AssertPropertiesEquality(entity, item);
-                }
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => t1.IdMapped == t2.IdMapped);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -279,8 +252,6 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
 
         #endregion
 
-        // Use AssertMembersEqualities
-
         #region BinaryImport<Anonymous>
 
         [TestMethod]
@@ -302,12 +273,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
 
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
-                Assert.AreEqual(entities.Count(), queryResult.Count());
-                foreach (var entity in entities)
-                {
-                    var item = queryResult.First(e => e.Id == entity.Id);
-                    Helper.AssertPropertiesEquality(entity, item);
-                }
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => t1.Id == t2.Id);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -317,26 +284,22 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
             using (var connection = GetConnection())
             {
                 // Prepare
-                var entities = Helper.CreateBulkOperationAnonymousLightIdentityTables(99, true);
+                var entities = Helper.CreateBulkOperationAnonymousLightIdentityTables(10, true);
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
                 var result = NpgsqlConnectionExtension.BinaryImport(connection,
                     tableName,
                     entities: entities,
-                    batchSize: 10);
+                    batchSize: 3);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
 
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
-                Assert.AreEqual(entities.Count(), queryResult.Count());
-                foreach (var entity in entities)
-                {
-                    var item = queryResult.First(e => e.Id == entity.Id);
-                    Helper.AssertPropertiesEquality(entity, item);
-                }
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => t1.Id == t2.Id);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -360,12 +323,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
 
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
-                Assert.AreEqual(entities.Count(), queryResult.Count());
-                foreach (var entity in entities)
-                {
-                    var item = queryResult.First(e => e.Id == entity.Id);
-                    Helper.AssertPropertiesEquality(entity, item);
-                }
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => t1.Id == t2.Id);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -400,12 +359,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
 
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
-                Assert.AreEqual(entities.Count(), queryResult.Count());
-                foreach (var entity in entities)
-                {
-                    var item = queryResult.First(e => e.Id == entity.IdMapped);
-                    Helper.AssertPropertiesEquality(entity, item);
-                }
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => t1.IdMapped == t2.Id);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -442,12 +397,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
 
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
-                Assert.AreEqual(entities.Count(), queryResult.Count());
-                foreach (var entity in entities)
-                {
-                    var item = queryResult.First(e => e.Id == entity.IdMapped);
-                    Helper.AssertPropertiesEquality(entity, item);
-                }
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => t1.IdMapped == t2.Id);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -476,8 +427,6 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
 
         #endregion
 
-        // Use AssertMembersEqualities
-
         #region BinaryImport<IDictionary<string,object>>
 
         [TestMethod]
@@ -499,12 +448,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
 
                 // Assert
                 var queryResult = connection.QueryAll(tableName).ToList();
-                Assert.AreEqual(entities.Count(), queryResult.Count());
-                foreach (var entity in entities)
-                {
-                    var item = queryResult.First(e => e.Id == ((dynamic)entity).Id);
-                    Helper.AssertPropertiesEquality(entity, item);
-                }
+                var assertCount = Helper.AssertExpandoObjectsEquality(entities, queryResult, (t1, t2) => t1.Id == t2.Id);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -514,25 +459,22 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
             using (var connection = GetConnection())
             {
                 // Prepare
-                var entities = Helper.CreateBulkOperationExpandoObjectLightIdentityTables(99, true);
+                var entities = Helper.CreateBulkOperationExpandoObjectLightIdentityTables(10, true);
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
                 var result = NpgsqlConnectionExtension.BinaryImport(connection,
                     tableName,
                     entities: entities,
-                    batchSize: 10);
+                    batchSize: 3);
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
 
                 // Assert
-                var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
-                Assert.AreEqual(entities.Count(), queryResult.Count());
-                for (var i = 0; i < entities.Count; i++)
-                {
-                    Helper.AssertPropertiesEquality(entities[i], queryResult[i]);
-                }
+                var queryResult = connection.QueryAll(tableName).ToList();
+                var assertCount = Helper.AssertExpandoObjectsEquality(entities, queryResult, (t1, t2) => t1.Id == t2.Id);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -556,12 +498,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
 
                 // Assert
                 var queryResult = connection.QueryAll(tableName).ToList();
-                Assert.AreEqual(entities.Count(), queryResult.Count());
-                foreach (var entity in entities)
-                {
-                    var item = queryResult.First(e => e.Id == ((dynamic)entity).Id);
-                    Helper.AssertPropertiesEquality(entity, item);
-                }
+                var assertCount = Helper.AssertExpandoObjectsEquality(entities, queryResult, (t1, t2) => t1.Id == t2.Id);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -595,12 +533,9 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 Assert.AreEqual(entities.Count(), result);
 
                 // Assert
-                var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
-                Assert.AreEqual(entities.Count(), queryResult.Count());
-                for (var i = 0; i < entities.Count; i++)
-                {
-                    Helper.AssertPropertiesEquality(entities[i], queryResult[i]);
-                }
+                var queryResult = connection.QueryAll(tableName).ToList();
+                var assertCount = Helper.AssertExpandoObjectsEquality(entities, queryResult, (t1, t2) => t1.IdMapped == t2.Id);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -635,12 +570,9 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 Assert.AreEqual(entities.Count(), result);
 
                 // Assert
-                var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
-                Assert.AreEqual(entities.Count(), queryResult.Count());
-                for (var i = 0; i < entities.Count; i++)
-                {
-                    Helper.AssertPropertiesEquality(entities[i], queryResult[i]);
-                }
+                var queryResult = connection.QueryAll(tableName).ToList();
+                var assertCount = Helper.AssertExpandoObjectsEquality(entities, queryResult, (t1, t2) => t1.IdMapped == t2.Id);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -691,12 +623,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
 
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
-                Assert.AreEqual(entities.Count(), queryResult.Count());
-                foreach (var entity in entities)
-                {
-                    var item = queryResult.First(e => e.Id == entity.Id);
-                    Helper.AssertPropertiesEquality(entity, item);
-                }
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => t1.Id == t2.Id);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -706,7 +634,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
             using (var connection = GetConnection())
             {
                 // Prepare
-                var entities = Helper.CreateBulkOperationLightIdentityTables(99, true);
+                var entities = Helper.CreateBulkOperationLightIdentityTables(10, true);
                 var tableName = "BulkOperationIdentityTable";
                 var table = Helper.ToDataTable(tableName, entities);
 
@@ -714,19 +642,15 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 var result = NpgsqlConnectionExtension.BinaryImport(connection,
                     table.TableName,
                     table: table,
-                    batchSize: 10);
+                    batchSize: 3);
 
                 // Assert
                 Assert.AreEqual(table.Rows.Count, result);
 
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
-                Assert.AreEqual(entities.Count(), queryResult.Count());
-                foreach (var entity in entities)
-                {
-                    var item = queryResult.First(e => e.Id == entity.Id);
-                    Helper.AssertPropertiesEquality(entity, item);
-                }
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => t1.Id == t2.Id);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -753,12 +677,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
 
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
-                Assert.AreEqual(entities.Count(), queryResult.Count());
-                foreach (var entity in entities)
-                {
-                    var item = queryResult.First(e => e.Id == entity.Id);
-                    Helper.AssertPropertiesEquality(entity, item);
-                }
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => t1.Id == t2.Id);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -794,12 +714,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
 
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
-                Assert.AreEqual(entities.Count(), queryResult.Count());
-                foreach (var entity in entities)
-                {
-                    var item = queryResult.First(e => e.Id == entity.IdMapped);
-                    Helper.AssertPropertiesEquality(entity, item);
-                }
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => t1.IdMapped == t2.Id);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -837,12 +753,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
 
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
-                Assert.AreEqual(entities.Count(), queryResult.Count());
-                foreach (var entity in entities)
-                {
-                    var item = queryResult.First(e => e.Id == entity.IdMapped);
-                    Helper.AssertPropertiesEquality(entity, item);
-                }
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => t1.IdMapped == t2.Id);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -890,16 +802,12 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
 
                     // Assert
                     Assert.AreEqual(entities.Count(), result);
-
-                    // Assert
-                    var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
-                    Assert.AreEqual(entities.Count(), queryResult.Count());
-                    foreach (var entity in entities)
-                    {
-                        var item = queryResult.First(e => e.Id == entity.Id);
-                        Helper.AssertPropertiesEquality(entity, item);
-                    }
                 }
+
+                // Assert
+                var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => t1.Id == t2.Id);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -922,16 +830,12 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
 
                     // Assert
                     Assert.AreEqual(entities.Count(), result);
-
-                    // Assert
-                    var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
-                    Assert.AreEqual(entities.Count(), queryResult.Count());
-                    foreach (var entity in entities)
-                    {
-                        var item = queryResult.First(e => e.Id == entity.Id);
-                        Helper.AssertPropertiesEquality(entity, item);
-                    }
                 }
+
+                // Assert
+                var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => t1.Id == t2.Id);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -966,16 +870,12 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
 
                     // Assert
                     Assert.AreEqual(entities.Count(), result);
-
-                    // Assert
-                    var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
-                    Assert.AreEqual(entities.Count(), queryResult.Count());
-                    foreach (var entity in entities)
-                    {
-                        var item = queryResult.First(e => e.Id == entity.IdMapped);
-                        Helper.AssertPropertiesEquality(entity, item);
-                    }
                 }
+
+                // Assert
+                var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => t1.IdMapped == t2.Id);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -1011,16 +911,12 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
 
                     // Assert
                     Assert.AreEqual(entities.Count(), result);
-
-                    // Assert
-                    var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
-                    Assert.AreEqual(entities.Count(), queryResult.Count());
-                    foreach (var entity in entities)
-                    {
-                        var item = queryResult.First(e => e.Id == entity.IdMapped);
-                        Helper.AssertPropertiesEquality(entity, item);
-                    }
                 }
+
+                // Assert
+                var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => t1.IdMapped == t2.Id);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -1080,12 +976,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
 
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
-                Assert.AreEqual(entities.Count(), queryResult.Count());
-                foreach (var entity in entities)
-                {
-                    var item = queryResult.First(e => e.Id == entity.Id);
-                    Helper.AssertPropertiesEquality(entity, item);
-                }
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => t1.Id == t2.Id);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -1095,26 +987,22 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
             using (var connection = GetConnection())
             {
                 // Prepare
-                var entities = Helper.CreateBulkOperationLightIdentityTables(99, true);
+                var entities = Helper.CreateBulkOperationLightIdentityTables(10, true);
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
                 var result = NpgsqlConnectionExtension.BinaryImportAsync<BulkOperationLightIdentityTable>(connection,
                     tableName,
                     entities: entities,
-                    batchSize: 10).Result;
+                    batchSize: 3).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
 
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
-                Assert.AreEqual(entities.Count(), queryResult.Count());
-                foreach (var entity in entities)
-                {
-                    var item = queryResult.First(e => e.Id == entity.Id);
-                    Helper.AssertPropertiesEquality(entity, item);
-                }
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => t1.Id == t2.Id);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -1138,12 +1026,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
 
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
-                Assert.AreEqual(entities.Count(), queryResult.Count());
-                foreach (var entity in entities)
-                {
-                    var item = queryResult.First(e => e.Id == entity.Id);
-                    Helper.AssertPropertiesEquality(entity, item);
-                }
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => t1.Id == t2.Id);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -1166,12 +1050,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
 
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>(tableName).ToList();
-                Assert.AreEqual(entities.Count(), queryResult.Count());
-                foreach (var entity in entities)
-                {
-                    var item = queryResult.First(e => e.IdMapped == entity.IdMapped);
-                    Helper.AssertPropertiesEquality(entity, item);
-                }
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => t1.IdMapped == t2.IdMapped);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -1195,12 +1075,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
 
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>(tableName).ToList();
-                Assert.AreEqual(entities.Count(), queryResult.Count());
-                foreach (var entity in entities)
-                {
-                    var item = queryResult.First(e => e.IdMapped == entity.IdMapped);
-                    Helper.AssertPropertiesEquality(entity, item);
-                }
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => t1.IdMapped == t2.IdMapped);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -1235,12 +1111,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
 
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>(tableName).ToList();
-                Assert.AreEqual(entities.Count(), queryResult.Count());
-                foreach (var entity in entities)
-                {
-                    var item = queryResult.First(e => e.IdMapped == entity.IdMapped);
-                    Helper.AssertPropertiesEquality(entity, item);
-                }
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => t1.IdMapped == t2.IdMapped);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -1276,12 +1148,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
 
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationMappedIdentityTable>(tableName).ToList();
-                Assert.AreEqual(entities.Count(), queryResult.Count());
-                foreach (var entity in entities)
-                {
-                    var item = queryResult.First(e => e.IdMapped == entity.IdMapped);
-                    Helper.AssertPropertiesEquality(entity, item);
-                }
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => t1.IdMapped == t2.IdMapped);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -1310,8 +1178,6 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
 
         #endregion
 
-        // Use AssertMembersEqualities
-
         #region BinaryImportAsync<Anonymous>
 
         [TestMethod]
@@ -1333,12 +1199,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
 
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
-                Assert.AreEqual(entities.Count(), queryResult.Count());
-                foreach (var entity in entities)
-                {
-                    var item = queryResult.First(e => e.Id == entity.Id);
-                    Helper.AssertPropertiesEquality(entity, item);
-                }
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => t1.Id == t2.Id);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -1348,26 +1210,22 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
             using (var connection = GetConnection())
             {
                 // Prepare
-                var entities = Helper.CreateBulkOperationAnonymousLightIdentityTables(99, true);
+                var entities = Helper.CreateBulkOperationAnonymousLightIdentityTables(10, true);
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
                 var result = NpgsqlConnectionExtension.BinaryImportAsync(connection,
                     tableName,
                     entities: entities,
-                    batchSize: 10).Result;
+                    batchSize: 3).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
 
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
-                Assert.AreEqual(entities.Count(), queryResult.Count());
-                foreach (var entity in entities)
-                {
-                    var item = queryResult.First(e => e.Id == entity.Id);
-                    Helper.AssertPropertiesEquality(entity, item);
-                }
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => t1.Id == t2.Id);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -1391,12 +1249,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
 
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
-                Assert.AreEqual(entities.Count(), queryResult.Count());
-                foreach (var entity in entities)
-                {
-                    var item = queryResult.First(e => e.Id == entity.Id);
-                    Helper.AssertPropertiesEquality(entity, item);
-                }
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => t1.Id == t2.Id);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -1431,12 +1285,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
 
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
-                Assert.AreEqual(entities.Count(), queryResult.Count());
-                foreach (var entity in entities)
-                {
-                    var item = queryResult.First(e => e.Id == entity.IdMapped);
-                    Helper.AssertPropertiesEquality(entity, item);
-                }
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => t1.IdMapped == t2.Id);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -1474,12 +1324,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
 
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
-                Assert.AreEqual(entities.Count(), queryResult.Count());
-                foreach (var entity in entities)
-                {
-                    var item = queryResult.First(e => e.Id == entity.IdMapped);
-                    Helper.AssertPropertiesEquality(entity, item);
-                }
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => t1.IdMapped == t2.Id);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -1508,8 +1354,6 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
 
         #endregion
 
-        // Use AssertMembersEqualities
-
         #region BinaryImportAsync<IDictionary<string,object>>
 
         [TestMethod]
@@ -1530,13 +1374,9 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 Assert.AreEqual(entities.Count(), result);
 
                 // Assert
-                var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
-                Assert.AreEqual(entities.Count(), queryResult.Count());
-                foreach (dynamic entity in entities)
-                {
-                    var item = queryResult.First(e => e.Id == entity.Id);
-                    Helper.AssertPropertiesEquality(entity, item);
-                }
+                var queryResult = connection.QueryAll(tableName).ToList();
+                var assertCount = Helper.AssertExpandoObjectsEquality(entities, queryResult, (t1, t2) => t1.Id == t2.Id);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -1546,26 +1386,22 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
             using (var connection = GetConnection())
             {
                 // Prepare
-                var entities = Helper.CreateBulkOperationExpandoObjectLightIdentityTables(99, true);
+                var entities = Helper.CreateBulkOperationExpandoObjectLightIdentityTables(10, true);
                 var tableName = "BulkOperationIdentityTable";
 
                 // Act
                 var result = NpgsqlConnectionExtension.BinaryImportAsync(connection,
                     tableName,
                     entities: entities,
-                    batchSize: 10).Result;
+                    batchSize: 3).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
 
                 // Assert
-                var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
-                Assert.AreEqual(entities.Count(), queryResult.Count());
-                foreach (dynamic entity in entities)
-                {
-                    var item = queryResult.First(e => e.Id == entity.Id);
-                    Helper.AssertPropertiesEquality(entity, item);
-                }
+                var queryResult = connection.QueryAll(tableName).ToList();
+                var assertCount = Helper.AssertExpandoObjectsEquality(entities, queryResult, (t1, t2) => t1.Id == t2.Id);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -1588,13 +1424,9 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 Assert.AreEqual(entities.Count(), result);
 
                 // Assert
-                var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
-                Assert.AreEqual(entities.Count(), queryResult.Count());
-                foreach (dynamic entity in entities)
-                {
-                    var item = queryResult.First(e => e.Id == entity.Id);
-                    Helper.AssertPropertiesEquality(entity, item);
-                }
+                var queryResult = connection.QueryAll(tableName).ToList();
+                var assertCount = Helper.AssertExpandoObjectsEquality(entities, queryResult, (t1, t2) => t1.Id == t2.Id);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -1628,13 +1460,9 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 Assert.AreEqual(entities.Count(), result);
 
                 // Assert
-                var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
-                Assert.AreEqual(entities.Count(), queryResult.Count());
-                foreach (dynamic entity in entities)
-                {
-                    var item = queryResult.First(e => e.Id == entity.IdMapped);
-                    Helper.AssertPropertiesEquality(entity, item);
-                }
+                var queryResult = connection.QueryAll(tableName).ToList();
+                var assertCount = Helper.AssertExpandoObjectsEquality(entities, queryResult, (t1, t2) => t1.IdMapped == t2.Id);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -1669,13 +1497,9 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 Assert.AreEqual(entities.Count(), result);
 
                 // Assert
-                var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
-                Assert.AreEqual(entities.Count(), queryResult.Count());
-                foreach (dynamic entity in entities)
-                {
-                    var item = queryResult.First(e => e.Id == entity.IdMapped);
-                    Helper.AssertPropertiesEquality(entity, item);
-                }
+                var queryResult = connection.QueryAll(tableName).ToList();
+                var assertCount = Helper.AssertExpandoObjectsEquality(entities, queryResult, (t1, t2) => t1.IdMapped == t2.Id);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -1726,12 +1550,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
 
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
-                Assert.AreEqual(entities.Count(), queryResult.Count());
-                foreach (var entity in entities)
-                {
-                    var item = queryResult.First(e => e.Id == entity.Id);
-                    Helper.AssertPropertiesEquality(entity, item);
-                }
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => t1.Id == t2.Id);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -1741,7 +1561,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
             using (var connection = GetConnection())
             {
                 // Prepare
-                var entities = Helper.CreateBulkOperationLightIdentityTables(99, true);
+                var entities = Helper.CreateBulkOperationLightIdentityTables(10, true);
                 var tableName = "BulkOperationIdentityTable";
                 var table = Helper.ToDataTable(tableName, entities);
 
@@ -1749,19 +1569,15 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
                 var result = NpgsqlConnectionExtension.BinaryImportAsync(connection,
                     table.TableName,
                     table: table,
-                    batchSize: 10).Result;
+                    batchSize: 3).Result;
 
                 // Assert
                 Assert.AreEqual(table.Rows.Count, result);
 
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
-                Assert.AreEqual(entities.Count(), queryResult.Count());
-                foreach (var entity in entities)
-                {
-                    var item = queryResult.First(e => e.Id == entity.Id);
-                    Helper.AssertPropertiesEquality(entity, item);
-                }
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => t1.Id == t2.Id);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -1788,12 +1604,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
 
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
-                Assert.AreEqual(entities.Count(), queryResult.Count());
-                foreach (var entity in entities)
-                {
-                    var item = queryResult.First(e => e.Id == entity.Id);
-                    Helper.AssertPropertiesEquality(entity, item);
-                }
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => t1.Id == t2.Id);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -1829,12 +1641,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
 
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
-                Assert.AreEqual(entities.Count(), queryResult.Count());
-                foreach (var entity in entities)
-                {
-                    var item = queryResult.First(e => e.Id == entity.IdMapped);
-                    Helper.AssertPropertiesEquality(entity, item);
-                }
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => t1.IdMapped == t2.Id);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -1872,12 +1680,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
 
                 // Assert
                 var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
-                Assert.AreEqual(entities.Count(), queryResult.Count());
-                foreach (var entity in entities)
-                {
-                    var item = queryResult.First(e => e.Id == entity.IdMapped);
-                    Helper.AssertPropertiesEquality(entity, item);
-                }
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => t1.IdMapped == t2.Id);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -1925,16 +1729,12 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
 
                     // Assert
                     Assert.AreEqual(entities.Count(), result);
-
-                    // Assert
-                    var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
-                    Assert.AreEqual(entities.Count(), queryResult.Count());
-                    foreach (var entity in entities)
-                    {
-                        var item = queryResult.First(e => e.Id == entity.Id);
-                        Helper.AssertPropertiesEquality(entity, item);
-                    }
                 }
+
+                // Assert
+                var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => t1.Id == t2.Id);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -1957,16 +1757,12 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
 
                     // Assert
                     Assert.AreEqual(entities.Count(), result);
-
-                    // Assert
-                    var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
-                    Assert.AreEqual(entities.Count(), queryResult.Count());
-                    foreach (var entity in entities)
-                    {
-                        var item = queryResult.First(e => e.Id == entity.Id);
-                        Helper.AssertPropertiesEquality(entity, item);
-                    }
                 }
+
+                // Assert
+                var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => t1.Id == t2.Id);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -2001,16 +1797,12 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
 
                     // Assert
                     Assert.AreEqual(entities.Count(), result);
-
-                    // Assert
-                    var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
-                    Assert.AreEqual(entities.Count(), queryResult.Count());
-                    foreach (var entity in entities)
-                    {
-                        var item = queryResult.First(e => e.Id == entity.IdMapped);
-                        Helper.AssertPropertiesEquality(entity, item);
-                    }
                 }
+
+                // Assert
+                var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => t1.IdMapped == t2.Id);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
@@ -2048,16 +1840,12 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Base
 
                     // Assert
                     Assert.AreEqual(entities.Count(), result);
-
-                    // Assert
-                    var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
-                    Assert.AreEqual(entities.Count(), queryResult.Count());
-                    foreach (var entity in entities)
-                    {
-                        var item = queryResult.First(e => e.Id == entity.IdMapped);
-                        Helper.AssertPropertiesEquality(entity, item);
-                    }
                 }
+
+                // Assert
+                var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => t1.IdMapped == t2.Id);
+                Assert.AreEqual(entities.Count(), assertCount);
             }
         }
 
