@@ -38,122 +38,190 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #region Asserts
 
-        /// <summary>
-        /// Asserts the properties equality of 2 types.
-        /// </summary>
-        /// <typeparam name="T1">The type of first object.</typeparam>
-        /// <typeparam name="T2">The type of second object.</typeparam>
-        /// <param name="t1">The instance of first object.</param>
-        /// <param name="t2">The instance of second object.</param>
-        public static void AssertPropertiesEquality<T1, T2>(T1 t1, T2 t2)
-        {
-            var propertiesOfType1 = typeof(T1).GetProperties();
-            var propertiesOfType2 = typeof(T2).GetProperties();
-            propertiesOfType1.AsList().ForEach(propertyOfType1 =>
-            {
-                if (propertyOfType1.Name == "Id" || propertyOfType1.Name == "IdMapped")
-                {
-                    return;
-                }
-                var propertyOfType2 = propertiesOfType2.FirstOrDefault(p => p.Name == propertyOfType1.Name);
-                if (propertyOfType2 == null)
-                {
-                    return;
-                }
-                var value1 = propertyOfType1.GetValue(t1);
-                var value2 = propertyOfType2.GetValue(t2);
-                if (value1 is byte[] && value2 is byte[])
-                {
-                    var b1 = (byte[])value1;
-                    var b2 = (byte[])value2;
-                    for (var i = 0; i < Math.Min(b1.Length, b2.Length); i++)
-                    {
-                        var v1 = b1[i];
-                        var v2 = b2[i];
-                        Assert.AreEqual(v1, v2,
-                            $"Assert failed for '{propertyOfType1.Name}'. The values are '{value1} ({propertyOfType1.PropertyType.FullName})' and '{value2} ({propertyOfType2.PropertyType.FullName})'.");
-                    }
-                }
-                else
-                {
-                    Assert.AreEqual(value1, value2,
-                        $"Assert failed for '{propertyOfType1.Name}'. The values are '{value1} ({propertyOfType1.PropertyType.FullName})' and '{value2} ({propertyOfType2.PropertyType.FullName})'.");
-                }
-            });
-        }
+        #region TEntity
 
         /// <summary>
-        /// Asserts the members equality of 2 object and <see cref="ExpandoObject"/>.
+        /// 
         /// </summary>
-        /// <typeparam name="T">The type of first object.</typeparam>
-        /// <param name="obj">The instance of first object.</param>
-        /// <param name="expandoObj">The instance of second object.</param>
-        public static void AssertMembersEquality(object obj, object expandoObj)
+        /// <typeparam name="T1"></typeparam>
+        /// <typeparam name="T2"></typeparam>
+        /// <param name="items1"></param>
+        /// <param name="items2"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
+        public static int AssertEntitiesEquality<T1, T2>(IEnumerable<T1> items1,
+            IEnumerable<T2> items2,
+            Func<T1, T2, bool> selector)
         {
-            var dictionary = new ExpandoObject() as IDictionary<string, object>;
-            foreach (var property in expandoObj.GetType().GetProperties())
+            Assert.AreEqual(items1.Count(), items2.Count(), "Count is not equal.");
+
+            var result = 0;
+
+            for (var i = 0; i < items1.Count(); i++)
             {
-                dictionary.Add(property.Name, property.GetValue(expandoObj));
+                var item1 = items1.ElementAt(i);
+                var item2 = items2.FirstOrDefault(item => selector(item1, item));
+                Assert.IsNotNull(item2, $"Item '{i}' from the 1st list has no equivalent item from the 2nd list.");
+
+                AssertEntityEquality(item1, item2);
+
+                result++;
             }
-            AssertMembersEquality(obj, dictionary);
+
+            return result;
         }
 
         /// <summary>
-        /// Asserts the members equality of 2 object and <see cref="ExpandoObject"/>.
+        /// 
         /// </summary>
-        /// <typeparam name="T">The type of first object.</typeparam>
-        /// <param name="obj">The instance of first object.</param>
-        /// <param name="expandoObj">The instance of second object.</param>
-        public static void AssertMembersEquality(object obj, ExpandoObject expandoObj)
+        /// <typeparam name="T1"></typeparam>
+        /// <typeparam name="T2"></typeparam>
+        /// <param name="item1"></param>
+        /// <param name="item2"></param>
+        public static void AssertEntityEquality<T1, T2>(T1 item1,
+            T2 item2)
         {
-            var dictionary = expandoObj as IDictionary<string, object>;
-            AssertMembersEquality(obj, dictionary);
-        }
+            var t1Properties = item1.GetType().GetProperties();
+            var t2Properties = item2.GetType().GetProperties();
 
-        /// <summary>
-        /// Asserts the members equality of 2 objects.
-        /// </summary>
-        /// <typeparam name="T">The type of first object.</typeparam>
-        /// <param name="obj">The instance of first object.</param>
-        /// <param name="dictionary">The instance of second object.</param>
-        public static void AssertMembersEquality(object obj, IDictionary<string, object> dictionary)
-        {
-            var properties = obj.GetType().GetProperties();
-            properties.AsList().ForEach(property =>
+            foreach (var t1Property in t1Properties)
             {
-                if (property.Name == "Id")
+                if (t1Property.Name == "Id" || t1Property.Name == "IdMapped")
                 {
-                    return;
+                    continue;
                 }
-                if (dictionary.ContainsKey(property.Name))
-                {
-                    var value1 = property.GetValue(obj);
-                    var value2 = dictionary[property.Name];
-                    if (value1 is byte[] && value2 is byte[])
-                    {
-                        var b1 = (byte[])value1;
-                        var b2 = (byte[])value2;
-                        for (var i = 0; i < Math.Min(b1.Length, b2.Length); i++)
-                        {
-                            var v1 = b1[i];
-                            var v2 = b2[i];
-                            Assert.AreEqual(v1, v2,
-                                $"Assert failed for '{property.Name}'. The values are '{v1}' and '{v2}'.");
-                        }
-                    }
-                    else
-                    {
-                        var propertyType = property.PropertyType.GetUnderlyingType();
-                        if (propertyType == typeof(TimeSpan) && value2 is DateTime)
-                        {
-                            value2 = ((DateTime)value2).TimeOfDay;
-                        }
-                        Assert.AreEqual(Convert.ChangeType(value1, propertyType), Convert.ChangeType(value2, propertyType),
-                            $"Assert failed for '{property.Name}'. The values are '{value1}' and '{value2}'.");
-                    }
-                }
-            });
+
+                var t2Property = t2Properties.FirstOrDefault(p => IsMatchingProperty(p.Name, t1Property.Name));
+                Assert.IsNotNull(t2Property, $"Property '{t1Property.Name}' is not found from the 2nd list.");
+
+                var value1 = t1Property.GetValue(item1);
+                var value2 = t2Property.GetValue(item2);
+
+                Assert.AreEqual(value1, value2);
+            }
         }
+
+        #endregion
+
+        #region IDictionary<string, object>
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="items1"></param>
+        /// <param name="items2"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
+        public static int AssertExpandoObjectsEquality(IEnumerable<dynamic> items1,
+            IEnumerable<dynamic> items2,
+            Func<dynamic, dynamic, bool> selector)
+        {
+            Assert.AreEqual(items1.Count(), items2.Count(), "Count is not equal.");
+
+            var result = 0;
+
+            for (var i = 0; i < items1.Count(); i++)
+            {
+                var item1 = items1.ElementAt(i);
+                var item2 = items2.FirstOrDefault(item => selector((IDictionary<string, object>)item1, item));
+                Assert.IsNotNull(item2, $"Item '{i}' from the 1st list has no equivalent item from the 2nd list.");
+
+                AssertExpandoObjectEquality(item1, item2);
+
+                result++;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="item1"></param>
+        /// <param name="item2"></param>
+        public static void AssertExpandoObjectEquality(dynamic item1,
+            dynamic item2)
+        {
+            var obj1Dictionary = item1 as IDictionary<string, object>;
+            var obj2Dictionary = item2 as IDictionary<string, object>;
+
+            AssertDictionaryEquality(obj1Dictionary, obj2Dictionary);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="items1"></param>
+        /// <param name="items2"></param>
+        /// <param name="selector"></param>
+        /// <returns></returns>
+        public static int AssertDictionariesEquality(IEnumerable<IDictionary<string, object>> items1,
+            IEnumerable<IDictionary<string, object>> items2,
+            Func<IDictionary<string, object>, IDictionary<string, object>, bool> selector)
+        {
+            Assert.AreEqual(items1.Count(), items2.Count(), "Count is not equal.");
+
+            var result = 0;
+
+            for (var i = 0; i < items1.Count(); i++)
+            {
+                var item1 = items1.ElementAt(i);
+                var item2 = items2.FirstOrDefault(item => selector(item1, item));
+                Assert.IsNotNull(item2, $"Item '{i}' from the 1st list has no equivalent item from the 2nd list.");
+
+                AssertDictionaryEquality(item1, item2);
+
+                result++;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj1"></param>
+        /// <param name="obj2"></param>
+        public static void AssertDictionaryEquality(IDictionary<string, object> dict1,
+            IDictionary<string, object> dict2)
+        {
+            foreach (var kvp1 in dict1)
+            {
+                if (kvp1.Key == "Id" || kvp1.Key == "IdMapped")
+                {
+                    continue;
+                }
+
+                object kvp2Value = null;
+
+                foreach (var kvp2 in dict2)
+                {
+                    if (IsMatchingProperty(kvp1.Key, kvp2.Key))
+                    {
+                        kvp2Value = kvp2.Value;
+                        break;
+                    }
+                }
+
+                Assert.IsNotNull(kvp2Value, $"Property '{kvp1.Key}' is not found from the 2nd list.");
+
+                Assert.AreEqual(kvp1.Value, kvp2Value);
+            }
+        }
+
+        #endregion
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="p1"></param>
+        /// <param name="p2"></param>
+        /// <returns></returns>
+        private static bool IsMatchingProperty(string p1,
+            string p2) =>
+            string.Equals(p1, p2, StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(p1, $"{p2}Mapped", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals($"{p1}Mapped", p2, StringComparison.OrdinalIgnoreCase);
 
         #endregion
 
@@ -166,9 +234,11 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
         /// </summary>
         /// <param name="count"></param>
         /// <param name="hasId"></param>
+        /// <param name="addToKey"></param>
         /// <returns></returns>
         public static List<BulkOperationIdentityTable> CreateBulkOperationIdentityTables(int count,
-            bool hasId = false)
+            bool hasId = false,
+            long addToKey = 0)
         {
             var random = new Random();
             var tables = new List<BulkOperationIdentityTable>();
@@ -177,7 +247,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var index = i + 1;
                 tables.Add(new BulkOperationIdentityTable
                 {
-                    Id = hasId ? index : 0,
+                    Id = hasId ? index + addToKey : 0,
                     ColumnBigInt = random.Next(100),
                     ColumnBit = true,
                     ColumnBoolean = true,
@@ -209,9 +279,11 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
         /// </summary>
         /// <param name="count"></param>
         /// <param name="hasId"></param>
+        /// <param name="addToKey"></param>
         /// <returns></returns>
         public static List<BulkOperationLightIdentityTable> CreateBulkOperationLightIdentityTables(int count,
-            bool hasId = false)
+            bool hasId = false,
+            long addToKey = 0)
         {
             var random = new Random();
             var tables = new List<BulkOperationLightIdentityTable>();
@@ -220,7 +292,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var index = i + 1;
                 tables.Add(new BulkOperationLightIdentityTable
                 {
-                    Id = hasId ? index : 0,
+                    Id = hasId ? index + addToKey : 0,
                     ColumnBigInt = random.Next(100),
                     ColumnBoolean = true,
                     ColumnInteger = random.Next(100),
@@ -242,9 +314,11 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
         /// </summary>
         /// <param name="count"></param>
         /// <param name="hasId"></param>
+        /// <param name="addToKey"></param>
         /// <returns></returns>
         public static List<BulkOperationMappedIdentityTable> CreateBulkOperationMappedIdentityTables(int count,
-            bool hasId = false)
+            bool hasId = false,
+            long addToKey = 0)
         {
             var random = new Random();
             var tables = new List<BulkOperationMappedIdentityTable>();
@@ -253,7 +327,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var index = i + 1;
                 tables.Add(new BulkOperationMappedIdentityTable
                 {
-                    IdMapped = hasId ? index : 0,
+                    IdMapped = hasId ? index + addToKey : 0,
                     ColumnBigIntMapped = random.Next(100),
                     ColumnBooleanMapped = true,
                     ColumnIntegerMapped = random.Next(100),
@@ -275,9 +349,11 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
         /// </summary>
         /// <param name="count"></param>
         /// <param name="hasId"></param>
+        /// <param name="addToKey"></param>
         /// <returns></returns>
         public static List<BulkOperationUnmatchedIdentityTable> CreateBulkOperationUnmatchedIdentityTables(int count,
-            bool hasId = false)
+            bool hasId = false,
+            long addToKey = 0)
         {
             var random = new Random();
             var tables = new List<BulkOperationUnmatchedIdentityTable>();
@@ -286,7 +362,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var index = i + 1;
                 tables.Add(new BulkOperationUnmatchedIdentityTable
                 {
-                    IdMapped = hasId ? index : 0,
+                    IdMapped = hasId ? index + addToKey : 0,
                     ColumnBigIntMapped = (long)random.Next(100),
                     ColumnBooleanMapped = true,
                     ColumnIntegerMapped = random.Next(100),
@@ -312,9 +388,11 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
         /// </summary>
         /// <param name="count"></param>
         /// <param name="hasId"></param>
+        /// <param name="addToKey"></param>
         /// <returns></returns>
         public static List<dynamic> CreateBulkOperationAnonymousLightIdentityTables(int count,
-            bool hasId = false)
+            bool hasId = false,
+            long addToKey = 0)
         {
             var random = new Random();
             var tables = new List<dynamic>();
@@ -323,7 +401,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var index = i + 1;
                 tables.Add(new
                 {
-                    Id = (long)(hasId ? index : 0),
+                    Id = (long)(hasId ? index + addToKey : 0),
                     ColumnBigInt = (long)random.Next(100),
                     ColumnBoolean = true,
                     ColumnInteger = random.Next(100),
@@ -345,9 +423,11 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
         /// </summary>
         /// <param name="count"></param>
         /// <param name="hasId"></param>
+        /// <param name="addToKey"></param>
         /// <returns></returns>
         public static List<dynamic> CreateBulkOperationAnonymousUnmatchedIdentityTables(int count,
-            bool hasId = false)
+            bool hasId = false,
+            long addToKey = 0)
         {
             var random = new Random();
             var tables = new List<dynamic>();
@@ -356,7 +436,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var index = i + 1;
                 tables.Add(new
                 {
-                    IdMapped = (long)(hasId ? index : 0),
+                    IdMapped = (long)(hasId ? index + addToKey : 0),
                     ColumnBigIntMapped = (long)random.Next(100),
                     ColumnBooleanMapped = true,
                     ColumnIntegerMapped = random.Next(100),
@@ -382,18 +462,20 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
         /// </summary>
         /// <param name="count"></param>
         /// <param name="hasId"></param>
+        /// <param name="addToKey"></param>
         /// <returns></returns>
-        public static List<ExpandoObject> CreateBulkOperationExpandoObjectLightIdentityTables(int count,
-            bool hasId = false)
+        public static List<dynamic> CreateBulkOperationExpandoObjectLightIdentityTables(int count,
+            bool hasId = false,
+            long addToKey = 0)
         {
             var random = new Random();
-            var tables = new List<ExpandoObject>();
+            var tables = new List<dynamic>();
             for (var i = 0; i < count; i++)
             {
                 var expandoObject = new ExpandoObject() as IDictionary<string, object>;
                 var index = i + 1;
 
-                expandoObject["Id"] = (long)(hasId ? index : 0);
+                expandoObject["Id"] = (long)(hasId ? index + addToKey : 0);
                 expandoObject["ColumnBigInt"] = (long)random.Next(100);
                 expandoObject["ColumnBoolean"] = true;
                 expandoObject["ColumnInteger"] = random.Next(100);
@@ -416,18 +498,20 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
         /// </summary>
         /// <param name="count"></param>
         /// <param name="hasId"></param>
+        /// <param name="addToKey"></param>
         /// <returns></returns>
-        public static List<ExpandoObject> CreateBulkOperationExpandoObjectUnmatchedIdentityTables(int count,
-            bool hasId = false)
+        public static List<dynamic> CreateBulkOperationExpandoObjectUnmatchedIdentityTables(int count,
+            bool hasId = false,
+            long addToKey = 0)
         {
             var random = new Random();
-            var tables = new List<ExpandoObject>();
+            var tables = new List<dynamic>();
             for (var i = 0; i < count; i++)
             {
                 var expandoObject = new ExpandoObject() as IDictionary<string, object>;
                 var index = i + 1;
 
-                expandoObject["IdMapped"] = (long)(hasId ? index : 0);
+                expandoObject["IdMapped"] = (long)(hasId ? index + addToKey : 0);
                 expandoObject["ColumnBigIntMapped"] = (long)random.Next(100);
                 expandoObject["ColumnBooleanMapped"] = true;
                 expandoObject["ColumnIntegerMapped"] = random.Next(100);
@@ -455,7 +539,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="entities"></param>
         /// <returns></returns>
-        private static DataTable ToDataTable<TEntity>(string tableName,
+        public static DataTable ToDataTable<TEntity>(string tableName,
             IEnumerable<TEntity> entities)
             where TEntity : class
         {
@@ -490,11 +574,13 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
         /// </summary>
         /// <param name="count"></param>
         /// <param name="hasId"></param>
+        /// <param name="addToKey"></param>
         /// <returns></returns>
         public static DataTable CreateBulkOperationDataTableLightIdentityTables(int count,
-            bool hasId = false)
+            bool hasId = false,
+            long addToKey = 0)
         {
-            var tables = CreateBulkOperationLightIdentityTables(count, hasId);
+            var tables = CreateBulkOperationLightIdentityTables(count, hasId, addToKey);
             return ToDataTable("BulkOperationIdentityTable", tables);
         }
 
@@ -503,11 +589,13 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
         /// </summary>
         /// <param name="count"></param>
         /// <param name="hasId"></param>
+        /// <param name="addToKey"></param>
         /// <returns></returns>
         public static DataTable CreateBulkOperationDataTableUnmatchedIdentityTables(int count,
-            bool hasId = false)
+            bool hasId = false,
+            long addToKey = 0)
         {
-            var tables = CreateBulkOperationUnmatchedIdentityTables(count, hasId);
+            var tables = CreateBulkOperationUnmatchedIdentityTables(count, hasId, addToKey);
             return ToDataTable("BulkOperationIdentityTable", tables);
         }
 

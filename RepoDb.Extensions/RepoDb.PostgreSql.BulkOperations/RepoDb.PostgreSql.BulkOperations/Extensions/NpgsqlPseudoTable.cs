@@ -6,6 +6,8 @@ using RepoDb.PostgreSql.BulkOperations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace RepoDb
 {
@@ -39,7 +41,43 @@ namespace RepoDb
                 GetCreatePseudoTableCommandText(tableName, getPseudoTableName(), mappings, identityBehavior, dbSetting) :
                 GetCreatePseudoTemporaryTableCommandText(tableName, getPseudoTableName(), mappings, identityBehavior, dbSetting);
 
-            connection.ExecuteNonQuery(commandText, bulkCopyTimeout, transaction: transaction);
+            connection.ExecuteNonQuery(commandText,
+                bulkCopyTimeout,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="getPseudoTableName"></param>
+        /// <param name="mappings"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="dbSetting"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        private static async Task CreatePseudoTableAsync(NpgsqlConnection connection,
+            string tableName,
+            Func<string> getPseudoTableName,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+            int? bulkCopyTimeout = null,
+            BulkImportIdentityBehavior identityBehavior = default,
+            BulkImportPseudoTableType pseudoTableType = default,
+            IDbSetting dbSetting = null,
+            NpgsqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            var commandText = pseudoTableType == BulkImportPseudoTableType.Physical ?
+                GetCreatePseudoTableCommandText(tableName, getPseudoTableName(), mappings, identityBehavior, dbSetting) :
+                GetCreatePseudoTemporaryTableCommandText(tableName, getPseudoTableName(), mappings, identityBehavior, dbSetting);
+
+            await connection.ExecuteNonQueryAsync(commandText,
+                bulkCopyTimeout,
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
@@ -69,7 +107,44 @@ namespace RepoDb
                 identityField,
                 dbSetting);
 
-            return connection.ExecuteQuery<long>(commandText, bulkCopyTimeout, transaction: transaction);
+            return connection.ExecuteQuery<long>(commandText,
+                bulkCopyTimeout,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="pseudoTableName"></param>
+        /// <param name="mappings"></param>
+        /// <param name="dbFields"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="dbSetting"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        private static async Task<IEnumerable<long>> InsertPseudoTableAsync(NpgsqlConnection connection,
+            string tableName,
+            string pseudoTableName,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings,
+            IEnumerable<DbField> dbFields,
+            int? bulkCopyTimeout = null,
+            IDbSetting dbSetting = null,
+            NpgsqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            var identityField = dbFields.FirstOrDefault(dbField => dbField.IsIdentity)?.AsField();
+            var commandText = GetInsertCommand(pseudoTableName,
+                tableName,
+                mappings.Select(mapping => new Field(mapping.DestinationColumn)),
+                identityField,
+                dbSetting);
+
+            return await connection.ExecuteQueryAsync<long>(commandText,
+                bulkCopyTimeout,
+                transaction: transaction,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>

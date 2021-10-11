@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace RepoDb
 {
@@ -80,13 +81,97 @@ namespace RepoDb
                         dbFields,
                         bulkCopyTimeout,
                         dbSetting,
-                        transaction).AsList();
+                        transaction)?.AsList();
 
                     setIdentities?.Invoke(identities);
                 }
 
                 // Return
                 return result.GetValueOrDefault();
+            }
+            finally
+            {
+                if (identityBehavior == BulkImportIdentityBehavior.ReturnIdentity)
+                {
+                    DropPseudoTable(connection, pseudoTableName, bulkCopyTimeout, transaction);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="getPseudoTableName"></param>
+        /// <param name="getMappings"></param>
+        /// <param name="dbFields"></param>
+        /// <param name="binaryImportAsync"></param>
+        /// <param name="setIdentities"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="pseudoTableType"></param>
+        /// <param name="dbSetting"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        private static async Task<int> PseudoBasedBinaryImportAsync(this NpgsqlConnection connection,
+            string tableName,
+            int? bulkCopyTimeout,
+            Func<string> getPseudoTableName,
+            Func<IEnumerable<NpgsqlBulkInsertMapItem>> getMappings,
+            IEnumerable<DbField> dbFields,
+            Func<string, Task<int>> binaryImportAsync,
+            Action<IEnumerable<long>> setIdentities,
+            BulkImportIdentityBehavior identityBehavior,
+            BulkImportPseudoTableType pseudoTableType,
+            IDbSetting dbSetting,
+            NpgsqlTransaction transaction,
+            CancellationToken cancellationToken = default)
+        {
+            string pseudoTableName = null;
+
+            try
+            {
+                // Mappings
+                var mappings = getMappings?.Invoke();
+
+                // Create (TEMP)
+                if (identityBehavior == BulkImportIdentityBehavior.ReturnIdentity)
+                {
+                    await CreatePseudoTableAsync(connection,
+                        tableName,
+                        () => (pseudoTableName = getPseudoTableName?.Invoke()),
+                        mappings,
+                        bulkCopyTimeout,
+                        identityBehavior,
+                        pseudoTableType,
+                        dbSetting,
+                        transaction,
+                        cancellationToken);
+                }
+
+                // Import
+                var result = await binaryImportAsync?.Invoke(pseudoTableName ?? tableName);
+
+                // Insert (INTO)
+                if (identityBehavior == BulkImportIdentityBehavior.ReturnIdentity)
+                {
+                    var identities = (await InsertPseudoTableAsync(connection,
+                        tableName,
+                        pseudoTableName,
+                        mappings,
+                        dbFields,
+                        bulkCopyTimeout,
+                        dbSetting,
+                        transaction,
+                        cancellationToken))?.AsList();
+
+                    setIdentities?.Invoke(identities);
+                }
+
+                // Return
+                return result;
             }
             finally
             {
@@ -115,7 +200,7 @@ namespace RepoDb
         {
             // Variables
             var result = default(TResult);
-            var hasTransaction = transaction != null;
+            var hasTransaction = (transaction == null || Transaction.Current != null);
 
             // Open
             connection.EnsureOpen();
@@ -131,7 +216,7 @@ namespace RepoDb
                 // Execute
                 if (execute != null)
                 {
-                    result = execute.Invoke();
+                    result = execute();
                 }
 
                 // Commit
@@ -183,7 +268,7 @@ namespace RepoDb
             var hasTransaction = transaction != null;
 
             // Open
-            connection.EnsureOpen();
+            await connection.EnsureOpenAsync(cancellationToken);
 
             // Ensure transaction
             if (hasTransaction == false)

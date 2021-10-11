@@ -1,7 +1,6 @@
 ﻿using Npgsql;
 using RepoDb.Enumerations.PostgreSql;
 using RepoDb.PostgreSql.BulkOperations;
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -16,7 +15,9 @@ namespace RepoDb
     /// </summary>
     public static partial class NpgsqlConnectionExtension
     {
-        #region BulkInsert<TEntity>
+        #region Sync
+
+        #region BinaryBulkInsert<TEntity>
 
         /// <summary>
         /// Inserts a list of entities into the target table by bulk. Underneath this operation is a call directly to the existing
@@ -29,11 +30,11 @@ namespace RepoDb
         /// <see cref="IDictionary{TKey, TValue}"/> (of <see cref="string"/>/<see cref="object"/>) and Anonymous Types).</param>
         /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used.</param>
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
-        /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the rows of the table will be sent together.</param>
-        /// <param name="identityBehavior">The behavior of how the identity column would work during the operation..</param>
+        /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the entities will be sent together in one-go.</param>
+        /// <param name="identityBehavior">The behavior of how the identity column would work during the operation.</param>
         /// <param name="pseudoTableType">The value that defines a value whether to use a physical or temporable table for the pseudo-table.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
-        /// <returns>The number of rows inserted into the target table.</returns>
+        /// <returns>The number of rows that has been inserted into the target table.</returns>
         public static int BinaryBulkInsert<TEntity>(this NpgsqlConnection connection,
             IEnumerable<TEntity> entities,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
@@ -65,11 +66,11 @@ namespace RepoDb
         /// <see cref="IDictionary{TKey, TValue}"/> (of <see cref="string"/>/<see cref="object"/>) and Anonymous Types).</param>
         /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used.</param>
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
-        /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the rows of the table will be sent together.</param>
-        /// <param name="identityBehavior">The behavior of how the identity column would work during the operation..</param>
+        /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the rows of the table will be sent together in one-go.</param>
+        /// <param name="identityBehavior">The behavior of how the identity column would work during the operation.</param>
         /// <param name="pseudoTableType">The value that defines a value whether to use a physical or temporable table for the pseudo-table.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
-        /// <returns>The number of rows inserted into the target table.</returns>
+        /// <returns>The number of rows that has been inserted into the target table.</returns>
         public static int BinaryBulkInsert<TEntity>(this NpgsqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
@@ -92,588 +93,316 @@ namespace RepoDb
 
         #endregion
 
-        #region BulkInsert(TableName)
+        #region BinaryBulkInsert<DataTable>
 
         /// <summary>
-        /// Bulk insert an instance of <see cref="DbDataReader"/> object into the database.
+        /// Inserts the rows of the <see cref="DataTable"/> into the target table by bulk. It uses the <see cref="DataTable.TableName"/> property 
+        /// as the target table. Underneath this operation is a call directly to the existing <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method.
         /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The target table for bulk-insert operation.</param>
-        /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
-        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
-        /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
-        public static int BulkInsert(this NpgsqlConnection connection,
-            string tableName,
-            DbDataReader reader,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
-            int? bulkCopyTimeout = null,
-            int? batchSize = null,
-            NpgsqlTransaction transaction = null)
-        {
-            return BulkInsertInternal(connection: connection,
-                tableName: tableName,
-                reader: reader,
-                dbFields: null,
-                mappings: mappings,
-                bulkCopyTimeout: bulkCopyTimeout,
-                batchSize: batchSize,
-                transaction: transaction);
-        }
-
-        /// <summary>
-        /// Bulk insert an instance of <see cref="DataTable"/> object into the database.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="dataTable">The <see cref="DataTable"/> object to be used in the bulk-insert operation.</param>
-        /// <param name="rowState">The state of the rows to be copied to the destination.</param>
-        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
-        /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table. This argument will only be used if the 'isReturnIdentity' argument is 'true'.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
-        public static int BulkInsert<TEntity>(this NpgsqlConnection connection,
-            DataTable dataTable,
+        /// <param name="connection">The current connection object in used.</param>
+        /// <param name="table">The source <see cref="DataTable"/> object that contains the rows to be bulk-inserted to the target table.</param>
+        /// <param name="rowState">The state of the rows to be bulk-inserted. If not specified, all the rows of the table will be used.</param>
+        /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used.</param>
+        /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
+        /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the rows of the table will be sent together in one-go.</param>
+        /// <param name="identityBehavior">The behavior of how the identity column would work during the operation.</param>
+        /// <param name="pseudoTableType">The value that defines a value whether to use a physical or temporable table for the pseudo-table.</param>
+        /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
+        /// <returns>The number of rows that has been inserted into the target table.</returns>
+        public static int BinaryBulkInsert(this NpgsqlConnection connection,
+            DataTable table,
             DataRowState? rowState = null,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? isReturnIdentity = null,
-            bool? usePhysicalPseudoTempTable = null,
-            NpgsqlTransaction transaction = null)
-            where TEntity : class
-        {
-            return BulkInsertInternal(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
-                dataTable: dataTable,
-                rowState: rowState,
-                dbFields: null,
-                mappings: mappings,
-                bulkCopyTimeout: bulkCopyTimeout,
-                batchSize: batchSize,
-                isReturnIdentity: isReturnIdentity,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction);
-        }
-
-        /// <summary>
-        /// Bulk insert an instance of <see cref="DataTable"/> object into the database.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The target table for bulk-insert operation.</param>
-        /// <param name="dataTable">The <see cref="DataTable"/> object to be used in the bulk-insert operation.</param>
-        /// <param name="rowState">The state of the rows to be copied to the destination.</param>
-        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
-        /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table. This argument will only be used if the 'isReturnIdentity' argument is 'true'.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
-        public static int BulkInsert(this NpgsqlConnection connection,
-            string tableName,
-            DataTable dataTable,
-            DataRowState? rowState = null,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
-            int? bulkCopyTimeout = null,
-            int? batchSize = null,
-            bool? isReturnIdentity = null,
-            bool? usePhysicalPseudoTempTable = null,
-            NpgsqlTransaction transaction = null)
-        {
-            return BulkInsertInternal(connection: connection,
-                tableName: tableName,
-                dataTable: dataTable,
-                rowState: rowState,
-                dbFields: null,
-                mappings: mappings,
-                bulkCopyTimeout: bulkCopyTimeout,
-                batchSize: batchSize,
-                isReturnIdentity: isReturnIdentity,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction);
-        }
-
-        #endregion
-
-        #region BulkInsertAsync<TEntity>
-
-        /// <summary>
-        /// Bulk insert a list of data entity objects into the database in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="entities">The list of the data entities to be bulk-inserted.</param>
-        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
-        /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table. This argument will only be used if the 'isReturnIdentity' argument is 'true'.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
-        public static Task<int> BulkInsertAsync<TEntity>(this NpgsqlConnection connection,
-            IEnumerable<TEntity> entities,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
-            int? bulkCopyTimeout = null,
-            int? batchSize = null,
-            bool? isReturnIdentity = null,
-            bool? usePhysicalPseudoTempTable = null,
-            NpgsqlTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-            where TEntity : class
-        {
-            return BulkInsertAsyncInternal(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
-                entities: entities,
-                dbFields: null,
-                mappings: mappings,
-                bulkCopyTimeout: bulkCopyTimeout,
-                batchSize: batchSize,
-                isReturnIdentity: isReturnIdentity,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction,
-                cancellationToken: cancellationToken);
-        }
-
-        /// <summary>
-        /// Bulk insert a list of data entity objects into the database in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="tableName">The target table for bulk-insert operation.</param>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="entities">The list of the data entities to be bulk-inserted.</param>
-        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
-        /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table. This argument will only be used if the 'isReturnIdentity' argument is 'true'.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
-        public static Task<int> BulkInsertAsync<TEntity>(this NpgsqlConnection connection,
-            string tableName,
-            IEnumerable<TEntity> entities,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
-            int? bulkCopyTimeout = null,
-            int? batchSize = null,
-            bool? isReturnIdentity = null,
-            bool? usePhysicalPseudoTempTable = null,
-            NpgsqlTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-            where TEntity : class
-        {
-            return BulkInsertAsyncInternal(connection: connection,
-                tableName: tableName,
-                entities: entities,
-                dbFields: null,
-                mappings: mappings,
-                bulkCopyTimeout: bulkCopyTimeout,
-                batchSize: batchSize,
-                isReturnIdentity: isReturnIdentity,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction,
-                cancellationToken: cancellationToken);
-        }
-
-        /// <summary>
-        /// Bulk insert an instance of <see cref="DbDataReader"/> object into the database in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
-        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
-        /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
-        public static async Task<int> BulkInsertAsync<TEntity>(this NpgsqlConnection connection,
-            DbDataReader reader,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
-            int? bulkCopyTimeout = null,
-            int? batchSize = null,
-            NpgsqlTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-            where TEntity : class
-        {
-            return await BulkInsertAsyncInternal(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
-                reader: reader,
-                dbFields: null,
-                mappings: mappings,
-                bulkCopyTimeout: bulkCopyTimeout,
-                batchSize: batchSize,
-                transaction: transaction,
-                cancellationToken: cancellationToken);
-        }
-
-        #endregion
-
-        #region BulkInsertAsync(TableName)
-
-        /// <summary>
-        /// Bulk insert an instance of <see cref="DbDataReader"/> object into the database in an asynchronous way.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The target table for bulk-insert operation.</param>
-        /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-insert operation.</param>
-        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
-        /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
-        public static Task<int> BulkInsertAsync(this NpgsqlConnection connection,
-            string tableName,
-            DbDataReader reader,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
-            int? bulkCopyTimeout = null,
-            int? batchSize = null,
-            NpgsqlTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-        {
-            return BulkInsertAsyncInternal(connection: connection,
-                tableName: tableName,
-                reader: reader,
-                dbFields: null,
-                mappings: mappings,
-                bulkCopyTimeout: bulkCopyTimeout,
-                batchSize: batchSize,
-                transaction: transaction,
-                cancellationToken: cancellationToken);
-        }
-
-        /// <summary>
-        /// Bulk insert an instance of <see cref="DataTable"/> object into the database in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="dataTable">The <see cref="DataTable"/> object to be used in the bulk-insert operation.</param>
-        /// <param name="rowState">The state of the rows to be copied to the destination.</param>
-        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
-        /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table. This argument will only be used if the 'isReturnIdentity' argument is 'true'.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
-        public static Task<int> BulkInsertAsync<TEntity>(this NpgsqlConnection connection,
-            DataTable dataTable,
-            DataRowState? rowState = null,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
-            int? bulkCopyTimeout = null,
-            int? batchSize = null,
-            bool? isReturnIdentity = null,
-            bool? usePhysicalPseudoTempTable = null,
-            NpgsqlTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-            where TEntity : class
-        {
-            return BulkInsertAsyncInternal(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
-                dataTable: dataTable,
-                rowState: rowState,
-                dbFields: null,
-                mappings: mappings,
-                bulkCopyTimeout: bulkCopyTimeout,
-                batchSize: batchSize,
-                isReturnIdentity: isReturnIdentity,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction,
-                cancellationToken: cancellationToken);
-        }
-
-        /// <summary>
-        /// Bulk insert an instance of <see cref="DataTable"/> object into the database in an asynchronous way.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The target table for bulk-insert operation.</param>
-        /// <param name="dataTable">The <see cref="DataTable"/> object to be used in the bulk-insert operation.</param>
-        /// <param name="rowState">The state of the rows to be copied to the destination.</param>
-        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
-        /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table. This argument will only be used if the 'isReturnIdentity' argument is 'true'.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
-        public static Task<int> BulkInsertAsync(this NpgsqlConnection connection,
-            string tableName,
-            DataTable dataTable,
-            DataRowState? rowState = null,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
-            int? bulkCopyTimeout = null,
-            int? batchSize = null,
-            bool? isReturnIdentity = null,
-            bool? usePhysicalPseudoTempTable = null,
-            NpgsqlTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-        {
-            return BulkInsertAsyncInternal(connection: connection,
-                tableName: tableName,
-                dataTable: dataTable,
-                rowState: rowState,
-                dbFields: null,
-                mappings: mappings,
-                bulkCopyTimeout: bulkCopyTimeout,
-                batchSize: batchSize,
-                isReturnIdentity: isReturnIdentity,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction,
-                cancellationToken: cancellationToken);
-        }
-
-        #endregion
-
-        #region BulkInsertInternal
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="connection"></param>
-        /// <param name="tableName"></param>
-        /// <param name="entities"></param>
-        /// <param name="dbFields"></param>
-        /// <param name="mappings"></param>
-        /// <param name="bulkCopyTimeout"></param>
-        /// <param name="batchSize"></param>
-        /// <param name="isReturnIdentity"></param>
-        /// <param name="usePhysicalPseudoTempTable"></param>
-        /// <param name="transaction"></param>
-        /// <returns></returns>
-        internal static int BulkInsertInternal<TEntity>(NpgsqlConnection connection,
-            string tableName,
-            IEnumerable<TEntity> entities,
-            IEnumerable<DbField> dbFields = null,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
-            int? bulkCopyTimeout = null,
-            int? batchSize = null,
-            bool? isReturnIdentity = null,
-            bool? usePhysicalPseudoTempTable = null,
-            NpgsqlTransaction transaction = null)
-            where TEntity : class =>
-            //BulkInsertInternalBase<TEntity, SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
-            //    SqlBulkCopyColumnMapping, NpgsqlTransaction>(connection,
-            //    tableName,
-            //    entities,
-            //    dbFields,
-            //    mappings,
-            //    hints,
-            //    bulkCopyTimeout,
-            //    batchSize,
-            //    isReturnIdentity,
-            //    usePhysicalPseudoTempTable,
-            //    transaction);
-            throw new NotImplementedException();
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="tableName"></param>
-        /// <param name="reader"></param>
-        /// <param name="dbFields"></param>
-        /// <param name="mappings"></param>
-        /// <param name="bulkCopyTimeout"></param>
-        /// <param name="batchSize"></param>
-        /// <param name="transaction"></param>
-        /// <returns></returns>
-        internal static int BulkInsertInternal(NpgsqlConnection connection,
-            string tableName,
-            DbDataReader reader,
-            IEnumerable<DbField> dbFields = null,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
-            int? bulkCopyTimeout = null,
-            int? batchSize = null,
+            BulkImportIdentityBehavior identityBehavior = default,
+            BulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null) =>
-            //BulkInsertInternalBase<SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
-            //    SqlBulkCopyColumnMapping, NpgsqlTransaction>(connection,
-            //    tableName,
-            //    reader,
-            //    dbFields,
-            //    mappings,
-            //    options.GetValueOrDefault(),
-            //    bulkCopyTimeout,
-            //    batchSize,
-            //    transaction);
-            throw new NotImplementedException();
+            BinaryBulkInsert(connection: connection,
+                tableName: table?.TableName,
+                table: table,
+                rowState: rowState,
+                mappings: mappings,
+                bulkCopyTimeout: bulkCopyTimeout,
+                batchSize: batchSize,
+                identityBehavior: identityBehavior,
+                pseudoTableType: pseudoTableType,
+                transaction: transaction);
 
         /// <summary>
-        /// Bulk insert an instance of <see cref="DataTable"/> object into the database.
+        /// Inserts a list of entities into the target table by bulk. Underneath this operation is a call directly to the existing
+        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImport' extended method.
         /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The target table for bulk-insert operation.</param>
-        /// <param name="dataTable">The <see cref="DataTable"/> object to be used in the bulk-insert operation.</param>
-        /// <param name="rowState">The state of the rows to be copied to the destination.</param>
-        /// <param name="dbFields">The list of <see cref="DbField"/> objects.</param>
-        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
-        /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table. This argument will only be used if the 'isReturnIdentity' argument is 'true'.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
-        internal static int BulkInsertInternal(NpgsqlConnection connection,
+        /// <param name="connection">The current connection object in used.</param>
+        /// <param name="tableName">The name of the target table from the database. If not specified, the <see cref="DataTable.TableName"/> property will be used.</param>
+        /// <param name="table">The source <see cref="DataTable"/> object that contains the rows to be bulk-inserted to the target table.</param>
+        /// <param name="rowState">The state of the rows to be bulk-inserted. If not specified, all the rows of the table will be used.</param>
+        /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used.</param>
+        /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
+        /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the rows of the table will be sent together in one-go.</param>
+        /// <param name="identityBehavior">The behavior of how the identity column would work during the operation.</param>
+        /// <param name="pseudoTableType">The value that defines a value whether to use a physical or temporable table for the pseudo-table.</param>
+        /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
+        /// <returns>The number of rows that has been inserted into the target table.</returns>
+        public static int BinaryBulkInsert(this NpgsqlConnection connection,
             string tableName,
-            DataTable dataTable,
+            DataTable table,
             DataRowState? rowState = null,
-            IEnumerable<DbField> dbFields = null,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? isReturnIdentity = null,
-            bool? usePhysicalPseudoTempTable = null,
+            BulkImportIdentityBehavior identityBehavior = default,
+            BulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null) =>
-            //BulkInsertInternalBase<SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
-            //    SqlBulkCopyColumnMapping, NpgsqlTransaction>(connection,
-            //    tableName,
-            //    dataTable,
-            //    rowState,
-            //    dbFields,
-            //    mappings,
-            //    options.GetValueOrDefault(),
-            //    hints,
-            //    bulkCopyTimeout,
-            //    batchSize,
-            //    isReturnIdentity,
-            //    usePhysicalPseudoTempTable,
-            //    transaction);
-            throw new NotImplementedException();
+            BinaryBulkInsertBase(connection: connection,
+                tableName: (tableName ?? table?.TableName),
+                table: table,
+                rowState: rowState,
+                mappings: mappings,
+                bulkCopyTimeout: bulkCopyTimeout,
+                batchSize: batchSize,
+                identityBehavior: identityBehavior,
+                pseudoTableType: pseudoTableType,
+                transaction: transaction);
 
         #endregion
 
-        #region BulkInsertAsyncInternal
+        #region BinaryBulkInsert<DbDataReader>
 
         /// <summary>
-        /// 
+        /// Inserts the rows of the <see cref="DbDataReader"/> into the target table by bulk. Underneath this operation is a call directly to the existing
+        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method.
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="connection"></param>
-        /// <param name="tableName"></param>
-        /// <param name="entities"></param>
-        /// <param name="dbFields"></param>
-        /// <param name="mappings"></param>
-        /// <param name="bulkCopyTimeout"></param>
-        /// <param name="batchSize"></param>
-        /// <param name="isReturnIdentity"></param>
-        /// <param name="usePhysicalPseudoTempTable"></param>
-        /// <param name="transaction"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        internal static Task<int> BulkInsertAsyncInternal<TEntity>(NpgsqlConnection connection,
+        /// <param name="connection">The current connection object in used.</param>
+        /// <param name="tableName">The name of the target table from the database.</param>
+        /// <param name="reader">The instance of <see cref="DbDataReader"/> object that contains the rows to be bulk-inserted to the target table.</param>
+        /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used.</param>
+        /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
+        /// <param name="identityBehavior">The behavior of how the identity column would work during the operation.</param>
+        /// <param name="pseudoTableType">The value that defines a value whether to use a physical or temporable table for the pseudo-table.</param>
+        /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
+        /// <returns>The number of rows that has been inserted into the target table.</returns>
+        public static int BinaryBulkInsert(this NpgsqlConnection connection,
             string tableName,
+            DbDataReader reader,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            BulkImportIdentityBehavior identityBehavior = default,
+            BulkImportPseudoTableType pseudoTableType = default,
+            NpgsqlTransaction transaction = null) =>
+            BinaryBulkInsertBase(connection: connection,
+                tableName: tableName,
+                reader: reader,
+                mappings: mappings,
+                bulkCopyTimeout: bulkCopyTimeout,
+                identityBehavior: identityBehavior,
+                pseudoTableType: pseudoTableType,
+                transaction: transaction);
+
+        #endregion
+
+        #endregion
+
+        #region Async
+
+        #region BinaryBulkInsert<TEntity>
+
+        /// <summary>
+        /// Inserts a list of entities into the target table by bulk in an asynchronous way. Underneath this operation is a call directly to the existing
+        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImport' extended method.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <param name="connection">The current connection object in used.</param>
+        /// <param name="entities">The list of entities to be bulk-inserted to the target table.
+        /// This can be an <see cref="IEnumerable{T}"/> of the following objects (<typeparamref name="TEntity"/> (as class/model), <see cref="ExpandoObject"/>,
+        /// <see cref="IDictionary{TKey, TValue}"/> (of <see cref="string"/>/<see cref="object"/>) and Anonymous Types).</param>
+        /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used.</param>
+        /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
+        /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the entities will be sent together in one-go.</param>
+        /// <param name="identityBehavior">The behavior of how the identity column would work during the operation.</param>
+        /// <param name="pseudoTableType">The value that defines a value whether to use a physical or temporable table for the pseudo-table.</param>
+        /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        /// <returns>The number of rows that has been inserted into the target table.</returns>
+        public static Task<int> BinaryBulkInsertAsync<TEntity>(this NpgsqlConnection connection,
             IEnumerable<TEntity> entities,
-            IEnumerable<DbField> dbFields = null,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? isReturnIdentity = null,
-            bool? usePhysicalPseudoTempTable = null,
+            BulkImportIdentityBehavior identityBehavior = default,
+            BulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            //BulkInsertAsyncInternalBase<TEntity, SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
-            //    SqlBulkCopyColumnMapping, NpgsqlTransaction>(connection,
-            //    tableName,
-            //    entities,
-            //    dbFields,
-            //    mappings,
-            //    options.GetValueOrDefault(),
-            //    hints,
-            //    bulkCopyTimeout,
-            //    batchSize,
-            //    isReturnIdentity,
-            //    usePhysicalPseudoTempTable,
-            //    transaction,
-            //    cancellationToken);
-            throw new NotImplementedException();
+            BinaryBulkInsertAsync<TEntity>(connection: connection,
+                tableName: ClassMappedNameCache.Get<TEntity>(),
+                entities: entities,
+                mappings: mappings,
+                bulkCopyTimeout: bulkCopyTimeout,
+                batchSize: batchSize,
+                identityBehavior: identityBehavior,
+                pseudoTableType: pseudoTableType,
+                transaction: transaction,
+                cancellationToken: cancellationToken);
 
         /// <summary>
-        /// 
+        /// Inserts a list of entities into the target table by bulk in an asynchronous way. Underneath this operation is a call directly to the existing
+        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImport' extended method.
         /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="tableName"></param>
-        /// <param name="reader"></param>
-        /// <param name="dbFields"></param>
-        /// <param name="mappings"></param>
-        /// <param name="bulkCopyTimeout"></param>
-        /// <param name="batchSize"></param>
-        /// <param name="transaction"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        internal static Task<int> BulkInsertAsyncInternal(NpgsqlConnection connection,
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <param name="connection">The current connection object in used.</param>
+        /// <param name="tableName">The name of the target table from the database.</param>
+        /// <param name="entities">The list of entities to be bulk-inserted to the target table.
+        /// This can be an <see cref="IEnumerable{T}"/> of the following objects (<typeparamref name="TEntity"/> (as class/model), <see cref="ExpandoObject"/>,
+        /// <see cref="IDictionary{TKey, TValue}"/> (of <see cref="string"/>/<see cref="object"/>) and Anonymous Types).</param>
+        /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used.</param>
+        /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
+        /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the rows of the table will be sent together in one-go.</param>
+        /// <param name="identityBehavior">The behavior of how the identity column would work during the operation.</param>
+        /// <param name="pseudoTableType">The value that defines a value whether to use a physical or temporable table for the pseudo-table.</param>
+        /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        /// <returns>The number of rows that has been inserted into the target table.</returns>
+        public static async Task<int> BinaryBulkInsertAsync<TEntity>(this NpgsqlConnection connection,
+            string tableName,
+            IEnumerable<TEntity> entities,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            BulkImportIdentityBehavior identityBehavior = default,
+            BulkImportPseudoTableType pseudoTableType = default,
+            NpgsqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+            where TEntity : class =>
+            await BinaryBulkInsertBaseAsync<TEntity>(connection: connection,
+                tableName: (tableName ?? ClassMappedNameCache.Get<TEntity>()),
+                entities: entities,
+                mappings: mappings,
+                bulkCopyTimeout: bulkCopyTimeout,
+                batchSize: batchSize,
+                identityBehavior: identityBehavior,
+                pseudoTableType: pseudoTableType,
+                transaction: transaction,
+                cancellationToken: cancellationToken);
+
+        #endregion
+
+        #region BinaryBulkInsert<DataTable>
+
+        /// <summary>
+        /// Inserts the rows of the <see cref="DataTable"/> into the target table by bulk in an asynchronous way. It uses the <see cref="DataTable.TableName"/> property 
+        /// as the target table. Underneath this operation is a call directly to the existing <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method.
+        /// </summary>
+        /// <param name="connection">The current connection object in used.</param>
+        /// <param name="table">The source <see cref="DataTable"/> object that contains the rows to be bulk-inserted to the target table.</param>
+        /// <param name="rowState">The state of the rows to be bulk-inserted. If not specified, all the rows of the table will be used.</param>
+        /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used.</param>
+        /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
+        /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the rows of the table will be sent together in one-go.</param>
+        /// <param name="identityBehavior">The behavior of how the identity column would work during the operation.</param>
+        /// <param name="pseudoTableType">The value that defines a value whether to use a physical or temporable table for the pseudo-table.</param>
+        /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        /// <returns>The number of rows that has been inserted into the target table.</returns>
+        public static Task<int> BinaryBulkInsertAsync(this NpgsqlConnection connection,
+            DataTable table,
+            DataRowState? rowState = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            BulkImportIdentityBehavior identityBehavior = default,
+            BulkImportPseudoTableType pseudoTableType = default,
+            NpgsqlTransaction transaction = null,
+            CancellationToken cancellationToken = default) =>
+            BinaryBulkInsertAsync(connection: connection,
+                tableName: table?.TableName,
+                table: table,
+                rowState: rowState,
+                mappings: mappings,
+                bulkCopyTimeout: bulkCopyTimeout,
+                batchSize: batchSize,
+                identityBehavior: identityBehavior,
+                pseudoTableType: pseudoTableType,
+                transaction: transaction,
+                cancellationToken: cancellationToken);
+
+        /// <summary>
+        /// Inserts the rows of the <see cref="DataTable"/> into the target table by bulk in an asynchronous way. It uses the <see cref="DataTable.TableName"/> property 
+        /// as the target table. Underneath this operation is a call directly to the existing <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method.
+        /// </summary>
+        /// <param name="connection">The current connection object in used.</param>
+        /// <param name="tableName">The name of the target table from the database. If not specified, the <see cref="DataTable.TableName"/> property will be used.</param>
+        /// <param name="table">The source <see cref="DataTable"/> object that contains the rows to be bulk-inserted to the target table.</param>
+        /// <param name="rowState">The state of the rows to be bulk-inserted. If not specified, all the rows of the table will be used.</param>
+        /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used.</param>
+        /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
+        /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the rows of the table will be sent together in one-go.</param>
+        /// <param name="identityBehavior">The behavior of how the identity column would work during the operation.</param>
+        /// <param name="pseudoTableType">The value that defines a value whether to use a physical or temporable table for the pseudo-table.</param>
+        /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        /// <returns>The number of rows that has been inserted into the target table.</returns>
+        public static async Task<int> BinaryBulkInsertAsync(this NpgsqlConnection connection,
+            string tableName,
+            DataTable table,
+            DataRowState? rowState = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            BulkImportIdentityBehavior identityBehavior = default,
+            BulkImportPseudoTableType pseudoTableType = default,
+            NpgsqlTransaction transaction = null,
+            CancellationToken cancellationToken = default) =>
+            await BinaryBulkInsertBaseAsync(connection: connection,
+                tableName: (tableName ?? table?.TableName),
+                table: table,
+                rowState: rowState,
+                mappings: mappings,
+                bulkCopyTimeout: bulkCopyTimeout,
+                batchSize: batchSize,
+                identityBehavior: identityBehavior,
+                pseudoTableType: pseudoTableType,
+                transaction: transaction,
+                cancellationToken: cancellationToken);
+
+        #endregion
+
+        #region BinaryBulkInsert<DbDataReader>
+
+        /// <summary>
+        /// Inserts the rows of the <see cref="DbDataReader"/> into the target table by bulk in an asynchronous way. Underneath this operation is a call directly to the existing
+        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method.
+        /// </summary>
+        /// <param name="connection">The current connection object in used.</param>
+        /// <param name="tableName">The name of the target table from the database.</param>
+        /// <param name="reader">The instance of <see cref="DbDataReader"/> object that contains the rows to be bulk-inserted to the target table.</param>
+        /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used.</param>
+        /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
+        /// <param name="identityBehavior">The behavior of how the identity column would work during the operation.</param>
+        /// <param name="pseudoTableType">The value that defines a value whether to use a physical or temporable table for the pseudo-table.</param>
+        /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        /// <returns>The number of rows that has been inserted into the target table.</returns>
+        public static async Task<int> BinaryBulkInsertAsync(this NpgsqlConnection connection,
             string tableName,
             DbDataReader reader,
-            IEnumerable<DbField> dbFields = null,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
-            int? batchSize = null,
+            BulkImportIdentityBehavior identityBehavior = default,
+            BulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            //BulkInsertAsyncInternalBase<SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
-            //    SqlBulkCopyColumnMapping, NpgsqlTransaction>(connection,
-            //    tableName,
-            //    reader,
-            //    dbFields,
-            //    mappings,
-            //    bulkCopyTimeout,
-            //    batchSize,
-            //    transaction,
-            //    cancellationToken);
-            throw new NotImplementedException();
+            await BinaryBulkInsertBaseAsync(connection: connection,
+                tableName: tableName,
+                reader: reader,
+                mappings: mappings,
+                bulkCopyTimeout: bulkCopyTimeout,
+                identityBehavior: identityBehavior,
+                pseudoTableType: pseudoTableType,
+                transaction: transaction,
+                cancellationToken: cancellationToken);
 
-        /// <summary>
-        /// Bulk insert an instance of <see cref="DataTable"/> object into the database in an asynchronous way.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The target table for bulk-insert operation.</param>
-        /// <param name="dataTable">The <see cref="DataTable"/> object to be used in the bulk-insert operation.</param>
-        /// <param name="rowState">The state of the rows to be copied to the destination.</param>
-        /// <param name="dbFields">The list of <see cref="DbField"/> objects.</param>
-        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
-        /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table. This argument will only be used if the 'isReturnIdentity' argument is 'true'.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
-        internal static Task<int> BulkInsertAsyncInternal(NpgsqlConnection connection,
-            string tableName,
-            DataTable dataTable,
-            DataRowState? rowState = null,
-            IEnumerable<DbField> dbFields = null,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
-            int? bulkCopyTimeout = null,
-            int? batchSize = null,
-            bool? isReturnIdentity = null,
-            bool? usePhysicalPseudoTempTable = null,
-            NpgsqlTransaction transaction = null,
-            CancellationToken cancellationToken = default) =>
-            //BulkInsertAsyncInternalBase<SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
-            //    SqlBulkCopyColumnMapping, NpgsqlTransaction>(connection,
-            //    tableName,
-            //    dataTable,
-            //    rowState,
-            //    dbFields,
-            //    mappings,
-            //    hints,
-            //    bulkCopyTimeout,
-            //    batchSize,
-            //    isReturnIdentity,
-            //    usePhysicalPseudoTempTable,
-            //    transaction,
-            //    cancellationToken);
-            throw new NotImplementedException();
+        #endregion
 
         #endregion
     }
