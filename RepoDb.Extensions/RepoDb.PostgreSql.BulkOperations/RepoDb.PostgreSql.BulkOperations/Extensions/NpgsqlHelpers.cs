@@ -325,6 +325,37 @@ namespace RepoDb
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="table"></param>
+        /// <param name="dbFields"></param>
+        /// <param name="identities"></param>
+        /// <param name="dbSetting"></param>
+        private static void SetDataTableIdentities(DataTable table,
+            IEnumerable<DbField> dbFields,
+            IEnumerable<long> identities,
+            IDbSetting dbSetting)
+        {
+            var identityField = dbFields?.FirstOrDefault(dbField => dbField.IsIdentity).AsField();
+            if (identityField == null)
+            {
+                return;
+            }
+
+            var identityColumn = GetDataTableIdentityColumn(table, identityField, dbSetting);
+            if (identityColumn == null)
+            {
+                identityColumn = table.Columns.Add(identityField.Name, identityField.Type ?? typeof(object));
+            }
+
+            var identityList = identities.ToList();
+            for (var i = 0; i < table.Rows.Count; i++)
+            {
+                table.Rows[i][identityColumn] = identityList[i];
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="dbFields"></param>
         /// <param name="dbSetting"></param>
@@ -346,7 +377,6 @@ namespace RepoDb
 
             return null;
         }
-
 
         /// <summary>
         /// 
@@ -372,6 +402,34 @@ namespace RepoDb
             }
 
             return property;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="identityField"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
+        private static DataColumn GetDataTableIdentityColumn(DataTable table,
+            Field identityField,
+            IDbSetting dbSetting)
+        {
+            if (identityField == null)
+            {
+                return null;
+            }
+
+            foreach (DataColumn column in table.Columns)
+            {
+                if (string.Equals(column.ColumnName.AsUnquoted(true, dbSetting),
+                    identityField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase))
+                {
+                    return column;
+                }
+            }
+
+            return null;
         }
     }
 }
