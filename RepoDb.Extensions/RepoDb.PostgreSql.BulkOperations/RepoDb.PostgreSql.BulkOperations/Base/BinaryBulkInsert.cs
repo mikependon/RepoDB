@@ -153,7 +153,8 @@ namespace RepoDb
                         transaction),
 
                 // setIdentities
-                null,
+                (identities) =>
+                    SetDataTableIdentities(table, dbFields, identities, dbSetting),
 
                 identityBehavior: identityBehavior,
                 pseudoTableType: pseudoTableType,
@@ -375,7 +376,8 @@ namespace RepoDb
                         cancellationToken),
 
                 // setIdentities
-                null,
+                (identities) =>
+                    SetDataTableIdentities(table, dbFields, identities, dbSetting),
 
                 identityBehavior: identityBehavior,
                 pseudoTableType: pseudoTableType,
