@@ -1,10 +1,10 @@
 ﻿using Npgsql;
+using RepoDb.Enumerations.PostgreSql;
 using RepoDb.PostgreSql.BulkOperations;
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Linq.Expressions;
+using System.Dynamic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,740 +15,424 @@ namespace RepoDb
     /// </summary>
     public static partial class NpgsqlConnectionExtension
     {
-        #region BulkMerge<TEntity>
+        #region Sync
+
+        #region BinaryBulkMerge<TEntity>
 
         /// <summary>
-        /// Bulk merge a list of data entity objects into the database.
+        /// Merges a list of entities into the target table by bulk. Underneath this operation is a call directly to the existing
+        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImport' extended method.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="entities">The list of the data entities to be bulk-merged.</param>
-        /// <param name="qualifiers">The qualifier fields to be used for this bulk-merge operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
-        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
-        /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
-        public static int BulkMerge<TEntity>(this NpgsqlConnection connection,
-            IEnumerable<TEntity> entities,
-            Expression<Func<TEntity, object>> qualifiers = null,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
-            int? bulkCopyTimeout = null,
-            int? batchSize = null,
-            bool? isReturnIdentity = null,
-            bool? usePhysicalPseudoTempTable = null,
-            NpgsqlTransaction transaction = null)
-            where TEntity : class
-        {
-            return BulkMergeInternal<TEntity>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
-                entities: entities,
-                qualifiers: ParseExpression(qualifiers),
-                mappings: mappings,
-                bulkCopyTimeout: bulkCopyTimeout,
-                batchSize: batchSize,
-                isReturnIdentity: isReturnIdentity,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction);
-        }
-
-        /// <summary>
-        /// Bulk merge a list of data entity objects into the database.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="tableName">The target table for bulk-merge operation.</param>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="entities">The list of the data entities to be bulk-merged.</param>
-        /// <param name="qualifiers">The expression for the qualifier fields to be used for this bulk-merge operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
-        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
-        /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
-        public static int BulkMerge<TEntity>(this NpgsqlConnection connection,
-            string tableName,
-            IEnumerable<TEntity> entities,
-            Expression<Func<TEntity, object>> qualifiers = null,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
-            int? bulkCopyTimeout = null,
-            int? batchSize = null,
-            bool? isReturnIdentity = null,
-            bool? usePhysicalPseudoTempTable = null,
-            NpgsqlTransaction transaction = null)
-            where TEntity : class
-        {
-            return BulkMergeInternal<TEntity>(connection: connection,
-                tableName: tableName,
-                entities: entities,
-                qualifiers: ParseExpression(qualifiers),
-                mappings: mappings,
-                bulkCopyTimeout: bulkCopyTimeout,
-                batchSize: batchSize,
-                isReturnIdentity: isReturnIdentity,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction);
-        }
-
-        /// <summary>
-        /// Bulk merge an instance of <see cref="DbDataReader"/> object into the database.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-merge operation.</param>
-        /// <param name="qualifiers">The expression for the qualifier fields to be used for this bulk-merge operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
-        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
-        /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
-        public static int BulkMerge<TEntity>(this NpgsqlConnection connection,
-            DbDataReader reader,
-            Expression<Func<TEntity, object>> qualifiers = null,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
-            int? bulkCopyTimeout = null,
-            int? batchSize = null,
-            bool? usePhysicalPseudoTempTable = null,
-            NpgsqlTransaction transaction = null)
-            where TEntity : class
-        {
-            return BulkMergeInternal(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
-                reader: reader,
-                qualifiers: ParseExpression(qualifiers),
-                mappings: mappings,
-                bulkCopyTimeout: bulkCopyTimeout,
-                batchSize: batchSize,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction);
-        }
-
-        #endregion
-
-        #region BulkMerge(TableName)
-
-        /// <summary>
-        /// Bulk merge an instance of <see cref="DbDataReader"/> object into the database.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The target table for bulk-merge operation.</param>
-        /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-merge operation.</param>
-        /// <param name="qualifiers">The qualifier fields to be used for this bulk-merge operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
-        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
-        /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
-        public static int BulkMerge(this NpgsqlConnection connection,
-            string tableName,
-            DbDataReader reader,
-            IEnumerable<Field> qualifiers = null,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
-            int? bulkCopyTimeout = null,
-            int? batchSize = null,
-            bool? usePhysicalPseudoTempTable = null,
-            NpgsqlTransaction transaction = null)
-        {
-            return BulkMergeInternal(connection: connection,
-                tableName: tableName,
-                reader: reader,
-                qualifiers: qualifiers,
-                mappings: mappings,
-                bulkCopyTimeout: bulkCopyTimeout,
-                batchSize: batchSize,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction);
-        }
-
-        /// <summary>
-        /// Bulk merge an instance of <see cref="DataTable"/> object into the database.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="dataTable">The <see cref="DataTable"/> object to be used in the bulk-merge operation.</param>
-        /// <param name="qualifiers">The qualifier fields to be used for this bulk-merge operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
-        /// <param name="rowState">The state of the rows to be copied to the destination.</param>
-        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
-        /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
-        public static int BulkMerge<TEntity>(this NpgsqlConnection connection,
-            DataTable dataTable,
-            IEnumerable<Field> qualifiers = null,
-            DataRowState? rowState = null,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
-            int? bulkCopyTimeout = null,
-            int? batchSize = null,
-            bool? isReturnIdentity = null,
-            bool? usePhysicalPseudoTempTable = null,
-            NpgsqlTransaction transaction = null)
-            where TEntity : class
-        {
-            return BulkMergeInternal(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
-                dataTable: dataTable,
-                qualifiers: qualifiers,
-                rowState: rowState,
-                mappings: mappings,
-                bulkCopyTimeout: bulkCopyTimeout,
-                batchSize: batchSize,
-                isReturnIdentity: isReturnIdentity,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction);
-        }
-
-        /// <summary>
-        /// Bulk merge an instance of <see cref="DataTable"/> object into the database.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The target table for bulk-merge operation.</param>
-        /// <param name="dataTable">The <see cref="DataTable"/> object to be used in the bulk-merge operation.</param>
-        /// <param name="qualifiers">The qualifier fields to be used for this bulk-merge operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
-        /// <param name="rowState">The state of the rows to be copied to the destination.</param>
-        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
-        /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
-        public static int BulkMerge(this NpgsqlConnection connection,
-            string tableName,
-            DataTable dataTable,
-            IEnumerable<Field> qualifiers = null,
-            DataRowState? rowState = null,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
-            int? bulkCopyTimeout = null,
-            int? batchSize = null,
-            bool? isReturnIdentity = null,
-            bool? usePhysicalPseudoTempTable = null,
-            NpgsqlTransaction transaction = null)
-        {
-            return BulkMergeInternal(connection: connection,
-                tableName: tableName,
-                dataTable: dataTable,
-                qualifiers: qualifiers,
-                rowState: rowState,
-                mappings: mappings,
-                bulkCopyTimeout: bulkCopyTimeout,
-                batchSize: batchSize,
-                isReturnIdentity: isReturnIdentity,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction);
-        }
-
-        #endregion
-
-        #region BulkMergeAsync<TEntity>
-
-        /// <summary>
-        /// Bulk merge a list of data entity objects into the database in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="entities">The list of the data entities to be bulk-merged.</param>
-        /// <param name="qualifiers">The expression for the qualifier fields to be used for this bulk-merge operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
-        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
-        /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
-        public static Task<int> BulkMergeAsync<TEntity>(this NpgsqlConnection connection,
-            IEnumerable<TEntity> entities,
-            Expression<Func<TEntity, object>> qualifiers = null,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
-            int? bulkCopyTimeout = null,
-            int? batchSize = null,
-            bool? isReturnIdentity = null,
-            bool? usePhysicalPseudoTempTable = null,
-            NpgsqlTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-            where TEntity : class
-        {
-            return BulkMergeAsyncInternal(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
-                entities: entities,
-                qualifiers: ParseExpression(qualifiers),
-                mappings: mappings,
-                bulkCopyTimeout: bulkCopyTimeout,
-                batchSize: batchSize,
-                isReturnIdentity: isReturnIdentity,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction,
-                cancellationToken: cancellationToken);
-        }
-
-        /// <summary>
-        /// Bulk merge a list of data entity objects into the database in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="tableName">The target table for bulk-merge operation.</param>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="entities">The list of the data entities to be bulk-merged.</param>
-        /// <param name="qualifiers">The expression for the qualifier fields to be used for this bulk-merge operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
-        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
-        /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
-        public static Task<int> BulkMergeAsync<TEntity>(this NpgsqlConnection connection,
-            string tableName,
-            IEnumerable<TEntity> entities,
-            Expression<Func<TEntity, object>> qualifiers = null,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
-            int? bulkCopyTimeout = null,
-            int? batchSize = null,
-            bool? isReturnIdentity = null,
-            bool? usePhysicalPseudoTempTable = null,
-            NpgsqlTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-            where TEntity : class
-        {
-            return BulkMergeAsyncInternal(connection: connection,
-                tableName: tableName,
-                entities: entities,
-                qualifiers: ParseExpression(qualifiers),
-                mappings: mappings,
-                bulkCopyTimeout: bulkCopyTimeout,
-                batchSize: batchSize,
-                isReturnIdentity: isReturnIdentity,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction,
-                cancellationToken: cancellationToken);
-        }
-
-        /// <summary>
-        /// Bulk merge an instance of <see cref="DbDataReader"/> object into the database in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-merge operation.</param>
-        /// <param name="qualifiers">The expression for the qualifier fields to be used for this bulk-merge operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
-        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
-        /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
-        public static Task<int> BulkMergeAsync<TEntity>(this NpgsqlConnection connection,
-            DbDataReader reader,
-            Expression<Func<TEntity, object>> qualifiers = null,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
-            int? bulkCopyTimeout = null,
-            int? batchSize = null,
-            bool? usePhysicalPseudoTempTable = null,
-            NpgsqlTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-            where TEntity : class
-        {
-            return BulkMergeAsyncInternal(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
-                reader: reader,
-                qualifiers: ParseExpression(qualifiers),
-                mappings: mappings,
-                bulkCopyTimeout: bulkCopyTimeout,
-                batchSize: batchSize,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction,
-                cancellationToken: cancellationToken);
-        }
-
-        #endregion
-
-        #region BulkMergeAsync(TableName)
-
-        /// <summary>
-        /// Bulk merge an instance of <see cref="DbDataReader"/> object into the database in an asynchronous way.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The target table for bulk-merge operation.</param>
-        /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-merge operation.</param>
-        /// <param name="qualifiers">The qualifier fields to be used for this bulk-merge operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
-        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
-        /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
-        public static Task<int> BulkMergeAsync(this NpgsqlConnection connection,
-            string tableName,
-            DbDataReader reader,
-            IEnumerable<Field> qualifiers = null,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
-            int? bulkCopyTimeout = null,
-            int? batchSize = null,
-            bool? usePhysicalPseudoTempTable = null,
-            NpgsqlTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-        {
-            return BulkMergeAsyncInternal(connection: connection,
-                tableName: tableName,
-                reader: reader,
-                qualifiers: qualifiers,
-                mappings: mappings,
-                bulkCopyTimeout: bulkCopyTimeout,
-                batchSize: batchSize,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction,
-                cancellationToken: cancellationToken);
-        }
-
-        /// <summary>
-        /// Bulk merge an instance of <see cref="DataTable"/> object into the database in an asynchronous way.
-        /// </summary>
-        /// <typeparam name="TEntity">The type of the data entity object.</typeparam>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="dataTable">The <see cref="DataTable"/> object to be used in the bulk-merge operation.</param>
-        /// <param name="qualifiers">The qualifier fields to be used for this bulk-merge operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
-        /// <param name="rowState">The state of the rows to be copied to the destination.</param>
-        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
-        /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
-        public static Task<int> BulkMergeAsync<TEntity>(this NpgsqlConnection connection,
-            DataTable dataTable,
-            IEnumerable<Field> qualifiers = null,
-            DataRowState? rowState = null,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
-            int? bulkCopyTimeout = null,
-            int? batchSize = null,
-            bool? isReturnIdentity = null,
-            bool? usePhysicalPseudoTempTable = null,
-            NpgsqlTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-            where TEntity : class
-        {
-            return BulkMergeAsyncInternal(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
-                dataTable: dataTable,
-                qualifiers: qualifiers,
-                rowState: rowState,
-                mappings: mappings,
-                bulkCopyTimeout: bulkCopyTimeout,
-                batchSize: batchSize,
-                isReturnIdentity: isReturnIdentity,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction,
-                cancellationToken: cancellationToken);
-        }
-
-        /// <summary>
-        /// Bulk merge an instance of <see cref="DataTable"/> object into the database in an asynchronous way.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The target table for bulk-merge operation.</param>
-        /// <param name="dataTable">The <see cref="DataTable"/> object to be used in the bulk-merge operation.</param>
-        /// <param name="qualifiers">The qualifier fields to be used for this bulk-merge operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
-        /// <param name="rowState">The state of the rows to be copied to the destination.</param>
-        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
-        /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
-        public static Task<int> BulkMergeAsync(this NpgsqlConnection connection,
-            string tableName,
-            DataTable dataTable,
-            IEnumerable<Field> qualifiers = null,
-            DataRowState? rowState = null,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
-            int? bulkCopyTimeout = null,
-            int? batchSize = null,
-            bool? isReturnIdentity = null,
-            bool? usePhysicalPseudoTempTable = null,
-            NpgsqlTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-        {
-            return BulkMergeAsyncInternal(connection: connection,
-                tableName: tableName,
-                dataTable: dataTable,
-                qualifiers: qualifiers,
-                rowState: rowState,
-                mappings: mappings,
-                bulkCopyTimeout: bulkCopyTimeout,
-                batchSize: batchSize,
-                isReturnIdentity: isReturnIdentity,
-                usePhysicalPseudoTempTable: usePhysicalPseudoTempTable,
-                transaction: transaction,
-                cancellationToken: cancellationToken);
-        }
-
-        #endregion
-
-        #region BulkMergeInternal
-
-        /// <summary>
-        ///
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="connection"></param>
-        /// <param name="tableName"></param>
-        /// <param name="entities"></param>
-        /// <param name="qualifiers"></param>
-        /// <param name="mappings"></param>
-        /// <param name="bulkCopyTimeout"></param>
-        /// <param name="batchSize"></param>
-        /// <param name="isReturnIdentity"></param>
-        /// <param name="usePhysicalPseudoTempTable"></param>
-        /// <param name="transaction"></param>
-        /// <returns></returns>
-        internal static int BulkMergeInternal<TEntity>(NpgsqlConnection connection,
-            string tableName,
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <param name="connection">The current connection object in used.</param>
+        /// <param name="entities">The list of entities to be bulk-inserted to the target table.
+        /// This can be an <see cref="IEnumerable{T}"/> of the following objects (<typeparamref name="TEntity"/> (as class/model), <see cref="ExpandoObject"/>,
+        /// <see cref="IDictionary{TKey, TValue}"/> (of <see cref="string"/>/<see cref="object"/>) and Anonymous Types).</param>
+        /// <param name="qualifiers">The list of qualifier fields to be used during the bulk-merge operation. If not specified, the primary/identity key will be used.</param>
+        /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not an entity mapping)</param>
+        /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
+        /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the entities will be sent together in one-go.</param>
+        /// <param name="identityBehavior">The behavior of how the identity column would work during the operation.</param>
+        /// <param name="pseudoTableType">The value that defines a value whether to use a physical or temporable table for the pseudo-table.</param>
+        /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
+        /// <returns>The number of rows that has been inserted into the target table.</returns>
+        public static int BinaryBulkMerge<TEntity>(this NpgsqlConnection connection,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? isReturnIdentity = null,
-            bool? usePhysicalPseudoTempTable = null,
+            BulkImportIdentityBehavior identityBehavior = default,
+            BulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null)
             where TEntity : class =>
-            //BulkMergeInternalBase<TEntity, SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
-            //    SqlBulkCopyColumnMapping, NpgsqlTransaction>(connection,
-            //    tableName,
-            //    entities,
-            //    qualifiers,
-            //    mappings,
-            //    options.GetValueOrDefault(),
-            //    hints,
-            //    bulkCopyTimeout,
-            //    batchSize,
-            //    isReturnIdentity,
-            //    usePhysicalPseudoTempTable,
-            //    transaction);
-            throw new NotImplementedException();
+            BinaryBulkMerge<TEntity>(connection: connection,
+                tableName: ClassMappedNameCache.Get<TEntity>(),
+                entities: entities,
+                qualifiers: qualifiers,
+                mappings: mappings,
+                bulkCopyTimeout: bulkCopyTimeout,
+                batchSize: batchSize,
+                identityBehavior: identityBehavior,
+                pseudoTableType: pseudoTableType,
+                transaction: transaction);
 
         /// <summary>
-        /// Bulk merge an instance of <see cref="DbDataReader"/> object into the database.
+        /// Merges a list of entities into the target table by bulk. Underneath this operation is a call directly to the existing
+        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImport' extended method.
         /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The target table for bulk-merge operation.</param>
-        /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-merge operation.</param>
-        /// <param name="qualifiers">The qualifier fields to be used for this bulk-merge operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
-        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
-        /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
-        internal static int BulkMergeInternal(NpgsqlConnection connection,
-            string tableName,
-            DbDataReader reader,
-            IEnumerable<Field> qualifiers = null,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
-            int? bulkCopyTimeout = null,
-            int? batchSize = null,
-            bool? usePhysicalPseudoTempTable = null,
-            NpgsqlTransaction transaction = null) =>
-            //BulkMergeInternalBase<SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
-            //    SqlBulkCopyColumnMapping, NpgsqlTransaction>(connection,
-            //    tableName,
-            //    reader,
-            //    qualifiers,
-            //    mappings,
-            //    options.GetValueOrDefault(),
-            //    hints,
-            //    bulkCopyTimeout,
-            //    batchSize,
-            //    usePhysicalPseudoTempTable,
-            //    transaction);
-            throw new NotImplementedException();
-
-        /// <summary>
-        /// Bulk merge an instance of <see cref="DataTable"/> object into the database.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The target table for bulk-merge operation.</param>
-        /// <param name="dataTable">The <see cref="DataTable"/> object to be used in the bulk-merge operation.</param>
-        /// <param name="qualifiers">The qualifier fields to be used for this bulk-merge operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
-        /// <param name="rowState">The state of the rows to be copied to the destination.</param>
-        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
-        /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
-        internal static int BulkMergeInternal(NpgsqlConnection connection,
-            string tableName,
-            DataTable dataTable,
-            IEnumerable<Field> qualifiers = null,
-            DataRowState? rowState = null,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
-            int? bulkCopyTimeout = null,
-            int? batchSize = null,
-            bool? isReturnIdentity = null,
-            bool? usePhysicalPseudoTempTable = null,
-            NpgsqlTransaction transaction = null) =>
-            //BulkMergeInternalBase<SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
-            //    SqlBulkCopyColumnMapping, NpgsqlTransaction>(connection,
-            //    tableName,
-            //    dataTable,
-            //    qualifiers,
-            //    rowState,
-            //    mappings,
-            //    options.GetValueOrDefault(),
-            //    hints,
-            //    bulkCopyTimeout,
-            //    batchSize,
-            //    isReturnIdentity,
-            //    usePhysicalPseudoTempTable,
-            //    transaction);
-            throw new NotImplementedException();
-
-        #endregion
-
-        #region BulkMergeAsyncInternal
-
-        /// <summary>
-        ///
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="connection"></param>
-        /// <param name="tableName"></param>
-        /// <param name="entities"></param>
-        /// <param name="qualifiers"></param>
-        /// <param name="mappings"></param>
-        /// <param name="bulkCopyTimeout"></param>
-        /// <param name="batchSize"></param>
-        /// <param name="isReturnIdentity"></param>
-        /// <param name="usePhysicalPseudoTempTable"></param>
-        /// <param name="transaction"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        internal static Task<int> BulkMergeAsyncInternal<TEntity>(NpgsqlConnection connection,
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <param name="connection">The current connection object in used.</param>
+        /// <param name="tableName">The name of the target table from the database.</param>
+        /// <param name="entities">The list of entities to be bulk-inserted to the target table.
+        /// This can be an <see cref="IEnumerable{T}"/> of the following objects (<typeparamref name="TEntity"/> (as class/model), <see cref="ExpandoObject"/>,
+        /// <see cref="IDictionary{TKey, TValue}"/> (of <see cref="string"/>/<see cref="object"/>) and Anonymous Types).</param>
+        /// <param name="qualifiers">The list of qualifier fields to be used during the bulk-merge operation. If not specified, the primary/identity key will be used.</param>
+        /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not an entity mapping)</param>
+        /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
+        /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the rows of the table will be sent together in one-go.</param>
+        /// <param name="identityBehavior">The behavior of how the identity column would work during the operation.</param>
+        /// <param name="pseudoTableType">The value that defines a value whether to use a physical or temporable table for the pseudo-table.</param>
+        /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
+        /// <returns>The number of rows that has been inserted into the target table.</returns>
+        public static int BinaryBulkMerge<TEntity>(this NpgsqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? isReturnIdentity = null,
-            bool? usePhysicalPseudoTempTable = null,
+            BulkImportIdentityBehavior identityBehavior = default,
+            BulkImportPseudoTableType pseudoTableType = default,
+            NpgsqlTransaction transaction = null)
+            where TEntity : class =>
+            BinaryBulkMergeBase<TEntity>(connection: connection,
+                tableName: (tableName ?? ClassMappedNameCache.Get<TEntity>()),
+                entities: entities,
+                qualifiers: qualifiers,
+                mappings: mappings,
+                bulkCopyTimeout: bulkCopyTimeout,
+                batchSize: batchSize,
+                identityBehavior: identityBehavior,
+                pseudoTableType: pseudoTableType,
+                transaction: transaction);
+
+        #endregion
+
+        #region BinaryBulkMerge<DataTable>
+
+        /// <summary>
+        /// Merges the rows of the <see cref="DataTable"/> into the target table by bulk. It uses the <see cref="DataTable.TableName"/> property 
+        /// as the target table. Underneath this operation is a call directly to the existing <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method.
+        /// </summary>
+        /// <param name="connection">The current connection object in used.</param>
+        /// <param name="table">The source <see cref="DataTable"/> object that contains the rows to be bulk-inserted to the target table.</param>
+        /// <param name="rowState">The state of the rows to be bulk-inserted. If not specified, all the rows of the table will be used.</param>
+        /// <param name="qualifiers">The list of qualifier fields to be used during the bulk-merge operation. If not specified, the primary/identity key will be used.</param>
+        /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not an entity mapping)</param>
+        /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
+        /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the rows of the table will be sent together in one-go.</param>
+        /// <param name="identityBehavior">The behavior of how the identity column would work during the operation.</param>
+        /// <param name="pseudoTableType">The value that defines a value whether to use a physical or temporable table for the pseudo-table.</param>
+        /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
+        /// <returns>The number of rows that has been inserted into the target table.</returns>
+        public static int BinaryBulkMerge(this NpgsqlConnection connection,
+            DataTable table,
+            DataRowState? rowState = null,
+            IEnumerable<Field> qualifiers = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            BulkImportIdentityBehavior identityBehavior = default,
+            BulkImportPseudoTableType pseudoTableType = default,
+            NpgsqlTransaction transaction = null) =>
+            BinaryBulkMerge(connection: connection,
+                tableName: table?.TableName,
+                table: table,
+                rowState: rowState,
+                qualifiers: qualifiers,
+                mappings: mappings,
+                bulkCopyTimeout: bulkCopyTimeout,
+                batchSize: batchSize,
+                identityBehavior: identityBehavior,
+                pseudoTableType: pseudoTableType,
+                transaction: transaction);
+
+        /// <summary>
+        /// Merges a list of entities into the target table by bulk. Underneath this operation is a call directly to the existing
+        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImport' extended method.
+        /// </summary>
+        /// <param name="connection">The current connection object in used.</param>
+        /// <param name="tableName">The name of the target table from the database. If not specified, the <see cref="DataTable.TableName"/> property will be used.</param>
+        /// <param name="table">The source <see cref="DataTable"/> object that contains the rows to be bulk-inserted to the target table.</param>
+        /// <param name="rowState">The state of the rows to be bulk-inserted. If not specified, all the rows of the table will be used.</param>
+        /// <param name="qualifiers">The list of qualifier fields to be used during the bulk-merge operation. If not specified, the primary/identity key will be used.</param>
+        /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not an entity mapping)</param>
+        /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
+        /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the rows of the table will be sent together in one-go.</param>
+        /// <param name="identityBehavior">The behavior of how the identity column would work during the operation.</param>
+        /// <param name="pseudoTableType">The value that defines a value whether to use a physical or temporable table for the pseudo-table.</param>
+        /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
+        /// <returns>The number of rows that has been inserted into the target table.</returns>
+        public static int BinaryBulkMerge(this NpgsqlConnection connection,
+            string tableName,
+            DataTable table,
+            DataRowState? rowState = null,
+            IEnumerable<Field> qualifiers = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            BulkImportIdentityBehavior identityBehavior = default,
+            BulkImportPseudoTableType pseudoTableType = default,
+            NpgsqlTransaction transaction = null) =>
+            BinaryBulkMergeBase(connection: connection,
+                tableName: (tableName ?? table?.TableName),
+                table: table,
+                rowState: rowState,
+                qualifiers: qualifiers,
+                mappings: mappings,
+                bulkCopyTimeout: bulkCopyTimeout,
+                batchSize: batchSize,
+                identityBehavior: identityBehavior,
+                pseudoTableType: pseudoTableType,
+                transaction: transaction);
+
+        #endregion
+
+        #region BinaryBulkMerge<DbDataReader>
+
+        /// <summary>
+        /// Merges the rows of the <see cref="DbDataReader"/> into the target table by bulk. Underneath this operation is a call directly to the existing
+        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method.
+        /// </summary>
+        /// <param name="connection">The current connection object in used.</param>
+        /// <param name="tableName">The name of the target table from the database.</param>
+        /// <param name="reader">The instance of <see cref="DbDataReader"/> object that contains the rows to be bulk-inserted to the target table.</param>
+        /// <param name="qualifiers">The list of qualifier fields to be used during the bulk-merge operation. If not specified, the primary/identity key will be used.</param>
+        /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not an entity mapping)</param>
+        /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
+        /// <param name="identityBehavior">The behavior of how the identity column would work during the operation.</param>
+        /// <param name="pseudoTableType">The value that defines a value whether to use a physical or temporable table for the pseudo-table.</param>
+        /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
+        /// <returns>The number of rows that has been inserted into the target table.</returns>
+        public static int BinaryBulkMerge(this NpgsqlConnection connection,
+            string tableName,
+            DbDataReader reader,
+            IEnumerable<Field> qualifiers = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            BulkImportIdentityBehavior identityBehavior = default,
+            BulkImportPseudoTableType pseudoTableType = default,
+            NpgsqlTransaction transaction = null) =>
+            BinaryBulkMergeBase(connection: connection,
+                tableName: tableName,
+                reader: reader,
+                qualifiers: qualifiers,
+                mappings: mappings,
+                bulkCopyTimeout: bulkCopyTimeout,
+                identityBehavior: identityBehavior,
+                pseudoTableType: pseudoTableType,
+                transaction: transaction);
+
+        #endregion
+
+        #endregion
+
+        #region Async
+
+        #region BinaryBulkMerge<TEntity>
+
+        /// <summary>
+        /// Merges a list of entities into the target table by bulk in an asynchronous way. Underneath this operation is a call directly to the existing
+        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImport' extended method.
+        /// </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <param name="connection">The current connection object in used.</param>
+        /// <param name="entities">The list of entities to be bulk-inserted to the target table.
+        /// This can be an <see cref="IEnumerable{T}"/> of the following objects (<typeparamref name="TEntity"/> (as class/model), <see cref="ExpandoObject"/>,
+        /// <see cref="IDictionary{TKey, TValue}"/> (of <see cref="string"/>/<see cref="object"/>) and Anonymous Types).</param>
+        /// <param name="qualifiers">The list of qualifier fields to be used during the bulk-merge operation. If not specified, the primary/identity key will be used.</param>
+        /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not an entity mapping)</param>
+        /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
+        /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the entities will be sent together in one-go.</param>
+        /// <param name="identityBehavior">The behavior of how the identity column would work during the operation.</param>
+        /// <param name="pseudoTableType">The value that defines a value whether to use a physical or temporable table for the pseudo-table.</param>
+        /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        /// <returns>The number of rows that has been inserted into the target table.</returns>
+        public static Task<int> BinaryBulkMergeAsync<TEntity>(this NpgsqlConnection connection,
+            IEnumerable<TEntity> entities,
+            IEnumerable<Field> qualifiers = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            BulkImportIdentityBehavior identityBehavior = default,
+            BulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class =>
-            //BulkMergeAsyncInternalBase<TEntity, SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
-            //    SqlBulkCopyColumnMapping, NpgsqlTransaction>(connection,
-            //    tableName,
-            //    entities,
-            //    qualifiers,
-            //    mappings,
-            //    options.GetValueOrDefault(),
-            //    hints,
-            //    bulkCopyTimeout,
-            //    batchSize,
-            //    isReturnIdentity,
-            //    usePhysicalPseudoTempTable,
-            //    transaction,
-            //    cancellationToken);
-            throw new NotImplementedException();
+            BinaryBulkMergeAsync<TEntity>(connection: connection,
+                tableName: ClassMappedNameCache.Get<TEntity>(),
+                entities: entities,
+                qualifiers: qualifiers,
+                mappings: mappings,
+                bulkCopyTimeout: bulkCopyTimeout,
+                batchSize: batchSize,
+                identityBehavior: identityBehavior,
+                pseudoTableType: pseudoTableType,
+                transaction: transaction,
+                cancellationToken: cancellationToken);
 
         /// <summary>
-        /// Bulk merge an instance of <see cref="DbDataReader"/> object into the database in an asynchronous way.
+        /// Merges a list of entities into the target table by bulk in an asynchronous way. Underneath this operation is a call directly to the existing
+        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImport' extended method.
         /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The target table for bulk-merge operation.</param>
-        /// <param name="reader">The <see cref="DbDataReader"/> object to be used in the bulk-merge operation.</param>
-        /// <param name="qualifiers">The qualifier fields to be used for this bulk-merge operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
-        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
-        /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <param name="connection">The current connection object in used.</param>
+        /// <param name="tableName">The name of the target table from the database.</param>
+        /// <param name="entities">The list of entities to be bulk-inserted to the target table.
+        /// This can be an <see cref="IEnumerable{T}"/> of the following objects (<typeparamref name="TEntity"/> (as class/model), <see cref="ExpandoObject"/>,
+        /// <see cref="IDictionary{TKey, TValue}"/> (of <see cref="string"/>/<see cref="object"/>) and Anonymous Types).</param>
+        /// <param name="qualifiers">The list of qualifier fields to be used during the bulk-merge operation. If not specified, the primary/identity key will be used.</param>
+        /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not an entity mapping)</param>
+        /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
+        /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the rows of the table will be sent together in one-go.</param>
+        /// <param name="identityBehavior">The behavior of how the identity column would work during the operation.</param>
+        /// <param name="pseudoTableType">The value that defines a value whether to use a physical or temporable table for the pseudo-table.</param>
+        /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
-        internal static Task<int> BulkMergeAsyncInternal(NpgsqlConnection connection,
+        /// <returns>The number of rows that has been inserted into the target table.</returns>
+        public static async Task<int> BinaryBulkMergeAsync<TEntity>(this NpgsqlConnection connection,
+            string tableName,
+            IEnumerable<TEntity> entities,
+            IEnumerable<Field> qualifiers = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            BulkImportIdentityBehavior identityBehavior = default,
+            BulkImportPseudoTableType pseudoTableType = default,
+            NpgsqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+            where TEntity : class =>
+            await BinaryBulkMergeBaseAsync<TEntity>(connection: connection,
+                tableName: (tableName ?? ClassMappedNameCache.Get<TEntity>()),
+                entities: entities,
+                qualifiers: qualifiers,
+                mappings: mappings,
+                bulkCopyTimeout: bulkCopyTimeout,
+                batchSize: batchSize,
+                identityBehavior: identityBehavior,
+                pseudoTableType: pseudoTableType,
+                transaction: transaction,
+                cancellationToken: cancellationToken);
+
+        #endregion
+
+        #region BinaryBulkMerge<DataTable>
+
+        /// <summary>
+        /// Merges the rows of the <see cref="DataTable"/> into the target table by bulk in an asynchronous way. It uses the <see cref="DataTable.TableName"/> property 
+        /// as the target table. Underneath this operation is a call directly to the existing <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method.
+        /// </summary>
+        /// <param name="connection">The current connection object in used.</param>
+        /// <param name="table">The source <see cref="DataTable"/> object that contains the rows to be bulk-inserted to the target table.</param>
+        /// <param name="rowState">The state of the rows to be bulk-inserted. If not specified, all the rows of the table will be used.</param>
+        /// <param name="qualifiers">The list of qualifier fields to be used during the bulk-merge operation. If not specified, the primary/identity key will be used.</param>
+        /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not an entity mapping)</param>
+        /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
+        /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the rows of the table will be sent together in one-go.</param>
+        /// <param name="identityBehavior">The behavior of how the identity column would work during the operation.</param>
+        /// <param name="pseudoTableType">The value that defines a value whether to use a physical or temporable table for the pseudo-table.</param>
+        /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        /// <returns>The number of rows that has been inserted into the target table.</returns>
+        public static Task<int> BinaryBulkMergeAsync(this NpgsqlConnection connection,
+            DataTable table,
+            DataRowState? rowState = null,
+            IEnumerable<Field> qualifiers = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            BulkImportIdentityBehavior identityBehavior = default,
+            BulkImportPseudoTableType pseudoTableType = default,
+            NpgsqlTransaction transaction = null,
+            CancellationToken cancellationToken = default) =>
+            BinaryBulkMergeAsync(connection: connection,
+                tableName: table?.TableName,
+                table: table,
+                rowState: rowState,
+                qualifiers: qualifiers,
+                mappings: mappings,
+                bulkCopyTimeout: bulkCopyTimeout,
+                batchSize: batchSize,
+                identityBehavior: identityBehavior,
+                pseudoTableType: pseudoTableType,
+                transaction: transaction,
+                cancellationToken: cancellationToken);
+
+        /// <summary>
+        /// Merges the rows of the <see cref="DataTable"/> into the target table by bulk in an asynchronous way. It uses the <see cref="DataTable.TableName"/> property 
+        /// as the target table. Underneath this operation is a call directly to the existing <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method.
+        /// </summary>
+        /// <param name="connection">The current connection object in used.</param>
+        /// <param name="tableName">The name of the target table from the database. If not specified, the <see cref="DataTable.TableName"/> property will be used.</param>
+        /// <param name="table">The source <see cref="DataTable"/> object that contains the rows to be bulk-inserted to the target table.</param>
+        /// <param name="rowState">The state of the rows to be bulk-inserted. If not specified, all the rows of the table will be used.</param>
+        /// <param name="qualifiers">The list of qualifier fields to be used during the bulk-merge operation. If not specified, the primary/identity key will be used.</param>
+        /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not an entity mapping)</param>
+        /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
+        /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the rows of the table will be sent together in one-go.</param>
+        /// <param name="identityBehavior">The behavior of how the identity column would work during the operation.</param>
+        /// <param name="pseudoTableType">The value that defines a value whether to use a physical or temporable table for the pseudo-table.</param>
+        /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        /// <returns>The number of rows that has been inserted into the target table.</returns>
+        public static async Task<int> BinaryBulkMergeAsync(this NpgsqlConnection connection,
+            string tableName,
+            DataTable table,
+            DataRowState? rowState = null,
+            IEnumerable<Field> qualifiers = null,
+            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
+            int? bulkCopyTimeout = null,
+            int? batchSize = null,
+            BulkImportIdentityBehavior identityBehavior = default,
+            BulkImportPseudoTableType pseudoTableType = default,
+            NpgsqlTransaction transaction = null,
+            CancellationToken cancellationToken = default) =>
+            await BinaryBulkMergeBaseAsync(connection: connection,
+                tableName: (tableName ?? table?.TableName),
+                table: table,
+                rowState: rowState,
+                qualifiers: qualifiers,
+                mappings: mappings,
+                bulkCopyTimeout: bulkCopyTimeout,
+                batchSize: batchSize,
+                identityBehavior: identityBehavior,
+                pseudoTableType: pseudoTableType,
+                transaction: transaction,
+                cancellationToken: cancellationToken);
+
+        #endregion
+
+        #region BinaryBulkMerge<DbDataReader>
+
+        /// <summary>
+        /// Merges the rows of the <see cref="DbDataReader"/> into the target table by bulk in an asynchronous way. Underneath this operation is a call directly to the existing
+        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method.
+        /// </summary>
+        /// <param name="connection">The current connection object in used.</param>
+        /// <param name="tableName">The name of the target table from the database.</param>
+        /// <param name="reader">The instance of <see cref="DbDataReader"/> object that contains the rows to be bulk-inserted to the target table.</param>
+        /// <param name="qualifiers">The list of qualifier fields to be used during the bulk-merge operation. If not specified, the primary/identity key will be used.</param>
+        /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not an entity mapping)</param>
+        /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
+        /// <param name="identityBehavior">The behavior of how the identity column would work during the operation.</param>
+        /// <param name="pseudoTableType">The value that defines a value whether to use a physical or temporable table for the pseudo-table.</param>
+        /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        /// <returns>The number of rows that has been inserted into the target table.</returns>
+        public static async Task<int> BinaryBulkMergeAsync(this NpgsqlConnection connection,
             string tableName,
             DbDataReader reader,
             IEnumerable<Field> qualifiers = null,
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
-            int? batchSize = null,
-            bool? usePhysicalPseudoTempTable = null,
+            BulkImportIdentityBehavior identityBehavior = default,
+            BulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default) =>
-            //BulkMergeAsyncInternalBase<SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
-            //    SqlBulkCopyColumnMapping, NpgsqlTransaction>(connection,
-            //    tableName,
-            //    reader,
-            //    qualifiers,
-            //    mappings,
-            //    options.GetValueOrDefault(),
-            //    hints,
-            //    bulkCopyTimeout,
-            //    batchSize,
-            //    usePhysicalPseudoTempTable,
-            //    transaction,
-            //    cancellationToken);
-            throw new NotImplementedException();
+            await BinaryBulkMergeBaseAsync(connection: connection,
+                tableName: tableName,
+                reader: reader,
+                qualifiers: qualifiers,
+                mappings: mappings,
+                bulkCopyTimeout: bulkCopyTimeout,
+                identityBehavior: identityBehavior,
+                pseudoTableType: pseudoTableType,
+                transaction: transaction,
+                cancellationToken: cancellationToken);
 
-        /// <summary>
-        /// Bulk merge an instance of <see cref="DataTable"/> object into the database in an asynchronous way.
-        /// </summary>
-        /// <param name="connection">The connection object to be used.</param>
-        /// <param name="tableName">The target table for bulk-merge operation.</param>
-        /// <param name="dataTable">The <see cref="DataTable"/> object to be used in the bulk-merge operation.</param>
-        /// <param name="qualifiers">The qualifier fields to be used for this bulk-merge operation. This is defaulted to the primary key; if not present, then it will use the identity key.</param>
-        /// <param name="rowState">The state of the rows to be copied to the destination.</param>
-        /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
-        /// <param name="bulkCopyTimeout">The timeout in seconds to be used.</param>
-        /// <param name="batchSize">The size per batch to be used.</param>
-        /// <param name="isReturnIdentity">The flags that signify whether the identity values will be returned.</param>
-        /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
-        /// <param name="transaction">The transaction to be used.</param>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        /// <returns>The number of rows affected by the execution.</returns>
-        internal static Task<int> BulkMergeAsyncInternal(NpgsqlConnection connection,
-            string tableName,
-            DataTable dataTable,
-            IEnumerable<Field> qualifiers = null,
-            DataRowState? rowState = null,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
-            int? bulkCopyTimeout = null,
-            int? batchSize = null,
-            bool? isReturnIdentity = null,
-            bool? usePhysicalPseudoTempTable = null,
-            NpgsqlTransaction transaction = null,
-            CancellationToken cancellationToken = default) =>
-            //BulkMergeAsyncInternalBase<SqlBulkCopy, SqlBulkCopyOptions, SqlBulkCopyColumnMappingCollection,
-            //    SqlBulkCopyColumnMapping, NpgsqlTransaction>(connection,
-            //    tableName,
-            //    dataTable,
-            //    qualifiers,
-            //    rowState,
-            //    mappings,
-            //    options.GetValueOrDefault(),
-            //    hints,
-            //    bulkCopyTimeout,
-            //    batchSize,
-            //    isReturnIdentity,
-            //    usePhysicalPseudoTempTable,
-            //    transaction,
-            //    cancellationToken);
-            throw new NotImplementedException();
+        #endregion
 
         #endregion
     }

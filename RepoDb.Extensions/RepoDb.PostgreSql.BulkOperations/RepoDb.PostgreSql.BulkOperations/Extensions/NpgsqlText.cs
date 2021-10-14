@@ -74,6 +74,16 @@ namespace RepoDb
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
+        private static string GetBinaryMergePseudoTableName(string tableName,
+            IDbSetting dbSetting) =>
+            $"_RepoDb_BinaryBulkMerge_{tableName.AsUnquoted(true, dbSetting)}";
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <returns></returns>
         private static OrderField GetOderColumnOrderField() =>
             new OrderField("__RepoDb_OrderColumn", Order.Ascending);
