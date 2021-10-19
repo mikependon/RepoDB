@@ -20,20 +20,27 @@ namespace RepoDb
         /// </summary>
         /// <param name="dbFields"></param>
         /// <param name="properties"></param>
+        /// <param name="includePrimary"></param>
         /// <param name="includeIdentity"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         internal static IEnumerable<ClassProperty> GetMatchedProperties(IEnumerable<DbField> dbFields,
             IEnumerable<ClassProperty> properties,
-            bool includeIdentity = false,
-            IDbSetting dbSetting = null)
+            bool includePrimary,
+            bool includeIdentity,
+            IDbSetting dbSetting)
         {
             var matchedProperties = properties?
                 .Where(property =>
-                    dbFields?.FirstOrDefault(dbField =>
-                        (dbField.IsIdentity == false || (includeIdentity && dbField.IsIdentity)) &&
+                {
+                    var dbField = dbFields?.FirstOrDefault(dbField =>
                         string.Equals(property.GetMappedName().AsUnquoted(true, dbSetting),
-                            dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null);
+                            dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase));
+
+                    return (dbField != null && dbField.IsPrimary == false && dbField.IsIdentity == false) ||
+                        (includePrimary && dbField?.IsPrimary == true) ||
+                        (includeIdentity && dbField?.IsIdentity == true);
+                });
 
             if (matchedProperties?.Any() != true)
             {
@@ -50,6 +57,7 @@ namespace RepoDb
         /// <param name="sourceName"></param>
         /// <param name="destinationName"></param>
         /// <param name="dbFields"></param>
+        /// <param name="includePrimary"></param>
         /// <param name="includeIdentity"></param>
         /// <param name="alternativeType"></param>
         /// <param name="dbSetting"></param>
@@ -57,26 +65,67 @@ namespace RepoDb
         private static NpgsqlBulkInsertMapItem GetMapping(string sourceName,
             string destinationName,
             IEnumerable<DbField> dbFields,
+            bool includePrimary,
             bool includeIdentity,
             Type alternativeType,
             IDbSetting dbSetting)
         {
-            if (includeIdentity == false)
+            var dbField = GetMappingDbField(destinationName,
+                dbFields,
+                includePrimary,
+                includeIdentity,
+                dbSetting);
+
+            // Check
+            if (dbField == null)
             {
-                var identity = dbFields?.FirstOrDefault(dbField => dbField.IsIdentity);
-                if (identity != null && string.Equals(identity.Name.AsUnquoted(true, dbSetting), destinationName.AsUnquoted(true, dbSetting)))
-                {
-                    return null;
-                }
+                return default;
             }
 
-            var dbField = dbFields?.First(df => string.Equals(destinationName.AsUnquoted(true, dbSetting),
-                df.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase));
+            // Resolve
             var dbType = !string.IsNullOrWhiteSpace(dbField?.DatabaseType) ?
                 dbTypeNameToNpgsqlDbTypeResolver.Resolve(dbField.DatabaseType) :
                 clientTypeToNpgsqlDbTypeResolver.Resolve(dbField?.Type ?? alternativeType);
 
+            // Return
             return new NpgsqlBulkInsertMapItem(sourceName, destinationName, dbType);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="dbFields"></param>
+        /// <param name="includePrimary"></param>
+        /// <param name="includeIdentity"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
+        private static DbField GetMappingDbField(string name,
+            IEnumerable<DbField> dbFields,
+            bool includePrimary,
+            bool includeIdentity,
+            IDbSetting dbSetting)
+        {
+            // Get
+            var dbField = dbFields?.First(df => string.Equals(name.AsUnquoted(true, dbSetting),
+                df.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase));
+
+            // Check
+            if (dbField == null)
+            {
+                return dbField;
+            }
+
+            // Primary
+            if ((dbField.IsPrimary && includePrimary) || // Primary
+                (dbField.IsIdentity && includePrimary) || // Identity
+                (dbField.IsPrimary == false && dbField.IsIdentity == false)) // Others
+            {
+                return dbField;
+            }
+
+            // Return
+            return default;
         }
 
         /// <summary>
@@ -84,18 +133,31 @@ namespace RepoDb
         /// </summary>
         /// <param name="dbFields"></param>
         /// <param name="properties"></param>
+        /// <param name="includePrimary"></param>
         /// <param name="includeIdentity"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         private static IEnumerable<NpgsqlBulkInsertMapItem> GetMappings(IEnumerable<DbField> dbFields,
             IEnumerable<ClassProperty> properties,
-            bool includeIdentity = false,
-            IDbSetting dbSetting = null)
+            bool includePrimary,
+            bool includeIdentity,
+            IDbSetting dbSetting)
         {
-            var matchedProperties = GetMatchedProperties(dbFields, properties, includeIdentity, dbSetting);
+            var matchedProperties = GetMatchedProperties(dbFields,
+                properties,
+                includePrimary,
+                includeIdentity,
+                dbSetting);
+
             return matchedProperties
-                .Select(property => GetMapping(property.PropertyInfo.Name, property.GetMappedName(), dbFields,
-                    includeIdentity, property.PropertyInfo.PropertyType, dbSetting));
+                .Select(property =>
+                    GetMapping(property.PropertyInfo.Name, property.GetMappedName(),
+                        dbFields,
+                        includePrimary,
+                        includeIdentity,
+                        property.PropertyInfo.PropertyType,
+                        dbSetting))
+                .Where(property => property != null);
         }
 
         /// <summary>
@@ -103,11 +165,13 @@ namespace RepoDb
         /// </summary>
         /// <param name="dictionary"></param>
         /// <param name="dbFields"></param>
+        /// <param name="includePrimary"></param>
         /// <param name="includeIdentity"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         private static IEnumerable<NpgsqlBulkInsertMapItem> GetMappings(IDictionary<string, object> dictionary,
             IEnumerable<DbField> dbFields,
+            bool includePrimary,
             bool includeIdentity,
             IDbSetting dbSetting)
         {
@@ -116,6 +180,7 @@ namespace RepoDb
                 var mapping = GetMapping(kvp.Key,
                     kvp.Key,
                     dbFields,
+                    includePrimary,
                     includeIdentity,
                     kvp.Value?.GetType().GetUnderlyingType(), dbSetting);
 
@@ -131,11 +196,13 @@ namespace RepoDb
         /// </summary>
         /// <param name="table"></param>
         /// <param name="dbFields"></param>
+        /// <param name="includePrimary"></param>
         /// <param name="includeIdentity"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         private static IEnumerable<NpgsqlBulkInsertMapItem> GetMappings(DataTable table,
             IEnumerable<DbField> dbFields,
+            bool includePrimary,
             bool includeIdentity,
             IDbSetting dbSetting)
         {
@@ -144,6 +211,7 @@ namespace RepoDb
                 var mapping = GetMapping(column.ColumnName,
                     column.ColumnName,
                     dbFields,
+                    includePrimary,
                     includeIdentity,
                     column.DataType.GetUnderlyingType(),
                     dbSetting);
@@ -160,11 +228,13 @@ namespace RepoDb
         /// </summary>
         /// <param name="reader"></param>
         /// <param name="dbFields"></param>
+        /// <param name="includePrimary"></param>
         /// <param name="includeIdentity"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         private static IEnumerable<NpgsqlBulkInsertMapItem> GetMappings(DbDataReader reader,
             IEnumerable<DbField> dbFields,
+            bool includePrimary,
             bool includeIdentity,
             IDbSetting dbSetting)
         {
@@ -174,6 +244,7 @@ namespace RepoDb
                 var mapping = GetMapping(name,
                     name,
                     dbFields,
+                    includePrimary,
                     includeIdentity,
                     reader.GetFieldType(i).GetUnderlyingType(),
                     dbSetting);
@@ -431,5 +502,21 @@ namespace RepoDb
 
             return null;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dbFields"></param>
+        /// <returns></returns>
+        private static bool IsPrimaryAnIdentity(IEnumerable<DbField> dbFields) =>
+            IsPrimaryAnIdentity(dbFields?.FirstOrDefault(dbField => dbField.IsPrimary));
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="primary"></param>
+        /// <returns></returns>
+        private static bool IsPrimaryAnIdentity(DbField primary) =>
+            primary.IsPrimary && primary.IsIdentity;
     }
 }

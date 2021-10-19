@@ -27,11 +27,11 @@
 
   <ItemGroup>
     <Compile Remove="Operations\NpgsqlConnection\BinaryBulkDelete.cs" />
-    <Compile Remove="Operations\NpgsqlConnection\BinaryBulkMerge.cs" />
     <Compile Remove="Operations\NpgsqlConnection\BinaryBulkUpdate.cs" />
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="Base\BinaryBulkMerge.cs" />
     <Compile Include="Base\BinaryImport.cs" />
     <Compile Include="Base\BinaryBulkInsert.cs" />
   </ItemGroup>

@@ -84,28 +84,16 @@ namespace RepoDb
         /// 
         /// </summary>
         /// <param name="connection"></param>
-        /// <param name="tableName"></param>
-        /// <param name="pseudoTableName"></param>
-        /// <param name="mappings"></param>
-        /// <param name="dbFields"></param>
+        /// <param name="getMergeToPseudoCommandText"></param>
         /// <param name="bulkCopyTimeout"></param>
-        /// <param name="dbSetting"></param>
         /// <param name="transaction"></param>
-        private static IEnumerable<long> InsertPseudoTable(NpgsqlConnection connection,
-            string tableName,
-            string pseudoTableName,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings,
-            IEnumerable<DbField> dbFields,
+        /// <returns></returns>
+        private static IEnumerable<long> MergeToPseudoTable(NpgsqlConnection connection,
+            Func<string> getMergeToPseudoCommandText,
             int? bulkCopyTimeout = null,
-            IDbSetting dbSetting = null,
             NpgsqlTransaction transaction = null)
         {
-            var identityField = dbFields.FirstOrDefault(dbField => dbField.IsIdentity)?.AsField();
-            var commandText = GetInsertCommand(pseudoTableName,
-                tableName,
-                mappings.Select(mapping => new Field(mapping.DestinationColumn)),
-                identityField,
-                dbSetting);
+            var commandText = getMergeToPseudoCommandText();
 
             return connection.ExecuteQuery<long>(commandText,
                 bulkCopyTimeout,
@@ -116,30 +104,17 @@ namespace RepoDb
         /// 
         /// </summary>
         /// <param name="connection"></param>
-        /// <param name="tableName"></param>
-        /// <param name="pseudoTableName"></param>
-        /// <param name="mappings"></param>
-        /// <param name="dbFields"></param>
+        /// <param name="getMergeToPseudoCommandText"></param>
         /// <param name="bulkCopyTimeout"></param>
-        /// <param name="dbSetting"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
-        private static async Task<IEnumerable<long>> InsertPseudoTableAsync(NpgsqlConnection connection,
-            string tableName,
-            string pseudoTableName,
-            IEnumerable<NpgsqlBulkInsertMapItem> mappings,
-            IEnumerable<DbField> dbFields,
+        private static async Task<IEnumerable<long>> MergeToPseudoTableAsync(NpgsqlConnection connection,
+            Func<string> getMergeToPseudoCommandText,
             int? bulkCopyTimeout = null,
-            IDbSetting dbSetting = null,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            var identityField = dbFields.FirstOrDefault(dbField => dbField.IsIdentity)?.AsField();
-            var commandText = GetInsertCommand(pseudoTableName,
-                tableName,
-                mappings.Select(mapping => new Field(mapping.DestinationColumn)),
-                identityField,
-                dbSetting);
+            var commandText = getMergeToPseudoCommandText();
 
             return await connection.ExecuteQueryAsync<long>(commandText,
                 bulkCopyTimeout,
@@ -167,7 +142,105 @@ namespace RepoDb
             var dbSetting = connection.GetDbSetting();
             var commandText = GetDropPseudoTemporaryTableCommandText(tableName, dbSetting);
 
-            connection.ExecuteNonQuery(commandText, bulkCopyTimeout, transaction: transaction);
+            connection.ExecuteNonQuery(commandText,
+                bulkCopyTimeout,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        private static async Task DropPseudoTableAsync(NpgsqlConnection connection,
+            string tableName,
+            int? bulkCopyTimeout = null,
+            NpgsqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            if (string.IsNullOrWhiteSpace(tableName))
+            {
+                return;
+            }
+
+            var dbSetting = connection.GetDbSetting();
+            var commandText = GetDropPseudoTemporaryTableCommandText(tableName, dbSetting);
+
+            await connection.ExecuteNonQueryAsync(commandText,
+                bulkCopyTimeout,
+                transaction: transaction,
+                cancellationToken: cancellationToken);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="fields"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="dbSetting"></param>
+        /// <param name="transaction"></param>
+        private static void CreatePseudoTableIndex(NpgsqlConnection connection,
+            string tableName,
+            IEnumerable<Field> fields,
+            int? bulkCopyTimeout = null,
+            IDbSetting dbSetting = null,
+            NpgsqlTransaction transaction = null)
+        {
+            var commandText = GetCreatePseudoTableIndexCommandText(tableName, fields, dbSetting);
+
+            connection.ExecuteNonQuery(commandText,
+                bulkCopyTimeout,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="fields"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="dbSetting"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        private static async Task CreatePseudoTableIndexAsync(NpgsqlConnection connection,
+            string tableName,
+            IEnumerable<Field> fields,
+            int? bulkCopyTimeout = null,
+            IDbSetting dbSetting = null,
+            NpgsqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            var commandText = GetCreatePseudoTableIndexCommandText(tableName, fields, dbSetting);
+
+            await connection.ExecuteNonQueryAsync(commandText,
+                bulkCopyTimeout,
+                transaction: transaction,
+                cancellationToken: cancellationToken);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="fields"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
+        private static string GetCreatePseudoTableIndexCommandText(string tableName,
+            IEnumerable<Field> fields,
+            IDbSetting dbSetting)
+        {
+            var indexName = $"{tableName}_{fields.Select(field => field.Name).Join("")}_IDX".AsQuoted(true, dbSetting);
+            var columns = fields.Select(field => field.Name.AsQuoted(true, dbSetting)).Join(", ");
+
+            return $"CREATE INDEX IF NOT EXISTS {indexName} " +
+                $"ON {tableName.AsQuoted(true, dbSetting)} ({columns}); ";
         }
 
         /// <summary>

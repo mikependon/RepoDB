@@ -5,6 +5,7 @@ using RepoDb.Interfaces;
 using RepoDb.PostgreSql.BulkOperations;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Transactions;
@@ -24,11 +25,14 @@ namespace RepoDb
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="bulkCopyTimeout"></param>
+        /// <param name="dbFields"></param>
         /// <param name="getPseudoTableName"></param>
         /// <param name="getMappings"></param>
-        /// <param name="dbFields"></param>
         /// <param name="binaryImport"></param>
+        /// <param name="getMergeToPseudoCommandText"></param>
         /// <param name="setIdentities"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="isBinaryBulkInsert"></param>
         /// <param name="identityBehavior"></param>
         /// <param name="pseudoTableType"></param>
         /// <param name="dbSetting"></param>
@@ -37,17 +41,22 @@ namespace RepoDb
         private static int PseudoBasedBinaryImport(this NpgsqlConnection connection,
             string tableName,
             int? bulkCopyTimeout,
+            IEnumerable<DbField> dbFields,
             Func<string> getPseudoTableName,
             Func<IEnumerable<NpgsqlBulkInsertMapItem>> getMappings,
-            IEnumerable<DbField> dbFields,
             Func<string, int> binaryImport,
+            Func<string> getMergeToPseudoCommandText,
             Action<IEnumerable<long>> setIdentities,
+            IEnumerable<Field> qualifiers,
+            bool isBinaryBulkInsert,
             BulkImportIdentityBehavior identityBehavior,
             BulkImportPseudoTableType pseudoTableType,
             IDbSetting dbSetting,
             NpgsqlTransaction transaction)
         {
             string pseudoTableName = null;
+            var withPseudoTable = identityBehavior == BulkImportIdentityBehavior.ReturnIdentity ||
+                isBinaryBulkInsert == false;
 
             try
             {
@@ -55,7 +64,7 @@ namespace RepoDb
                 var mappings = getMappings?.Invoke();
 
                 // Create (TEMP)
-                if (identityBehavior == BulkImportIdentityBehavior.ReturnIdentity)
+                if (withPseudoTable)
                 {
                     CreatePseudoTable(connection,
                         tableName,
@@ -71,19 +80,33 @@ namespace RepoDb
                 // Import
                 var result = binaryImport?.Invoke(pseudoTableName ?? tableName);
 
-                // Insert (INTO)
-                if (identityBehavior == BulkImportIdentityBehavior.ReturnIdentity)
+                // Create Index
+                if (isBinaryBulkInsert == false && withPseudoTable)
                 {
-                    var identities = InsertPseudoTable(connection,
-                        tableName,
+                    qualifiers = qualifiers?.Any() == true ? qualifiers :
+                        dbFields?.FirstOrDefault(dbField => dbField.IsPrimary).AsField().AsEnumerable();
+
+                    CreatePseudoTableIndex(connection,
                         pseudoTableName,
-                        mappings,
-                        dbFields,
+                        qualifiers,
                         bulkCopyTimeout,
                         dbSetting,
+                        transaction);
+                }
+
+                // Merge (INTO)
+                if (withPseudoTable)
+                {
+                    var identities = MergeToPseudoTable(connection,
+                        getMergeToPseudoCommandText,
+                        bulkCopyTimeout,
                         transaction)?.AsList();
 
-                    setIdentities?.Invoke(identities);
+                    // Set the identities
+                    if (identityBehavior == BulkImportIdentityBehavior.ReturnIdentity)
+                    {
+                        setIdentities?.Invoke(identities);
+                    }
                 }
 
                 // Return
@@ -91,7 +114,7 @@ namespace RepoDb
             }
             finally
             {
-                if (identityBehavior == BulkImportIdentityBehavior.ReturnIdentity)
+                if (withPseudoTable)
                 {
                     DropPseudoTable(connection, pseudoTableName, bulkCopyTimeout, transaction);
                 }
@@ -104,11 +127,14 @@ namespace RepoDb
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="bulkCopyTimeout"></param>
+        /// <param name="dbFields"></param>
         /// <param name="getPseudoTableName"></param>
         /// <param name="getMappings"></param>
-        /// <param name="dbFields"></param>
         /// <param name="binaryImportAsync"></param>
+        /// <param name="getMergeToPseudoCommandText"></param>
         /// <param name="setIdentities"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="isBinaryBulkInsert"></param>
         /// <param name="identityBehavior"></param>
         /// <param name="pseudoTableType"></param>
         /// <param name="dbSetting"></param>
@@ -118,11 +144,14 @@ namespace RepoDb
         private static async Task<int> PseudoBasedBinaryImportAsync(this NpgsqlConnection connection,
             string tableName,
             int? bulkCopyTimeout,
+            IEnumerable<DbField> dbFields,
             Func<string> getPseudoTableName,
             Func<IEnumerable<NpgsqlBulkInsertMapItem>> getMappings,
-            IEnumerable<DbField> dbFields,
             Func<string, Task<int>> binaryImportAsync,
+            Func<string> getMergeToPseudoCommandText,
             Action<IEnumerable<long>> setIdentities,
+            IEnumerable<Field> qualifiers,
+            bool isBinaryBulkInsert,
             BulkImportIdentityBehavior identityBehavior,
             BulkImportPseudoTableType pseudoTableType,
             IDbSetting dbSetting,
@@ -130,6 +159,8 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
         {
             string pseudoTableName = null;
+            var withPseudoTable = identityBehavior == BulkImportIdentityBehavior.ReturnIdentity ||
+                isBinaryBulkInsert == false;
 
             try
             {
@@ -137,7 +168,7 @@ namespace RepoDb
                 var mappings = getMappings?.Invoke();
 
                 // Create (TEMP)
-                if (identityBehavior == BulkImportIdentityBehavior.ReturnIdentity)
+                if (withPseudoTable)
                 {
                     await CreatePseudoTableAsync(connection,
                         tableName,
@@ -154,20 +185,34 @@ namespace RepoDb
                 // Import
                 var result = await binaryImportAsync?.Invoke(pseudoTableName ?? tableName);
 
-                // Insert (INTO)
-                if (identityBehavior == BulkImportIdentityBehavior.ReturnIdentity)
+                // Create Index
+                if (isBinaryBulkInsert == false && withPseudoTable)
                 {
-                    var identities = (await InsertPseudoTableAsync(connection,
-                        tableName,
+                    qualifiers = qualifiers?.Any() == true ? qualifiers :
+                        dbFields?.FirstOrDefault(dbField => dbField.IsPrimary).AsField().AsEnumerable();
+
+                    await CreatePseudoTableIndexAsync(connection,
                         pseudoTableName,
-                        mappings,
-                        dbFields,
+                        qualifiers,
                         bulkCopyTimeout,
                         dbSetting,
                         transaction,
-                        cancellationToken))?.AsList();
+                        cancellationToken);
+                }
 
-                    setIdentities?.Invoke(identities);
+                // Insert (INTO)
+                if (withPseudoTable)
+                {
+                    var identities = (await MergeToPseudoTableAsync(connection,
+                        getMergeToPseudoCommandText,
+                        bulkCopyTimeout,
+                        transaction))?.AsList();
+
+                    // Set the identities
+                    if (identityBehavior == BulkImportIdentityBehavior.ReturnIdentity)
+                    {
+                        setIdentities?.Invoke(identities);
+                    }
                 }
 
                 // Return
@@ -175,9 +220,9 @@ namespace RepoDb
             }
             finally
             {
-                if (identityBehavior == BulkImportIdentityBehavior.ReturnIdentity)
+                if (withPseudoTable)
                 {
-                    DropPseudoTable(connection, pseudoTableName, bulkCopyTimeout, transaction);
+                    await DropPseudoTableAsync(connection, pseudoTableName, bulkCopyTimeout, transaction, cancellationToken);
                 }
             }
         }
