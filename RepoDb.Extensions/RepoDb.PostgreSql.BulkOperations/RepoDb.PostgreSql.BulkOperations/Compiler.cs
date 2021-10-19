@@ -92,9 +92,15 @@ namespace RepoDb.PostgreSql.BulkOperations
                 BulkImportIdentityBehavior identityBehavior,
                 IDbSetting dbSetting = null)
             {
+                var includeIdentity = (identityBehavior == BulkImportIdentityBehavior.KeepIdentity);
+                var primaryDbField = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
+                var isPrimaryAnIdentity = primaryDbField?.IsIdentity == true;
+                var includePrimary = isPrimaryAnIdentity == false ||
+                    (isPrimaryAnIdentity && identityBehavior == BulkImportIdentityBehavior.KeepIdentity);
                 var matchedProperties = NpgsqlConnectionExtension.GetMatchedProperties(dbFields,
                     properties,
-                    (identityBehavior == BulkImportIdentityBehavior.KeepIdentity),
+                    includePrimary,
+                    includeIdentity,
                     dbSetting);
                 var mappings = matchedProperties.Select(property =>
                     new NpgsqlBulkInsertMapItem(property.PropertyInfo.Name, property.GetMappedName()));
@@ -252,9 +258,15 @@ namespace RepoDb.PostgreSql.BulkOperations
                 BulkImportIdentityBehavior identityBehavior,
                 IDbSetting dbSetting = null)
             {
+                var includeIdentity = (identityBehavior == BulkImportIdentityBehavior.KeepIdentity);
+                var primaryDbField = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
+                var isPrimaryAnIdentity = primaryDbField?.IsIdentity == true;
+                var includePrimary = isPrimaryAnIdentity == false ||
+                    (isPrimaryAnIdentity && identityBehavior == BulkImportIdentityBehavior.KeepIdentity);
                 var matchedProperties = NpgsqlConnectionExtension.GetMatchedProperties(dbFields,
                     properties,
-                    (identityBehavior == BulkImportIdentityBehavior.KeepIdentity),
+                    includePrimary,
+                    includeIdentity,
                     dbSetting);
                 var mappings = matchedProperties.Select(property =>
                     new NpgsqlBulkInsertMapItem(property.PropertyInfo.Name, property.GetMappedName()));

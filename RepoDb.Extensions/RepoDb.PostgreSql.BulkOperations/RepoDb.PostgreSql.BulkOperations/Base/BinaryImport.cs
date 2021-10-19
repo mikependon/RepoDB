@@ -121,17 +121,22 @@ namespace RepoDb
             // Solving the anonymous types
             var entityType = (entities?.First()?.GetType() ?? typeof(TEntity));
             var isDictionary = entityType.IsDictionaryStringObject();
+            var includeIdentity = (identityBehavior == BulkImportIdentityBehavior.KeepIdentity);
+            var isPrimaryAnIdentity = IsPrimaryAnIdentity(dbFields);
+            var includePrimary = isPrimaryAnIdentity == false || (isPrimaryAnIdentity && includeIdentity);
 
             // Mappings
             mappings = mappings?.Any() == true ? mappings :
                 isDictionary ?
                 GetMappings(entities?.First() as IDictionary<string, object>,
                     dbFields,
-                    (identityBehavior == BulkImportIdentityBehavior.KeepIdentity),
+                    includePrimary,
+                    includeIdentity,
                     dbSetting) :
                 GetMappings(dbFields,
                     PropertyCache.Get(entityType),
-                    (identityBehavior == BulkImportIdentityBehavior.KeepIdentity),
+                    includePrimary,
+                    includeIdentity,
                     dbSetting);
 
             // Execution
@@ -276,11 +281,16 @@ namespace RepoDb
             IDbSetting dbSetting = null,
             NpgsqlTransaction transaction = null)
         {
+            var includeIdentity = (identityBehavior == BulkImportIdentityBehavior.KeepIdentity);
+            var isPrimaryAnIdentity = IsPrimaryAnIdentity(dbFields);
+            var includePrimary = isPrimaryAnIdentity == false || (isPrimaryAnIdentity && includeIdentity);
+
             // Mappings
             mappings = mappings?.Any() == true ? mappings :
                 GetMappings(table,
                     dbFields,
-                    (identityBehavior == BulkImportIdentityBehavior.KeepIdentity),
+                    includePrimary,
+                    includeIdentity,
                     dbSetting);
 
             // Execution
@@ -369,11 +379,16 @@ namespace RepoDb
             IDbSetting dbSetting = null,
             NpgsqlTransaction transaction = null)
         {
+            var includeIdentity = (identityBehavior == BulkImportIdentityBehavior.KeepIdentity);
+            var isPrimaryAnIdentity = IsPrimaryAnIdentity(dbFields);
+            var includePrimary = isPrimaryAnIdentity == false || (isPrimaryAnIdentity && includeIdentity);
+
             // Mappings
             mappings = mappings?.Any() == true ? mappings :
                 GetMappings(reader,
                     dbFields,
-                    (identityBehavior == BulkImportIdentityBehavior.KeepIdentity),
+                    includePrimary,
+                    includeIdentity,
                     dbSetting);
 
             // Execution
@@ -519,17 +534,22 @@ namespace RepoDb
             // Solving the anonymous types
             var entityType = (entities?.First()?.GetType() ?? typeof(TEntity));
             var isDictionary = entityType.IsDictionaryStringObject();
+            var includeIdentity = (identityBehavior == BulkImportIdentityBehavior.KeepIdentity);
+            var isPrimaryAnIdentity = IsPrimaryAnIdentity(dbFields);
+            var includePrimary = isPrimaryAnIdentity == false || (isPrimaryAnIdentity && includeIdentity);
 
             // Mappings
             mappings = mappings?.Any() == true ? mappings :
                 isDictionary ?
                 GetMappings(entities?.First() as IDictionary<string, object>,
                     dbFields,
-                    (identityBehavior == BulkImportIdentityBehavior.KeepIdentity),
+                    includePrimary,
+                    includeIdentity,
                     dbSetting) :
                 GetMappings(dbFields,
                     PropertyCache.Get(entityType),
-                    (identityBehavior == BulkImportIdentityBehavior.KeepIdentity),
+                    includePrimary,
+                    includeIdentity,
                     dbSetting);
 
             // Execution
@@ -685,11 +705,16 @@ namespace RepoDb
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
+            var includeIdentity = (identityBehavior == BulkImportIdentityBehavior.KeepIdentity);
+            var isPrimaryAnIdentity = IsPrimaryAnIdentity(dbFields);
+            var includePrimary = isPrimaryAnIdentity == false || (isPrimaryAnIdentity && includeIdentity);
+
             // Mappings
             mappings = mappings?.Any() == true ? mappings :
                 GetMappings(table,
                     dbFields,
-                    (identityBehavior == BulkImportIdentityBehavior.KeepIdentity),
+                    includePrimary,
+                    includeIdentity,
                     dbSetting);
 
             // Execution
@@ -785,11 +810,16 @@ namespace RepoDb
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
+            var includeIdentity = (identityBehavior == BulkImportIdentityBehavior.KeepIdentity);
+            var isPrimaryAnIdentity = IsPrimaryAnIdentity(dbFields);
+            var includePrimary = isPrimaryAnIdentity == false || (isPrimaryAnIdentity && includeIdentity);
+
             // Mappings
             mappings = mappings?.Any() == true ? mappings :
                 GetMappings(reader,
                     dbFields,
-                    (identityBehavior == BulkImportIdentityBehavior.KeepIdentity),
+                    includePrimary,
+                    includeIdentity,
                     dbSetting).ToList();
 
             // Execution

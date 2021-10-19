@@ -20,7 +20,9 @@ namespace RepoDb
         #region BinaryBulkMerge<TEntity>
 
         /// <summary>
-        /// Merges a list of entities into the target table by bulk. Underneath this operation is a call directly to the existing
+        /// Merges a list of entities into the target table by bulk. This operation is inserting a row (if not present), and updating 
+        /// an existing row (if present), based on the given qualifiers. It uses the 'ON CONFLICT DO UPDATE' command of the PostgreSQL
+        /// to insert/update a row. Underneath this operation is a call directly to the existing 
         /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImport' extended method.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
@@ -58,7 +60,9 @@ namespace RepoDb
                 transaction: transaction);
 
         /// <summary>
-        /// Merges a list of entities into the target table by bulk. Underneath this operation is a call directly to the existing
+        /// Merges a list of entities into the target table by bulk. This operation is inserting a row (if not present), and updating 
+        /// an existing row (if present), based on the given qualifiers. It uses the 'ON CONFLICT DO UPDATE' command of the PostgreSQL
+        /// to insert/update a row. Underneath this operation is a call directly to the existing 
         /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImport' extended method.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
@@ -102,8 +106,10 @@ namespace RepoDb
         #region BinaryBulkMerge<DataTable>
 
         /// <summary>
-        /// Merges the rows of the <see cref="DataTable"/> into the target table by bulk. It uses the <see cref="DataTable.TableName"/> property 
-        /// as the target table. Underneath this operation is a call directly to the existing <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method.
+        /// Merges the rows of the <see cref="DataTable"/> into the target table by bulk. This operation is inserting a row (if not present), and updating 
+        /// an existing row (if present), based on the given qualifiers. It uses the 'ON CONFLICT DO UPDATE' command of the PostgreSQL
+        /// to insert/update a row. Underneath this operation is a call directly to the existing 
+        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImport' extended method.
         /// </summary>
         /// <param name="connection">The current connection object in used.</param>
         /// <param name="table">The source <see cref="DataTable"/> object that contains the rows to be bulk-inserted to the target table.</param>
@@ -139,7 +145,9 @@ namespace RepoDb
                 transaction: transaction);
 
         /// <summary>
-        /// Merges a list of entities into the target table by bulk. Underneath this operation is a call directly to the existing
+        /// Merges the rows of the <see cref="DataTable"/> into the target table by bulk. This operation is inserting a row (if not present), and updating 
+        /// an existing row (if present), based on the given qualifiers. It uses the 'ON CONFLICT DO UPDATE' command of the PostgreSQL
+        /// to insert/update a row. Underneath this operation is a call directly to the existing 
         /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImport' extended method.
         /// </summary>
         /// <param name="connection">The current connection object in used.</param>
@@ -182,8 +190,10 @@ namespace RepoDb
         #region BinaryBulkMerge<DbDataReader>
 
         /// <summary>
-        /// Merges the rows of the <see cref="DbDataReader"/> into the target table by bulk. Underneath this operation is a call directly to the existing
-        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method.
+        /// Merges the rows of the <see cref="DbDataReader"/> into the target table by bulk. This operation is inserting a row (if not present), and updating 
+        /// an existing row (if present), based on the given qualifiers. It uses the 'ON CONFLICT DO UPDATE' command of the PostgreSQL
+        /// to insert/update a row. Underneath this operation is a call directly to the existing 
+        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImport' extended method.
         /// </summary>
         /// <param name="connection">The current connection object in used.</param>
         /// <param name="tableName">The name of the target table from the database.</param>
@@ -223,7 +233,9 @@ namespace RepoDb
         #region BinaryBulkMerge<TEntity>
 
         /// <summary>
-        /// Merges a list of entities into the target table by bulk in an asynchronous way. Underneath this operation is a call directly to the existing
+        /// Merges a list of entities into the target table by bulk in an asynchronous way. This operation is inserting a row (if not present), and updating 
+        /// an existing row (if present), based on the given qualifiers. It uses the 'ON CONFLICT DO UPDATE' command of the PostgreSQL
+        /// to insert/update a row. Underneath this operation is a call directly to the existing 
         /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImport' extended method.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
@@ -264,7 +276,9 @@ namespace RepoDb
                 cancellationToken: cancellationToken);
 
         /// <summary>
-        /// Merges a list of entities into the target table by bulk in an asynchronous way. Underneath this operation is a call directly to the existing
+        /// Merges a list of entities into the target table by bulk in an asynchronous way. This operation is inserting a row (if not present), and updating 
+        /// an existing row (if present), based on the given qualifiers. It uses the 'ON CONFLICT DO UPDATE' command of the PostgreSQL
+        /// to insert/update a row. Underneath this operation is a call directly to the existing 
         /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImport' extended method.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
@@ -311,8 +325,10 @@ namespace RepoDb
         #region BinaryBulkMerge<DataTable>
 
         /// <summary>
-        /// Merges the rows of the <see cref="DataTable"/> into the target table by bulk in an asynchronous way. It uses the <see cref="DataTable.TableName"/> property 
-        /// as the target table. Underneath this operation is a call directly to the existing <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method.
+        /// Merges the rows of the <see cref="DataTable"/> into the target table by bulk in an asynchronous way. This operation is inserting a row (if not present), and updating 
+        /// an existing row (if present), based on the given qualifiers. It uses the 'ON CONFLICT DO UPDATE' command of the PostgreSQL
+        /// to insert/update a row. Underneath this operation is a call directly to the existing 
+        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImport' extended method.
         /// </summary>
         /// <param name="connection">The current connection object in used.</param>
         /// <param name="table">The source <see cref="DataTable"/> object that contains the rows to be bulk-inserted to the target table.</param>
@@ -351,8 +367,10 @@ namespace RepoDb
                 cancellationToken: cancellationToken);
 
         /// <summary>
-        /// Merges the rows of the <see cref="DataTable"/> into the target table by bulk in an asynchronous way. It uses the <see cref="DataTable.TableName"/> property 
-        /// as the target table. Underneath this operation is a call directly to the existing <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method.
+        /// Merges the rows of the <see cref="DataTable"/> into the target table by bulk in an asynchronous way. This operation is inserting a row (if not present), and updating 
+        /// an existing row (if present), based on the given qualifiers. It uses the 'ON CONFLICT DO UPDATE' command of the PostgreSQL
+        /// to insert/update a row. Underneath this operation is a call directly to the existing 
+        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImport' extended method.
         /// </summary>
         /// <param name="connection">The current connection object in used.</param>
         /// <param name="tableName">The name of the target table from the database. If not specified, the <see cref="DataTable.TableName"/> property will be used.</param>
@@ -397,8 +415,10 @@ namespace RepoDb
         #region BinaryBulkMerge<DbDataReader>
 
         /// <summary>
-        /// Merges the rows of the <see cref="DbDataReader"/> into the target table by bulk in an asynchronous way. Underneath this operation is a call directly to the existing
-        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method.
+        /// Merges the rows of the <see cref="DbDataReader"/> into the target table by bulk in an asynchronous way. This operation is inserting a row (if not present), and updating 
+        /// an existing row (if present), based on the given qualifiers. It uses the 'ON CONFLICT DO UPDATE' command of the PostgreSQL
+        /// to insert/update a row. Underneath this operation is a call directly to the existing 
+        /// <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the 'BinaryImport' extended method.
         /// </summary>
         /// <param name="connection">The current connection object in used.</param>
         /// <param name="tableName">The name of the target table from the database.</param>

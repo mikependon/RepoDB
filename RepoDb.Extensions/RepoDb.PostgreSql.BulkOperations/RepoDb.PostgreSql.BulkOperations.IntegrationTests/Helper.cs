@@ -97,7 +97,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var value1 = t1Property.GetValue(item1);
                 var value2 = t2Property.GetValue(item2);
 
-                Assert.AreEqual(value1, value2);
+                Assert.AreEqual(value1, value2, $"Property: {t1Property.Name}");
             }
         }
 
@@ -205,7 +205,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
                 Assert.IsNotNull(kvp2Value, $"Property '{kvp1.Key}' is not found from the 2nd list.");
 
-                Assert.AreEqual(kvp1.Value, kvp2Value);
+                Assert.AreEqual(kvp1.Value, kvp2Value, $"Property: {kvp1.Key}");
             }
         }
 
@@ -248,23 +248,23 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 tables.Add(new BulkOperationIdentityTable
                 {
                     Id = hasId ? index + addToKey : 0,
-                    ColumnBigInt = random.Next(100),
+                    ColumnBigInt = index,
                     ColumnBit = true,
                     ColumnBoolean = true,
                     ColumnChar = 'C',
-                    ColumnDate = EpocDate.AddDays(random.Next(100)),
-                    ColumnInteger = random.Next(100),
-                    ColumnMoney = random.Next(100),
-                    ColumnNumeric = random.Next(100),
-                    ColumnReal = random.Next(100),
-                    ColumnSerial = random.Next(100),
-                    ColumnSmallInt = (short)random.Next(100),
-                    ColumnSmallSerial = (short)random.Next(100),
+                    ColumnDate = EpocDate.AddDays(index),
+                    ColumnInteger = index,
+                    ColumnMoney = index,
+                    ColumnNumeric = index,
+                    ColumnReal = index,
+                    ColumnSerial = index,
+                    ColumnSmallInt = (short)index,
+                    ColumnSmallSerial = (short)index,
                     ColumnText = $"Text-{index}",
-                    ColumnTimestampWithoutTimeZone = EpocDate.AddDays(random.Next(100)),
-                    ColumnTimestampWithTimeZone = EpocDate.AddDays(random.Next(100)),
-                    ColumnTimeWithoutTimeZone = EpocDate.AddDays(random.Next(100)),
-                    ColumnTimeWithTimeZone = EpocDate.AddDays(random.Next(100))
+                    ColumnTimestampWithoutTimeZone = EpocDate.AddDays(index),
+                    ColumnTimestampWithTimeZone = EpocDate.AddDays(index),
+                    ColumnTimeWithoutTimeZone = EpocDate.AddDays(index),
+                    ColumnTimeWithTimeZone = EpocDate.AddDays(index)
                 });
             }
             return tables;
@@ -293,12 +293,12 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 tables.Add(new BulkOperationLightIdentityTable
                 {
                     Id = hasId ? index + addToKey : 0,
-                    ColumnBigInt = random.Next(100),
+                    ColumnBigInt = index,
                     ColumnBoolean = true,
-                    ColumnInteger = random.Next(100),
-                    ColumnNumeric = random.Next(100),
-                    ColumnReal = random.Next(100),
-                    ColumnSmallInt = (short)random.Next(100),
+                    ColumnInteger = index,
+                    ColumnNumeric = index,
+                    ColumnReal = index,
+                    ColumnSmallInt = (short)index,
                     ColumnText = $"Text-{index}",
                 });
             }
@@ -328,12 +328,12 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 tables.Add(new BulkOperationMappedIdentityTable
                 {
                     IdMapped = hasId ? index + addToKey : 0,
-                    ColumnBigIntMapped = random.Next(100),
+                    ColumnBigIntMapped = index,
                     ColumnBooleanMapped = true,
-                    ColumnIntegerMapped = random.Next(100),
-                    ColumnNumericMapped = random.Next(100),
-                    ColumnRealMapped = random.Next(100),
-                    ColumnSmallIntMapped = (short)random.Next(100),
+                    ColumnIntegerMapped = index,
+                    ColumnNumericMapped = index,
+                    ColumnRealMapped = index,
+                    ColumnSmallIntMapped = (short)index,
                     ColumnTextMapped = $"Text-{index}",
                 });
             }
@@ -363,12 +363,12 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 tables.Add(new BulkOperationUnmatchedIdentityTable
                 {
                     IdMapped = hasId ? index + addToKey : 0,
-                    ColumnBigIntMapped = (long)random.Next(100),
+                    ColumnBigIntMapped = (long)index,
                     ColumnBooleanMapped = true,
-                    ColumnIntegerMapped = random.Next(100),
-                    ColumnNumericMapped = (decimal)random.Next(100),
-                    ColumnRealMapped = (float)random.Next(100),
-                    ColumnSmallIntMapped = (short)random.Next(100),
+                    ColumnIntegerMapped = index,
+                    ColumnNumericMapped = (decimal)index,
+                    ColumnRealMapped = (float)index,
+                    ColumnSmallIntMapped = (short)index,
                     ColumnTextMapped = $"Text-{index}",
                 });
             }
@@ -402,12 +402,12 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 tables.Add(new
                 {
                     Id = (long)(hasId ? index + addToKey : 0),
-                    ColumnBigInt = (long)random.Next(100),
+                    ColumnBigInt = (long)index,
                     ColumnBoolean = true,
-                    ColumnInteger = random.Next(100),
-                    ColumnNumeric = (decimal)random.Next(100),
-                    ColumnReal = (float)random.Next(100),
-                    ColumnSmallInt = (short)random.Next(100),
+                    ColumnInteger = index,
+                    ColumnNumeric = (decimal)index,
+                    ColumnReal = (float)index,
+                    ColumnSmallInt = (short)index,
                     ColumnText = $"Text-{index}",
                 });
             }
@@ -437,12 +437,12 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 tables.Add(new
                 {
                     IdMapped = (long)(hasId ? index + addToKey : 0),
-                    ColumnBigIntMapped = (long)random.Next(100),
+                    ColumnBigIntMapped = (long)index,
                     ColumnBooleanMapped = true,
-                    ColumnIntegerMapped = random.Next(100),
-                    ColumnNumericMapped = (decimal)random.Next(100),
-                    ColumnRealMapped = (float)random.Next(100),
-                    ColumnSmallIntMapped = (short)random.Next(100),
+                    ColumnIntegerMapped = index,
+                    ColumnNumericMapped = (decimal)index,
+                    ColumnRealMapped = (float)index,
+                    ColumnSmallIntMapped = (short)index,
                     ColumnTextMapped = $"Text-{index}",
                 });
             }
@@ -476,12 +476,12 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var index = i + 1;
 
                 expandoObject["Id"] = (long)(hasId ? index + addToKey : 0);
-                expandoObject["ColumnBigInt"] = (long)random.Next(100);
+                expandoObject["ColumnBigInt"] = (long)index;
                 expandoObject["ColumnBoolean"] = true;
-                expandoObject["ColumnInteger"] = random.Next(100);
-                expandoObject["ColumnNumeric"] = (decimal)random.Next(100);
-                expandoObject["ColumnReal"] = (float)random.Next(100);
-                expandoObject["ColumnSmallInt"] = (short)random.Next(100);
+                expandoObject["ColumnInteger"] = index;
+                expandoObject["ColumnNumeric"] = (decimal)index;
+                expandoObject["ColumnReal"] = (float)index;
+                expandoObject["ColumnSmallInt"] = (short)index;
                 expandoObject["ColumnText"] = $"Text -{index}";
 
                 tables.Add((ExpandoObject)expandoObject);
@@ -512,12 +512,12 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var index = i + 1;
 
                 expandoObject["IdMapped"] = (long)(hasId ? index + addToKey : 0);
-                expandoObject["ColumnBigIntMapped"] = (long)random.Next(100);
+                expandoObject["ColumnBigIntMapped"] = (long)index;
                 expandoObject["ColumnBooleanMapped"] = true;
-                expandoObject["ColumnIntegerMapped"] = random.Next(100);
-                expandoObject["ColumnNumericMapped"] = (decimal)random.Next(100);
-                expandoObject["ColumnRealMapped"] = (float)random.Next(100);
-                expandoObject["ColumnSmallIntMapped"] = (short)random.Next(100);
+                expandoObject["ColumnIntegerMapped"] = index;
+                expandoObject["ColumnNumericMapped"] = (decimal)index;
+                expandoObject["ColumnRealMapped"] = (float)index;
+                expandoObject["ColumnSmallIntMapped"] = (short)index;
                 expandoObject["ColumnTextMapped"] = $"Text -{index}";
 
                 tables.Add((ExpandoObject)expandoObject);
