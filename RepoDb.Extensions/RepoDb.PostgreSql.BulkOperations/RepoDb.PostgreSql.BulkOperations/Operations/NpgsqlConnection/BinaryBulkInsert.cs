@@ -32,7 +32,7 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
         /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the entities will be sent together in one-go.</param>
         /// <param name="identityBehavior">The behavior of how the identity column would work during the operation.</param>
-        /// <param name="pseudoTableType">The value that defines a value whether to use a physical or temporable table for the pseudo-table.</param>
+        /// <param name="pseudoTableType">The value that defines whether an actual or temporary table will be created for the pseudo-table.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
         public static int BinaryBulkInsert<TEntity>(this NpgsqlConnection connection,
@@ -68,7 +68,7 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
         /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the rows of the table will be sent together in one-go.</param>
         /// <param name="identityBehavior">The behavior of how the identity column would work during the operation.</param>
-        /// <param name="pseudoTableType">The value that defines a value whether to use a physical or temporable table for the pseudo-table.</param>
+        /// <param name="pseudoTableType">The value that defines whether an actual or temporary table will be created for the pseudo-table.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
         public static int BinaryBulkInsert<TEntity>(this NpgsqlConnection connection,
@@ -106,7 +106,7 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
         /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the rows of the table will be sent together in one-go.</param>
         /// <param name="identityBehavior">The behavior of how the identity column would work during the operation.</param>
-        /// <param name="pseudoTableType">The value that defines a value whether to use a physical or temporable table for the pseudo-table.</param>
+        /// <param name="pseudoTableType">The value that defines whether an actual or temporary table will be created for the pseudo-table.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
         public static int BinaryBulkInsert(this NpgsqlConnection connection,
@@ -141,7 +141,7 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
         /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the rows of the table will be sent together in one-go.</param>
         /// <param name="identityBehavior">The behavior of how the identity column would work during the operation.</param>
-        /// <param name="pseudoTableType">The value that defines a value whether to use a physical or temporable table for the pseudo-table.</param>
+        /// <param name="pseudoTableType">The value that defines whether an actual or temporary table will be created for the pseudo-table.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
         public static int BinaryBulkInsert(this NpgsqlConnection connection,
@@ -179,7 +179,7 @@ namespace RepoDb
         /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not an entity mapping)</param>
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
         /// <param name="identityBehavior">The behavior of how the identity column would work during the operation.</param>
-        /// <param name="pseudoTableType">The value that defines a value whether to use a physical or temporable table for the pseudo-table.</param>
+        /// <param name="pseudoTableType">The value that defines whether an actual or temporary table will be created for the pseudo-table.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
         public static int BinaryBulkInsert(this NpgsqlConnection connection,
@@ -220,7 +220,7 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
         /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the entities will be sent together in one-go.</param>
         /// <param name="identityBehavior">The behavior of how the identity column would work during the operation.</param>
-        /// <param name="pseudoTableType">The value that defines a value whether to use a physical or temporable table for the pseudo-table.</param>
+        /// <param name="pseudoTableType">The value that defines whether an actual or temporary table will be created for the pseudo-table.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
@@ -259,7 +259,7 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
         /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the rows of the table will be sent together in one-go.</param>
         /// <param name="identityBehavior">The behavior of how the identity column would work during the operation.</param>
-        /// <param name="pseudoTableType">The value that defines a value whether to use a physical or temporable table for the pseudo-table.</param>
+        /// <param name="pseudoTableType">The value that defines whether an actual or temporary table will be created for the pseudo-table.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
@@ -300,7 +300,7 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
         /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the rows of the table will be sent together in one-go.</param>
         /// <param name="identityBehavior">The behavior of how the identity column would work during the operation.</param>
-        /// <param name="pseudoTableType">The value that defines a value whether to use a physical or temporable table for the pseudo-table.</param>
+        /// <param name="pseudoTableType">The value that defines whether an actual or temporary table will be created for the pseudo-table.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
@@ -338,7 +338,7 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
         /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the rows of the table will be sent together in one-go.</param>
         /// <param name="identityBehavior">The behavior of how the identity column would work during the operation.</param>
-        /// <param name="pseudoTableType">The value that defines a value whether to use a physical or temporable table for the pseudo-table.</param>
+        /// <param name="pseudoTableType">The value that defines whether an actual or temporary table will be created for the pseudo-table.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
@@ -379,7 +379,7 @@ namespace RepoDb
         /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not an entity mapping)</param>
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
         /// <param name="identityBehavior">The behavior of how the identity column would work during the operation.</param>
-        /// <param name="pseudoTableType">The value that defines a value whether to use a physical or temporable table for the pseudo-table.</param>
+        /// <param name="pseudoTableType">The value that defines whether an actual or temporary table will be created for the pseudo-table.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>

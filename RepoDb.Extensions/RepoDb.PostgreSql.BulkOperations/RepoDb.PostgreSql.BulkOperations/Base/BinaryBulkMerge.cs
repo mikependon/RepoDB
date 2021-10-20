@@ -29,6 +29,7 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="identityBehavior"></param>
+        /// <param name="mergeCommandType"></param>
         /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
@@ -40,6 +41,7 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             BulkImportIdentityBehavior identityBehavior = default,
+            BulkImportMergeCommandType mergeCommandType = default,
             BulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null)
             where TEntity : class
@@ -100,6 +102,7 @@ namespace RepoDb
                         dbFields.FirstOrDefault(dbField => dbField.IsPrimary)?.AsField(),
                         dbFields.FirstOrDefault(dbField => dbField.IsIdentity)?.AsField(),
                         identityBehavior,
+                        mergeCommandType,
                         dbSetting),
 
                 // setIdentities
@@ -130,6 +133,7 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="identityBehavior"></param>
+        /// <param name="mergeCommandType"></param>
         /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
@@ -142,6 +146,7 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             BulkImportIdentityBehavior identityBehavior = default,
+            BulkImportMergeCommandType mergeCommandType = default,
             BulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null)
         {
@@ -194,6 +199,7 @@ namespace RepoDb
                         dbFields.FirstOrDefault(dbField => dbField.IsPrimary)?.AsField(),
                         dbFields.FirstOrDefault(dbField => dbField.IsIdentity)?.AsField(),
                         identityBehavior,
+                        mergeCommandType,
                         dbSetting),
 
                 // setIdentities
@@ -222,6 +228,7 @@ namespace RepoDb
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="identityBehavior"></param>
+        /// <param name="mergeCommandType"></param>
         /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
@@ -232,6 +239,7 @@ namespace RepoDb
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             BulkImportIdentityBehavior identityBehavior = default,
+            BulkImportMergeCommandType mergeCommandType = default,
             BulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null)
         {
@@ -282,6 +290,7 @@ namespace RepoDb
                         dbFields.FirstOrDefault(dbField => dbField.IsPrimary)?.AsField(),
                         dbFields.FirstOrDefault(dbField => dbField.IsIdentity)?.AsField(),
                         identityBehavior,
+                        mergeCommandType,
                         dbSetting),
 
                 // setIdentities
@@ -315,6 +324,7 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="identityBehavior"></param>
+        /// <param name="mergeCommandType"></param>
         /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
@@ -327,6 +337,7 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             BulkImportIdentityBehavior identityBehavior = default,
+            BulkImportMergeCommandType mergeCommandType = default,
             BulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
@@ -389,6 +400,7 @@ namespace RepoDb
                         dbFields.FirstOrDefault(dbField => dbField.IsPrimary)?.AsField(),
                         dbFields.FirstOrDefault(dbField => dbField.IsIdentity)?.AsField(),
                         identityBehavior,
+                        mergeCommandType,
                         dbSetting),
 
                 // setIdentities
@@ -420,6 +432,7 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="batchSize"></param>
         /// <param name="identityBehavior"></param>
+        /// <param name="mergeCommandType"></param>
         /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
@@ -433,6 +446,7 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             BulkImportIdentityBehavior identityBehavior = default,
+            BulkImportMergeCommandType mergeCommandType = default,
             BulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
@@ -487,6 +501,7 @@ namespace RepoDb
                         dbFields.FirstOrDefault(dbField => dbField.IsPrimary)?.AsField(),
                         dbFields.FirstOrDefault(dbField => dbField.IsIdentity)?.AsField(),
                         identityBehavior,
+                        mergeCommandType,
                         dbSetting),
 
                 // setIdentities
@@ -516,6 +531,7 @@ namespace RepoDb
         /// <param name="mappings"></param>
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="identityBehavior"></param>
+        /// <param name="mergeCommandType"></param>
         /// <param name="pseudoTableType"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
@@ -527,6 +543,7 @@ namespace RepoDb
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null,
             int? bulkCopyTimeout = null,
             BulkImportIdentityBehavior identityBehavior = default,
+            BulkImportMergeCommandType mergeCommandType = default,
             BulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
@@ -579,6 +596,7 @@ namespace RepoDb
                         dbFields.FirstOrDefault(dbField => dbField.IsPrimary)?.AsField(),
                         dbFields.FirstOrDefault(dbField => dbField.IsIdentity)?.AsField(),
                         identityBehavior,
+                        mergeCommandType,
                         dbSetting),
 
                 // setIdentities
