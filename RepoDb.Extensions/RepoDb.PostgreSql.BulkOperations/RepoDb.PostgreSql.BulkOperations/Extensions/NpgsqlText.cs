@@ -22,12 +22,14 @@ namespace RepoDb
         /// <param name="destinationTableName"></param>
         /// <param name="fields"></param>
         /// <param name="identityField"></param>
+        /// <param name="identityBehavior"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         private static string GetInsertCommandText(string sourceTableName,
             string destinationTableName,
             IEnumerable<Field> fields,
             Field identityField,
+            BulkImportIdentityBehavior identityBehavior,
             IDbSetting dbSetting)
         {
             if (identityField != null)
@@ -49,6 +51,7 @@ namespace RepoDb
                 .OpenParen()
                 .FieldsFrom(fields, dbSetting)
                 .CloseParen()
+                .WriteText("OVERRIDING SYSTEM VALUE")
                 .Select()
                 .FieldsFrom(fields, dbSetting)
                 .From()
@@ -56,7 +59,7 @@ namespace RepoDb
                 .OrderByFrom(GetOderColumnOrderField().AsEnumerable(), dbSetting);
 
             // Return the Id
-            if (identityField != null)
+            if (identityBehavior == BulkImportIdentityBehavior.ReturnIdentity && identityField != null)
             {
                 builder
                     .Returning()
@@ -104,58 +107,80 @@ namespace RepoDb
             // Build the query
             var builder = new QueryBuilder();
 
-            // Insert
+            // Update
+            var updatableFields = GetUpdatableFields(
+                fields,
+                qualifiers,
+                primaryField,
+                dbSetting);
             builder
                 .Clear()
+                .Update()
+                .TableNameFrom(destinationTableName, dbSetting)
+                .WriteText("AS T")
+                .Set()
+                .FieldsAndAliasFieldsFrom(updatableFields, string.Empty, "S", dbSetting)
+                .From()
+                .TableNameFrom(sourceTableName, dbSetting)
+                .WriteText("AS S")
+                .Where()
+                .WriteText(qualifiers
+                    .Select(
+                        field => field.AsJoinQualifier("S", "T", true, dbSetting))
+                            .Join(" AND "))
+                .End();
+
+            // Insert
+            var insertableFields = GetInsertableFields(fields,
+                identityField,
+                identityBehavior,
+                dbSetting);
+            builder
                 .Insert()
                 .Into()
                 .TableNameFrom(destinationTableName, dbSetting)
                 .OpenParen()
-                .FieldsFrom(fields, dbSetting)
-                .CloseParen()
-                .WriteText("OVERRIDING SYSTEM VALUE");
+                .FieldsFrom(insertableFields, dbSetting)
+                .CloseParen();
 
-            // Select the fields
+            if (identityBehavior == BulkImportIdentityBehavior.KeepIdentity)
+            {
+                builder
+                    .WriteText("OVERRIDING SYSTEM VALUE");
+            }
+
             builder
                 .Select()
-                .FieldsFrom(fields, dbSetting)
+                .AsAliasFieldsFrom(insertableFields, "S", dbSetting)
                 .From()
-                .TableNameFrom(sourceTableName, dbSetting);
+                .TableNameFrom(sourceTableName, dbSetting)
+                .WriteText("AS S")
+                .WriteText("LEFT JOIN")
+                .TableNameFrom(destinationTableName, dbSetting)
+                .WriteText("AS T")
+                .On()
+                .WriteText(qualifiers
+                    .Select(
+                        field => field.AsJoinQualifier("S", "T", true, dbSetting))
+                            .Join(" AND "))
+                .Where()
+                .WriteText(qualifiers
+                    .Select(
+                        field => string.Concat("T.", field.Name.AsQuoted(true, true, dbSetting), " IS NULL"))
+                            .Join(" AND "));
 
-            // Return identity
+            // Return the Id
             if (identityBehavior == BulkImportIdentityBehavior.ReturnIdentity)
             {
                 builder
                     .OrderByFrom(GetOderColumnOrderField().AsEnumerable(), dbSetting);
-            }
 
-            // Set the qualifiers
-            builder
-                .OnConflict(qualifiers, dbSetting)
-                .DoUpdate();
-
-            // Set the columns
-            var updatableFields = GetUpdatableFields(fields,
-                qualifiers,
-                primaryField,
-                dbSetting);
-            var setColumns = updatableFields
-                .Select(field =>
+                if (identityField != null)
                 {
-                    var name = field.Name.AsQuoted(true, dbSetting);
-                    return $"{name} = EXCLUDED.{name}";
-                })
-                .Join(", ");
-            builder
-                .Set()
-                .WriteText(setColumns);
-
-            // Return the id
-            if (identityBehavior == BulkImportIdentityBehavior.ReturnIdentity && identityField != null)
-            {
-                builder
-                    .Returning()
-                    .WriteText(identityField.Name.AsQuoted(true, dbSetting));
+                    builder
+                        .Returning()
+                        .WriteText(identityField.Name.AsQuoted(true, dbSetting));
+                }
             }
 
             // Return the command text
@@ -251,12 +276,18 @@ namespace RepoDb
                 .Set()
                 .WriteText(setColumns);
 
-            // Return the id
-            if (identityBehavior == BulkImportIdentityBehavior.ReturnIdentity && identityField != null)
+            // Return the Id
+            if (identityBehavior == BulkImportIdentityBehavior.ReturnIdentity)
             {
                 builder
-                    .Returning()
-                    .WriteText(identityField.Name.AsQuoted(true, dbSetting));
+                    .OrderByFrom(GetOderColumnOrderField().AsEnumerable(), dbSetting);
+
+                if (identityField != null)
+                {
+                    builder
+                        .Returning()
+                        .WriteText(identityField.Name.AsQuoted(true, dbSetting));
+                }
             }
 
             // Return the command text
@@ -364,6 +395,26 @@ namespace RepoDb
 
             return qualifiers;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fields"></param>
+        /// <param name="identityField"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
+        private static IEnumerable<Field> GetInsertableFields(IEnumerable<Field> fields,
+            Field identityField,
+            BulkImportIdentityBehavior identityBehavior,
+            IDbSetting dbSetting) =>
+            fields?
+                .Where(field =>
+                {
+                    var isIdentity = string.Equals(identityField?.Name.AsQuoted(true, dbSetting), field.Name.AsQuoted(true, dbSetting), StringComparison.OrdinalIgnoreCase);
+                    return (isIdentity == false) ||
+                        (isIdentity && identityBehavior == BulkImportIdentityBehavior.KeepIdentity);
+                });
 
         /// <summary>
         /// 

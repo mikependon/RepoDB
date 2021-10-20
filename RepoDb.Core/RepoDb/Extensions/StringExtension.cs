@@ -451,7 +451,9 @@ namespace RepoDb.Extensions
             string leftAlias,
             string rightAlias,
             IDbSetting dbSetting) =>
-            string.Concat(leftAlias, StringConstant.Period, AsField(value, dbSetting), " = ", rightAlias, StringConstant.Period, AsField(value, dbSetting));
+            string.Concat(
+                (string.IsNullOrWhiteSpace(leftAlias) ? string.Empty : string.Concat(leftAlias, StringConstant.Period)), AsField(value, dbSetting), " = ",
+                (string.IsNullOrWhiteSpace(rightAlias) ? string.Empty : string.Concat(rightAlias, StringConstant.Period)), AsField(value, dbSetting));
 
         /// <summary>
         /// 

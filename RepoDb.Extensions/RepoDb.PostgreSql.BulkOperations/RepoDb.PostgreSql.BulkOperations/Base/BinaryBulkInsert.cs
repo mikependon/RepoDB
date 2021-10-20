@@ -97,6 +97,7 @@ namespace RepoDb
                         tableName,
                         mappings.Select(mapping => new Field(mapping.DestinationColumn)),
                         dbFields.FirstOrDefault(dbField => dbField.IsIdentity)?.AsField(),
+                        identityBehavior,
                         dbSetting),
 
                 // setIdentities
@@ -188,6 +189,7 @@ namespace RepoDb
                         tableName,
                         mappings.Select(mapping => new Field(mapping.DestinationColumn)),
                         dbFields.FirstOrDefault(dbField => dbField.IsIdentity)?.AsField(),
+                        identityBehavior,
                         dbSetting),
 
                 // setIdentities
@@ -277,6 +279,7 @@ namespace RepoDb
                         tableName,
                         mappings.Select(mapping => new Field(mapping.DestinationColumn)),
                         dbFields.FirstOrDefault(dbField => dbField.IsIdentity)?.AsField(),
+                        identityBehavior,
                         dbSetting),
 
                 // setIdentities
@@ -381,6 +384,7 @@ namespace RepoDb
                         tableName,
                         mappings.Select(mapping => new Field(mapping.DestinationColumn)),
                         dbFields.FirstOrDefault(dbField => dbField.IsIdentity)?.AsField(),
+                        identityBehavior,
                         dbSetting),
 
                 // setIdentities
@@ -476,6 +480,7 @@ namespace RepoDb
                         tableName,
                         mappings.Select(mapping => new Field(mapping.DestinationColumn)),
                         dbFields.FirstOrDefault(dbField => dbField.IsIdentity)?.AsField(),
+                        identityBehavior,
                         dbSetting),
 
                 // setIdentities
@@ -562,6 +567,7 @@ namespace RepoDb
                         tableName,
                         mappings.Select(mapping => new Field(mapping.DestinationColumn)),
                         dbFields.FirstOrDefault(dbField => dbField.IsIdentity)?.AsField(),
+                        identityBehavior,
                         dbSetting),
 
                 // setIdentities
