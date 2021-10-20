@@ -87,9 +87,50 @@ namespace RepoDb
         /// <param name="primaryField"></param>
         /// <param name="identityField"></param>
         /// <param name="identityBehavior"></param>
+        /// <param name="mergeCommandType"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         private static string GetMergeCommandText(string sourceTableName,
+            string destinationTableName,
+            IEnumerable<Field> fields,
+            IEnumerable<Field> qualifiers,
+            Field primaryField,
+            Field identityField,
+            BulkImportIdentityBehavior identityBehavior,
+            BulkImportMergeCommandType mergeCommandType,
+            IDbSetting dbSetting) =>
+            mergeCommandType == BulkImportMergeCommandType.InsertAndUpdate ?
+            GetMergeCommandTextViaInsertAndUpdate(sourceTableName,
+                destinationTableName,
+                fields,
+                qualifiers,
+                primaryField,
+                identityField,
+                identityBehavior,
+                dbSetting) :
+            GetMergeCommandTextViaOnConflictDoUpdate(sourceTableName,
+                destinationTableName,
+                fields,
+                qualifiers,
+                primaryField,
+                identityField,
+                identityBehavior,
+                dbSetting);
+
+        /// <summary>
+        /// Do the explicit UPDATE and INSERT command.
+        /// Link: https://stackoverflow.com/questions/17267417/how-to-upsert-merge-insert-on-duplicate-update-in-postgresql
+        /// </summary>
+        /// <param name="sourceTableName"></param>
+        /// <param name="destinationTableName"></param>
+        /// <param name="fields"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="primaryField"></param>
+        /// <param name="identityField"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
+        private static string GetMergeCommandTextViaInsertAndUpdate(string sourceTableName,
             string destinationTableName,
             IEnumerable<Field> fields,
             IEnumerable<Field> qualifiers,
@@ -119,15 +160,28 @@ namespace RepoDb
                 .TableNameFrom(destinationTableName, dbSetting)
                 .WriteText("AS T")
                 .Set()
-                .FieldsAndAliasFieldsFrom(updatableFields, string.Empty, "S", dbSetting)
+                // ====================
+                // > v1.12.9
+                //.FieldsAndAliasFieldsFrom(updatableFields, string.Empty, "S", dbSetting)
+                // TODO: Remove soon
+                .WriteText(updatableFields
+                    .Select(
+                        field =>
+                        {
+                            var fieldName = field.Name.AsQuoted(true, true, dbSetting);
+                            return string.Concat(fieldName, " = S.", fieldName);
+                        })
+                    .Join(", "))
+                // ====================
                 .From()
                 .TableNameFrom(sourceTableName, dbSetting)
                 .WriteText("AS S")
                 .Where()
                 .WriteText(qualifiers
                     .Select(
-                        field => field.AsJoinQualifier("S", "T", true, dbSetting))
-                            .Join(" AND "))
+                        field =>
+                            field.AsJoinQualifier("S", "T", true, dbSetting))
+                    .Join(" AND "))
                 .End();
 
             // Insert
@@ -161,13 +215,15 @@ namespace RepoDb
                 .On()
                 .WriteText(qualifiers
                     .Select(
-                        field => field.AsJoinQualifier("S", "T", true, dbSetting))
-                            .Join(" AND "))
+                        field =>
+                            field.AsJoinQualifier("S", "T", true, dbSetting))
+                    .Join(" AND "))
                 .Where()
                 .WriteText(qualifiers
                     .Select(
-                        field => string.Concat("T.", field.Name.AsQuoted(true, true, dbSetting), " IS NULL"))
-                            .Join(" AND "));
+                        field =>
+                            string.Concat("T.", field.Name.AsQuoted(true, true, dbSetting), " IS NULL"))
+                    .Join(" AND "));
 
             // Return the Id
             if (identityBehavior == BulkImportIdentityBehavior.ReturnIdentity)
@@ -211,7 +267,6 @@ namespace RepoDb
         /// <param name="identityBehavior"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        [Obsolete]
         private static string GetMergeCommandTextViaOnConflictDoUpdate(string sourceTableName,
             string destinationTableName,
             IEnumerable<Field> fields,
