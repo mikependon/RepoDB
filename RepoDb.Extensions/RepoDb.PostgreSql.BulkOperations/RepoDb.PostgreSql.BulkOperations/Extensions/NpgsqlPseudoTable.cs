@@ -191,6 +191,11 @@ namespace RepoDb
             IDbSetting dbSetting = null,
             NpgsqlTransaction transaction = null)
         {
+            if (fields?.Any()!=true)
+            {
+                return;
+            }
+
             var commandText = GetCreatePseudoTableIndexCommandText(tableName, fields, dbSetting);
 
             connection.ExecuteNonQuery(commandText,
@@ -217,6 +222,11 @@ namespace RepoDb
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
+            if (fields?.Any() != true)
+            {
+                return;
+            }
+
             var commandText = GetCreatePseudoTableIndexCommandText(tableName, fields, dbSetting);
 
             await connection.ExecuteNonQueryAsync(commandText,

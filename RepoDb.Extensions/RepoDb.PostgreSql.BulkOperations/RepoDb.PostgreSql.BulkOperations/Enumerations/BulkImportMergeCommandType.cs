@@ -6,14 +6,17 @@
     public enum BulkImportMergeCommandType : short
     {
         /// <summary>
-        /// An explicit 'INSERT' and 'UPDATE' command will be used during the operation. It is the legacy 'UPSERT' operation.
+        /// An explicit 'INSERT' and 'UPDATE' commands will be used during the operation. It is the legacy 'UPSERT' operation.
         /// (This is the default value)
         /// </summary>
         InsertAndUpdate,
         /// <summary>
-        /// An existing 'ON CONFLICT DO UPDATE' command will be used during the operation. Using this value requires your qualifiers
-        /// to be part of the table index. If the qualifiers provided are not indexed, a 'unique or exclusion constraint' exception 
-        /// will be thrown by the PostgeSQL.
+        /// An existing 'ON CONFLICT DO UPDATE' command will be used during the operation. By using this value, it  requires 
+        /// that every entity only targets a single row from the underlying table, otherwise, an exception will be thrown. 
+        /// To ensure that the operation is targetting the correct row, we highly recommend to always pass the value of the 
+        /// primary column from your entities. If the 'qualifiers' argument is used, ensures that every qualifier field being 
+        /// in-used is present from the table indexes, otherwise, a 'unique or exclusion constraint' exception will be thrown. 
+        /// (The exceptions thrown are default from PostgreSQL)
         /// </summary>
         OnConflictDoUpdate
     }

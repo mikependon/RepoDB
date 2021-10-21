@@ -50,8 +50,15 @@ namespace RepoDb
                 .TableNameFrom(destinationTableName, dbSetting)
                 .OpenParen()
                 .FieldsFrom(fields, dbSetting)
-                .CloseParen()
-                .WriteText("OVERRIDING SYSTEM VALUE")
+                .CloseParen();
+
+            if (identityBehavior == BulkImportIdentityBehavior.KeepIdentity)
+            {
+                builder
+                    .WriteText("OVERRIDING SYSTEM VALUE");
+            }
+
+            builder
                 .Select()
                 .FieldsFrom(fields, dbSetting)
                 .From()
@@ -139,10 +146,9 @@ namespace RepoDb
             BulkImportIdentityBehavior identityBehavior,
             IDbSetting dbSetting)
         {
-            // Ensure the qualifiers
-            qualifiers = EnsureQualifiers(qualifiers, primaryField, destinationTableName);
-
-            // Validate the qualifiers
+            // Qualifiers
+            qualifiers = EnsurePrimaryAsQualifier(qualifiers, primaryField, destinationTableName);
+            ThrowIfNoQualifiers(qualifiers, destinationTableName);
             ThrowOnMissingQualifiers(fields, qualifiers, dbSetting);
 
             // Build the query
@@ -276,10 +282,9 @@ namespace RepoDb
             BulkImportIdentityBehavior identityBehavior,
             IDbSetting dbSetting)
         {
-            // Ensure the qualifiers
-            qualifiers = EnsureQualifiers(qualifiers, primaryField, destinationTableName);
-
-            // Validate the qualifiers
+            // Qualifiers
+            qualifiers = EnsurePrimaryAsQualifier(qualifiers, primaryField, destinationTableName);
+            ThrowIfNoQualifiers(qualifiers, destinationTableName);
             ThrowOnMissingQualifiers(fields, qualifiers, dbSetting);
 
             // Build the query
@@ -293,8 +298,14 @@ namespace RepoDb
                 .TableNameFrom(destinationTableName, dbSetting)
                 .OpenParen()
                 .FieldsFrom(fields, dbSetting)
-                .CloseParen()
-                .WriteText("OVERRIDING SYSTEM VALUE");
+                .CloseParen();
+
+            if (identityBehavior == BulkImportIdentityBehavior.KeepIdentity ||
+                primaryField == identityField)
+            {
+                builder
+                    .WriteText("OVERRIDING SYSTEM VALUE");
+            }
 
             // Select the fields
             builder
@@ -332,17 +343,11 @@ namespace RepoDb
                 .WriteText(setColumns);
 
             // Return the Id
-            if (identityBehavior == BulkImportIdentityBehavior.ReturnIdentity)
+            if (identityBehavior == BulkImportIdentityBehavior.ReturnIdentity && identityField != null)
             {
                 builder
-                    .OrderByFrom(GetOderColumnOrderField().AsEnumerable(), dbSetting);
-
-                if (identityField != null)
-                {
-                    builder
-                        .Returning()
-                        .WriteText(identityField.Name.AsQuoted(true, dbSetting));
-                }
+                    .Returning()
+                    .WriteText(identityField.Name.AsQuoted(true, dbSetting));
             }
 
             // Return the command text
@@ -437,7 +442,7 @@ namespace RepoDb
         /// <param name="primaryField"></param>
         /// <param name="destinationTableName"></param>
         /// <returns></returns>
-        private static IEnumerable<Field> EnsureQualifiers(IEnumerable<Field> qualifiers,
+        private static IEnumerable<Field> EnsurePrimaryAsQualifier(IEnumerable<Field> qualifiers,
             Field primaryField,
             string destinationTableName)
         {
@@ -445,8 +450,6 @@ namespace RepoDb
             {
                 qualifiers = primaryField.AsEnumerable();
             }
-
-            ThrowIfNoQualifiers(qualifiers, destinationTableName);
 
             return qualifiers;
         }

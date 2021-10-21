@@ -21,7 +21,7 @@ namespace RepoDb
 
         /// <summary>
         /// Merges a list of entities into the target table by bulk. This operation is inserting a row (if not present), and updating an existing 
-        /// row (if present), based on the given qualifiers. It uses either the 'INSERT/UPDATE' or the 'ON CONFLICT DO UPDATE' commands of the 
+        /// row (if present), based on the given qualifiers. It uses either of the 'INSERT/UPDATE' and 'ON CONFLICT DO UPDATE' commands of the 
         /// PostgreSQL based on the value passed to the '<paramref name="mergeCommandType"/>' argument. Underneath this operation is a call directly to 
         /// the existing <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the customized 'BinaryBulkInsert' extended method.
         /// </summary>
@@ -31,7 +31,7 @@ namespace RepoDb
         /// This can be an <see cref="IEnumerable{T}"/> of the following objects (<typeparamref name="TEntity"/> (as class/model), <see cref="ExpandoObject"/>,
         /// <see cref="IDictionary{TKey, TValue}"/> (of <see cref="string"/>/<see cref="object"/>) and Anonymous Types).</param>
         /// <param name="qualifiers">The list of qualifier fields to be used during the bulk-merge operation. If not specified, the primary key will be used.</param>
-        /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not an entity mapping)</param>
+        /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not the entity mappings, but is working on top of it)</param>
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
         /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the entities will be sent together in one-go.</param>
         /// <param name="identityBehavior">The behavior of how the identity column would work during the operation.</param>
@@ -64,7 +64,7 @@ namespace RepoDb
 
         /// <summary>
         /// Merges a list of entities into the target table by bulk. This operation is inserting a row (if not present), and updating an existing 
-        /// row (if present), based on the given qualifiers. It uses either the 'INSERT/UPDATE' or the 'ON CONFLICT DO UPDATE' commands of the 
+        /// row (if present), based on the given qualifiers. It uses either of the 'INSERT/UPDATE' and 'ON CONFLICT DO UPDATE' commands of the 
         /// PostgreSQL based on the value passed to the '<paramref name="mergeCommandType"/>' argument. Underneath this operation is a call directly to 
         /// the existing <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the customized 'BinaryBulkInsert' extended method.
         /// </summary>
@@ -75,7 +75,7 @@ namespace RepoDb
         /// This can be an <see cref="IEnumerable{T}"/> of the following objects (<typeparamref name="TEntity"/> (as class/model), <see cref="ExpandoObject"/>,
         /// <see cref="IDictionary{TKey, TValue}"/> (of <see cref="string"/>/<see cref="object"/>) and Anonymous Types).</param>
         /// <param name="qualifiers">The list of qualifier fields to be used during the bulk-merge operation. If not specified, the primary key will be used.</param>
-        /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not an entity mapping)</param>
+        /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not the entity mappings, but is working on top of it)</param>
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
         /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the rows of the table will be sent together in one-go.</param>
         /// <param name="identityBehavior">The behavior of how the identity column would work during the operation.</param>
@@ -113,7 +113,7 @@ namespace RepoDb
 
         /// <summary>
         /// Merges the rows of the <see cref="DataTable"/> into the target table by bulk. This operation is inserting a row (if not present), and updating an existing 
-        /// row (if present), based on the given qualifiers. It uses either the 'INSERT/UPDATE' or the 'ON CONFLICT DO UPDATE' commands of the 
+        /// row (if present), based on the given qualifiers. It uses either of the 'INSERT/UPDATE' and 'ON CONFLICT DO UPDATE' commands of the 
         /// PostgreSQL based on the value passed to the '<paramref name="mergeCommandType"/>' argument. Underneath this operation is a call directly to 
         /// the existing <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the customized 'BinaryBulkInsert' extended method.
         /// </summary>
@@ -121,7 +121,7 @@ namespace RepoDb
         /// <param name="table">The source <see cref="DataTable"/> object that contains the rows to be bulk-inserted to the target table.</param>
         /// <param name="rowState">The state of the rows to be bulk-inserted. If not specified, all the rows of the table will be used.</param>
         /// <param name="qualifiers">The list of qualifier fields to be used during the bulk-merge operation. If not specified, the primary key will be used.</param>
-        /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not an entity mapping)</param>
+        /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not the entity mappings, but is working on top of it)</param>
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
         /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the rows of the table will be sent together in one-go.</param>
         /// <param name="identityBehavior">The behavior of how the identity column would work during the operation.</param>
@@ -155,7 +155,7 @@ namespace RepoDb
 
         /// <summary>
         /// Merges the rows of the <see cref="DataTable"/> into the target table by bulk. This operation is inserting a row (if not present), and updating an existing 
-        /// row (if present), based on the given qualifiers. It uses either the 'INSERT/UPDATE' or the 'ON CONFLICT DO UPDATE' commands of the 
+        /// row (if present), based on the given qualifiers. It uses either of the 'INSERT/UPDATE' and 'ON CONFLICT DO UPDATE' commands of the 
         /// PostgreSQL based on the value passed to the '<paramref name="mergeCommandType"/>' argument. Underneath this operation is a call directly to 
         /// the existing <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the customized 'BinaryBulkInsert' extended method.
         /// </summary>
@@ -164,7 +164,7 @@ namespace RepoDb
         /// <param name="table">The source <see cref="DataTable"/> object that contains the rows to be bulk-inserted to the target table.</param>
         /// <param name="rowState">The state of the rows to be bulk-inserted. If not specified, all the rows of the table will be used.</param>
         /// <param name="qualifiers">The list of qualifier fields to be used during the bulk-merge operation. If not specified, the primary key will be used.</param>
-        /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not an entity mapping)</param>
+        /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not the entity mappings, but is working on top of it)</param>
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
         /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the rows of the table will be sent together in one-go.</param>
         /// <param name="identityBehavior">The behavior of how the identity column would work during the operation.</param>
@@ -203,7 +203,7 @@ namespace RepoDb
 
         /// <summary>
         /// Merges the rows of the <see cref="DbDataReader"/> into the target table by bulk. This operation is inserting a row (if not present), and updating an existing 
-        /// row (if present), based on the given qualifiers. It uses either the 'INSERT/UPDATE' or the 'ON CONFLICT DO UPDATE' commands of the 
+        /// row (if present), based on the given qualifiers. It uses either of the 'INSERT/UPDATE' and 'ON CONFLICT DO UPDATE' commands of the 
         /// PostgreSQL based on the value passed to the '<paramref name="mergeCommandType"/>' argument. Underneath this operation is a call directly to 
         /// the existing <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the customized 'BinaryBulkInsert' extended method.
         /// </summary>
@@ -211,7 +211,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table from the database.</param>
         /// <param name="reader">The instance of <see cref="DbDataReader"/> object that contains the rows to be bulk-inserted to the target table.</param>
         /// <param name="qualifiers">The list of qualifier fields to be used during the bulk-merge operation. If not specified, the primary key will be used.</param>
-        /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not an entity mapping)</param>
+        /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not the entity mappings, but is working on top of it)</param>
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
         /// <param name="mergeCommandType">The value that defines the type of command to be used during the operation.</param>
         /// <param name="identityBehavior">The behavior of how the identity column would work during the operation.</param>
@@ -249,7 +249,7 @@ namespace RepoDb
 
         /// <summary>
         /// Merges a list of entities into the target table by bulk in an asynchronous way. This operation is inserting a row (if not present), and updating an existing 
-        /// row (if present), based on the given qualifiers. It uses either the 'INSERT/UPDATE' or the 'ON CONFLICT DO UPDATE' commands of the 
+        /// row (if present), based on the given qualifiers. It uses either of the 'INSERT/UPDATE' and 'ON CONFLICT DO UPDATE' commands of the 
         /// PostgreSQL based on the value passed to the '<paramref name="mergeCommandType"/>' argument. Underneath this operation is a call directly to 
         /// the existing <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the customized 'BinaryBulkInsertAsync' extended method.
         /// </summary>
@@ -259,7 +259,7 @@ namespace RepoDb
         /// This can be an <see cref="IEnumerable{T}"/> of the following objects (<typeparamref name="TEntity"/> (as class/model), <see cref="ExpandoObject"/>,
         /// <see cref="IDictionary{TKey, TValue}"/> (of <see cref="string"/>/<see cref="object"/>) and Anonymous Types).</param>
         /// <param name="qualifiers">The list of qualifier fields to be used during the bulk-merge operation. If not specified, the primary key will be used.</param>
-        /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not an entity mapping)</param>
+        /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not the entity mappings, but is working on top of it)</param>
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
         /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the entities will be sent together in one-go.</param>
         /// <param name="identityBehavior">The behavior of how the identity column would work during the operation.</param>
@@ -295,7 +295,7 @@ namespace RepoDb
 
         /// <summary>
         /// Merges a list of entities into the target table by bulk in an asynchronous way. This operation is inserting a row (if not present), and updating an existing 
-        /// row (if present), based on the given qualifiers. It uses either the 'INSERT/UPDATE' or the 'ON CONFLICT DO UPDATE' commands of the 
+        /// row (if present), based on the given qualifiers. It uses either of the 'INSERT/UPDATE' and 'ON CONFLICT DO UPDATE' commands of the 
         /// PostgreSQL based on the value passed to the '<paramref name="mergeCommandType"/>' argument. Underneath this operation is a call directly to 
         /// the existing <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the customized 'BinaryBulkInsertAsync' extended method.
         /// </summary>
@@ -306,7 +306,7 @@ namespace RepoDb
         /// This can be an <see cref="IEnumerable{T}"/> of the following objects (<typeparamref name="TEntity"/> (as class/model), <see cref="ExpandoObject"/>,
         /// <see cref="IDictionary{TKey, TValue}"/> (of <see cref="string"/>/<see cref="object"/>) and Anonymous Types).</param>
         /// <param name="qualifiers">The list of qualifier fields to be used during the bulk-merge operation. If not specified, the primary key will be used.</param>
-        /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not an entity mapping)</param>
+        /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not the entity mappings, but is working on top of it)</param>
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
         /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the rows of the table will be sent together in one-go.</param>
         /// <param name="identityBehavior">The behavior of how the identity column would work during the operation.</param>
@@ -347,7 +347,7 @@ namespace RepoDb
 
         /// <summary>
         /// Merges the rows of the <see cref="DataTable"/> into the target table by bulk in an asynchronous way. This operation is inserting a row (if not present), and updating an existing 
-        /// row (if present), based on the given qualifiers. It uses either the 'INSERT/UPDATE' or the 'ON CONFLICT DO UPDATE' commands of the 
+        /// row (if present), based on the given qualifiers. It uses either of the 'INSERT/UPDATE' and 'ON CONFLICT DO UPDATE' commands of the 
         /// PostgreSQL based on the value passed to the '<paramref name="mergeCommandType"/>' argument. Underneath this operation is a call directly to 
         /// the existing <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the customized 'BinaryBulkInsertAsync' extended method.
         /// </summary>
@@ -355,7 +355,7 @@ namespace RepoDb
         /// <param name="table">The source <see cref="DataTable"/> object that contains the rows to be bulk-inserted to the target table.</param>
         /// <param name="rowState">The state of the rows to be bulk-inserted. If not specified, all the rows of the table will be used.</param>
         /// <param name="qualifiers">The list of qualifier fields to be used during the bulk-merge operation. If not specified, the primary key will be used.</param>
-        /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not an entity mapping)</param>
+        /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not the entity mappings, but is working on top of it)</param>
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
         /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the rows of the table will be sent together in one-go.</param>
         /// <param name="identityBehavior">The behavior of how the identity column would work during the operation.</param>
@@ -392,7 +392,7 @@ namespace RepoDb
 
         /// <summary>
         /// Merges the rows of the <see cref="DataTable"/> into the target table by bulk in an asynchronous way. This operation is inserting a row (if not present), and updating an existing 
-        /// row (if present), based on the given qualifiers. It uses either the 'INSERT/UPDATE' or the 'ON CONFLICT DO UPDATE' commands of the 
+        /// row (if present), based on the given qualifiers. It uses either of the 'INSERT/UPDATE' and 'ON CONFLICT DO UPDATE' commands of the 
         /// PostgreSQL based on the value passed to the '<paramref name="mergeCommandType"/>' argument. Underneath this operation is a call directly to 
         /// the existing <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the customized 'BinaryBulkInsertAsync' extended method.
         /// </summary>
@@ -401,7 +401,7 @@ namespace RepoDb
         /// <param name="table">The source <see cref="DataTable"/> object that contains the rows to be bulk-inserted to the target table.</param>
         /// <param name="rowState">The state of the rows to be bulk-inserted. If not specified, all the rows of the table will be used.</param>
         /// <param name="qualifiers">The list of qualifier fields to be used during the bulk-merge operation. If not specified, the primary key will be used.</param>
-        /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not an entity mapping)</param>
+        /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not the entity mappings, but is working on top of it)</param>
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
         /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the rows of the table will be sent together in one-go.</param>
         /// <param name="identityBehavior">The behavior of how the identity column would work during the operation.</param>
@@ -443,7 +443,7 @@ namespace RepoDb
 
         /// <summary>
         /// Merges the rows of the <see cref="DbDataReader"/> into the target table by bulk in an asynchronous way. This operation is inserting a row (if not present), and updating an existing 
-        /// row (if present), based on the given qualifiers. It uses either the 'INSERT/UPDATE' or the 'ON CONFLICT DO UPDATE' commands of the 
+        /// row (if present), based on the given qualifiers. It uses either of the 'INSERT/UPDATE' and 'ON CONFLICT DO UPDATE' commands of the 
         /// PostgreSQL based on the value passed to the '<paramref name="mergeCommandType"/>' argument. Underneath this operation is a call directly to 
         /// the existing <see cref="NpgsqlConnection.BeginBinaryExport(string)"/> method via the customized 'BinaryBulkInsertAsync' extended method.
         /// </summary>
@@ -451,7 +451,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table from the database.</param>
         /// <param name="reader">The instance of <see cref="DbDataReader"/> object that contains the rows to be bulk-inserted to the target table.</param>
         /// <param name="qualifiers">The list of qualifier fields to be used during the bulk-merge operation. If not specified, the primary key will be used.</param>
-        /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not an entity mapping)</param>
+        /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not the entity mappings, but is working on top of it)</param>
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
         /// <param name="identityBehavior">The behavior of how the identity column would work during the operation.</param>
         /// <param name="mergeCommandType">The value that defines the type of command to be used during the operation.</param>

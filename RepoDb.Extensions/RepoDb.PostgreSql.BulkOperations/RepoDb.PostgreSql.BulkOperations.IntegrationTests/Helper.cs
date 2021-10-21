@@ -48,12 +48,17 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
         /// <param name="items1"></param>
         /// <param name="items2"></param>
         /// <param name="selector"></param>
+        /// <param name="assertItemsCount"></param>
         /// <returns></returns>
         public static int AssertEntitiesEquality<T1, T2>(IEnumerable<T1> items1,
             IEnumerable<T2> items2,
-            Func<T1, T2, bool> selector)
+            Func<T1, T2, bool> selector,
+            bool assertItemsCount = true)
         {
-            Assert.AreEqual(items1.Count(), items2.Count(), "Count is not equal.");
+            if (assertItemsCount)
+            {
+                Assert.AreEqual(items1.Count(), items2.Count(), "Count is not equal.");
+            }
 
             var result = 0;
 
@@ -114,9 +119,13 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
         /// <returns></returns>
         public static int AssertExpandoObjectsEquality(IEnumerable<dynamic> items1,
             IEnumerable<dynamic> items2,
-            Func<dynamic, dynamic, bool> selector)
+            Func<dynamic, dynamic, bool> selector,
+            bool assertItemsCount = true)
         {
-            Assert.AreEqual(items1.Count(), items2.Count(), "Count is not equal.");
+            if (assertItemsCount)
+            {
+                Assert.AreEqual(items1.Count(), items2.Count(), "Count is not equal.");
+            }
 
             var result = 0;
 
