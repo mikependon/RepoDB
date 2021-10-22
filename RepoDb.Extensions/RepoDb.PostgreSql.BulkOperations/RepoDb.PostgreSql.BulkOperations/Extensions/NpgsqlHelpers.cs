@@ -292,23 +292,23 @@ namespace RepoDb
         /// <param name="entityType"></param>
         /// <param name="entities"></param>
         /// <param name="dbFields"></param>
-        /// <param name="identities"></param>
+        /// <param name="identityResults"></param>
         /// <param name="dbSetting"></param>
         private static void SetIdentities<TEntity>(Type entityType,
             IEnumerable<TEntity> entities,
             IEnumerable<DbField> dbFields,
-            IEnumerable<long> identities,
+            IEnumerable<IdentityResult> identityResults,
             IDbSetting dbSetting)
             where TEntity : class
         {
             if (entityType.IsDictionaryStringObject())
             {
                 var dictionaries = entities.Select(item => item as IDictionary<string, object>);
-                SetDictionaryIdentities(dictionaries, dbFields, identities, dbSetting);
+                SetDictionaryIdentities(dictionaries, dbFields, identityResults, dbSetting);
             }
             else
             {
-                SetEntityIdentities(entities, dbFields, identities, dbSetting);
+                SetEntityIdentities(entities, dbFields, identityResults, dbSetting);
             }
         }
 
@@ -318,14 +318,14 @@ namespace RepoDb
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="entities"></param>
         /// <param name="dbFields"></param>
-        /// <param name="identities"></param>
+        /// <param name="identityResults"></param>
         /// <param name="dbSetting"></param>
         private static void SetEntityIdentities<TEntity>(IEnumerable<TEntity> entities,
             IEnumerable<DbField> dbFields,
-            IEnumerable<long> identities,
+            IEnumerable<IdentityResult> identityResults,
             IDbSetting dbSetting)
             where TEntity : class =>
-            SetEntityIdentities<TEntity>(entities, GetEntityIdentityField<TEntity>(dbFields, dbSetting), identities);
+            SetEntityIdentities<TEntity>(entities, GetEntityIdentityField<TEntity>(dbFields, dbSetting), identityResults);
 
         /// <summary>
         /// 
@@ -333,10 +333,10 @@ namespace RepoDb
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="entities"></param>
         /// <param name="identityField"></param>
-        /// <param name="identities"></param>
+        /// <param name="identityResults"></param>
         private static void SetEntityIdentities<TEntity>(IEnumerable<TEntity> entities,
             Field identityField,
-            IEnumerable<long> identities)
+            IEnumerable<IdentityResult> identityResults)
             where TEntity : class
         {
             if (identityField == null)
@@ -357,11 +357,14 @@ namespace RepoDb
             }
 
             var entityList = entities.AsList();
-            var identityList = identities.AsList();
+            var bulkInsertIndex = -1;
+            var index = 0;
 
-            for (var i = 0; i < identityList.Count; i++)
+            foreach (var result in identityResults)
             {
-                func(entityList[i], identityList[i]);
+                var entity = entityList[result.Index == bulkInsertIndex ? index : result.Index];
+                func(entity, result.Identity);
+                index++;
             }
         }
 
@@ -370,11 +373,11 @@ namespace RepoDb
         /// </summary>
         /// <param name="entities"></param>
         /// <param name="dbFields"></param>
-        /// <param name="identities"></param>
+        /// <param name="identityResults"></param>
         /// <param name="dbSetting"></param>
         private static void SetDictionaryIdentities(IEnumerable<IDictionary<string, object>> entities,
             IEnumerable<DbField> dbFields,
-            IEnumerable<long> identities,
+            IEnumerable<IdentityResult> identityResults,
             IDbSetting dbSetting)
         {
             var identityField = dbFields?.FirstOrDefault(dbField => dbField.IsIdentity).AsField();
@@ -385,11 +388,14 @@ namespace RepoDb
             }
 
             var entityList = entities.AsList();
-            var identityList = identities.AsList();
+            var bulkInsertIndex = -1;
+            var index = 0;
 
-            for (var i = 0; i < identityList.Count; i++)
+            foreach (var result in identityResults)
             {
-                entityList[i][identityField.Name.AsUnquoted(true, dbSetting)] = identityList[i];
+                var entity = entityList[result.Index == bulkInsertIndex ? index : result.Index];
+                entity[identityField.Name.AsUnquoted(true, dbSetting)] = result.Identity;
+                index++;
             }
         }
 
@@ -398,11 +404,11 @@ namespace RepoDb
         /// </summary>
         /// <param name="table"></param>
         /// <param name="dbFields"></param>
-        /// <param name="identities"></param>
+        /// <param name="identityResults"></param>
         /// <param name="dbSetting"></param>
         private static void SetDataTableIdentities(DataTable table,
             IEnumerable<DbField> dbFields,
-            IEnumerable<long> identities,
+            IEnumerable<IdentityResult> identityResults,
             IDbSetting dbSetting)
         {
             var identityField = dbFields?.FirstOrDefault(dbField => dbField.IsIdentity).AsField();
@@ -417,10 +423,15 @@ namespace RepoDb
                 identityColumn = table.Columns.Add(identityField.Name, identityField.Type ?? typeof(object));
             }
 
-            var identityList = identities.ToList();
-            for (var i = 0; i < table.Rows.Count; i++)
+            var identityList = identityResults.ToList();
+            var bulkInsertIndex = -1;
+            var index = 0;
+
+            foreach (var result in identityResults)
             {
-                table.Rows[i][identityColumn] = identityList[i];
+                var row = table.Rows[result.Index == bulkInsertIndex ? index : result.Index];
+                row[identityColumn] = result.Identity;
+                index++;
             }
         }
 
@@ -518,5 +529,28 @@ namespace RepoDb
         /// <returns></returns>
         private static bool IsPrimaryAnIdentity(DbField primary) =>
             primary.IsPrimary && primary.IsIdentity;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="enumerable"></param>
+        /// <returns></returns>
+        private static int EnumerableGetHashCode<T>(IEnumerable<T> enumerable)
+        {
+            var hashCode = 0;
+
+            if (enumerable?.Any()!=true)
+            {
+                return hashCode;
+            }
+
+            foreach(var item  in enumerable)
+            {
+                hashCode = HashCode.Combine(hashCode, item.GetHashCode());
+            }
+
+            return hashCode;
+        }
     }
 }
