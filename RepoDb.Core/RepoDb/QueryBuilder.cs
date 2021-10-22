@@ -3,6 +3,7 @@ using RepoDb.Extensions;
 using System.Linq;
 using System.Text;
 using RepoDb.Interfaces;
+using System;
 
 namespace RepoDb
 {
@@ -75,7 +76,14 @@ namespace RepoDb
         /// <returns>The current instance.</returns>
         public QueryBuilder WriteText(string text) => Append(text);
 
-        private QueryBuilder Append(string value, bool spaceBefore = true)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="spaceBefore"></param>
+        /// <returns></returns>
+        private QueryBuilder Append(string value,
+            bool spaceBefore = true)
         {
             if (string.IsNullOrWhiteSpace(value)) return this;
 
@@ -86,6 +94,11 @@ namespace RepoDb
             return this;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         private QueryBuilder Append(char value)
         {
             stringBuilder.Append(value);
@@ -93,7 +106,16 @@ namespace RepoDb
             return this;
         }
 
-        private QueryBuilder AppendJoin(IEnumerable<string> values, string separator = ", ", bool spaceBefore = true)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="values"></param>
+        /// <param name="separator"></param>
+        /// <param name="spaceBefore"></param>
+        /// <returns></returns>
+        private QueryBuilder AppendJoin(IEnumerable<string> values,
+            string separator = ", ",
+            bool spaceBefore = true)
         {
             if (values.IsNullOrEmpty()) return this;
 
@@ -276,7 +298,18 @@ namespace RepoDb
         /// </summary>
         /// <param name="field">The list of fields to be stringified.</param>
         /// <returns>The current instance.</returns>
-        public QueryBuilder FieldFrom(Field field) => Append(field?.Name);
+        [Obsolete]
+        public QueryBuilder FieldFrom(Field field) =>
+            FieldFrom(field, null);
+
+        /// <summary>
+        /// Appends a stringified fields to the SQL Query Statement.
+        /// </summary>
+        /// <param name="field">The list of fields to be stringified.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
+        /// <returns>The current instance.</returns>
+        public QueryBuilder FieldFrom(Field field,
+            IDbSetting dbSetting) => Append(field?.Name.AsField(dbSetting));
 
         /// <summary>
         /// Appends a stringified fields to the SQL Query Statement.
