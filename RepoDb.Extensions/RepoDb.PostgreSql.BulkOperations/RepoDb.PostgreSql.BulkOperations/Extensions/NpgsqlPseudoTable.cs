@@ -191,7 +191,7 @@ namespace RepoDb
             IDbSetting dbSetting = null,
             NpgsqlTransaction transaction = null)
         {
-            if (fields?.Any()!=true)
+            if (fields?.Any() != true)
             {
                 return;
             }

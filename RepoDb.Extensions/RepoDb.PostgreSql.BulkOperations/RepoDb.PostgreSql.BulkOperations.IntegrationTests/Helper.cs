@@ -249,7 +249,6 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
             bool hasId = false,
             long addToKey = 0)
         {
-            var random = new Random();
             var tables = new List<BulkOperationIdentityTable>();
             for (var i = 0; i < count; i++)
             {
@@ -294,7 +293,6 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
             bool hasId = false,
             long addToKey = 0)
         {
-            var random = new Random();
             var tables = new List<BulkOperationLightIdentityTable>();
             for (var i = 0; i < count; i++)
             {
@@ -329,7 +327,6 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
             bool hasId = false,
             long addToKey = 0)
         {
-            var random = new Random();
             var tables = new List<BulkOperationMappedIdentityTable>();
             for (var i = 0; i < count; i++)
             {
@@ -364,7 +361,6 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
             bool hasId = false,
             long addToKey = 0)
         {
-            var random = new Random();
             var tables = new List<BulkOperationUnmatchedIdentityTable>();
             for (var i = 0; i < count; i++)
             {
@@ -403,7 +399,6 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
             bool hasId = false,
             long addToKey = 0)
         {
-            var random = new Random();
             var tables = new List<dynamic>();
             for (var i = 0; i < count; i++)
             {
@@ -438,7 +433,6 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
             bool hasId = false,
             long addToKey = 0)
         {
-            var random = new Random();
             var tables = new List<dynamic>();
             for (var i = 0; i < count; i++)
             {
@@ -477,7 +471,6 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
             bool hasId = false,
             long addToKey = 0)
         {
-            var random = new Random();
             var tables = new List<dynamic>();
             for (var i = 0; i < count; i++)
             {
@@ -513,7 +506,6 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
             bool hasId = false,
             long addToKey = 0)
         {
-            var random = new Random();
             var tables = new List<dynamic>();
             for (var i = 0; i < count; i++)
             {

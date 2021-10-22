@@ -398,11 +398,9 @@ namespace RepoDb
             Field identityField,
             IDbSetting dbSetting)
         {
-            var returnIdentityTableName = GetTemporaryReturnIdentityTableName();
+            var returnIdentityTableName = GetTemporaryReturnIdentityTableName().AsQuoted(true, dbSetting);
             var orderColumnOrderField = GetOderColumnOrderField();
             var orderColumnName = orderColumnOrderField.Name.AsQuoted(true, dbSetting);
-            var indexColumnName = "Index".AsQuoted(true, dbSetting);
-            var identityColumnName = "Identity".AsQuoted(true, dbSetting);
             var idColumnName = identityField.Name.AsQuoted(true, dbSetting);
 
             // Drop if exists
@@ -411,27 +409,30 @@ namespace RepoDb
                 .TableNameFrom(returnIdentityTableName, dbSetting)
                 .End();
 
+            // Compose
+            var commandText = @$"WITH CTE AS
+(
+	SELECT ROW_NUMBER() OVER(PARTITION BY S.{orderColumnName} ORDER BY T.{idColumnName} DESC) AS ""RowNumber"",
+		S.{orderColumnName} AS ""Index"", T.{idColumnName} AS ""Identity""
+	FROM {sourceTableName.AsQuoted(true, dbSetting)} AS S
+	LEFT JOIN {destinationTableName.AsQuoted(true, dbSetting)} AS T
+	ON ({qualifiers
+            .Select(
+                field =>
+                    field.AsJoinQualifier("T", "S", true, dbSetting))
+            .Join(" AND ")})
+)
+SELECT ""Index""
+	, ""Identity""
+INTO TEMPORARY {returnIdentityTableName}
+FROM CTE
+WHERE ""RowNumber"" = 1
+ORDER BY ""Index"";";
+
             // Select into
             builder
                 .NewLine()
-                .Select()
-                .WriteText($"S.{orderColumnName} AS {indexColumnName},")
-                .WriteText($"T.{idColumnName} AS {identityColumnName}")
-                .Into()
-                .WriteText("TEMPORARY")
-                .TableNameFrom(returnIdentityTableName, dbSetting)
-                .From()
-                .TableNameFrom(sourceTableName, dbSetting)
-                .As("S")
-                .WriteText("LEFT JOIN")
-                .TableNameFrom(destinationTableName, dbSetting)
-                .As("T")
-                .On()
-                .WriteText(qualifiers
-                    .Select(
-                        field =>
-                            field.AsJoinQualifier("T", "S", true, dbSetting))
-                    .Join(" AND "))
+                .WriteText(commandText)
                 .End();
         }
 
