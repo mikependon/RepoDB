@@ -101,8 +101,8 @@ namespace RepoDb
                         dbSetting),
 
                 // setIdentities
-                (identities) =>
-                    SetIdentities(entityType, entities, dbFields, identities, dbSetting),
+                (identityResults) =>
+                    SetIdentities(entityType, entities, dbFields, identityResults, dbSetting),
 
                 null,
                 true,
@@ -193,8 +193,8 @@ namespace RepoDb
                         dbSetting),
 
                 // setIdentities
-                (identities) =>
-                    SetDataTableIdentities(table, dbFields, identities, dbSetting),
+                (identityResults) =>
+                    SetDataTableIdentities(table, dbFields, identityResults, dbSetting),
 
                 null,
                 true,
@@ -388,8 +388,8 @@ namespace RepoDb
                         dbSetting),
 
                 // setIdentities
-                (identities) =>
-                    SetIdentities(entityType, entities, dbFields, identities, dbSetting),
+                (identityResults) =>
+                    SetIdentities(entityType, entities, dbFields, identityResults, dbSetting),
 
                 null,
                 true,
@@ -484,8 +484,8 @@ namespace RepoDb
                         dbSetting),
 
                 // setIdentities
-                (identities) =>
-                    SetDataTableIdentities(table, dbFields, identities, dbSetting),
+                (identityResults) =>
+                    SetDataTableIdentities(table, dbFields, identityResults, dbSetting),
 
                 null,
                 true,
