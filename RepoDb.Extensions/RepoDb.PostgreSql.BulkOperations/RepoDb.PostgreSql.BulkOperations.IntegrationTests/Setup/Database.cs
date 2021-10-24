@@ -75,7 +75,7 @@ namespace RepoDb.IntegrationTests.Setup
         {
             using (var connection = new NpgsqlConnection(ConnectionStringForRepoDb))
             {
-                connection.Truncate<BulkOperationIdentityTable>();
+                connection.Truncate("BulkOperationIdentityTable");
             }
         }
 
