@@ -238,45 +238,45 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #region BulkOperationIdentityTable
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="count"></param>
-        /// <param name="hasId"></param>
-        /// <param name="addToKey"></param>
-        /// <returns></returns>
-        public static List<BulkOperationIdentityTable> CreateBulkOperationIdentityTables(int count,
-            bool hasId = false,
-            long addToKey = 0)
-        {
-            var tables = new List<BulkOperationIdentityTable>();
-            for (var i = 0; i < count; i++)
-            {
-                var index = i + 1;
-                tables.Add(new BulkOperationIdentityTable
-                {
-                    Id = hasId ? index + addToKey : 0,
-                    ColumnBigInt = index,
-                    ColumnBit = true,
-                    ColumnBoolean = true,
-                    ColumnChar = 'C',
-                    ColumnDate = EpocDate.AddDays(index),
-                    ColumnInteger = index,
-                    ColumnMoney = index,
-                    ColumnNumeric = index,
-                    ColumnReal = index,
-                    ColumnSerial = index,
-                    ColumnSmallInt = (short)index,
-                    ColumnSmallSerial = (short)index,
-                    ColumnText = $"Text-{index}",
-                    ColumnTimestampWithoutTimeZone = EpocDate.AddDays(index),
-                    ColumnTimestampWithTimeZone = EpocDate.AddDays(index),
-                    ColumnTimeWithoutTimeZone = EpocDate.AddDays(index),
-                    ColumnTimeWithTimeZone = EpocDate.AddDays(index)
-                });
-            }
-            return tables;
-        }
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <param name="count"></param>
+        ///// <param name="hasId"></param>
+        ///// <param name="addToKey"></param>
+        ///// <returns></returns>
+        //public static List<BulkOperationIdentityTable> CreateBulkOperationIdentityTables(int count,
+        //    bool hasId = false,
+        //    long addToKey = 0)
+        //{
+        //    var tables = new List<BulkOperationIdentityTable>();
+        //    for (var i = 0; i < count; i++)
+        //    {
+        //        var index = i + 1;
+        //        tables.Add(new BulkOperationIdentityTable
+        //        {
+        //            Id = hasId ? index + addToKey : 0,
+        //            ColumnBigInt = index,
+        //            ColumnBit = true,
+        //            ColumnBoolean = true,
+        //            ColumnChar = 'C',
+        //            ColumnDate = EpocDate.AddDays(index),
+        //            ColumnInteger = index,
+        //            ColumnMoney = index,
+        //            ColumnNumeric = index,
+        //            ColumnReal = index,
+        //            ColumnSerial = index,
+        //            ColumnSmallInt = (short)index,
+        //            ColumnSmallSerial = (short)index,
+        //            ColumnText = $"Text-{index}",
+        //            ColumnTimestampWithoutTimeZone = EpocDate.AddDays(index),
+        //            ColumnTimestampWithTimeZone = EpocDate.AddDays(index),
+        //            ColumnTimeWithoutTimeZone = EpocDate.AddDays(index),
+        //            ColumnTimeWithTimeZone = EpocDate.AddDays(index)
+        //        });
+        //    }
+        //    return tables;
+        //}
 
         #endregion
 
@@ -316,18 +316,20 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
         /// 
         /// </summary>
         /// <param name="data"></param>
-        public static void UpdateBulkOperationLightIdentityTables(IEnumerable<BulkOperationLightIdentityTable> data)
+        /// <returns></returns>
+        public static List<BulkOperationLightIdentityTable> UpdateBulkOperationLightIdentityTables(List<BulkOperationLightIdentityTable> data)
         {
             foreach (var item in data)
             {
-                item.ColumnBigInt += 100;
+                /*item.ColumnBigInt += 100;
+                item.ColumnInteger += 100;*/
                 item.ColumnBoolean = false;
-                item.ColumnInteger += 100;
                 item.ColumnNumeric += 100;
                 item.ColumnReal += 100;
                 item.ColumnSmallInt += 100;
                 item.ColumnText += " (Updated)";
             }
+            return data;
         }
 
         #endregion
@@ -368,18 +370,20 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
         /// 
         /// </summary>
         /// <param name="data"></param>
-        public static void UpdateBulkOperationMappedIdentityTables(IEnumerable<BulkOperationMappedIdentityTable> data)
+        /// <returns></returns>
+        public static List<BulkOperationMappedIdentityTable> UpdateBulkOperationMappedIdentityTables(List<BulkOperationMappedIdentityTable> data)
         {
             foreach (var item in data)
             {
-                item.ColumnBigIntMapped += 100;
+                /*item.ColumnBigIntMapped += 100;
+                item.ColumnIntegerMapped += 100;*/
                 item.ColumnBooleanMapped = false;
-                item.ColumnIntegerMapped += 100;
                 item.ColumnNumericMapped += 100;
                 item.ColumnRealMapped += 100;
                 item.ColumnSmallIntMapped += 100;
                 item.ColumnTextMapped += " (Updated)";
             }
+            return data;
         }
 
         #endregion
@@ -420,18 +424,20 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
         /// 
         /// </summary>
         /// <param name="data"></param>
-        public static void UpdateBulkOperationUnmatchedIdentityTables(IEnumerable<BulkOperationUnmatchedIdentityTable> data)
+        /// <returns></returns>
+        public static List<BulkOperationUnmatchedIdentityTable> UpdateBulkOperationUnmatchedIdentityTables(List<BulkOperationUnmatchedIdentityTable> data)
         {
             foreach (var item in data)
             {
-                item.ColumnBigIntMapped += 100;
+                /*item.ColumnBigIntMapped += 100;
+                item.ColumnIntegerMapped += 100;*/
                 item.ColumnBooleanMapped = false;
-                item.ColumnIntegerMapped += 100;
                 item.ColumnNumericMapped += 100;
                 item.ColumnRealMapped += 100;
                 item.ColumnSmallIntMapped += 100;
                 item.ColumnTextMapped += " (Updated)";
             }
+            return data;
         }
 
         #endregion
@@ -472,6 +478,33 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
             return tables;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="count"></param>
+        /// <param name="hasId"></param>
+        /// <param name="addToKey"></param>
+        /// <returns></returns>
+        public static List<dynamic> UpdateBulkOperationAnonymousLightIdentityTables(List<dynamic> data)
+        {
+            var tables = new List<dynamic>();
+            foreach (var item in data)
+            {
+                tables.Add(new
+                {
+                    Id = (long)item.Id,
+                    ColumnBigInt = (long)item.ColumnBigInt,
+                    ColumnInteger = (int)item.ColumnInteger,
+                    ColumnBoolean = false,
+                    ColumnNumeric = (decimal)(item.ColumnNumeric + 100),
+                    ColumnReal = (float)(item.ColumnReal + 100),
+                    ColumnSmallInt = (short)(item.ColumnSmallInt + 100),
+                    ColumnText = $"{item.ColumnText} (Updated)",
+                });
+            }
+            return tables;
+        }
+
         #endregion
 
         #region BulkOperationAnonymousUnmatchedIdentityTable
@@ -506,6 +539,31 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
             return tables;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static List<dynamic> UpdateBulkOperationAnonymousUnmatchedIdentityTables(List<dynamic> data)
+        {
+            var tables = new List<dynamic>();
+            foreach (var item in data)
+            {
+                tables.Add(new
+                {
+                    IdMapped = (long)item.IdMapped,
+                    ColumnBigIntMapped = (long)item.ColumnBigIntMapped,
+                    ColumnIntegerMapped = (int)item.ColumnIntegerMapped,
+                    ColumnBooleanMapped = false,
+                    ColumnNumericMapped = (decimal)(item.ColumnNumericMapped + 100),
+                    ColumnRealMapped = (float)(item.ColumnRealMapped + 100),
+                    ColumnSmallIntMapped = (short)(item.ColumnSmallIntMapped + 100),
+                    ColumnTextMapped = $"{item.ColumnTextMapped} (Updated)",
+                });
+            }
+            return tables;
+        }
+
         #endregion
 
         #endregion
@@ -530,7 +588,6 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
             {
                 var expandoObject = new ExpandoObject() as IDictionary<string, object>;
                 var index = i + 1;
-
                 expandoObject["Id"] = (long)(hasId ? index + addToKey : 0);
                 expandoObject["ColumnBigInt"] = (long)index;
                 expandoObject["ColumnBoolean"] = true;
@@ -538,11 +595,31 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 expandoObject["ColumnNumeric"] = (decimal)index;
                 expandoObject["ColumnReal"] = (float)index;
                 expandoObject["ColumnSmallInt"] = (short)index;
-                expandoObject["ColumnText"] = $"Text -{index}";
-
+                expandoObject["ColumnText"] = $"Text-{index}";
                 tables.Add((ExpandoObject)expandoObject);
             }
             return tables;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name=""></param>
+        /// <returns></returns>
+        public static List<dynamic> UpdateBulkOperationExpandoObjectLightIdentityTables(List<dynamic> data)
+        {
+            foreach (ExpandoObject item in data)
+            {
+                var dictionary = item as IDictionary<string, object>;
+                /*dictionary["ColumnBigInt"] = (long)dictionary["ColumnBigInt"];
+                dictionary["ColumnInteger"] = (int)dictionary["ColumnInteger"];*/
+                dictionary["ColumnBoolean"] = false;
+                dictionary["ColumnNumeric"] = (decimal)((decimal)dictionary["ColumnNumeric"] + 100);
+                dictionary["ColumnReal"] = (float)((float)dictionary["ColumnReal"] + 100);
+                dictionary["ColumnSmallInt"] = (short)((short)dictionary["ColumnSmallInt"] + 100);
+                dictionary["ColumnText"] = $"{dictionary["ColumnText"]} (Updated)";
+            }
+            return data;
         }
 
         #endregion
@@ -565,7 +642,6 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
             {
                 var expandoObject = new ExpandoObject() as IDictionary<string, object>;
                 var index = i + 1;
-
                 expandoObject["IdMapped"] = (long)(hasId ? index + addToKey : 0);
                 expandoObject["ColumnBigIntMapped"] = (long)index;
                 expandoObject["ColumnBooleanMapped"] = true;
@@ -573,11 +649,31 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 expandoObject["ColumnNumericMapped"] = (decimal)index;
                 expandoObject["ColumnRealMapped"] = (float)index;
                 expandoObject["ColumnSmallIntMapped"] = (short)index;
-                expandoObject["ColumnTextMapped"] = $"Text -{index}";
-
+                expandoObject["ColumnTextMapped"] = $"Text-{index}";
                 tables.Add((ExpandoObject)expandoObject);
             }
             return tables;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name=""></param>
+        /// <returns></returns>
+        public static List<dynamic> UpdateBulkOperationExpandoObjectUnmatchedIdentityTables(List<dynamic> data)
+        {
+            foreach (ExpandoObject item in data)
+            {
+                var dictionary = item as IDictionary<string, object>;
+                /*dictionary["ColumnBigIntMapped"] = (long)dictionary["ColumnBigIntMapped"]);
+                dictionary["ColumnIntegerMapped"] = (int)dictionary["ColumnIntegerMapped"]);*/
+                dictionary["ColumnBooleanMapped"] = false;
+                dictionary["ColumnNumericMapped"] = (decimal)((decimal)dictionary["ColumnNumericMapped"] + 100);
+                dictionary["ColumnRealMapped"] = (float)((float)dictionary["ColumnRealMapped"] + 100);
+                dictionary["ColumnSmallIntMapped"] = (short)((short)dictionary["ColumnSmallIntMapped"] + 100);
+                dictionary["ColumnTextMapped"] = $"{dictionary["ColumnTextMapped"]} (Updated)";
+            }
+            return data;
         }
 
         #endregion
@@ -585,8 +681,6 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
         #endregion
 
         #region DataTable
-
-        #region BulkOperationDataTableIdentityTable
 
         /// <summary>
         /// 
@@ -624,6 +718,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
             return table;
         }
 
+        #region BulkOperationDataTableLightIdentityTable
+
         /// <summary>
         /// 
         /// </summary>
@@ -642,6 +738,18 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static DataTable UpdateBulkOperationDataTableLightIdentityTables(List<BulkOperationLightIdentityTable> data) =>
+            ToDataTable("BulkOperationIdentityTable", UpdateBulkOperationLightIdentityTables(data));
+
+        #endregion
+
+        #region BulkOperationDataTableUnmatchedIdentityTable
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="count"></param>
         /// <param name="hasId"></param>
         /// <param name="addToKey"></param>
@@ -653,6 +761,14 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
             var tables = CreateBulkOperationUnmatchedIdentityTables(count, hasId, addToKey);
             return ToDataTable("BulkOperationIdentityTable", tables);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static DataTable UpdateBulkOperationDataTableUnmatchedIdentityTables(List<BulkOperationUnmatchedIdentityTable> data) =>
+            ToDataTable("BulkOperationIdentityTable", UpdateBulkOperationUnmatchedIdentityTables(data));
 
         #endregion
 
