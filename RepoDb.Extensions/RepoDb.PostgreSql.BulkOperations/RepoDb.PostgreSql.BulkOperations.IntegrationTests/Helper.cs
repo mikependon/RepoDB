@@ -312,6 +312,24 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
             return tables;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        public static void UpdateBulkOperationLightIdentityTables(IEnumerable<BulkOperationLightIdentityTable> data)
+        {
+            foreach (var item in data)
+            {
+                item.ColumnBigInt += 100;
+                item.ColumnBoolean = false;
+                item.ColumnInteger += 100;
+                item.ColumnNumeric += 100;
+                item.ColumnReal += 100;
+                item.ColumnSmallInt += 100;
+                item.ColumnText += " (Updated)";
+            }
+        }
+
         #endregion
 
         #region BulkOperationMappedIdentityTable
@@ -346,6 +364,24 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
             return tables;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        public static void UpdateBulkOperationMappedIdentityTables(IEnumerable<BulkOperationMappedIdentityTable> data)
+        {
+            foreach (var item in data)
+            {
+                item.ColumnBigIntMapped += 100;
+                item.ColumnBooleanMapped = false;
+                item.ColumnIntegerMapped += 100;
+                item.ColumnNumericMapped += 100;
+                item.ColumnRealMapped += 100;
+                item.ColumnSmallIntMapped += 100;
+                item.ColumnTextMapped += " (Updated)";
+            }
+        }
+
         #endregion
 
         #region BulkOperationUnmatchedIdentityTable
@@ -378,6 +414,24 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 });
             }
             return tables;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        public static void UpdateBulkOperationUnmatchedIdentityTables(IEnumerable<BulkOperationUnmatchedIdentityTable> data)
+        {
+            foreach (var item in data)
+            {
+                item.ColumnBigIntMapped += 100;
+                item.ColumnBooleanMapped = false;
+                item.ColumnIntegerMapped += 100;
+                item.ColumnNumericMapped += 100;
+                item.ColumnRealMapped += 100;
+                item.ColumnSmallIntMapped += 100;
+                item.ColumnTextMapped += " (Updated)";
+            }
         }
 
         #endregion
