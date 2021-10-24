@@ -315,7 +315,7 @@ namespace RepoDb
             // Create temp table
             if (identityBehavior == BulkImportIdentityBehavior.ReturnIdentity)
             {
-                WriteCreateTemporaryReturnIdentityTable(builder,
+                WriteCreateTemporaryReturnIdentityTableForMerge(builder,
                     sourceTableName,
                     destinationTableName,
                     qualifiers,
@@ -323,7 +323,7 @@ namespace RepoDb
                     dbSetting);
 
                 // Create the index
-                WriteCreateTemporaryReturnIdentityTableIndex(builder,
+                WriteCreateTemporaryReturnIdentityTableIndexForMerge(builder,
                     dbSetting);
             }
 
@@ -349,7 +349,7 @@ namespace RepoDb
                     identityField,
                     identityBehavior,
                     dbSetting);
-                WriteInsertIntoTargetTableFromPseudoTableForMergeWithReturnIdentity(builder,
+                WriteInsertIntoTargetTableFromPseudoTableWithReturnIdentityForMerge(builder,
                     sourceTableName,
                     destinationTableName,
                     insertableFields,
@@ -373,7 +373,7 @@ namespace RepoDb
             // Return the identities (if needed)
             if (identityBehavior == BulkImportIdentityBehavior.ReturnIdentity && identityField != null)
             {
-                WriteReturnIdentityResultsFromTemporaryReturnIdentityTable(builder,
+                WriteReturnIdentityResultsFromTemporaryReturnIdentityTableForMerge(builder,
                     dbSetting);
             }
 
@@ -391,7 +391,7 @@ namespace RepoDb
         /// <param name="qualifiers"></param>
         /// <param name="identityField"></param>
         /// <param name="dbSetting"></param>
-        private static void WriteCreateTemporaryReturnIdentityTable(QueryBuilder builder,
+        private static void WriteCreateTemporaryReturnIdentityTableForMerge(QueryBuilder builder,
             string sourceTableName,
             string destinationTableName,
             IEnumerable<Field> qualifiers,
@@ -441,7 +441,7 @@ ORDER BY ""Index"";";
         /// </summary>
         /// <param name="builder"></param>
         /// <param name="dbSetting"></param>
-        private static void WriteCreateTemporaryReturnIdentityTableIndex(QueryBuilder builder,
+        private static void WriteCreateTemporaryReturnIdentityTableIndexForMerge(QueryBuilder builder,
             IDbSetting dbSetting)
         {
             var returnIdentityTableName = GetTemporaryReturnIdentityTableName();
@@ -477,13 +477,6 @@ ORDER BY ""Index"";";
             IEnumerable<Field> updatableFields,
             IDbSetting dbSetting)
         {
-            var returnIdentityTableName = GetTemporaryReturnIdentityTableName();
-            var orderColumnOrderField = GetOderColumnOrderField();
-            var orderColumnName = orderColumnOrderField.Name.AsQuoted(true, dbSetting);
-            var indexColumnName = "Index".AsQuoted(true, dbSetting);
-            var identityColumnName = "Identity".AsQuoted(true, dbSetting);
-
-            // Create
             builder
                 .NewLine()
                 .Update()
@@ -581,7 +574,7 @@ ORDER BY ""Index"";";
         /// <param name="qualifiers"></param>
         /// <param name="identityField"></param>
         /// <param name="dbSetting"></param>
-        private static void WriteInsertIntoTargetTableFromPseudoTableForMergeWithReturnIdentity(QueryBuilder builder,
+        private static void WriteInsertIntoTargetTableFromPseudoTableWithReturnIdentityForMerge(QueryBuilder builder,
             string sourceTableName,
             string destinationTableName,
             IEnumerable<Field> fields,
@@ -664,7 +657,7 @@ SET ""Identity"" = EXCLUDED.""Identity"";";
         /// </summary>
         /// <param name="builder"></param>
         /// <param name="dbSetting"></param>
-        private static void WriteReturnIdentityResultsFromTemporaryReturnIdentityTable(QueryBuilder builder,
+        private static void WriteReturnIdentityResultsFromTemporaryReturnIdentityTableForMerge(QueryBuilder builder,
             IDbSetting dbSetting)
         {
             var returnIdentityTableName = GetTemporaryReturnIdentityTableName().AsQuoted(true, dbSetting);
@@ -746,6 +739,79 @@ SET ""Identity"" = EXCLUDED.""Identity"";";
 
         #endregion
 
+        #region BinaryBulkUpdate
+
+        /// <summary>
+        /// Do the explicit UPDATE and INSERT command.
+        /// Link: https://stackoverflow.com/questions/17267417/how-to-upsert-merge-insert-on-duplicate-update-in-postgresql
+        /// </summary>
+        /// <param name="sourceTableName"></param>
+        /// <param name="destinationTableName"></param>
+        /// <param name="fields"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="primaryField"></param>
+        /// <param name="identityField"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
+        private static string GetUpdateCommandText(string sourceTableName,
+            string destinationTableName,
+            IEnumerable<Field> fields,
+            IEnumerable<Field> qualifiers,
+            Field primaryField,
+            Field identityField,
+            BulkImportIdentityBehavior identityBehavior,
+            IDbSetting dbSetting)
+        {
+            var key = HashCode.Combine(sourceTableName.GetHashCode(),
+                destinationTableName.GetHashCode(),
+                EnumerableGetHashCode(fields),
+                EnumerableGetHashCode(qualifiers),
+                primaryField.GetHashCode(),
+                identityField.GetHashCode(),
+                identityBehavior.GetHashCode());
+
+            // Get from cache
+            var commandText = LocalCommandTextCache.Get(key);
+            if (!string.IsNullOrEmpty(commandText))
+            {
+                return commandText;
+            }
+
+            // Qualifiers
+            qualifiers = EnsurePrimaryAsQualifier(qualifiers, primaryField, destinationTableName);
+            ThrowIfNoQualifiers(qualifiers, destinationTableName);
+            ThrowOnMissingQualifiers(fields, qualifiers, dbSetting);
+
+            // Build the query
+            var builder = new QueryBuilder();
+
+            // Update the target table (from the pseudo table)
+            var updatableFields = GetUpdatableFields(
+                fields,
+                qualifiers,
+                primaryField,
+                dbSetting);
+            WriteUpdateTargetTableFromPseudoTable(builder,
+                sourceTableName,
+                destinationTableName,
+                qualifiers,
+                updatableFields,
+                dbSetting);
+
+            // Set the command text
+            commandText = builder
+                .ToString();
+
+            // Add to cache
+            LocalCommandTextCache.Add(key, commandText, true);
+
+            // Return
+            return commandText;
+        }
+
+        #endregion
+
         #region Helpers
 
         /// <summary>
@@ -767,6 +833,16 @@ SET ""Identity"" = EXCLUDED.""Identity"";";
         private static string GetBinaryMergePseudoTableName(string tableName,
             IDbSetting dbSetting) =>
             $"_RepoDb_BinaryBulkMerge_{tableName.AsUnquoted(true, dbSetting)}";
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
+        private static string GetBinaryUpdatePseudoTableName(string tableName,
+            IDbSetting dbSetting) =>
+            $"_RepoDb_BinaryBulkUpdate_{tableName.AsUnquoted(true, dbSetting)}";
 
         /// <summary>
         /// 
