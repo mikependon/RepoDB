@@ -777,6 +777,33 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestBinaryBulkMergeViaAnonymousWithQualifiers()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = Helper.CreateBulkOperationAnonymousLightIdentityTables(10, false);
+                var tableName = "BulkOperationIdentityTable";
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryBulkMerge(connection,
+                    tableName,
+                    entities: entities,
+                    qualifiers: Field.From(
+                        nameof(BulkOperationLightIdentityTable.ColumnBigInt),
+                        nameof(BulkOperationLightIdentityTable.ColumnInteger)));
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+
+                // Assert
+                var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => entities.IndexOf(t1) == queryResult.IndexOf(t2));
+                Assert.AreEqual(entities.Count(), assertCount);
+            }
+        }
+
+        [TestMethod]
         public void TestBinaryBulkMergeViaAnonymousWithKeepIdentity()
         {
             using (var connection = GetConnection())
@@ -1171,6 +1198,33 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                     tableName,
                     entities: entities,
                     batchSize: 3);
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+
+                // Assert
+                var queryResult = connection.QueryAll(tableName).ToList();
+                var assertCount = Helper.AssertExpandoObjectsEquality(entities, queryResult, (t1, t2) => entities.IndexOf(t1) == queryResult.IndexOf(t2));
+                Assert.AreEqual(entities.Count(), assertCount);
+            }
+        }
+
+        [TestMethod]
+        public void TestBinaryBulkMergeViaExpandoObjectWithQualifiers()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = Helper.CreateBulkOperationExpandoObjectLightIdentityTables(10, false);
+                var tableName = "BulkOperationIdentityTable";
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryBulkMerge(connection,
+                    tableName,
+                    entities: entities,
+                    qualifiers: Field.From(
+                        nameof(BulkOperationLightIdentityTable.ColumnBigInt),
+                        nameof(BulkOperationLightIdentityTable.ColumnInteger)));
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -1722,6 +1776,34 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestBinaryBulkMergeViaDataTableWithQualifiers()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = Helper.CreateBulkOperationLightIdentityTables(10, false);
+                var tableName = "BulkOperationIdentityTable";
+                var table = Helper.ToDataTable(tableName, entities);
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryBulkMerge(connection,
+                    tableName,
+                    table: table,
+                    qualifiers: Field.From(
+                        nameof(BulkOperationLightIdentityTable.ColumnBigInt),
+                        nameof(BulkOperationLightIdentityTable.ColumnInteger)));
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+
+                // Assert
+                var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => entities.IndexOf(t1) == queryResult.IndexOf(t2));
+                Assert.AreEqual(entities.Count(), assertCount);
+            }
+        }
+
+        [TestMethod]
         public void TestBinaryBulkMergeViaDataTableWithKeepIdentity()
         {
             using (var connection = GetConnection())
@@ -2258,6 +2340,36 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                     var result = NpgsqlConnectionExtension.BinaryBulkMerge(connection,
                         tableName,
                         reader);
+
+                    // Assert
+                    Assert.AreEqual(entities.Count(), result);
+                }
+
+                // Assert
+                var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => entities.IndexOf(t1) == queryResult.IndexOf(t2));
+                Assert.AreEqual(entities.Count(), assertCount);
+            }
+        }
+
+        [TestMethod]
+        public void TestBinaryBulkMergeViaDbDataReaderWithQualifiers()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = Helper.CreateBulkOperationLightIdentityTables(10, false);
+                var tableName = "BulkOperationIdentityTable";
+
+                using (var reader = new DataEntityDataReader<BulkOperationLightIdentityTable>(entities))
+                {
+                    // Act
+                    var result = NpgsqlConnectionExtension.BinaryBulkMerge(connection,
+                        tableName,
+                        reader,
+                        qualifiers: Field.From(
+                            nameof(BulkOperationLightIdentityTable.ColumnBigInt),
+                            nameof(BulkOperationLightIdentityTable.ColumnInteger)));
 
                     // Assert
                     Assert.AreEqual(entities.Count(), result);
@@ -3349,6 +3461,33 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestBinaryBulkMergeAsyncViaAnonymousWithQualifiers()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = Helper.CreateBulkOperationAnonymousLightIdentityTables(10, false);
+                var tableName = "BulkOperationIdentityTable";
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryBulkMergeAsync(connection,
+                    tableName,
+                    entities: entities,
+                    qualifiers: Field.From(
+                        nameof(BulkOperationLightIdentityTable.ColumnBigInt),
+                        nameof(BulkOperationLightIdentityTable.ColumnInteger))).Result;
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+
+                // Assert
+                var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => entities.IndexOf(t1) == queryResult.IndexOf(t2));
+                Assert.AreEqual(entities.Count(), assertCount);
+            }
+        }
+
+        [TestMethod]
         public void TestBinaryBulkMergeAsyncViaAnonymousWithKeepIdentity()
         {
             using (var connection = GetConnection())
@@ -3743,6 +3882,33 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                     tableName,
                     entities: entities,
                     batchSize: 3).Result;
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+
+                // Assert
+                var queryResult = connection.QueryAll(tableName).ToList();
+                var assertCount = Helper.AssertExpandoObjectsEquality(entities, queryResult, (t1, t2) => entities.IndexOf(t1) == queryResult.IndexOf(t2));
+                Assert.AreEqual(entities.Count(), assertCount);
+            }
+        }
+
+        [TestMethod]
+        public void TestBinaryBulkMergeAsyncViaExpandoObjectWithQualifiers()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = Helper.CreateBulkOperationExpandoObjectLightIdentityTables(10, false);
+                var tableName = "BulkOperationIdentityTable";
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryBulkMergeAsync(connection,
+                    tableName,
+                    entities: entities,
+                    qualifiers: Field.From(
+                        nameof(BulkOperationLightIdentityTable.ColumnBigInt),
+                        nameof(BulkOperationLightIdentityTable.ColumnInteger))).Result;
 
                 // Assert
                 Assert.AreEqual(entities.Count(), result);
@@ -4294,6 +4460,34 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
         }
 
         [TestMethod]
+        public void TestBinaryBulkMergeAsyncViaDataTableWithQualifiers()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = Helper.CreateBulkOperationLightIdentityTables(10, false);
+                var tableName = "BulkOperationIdentityTable";
+                var table = Helper.ToDataTable(tableName, entities);
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryBulkMergeAsync(connection,
+                    tableName,
+                    table: table,
+                    qualifiers: Field.From(
+                        nameof(BulkOperationLightIdentityTable.ColumnBigInt),
+                        nameof(BulkOperationLightIdentityTable.ColumnInteger))).Result;
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+
+                // Assert
+                var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => entities.IndexOf(t1) == queryResult.IndexOf(t2));
+                Assert.AreEqual(entities.Count(), assertCount);
+            }
+        }
+
+        [TestMethod]
         public void TestBinaryBulkMergeAsyncViaDataTableWithKeepIdentity()
         {
             using (var connection = GetConnection())
@@ -4830,6 +5024,36 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                     var result = NpgsqlConnectionExtension.BinaryBulkMergeAsync(connection,
                         tableName,
                         reader).Result;
+
+                    // Assert
+                    Assert.AreEqual(entities.Count(), result);
+                }
+
+                // Assert
+                var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => entities.IndexOf(t1) == queryResult.IndexOf(t2));
+                Assert.AreEqual(entities.Count(), assertCount);
+            }
+        }
+
+        [TestMethod]
+        public void TestBinaryBulkMergeAsyncViaDbDataReaderWithQualifiers()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = Helper.CreateBulkOperationLightIdentityTables(10, false);
+                var tableName = "BulkOperationIdentityTable";
+
+                using (var reader = new DataEntityDataReader<BulkOperationLightIdentityTable>(entities))
+                {
+                    // Act
+                    var result = NpgsqlConnectionExtension.BinaryBulkMergeAsync(connection,
+                        tableName,
+                        reader,
+                        qualifiers: Field.From(
+                            nameof(BulkOperationLightIdentityTable.ColumnBigInt),
+                            nameof(BulkOperationLightIdentityTable.ColumnInteger))).Result;
 
                     // Assert
                     Assert.AreEqual(entities.Count(), result);
