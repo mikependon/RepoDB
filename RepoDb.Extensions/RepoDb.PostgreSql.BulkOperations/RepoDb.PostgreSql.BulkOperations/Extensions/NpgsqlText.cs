@@ -490,19 +490,7 @@ ORDER BY ""Index"";";
                 .TableNameFrom(destinationTableName, dbSetting)
                 .As("T")
                 .Set()
-                // ====================
-                // > v1.12.9
-                //.FieldsAndAliasFieldsFrom(updatableFields, string.Empty, "S", dbSetting)
-                // TODO: Remove soon
-                .WriteText(updatableFields
-                    .Select(
-                        field =>
-                        {
-                            var fieldName = field.Name.AsQuoted(true, true, dbSetting);
-                            return string.Concat(fieldName, " = S.", fieldName);
-                        })
-                    .Join(", "))
-                // ====================
+                .FieldsAndAliasFieldsFrom(updatableFields, string.Empty, "S", dbSetting)
                 .From()
                 .TableNameFrom(sourceTableName, dbSetting)
                 .As("S")

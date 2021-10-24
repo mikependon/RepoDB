@@ -1,4 +1,7 @@
-﻿using RepoDb.Extensions;
+﻿using NpgsqlTypes;
+using RepoDb.Attributes.Parameter;
+using RepoDb.Attributes.Parameter.Npgsql;
+using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.PostgreSql.BulkOperations;
 using RepoDb.Resolvers;
@@ -60,6 +63,7 @@ namespace RepoDb
         /// <param name="includePrimary"></param>
         /// <param name="includeIdentity"></param>
         /// <param name="alternativeType"></param>
+        /// <param name="npgsqlDbType"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         private static NpgsqlBulkInsertMapItem GetMapping(string sourceName,
@@ -68,27 +72,31 @@ namespace RepoDb
             bool includePrimary,
             bool includeIdentity,
             Type alternativeType,
+            NpgsqlDbType? npgsqlDbType,
             IDbSetting dbSetting)
         {
-            var dbField = GetMappingDbField(destinationName,
-                dbFields,
-                includePrimary,
-                includeIdentity,
-                dbSetting);
-
-            // Check
-            if (dbField == null)
+            if (npgsqlDbType == null)
             {
-                return default;
+                var dbField = GetMappingDbField(destinationName,
+                    dbFields,
+                    includePrimary,
+                    includeIdentity,
+                    dbSetting);
+
+                // Check
+                if (dbField == null)
+                {
+                    return default;
+                }
+
+                // Resolve
+                npgsqlDbType = !string.IsNullOrWhiteSpace(dbField?.DatabaseType) ?
+                    dbTypeNameToNpgsqlDbTypeResolver.Resolve(dbField.DatabaseType) :
+                    clientTypeToNpgsqlDbTypeResolver.Resolve(dbField?.Type ?? alternativeType);
             }
 
-            // Resolve
-            var dbType = !string.IsNullOrWhiteSpace(dbField?.DatabaseType) ?
-                dbTypeNameToNpgsqlDbTypeResolver.Resolve(dbField.DatabaseType) :
-                clientTypeToNpgsqlDbTypeResolver.Resolve(dbField?.Type ?? alternativeType);
-
             // Return
-            return new NpgsqlBulkInsertMapItem(sourceName, destinationName, dbType);
+            return new NpgsqlBulkInsertMapItem(sourceName, destinationName, npgsqlDbType);
         }
 
         /// <summary>
@@ -151,11 +159,13 @@ namespace RepoDb
 
             return matchedProperties
                 .Select(property =>
-                    GetMapping(property.PropertyInfo.Name, property.GetMappedName(),
+                    GetMapping(property.PropertyInfo.Name,
+                        property.GetMappedName(),
                         dbFields,
                         includePrimary,
                         includeIdentity,
                         property.PropertyInfo.PropertyType,
+                        GetMappedNpgsqlDbTypeFromAttributes(property.GetPropertyValueAttributes()),
                         dbSetting))
                 .Where(property => property != null);
         }
@@ -182,7 +192,9 @@ namespace RepoDb
                     dbFields,
                     includePrimary,
                     includeIdentity,
-                    kvp.Value?.GetType().GetUnderlyingType(), dbSetting);
+                    kvp.Value?.GetType().GetUnderlyingType(),
+                    null,
+                    dbSetting);
 
                 if (mapping != null)
                 {
@@ -214,6 +226,7 @@ namespace RepoDb
                     includePrimary,
                     includeIdentity,
                     column.DataType.GetUnderlyingType(),
+                    null,
                     dbSetting);
 
                 if (mapping != null)
@@ -247,6 +260,7 @@ namespace RepoDb
                     includePrimary,
                     includeIdentity,
                     reader.GetFieldType(i).GetUnderlyingType(),
+                    null,
                     dbSetting);
 
                 if (mapping != null)
@@ -254,6 +268,22 @@ namespace RepoDb
                     yield return mapping;
                 }
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="propertyValueAttributes"></param>
+        /// <returns></returns>
+        private static NpgsqlDbType? GetMappedNpgsqlDbTypeFromAttributes(IEnumerable<PropertyValueAttribute> propertyValueAttributes)
+        {
+            // In purpose, the PropertyValueAttribute.Value is not exposed, therefore we cannot use this.
+            // -> string.Equals(propertyValueAttribute.PropertyName, nameof(NpgsqlDbTypeAttribute.PropertyName), StringComparison.OrdinalIgnoreCase))
+
+            var attribute = (NpgsqlDbTypeAttribute)propertyValueAttributes?
+                .FirstOrDefault(propertyValueAttribute => propertyValueAttribute is NpgsqlDbTypeAttribute);
+
+            return attribute?.NpgsqlDbType;
         }
 
         /// <summary>
@@ -540,12 +570,12 @@ namespace RepoDb
         {
             var hashCode = 0;
 
-            if (enumerable?.Any()!=true)
+            if (enumerable?.Any() != true)
             {
                 return hashCode;
             }
 
-            foreach(var item  in enumerable)
+            foreach (var item in enumerable)
             {
                 hashCode = HashCode.Combine(hashCode, item.GetHashCode());
             }

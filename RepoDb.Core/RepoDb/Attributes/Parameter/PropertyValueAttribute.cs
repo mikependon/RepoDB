@@ -66,7 +66,7 @@ namespace RepoDb.Attributes.Parameter
         public string PropertyName { get; }
 
         /// <summary>
-        /// Gets the value that is used to set in the parameter.
+        /// Gets the value that is being used to set the target parameter property value.
         /// </summary>
         protected internal object Value { get; }
 
