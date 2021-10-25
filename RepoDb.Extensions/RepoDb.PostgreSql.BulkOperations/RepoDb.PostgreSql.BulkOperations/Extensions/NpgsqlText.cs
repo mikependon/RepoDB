@@ -266,15 +266,132 @@ namespace RepoDb
                 .WriteText(setColumns);
 
             // Return the Id
-            if (identityBehavior == BulkImportIdentityBehavior.ReturnIdentity && identityField != null)
+            if (identityBehavior == BulkImportIdentityBehavior.ReturnIdentity)
             {
-                WriteReturnIdentityResultsFromActualTable(builder,
-                    sourceTableName,
-                    destinationTableName,
-                    qualifiers,
-                    identityField,
-                    dbSetting);
+                if (identityField != null)
+                {
+                    WriteReturnIdentityResultsFromActualTable(builder,
+                        sourceTableName,
+                        destinationTableName,
+                        qualifiers,
+                        identityField,
+                        dbSetting);
+                }
             }
+            else
+            {
+                builder
+                    .Returning()
+                    .WriteText("-1 AS \"Index\", -1 AS \"Identity\"");
+            }
+
+            // Return the command text
+            return builder
+                .End()
+                .ToString();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sourceTableName"></param>
+        /// <param name="destinationTableName"></param>
+        /// <param name="fields"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="primaryField"></param>
+        /// <param name="identityField"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
+        private static string GetMergeCommandTextViaInsertAndUpdate(string sourceTableName,
+            string destinationTableName,
+            IEnumerable<Field> fields,
+            IEnumerable<Field> qualifiers,
+            Field primaryField,
+            Field identityField,
+            BulkImportIdentityBehavior identityBehavior,
+            IDbSetting dbSetting) =>
+            identityBehavior == BulkImportIdentityBehavior.ReturnIdentity ?
+            GetMergeCommandTextViaInsertAndUpdateForReturnIdentity(sourceTableName,
+                destinationTableName,
+                fields,
+                qualifiers,
+                primaryField,
+                identityField,
+                identityBehavior,
+                dbSetting) :
+            GetMergeCommandTextViaInsertAndUpdateForNormal(sourceTableName,
+                destinationTableName,
+                fields,
+                qualifiers,
+                primaryField,
+                identityField,
+                identityBehavior,
+                dbSetting);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sourceTableName"></param>
+        /// <param name="destinationTableName"></param>
+        /// <param name="fields"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="primaryField"></param>
+        /// <param name="identityField"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
+        private static string GetMergeCommandTextViaInsertAndUpdateForNormal(string sourceTableName,
+            string destinationTableName,
+            IEnumerable<Field> fields,
+            IEnumerable<Field> qualifiers,
+            Field primaryField,
+            Field identityField,
+            BulkImportIdentityBehavior identityBehavior,
+            IDbSetting dbSetting)
+        {
+            // Qualifiers
+            qualifiers = EnsurePrimaryAsQualifier(qualifiers, primaryField, destinationTableName);
+            ThrowIfNoQualifiers(qualifiers, destinationTableName);
+            ThrowOnMissingQualifiers(fields, qualifiers, dbSetting);
+
+            // Build the query
+            var builder = new QueryBuilder();
+
+            // Create the temp table
+            WriteCreateTemporaryReturnIdentityTableForMerge(builder,
+                    dbSetting);
+
+            // Update the target data (from the pseudo table)
+            var updatableFields = GetUpdatableFields(
+                fields,
+                qualifiers,
+                primaryField,
+                dbSetting);
+            WriteUpdateTargetTableFromPseudoTableForMerge(builder,
+                sourceTableName,
+                destinationTableName,
+                qualifiers,
+                updatableFields,
+                dbSetting,
+                true);
+
+            // Insert Into
+            WriteInsertIntoTargetTableFromPseudoTableForMerge(builder,
+                sourceTableName,
+                destinationTableName,
+                fields,
+                qualifiers,
+                identityField,
+                identityBehavior,
+                dbSetting);
+
+            // Return
+            builder
+                .Select()
+                .WriteText("*")
+                .From()
+                .TableNameFrom(GetTemporaryReturnIdentityTableName(), dbSetting);
 
             // Return the command text
             return builder
@@ -295,7 +412,7 @@ namespace RepoDb
         /// <param name="identityBehavior"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        private static string GetMergeCommandTextViaInsertAndUpdate(string sourceTableName,
+        private static string GetMergeCommandTextViaInsertAndUpdateForReturnIdentity(string sourceTableName,
             string destinationTableName,
             IEnumerable<Field> fields,
             IEnumerable<Field> qualifiers,
@@ -313,73 +430,85 @@ namespace RepoDb
             var builder = new QueryBuilder();
 
             // Create temp table
-            if (identityBehavior == BulkImportIdentityBehavior.ReturnIdentity)
-            {
-                WriteCreateTemporaryReturnIdentityTableForMerge(builder,
-                    sourceTableName,
-                    destinationTableName,
-                    qualifiers,
-                    identityField,
-                    dbSetting);
+            WriteCreateTemporaryReturnIdentityTableForMerge(builder,
+                sourceTableName,
+                destinationTableName,
+                qualifiers,
+                identityField,
+                dbSetting);
 
-                // Create the index
-                WriteCreateTemporaryReturnIdentityTableIndexForMerge(builder,
-                    dbSetting);
-            }
+            // Create the index
+            WriteCreateTemporaryReturnIdentityTableIndexForMerge(builder,
+                dbSetting);
 
-            // Update the target table (from the pseudo table)
+            // Update the target data (from the pseudo table)
             var updatableFields = GetUpdatableFields(
                 fields,
                 qualifiers,
                 primaryField,
                 dbSetting);
-            WriteUpdateTargetTableFromPseudoTable(builder,
+            WriteUpdateTargetTableFromPseudoTableForMerge(builder,
                 sourceTableName,
                 destinationTableName,
                 qualifiers,
                 updatableFields,
+                dbSetting,
+                false);
+
+            // Insert Into (via CTE)
+            var insertableFields = GetInsertableFields(
+                fields,
+                identityField,
+                identityBehavior,
+                dbSetting);
+            WriteInsertIntoTargetTableFromPseudoTableWithReturnIdentityForMerge(builder,
+                sourceTableName,
+                destinationTableName,
+                insertableFields,
+                qualifiers,
+                identityField,
                 dbSetting);
 
-            // Insert into target table (from the pseudo table)
-            if (identityBehavior == BulkImportIdentityBehavior.ReturnIdentity)
-            {
-                // Insert Into (via CTE)
-                var insertableFields = GetInsertableFields(
-                    fields,
-                    identityField,
-                    identityBehavior,
-                    dbSetting);
-                WriteInsertIntoTargetTableFromPseudoTableWithReturnIdentityForMerge(builder,
-                    sourceTableName,
-                    destinationTableName,
-                    insertableFields,
-                    qualifiers,
-                    identityField,
-                    dbSetting);
-            }
-            else
-            {
-                // Direct Insert Into
-                WriteInsertIntoTargetTableFromPseudoTableForMerge(builder,
-                    sourceTableName,
-                    destinationTableName,
-                    fields,
-                    qualifiers,
-                    identityField,
-                    identityBehavior,
-                    dbSetting);
-            }
-
             // Return the identities (if needed)
-            if (identityBehavior == BulkImportIdentityBehavior.ReturnIdentity && identityField != null)
-            {
-                WriteReturnIdentityResultsFromTemporaryReturnIdentityTableForMerge(builder,
-                    dbSetting);
-            }
+            WriteReturnIdentityResultsFromTemporaryReturnIdentityTableForMerge(builder,
+                dbSetting);
 
             // Return the command text
             return builder
                 .ToString();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="dbSetting"></param>
+        private static void WriteCreateTemporaryReturnIdentityTableForMerge(QueryBuilder builder,
+            IDbSetting dbSetting)
+        {
+            var returnIdentityTableName = GetTemporaryReturnIdentityTableName().AsQuoted(true, dbSetting);
+
+            // Drop if exists
+            builder
+                .WriteText($"DROP TABLE IF EXISTS")
+                .TableNameFrom(returnIdentityTableName, dbSetting)
+                .End();
+
+            // Compose
+            var commandText = @$"WITH CTE AS
+(
+	SELECT -1 AS ""Index"", -1 AS ""Identity""
+)
+SELECT ""Index""
+	, ""Identity""
+INTO TEMPORARY {returnIdentityTableName}
+FROM CTE
+WHERE 1 = 0;";
+
+            // Select into
+            builder
+                .NewLine()
+                .WriteText(commandText);
         }
 
         /// <summary>
@@ -426,7 +555,7 @@ SELECT ""Index""
 	, ""Identity""
 INTO TEMPORARY {returnIdentityTableName}
 FROM CTE
-WHERE ""RowNumber"" = 1
+/*WHERE ""RowNumber"" = 1*/
 ORDER BY ""Index"";";
 
             // Select into
@@ -467,41 +596,6 @@ ORDER BY ""Index"";";
         /// <param name="builder"></param>
         /// <param name="sourceTableName"></param>
         /// <param name="destinationTableName"></param>
-        /// <param name="qualifiers"></param>
-        /// <param name="updatableFields"></param>
-        /// <param name="dbSetting"></param>
-        private static void WriteUpdateTargetTableFromPseudoTable(QueryBuilder builder,
-            string sourceTableName,
-            string destinationTableName,
-            IEnumerable<Field> qualifiers,
-            IEnumerable<Field> updatableFields,
-            IDbSetting dbSetting)
-        {
-            builder
-                .NewLine()
-                .Update()
-                .TableNameFrom(destinationTableName, dbSetting)
-                .As("T")
-                .Set()
-                .FieldsAndAliasFieldsFrom(updatableFields, string.Empty, "S", dbSetting)
-                .From()
-                .TableNameFrom(sourceTableName, dbSetting)
-                .As("S")
-                .Where()
-                .WriteText(qualifiers
-                    .Select(
-                        field =>
-                            field.AsJoinQualifier("S", "T", true, dbSetting))
-                    .Join(" AND "))
-                .End();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="builder"></param>
-        /// <param name="sourceTableName"></param>
-        /// <param name="destinationTableName"></param>
         /// <param name="fields"></param>
         /// <param name="qualifiers"></param>
         /// <param name="identityField"></param>
@@ -526,6 +620,8 @@ ORDER BY ""Index"";";
             // Insert
             builder
                 .NewLine()
+                .WriteText("WITH CTE AS")
+                .OpenParen()
                 .Insert()
                 .Into()
                 .TableNameFrom(destinationTableName, dbSetting)
@@ -561,6 +657,19 @@ ORDER BY ""Index"";";
                             field =>
                                 $"T.{field.Name.AsQuoted(true, dbSetting)} IS NULL")
                         .Join(" AND "))
+                .Returning()
+                .WriteText("-1 AS \"Index\", -1 AS \"Identity\"")
+                .CloseParen()
+                .Insert()
+                .Into()
+                .TableNameFrom(GetTemporaryReturnIdentityTableName(), dbSetting)
+                .OpenParen()
+                .WriteText("\"Index\", \"Identity\"")
+                .CloseParen()
+                .Select()
+                .WriteText("\"Index\", \"Identity\"")
+                .From()
+                .WriteText("CTE")
                 .End();
         }
 
@@ -658,32 +767,80 @@ SET ""Identity"" = EXCLUDED.""Identity"";";
         /// <param name="builder"></param>
         /// <param name="dbSetting"></param>
         private static void WriteReturnIdentityResultsFromTemporaryReturnIdentityTableForMerge(QueryBuilder builder,
-            IDbSetting dbSetting)
-        {
-            var returnIdentityTableName = GetTemporaryReturnIdentityTableName().AsQuoted(true, dbSetting);
-            var rowNumberName = "RowNumber".AsQuoted(true, dbSetting);
-            var indexName = "Index".AsQuoted(true, dbSetting);
-            var identityName = "Identity".AsQuoted(true, dbSetting);
-
-            // Build
+            IDbSetting dbSetting) =>
             builder
                 .NewLine()
-                .WriteText("WITH CTE AS")
-                .OpenParen()
                 .Select()
-                .WriteText($"ROW_NUMBER() OVER (PARTITION BY {indexName} ORDER BY {identityName} DESC) AS {rowNumberName},")
-                .WriteText($"{indexName},")
-                .WriteText(identityName)
+                .WriteText("\"Index\",")
+                .WriteText("\"Identity\"")
                 .From()
-                .TableNameFrom(returnIdentityTableName, dbSetting)
-                .CloseParen()
-                .Select()
-                .WriteText($"{indexName},")
-                .WriteText(identityName)
+                .TableNameFrom(GetTemporaryReturnIdentityTableName(), dbSetting)
+                .WriteText("ORDER BY \"Index\", \"Identity\"");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="sourceTableName"></param>
+        /// <param name="destinationTableName"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="updatableFields"></param>
+        /// <param name="dbSetting"></param>
+        /// <param name="isWrapped"></param>
+        private static void WriteUpdateTargetTableFromPseudoTableForMerge(QueryBuilder builder,
+            string sourceTableName,
+            string destinationTableName,
+            IEnumerable<Field> qualifiers,
+            IEnumerable<Field> updatableFields,
+            IDbSetting dbSetting,
+            bool isWrapped)
+        {
+            builder
+                .NewLine();
+
+            if (isWrapped)
+            {
+                builder
+                    .WriteText("WITH CTE AS")
+                    .OpenParen();
+            }
+
+            builder
+                .Update()
+                .TableNameFrom(destinationTableName, dbSetting)
+                .As("T")
+                .Set()
+                .FieldsAndAliasFieldsFrom(updatableFields, string.Empty, "S", dbSetting)
                 .From()
-                .WriteText("CTE")
+                .TableNameFrom(sourceTableName, dbSetting)
+                .As("S")
                 .Where()
-                .WriteText($"{rowNumberName} = 1");
+                .WriteText(qualifiers
+                    .Select(
+                        field =>
+                            field.AsJoinQualifier("S", "T", true, dbSetting))
+                    .Join(" AND "));
+
+            if (isWrapped)
+            {
+                builder
+                    .Returning()
+                    .WriteText("-1 AS \"Index\", -1 AS \"Identity\"")
+                    .CloseParen()
+                    .Insert()
+                    .Into()
+                    .TableNameFrom(GetTemporaryReturnIdentityTableName(), dbSetting)
+                    .OpenParen()
+                    .WriteText("\"Index\", \"Identity\"")
+                    .CloseParen()
+                    .Select()
+                    .WriteText("\"Index\", \"Identity\"")
+                    .From()
+                    .WriteText("CTE");
+            }
+
+            builder
+                .End();
         }
 
         /// <summary>
@@ -792,7 +949,7 @@ SET ""Identity"" = EXCLUDED.""Identity"";";
                 qualifiers,
                 primaryField,
                 dbSetting);
-            WriteUpdateTargetTableFromPseudoTable(builder,
+            WriteUpdateTargetTableFromPseudoTableForUpdate(builder,
                 sourceTableName,
                 destinationTableName,
                 qualifiers,
@@ -808,6 +965,50 @@ SET ""Identity"" = EXCLUDED.""Identity"";";
 
             // Return
             return commandText;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="sourceTableName"></param>
+        /// <param name="destinationTableName"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="updatableFields"></param>
+        /// <param name="dbSetting"></param>
+        private static void WriteUpdateTargetTableFromPseudoTableForUpdate(QueryBuilder builder,
+            string sourceTableName,
+            string destinationTableName,
+            IEnumerable<Field> qualifiers,
+            IEnumerable<Field> updatableFields,
+            IDbSetting dbSetting)
+        {
+            builder
+                .NewLine()
+                .WriteText("WITH CTE AS")
+                .OpenParen()
+                .Update()
+                .TableNameFrom(destinationTableName, dbSetting)
+                .As("T")
+                .Set()
+                .FieldsAndAliasFieldsFrom(updatableFields, string.Empty, "S", dbSetting)
+                .From()
+                .TableNameFrom(sourceTableName, dbSetting)
+                .As("S")
+                .Where()
+                .WriteText(qualifiers
+                    .Select(
+                        field =>
+                            field.AsJoinQualifier("S", "T", true, dbSetting))
+                    .Join(" AND "))
+                .Returning()
+                .WriteText("-1 AS \"Index\", -1 AS \"Identity\"")
+                .CloseParen()
+                .Select()
+                .WriteText("*")
+                .From()
+                .WriteText("CTE")
+                .End();
         }
 
         #endregion
