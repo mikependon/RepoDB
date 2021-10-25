@@ -88,7 +88,27 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static IEnumerable<IdentityResult> MergeToPseudoTable(NpgsqlConnection connection,
+        private static int MergeToPseudoTable(NpgsqlConnection connection,
+            Func<string> getMergeToPseudoCommandText,
+            int? bulkCopyTimeout = null,
+            NpgsqlTransaction transaction = null)
+        {
+            var commandText = getMergeToPseudoCommandText();
+
+            return connection.ExecuteNonQuery(commandText,
+                bulkCopyTimeout,
+                transaction: transaction);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="getMergeToPseudoCommandText"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="transaction"></param>
+        /// <returns></returns>
+        private static IEnumerable<IdentityResult> MergeToPseudoTableWithIdentityResults(NpgsqlConnection connection,
             Func<string> getMergeToPseudoCommandText,
             int? bulkCopyTimeout = null,
             NpgsqlTransaction transaction = null)
@@ -108,7 +128,29 @@ namespace RepoDb
         /// <param name="bulkCopyTimeout"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
-        private static async Task<IEnumerable<IdentityResult>> MergeToPseudoTableAsync(NpgsqlConnection connection,
+        private static async Task<int> MergeToPseudoTableAsync(NpgsqlConnection connection,
+            Func<string> getMergeToPseudoCommandText,
+            int? bulkCopyTimeout = null,
+            NpgsqlTransaction transaction = null,
+            CancellationToken cancellationToken = default)
+        {
+            var commandText = getMergeToPseudoCommandText();
+
+            return await connection.ExecuteNonQueryAsync(commandText,
+                bulkCopyTimeout,
+                transaction: transaction,
+                cancellationToken: cancellationToken);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="getMergeToPseudoCommandText"></param>
+        /// <param name="bulkCopyTimeout"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        private static async Task<IEnumerable<IdentityResult>> MergeToPseudoTableWithIdentityResultsAsync(NpgsqlConnection connection,
             Func<string> getMergeToPseudoCommandText,
             int? bulkCopyTimeout = null,
             NpgsqlTransaction transaction = null,

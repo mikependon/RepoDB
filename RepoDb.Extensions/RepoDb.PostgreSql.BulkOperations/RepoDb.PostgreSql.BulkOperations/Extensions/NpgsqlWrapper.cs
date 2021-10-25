@@ -101,10 +101,10 @@ namespace RepoDb
                         transaction);
                 }
 
-                // Merge (INTO)
+                // Merge/Update/Delete
                 if (withPseudoTable)
                 {
-                    var identityResults = MergeToPseudoTable(connection,
+                    var identityResults = MergeToPseudoTableWithIdentityResults(connection,
                         getMergeToPseudoCommandText,
                         bulkCopyTimeout,
                         transaction)?.AsList();
@@ -113,6 +113,8 @@ namespace RepoDb
                     {
                         setIdentities?.Invoke(identityResults);
                     }
+
+                    result = identityResults.Count();
                 }
 
                 // Return
@@ -220,15 +222,17 @@ namespace RepoDb
                 // Insert (INTO)
                 if (withPseudoTable)
                 {
-                    var identityResults = (await MergeToPseudoTableAsync(connection,
+                    var identityResults = (await MergeToPseudoTableWithIdentityResultsAsync(connection,
                         getMergeToPseudoCommandText,
                         bulkCopyTimeout,
                         transaction))?.AsList();
-                    
+
                     if (identityBehavior == BulkImportIdentityBehavior.ReturnIdentity)
                     {
                         setIdentities?.Invoke(identityResults);
                     }
+
+                    result = identityResults.Count();
                 }
 
                 // Return
