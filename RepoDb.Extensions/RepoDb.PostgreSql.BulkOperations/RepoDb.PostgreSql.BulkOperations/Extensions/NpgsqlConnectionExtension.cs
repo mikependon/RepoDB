@@ -531,21 +531,6 @@ namespace RepoDb
             IDbSetting dbSetting) =>
             mappings?.Select(mapping => mapping.DestinationColumn.AsQuoted(true, dbSetting)).Join(", ");
 
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="dbFields"></param>
-        ///// <param name="properties"></param>
-        ///// <param name="identityBehavior"></param>
-        ///// <param name="dbSetting"></param>
-        ///// <returns></returns>
-        //private static string GetTextColumns(IEnumerable<DbField> dbFields,
-        //    IEnumerable<ClassProperty> properties,
-        //    BulkImportIdentityBehavior identityBehavior,
-        //    IDbSetting dbSetting) =>
-        //    GetMatchedProperties(dbFields, properties, (identityBehavior == BulkImportIdentityBehavior.KeepIdentity), dbSetting)
-        //        .Select(property => property.GetMappedName().AsQuoted(true, dbSetting)).Join(", ");
-
         #endregion
     }
 }

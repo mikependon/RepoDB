@@ -59,7 +59,7 @@ namespace RepoDb
 
                 // getPseudoTableName
                 () =>
-                    pseudoTableName = GetBinaryMergePseudoTableName(tableName ?? ClassMappedNameCache.Get<TEntity>(), dbSetting),
+                    pseudoTableName = GetBinaryBulkMergePseudoTableName(tableName ?? ClassMappedNameCache.Get<TEntity>(), dbSetting),
 
                 // getMappings
                 () =>
@@ -161,7 +161,7 @@ namespace RepoDb
 
                 // getPseudoTableName
                 () =>
-                    pseudoTableName = GetBinaryMergePseudoTableName(tableName, dbSetting),
+                    pseudoTableName = GetBinaryBulkMergePseudoTableName(tableName, dbSetting),
 
                 // getMappings
                 () =>
@@ -254,7 +254,7 @@ namespace RepoDb
 
                 // getPseudoTableName
                 () =>
-                    pseudoTableName = GetBinaryMergePseudoTableName(tableName, dbSetting),
+                    pseudoTableName = GetBinaryBulkMergePseudoTableName(tableName, dbSetting),
 
                 // getMappings
                 () =>
@@ -356,7 +356,7 @@ namespace RepoDb
 
                 // getPseudoTableName
                 () =>
-                    pseudoTableName = GetBinaryMergePseudoTableName(tableName ?? ClassMappedNameCache.Get<TEntity>(), dbSetting),
+                    pseudoTableName = GetBinaryBulkMergePseudoTableName(tableName ?? ClassMappedNameCache.Get<TEntity>(), dbSetting),
 
                 // getMappings
                 () =>
@@ -462,7 +462,7 @@ namespace RepoDb
 
                 // getPseudoTableName
                 () =>
-                    pseudoTableName = GetBinaryMergePseudoTableName(tableName, dbSetting),
+                    pseudoTableName = GetBinaryBulkMergePseudoTableName(tableName, dbSetting),
 
                 // getMappings
                 () =>
@@ -559,7 +559,7 @@ namespace RepoDb
 
                 // getPseudoTableName
                 () =>
-                    pseudoTableName = GetBinaryMergePseudoTableName(tableName, dbSetting),
+                    pseudoTableName = GetBinaryBulkMergePseudoTableName(tableName, dbSetting),
 
                 // getMappings
                 () =>

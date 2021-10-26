@@ -1021,7 +1021,7 @@ SET ""Identity"" = EXCLUDED.""Identity"";";
         /// <param name="tableName"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        private static string GetBinaryInsertPseudoTableName(string tableName,
+        private static string GetBinaryBulkInsertPseudoTableName(string tableName,
             IDbSetting dbSetting) =>
             $"_RepoDb_BinaryBulkInsert_{tableName.AsUnquoted(true, dbSetting)}";
 
@@ -1031,7 +1031,7 @@ SET ""Identity"" = EXCLUDED.""Identity"";";
         /// <param name="tableName"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        private static string GetBinaryMergePseudoTableName(string tableName,
+        private static string GetBinaryBulkMergePseudoTableName(string tableName,
             IDbSetting dbSetting) =>
             $"_RepoDb_BinaryBulkMerge_{tableName.AsUnquoted(true, dbSetting)}";
 
@@ -1041,9 +1041,19 @@ SET ""Identity"" = EXCLUDED.""Identity"";";
         /// <param name="tableName"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        private static string GetBinaryUpdatePseudoTableName(string tableName,
+        private static string GetBinaryBulkUpdatePseudoTableName(string tableName,
             IDbSetting dbSetting) =>
             $"_RepoDb_BinaryBulkUpdate_{tableName.AsUnquoted(true, dbSetting)}";
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
+        private static string GetBinaryBulkDeletePseudoTableName(string tableName,
+            IDbSetting dbSetting) =>
+            $"_RepoDb_BinaryBulkDelete_{tableName.AsUnquoted(true, dbSetting)}";
 
         /// <summary>
         /// 

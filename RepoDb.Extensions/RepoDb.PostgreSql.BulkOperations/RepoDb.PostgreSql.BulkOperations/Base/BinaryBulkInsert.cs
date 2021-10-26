@@ -55,7 +55,7 @@ namespace RepoDb
 
                 // getPseudoTableName
                 () =>
-                    pseudoTableName = GetBinaryInsertPseudoTableName(tableName ?? ClassMappedNameCache.Get<TEntity>(), dbSetting),
+                    pseudoTableName = GetBinaryBulkInsertPseudoTableName(tableName ?? ClassMappedNameCache.Get<TEntity>(), dbSetting),
 
                 // getMappings
                 () =>
@@ -152,7 +152,7 @@ namespace RepoDb
 
                 // getPseudoTableName
                 () =>
-                    pseudoTableName = GetBinaryInsertPseudoTableName(tableName, dbSetting),
+                    pseudoTableName = GetBinaryBulkInsertPseudoTableName(tableName, dbSetting),
 
                 // getMappings
                 () =>
@@ -244,7 +244,7 @@ namespace RepoDb
 
                 // getPseudoTableName
                 () =>
-                    pseudoTableName = GetBinaryInsertPseudoTableName(tableName, dbSetting),
+                    pseudoTableName = GetBinaryBulkInsertPseudoTableName(tableName, dbSetting),
 
                 // getMappings
                 () =>
@@ -341,7 +341,7 @@ namespace RepoDb
 
                 // getPseudoTableName
                 () =>
-                    pseudoTableName = GetBinaryInsertPseudoTableName(tableName ?? ClassMappedNameCache.Get<TEntity>(), dbSetting),
+                    pseudoTableName = GetBinaryBulkInsertPseudoTableName(tableName ?? ClassMappedNameCache.Get<TEntity>(), dbSetting),
 
                 // getMappings
                 () =>
@@ -442,7 +442,7 @@ namespace RepoDb
 
                 // getPseudoTableName
                 () =>
-                    pseudoTableName = GetBinaryInsertPseudoTableName(tableName, dbSetting),
+                    pseudoTableName = GetBinaryBulkInsertPseudoTableName(tableName, dbSetting),
 
                 // getMappings
                 () =>
@@ -538,7 +538,7 @@ namespace RepoDb
 
                 // getPseudoTableName
                 () =>
-                    pseudoTableName = GetBinaryInsertPseudoTableName(tableName, dbSetting),
+                    pseudoTableName = GetBinaryBulkInsertPseudoTableName(tableName, dbSetting),
 
                 // getMappings
                 () =>

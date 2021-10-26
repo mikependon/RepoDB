@@ -57,7 +57,7 @@ namespace RepoDb
 
                 // getPseudoTableName
                 () =>
-                    pseudoTableName = GetBinaryUpdatePseudoTableName(tableName ?? ClassMappedNameCache.Get<TEntity>(), dbSetting),
+                    pseudoTableName = GetBinaryBulkUpdatePseudoTableName(tableName ?? ClassMappedNameCache.Get<TEntity>(), dbSetting),
 
                 // getMappings
                 () =>
@@ -156,7 +156,7 @@ namespace RepoDb
 
                 // getPseudoTableName
                 () =>
-                    pseudoTableName = GetBinaryUpdatePseudoTableName(tableName, dbSetting),
+                    pseudoTableName = GetBinaryBulkUpdatePseudoTableName(tableName, dbSetting),
 
                 // getMappings
                 () =>
@@ -246,7 +246,7 @@ namespace RepoDb
 
                 // getPseudoTableName
                 () =>
-                    pseudoTableName = GetBinaryUpdatePseudoTableName(tableName, dbSetting),
+                    pseudoTableName = GetBinaryBulkUpdatePseudoTableName(tableName, dbSetting),
 
                 // getMappings
                 () =>
@@ -345,7 +345,7 @@ namespace RepoDb
 
                 // getPseudoTableName
                 () =>
-                    pseudoTableName = GetBinaryUpdatePseudoTableName(tableName ?? ClassMappedNameCache.Get<TEntity>(), dbSetting),
+                    pseudoTableName = GetBinaryBulkUpdatePseudoTableName(tableName ?? ClassMappedNameCache.Get<TEntity>(), dbSetting),
 
                 // getMappings
                 () =>
@@ -448,7 +448,7 @@ namespace RepoDb
 
                 // getPseudoTableName
                 () =>
-                    pseudoTableName = GetBinaryUpdatePseudoTableName(tableName, dbSetting),
+                    pseudoTableName = GetBinaryBulkUpdatePseudoTableName(tableName, dbSetting),
 
                 // getMappings
                 () =>
@@ -542,7 +542,7 @@ namespace RepoDb
 
                 // getPseudoTableName
                 () =>
-                    pseudoTableName = GetBinaryUpdatePseudoTableName(tableName, dbSetting),
+                    pseudoTableName = GetBinaryBulkUpdatePseudoTableName(tableName, dbSetting),
 
                 // getMappings
                 () =>

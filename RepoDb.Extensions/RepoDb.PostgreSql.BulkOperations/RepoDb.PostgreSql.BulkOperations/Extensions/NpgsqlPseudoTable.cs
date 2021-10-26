@@ -13,8 +13,6 @@ namespace RepoDb
 {
     public static partial class NpgsqlConnectionExtension
     {
-        #region Others
-
         /// <summary>
         /// 
         /// </summary>
@@ -357,7 +355,5 @@ namespace RepoDb
         private static string GetDropPseudoTemporaryTableCommandText(string tableName,
             IDbSetting dbSetting) =>
             $"DROP TABLE IF EXISTS {tableName.AsQuoted(true, dbSetting)};";
-
-        #endregion
     }
 }
