@@ -33,7 +33,8 @@ namespace RepoDb
             BulkImportIdentityBehavior identityBehavior,
             IDbSetting dbSetting)
         {
-            var key = HashCode.Combine(sourceTableName.GetHashCode(),
+            var key = HashCode.Combine("BinaryBulkInsert".GetHashCode(),
+                sourceTableName.GetHashCode(),
                 destinationTableName.GetHashCode(),
                 EnumerableGetHashCode(fields),
                 identityField.GetHashCode(),
@@ -132,14 +133,15 @@ namespace RepoDb
             BulkImportMergeCommandType mergeCommandType,
             IDbSetting dbSetting)
         {
-            var key = HashCode.Combine(sourceTableName.GetHashCode(),
-                destinationTableName.GetHashCode(),
-                EnumerableGetHashCode(fields),
-                EnumerableGetHashCode(qualifiers),
-                primaryField.GetHashCode(),
-                identityField.GetHashCode(),
-                identityBehavior.GetHashCode(),
-                mergeCommandType.GetHashCode());
+            var key = HashCode.Combine("BinaryBulkMerge".GetHashCode(),
+                HashCode.Combine(sourceTableName.GetHashCode(),
+                    destinationTableName.GetHashCode(),
+                    EnumerableGetHashCode(fields),
+                    EnumerableGetHashCode(qualifiers),
+                    primaryField.GetHashCode(),
+                    identityField.GetHashCode(),
+                    identityBehavior.GetHashCode(),
+                    mergeCommandType.GetHashCode()));
 
             // Get from cache
             var commandText = LocalCommandTextCache.Get(key);
@@ -899,8 +901,7 @@ SET ""Identity"" = EXCLUDED.""Identity"";";
         #region BinaryBulkUpdate
 
         /// <summary>
-        /// Do the explicit UPDATE and INSERT command.
-        /// Link: https://stackoverflow.com/questions/17267417/how-to-upsert-merge-insert-on-duplicate-update-in-postgresql
+        /// 
         /// </summary>
         /// <param name="sourceTableName"></param>
         /// <param name="destinationTableName"></param>
@@ -920,7 +921,8 @@ SET ""Identity"" = EXCLUDED.""Identity"";";
             BulkImportIdentityBehavior identityBehavior,
             IDbSetting dbSetting)
         {
-            var key = HashCode.Combine(sourceTableName.GetHashCode(),
+            var key = HashCode.Combine("BinaryBulkUpdate".GetHashCode(),
+                sourceTableName.GetHashCode(),
                 destinationTableName.GetHashCode(),
                 EnumerableGetHashCode(fields),
                 EnumerableGetHashCode(qualifiers),
@@ -949,40 +951,6 @@ SET ""Identity"" = EXCLUDED.""Identity"";";
                 qualifiers,
                 primaryField,
                 dbSetting);
-            WriteUpdateTargetTableFromPseudoTableForUpdate(builder,
-                sourceTableName,
-                destinationTableName,
-                qualifiers,
-                updatableFields,
-                dbSetting);
-
-            // Set the command text
-            commandText = builder
-                .ToString();
-
-            // Add to cache
-            LocalCommandTextCache.Add(key, commandText, true);
-
-            // Return
-            return commandText;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="builder"></param>
-        /// <param name="sourceTableName"></param>
-        /// <param name="destinationTableName"></param>
-        /// <param name="qualifiers"></param>
-        /// <param name="updatableFields"></param>
-        /// <param name="dbSetting"></param>
-        private static void WriteUpdateTargetTableFromPseudoTableForUpdate(QueryBuilder builder,
-            string sourceTableName,
-            string destinationTableName,
-            IEnumerable<Field> qualifiers,
-            IEnumerable<Field> updatableFields,
-            IDbSetting dbSetting)
-        {
             builder
                 .NewLine()
                 .WriteText("WITH CTE AS")
@@ -1009,6 +977,108 @@ SET ""Identity"" = EXCLUDED.""Identity"";";
                 .From()
                 .WriteText("CTE")
                 .End();
+
+            // Set the command text
+            commandText = builder
+                .ToString();
+
+            // Add to cache
+            LocalCommandTextCache.Add(key, commandText, true);
+
+            // Return
+            return commandText;
+        }
+
+        #endregion
+
+        #region BinaryBulkDelete
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sourceTableName"></param>
+        /// <param name="destinationTableName"></param>
+        /// <param name="fields"></param>
+        /// <param name="qualifiers"></param>
+        /// <param name="primaryField"></param>
+        /// <param name="identityField"></param>
+        /// <param name="identityBehavior"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
+        private static string GetDeleteCommandText(string sourceTableName,
+            string destinationTableName,
+            IEnumerable<Field> fields,
+            IEnumerable<Field> qualifiers,
+            Field primaryField,
+            Field identityField,
+            BulkImportIdentityBehavior identityBehavior,
+            IDbSetting dbSetting)
+        {
+            var key = HashCode.Combine("BinaryBulkDelete".GetHashCode(),
+                sourceTableName.GetHashCode(),
+                destinationTableName.GetHashCode(),
+                EnumerableGetHashCode(fields),
+                EnumerableGetHashCode(qualifiers),
+                primaryField.GetHashCode(),
+                identityField.GetHashCode(),
+                identityBehavior.GetHashCode());
+
+            // Get from cache
+            var commandText = LocalCommandTextCache.Get(key);
+            if (!string.IsNullOrEmpty(commandText))
+            {
+                return commandText;
+            }
+
+            // Qualifiers
+            qualifiers = EnsurePrimaryAsQualifier(qualifiers, primaryField, destinationTableName);
+            ThrowIfNoQualifiers(qualifiers, destinationTableName);
+            ThrowOnMissingQualifiers(fields, qualifiers, dbSetting);
+
+            // Build the query
+            var builder = new QueryBuilder();
+
+            // Update the target table (from the pseudo table)
+            var updatableFields = GetUpdatableFields(
+                fields,
+                qualifiers,
+                primaryField,
+                dbSetting);
+            builder
+                .NewLine()
+                .WriteText("WITH CTE AS")
+                .OpenParen()
+                .Delete()
+                .From()
+                .TableNameFrom(destinationTableName, dbSetting)
+                .As("T")
+                .Using()
+                .TableNameFrom(sourceTableName, dbSetting)
+                .As("S")
+                .Where()
+                .WriteText(qualifiers
+                    .Select(
+                        field =>
+                            field.AsJoinQualifier("S", "T", true, dbSetting))
+                    .Join(" AND "))
+                .Returning()
+                .WriteText("-1 AS \"Index\", -1 AS \"Identity\"")
+                .CloseParen()
+                .Select()
+                .WriteText("*")
+                .From()
+                .WriteText("CTE")
+                .End();
+
+            // Set the command text
+            commandText = builder
+                .ToString();
+
+            // Add to cache
+            LocalCommandTextCache.Add(key, commandText, true);
+
+            // Return
+            return commandText;
         }
 
         #endregion
