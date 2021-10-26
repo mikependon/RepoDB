@@ -31,7 +31,7 @@ namespace RepoDb
         /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not an entity mapping)</param>
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
         /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the entities will be sent together in one-go.</param>
-        /// <param name="keepIdentity">A value that indicates whether the newly generated identity value from the target table will be set back to the entity.</param>
+        /// <param name="keepIdentity">A value that indicates whether the existing identity property values from the entities will be kept during the operation.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
         public static int BinaryImport<TEntity>(this NpgsqlConnection connection,
@@ -64,7 +64,7 @@ namespace RepoDb
         /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not an entity mapping)</param>
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
         /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the entities will be sent together in one-go.</param>
-        /// <param name="keepIdentity">A value that indicates whether the newly generated identity value from the target table will be set back to the entity.</param>
+        /// <param name="keepIdentity">A value that indicates whether the existing identity property values from the entities will be kept during the operation.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
         public static int BinaryImport<TEntity>(this NpgsqlConnection connection,
@@ -194,7 +194,7 @@ namespace RepoDb
         /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not an entity mapping)</param>
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
         /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the rows of the table will be sent together in one-go.</param>
-        /// <param name="keepIdentity">A value that indicates whether the newly generated identity value from the target table will be set back to the entity.</param>
+        /// <param name="keepIdentity">A value that indicates whether the existing identity property values from the <see cref="DataTable"/> will be kept during the operation.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
         public static int BinaryImport(this NpgsqlConnection connection,
@@ -226,7 +226,7 @@ namespace RepoDb
         /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not an entity mapping)</param>
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
         /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the rows of the table will be sent together in one-go.</param>
-        /// <param name="keepIdentity">A value that indicates whether the newly generated identity value from the target table will be set back to the entity.</param>
+        /// <param name="keepIdentity">A value that indicates whether the existing identity property values from the <see cref="DataTable"/> will be kept during the operation.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
         public static int BinaryImport(this NpgsqlConnection connection,
@@ -336,7 +336,7 @@ namespace RepoDb
         /// <param name="reader">The instance of <see cref="DbDataReader"/> object that contains the rows to be bulk-inserted to the target table.</param>
         /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not an entity mapping)</param>
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
-        /// <param name="keepIdentity">A value that indicates whether the newly generated identity value from the target table will be set back to the entity.</param>
+        /// <param name="keepIdentity">A value that indicates whether the existing identity property values from the <see cref="DbDataReader"/> will be kept during the operation.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
         public static int BinaryImport(this NpgsqlConnection connection,
@@ -436,7 +436,7 @@ namespace RepoDb
         /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not an entity mapping)</param>
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
         /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the entities will be sent together in one-go.</param>
-        /// <param name="keepIdentity">A value that indicates whether the newly generated identity value from the target table will be set back to the entity.</param>
+        /// <param name="keepIdentity">A value that indicates whether the existing identity property values from the entities will be kept during the operation.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
@@ -472,7 +472,7 @@ namespace RepoDb
         /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not an entity mapping)</param>
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
         /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the entities will be sent together in one-go.</param>
-        /// <param name="keepIdentity">A value that indicates whether the newly generated identity value from the target table will be set back to the entity.</param>
+        /// <param name="keepIdentity">A value that indicates whether the existing identity property values from the entities will be kept during the operation.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
@@ -610,7 +610,7 @@ namespace RepoDb
         /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not an entity mapping)</param>
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
         /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the rows of the table will be sent together in one-go.</param>
-        /// <param name="keepIdentity">A value that indicates whether the newly generated identity value from the target table will be set back to the entity.</param>
+        /// <param name="keepIdentity">A value that indicates whether the existing identity property values from the <see cref="DataTable"/> will be kept during the operation.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
@@ -645,7 +645,7 @@ namespace RepoDb
         /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not an entity mapping)</param>
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
         /// <param name="batchSize">The size per batch to be sent to the database. If not specified, all the rows of the table will be sent together in one-go.</param>
-        /// <param name="keepIdentity">A value that indicates whether the newly generated identity value from the target table will be set back to the entity.</param>
+        /// <param name="keepIdentity">A value that indicates whether the existing identity property values from the <see cref="DataTable"/> will be kept during the operation.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
@@ -762,7 +762,7 @@ namespace RepoDb
         /// <param name="reader">The instance of <see cref="DbDataReader"/> object that contains the rows to be bulk-inserted to the target table.</param>
         /// <param name="mappings">The list of mappings to be used. If not specified, only the matching properties/columns from the target table will be used. (This is not an entity mapping)</param>
         /// <param name="bulkCopyTimeout">The timeout expiration of the operation (see <see cref="NpgsqlBinaryImporter.Timeout"/>).</param>
-        /// <param name="keepIdentity">A value that indicates whether the newly generated identity value from the target table will be set back to the entity.</param>
+        /// <param name="keepIdentity">A value that indicates whether the existing identity property values from the <see cref="DbDataReader"/> will be kept during the operation.</param>
         /// <param name="transaction">The current transaction object in used. If not specified, an implicit transaction will be created and used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows that has been inserted into the target table.</returns>
