@@ -26,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="Base\BinaryBulkDeleteByKey.cs" />
     <Compile Include="Base\BinaryBulkDelete.cs" />
     <Compile Include="Base\BinaryBulkMerge.cs" />
     <Compile Include="Base\BinaryBulkUpdate.cs" />
