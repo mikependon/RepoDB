@@ -1038,12 +1038,81 @@ SET ""Identity"" = EXCLUDED.""Identity"";";
             // Build the query
             var builder = new QueryBuilder();
 
-            // Update the target table (from the pseudo table)
-            var updatableFields = GetUpdatableFields(
-                fields,
-                qualifiers,
-                primaryField,
-                dbSetting);
+            // Delete the target table (from the pseudo table)
+            builder
+                .NewLine()
+                .WriteText("WITH CTE AS")
+                .OpenParen()
+                .Delete()
+                .From()
+                .TableNameFrom(destinationTableName, dbSetting)
+                .As("T")
+                .Using()
+                .TableNameFrom(sourceTableName, dbSetting)
+                .As("S")
+                .Where()
+                .WriteText(qualifiers
+                    .Select(
+                        field =>
+                            field.AsJoinQualifier("S", "T", true, dbSetting))
+                    .Join(" AND "))
+                .Returning()
+                .WriteText("-1 AS \"Index\", -1 AS \"Identity\"")
+                .CloseParen()
+                .Select()
+                .WriteText("*")
+                .From()
+                .WriteText("CTE")
+                .End();
+
+            // Set the command text
+            commandText = builder
+                .ToString();
+
+            // Add to cache
+            LocalCommandTextCache.Add(key, commandText, true);
+
+            // Return
+            return commandText;
+        }
+
+        #endregion
+
+        #region BinaryBulkDeleteByKey
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sourceTableName"></param>
+        /// <param name="destinationTableName"></param>
+        /// <param name="primaryField"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
+        private static string GetDeleteByKeyCommandText(string sourceTableName,
+            string destinationTableName,
+            Field primaryField,
+            IDbSetting dbSetting)
+        {
+            var key = HashCode.Combine("BinaryBulkDeleteByKey".GetHashCode(),
+                sourceTableName.GetHashCode(),
+                destinationTableName.GetHashCode(),
+                primaryField.GetHashCode());
+
+            // Get from cache
+            var commandText = LocalCommandTextCache.Get(key);
+            if (!string.IsNullOrEmpty(commandText))
+            {
+                return commandText;
+            }
+
+            // Qualifiers
+            var qualifiers = EnsurePrimaryAsQualifier(null, primaryField, destinationTableName);
+            ThrowIfNoQualifiers(qualifiers, destinationTableName);
+
+            // Build the query
+            var builder = new QueryBuilder();
+
+            // Delete the target table (from the pseudo table)
             builder
                 .NewLine()
                 .WriteText("WITH CTE AS")
@@ -1124,6 +1193,16 @@ SET ""Identity"" = EXCLUDED.""Identity"";";
         private static string GetBinaryBulkDeletePseudoTableName(string tableName,
             IDbSetting dbSetting) =>
             $"_RepoDb_BinaryBulkDelete_{tableName.AsUnquoted(true, dbSetting)}";
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="dbSetting"></param>
+        /// <returns></returns>
+        private static string GetBinaryBulkDeleteByKeyPseudoTableName(string tableName,
+            IDbSetting dbSetting) =>
+            $"_RepoDb_BinaryBulkDeleteByKey_{tableName.AsUnquoted(true, dbSetting)}";
 
         /// <summary>
         /// 
