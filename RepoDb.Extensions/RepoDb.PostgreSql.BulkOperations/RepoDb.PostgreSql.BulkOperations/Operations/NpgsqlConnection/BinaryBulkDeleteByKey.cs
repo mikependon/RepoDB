@@ -34,10 +34,9 @@ namespace RepoDb
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             BulkImportPseudoTableType pseudoTableType = default,
-            NpgsqlTransaction transaction = null)
-            where TPrimaryKey : class =>
+            NpgsqlTransaction transaction = null) =>
             BinaryBulkDeleteByKeyBase<TPrimaryKey>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TPrimaryKey>(),
+                tableName: tableName,
                 primaryKeys: primaryKeys,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,
@@ -73,10 +72,9 @@ namespace RepoDb
             int? batchSize = null,
             BulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null,
-            CancellationToken cancellationToken = default)
-            where TPrimaryKey : class =>
+            CancellationToken cancellationToken = default) =>
             await BinaryBulkDeleteByKeyBaseAsync<TPrimaryKey>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TPrimaryKey>(),
+                tableName: tableName,
                 primaryKeys: primaryKeys,
                 bulkCopyTimeout: bulkCopyTimeout,
                 batchSize: batchSize,

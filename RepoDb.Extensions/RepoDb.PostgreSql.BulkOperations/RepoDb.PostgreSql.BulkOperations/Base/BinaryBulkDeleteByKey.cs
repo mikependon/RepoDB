@@ -3,7 +3,6 @@ using RepoDb.Enumerations.PostgreSql;
 using RepoDb.Extensions;
 using RepoDb.PostgreSql.BulkOperations;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -35,7 +34,6 @@ namespace RepoDb
             int? batchSize = null,
             BulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null)
-            where TPrimaryKey : class
         {
             var identityBehavior = BulkImportIdentityBehavior.Unspecified;
             var dbSetting = connection.GetDbSetting();
@@ -62,8 +60,8 @@ namespace RepoDb
 
                 // binaryImport
                 (tableName) =>
-                    connection.BinaryImport<TPrimaryKey>(tableName,
-                        primaryKeys,
+                    connection.BinaryImport(tableName,
+                        GetExpandoObjectData(primaryKeys, primaryKey.AsField()),
                         mappings,
                         dbFields,
                         bulkCopyTimeout,
@@ -119,7 +117,6 @@ namespace RepoDb
             BulkImportPseudoTableType pseudoTableType = default,
             NpgsqlTransaction transaction = null,
             CancellationToken cancellationToken = default)
-            where TPrimaryKey : class
         {
             var identityBehavior = BulkImportIdentityBehavior.Unspecified;
             var dbSetting = connection.GetDbSetting();
@@ -146,8 +143,8 @@ namespace RepoDb
 
                 // binaryImport
                 async (tableName) =>
-                    await connection.BinaryImportAsync<TPrimaryKey>(tableName,
-                        primaryKeys,
+                    await connection.BinaryImportAsync(tableName,
+                        GetExpandoObjectData(primaryKeys, primaryKey.AsField()),
                         mappings,
                         dbFields,
                         bulkCopyTimeout,
