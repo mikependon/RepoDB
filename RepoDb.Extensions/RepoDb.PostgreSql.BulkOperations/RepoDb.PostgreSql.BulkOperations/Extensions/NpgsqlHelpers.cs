@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Dynamic;
 using System.Linq;
 
 namespace RepoDb
@@ -301,6 +302,35 @@ namespace RepoDb
                 {
                     yield return row;
                 }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TData"></typeparam>
+        /// <param name="data"></param>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        private static IEnumerable<ExpandoObject> GetExpandoObjectData<TData>(IEnumerable<TData> data,
+            Field field) =>
+            GetExpandoObjectData<TData>(data, field.Name);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TData"></typeparam>
+        /// <param name="data"></param>
+        /// <param name="column"></param>
+        /// <returns></returns>
+        private static IEnumerable<ExpandoObject> GetExpandoObjectData<TData>(IEnumerable<TData> data,
+            string column)
+        {
+            foreach (var item in data)
+            {
+                var expandoObject = new ExpandoObject() as IDictionary<string, object>;
+                expandoObject[column] = item;
+                yield return (ExpandoObject)expandoObject;
             }
         }
 
