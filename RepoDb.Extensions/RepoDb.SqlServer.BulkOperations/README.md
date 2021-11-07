@@ -134,24 +134,6 @@ using (var connection = new SqlConnection(ConnectionString))
 }
 ```
 
-Or with primary keys
-
-```csharp
-using (var connection = new SqlConnection(ConnectionString))
-{
-    var primaryKeys = new [] { 10045, ..., 11011 };
-	var rows = connection.BulkDelete<Customer>(primaryKeys);
-}
-```
-
-```csharp
-using (var connection = new SqlConnection(ConnectionString))
-{
-	var customers = GetCustomers();
-	var rows = connection.BulkDelete<Customer>(customers, qualifiers: e => new { e.LastName, e.DateOfBirth });
-}
-```
-
 Or via table-name
 
 ```csharp
@@ -178,31 +160,11 @@ using (var connection = new SqlConnection(ConnectionString))
 using (var connection = new SqlConnection(ConnectionString))
 {
 	var table = GetCustomersAsDataTable();
-	var rows = connection.BulkDelete<Customer>(table);
-}
-```
-
-Or with qualifiers
-
-```csharp
-using (var connection = new SqlConnection(ConnectionString))
-{
-	var table = GetCustomersAsDataTable();
-	var rows = connection.BulkDelete<Customer>(table, qualifiers: e => new { e.LastName, e.DateOfBirth });
-}
-```
-
-Or via table-name
-
-```csharp
-using (var connection = new SqlConnection(ConnectionString))
-{
-	var table = GetCustomersAsDataTable();
 	var rows = connection.BulkDelete("Customer", table);
 }
 ```
 
-Or via table-name with qualifiers
+Or with qualifiers
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
@@ -219,36 +181,12 @@ using (var connection = new SqlConnection(ConnectionString))
 {
 	using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[Customer];"))
 	{
-		var rows = connection.BulkDelete<Customer>(reader);
-	}
-}
-```
-
-Or with qualifiers
-
-```csharp
-using (var connection = new SqlConnection(ConnectionString))
-{
-	using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[Customer];"))
-	{
-		var rows = connection.BulkDelete<Customer>(reader, qualifiers: e => new { e.LastName, e.DateOfBirth });
-	}
-}
-```
-
-Or via table-name
-
-```csharp
-using (var connection = new SqlConnection(ConnectionString))
-{
-	using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[Customer];"))
-	{
 		var rows = connection.BulkDelete("Customer", reader);
 	}
 }
 ```
 
-Or via table-name with qualifiers
+Or with qualifiers
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
@@ -290,33 +228,11 @@ using (var connection = new SqlConnection(ConnectionString))
 using (var connection = new SqlConnection(ConnectionString))
 {
 	var table = GetCustomersAsDataTable();
-	var rows = connection.BulkInsert<Customer>(table);
-}
-```
-
-Or via table-name
-
-```csharp
-using (var connection = new SqlConnection(ConnectionString))
-{
-	var table = GetCustomersAsDataTable();
 	var rows = connection.BulkInsert("Customer", table);
 }
 ```
 
 ### BulkInsert via DbDataReader
-
-```csharp
-using (var connection = new SqlConnection(ConnectionString))
-{
-	using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[Customer];"))
-	{
-		var rows = connection.BulkInsert<Customer>(reader);
-	}
-}
-```
-
-Or via table-name
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
@@ -378,31 +294,11 @@ using (var connection = new SqlConnection(ConnectionString))
 using (var connection = new SqlConnection(ConnectionString))
 {
 	var table = GetCustomersAsDataTable();
-	var rows = connection.BulkMerge<Customer>(table);
-}
-```
-
-Or with qualifiers
-
-```csharp
-using (var connection = new SqlConnection(ConnectionString))
-{
-	var table = GetCustomersAsDataTable();
-	var rows = connection.BulkMerge<Customer>(table, qualifiers: e => new { e.LastName, e.DateOfBirth });
-}
-```
-
-Or via table-name
-
-```csharp
-using (var connection = new SqlConnection(ConnectionString))
-{
-	var table = GetCustomersAsDataTable();
 	var rows = connection.BulkMerge("Customer", table);
 }
 ```
 
-Or via table-name with qualifiers
+Or with qualifiers
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
@@ -419,36 +315,12 @@ using (var connection = new SqlConnection(ConnectionString))
 {
 	using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[Customer];"))
 	{
-		var rows = connection.BulkMerge<Customer>(reader);
-	}
-}
-```
-
-Or with qualifiers
-
-```csharp
-using (var connection = new SqlConnection(ConnectionString))
-{
-	using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[Customer];"))
-	{
-		var rows = connection.BulkMerge<Customer>(reader, qualifiers: e => new { e.LastName, e.DateOfBirth });
-	}
-}
-```
-
-Or via table-name
-
-```csharp
-using (var connection = new SqlConnection(ConnectionString))
-{
-	using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[Customer];"))
-	{
 		var rows = connection.BulkMerge("Customer", reader);
 	}
 }
 ```
 
-Or via table-name with qualifiers
+Or with qualifiers
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
@@ -510,31 +382,11 @@ using (var connection = new SqlConnection(ConnectionString))
 using (var connection = new SqlConnection(ConnectionString))
 {
 	var table = GetCustomersAsDataTable();
-	var rows = connection.BulkUpdate<Customer>(table);
-}
-```
-
-Or with qualifiers
-
-```csharp
-using (var connection = new SqlConnection(ConnectionString))
-{
-	var table = GetCustomersAsDataTable();
-	var rows = connection.BulkUpdate<Customer>(table, qualifiers: e => new { e.LastName, e.DateOfBirth });
-}
-```
-
-Or via table-name
-
-```csharp
-using (var connection = new SqlConnection(ConnectionString))
-{
-	var table = GetCustomersAsDataTable();
 	var rows = connection.BulkUpdate("Customer", table);
 }
 ```
 
-Or via table-name with qualifiers
+Or with qualifiers
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
@@ -551,36 +403,12 @@ using (var connection = new SqlConnection(ConnectionString))
 {
 	using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[Customer];"))
 	{
-		var rows = connection.BulkUpdate<Customer>(reader);
-	}
-}
-```
-
-Or with qualifiers
-
-```csharp
-using (var connection = new SqlConnection(ConnectionString))
-{
-	using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[Customer];"))
-	{
-		var rows = connection.BulkUpdate<Customer>(reader, qualifiers: e => new { e.LastName, e.DateOfBirth });
-	}
-}
-```
-
-Or via table-name
-
-```csharp
-using (var connection = new SqlConnection(ConnectionString))
-{
-	using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[Customer];"))
-	{
 		var rows = connection.BulkUpdate("Customer", reader);
 	}
 }
 ```
 
-Or via table-name with qualifiers
+Or with qualifiers
 
 ```csharp
 using (var connection = new SqlConnection(ConnectionString))
