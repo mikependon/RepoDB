@@ -16,11 +16,8 @@
 
   <ItemGroup>
     <Compile Remove="Operations\BaseRepository\**" />
-    <Compile Remove="Operations\DbRepository\**" />
     <EmbeddedResource Remove="Operations\BaseRepository\**" />
-    <EmbeddedResource Remove="Operations\DbRepository\**" />
     <None Remove="Operations\BaseRepository\**" />
-    <None Remove="Operations\DbRepository\**" />
   </ItemGroup>
 
   <ItemGroup>
