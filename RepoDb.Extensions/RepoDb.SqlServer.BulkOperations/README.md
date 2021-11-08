@@ -334,7 +334,7 @@ using (var connection = new SqlConnection(ConnectionString))
 
 ## BulkUpdate
 
-Bulk update a list of data entity objects into the database. A record is being updated in the database based on the defined qualifiers. It returns the number of rows updated in the database.
+Bulk update a list of data entity objects into the database. It returns the number of rows updated in the database.
 
 ### BulkUpdate via DataEntities
 
