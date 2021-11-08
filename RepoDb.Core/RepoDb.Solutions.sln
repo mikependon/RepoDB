@@ -93,6 +93,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.Sqlite.Microsoft", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.SQLite.System", "..\RepoDb.SQLite.System\RepoDb.SQLite.System\RepoDb.SQLite.System.csproj", "{A52DA818-69DD-4A13-B2C7-F398EBA1E9D5}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.PostgreSql.BulkOperations", "..\RepoDb.Extensions\RepoDb.PostgreSql.BulkOperations\RepoDb.PostgreSql.BulkOperations\RepoDb.PostgreSql.BulkOperations.csproj", "{3E988CD4-6AF4-4374-9B59-90FCF5FA1B12}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PostgreSql.BulkOperations", "PostgreSql.BulkOperations", "{1D83C958-5A70-4B29-A230-591EAEAB692C}"
+	ProjectSection(SolutionItems) = preProject
+		..\RepoDb.Extensions\RepoDb.PostgreSql.BulkOperations\README.md = ..\RepoDb.Extensions\RepoDb.PostgreSql.BulkOperations\README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -131,6 +138,10 @@ Global
 		{A52DA818-69DD-4A13-B2C7-F398EBA1E9D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A52DA818-69DD-4A13-B2C7-F398EBA1E9D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A52DA818-69DD-4A13-B2C7-F398EBA1E9D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E988CD4-6AF4-4374-9B59-90FCF5FA1B12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E988CD4-6AF4-4374-9B59-90FCF5FA1B12}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E988CD4-6AF4-4374-9B59-90FCF5FA1B12}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E988CD4-6AF4-4374-9B59-90FCF5FA1B12}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -145,6 +156,7 @@ Global
 		{419BA40B-7803-4E45-893F-FB8A6E81FAC5} = {5EA323B8-B4B6-4083-97A3-018C9423B20A}
 		{33D8E1C3-814F-4E46-90C6-793DDBCE0793} = {5EA323B8-B4B6-4083-97A3-018C9423B20A}
 		{33D9D9D0-2A18-4F7D-8059-7B3679B6D1ED} = {5EA323B8-B4B6-4083-97A3-018C9423B20A}
+		{1D83C958-5A70-4B29-A230-591EAEAB692C} = {5EA323B8-B4B6-4083-97A3-018C9423B20A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D15A7161-5524-45B7-A22A-EA6C877AA840}

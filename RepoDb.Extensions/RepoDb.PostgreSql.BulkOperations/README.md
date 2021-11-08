@@ -75,13 +75,11 @@ The argument `mergedCommandType` is used to define a value whether the existing 
 
 ### Identity Setting Alignment
 
-The library has enforced an additional logic to ensure the identity setting alignment if the `keepIdentity` is enabled (or the `identityBehavior` is set to `ReturnIdentity`) during the calls. This affects both the [BinaryBulkInsert](https://repodb.net/operation/binarybulkinsert) and [BinaryBulkMerge](https://repodb.net/operation/binarybulkmerge) operations.
-
-Basically, a new column named `__RepoDb_OrderColumn` is being added into the pseudo-temporary table if the identity field is present on the underlying target table. This column will contain the actual index of the entity model from the `IEnumerable<T>` object.
+Behind the scene, the library has enforced an additional logic to ensure the identity setting alignment. Basically, a new column named `__RepoDb_OrderColumn` is being added into the pseudo-temporary table if the identity field is present on the underlying target table. This column will contain the actual index of the entity model from the `IEnumerable<T>` object.
 
 During the bulk operation, a dedicated index value is passed that targets this additional column with a value of the entity model index, thus ensuring that the index value is really equating the index of the entity data from the `IEnumerable<T>` object. The resultsets of the pseudo-temporary table are being ordered using this newly generated column prior the actual merge to the underlying table.
 
-When the newly generated identity value is being set back to the data model, the value of the `__RepoDb_OrderColumn` column is being used to look-up the proper index of the equating entity model from the `IEnumerable<T>` object, then, the compiled identity-setter function is used to assign back the identity value into the identity property.
+For both the [BinaryBulkInsert](https://repodb.net/operation/binarybulkinsert) and [BinaryBulkMerge](https://repodb.net/operation/binarybulkmerge) operations, when the newly generated identity value is being set back to the data model, the value of the `__RepoDb_OrderColumn` column is being used to look-up the proper index of the equating entity model from the `IEnumerable<T>` object, then, the compiled identity-setter function is used to assign back the identity value into the identity property.
 
 ## Async Methods
 
@@ -177,11 +175,19 @@ using (var connection = new SqlConnection(ConnectionString))
 
 ## BinaryBulkDeleteByKey
 
-Soon to be updated.
+Delete the existing rows from the database via a list of primary keys by bulk. It returns the number of rows deleted during the operation.
+
+```csharp
+using (var connection = new SqlConnection(ConnectionString))
+{
+	var primaryKeys = new [] { 1, 2, ..., 10045 };
+	var rows = connection.BinaryBulkDeleteByKey(primaryKeys);
+}
+```
 
 ## BulkInsert
 
-Bulk insert a list of data entity objects into the database. All data entities will be inserted as new records in the database. It returns the number of rows inserted in the database.
+Insert a list of entities into the database by bulk. It returns the number of rows inserted in the database.
 
 ### BulkInsert via DataEntities
 
@@ -227,7 +233,7 @@ using (var connection = new SqlConnection(ConnectionString))
 
 ## BulkMerge
 
-Bulk merge a list of data entity objects into the database. A record is being inserted in the database if it is not exists using the defined qualifiers. It returns the number of rows inserted/updated in the database.
+Merge a list of entities into the database by bulk. A new row is being inserted (if not present) and an existing row is being updated (if present) through the defined qualifiers. It returns the number of rows inserted/updated in the database.
 
 ### BulkMerge via DataEntities
 
@@ -315,7 +321,7 @@ using (var connection = new SqlConnection(ConnectionString))
 
 ## BulkUpdate
 
-Bulk update a list of data entity objects into the database. A record is being updated in the database based on the defined qualifiers. It returns the number of rows updated in the database.
+Update the existing rows from the database by bulk. The operation will be based on the given qualifiers. It returns the number of rows updated in the database.
 
 ### BulkUpdate via DataEntities
 
