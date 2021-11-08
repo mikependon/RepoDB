@@ -15,11 +15,11 @@ An extension library that contains the official Bulk Operations of RepoDB for Po
 
 ## Why use Bulk Operations?
 
-Basically, we do the normal [Delete](https://repodb.net/operation/delete), [Insert](https://repodb.net/operation/insert), [Merge](https://repodb.net/operation/merge) and [Update](https://repodb.net/operation/update) operations when interacting with the database. The data is processed in an atomic way. If we do call the batch operations, the multiple single operation is just being batched and executed at the same time. In short, there are round-trips between your application and the database. Thus does not give you the maximum performance when doing the CRUD operations.
+Basically, you do the normal [Delete](https://repodb.net/operation/delete), [Insert](https://repodb.net/operation/insert), [Merge](https://repodb.net/operation/merge) and [Update](https://repodb.net/operation/update) operations when interacting with the database, and with this, the data is processed in an atomic way. If you do use the batch operations, the multiple single operations are batched and executed together but it does not eliminate the round-trips between your application and your database. Thus does not give you the maximum performance when doing the CRUD operations.
 
-With bulk operations, all data is brought from the client application to the database via [BinaryImport](https://repodb.net/operation/binaryimport) process. It ignores the audit, logs, constraints and any other database special handling. After that, the data is being processed at the same time in the database (server).
+With the bulk operations, all data is brought from your client application to your database via [BinaryImport](https://repodb.net/operation/binaryimport) operation (bulk process). It ignores the audit, logs, constraints and any other database special handling. After that, the data is being post processed together in the database (server).
 
-The bulk operations can hugely improve the performance by more than 90% when processing a large datasets.
+The bulk operations can hugely improve the performance of your application by more than 90%, especially when processing the large datasets.
 
 ## Core Features
 
@@ -67,7 +67,7 @@ The arguments `qualifiers`, `keepIdentity`, `identityBehavior`, `pseudoTableType
 
 The argument `qualifiers` is used to define the qualifier fields to be used in the operations. It usually refers to the `WHERE` expression of SQL Statements. If not given, the primary key field will be used.
 
-The argument `keepIdentity` is used to define a value whether the identity property of the entity/model will be kept during the operation. Whereas,the argument `identityBehavior` is used to define a value whether an identity property of the entity/model will be kept, or, the newly generated identity values from the database will be returned after the operation. 
+The argument `keepIdentity` is used to define a value whether the identity property of the entity/model will be kept during the operation. Identically, the argument `identityBehavior` is used to define a value liked with `keepIdentity` argument, together-with, the value that is used to return the newly generated identity values from the database. 
 
 The argument `pseudoTableType` is used to define a value whether a physical pseudo-table will be created during the operation. By default, a temporary table is used.
 
@@ -75,334 +75,338 @@ The argument `mergedCommandType` is used to define a value whether the existing 
 
 ### Identity Setting Alignment
 
-Behind the scene, the library has enforced an additional logic to ensure the identity setting alignment. Basically, a new column named `__RepoDb_OrderColumn` is being added into the pseudo-temporary table if the identity field is present on the underlying target table. This column will contain the actual index of the entity model from the `IEnumerable<T>` object.
+Behind the scene, the library has enforced an additional logic to ensure the identity setting alignment. Basically, a new column named `__RepoDb_OrderColumn` is being added into the pseudo-temporary table if the identity field is present on the underlying table. This column will contain the actual index of the entity model from the `IEnumerable<T>` object.
 
 During the bulk operation, a dedicated index value is passed that targets this additional column with a value of the entity model index, thus ensuring that the index value is really equating the index of the entity data from the `IEnumerable<T>` object. The resultsets of the pseudo-temporary table are being ordered using this newly generated column prior the actual merge to the underlying table.
 
 For both the [BinaryBulkInsert](https://repodb.net/operation/binarybulkinsert) and [BinaryBulkMerge](https://repodb.net/operation/binarybulkmerge) operations, when the newly generated identity value is being set back to the data model, the value of the `__RepoDb_OrderColumn` column is being used to look-up the proper index of the equating entity model from the `IEnumerable<T>` object, then, the compiled identity-setter function is used to assign back the identity value into the identity property.
 
+## BatchSize
+
+All the provided operations has a `batchSize` attribute that enables you to override the size of the items being wired-up to the server during the operation. By default it is `null`, all items are being sent together in one-go. Use this attribute if you wish to optimize the operation based on certain sitution (i.e.: No. of Columns, Type/Size of Data, Network Latency).
+
 ## Async Methods
 
-All synchronous methods has an equivalent asynchronous (Async) methods.
+All the provided synchronous operations has its equivalent asynchronous (Async) operations.
 
 ## BinaryBulkDelete
 
-Delete the existing rows from the database by bulk. It returns the number of rows deleted during the operation.
+Delete the existing rows from the database by bulk. It returns the number of rows that has been deleted during the operation.
 
 ### BinaryBulkDelete via DataEntities
 
 ```csharp
-using (var connection = new SqlConnection(ConnectionString))
+using (var connection = new NpgsqlConnection(ConnectionString))
 {
 	var customers = GetCustomers();
-	var rows = connection.BinaryBulkDelete<Customer>(customers);
+	var deletedRows = connection.BinaryBulkDelete<Customer>(customers);
 }
 ```
 
-Or with qualifiers
+Or with qualifiers.
 
 ```csharp
-using (var connection = new SqlConnection(ConnectionString))
+using (var connection = new NpgsqlConnection(ConnectionString))
 {
 	var customers = GetCustomers();
-	var rows = connection.BinaryBulkDelete<Customer>(customers, qualifiers: e => new { e.LastName, e.DateOfBirth });
+	var deletedRows = connection.BinaryBulkDelete<Customer>(customers, qualifiers: e => new { e.LastName, e.DateOfBirth });
 }
 ```
 
 Or via table-name
 
 ```csharp
-using (var connection = new SqlConnection(ConnectionString))
+using (var connection = new NpgsqlConnection(ConnectionString))
 {
 	var customers = GetCustomers();
-	var rows = connection.BinaryBulkDelete("Customer", customers);
+	var deletedRows = connection.BinaryBulkDelete("Customer", customers);
 }
 ```
 
-Or with qualifiers
+Or with qualifiers.
 
 ```csharp
-using (var connection = new SqlConnection(ConnectionString))
+using (var connection = new NpgsqlConnection(ConnectionString))
 {
 	var customers = GetCustomers();
-	var rows = connection.BinaryBulkDelete("Customer", customers, qualifiers: Field.From("LastName", "DateOfBirth"));
+	var deletedRows = connection.BinaryBulkDelete("Customer", customers, qualifiers: Field.From("LastName", "DateOfBirth"));
 }
 ```
 
 ### BinaryBulkDelete via DataTable
 
 ```csharp
-using (var connection = new SqlConnection(ConnectionString))
+using (var connection = new NpgsqlConnection(ConnectionString))
 {
 	var table = GetCustomersAsDataTable();
-	var rows = connection.BinaryBulkDelete("Customer", table);
+	var deletedRows = connection.BinaryBulkDelete("Customer", table);
 }
 ```
 
-Or with qualifiers
+Or with qualifiers.
 
 ```csharp
-using (var connection = new SqlConnection(ConnectionString))
+using (var connection = new NpgsqlConnection(ConnectionString))
 {
 	var table = GetCustomersAsDataTable();
-	var rows = connection.BinaryBulkDelete("Customer", table, qualifiers: Field.From("LastName", "DateOfBirth"));
+	var deletedRows = connection.BinaryBulkDelete("Customer", table, qualifiers: Field.From("LastName", "DateOfBirth"));
 }
 ```
 
 ### BinaryBulkDelete via DbDataReader
 
 ```csharp
-using (var connection = new SqlConnection(ConnectionString))
+using (var connection = new NpgsqlConnection(ConnectionString))
 {
 	using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[Customer];"))
 	{
-		var rows = connection.BinaryBulkDelete("Customer", reader);
+		var deletedRows = connection.BinaryBulkDelete("Customer", reader);
 	}
 }
 ```
 
-Or with qualifiers
+Or with qualifiers.
 
 ```csharp
-using (var connection = new SqlConnection(ConnectionString))
+using (var connection = new NpgsqlConnection(ConnectionString))
 {
 	using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[Customer];"))
 	{
-		var rows = connection.BinaryBulkDelete("Customer", reader, qualifiers: Field.From("LastName", "DateOfBirth"));
+		var deletedRows = connection.BinaryBulkDelete("Customer", reader, qualifiers: Field.From("LastName", "DateOfBirth"));
 	}
 }
 ```
 
 ## BinaryBulkDeleteByKey
 
-Delete the existing rows from the database via a list of primary keys by bulk. It returns the number of rows deleted during the operation.
+Delete the existing rows from the database by bulk via a list of primary keys. It returns the number of rows that has been deleted during the operation.
 
 ```csharp
-using (var connection = new SqlConnection(ConnectionString))
+using (var connection = new NpgsqlConnection(ConnectionString))
 {
 	var primaryKeys = new [] { 1, 2, ..., 10045 };
-	var rows = connection.BinaryBulkDeleteByKey(primaryKeys);
+	var deletedRows = connection.BinaryBulkDeleteByKey(primaryKeys);
 }
 ```
 
-## BulkInsert
+## BinaryBulkInsert
 
-Insert a list of entities into the database by bulk. It returns the number of rows inserted in the database.
+Insert a list of entities into the database by bulk. It returns the number of rows that has been inserted in the database.
 
-### BulkInsert via DataEntities
+### BinaryBulkInsert via DataEntities
 
 ```csharp
-using (var connection = new SqlConnection(ConnectionString))
+using (var connection = new NpgsqlConnection(ConnectionString))
 {
 	var customers = GetCustomers();
-	var rows = connection.BulkInsert<Customer>(customers);
+	var insertedRows = connection.BinaryBulkInsert<Customer>(customers);
 }
 ```
 
 Or via table-name
 
 ```csharp
-using (var connection = new SqlConnection(ConnectionString))
+using (var connection = new NpgsqlConnection(ConnectionString))
 {
 	var customers = GetCustomers();
-	var rows = connection.BulkInsert("Customer", customers);
+	var insertedRows = connection.BinaryBulkInsert("Customer", customers);
 }
 ```
 
-### BulkInsert via DataTable
+### BinaryBulkInsert via DataTable
 
 ```csharp
-using (var connection = new SqlConnection(ConnectionString))
+using (var connection = new NpgsqlConnection(ConnectionString))
 {
 	var table = GetCustomersAsDataTable();
-	var rows = connection.BulkInsert("Customer", table);
+	var insertedRows = connection.BinaryBulkInsert("Customer", table);
 }
 ```
 
-### BulkInsert via DbDataReader
+### BinaryBulkInsert via DbDataReader
 
 ```csharp
-using (var connection = new SqlConnection(ConnectionString))
+using (var connection = new NpgsqlConnection(ConnectionString))
 {
 	using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[Customer];"))
 	{
-		var rows = connection.BulkInsert("Customer", reader);
+		var insertedRows = connection.BinaryBulkInsert("Customer", reader);
 	}
 }
 ```
 
-## BulkMerge
+## BinaryBulkMerge
 
-Merge a list of entities into the database by bulk. A new row is being inserted (if not present) and an existing row is being updated (if present) through the defined qualifiers. It returns the number of rows inserted/updated in the database.
+Merge a list of entities into the database by bulk. A new row is being inserted (if not present) and an existing row is being updated (if present) through the defined qualifiers. It returns the number of rows that has been inserted/updated in the database.
 
-### BulkMerge via DataEntities
+### BinaryBulkMerge via DataEntities
 
 ```csharp
-using (var connection = new SqlConnection(ConnectionString))
+using (var connection = new NpgsqlConnection(ConnectionString))
 {
 	var customers = GetCustomers();
-	var rows = connection.BulkMerge<Customer>(customers);
+	var mergedRows = connection.BinaryBulkMerge<Customer>(customers);
 }
 ```
 
-Or with qualifiers
+Or with qualifiers.
 
 ```csharp
-using (var connection = new SqlConnection(ConnectionString))
+using (var connection = new NpgsqlConnection(ConnectionString))
 {
 	var customers = GetCustomers();
-	var rows = connection.BulkMerge<Customer>(customers, qualifiers: e => new { e.LastName, e.DateOfBirth });
+	var mergedRows = connection.BinaryBulkMerge<Customer>(customers, qualifiers: e => new { e.LastName, e.DateOfBirth });
 }
 ```
 
 Or via table-name
 
 ```csharp
-using (var connection = new SqlConnection(ConnectionString))
+using (var connection = new NpgsqlConnection(ConnectionString))
 {
 	var customers = GetCustomers();
-	var rows = connection.BulkMerge("Customer", customers);
+	var mergedRows = connection.BinaryBulkMerge("Customer", customers);
 }
 ```
 
-Or with qualifiers
+Or with qualifiers.
 
 ```csharp
-using (var connection = new SqlConnection(ConnectionString))
+using (var connection = new NpgsqlConnection(ConnectionString))
 {
 	var customers = GetCustomers();
-	var rows = connection.BulkMerge("Customer", customers, qualifiers: Field.From("LastName", "DateOfBirth"));
+	var mergedRows = connection.BinaryBulkMerge("Customer", customers, qualifiers: Field.From("LastName", "DateOfBirth"));
 }
 ```
 
-### BulkMerge via DataTable
+### BinaryBulkMerge via DataTable
 
 ```csharp
-using (var connection = new SqlConnection(ConnectionString))
+using (var connection = new NpgsqlConnection(ConnectionString))
 {
 	var table = GetCustomersAsDataTable();
-	var rows = connection.BulkMerge("Customer", table);
+	var mergedRows = connection.BinaryBulkMerge("Customer", table);
 }
 ```
 
-Or with qualifiers
+Or with qualifiers.
 
 ```csharp
-using (var connection = new SqlConnection(ConnectionString))
+using (var connection = new NpgsqlConnection(ConnectionString))
 {
 	var table = GetCustomersAsDataTable();
-	var rows = connection.BulkMerge("Customer", table, qualifiers: Field.From("LastName", "DateOfBirth"));
+	var mergedRows = connection.BinaryBulkMerge("Customer", table, qualifiers: Field.From("LastName", "DateOfBirth"));
 }
 ```
 
-### BulkMerge via DbDataReader
+### BinaryBulkMerge via DbDataReader
 
 ```csharp
-using (var connection = new SqlConnection(ConnectionString))
+using (var connection = new NpgsqlConnection(ConnectionString))
 {
 	using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[Customer];"))
 	{
-		var rows = connection.BulkMerge("Customer", reader);
+		var mergedRows = connection.BinaryBulkMerge("Customer", reader);
 	}
 }
 ```
 
-Or with qualifiers
+Or with qualifiers.
 
 ```csharp
-using (var connection = new SqlConnection(ConnectionString))
+using (var connection = new NpgsqlConnection(ConnectionString))
 {
 	using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[Customer];"))
 	{
-		var rows = connection.BulkMerge("Customer", reader, qualifiers: Field.From("LastName", "DateOfBirth"));
+		var mergedRows = connection.BinaryBulkMerge("Customer", reader, qualifiers: Field.From("LastName", "DateOfBirth"));
 	}
 }
 ```
 
-## BulkUpdate
+## BinaryBulkUpdate
 
-Update the existing rows from the database by bulk. The operation will be based on the given qualifiers. It returns the number of rows updated in the database.
+Update the existing rows from the database by bulk. The affected rows are strongly bound to the values of the qualifier fields when calling the operation. It returns the number of rows that has been updated in the database.
 
-### BulkUpdate via DataEntities
+### BinaryBulkUpdate via DataEntities
 
 ```csharp
-using (var connection = new SqlConnection(ConnectionString))
+using (var connection = new NpgsqlConnection(ConnectionString))
 {
 	var customers = GetCustomers();
-	var rows = connection.BulkUpdate<Customer>(customers);
+	var rows = connection.BinaryBulkUpdate<Customer>(customers);
 }
 ```
 
-Or with qualifiers
+Or with qualifiers.
 
 ```csharp
-using (var connection = new SqlConnection(ConnectionString))
+using (var connection = new NpgsqlConnection(ConnectionString))
 {
 	var customers = GetCustomers();
-	var rows = connection.BulkUpdate<Customer>(customers, qualifiers: e => new { e.LastName, e.DateOfBirth });
+	var rows = connection.BinaryBulkUpdate<Customer>(customers, qualifiers: e => new { e.LastName, e.DateOfBirth });
 }
 ```
 
 Or via table-name
 
 ```csharp
-using (var connection = new SqlConnection(ConnectionString))
+using (var connection = new NpgsqlConnection(ConnectionString))
 {
 	var customers = GetCustomers();
-	var rows = connection.BulkUpdate("Customer", customers);
+	var rows = connection.BinaryBulkUpdate("Customer", customers);
 }
 ```
 
-Or with qualifiers
+Or with qualifiers.
 
 ```csharp
-using (var connection = new SqlConnection(ConnectionString))
+using (var connection = new NpgsqlConnection(ConnectionString))
 {
 	var customers = GetCustomers();
-	var rows = connection.BulkUpdate("Customer", customers, qualifiers: Field.From("LastName", "DateOfBirth"));
+	var rows = connection.BinaryBulkUpdate("Customer", customers, qualifiers: Field.From("LastName", "DateOfBirth"));
 }
 ```
 
-### BulkUpdate via DataTable
+### BinaryBulkUpdate via DataTable
 
 ```csharp
-using (var connection = new SqlConnection(ConnectionString))
+using (var connection = new NpgsqlConnection(ConnectionString))
 {
 	var table = GetCustomersAsDataTable();
-	var rows = connection.BulkUpdate("Customer", table);
+	var rows = connection.BinaryBulkUpdate("Customer", table);
 }
 ```
 
-Or with qualifiers
+Or with qualifiers.
 
 ```csharp
-using (var connection = new SqlConnection(ConnectionString))
+using (var connection = new NpgsqlConnection(ConnectionString))
 {
 	var table = GetCustomersAsDataTable();
-	var rows = connection.BulkUpdate("Customer", table, qualifiers: Field.From("LastName", "DateOfBirth"));
+	var rows = connection.BinaryBulkUpdate("Customer", table, qualifiers: Field.From("LastName", "DateOfBirth"));
 }
 ```
 
-### BulkUpdate via DbDataReader
+### BinaryBulkUpdate via DbDataReader
 
 ```csharp
-using (var connection = new SqlConnection(ConnectionString))
+using (var connection = new NpgsqlConnection(ConnectionString))
 {
 	using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[Customer];"))
 	{
-		var rows = connection.BulkUpdate("Customer", reader);
+		var rows = connection.BinaryBulkUpdate("Customer", reader);
 	}
 }
 ```
 
-Or with qualifiers
+Or with qualifiers.
 
 ```csharp
-using (var connection = new SqlConnection(ConnectionString))
+using (var connection = new NpgsqlConnection(ConnectionString))
 {
 	using (var reader = connection.ExecuteReader("SELECT * FROM [dbo].[Customer];"))
 	{
-		var rows = connection.BulkUpdate("Customer", reader, qualifiers: Field.From("LastName", "DateOfBirth"));
+		var rows = connection.BinaryBulkUpdate("Customer", reader, qualifiers: Field.From("LastName", "DateOfBirth"));
 	}
 }
 ```
