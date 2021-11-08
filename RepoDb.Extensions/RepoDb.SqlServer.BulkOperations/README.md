@@ -4,7 +4,7 @@
 [![SqlServerBulkReleases](https://img.shields.io/badge/releases-core-important?&logo=nuget)](https://repodb.net/release/sqlserverbulk)
 [![SqlServerBulkIntegrationTests](https://img.shields.io/appveyor/tests/mikependon/repodb-oap1j?&logo=appveyor&label=integration%20tests)](https://ci.appveyor.com/project/mikependon/repodb-oap1j/build/tests)
 
-# RepoDb.SqlServer.BulkOperations
+# [RepoDb.SqlServer.BulkOperations](https://www.nuget.org/packages/RepoDb.SqlServer.BulkOperations)
 
 An extension library that contains the official Bulk Operations of RepoDB for SQL Server.
 
@@ -13,7 +13,7 @@ An extension library that contains the official Bulk Operations of RepoDB for SQ
 - [GitHub Home Page](https://github.com/mikependon/RepoDb) - to learn more about the core library.
 - [Website](http://repodb.net) - docs, features, classes, references, releases and blogs.
 
-## Why use Bulk Operations?
+## Why use the Bulk Operations?
 
 Basically, we do the normal [Delete](https://repodb.net/operation/delete), [Insert](https://repodb.net/operation/insert), [Merge](https://repodb.net/operation/merge) and [Update](https://repodb.net/operation/update) operations when interacting with the database. The data is processed in an atomic way. If we do call the batch operations, the multiple single operation is just being batched and executed at the same time. In short, there are round-trips between your application and the database. Thus does not give you the maximum performance when doing the CRUD operations.
 
