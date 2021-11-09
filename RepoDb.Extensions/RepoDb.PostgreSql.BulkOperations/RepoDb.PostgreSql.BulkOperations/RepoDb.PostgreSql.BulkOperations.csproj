@@ -15,12 +15,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Operations\BaseRepository\**" />
-    <EmbeddedResource Remove="Operations\BaseRepository\**" />
-    <None Remove="Operations\BaseRepository\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="RepoDb" Version="1.12.10-beta1" />
     <PackageReference Include="RepoDb.PostgreSql" Version="1.1.5-beta1" />
   </ItemGroup>
