@@ -122,7 +122,7 @@ namespace RepoDb
             if (spaceBefore) Space();
 
             stringBuilder
-#if NET5_0             
+#if !NETSTANDARD2_0             
                 .AppendJoin(separator, values);
 #else
                 .Append(values.Join(separator));
