@@ -514,7 +514,7 @@ namespace RepoDb
                     isReturnIdentity.GetValueOrDefault());
 
                 // Identity if the identity is to return
-                var column = dataTable.Columns[identityDbField.Name];
+                var column = identityDbField is not null ? dataTable.Columns[identityDbField.Name] : null;
                 if (isReturnIdentity == true && column?.ReadOnly == false)
                 {
                     using var reader = (DbDataReader)connection.ExecuteReader(sql, commandTimeout: bulkCopyTimeout, transaction: transaction);
@@ -1062,7 +1062,7 @@ namespace RepoDb
                     isReturnIdentity.GetValueOrDefault());
 
                 // Identity if the identity is to return
-                var column = dataTable.Columns[identityDbField.Name];
+                var column = identityDbField is not null ? dataTable.Columns[identityDbField.Name] : null;
                 if (isReturnIdentity == true && column?.ReadOnly == false)
                 {
                     using var reader = (DbDataReader)await connection.ExecuteReaderAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, cancellationToken: cancellationToken);
