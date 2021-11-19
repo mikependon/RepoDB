@@ -152,23 +152,6 @@ namespace RepoDb.UnitTests.StatementBuilders
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
-        public void ThrowExceptionOnBaseStatementBuilderCreateQueryAllIfTheOrderFieldIsNotCovered()
-        {
-            // Setup
-            var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
-            var tableName = "Table";
-            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
-            var orderBy = OrderField.Parse(new { Id = Order.Ascending, Field1 = Order.Ascending });
-
-            // Act
-            statementBuilder.CreateQueryAll(queryBuilder: queryBuilder,
-                tableName: tableName,
-                fields: fields,
-                orderBy: orderBy);
-        }
-
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
         public void ThrowExceptionOnBaseStatementBuilderCreateQueryAllIfThereAreNoFields()
         {
