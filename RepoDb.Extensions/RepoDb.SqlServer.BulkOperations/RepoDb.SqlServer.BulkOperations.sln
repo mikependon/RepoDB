@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29709.97
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.SqlServer.BulkOperations", "RepoDb.SqlServer.BulkOperations\RepoDb.SqlServer.BulkOperations.csproj", "{CF8E22D7-E51A-4D03-AFC8-71CBF8913A2A}"
 EndProject
@@ -16,7 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.SqlServer.BulkOperat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.SqlServer", "..\..\RepoDb.SqlServer\RepoDb.SqlServer\RepoDb.SqlServer.csproj", "{3BE48340-D1A7-4BEC-A1CF-96D529A71F1D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.SqlServer.BulkOperations.IntegrationTests", "RepoDb.SqlServer.BulkOperations.IntegrationTests\RepoDb.SqlServer.BulkOperations.IntegrationTests.csproj", "{DF6AA6A3-D906-4226-9F06-166D73140998}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.SqlServer.BulkOperations.IntegrationTests", "RepoDb.SqlServer.BulkOperations.IntegrationTests\RepoDb.SqlServer.BulkOperations.IntegrationTests.csproj", "{02474021-4172-4158-B70A-DB16928FEE03}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,16 +36,16 @@ Global
 		{3BE48340-D1A7-4BEC-A1CF-96D529A71F1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3BE48340-D1A7-4BEC-A1CF-96D529A71F1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3BE48340-D1A7-4BEC-A1CF-96D529A71F1D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DF6AA6A3-D906-4226-9F06-166D73140998}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DF6AA6A3-D906-4226-9F06-166D73140998}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DF6AA6A3-D906-4226-9F06-166D73140998}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DF6AA6A3-D906-4226-9F06-166D73140998}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02474021-4172-4158-B70A-DB16928FEE03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02474021-4172-4158-B70A-DB16928FEE03}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02474021-4172-4158-B70A-DB16928FEE03}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02474021-4172-4158-B70A-DB16928FEE03}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{DF6AA6A3-D906-4226-9F06-166D73140998} = {855A00F9-E6E4-4E91-A73A-79252AC16F4B}
+		{02474021-4172-4158-B70A-DB16928FEE03} = {855A00F9-E6E4-4E91-A73A-79252AC16F4B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D1EC881D-7541-4E93-B612-7871A008CC04}

@@ -174,9 +174,13 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 // Act
                 connection.Insert(entity);
 
+                // Setup
+                var startDate = DateTime.Now.Date.AddHours(-5);
+                var endDate = DateTime.Now.Date.AddHours(5);
+
                 // Act
                 var queryResult = connection.Query<CompleteTableForDateTime>(e =>
-                    e.ColumnTimestampWithTimeZone >= DateTime.UtcNow.Date.AddHours(-5) && e.ColumnTimestampWithTimeZone <= DateTime.UtcNow.Date.AddHours(5)).FirstOrDefault();
+                    e.ColumnTimestampWithTimeZone >= startDate && e.ColumnTimestampWithTimeZone <= endDate).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -195,8 +199,8 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 connection.Insert(entity);
 
                 // Setup
-                var startDate = DateTime.UtcNow.Date.AddHours(-5);
-                var endDate = DateTime.UtcNow.Date.AddHours(5);
+                var startDate = DateTime.Now.Date.AddHours(-5);
+                var endDate = DateTime.Now.Date.AddHours(5);
 
                 // Act
                 var queryResult = connection.Query<CompleteTableForDateTime>(e =>
@@ -219,9 +223,13 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 // Act
                 connection.Insert(entity);
 
+                // Setup
+                var startDate = DateTime.Now.Date.AddHours(-5);
+                var endDate = DateTime.Now.Date.AddHours(5);
+
                 // Act
                 var queryResult = connection.Query<CompleteTableForDateTime>(e =>
-                    e.ColumnTimestampWithTimeZone >= DateTime.UtcNow.Date.AddHours(-5) && e.ColumnTimestampWithTimeZone <= DateTime.UtcNow.Date.AddHours(5)).FirstOrDefault();
+                    e.ColumnTimestampWithTimeZone >= startDate && e.ColumnTimestampWithTimeZone <= endDate).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -241,8 +249,8 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 connection.Insert(entity);
 
                 // Setup
-                var startDate = DateTime.UtcNow.Date.AddHours(-5);
-                var endDate = DateTime.UtcNow.Date.AddHours(5);
+                var startDate = DateTime.Now.Date.AddHours(-5);
+                var endDate = DateTime.Now.Date.AddHours(5);
 
                 // Act
                 var queryResult = connection.Query<CompleteTableForDateTime>(e =>
