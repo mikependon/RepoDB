@@ -31,10 +31,10 @@ namespace RepoDb.SqlServer.IntegrationTests.Setup
             var connectionString = Environment.GetEnvironmentVariable("REPODB_CONSTR", EnvironmentVariableTarget.Process);
 
             // Master connection
-            ConnectionStringForMaster = (connectionStringForMaster ?? @"Server=(local);Database=master;Integrated Security=False;User Id=michael;Password=Password123;");
+            ConnectionStringForMaster = (connectionStringForMaster ?? @"Server=(local);Database=master;Integrated Security=SSPI;");
 
             // RepoDb connection
-            ConnectionString = (connectionString ?? @"Server=(local);Database=RepoDbTest;Integrated Security=False;User Id=michael;Password=Password123;");
+            ConnectionString = (connectionString ?? @"Server=(local);Database=RepoDbTest;Integrated Security=SSPI;");
 
             // Initialize the SqlServer
             SqlServerBootstrap.Initialize();

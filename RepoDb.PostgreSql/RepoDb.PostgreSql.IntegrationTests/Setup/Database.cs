@@ -35,6 +35,10 @@ namespace RepoDb.PostgreSql.IntegrationTests.Setup
             // RepoDb connection
             ConnectionString = (connectionString ?? "Server=127.0.0.1;Port=5432;Database=RepoDb;User Id=postgres;Password=Password123;");
 
+            // For >= v6.0.0: To reutilize the legacy behavior
+            // https://github.com/abpframework/abp/issues/10273
+            // AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
             // Initialize PostgreSql
             PostgreSqlBootstrap.Initialize();
 
