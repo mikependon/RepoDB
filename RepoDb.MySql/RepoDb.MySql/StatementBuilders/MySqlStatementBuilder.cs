@@ -641,22 +641,6 @@ namespace RepoDb.StatementBuilders
                 throw new NullReferenceException($"The list of queryable fields must not be null for '{tableName}'.");
             }
 
-            // Validate the ordering
-            if (orderBy != null)
-            {
-                // Check if the order fields are present in the given fields
-                var unmatchesOrderFields = orderBy.Where(orderField =>
-                    fields.FirstOrDefault(f =>
-                        string.Equals(orderField.Name, f.Name, StringComparison.OrdinalIgnoreCase)) == null);
-
-                // Throw an error we found any unmatches
-                if (unmatchesOrderFields.Any() == true)
-                {
-                    throw new MissingFieldsException($"The order fields '{unmatchesOrderFields.Select(field => field.Name).Join(", ")}' are not " +
-                        $"present at the given fields '{fields.Select(field => field.Name).Join(", ")}'.");
-                }
-            }
-
             // Initialize the builder
             var builder = queryBuilder ?? new QueryBuilder();
 

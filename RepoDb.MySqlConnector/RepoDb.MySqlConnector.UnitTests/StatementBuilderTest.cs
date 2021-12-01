@@ -960,22 +960,6 @@ namespace RepoDb.MySqlConnector.UnitTests
             Assert.AreEqual(expected, query);
         }
 
-        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
-        public void ThrowExceptionOnMySqlStatementBuilderCreateQueryIfOrderFieldsAreNotPresentAtTheFields()
-        {
-            // Setup
-            var builder = StatementBuilderMapper.Get<MySqlConnection>();
-
-            // Act
-            builder.CreateQuery(new QueryBuilder(),
-                "Table",
-                Field.From("Id", "Name", "Address"),
-                null,
-                OrderField.Parse(new { Id = Order.Descending, SSN = Order.Ascending }),
-                null,
-                null);
-        }
-
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
         public void ThrowExceptionOnMySqlStatementBuilderCreateQueryIfThereAreHints()
         {

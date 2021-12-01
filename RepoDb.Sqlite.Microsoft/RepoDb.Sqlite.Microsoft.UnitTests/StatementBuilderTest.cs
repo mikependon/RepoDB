@@ -731,22 +731,6 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests
             Assert.AreEqual(expected, query);
         }
 
-        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
-        public void ThrowExceptionOnMdsSqLiteStatementBuilderCreateQueryIfOrderFieldsAreNotPresentAtTheFields()
-        {
-            // Setup
-            var builder = StatementBuilderMapper.Get<SqliteConnection>();
-
-            // Act
-            builder.CreateQuery(new QueryBuilder(),
-                "Table",
-                Field.From("Id", "Name", "Address"),
-                null,
-                OrderField.Parse(new { Id = Order.Descending, SSN = Order.Ascending }),
-                null,
-                null);
-        }
-
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
         public void ThrowExceptionOnMdsSqLiteStatementBuilderCreateQueryIfThereAreHints()
         {
