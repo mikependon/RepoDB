@@ -961,22 +961,6 @@ namespace RepoDb.PostgreSql.UnitTests
             Assert.AreEqual(expected, query);
         }
 
-        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
-        public void ThrowExceptionOnPostgreSqlStatementBuilderCreateQueryIfOrderFieldsAreNotPresentAtTheFields()
-        {
-            // Setup
-            var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
-
-            // Act
-            builder.CreateQuery(new QueryBuilder(),
-                "Table",
-                Field.From("Id", "Name", "Address"),
-                null,
-                OrderField.Parse(new { Id = Order.Descending, SSN = Order.Ascending }),
-                null,
-                null);
-        }
-
         [TestMethod, ExpectedException(typeof(NotSupportedException))]
         public void ThrowExceptionOnPostgreSqlStatementBuilderCreateQueryIfThereAreHints()
         {
