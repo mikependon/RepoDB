@@ -266,7 +266,8 @@ namespace RepoDb
                 mappings,
                 identityBehavior,
                 dbSetting);
-#if NET6_0
+
+#if NET5_0
             var importer = await connection.BeginBinaryImportAsync(copyCommand, cancellationToken);
 #else
             var importer = await Task.FromResult(connection.BeginBinaryImport(copyCommand));

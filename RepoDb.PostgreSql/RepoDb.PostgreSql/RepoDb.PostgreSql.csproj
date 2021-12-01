@@ -19,6 +19,10 @@
     <PackageReference Include="RepoDb" Version="1.12.10-beta1" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
+	<PackageReference Include="Npgsql" Version="6.0.0" />
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
   </ItemGroup>
