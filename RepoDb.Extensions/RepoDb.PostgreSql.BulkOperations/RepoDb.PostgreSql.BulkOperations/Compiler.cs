@@ -645,6 +645,7 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// <typeparam name="TEntity"></typeparam>
         /// <typeparam name="TResult"></typeparam>
         /// <param name="methodName"></param>
+        /// <param name="types"></param>
         /// <returns></returns>
         public static Func<TEntity, object[], TResult> GetParameterizedMethodFunc<TEntity, TResult>(string methodName,
             Type[] types)
@@ -709,6 +710,7 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="methodName"></param>
+        /// <param name="types"></param>
         /// <returns></returns>
         public static Action<TEntity, object[]> GetParameterizedVoidMethodFunc<TEntity>(string methodName,
             Type[] types)
