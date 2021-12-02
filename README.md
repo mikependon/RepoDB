@@ -1,3 +1,4 @@
+
 [![SolutionBuilds](https://img.shields.io/appveyor/ci/mikependon/repodb-h87g9?&logo=appveyor&label=sln%20builds)](https://ci.appveyor.com/project/mikependon/repodb-h87g9)
 [![Version](https://img.shields.io/nuget/v/RepoDb?&logo=nuget)](https://www.nuget.org/packages/RepoDb)
 [![Releases](https://img.shields.io/badge/releases-core-important?&logo=nuget)](http://repodb.net/release/core)
@@ -10,6 +11,19 @@
 RepoDB is an open-source .NET ORM library that bridges the gaps of micro-ORMs and full-ORMs. It helps you simplify the switch-over of when to use the BASIC and ADVANCE operations during the development.
 
 To get the latest updates about this library, follow us on [Twitter](https://twitter.com/mike_pendon)!
+
+### Community Polls :raising_hand_man:
+
+*You are important to us and we would like to hear your opinion!*
+
+As we are moving and developing fast, we also want to capture the feedback and considerations of the overall community before diving into an actual implementation.
+
+We hope to ask your little time to visit and provide feedback on the items we woud like to incorporate and/or develop towards this library.
+
+- [The refactoring of the Tracing implementations](https://github.com/mikependon/RepoDB/issues/941)
+- [ONION Architecture: Separation to multiple Nuget packages](https://github.com/mikependon/RepoDB/issues/914)
+
+Thank you for your participation.
 
 ## Benefits/Advantages
 
