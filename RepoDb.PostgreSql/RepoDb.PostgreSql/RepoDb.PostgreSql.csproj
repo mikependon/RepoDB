@@ -15,12 +15,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Npgsql" Version="5.0.11" />
+    <PackageReference Include="Npgsql" Version="6.0.0" />
     <PackageReference Include="RepoDb" Version="1.12.10-beta1" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
-	<PackageReference Include="Npgsql" Version="6.0.0" />
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+	<PackageReference Include="Npgsql" Version="5.0.11" />
   </ItemGroup>
 
   <ItemGroup>
