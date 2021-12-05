@@ -213,7 +213,7 @@ namespace RepoDb
             where TEntity : class
         {
             return UpdateAllInternal<TEntity>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entities),
                 entities: entities,
                 qualifiers: null,
                 batchSize: batchSize,
@@ -253,7 +253,7 @@ namespace RepoDb
             where TEntity : class
         {
             return UpdateAllInternal<TEntity>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entities),
                 entities: entities,
                 qualifiers: qualifier?.AsEnumerable(),
                 batchSize: batchSize,
@@ -293,7 +293,7 @@ namespace RepoDb
             where TEntity : class
         {
             return UpdateAllInternal<TEntity>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entities),
                 entities: entities,
                 qualifiers: qualifiers,
                 batchSize: batchSize,
@@ -333,7 +333,7 @@ namespace RepoDb
             where TEntity : class
         {
             return UpdateAllInternal<TEntity>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entities),
                 entities: entities,
                 qualifiers: Field.Parse<TEntity>(qualifiers),
                 batchSize: batchSize,
@@ -377,10 +377,10 @@ namespace RepoDb
             if (qualifiers?.Any() != true)
             {
                 var key = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction,
-                    entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity));
+                    GetEntityType<TEntity>(entities));
                 qualifiers = key.AsEnumerable();
             }
-            if ((entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity)).IsDictionaryStringObject())
+            if (GetEntityType<TEntity>(entities).IsDictionaryStringObject())
             {
                 return UpdateAllInternalBase<IDictionary<string, object>>(connection: connection,
                     tableName: tableName,
@@ -620,7 +620,7 @@ namespace RepoDb
             where TEntity : class
         {
             return UpdateAllAsyncInternal<TEntity>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entities),
                 entities: entities,
                 qualifiers: null,
                 batchSize: batchSize,
@@ -663,7 +663,7 @@ namespace RepoDb
             where TEntity : class
         {
             return UpdateAllAsyncInternal<TEntity>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entities),
                 entities: entities,
                 qualifiers: qualifier?.AsEnumerable(),
                 batchSize: batchSize,
@@ -706,7 +706,7 @@ namespace RepoDb
             where TEntity : class
         {
             return UpdateAllAsyncInternal<TEntity>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entities),
                 entities: entities,
                 qualifiers: qualifiers,
                 batchSize: batchSize,
@@ -749,7 +749,7 @@ namespace RepoDb
             where TEntity : class
         {
             return UpdateAllAsyncInternal<TEntity>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entities),
                 entities: entities,
                 qualifiers: Field.Parse<TEntity>(qualifiers),
                 batchSize: batchSize,
@@ -796,10 +796,10 @@ namespace RepoDb
             if (qualifiers?.Any() != true)
             {
                 var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction,
-                    entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity), cancellationToken);
+                    GetEntityType<TEntity>(entities), cancellationToken);
                 qualifiers = key.AsEnumerable();
             }
-            if ((entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity)).IsDictionaryStringObject())
+            if (GetEntityType<TEntity>(entities).IsDictionaryStringObject())
             {
                 return await UpdateAllAsyncInternalBase<IDictionary<string, object>>(connection: connection,
                     tableName: tableName,
@@ -1130,7 +1130,9 @@ namespace RepoDb
             batchSize = (dbSetting.IsMultiStatementExecutable == true) ? Math.Min(batchSize, entities.Count()) : 1;
 
             // Get the context
-            var context = UpdateAllExecutionContextProvider.Create<TEntity>(connection,
+            var entityType = GetEntityType<TEntity>(entities);
+            var context = UpdateAllExecutionContextProvider.Create(entityType,
+                connection,
                 tableName,
                 entities,
                 qualifiers,
@@ -1218,7 +1220,8 @@ namespace RepoDb
                             if (batchItems.Count != batchSize)
                             {
                                 // Get a new execution context from cache
-                                context = UpdateAllExecutionContextProvider.Create<TEntity>(connection,
+                                context = UpdateAllExecutionContextProvider.Create(entityType,
+                                    connection,
                                     tableName,
                                     batchItems,
                                     qualifiers,
@@ -1239,7 +1242,7 @@ namespace RepoDb
                             }
                             else
                             {
-                                context.MultipleDataEntitiesParametersSetterFunc?.Invoke(command, batchItems);
+                                context.MultipleDataEntitiesParametersSetterFunc?.Invoke(command, batchItems.OfType<object>().AsList());
                             }
 
                             // Prepare the command
@@ -1334,7 +1337,9 @@ namespace RepoDb
             batchSize = (dbSetting.IsMultiStatementExecutable == true) ? Math.Min(batchSize, entities.Count()) : 1;
 
             // Get the context
-            var context = await UpdateAllExecutionContextProvider.CreateAsync<TEntity>(connection,
+            var entityType = GetEntityType<TEntity>(entities);
+            var context = await UpdateAllExecutionContextProvider.CreateAsync(entityType,
+                connection,
                 tableName,
                 entities,
                 qualifiers,
@@ -1423,7 +1428,8 @@ namespace RepoDb
                             if (batchItems.Count != batchSize)
                             {
                                 // Get a new execution context from cache
-                                context = await UpdateAllExecutionContextProvider.CreateAsync<TEntity>(connection,
+                                context = await UpdateAllExecutionContextProvider.CreateAsync(entityType,
+                                    connection,
                                     tableName,
                                     batchItems,
                                     qualifiers,
@@ -1445,7 +1451,7 @@ namespace RepoDb
                             }
                             else
                             {
-                                context.MultipleDataEntitiesParametersSetterFunc?.Invoke(command, batchItems);
+                                context.MultipleDataEntitiesParametersSetterFunc?.Invoke(command, batchItems.OfType<object>().AsList());
                             }
 
                             // Prepare the command

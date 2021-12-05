@@ -20,16 +20,17 @@ namespace RepoDb.Contexts.Providers
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="type"></param>
         /// <param name="tableName"></param>
         /// <param name="fields"></param>
         /// <param name="hints"></param>
         /// <returns></returns>
-        private static string GetKey<TEntity>(string tableName,
+        private static string GetKey(Type type,
+            string tableName,
             IEnumerable<Field> fields,
             string hints)
         {
-            return string.Concat(typeof(TEntity).FullName,
+            return string.Concat(type.FullName,
                 ";",
                 tableName,
                 ";",
@@ -41,7 +42,7 @@ namespace RepoDb.Contexts.Providers
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entityType"></param>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="fields"></param>
@@ -49,18 +50,18 @@ namespace RepoDb.Contexts.Providers
         /// <param name="transaction"></param>
         /// <param name="statementBuilder"></param>
         /// <returns></returns>
-        public static InsertExecutionContext<TEntity> Create<TEntity>(IDbConnection connection,
+        public static InsertExecutionContext Create(Type entityType,
+            IDbConnection connection,
             string tableName,
             IEnumerable<Field> fields,
             string hints = null,
             IDbTransaction transaction = null,
             IStatementBuilder statementBuilder = null)
-            where TEntity : class
         {
-            var key = GetKey<TEntity>(tableName, fields, hints);
+            var key = GetKey(entityType, tableName, fields, hints);
 
             // Get from cache
-            var context = InsertExecutionContextCache.Get<TEntity>(key);
+            var context = InsertExecutionContextCache.Get(key);
             if (context != null)
             {
                 return context;
@@ -77,14 +78,14 @@ namespace RepoDb.Contexts.Providers
             var commandText = CommandTextCache.GetInsertText(request);
 
             // Call
-            context = CreateInternal<TEntity>(connection,
+            context = CreateInternal(entityType, connection,
                 dbFields,
                 tableName,
                 fields,
                 commandText);
 
             // Add to cache
-            InsertExecutionContextCache.Add<TEntity>(key, context);
+            InsertExecutionContextCache.Add(entityType, key, context);
 
             // Return
             return context;
@@ -93,7 +94,7 @@ namespace RepoDb.Contexts.Providers
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entityType"></param>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="fields"></param>
@@ -102,19 +103,19 @@ namespace RepoDb.Contexts.Providers
         /// <param name="statementBuilder"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static async Task<InsertExecutionContext<TEntity>> CreateAsync<TEntity>(IDbConnection connection,
+        public static async Task<InsertExecutionContext> CreateAsync(Type entityType,
+            IDbConnection connection,
             string tableName,
             IEnumerable<Field> fields,
             string hints = null,
             IDbTransaction transaction = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
-            where TEntity : class
         {
-            var key = GetKey<TEntity>(tableName, fields, hints);
+            var key = GetKey(entityType, tableName, fields, hints);
 
             // Get from cache
-            var context = InsertExecutionContextCache.Get<TEntity>(key);
+            var context = InsertExecutionContextCache.Get(key);
             if (context != null)
             {
                 return context;
@@ -131,14 +132,15 @@ namespace RepoDb.Contexts.Providers
             var commandText = await CommandTextCache.GetInsertTextAsync(request, cancellationToken);
 
             // Call
-            context = CreateInternal<TEntity>(connection,
+            context = CreateInternal(entityType,
+                connection,
                 dbFields,
                 tableName,
                 fields,
                 commandText);
 
             // Add to cache
-            InsertExecutionContextCache.Add<TEntity>(key, context);
+            InsertExecutionContextCache.Add(entityType, key, context);
 
             // Return
             return context;
@@ -147,19 +149,19 @@ namespace RepoDb.Contexts.Providers
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entityType"></param>
         /// <param name="connection"></param>
         /// <param name="dbFields"></param>
         /// <param name="tableName"></param>
         /// <param name="fields"></param>
         /// <param name="commandText"></param>
         /// <returns></returns>
-        private static InsertExecutionContext<TEntity> CreateInternal<TEntity>(IDbConnection connection,
+        private static InsertExecutionContext CreateInternal(Type entityType,
+            IDbConnection connection,
             IEnumerable<DbField> dbFields,
             string tableName,
             IEnumerable<Field> fields,
             string commandText)
-            where TEntity : class
         {
             var dbSetting = connection.GetDbSetting();
             var identity = (Field)null;
@@ -167,9 +169,9 @@ namespace RepoDb.Contexts.Providers
             var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
 
             // Set the identity field
-            identity = IdentityCache.Get<TEntity>()?.AsField() ??
+            identity = IdentityCache.Get(entityType)?.AsField() ??
                 FieldCache
-                    .Get<TEntity>()?
+                    .Get(entityType)?
                     .FirstOrDefault(field =>
                         string.Equals(field.Name.AsUnquoted(true, dbSetting), identityDbField?.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) ??
                 identityDbField?.AsField();
@@ -183,21 +185,21 @@ namespace RepoDb.Contexts.Providers
                 .AsList();
 
             // Variables for the entity action
-            var identityPropertySetter = (Action<TEntity, object>)null;
+            var identityPropertySetter = (Action<object, object>)null;
 
             // Get the identity setter
             if (identity != null)
             {
-                identityPropertySetter = FunctionCache.GetDataEntityPropertySetterCompiledFunction<TEntity>(identity);
+                identityPropertySetter = FunctionCache.GetDataEntityPropertySetterCompiledFunction(entityType, identity);
             }
 
             // Return the value
-            return new InsertExecutionContext<TEntity>
+            return new InsertExecutionContext
             {
                 CommandText = commandText,
                 InputFields = inputFields,
-                ParametersSetterFunc = FunctionCache.GetDataEntityDbParameterSetterCompiledFunction<TEntity>(
-                    string.Concat(typeof(TEntity).FullName, StringConstant.Period, tableName, ".Insert"),
+                ParametersSetterFunc = FunctionCache.GetDataEntityDbParameterSetterCompiledFunction(entityType,
+                    string.Concat(entityType.FullName, StringConstant.Period, tableName, ".Insert"),
                     inputFields?.AsList(),
                     null,
                     dbSetting),

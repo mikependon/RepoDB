@@ -9,11 +9,11 @@ namespace RepoDb.Reflection
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entityType"></param>
         /// <param name="field"></param>
         /// <returns></returns>
-        internal static Action<TEntity, object> CompileDictionaryStringObjectItemSetter<TEntity>(Field field)
-            where TEntity : class
+        internal static Action<object, object> CompileDictionaryStringObjectItemSetter(Type entityType,
+            Field field)
         {
             // Check the property first
             if (field == null)
@@ -22,7 +22,6 @@ namespace RepoDb.Reflection
             }
 
             // Variables for type
-            var typeOfEntity = typeof(TEntity);
             var valueParameter = Expression.Parameter(StaticType.Object, "value");
             var targetType = field.Type?.GetUnderlyingType();
             var valueExpression = (Expression)valueParameter;
@@ -43,18 +42,22 @@ namespace RepoDb.Reflection
             valueExpression = ConvertExpressionToPropertyHandlerSetExpression(valueExpression, null, targetType);
 
             // Assign the value into DataEntity.Property
-            var dictionaryParameter = Expression.Parameter(typeOfEntity, "entity");
+            var dictionaryParameter = Expression.Parameter(StaticType.Object, "entity");
             var itemIndexMethod = StaticType.IDictionaryStringObject.GetMethod("set_Item", new[]
             {
                 StaticType.String,
                 StaticType.Object
             });
-            var itemAssignment = Expression.Call(dictionaryParameter, itemIndexMethod,
-                Expression.Constant(field.Name), ConvertExpressionToTypeExpression(valueExpression, StaticType.Object));
+            var itemAssignment = Expression.Call(ConvertExpressionToTypeExpression(dictionaryParameter, entityType),
+                itemIndexMethod,
+                Expression.Constant(field.Name),
+                ConvertExpressionToTypeExpression(valueExpression, StaticType.Object));
 
             // Return function
-            return Expression.Lambda<Action<TEntity, object>>(itemAssignment,
-                dictionaryParameter, valueParameter).Compile();
+            return Expression
+                .Lambda<Action<object, object>>(itemAssignment,
+                    dictionaryParameter, valueParameter)
+                .Compile();
         }
     }
 }

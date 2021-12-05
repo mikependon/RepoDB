@@ -11,19 +11,19 @@ namespace RepoDb.Reflection
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entityType"></param>
         /// <param name="inputFields"></param>
         /// <param name="outputFields"></param>
         /// <param name="batchSize"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        internal static Action<DbCommand, IList<TEntity>> CompileDataEntityListDbParameterSetter<TEntity>(IEnumerable<DbField> inputFields,
+        internal static Action<DbCommand, IList<object>> CompileDataEntityListDbParameterSetter(Type entityType,
+            IEnumerable<DbField> inputFields,
             IEnumerable<DbField> outputFields,
             int batchSize,
             IDbSetting dbSetting)
-            where TEntity : class
         {
-            var typeOfListEntity = typeof(IList<TEntity>);
+            var typeOfListEntity = typeof(IList<>).MakeGenericType(StaticType.Object);
             var commandParameterExpression = Expression.Parameter(StaticType.DbCommand, "command");
             var entitiesParameterExpression = Expression.Parameter(typeOfListEntity, "entities");
             var fieldDirections = new List<FieldDirection>();
@@ -40,7 +40,8 @@ namespace RepoDb.Reflection
             for (var entityIndex = 0; entityIndex < batchSize; entityIndex++)
             {
                 // Add to the instance block
-                var indexDbParameterSetterExpression = GetIndexDbParameterSetterExpression<TEntity>(commandParameterExpression,
+                var indexDbParameterSetterExpression = GetIndexDbParameterSetterExpression(entityType,
+                    commandParameterExpression,
                     entitiesParameterExpression,
                     fieldDirections,
                     entityIndex,
@@ -52,7 +53,7 @@ namespace RepoDb.Reflection
 
             // Set the function value
             return Expression
-                .Lambda<Action<DbCommand, IList<TEntity>>>(Expression.Block(bodyExpressions), commandParameterExpression, entitiesParameterExpression)
+                .Lambda<Action<DbCommand, IList<object>>>(Expression.Block(bodyExpressions), commandParameterExpression, entitiesParameterExpression)
                 .Compile();
         }
     }

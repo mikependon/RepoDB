@@ -1,4 +1,5 @@
 ﻿using RepoDb.Contexts.Execution;
+using System;
 using System.Collections.Concurrent;
 
 namespace RepoDb.Contexts.Cachers
@@ -8,7 +9,7 @@ namespace RepoDb.Contexts.Cachers
     /// </summary>
     public static class InsertExecutionContextCache
     {
-        private static ConcurrentDictionary<string, object> cache = new();
+        private static ConcurrentDictionary<string, InsertExecutionContext> cache = new();
 
         /// <summary>
         /// Flushes all the cached execution context.
@@ -19,26 +20,24 @@ namespace RepoDb.Contexts.Cachers
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="type"></param>
         /// <param name="key"></param>
         /// <param name="context"></param>
-        internal static void Add<TEntity>(string key,
-            InsertExecutionContext<TEntity> context)
-            where TEntity : class =>
+        internal static void Add(Type type,
+            string key,
+            InsertExecutionContext context) =>
             cache.TryAdd(key, context);
 
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
         /// <param name="key"></param>
         /// <returns></returns>
-        internal static InsertExecutionContext<TEntity> Get<TEntity>(string key)
-            where TEntity : class
+        internal static InsertExecutionContext Get(string key)
         {
             if (cache.TryGetValue(key, out var result))
             {
-                return result as InsertExecutionContext<TEntity>;
+                return result;
             }
             return null;
         }

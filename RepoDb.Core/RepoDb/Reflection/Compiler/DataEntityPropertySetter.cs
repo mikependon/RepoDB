@@ -10,32 +10,31 @@ namespace RepoDb.Reflection
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entityType"></param>
         /// <param name="field"></param>
         /// <returns></returns>
-        internal static Action<TEntity, object> CompileDataEntityPropertySetter<TEntity>(Field field)
-            where TEntity : class
+        internal static Action<object, object> CompileDataEntityPropertySetter(Type entityType,
+            Field field)
         {
-            // Variables for type
-            var typeOfEntity = typeof(TEntity);
-
             // Get the entity property
-            var property = typeOfEntity.GetMappedProperty(field.Name)?.PropertyInfo;
+            var property = entityType.GetMappedProperty(field.Name)?.PropertyInfo;
 
             // Return the function
-            return CompileDataEntityPropertySetter<TEntity>(property, property?.PropertyType ?? field.Type);
+            return CompileDataEntityPropertySetter(entityType,
+                property,
+                property?.PropertyType ?? field.Type);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entityType"></param>
         /// <param name="property"></param>
         /// <param name="targetType"></param>
         /// <returns></returns>
-        internal static Action<TEntity, object> CompileDataEntityPropertySetter<TEntity>(PropertyInfo property,
+        internal static Action<object, object> CompileDataEntityPropertySetter(Type entityType,
+            PropertyInfo property,
             Type targetType)
-            where TEntity : class
         {
             // Check the property first
             if (property == null)
@@ -48,9 +47,6 @@ namespace RepoDb.Reflection
             {
                 return null;
             }
-
-            // Variables for type
-            var typeOfEntity = typeof(TEntity);
 
             // Variables for argument
             var valueParameter = Expression.Parameter(StaticType.Object, "value");
@@ -65,20 +61,20 @@ namespace RepoDb.Reflection
             var valueExpression = ConvertExpressionToTypeExpression(Expression.Call(toTypeMethod, valueParameter), targetType);
 
             // Property Handler
-            if (typeOfEntity.IsClassType())
+            if (entityType.IsClassType())
             {
-                var classProperty = PropertyCache.Get(typeOfEntity, property, true);
+                var classProperty = PropertyCache.Get(entityType, property, true);
                 valueExpression = ConvertExpressionToPropertyHandlerSetExpression(valueExpression,
                     classProperty, targetType ?? classProperty.PropertyInfo.PropertyType);
             }
 
             // Assign the value into DataEntity.Property
-            var entityParameter = Expression.Parameter(typeOfEntity, "entity");
-            var propertyAssignment = Expression.Call(entityParameter, property.SetMethod,
+            var entityParameter = Expression.Parameter(StaticType.Object, "entity");
+            var propertyAssignment = Expression.Call(Expression.Convert(entityParameter, entityType), property.SetMethod,
                 valueExpression);
 
             // Return function
-            return Expression.Lambda<Action<TEntity, object>>(propertyAssignment,
+            return Expression.Lambda<Action<object, object>>(propertyAssignment,
                 entityParameter, valueParameter).Compile();
         }
     }

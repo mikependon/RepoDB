@@ -4,7 +4,6 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
-using System.Collections.Generic;
 
 namespace RepoDb.IntegrationTests
 {
@@ -38,7 +37,7 @@ namespace RepoDb.IntegrationTests
                 connection.Insert<Entity<InheritedIdentityTable>>(entity);
 
                 // Act
-                var deleteResult = connection.Delete<Entity<InheritedIdentityTable>>(entity);
+                var deleteResult = connection.Delete<InheritedIdentityTable>(entity);
 
                 // Assert
                 Assert.IsTrue(deleteResult > 0);
@@ -86,7 +85,7 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(entity.Id, insertResult);
 
                 // Act
-                var queryResult = connection.Query<Entity<InheritedIdentityTable>>(entity.Id).FirstOrDefault();
+                var queryResult = connection.Query<InheritedIdentityTable>(entity.Id).FirstOrDefault();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);

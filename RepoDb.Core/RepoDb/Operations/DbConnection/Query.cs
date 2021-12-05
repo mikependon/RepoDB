@@ -58,7 +58,7 @@ namespace RepoDb
         {
             return QueryInternal<TEntity>(connection: connection,
                 tableName: tableName,
-                where: WhatToQueryGroup<TEntity>(connection, what, transaction),
+                where: WhatToQueryGroup(typeof(TEntity),connection, what, transaction),
                 fields: fields,
                 orderBy: orderBy,
                 top: top,
@@ -113,7 +113,7 @@ namespace RepoDb
         {
             return QueryInternal<TEntity>(connection: connection,
                 tableName: tableName,
-                where: WhatToQueryGroup<TEntity>(connection, what, transaction),
+                where: WhatToQueryGroup(typeof(TEntity),connection, what, transaction),
                 fields: fields,
                 orderBy: orderBy,
                 top: top,
@@ -381,7 +381,7 @@ namespace RepoDb
         {
             return QueryInternal<TEntity>(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
-                where: WhatToQueryGroup<TEntity>(connection, what, transaction),
+                where: WhatToQueryGroup(typeof(TEntity),connection, what, transaction),
                 fields: fields,
                 orderBy: orderBy,
                 top: top,
@@ -434,7 +434,7 @@ namespace RepoDb
         {
             return QueryInternal<TEntity>(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
-                where: WhatToQueryGroup<TEntity>(connection, what, transaction),
+                where: WhatToQueryGroup(typeof(TEntity),connection, what, transaction),
                 fields: fields,
                 orderBy: orderBy,
                 top: top,
@@ -761,7 +761,7 @@ namespace RepoDb
             return await QueryAsyncInternal<TEntity>(connection: connection,
                 tableName: tableName,
                 fields: fields,
-                where: await WhatToQueryGroupAsync<TEntity>(connection, what, transaction, cancellationToken),
+                where: await WhatToQueryGroupAsync(typeof(TEntity), connection, what, transaction, cancellationToken),
                 orderBy: orderBy,
                 top: top,
                 hints: hints,
@@ -819,7 +819,7 @@ namespace RepoDb
             return await QueryAsyncInternal<TEntity>(connection: connection,
                 tableName: tableName,
                 fields: fields,
-                where: await WhatToQueryGroupAsync<TEntity>(connection, what, transaction, cancellationToken),
+                where: await WhatToQueryGroupAsync(typeof(TEntity), connection, what, transaction, cancellationToken),
                 orderBy: orderBy,
                 top: top,
                 hints: hints,
@@ -1101,7 +1101,7 @@ namespace RepoDb
         {
             return await QueryAsyncInternal<TEntity>(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
-                where: await WhatToQueryGroupAsync<TEntity>(connection, what, transaction, cancellationToken),
+                where: await WhatToQueryGroupAsync(typeof(TEntity), connection, what, transaction, cancellationToken),
                 fields: fields,
                 orderBy: orderBy,
                 top: top,
@@ -1157,7 +1157,7 @@ namespace RepoDb
         {
             return await QueryAsyncInternal<TEntity>(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
-                where: await WhatToQueryGroupAsync<TEntity>(connection, what, transaction, cancellationToken),
+                where: await WhatToQueryGroupAsync(typeof(TEntity), connection, what, transaction, cancellationToken),
                 fields: fields,
                 orderBy: orderBy,
                 top: top,

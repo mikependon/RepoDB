@@ -11,29 +11,28 @@ namespace RepoDb.Reflection
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entityType"></param>
         /// <param name="inputFields"></param>
         /// <param name="outputFields"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        internal static Action<DbCommand, TEntity> CompileDataEntityDbParameterSetter<TEntity>(IEnumerable<DbField> inputFields,
+        internal static Action<DbCommand, object> CompileDataEntityDbParameterSetter(Type entityType,
+            IEnumerable<DbField> inputFields,
             IEnumerable<DbField> outputFields,
             IDbSetting dbSetting)
-            where TEntity : class
         {
-            var typeOfEntity = typeof(TEntity);
             var commandParameterExpression = Expression.Parameter(StaticType.DbCommand, "command");
-            var entityParameterExpression = Expression.Parameter(typeOfEntity, "entityParameter");
+            var entityParameterExpression = Expression.Parameter(StaticType.Object, "entityParameter");
             var dbParameterCollectionExpression = Expression.Property(commandParameterExpression,
                 StaticType.DbCommand.GetProperty("Parameters"));
-            var entityVariableExpression = Expression.Variable(typeOfEntity, "entityVariable");
+            var entityVariableExpression = Expression.Variable(StaticType.Object, "entityVariable");
             var entityExpressions = new List<Expression>();
             var entityVariableExpressions = new List<ParameterExpression>();
             var fieldDirections = new List<FieldDirection>();
             var bodyExpressions = new List<Expression>();
 
             // Class handler
-            var handledEntityParameterExpression = ConvertExpressionToClassHandlerSetExpression<TEntity>(entityParameterExpression);
+            var handledEntityParameterExpression = ConvertExpressionToClassHandlerSetExpression(entityType, entityParameterExpression);
 
             // Field directions
             fieldDirections.AddRange(GetInputFieldDirections(inputFields));
@@ -47,14 +46,17 @@ namespace RepoDb.Reflection
             entityExpressions.Add(Expression.Assign(entityVariableExpression, handledEntityParameterExpression));
 
             // Throw if null
-            entityExpressions.Add(ThrowIfNullAfterClassHandlerExpression<TEntity>(entityVariableExpression));
+            entityExpressions.Add(ThrowIfNullAfterClassHandlerExpression(entityType, entityVariableExpression));
 
             // Iterate the input fields
             foreach (var fieldDirection in fieldDirections)
             {
                 // Add the property block
                 var propertyBlock = GetPropertyFieldExpression(commandParameterExpression,
-                    entityVariableExpression, fieldDirection, 0, dbSetting);
+                    ConvertExpressionToTypeExpression(entityVariableExpression, entityType),
+                    fieldDirection,
+                    0,
+                    dbSetting);
 
                 // Add to instance expression
                 entityExpressions.Add(propertyBlock);
@@ -68,7 +70,7 @@ namespace RepoDb.Reflection
 
             // Set the function value
             return Expression
-                .Lambda<Action<DbCommand, TEntity>>(Expression.Block(bodyExpressions), commandParameterExpression, entityParameterExpression)
+                .Lambda<Action<DbCommand, object>>(Expression.Block(bodyExpressions), commandParameterExpression, entityParameterExpression)
                 .Compile();
         }
     }

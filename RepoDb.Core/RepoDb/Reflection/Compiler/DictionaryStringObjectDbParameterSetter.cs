@@ -11,17 +11,16 @@ namespace RepoDb.Reflection
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entityType"></param>
         /// <param name="inputFields"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        internal static Action<DbCommand, TEntity> CompileDictionaryStringObjectDbParameterSetter<TEntity>(IEnumerable<DbField> inputFields,
+        internal static Action<DbCommand, object> CompileDictionaryStringObjectDbParameterSetter(Type entityType,
+            IEnumerable<DbField> inputFields,
             IDbSetting dbSetting)
-            where TEntity : class
         {
-            var typeOfEntity = typeof(TEntity);
             var commandParameterExpression = Expression.Parameter(StaticType.DbCommand, "command");
-            var entityParameterExpression = Expression.Parameter(typeOfEntity, "entityParameter");
+            var entityParameterExpression = Expression.Parameter(StaticType.Object, "entityParameter");
             var dbParameterCollectionExpression = Expression.Property(commandParameterExpression,
                 StaticType.DbCommand.GetProperty("Parameters"));
             var dictionaryInstanceExpression = ConvertExpressionToTypeExpression(entityParameterExpression, StaticType.IDictionaryStringObject);
@@ -45,7 +44,9 @@ namespace RepoDb.Reflection
 
             // Compile
             return Expression
-                .Lambda<Action<DbCommand, TEntity>>(Expression.Block(bodyExpressions), commandParameterExpression, entityParameterExpression)
+                .Lambda<Action<DbCommand, object>>(Expression.Block(bodyExpressions),
+                    commandParameterExpression,
+                    entityParameterExpression)
                 .Compile();
         }
     }

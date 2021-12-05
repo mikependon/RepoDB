@@ -39,7 +39,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var key = GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, transaction);
+            var key = GetAndGuardPrimaryKeyOrIdentityKey(GetEntityType<TEntity>(entity), connection, transaction);
             return DeleteInternal<TEntity>(connection: connection,
                 where: ToQueryGroup<TEntity>(key, entity),
                 hints: hints,
@@ -72,7 +72,7 @@ namespace RepoDb
             where TEntity : class
         {
             return DeleteInternal<TEntity>(connection: connection,
-                where: WhatToQueryGroup<TEntity>(connection, what, transaction),
+                where: WhatToQueryGroup(typeof(TEntity), connection, what, transaction),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -102,7 +102,7 @@ namespace RepoDb
             where TEntity : class
         {
             return DeleteInternal<TEntity>(connection: connection,
-                where: WhatToQueryGroup<TEntity>(connection, what, transaction),
+                where: WhatToQueryGroup(typeof(TEntity), connection, what, transaction),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -302,7 +302,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync<TEntity>(connection, transaction, cancellationToken);
+            var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(GetEntityType<TEntity>(entity), connection, transaction, cancellationToken);
             return await DeleteAsyncInternal<TEntity>(connection: connection,
                 where: ToQueryGroup<TEntity>(key, entity),
                 hints: hints,
@@ -338,7 +338,7 @@ namespace RepoDb
             where TEntity : class
         {
             return await DeleteAsyncInternal<TEntity>(connection: connection,
-                where: await WhatToQueryGroupAsync<TEntity>(connection, what, transaction, cancellationToken),
+                where: await WhatToQueryGroupAsync(typeof(TEntity), connection, what, transaction, cancellationToken),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -371,7 +371,7 @@ namespace RepoDb
             where TEntity : class
         {
             return await DeleteAsyncInternal<TEntity>(connection: connection,
-                where: await WhatToQueryGroupAsync<TEntity>(connection, what, transaction, cancellationToken),
+                where: await WhatToQueryGroupAsync(typeof(TEntity), connection, what, transaction, cancellationToken),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
