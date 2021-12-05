@@ -103,6 +103,16 @@ namespace RepoDb.IntegrationTests
             };
         }
 
+        public EnumCompleteTableWithPropertyHandler CreateEnumCompleteTableWithPropertyHandlerAndWithNullValues()
+        {
+            return new EnumCompleteTableWithPropertyHandler
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnBit = null,
+                ColumnNVarChar = null
+            };
+        }
+
         public IEnumerable<EnumCompleteTableWithPropertyHandler> CreateEnumCompleteTableWithPropertyHandlers(int count = 10)
         {
             for (var i = 0; i < count; i++)
@@ -2207,7 +2217,7 @@ namespace RepoDb.IntegrationTests
 
         #endregion
 
-        #region custom enum mapping
+        #region Custom Enum Mapping
         private static CustomedMappingEnumPropertyHandler<TDbType, TEnum> CreateCustomedMappingEnumPropertyHandler<TEnum, TDbType>(
             Dictionary<TEnum, TDbType> mapping)
             => new CustomedMappingEnumPropertyHandler<TDbType, TEnum>(mapping);
@@ -2273,7 +2283,7 @@ namespace RepoDb.IntegrationTests
         {
             EnsureCustomedMappingEnumPropertyHandler<CustomedStringEnum>(customedStringEnumHandler);
             EnsureCustomedMappingEnumPropertyHandler<CustomedStringEnum?>(customedStringEnumHandler);
-            
+
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 var enumValue = connection.ExecuteQuery<CustomedStringEnum>("select 'Special-B'").First();
@@ -2311,7 +2321,7 @@ namespace RepoDb.IntegrationTests
         {
             EnsureCustomedMappingEnumPropertyHandler<CustomedDecimalEnum>(customedDecimalEnumHandler);
             EnsureCustomedMappingEnumPropertyHandler<CustomedDecimalEnum?>(customedDecimalEnumHandler);
-            
+
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 var enumValue = connection.ExecuteQuery<CustomedDecimalEnum>("select convert(decimal(8,3), 6.2)").First();
@@ -2343,6 +2353,69 @@ namespace RepoDb.IntegrationTests
                 Assert.IsNull(nullDecimalValue);
             }
         }
+
+        #endregion
+
+        #region InvalidValue/OutOfRangeValue (with PropertyHandlers)
+
+        #region Insert
+
+        [TestMethod]
+        public void TestInsertForEnumWithPropertyHandlerAndWithNullValues()
+        {
+            // Setup
+            var entity = CreateEnumCompleteTableWithPropertyHandlerAndWithNullValues();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var id = connection.Insert<EnumCompleteTableWithPropertyHandler, Guid>(entity);
+
+                // Assert
+                Assert.AreEqual(1, connection.CountAll<EnumCompleteTable>());
+                Assert.AreNotEqual(id, Guid.Empty);
+                Assert.AreEqual(entity.SessionId, id);
+
+                // Act
+                var queryResult = connection.Query<EnumCompleteTable>(id);
+
+                // Assert
+                Helper.AssertPropertiesEquality(entity, queryResult.First());
+            }
+        }
+
+        #endregion
+
+        #region Query
+
+        [TestMethod]
+        public void TestQueryForEnumWithPropertyHandlerAndWithNullValues()
+        {
+            // Setup
+            var entity = new
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnBit = -1,
+                ColumnNVarChar = "OutsideOfEnumRange"
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var id = connection.Insert<Guid>(ClassMappedNameCache.Get<EnumCompleteTable>(), entity);
+
+                // Assert
+                Assert.AreEqual(1, connection.CountAll<EnumCompleteTable>());
+
+                // Act
+                var queryResult = connection.Query<EnumCompleteTableWithPropertyHandler>(id);
+
+                // Assert
+                Helper.AssertPropertiesEquality(entity, queryResult.First());
+            }
+        }
+
+        #endregion
 
         #endregion
     }
