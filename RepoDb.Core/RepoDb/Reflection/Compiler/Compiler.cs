@@ -934,15 +934,14 @@ namespace RepoDb.Reflection
         /// <summary>
         ///
         /// </summary>
-        /// <typeparam name="TResult"></typeparam>
+        /// <param name="resultType"></param>
         /// <param name="entityOrEntitiesExpression"></param>
         /// <returns></returns>
-        internal static Expression ConvertExpressionToClassHandlerSetExpression<TResult>(Expression entityOrEntitiesExpression)
+        internal static Expression ConvertExpressionToClassHandlerSetExpression(Type resultType,
+            Expression entityOrEntitiesExpression)
         {
-            var typeOfResult = typeof(TResult);
-
             // Check the handler
-            var handlerInstance = GetClassHandler(typeOfResult);
+            var handlerInstance = GetClassHandler(resultType);
             if (handlerInstance == null)
 
             {
@@ -951,27 +950,19 @@ namespace RepoDb.Reflection
 
             // Validate
             var handlerType = handlerInstance.GetType();
-            if (handlerType.IsClassHandlerValidForModel(typeOfResult) == false)
+            if (handlerType.IsClassHandlerValidForModel(resultType) == false)
             {
-                throw new InvalidTypeException($"The class handler '{handlerType.FullName}' cannot be used for type '{typeOfResult.FullName}'.");
+                throw new InvalidTypeException($"The class handler '{handlerType.FullName}' cannot be used for type '{resultType.FullName}'.");
             }
 
             // Call the IClassHandler.Set method
-            var typeOfListEntity = typeof(IList<TResult>);
-            if (typeOfListEntity.IsAssignableFrom(entityOrEntitiesExpression.Type))
-            {
-                var setMethod = GetClassHandlerSetMethod(handlerInstance, typeOfListEntity);
-                entityOrEntitiesExpression = Expression.Call(Expression.Constant(handlerInstance),
-                    setMethod,
-                    entityOrEntitiesExpression);
-            }
-            else
-            {
-                var setMethod = GetClassHandlerSetMethod(handlerInstance, typeOfResult);
-                entityOrEntitiesExpression = Expression.Call(Expression.Constant(handlerInstance),
-                    setMethod,
-                    entityOrEntitiesExpression);
-            }
+            var typeOfListEntity = typeof(IList<>).MakeGenericType(StaticType.Object);
+            var type = typeOfListEntity.IsAssignableFrom(entityOrEntitiesExpression.Type) ?
+                typeOfListEntity : resultType;
+            var setMethod = GetClassHandlerSetMethod(handlerInstance, type);
+            entityOrEntitiesExpression = Expression.Call(Expression.Constant(handlerInstance),
+                setMethod,
+                ConvertExpressionToTypeExpression(entityOrEntitiesExpression, resultType));
 
             // Return the block
             return entityOrEntitiesExpression;
@@ -1763,7 +1754,7 @@ namespace RepoDb.Reflection
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         internal static Expression GetPropertyFieldExpression(ParameterExpression commandParameterExpression,
-            ParameterExpression entityExpression,
+            Expression entityExpression,
             FieldDirection fieldDirection,
             int entityIndex,
             IDbSetting dbSetting)
@@ -1803,6 +1794,10 @@ namespace RepoDb.Reflection
                 {
                     propertyVariableExpression = Expression.Variable(classProperty.PropertyInfo.PropertyType, string.Concat("propertyVariable", propertyName));
                     propertyInstanceExpression = Expression.Property(entityExpression, classProperty.PropertyInfo);
+                }
+                else
+                {
+                    throw new PropertyNotFoundException($"The property '{propertyName}' is not found from type '{entityExpression.Type}'. The current operation could not proceed.");
                 }
             }
 
@@ -1859,57 +1854,60 @@ namespace RepoDb.Reflection
         /// <summary>
         ///
         /// </summary>
-        /// <typeparam name="TResult"></typeparam>
+        /// <param name="resultType"></param>
         /// <param name="expression"></param>
         /// <returns></returns>
-        private static Expression ThrowIfNullAfterClassHandlerExpression<TResult>(Expression expression)
+        private static Expression ThrowIfNullAfterClassHandlerExpression(Type resultType,
+            Expression expression)
         {
-            var typeOfResult = typeof(TResult);
             var isNullExpression = Expression.Equal(Expression.Constant(null), expression);
-            var exception = new NullReferenceException($"Entity of type '{typeOfResult}' must not be null. If you have defined a class handler, please check the 'Set' method.");
+            var exception = new NullReferenceException($"Entity of type '{resultType}' must not be null. If you have defined a class handler, please check the 'Set' method.");
             return Expression.IfThen(isNullExpression, Expression.Throw(Expression.Constant(exception)));
         }
 
         /// <summary>
         ///
         /// </summary>
-        /// <typeparam name="TResult"></typeparam>
+        /// <param name="entityType"></param>
         /// <param name="commandParameterExpression"></param>
         /// <param name="entitiesParameterExpression"></param>
         /// <param name="fieldDirections"></param>
         /// <param name="entityIndex"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        private static Expression GetIndexDbParameterSetterExpression<TResult>(ParameterExpression commandParameterExpression,
+        private static Expression GetIndexDbParameterSetterExpression(Type entityType,
+            ParameterExpression commandParameterExpression,
             Expression entitiesParameterExpression,
             IEnumerable<FieldDirection> fieldDirections,
             int entityIndex,
             IDbSetting dbSetting)
         {
             // Get the current instance
-            var typeOfResult = typeof(TResult);
-            var entityVariableExpression = Expression.Variable(typeOfResult, "instance");
-            var typeOfListEntity = typeof(IList<TResult>);
+            var entityVariableExpression = Expression.Variable(StaticType.Object, "instance");
+            var typeOfListEntity = typeof(IList<>).MakeGenericType(StaticType.Object);
             var entityParameter = (Expression)GetListEntityIndexerExpression(entitiesParameterExpression, typeOfListEntity, entityIndex);
             var entityExpressions = new List<Expression>();
             var entityVariables = new List<ParameterExpression>();
 
             // Class handler
-            entityParameter = ConvertExpressionToClassHandlerSetExpression<TResult>(entityParameter);
+            entityParameter = ConvertExpressionToClassHandlerSetExpression(entityType, entityParameter);
 
             // Entity instance
             entityVariables.Add(entityVariableExpression);
             entityExpressions.Add(Expression.Assign(entityVariableExpression, entityParameter));
 
             // Throw if null
-            entityExpressions.Add(ThrowIfNullAfterClassHandlerExpression<TResult>(entityVariableExpression));
+            entityExpressions.Add(ThrowIfNullAfterClassHandlerExpression(entityType, entityVariableExpression));
 
             // Iterate the input fields
             foreach (var fieldDirection in fieldDirections)
             {
                 // Add the property block
                 var propertyBlock = GetPropertyFieldExpression(commandParameterExpression,
-                    entityVariableExpression, fieldDirection, entityIndex, dbSetting);
+                    ConvertExpressionToTypeExpression(entityVariableExpression, entityType),
+                    fieldDirection,
+                    entityIndex,
+                    dbSetting);
 
                 // Add to instance expression
                 entityExpressions.Add(propertyBlock);

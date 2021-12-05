@@ -45,7 +45,7 @@ namespace RepoDb
             where TEntity : class
         {
             var key = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction,
-                entity?.GetType() ?? typeof(TEntity));
+                GetEntityType<TEntity>(entity));
             return UpdateInternal<TEntity>(connection: connection,
                 tableName: tableName,
                 entity: entity,
@@ -316,9 +316,9 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            var key = GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, transaction);
+            var key = GetAndGuardPrimaryKeyOrIdentityKey(GetEntityType<TEntity>(entity), connection, transaction);
             return UpdateInternal<TEntity>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entity),
                 entity: entity,
                 where: ToQueryGroup<TEntity>(key, entity),
                 fields: fields,
@@ -356,9 +356,9 @@ namespace RepoDb
             where TEntity : class
         {
             return UpdateInternal<TEntity>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entity),
                 entity: entity,
-                where: WhatToQueryGroup<TEntity>(connection, what, transaction),
+                where: WhatToQueryGroup(GetEntityType<TEntity>(entity), connection, what, transaction),
                 fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -393,9 +393,9 @@ namespace RepoDb
             where TEntity : class
         {
             return UpdateInternal<TEntity>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entity),
                 entity: entity,
-                where: WhatToQueryGroup<TEntity>(connection, what, transaction),
+                where: WhatToQueryGroup(GetEntityType<TEntity>(entity), connection, what, transaction),
                 fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -430,7 +430,7 @@ namespace RepoDb
             where TEntity : class
         {
             return UpdateInternal<TEntity>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entity),
                 entity: entity,
                 where: ToQueryGroup(where),
                 fields: fields,
@@ -467,7 +467,7 @@ namespace RepoDb
             where TEntity : class
         {
             return UpdateInternal<TEntity>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entity),
                 entity: entity,
                 where: where != null ? new QueryGroup(where.AsEnumerable()) : null,
                 fields: fields,
@@ -504,7 +504,7 @@ namespace RepoDb
             where TEntity : class
         {
             return UpdateInternal<TEntity>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entity),
                 entity: entity,
                 where: ToQueryGroup(where),
                 fields: fields,
@@ -541,7 +541,7 @@ namespace RepoDb
             where TEntity : class
         {
             return UpdateInternal<TEntity>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entity),
                 entity: entity,
                 where: where,
                 fields: fields,
@@ -579,7 +579,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            if (entity?.GetType().IsDictionaryStringObject() == true)
+            if (GetEntityType<TEntity>(entity).IsDictionaryStringObject() == true)
             {
                 return UpdateInternalBase<IDictionary<string, object>>(connection: connection,
                     tableName: tableName,
@@ -639,7 +639,7 @@ namespace RepoDb
             where TEntity : class
         {
             var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction,
-                entity?.GetType() ?? typeof(TEntity), cancellationToken);
+                GetEntityType<TEntity>(entity), cancellationToken);
             return await UpdateAsyncInternal<TEntity>(connection: connection,
                 tableName: tableName,
                 entity: entity,
@@ -931,9 +931,9 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync<TEntity>(connection, transaction, cancellationToken);
+            var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(GetEntityType<TEntity>(entity), connection, transaction, cancellationToken);
             return await UpdateAsyncInternal<TEntity>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entity),
                 entity: entity,
                 where: ToQueryGroup<TEntity>(key, entity),
                 fields: fields,
@@ -974,9 +974,9 @@ namespace RepoDb
             where TEntity : class
         {
             return await UpdateAsyncInternal<TEntity>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entity),
                 entity: entity,
-                where: await WhatToQueryGroupAsync<TEntity>(connection, what, transaction, cancellationToken),
+                where: await WhatToQueryGroupAsync(GetEntityType<TEntity>(entity), connection, what, transaction, cancellationToken),
                 fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -1014,9 +1014,9 @@ namespace RepoDb
             where TEntity : class
         {
             return await UpdateAsyncInternal<TEntity>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entity),
                 entity: entity,
-                where: await WhatToQueryGroupAsync<TEntity>(connection, what, transaction, cancellationToken),
+                where: await WhatToQueryGroupAsync(GetEntityType<TEntity>(entity), connection, what, transaction, cancellationToken),
                 fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
@@ -1054,7 +1054,7 @@ namespace RepoDb
             where TEntity : class
         {
             return UpdateAsyncInternal<TEntity>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entity),
                 entity: entity,
                 where: ToQueryGroup(where),
                 fields: fields,
@@ -1094,7 +1094,7 @@ namespace RepoDb
             where TEntity : class
         {
             return UpdateAsyncInternal<TEntity>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entity),
                 entity: entity,
                 where: ToQueryGroup(where),
                 fields: fields,
@@ -1134,7 +1134,7 @@ namespace RepoDb
             where TEntity : class
         {
             return UpdateAsyncInternal<TEntity>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entity),
                 entity: entity,
                 where: ToQueryGroup(where),
                 fields: fields,
@@ -1174,7 +1174,7 @@ namespace RepoDb
             where TEntity : class
         {
             return UpdateAsyncInternal<TEntity>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entity),
                 entity: entity,
                 where: where,
                 fields: fields,
@@ -1215,7 +1215,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            if (entity?.GetType().IsDictionaryStringObject() == true)
+            if (GetEntityType<TEntity>(entity).IsDictionaryStringObject() == true)
             {
                 return UpdateAsyncInternalBase<IDictionary<string, object>>(connection: connection,
                     tableName: tableName,
@@ -1672,7 +1672,9 @@ namespace RepoDb
             where?.IsForUpdate();
 
             // Get the context
-            var context = UpdateExecutionContextProvider.Create<TEntity>(connection,
+            var entityType = GetEntityType<TEntity>(entity);
+            var context = UpdateExecutionContextProvider.Create(entityType,
+                connection,
                 tableName,
                 where,
                 fields,
@@ -1765,7 +1767,9 @@ namespace RepoDb
             where?.IsForUpdate();
 
             // Get the context
-            var context = await UpdateExecutionContextProvider.CreateAsync<TEntity>(connection,
+            var entityType = GetEntityType<TEntity>(entity);
+            var context = await UpdateExecutionContextProvider.CreateAsync(entityType,
+                connection,
                 tableName,
                 where,
                 fields,

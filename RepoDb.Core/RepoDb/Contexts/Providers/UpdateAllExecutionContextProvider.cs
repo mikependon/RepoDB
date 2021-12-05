@@ -21,20 +21,21 @@ namespace RepoDb.Contexts.Providers
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entityType"></param>
         /// <param name="tableName"></param>
         /// <param name="qualifiers"></param>
         /// <param name="fields"></param>
         /// <param name="batchSize"></param>
         /// <param name="hints"></param>
         /// <returns></returns>
-        private static string GetKey<TEntity>(string tableName,
+        private static string GetKey(Type entityType,
+            string tableName,
             IEnumerable<Field> qualifiers,
             IEnumerable<Field> fields,
             int batchSize,
             string hints)
         {
-            return string.Concat(typeof(TEntity).FullName,
+            return string.Concat(entityType.FullName,
                 ";",
                 tableName,
                 ";",
@@ -50,7 +51,7 @@ namespace RepoDb.Contexts.Providers
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entityType"></param>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="entities"></param>
@@ -61,21 +62,21 @@ namespace RepoDb.Contexts.Providers
         /// <param name="transaction"></param>
         /// <param name="statementBuilder"></param>
         /// <returns></returns>
-        public static UpdateAllExecutionContext<TEntity> Create<TEntity>(IDbConnection connection,
+        public static UpdateAllExecutionContext Create(Type entityType,
+            IDbConnection connection,
             string tableName,
-            IEnumerable<TEntity> entities,
+            IEnumerable<object> entities,
             IEnumerable<Field> qualifiers,
             int batchSize,
             IEnumerable<Field> fields,
             string hints = null,
             IDbTransaction transaction = null,
             IStatementBuilder statementBuilder = null)
-            where TEntity : class
         {
-            var key = GetKey<TEntity>(tableName, qualifiers, fields, batchSize, hints);
+            var key = GetKey(entityType, tableName, qualifiers, fields, batchSize, hints);
 
             // Get from cache
-            var context = UpdateAllExecutionContextCache.Get<TEntity>(key);
+            var context = UpdateAllExecutionContextCache.Get(key);
             if (context != null)
             {
                 return context;
@@ -94,7 +95,8 @@ namespace RepoDb.Contexts.Providers
             var commandText = CommandTextCache.GetUpdateAllText(request);
 
             // Call
-            context = CreateInternal<TEntity>(connection,
+            context = CreateInternal(entityType,
+                connection,
                 tableName,
                 entities,
                 dbFields,
@@ -104,7 +106,7 @@ namespace RepoDb.Contexts.Providers
                 commandText);
 
             // Add to cache
-            UpdateAllExecutionContextCache.Add<TEntity>(key, context);
+            UpdateAllExecutionContextCache.Add(key, context);
 
             // Return
             return context;
@@ -113,7 +115,7 @@ namespace RepoDb.Contexts.Providers
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entityType"></param>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="entities"></param>
@@ -125,9 +127,10 @@ namespace RepoDb.Contexts.Providers
         /// <param name="statementBuilder"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static async Task<UpdateAllExecutionContext<TEntity>> CreateAsync<TEntity>(IDbConnection connection,
+        public static async Task<UpdateAllExecutionContext> CreateAsync(Type entityType,
+            IDbConnection connection,
             string tableName,
-            IEnumerable<TEntity> entities,
+            IEnumerable<object> entities,
             IEnumerable<Field> qualifiers,
             int batchSize,
             IEnumerable<Field> fields,
@@ -135,12 +138,11 @@ namespace RepoDb.Contexts.Providers
             IDbTransaction transaction = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
-            where TEntity : class
         {
-            var key = GetKey<TEntity>(tableName, qualifiers, fields, batchSize, hints);
+            var key = GetKey(entityType, tableName, qualifiers, fields, batchSize, hints);
 
             // Get from cache
-            var context = UpdateAllExecutionContextCache.Get<TEntity>(key);
+            var context = UpdateAllExecutionContextCache.Get(key);
             if (context != null)
             {
                 return context;
@@ -159,7 +161,8 @@ namespace RepoDb.Contexts.Providers
             var commandText = await CommandTextCache.GetUpdateAllTextAsync(request, cancellationToken);
 
             // Call
-            context = CreateInternal<TEntity>(connection,
+            context = CreateInternal(entityType,
+                connection,
                 tableName,
                 entities,
                 dbFields,
@@ -169,7 +172,7 @@ namespace RepoDb.Contexts.Providers
                 commandText);
 
             // Add to cache
-            UpdateAllExecutionContextCache.Add<TEntity>(key, context);
+            UpdateAllExecutionContextCache.Add(key, context);
 
             // Return
             return context;
@@ -178,7 +181,7 @@ namespace RepoDb.Contexts.Providers
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entityType"></param>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="entities"></param>
@@ -188,15 +191,15 @@ namespace RepoDb.Contexts.Providers
         /// <param name="fields"></param>
         /// <param name="commandText"></param>
         /// <returns></returns>
-        private static UpdateAllExecutionContext<TEntity> CreateInternal<TEntity>(IDbConnection connection,
+        private static UpdateAllExecutionContext CreateInternal(Type entityType,
+            IDbConnection connection,
             string tableName,
-            IEnumerable<TEntity> entities,
+            IEnumerable<object> entities,
             IEnumerable<DbField> dbFields,
             IEnumerable<Field> qualifiers,
             int batchSize,
             IEnumerable<Field> fields,
             string commandText)
-            where TEntity : class
         {
             // Variables needed
             var dbSetting = connection.GetDbSetting();
@@ -217,7 +220,7 @@ namespace RepoDb.Contexts.Providers
                 .AsList();
 
             // Exclude the fields not on the actual entity
-            if (typeof(TEntity).IsClassType() == false)
+            if (entityType.IsClassType() == false)
             {
                 var entityFields = Field.Parse(entities?.FirstOrDefault());
                 inputFields = inputFields?
@@ -227,30 +230,30 @@ namespace RepoDb.Contexts.Providers
             }
 
             // Variables for the context
-            var multipleEntitiesFunc = (Action<DbCommand, IList<TEntity>>)null;
-            var singleEntityFunc = (Action<DbCommand, TEntity>)null;
+            var multipleEntitiesFunc = (Action<DbCommand, IList<object>>)null;
+            var singleEntityFunc = (Action<DbCommand, object>)null;
 
             // Identity which objects to set
             if (batchSize <= 1)
             {
-                singleEntityFunc = FunctionCache.GetDataEntityDbParameterSetterCompiledFunction<TEntity>(
-                    string.Concat(typeof(TEntity).FullName, StringConstant.Period, tableName, ".UpdateAll"),
-                    inputFields?.AsList(),
+                singleEntityFunc = FunctionCache.GetDataEntityDbParameterSetterCompiledFunction(entityType,
+                    string.Concat(entityType.FullName, StringConstant.Period, tableName, ".UpdateAll"),
+                    inputFields,
                     null,
                     dbSetting);
             }
             else
             {
-                multipleEntitiesFunc = FunctionCache.GetDataEntityListDbParameterSetterCompiledFunction<TEntity>(
-                    string.Concat(typeof(TEntity).FullName, StringConstant.Period, tableName, ".UpdateAll"),
-                    inputFields?.AsList(),
+                multipleEntitiesFunc = FunctionCache.GetDataEntityListDbParameterSetterCompiledFunction(entityType,
+                    string.Concat(entityType.FullName, StringConstant.Period, tableName, ".UpdateAll"),
+                    inputFields,
                     null,
                     batchSize,
                     dbSetting);
             }
 
             // Return the value
-            return new UpdateAllExecutionContext<TEntity>
+            return new UpdateAllExecutionContext
             {
                 CommandText = commandText,
                 InputFields = inputFields,

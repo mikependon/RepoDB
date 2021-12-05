@@ -115,7 +115,7 @@ namespace RepoDb
             where TEntity : class
         {
             return InsertInternal<TEntity, object>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entity),
                 entity: entity,
                 fields: fields,
                 hints: hints,
@@ -150,7 +150,7 @@ namespace RepoDb
             where TEntity : class
         {
             return InsertInternal<TEntity, TResult>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entity),
                 entity: entity,
                 fields: fields,
                 hints: hints,
@@ -186,7 +186,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            if (entity?.GetType().IsDictionaryStringObject() == true)
+            if (GetEntityType<TEntity>(entity).IsDictionaryStringObject() == true)
             {
                 return InsertInternalBase<IDictionary<string, object>, TResult>(connection: connection,
                     tableName: tableName,
@@ -321,7 +321,7 @@ namespace RepoDb
             where TEntity : class
         {
             return InsertAsyncInternal<TEntity, object>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entity),
                 entity: entity,
                 fields: fields,
                 hints: hints,
@@ -359,7 +359,7 @@ namespace RepoDb
             where TEntity : class
         {
             return InsertAsyncInternal<TEntity, TResult>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entity),
                 entity: entity,
                 fields: fields,
                 hints: hints,
@@ -398,7 +398,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            if (entity?.GetType().IsDictionaryStringObject() == true)
+            if (GetEntityType<TEntity>(entity).IsDictionaryStringObject() == true)
             {
                 return InsertAsyncInternalBase<IDictionary<string, object>, TResult>(connection: connection,
                     tableName: tableName,
@@ -613,7 +613,9 @@ namespace RepoDb
             var dbSetting = connection.GetDbSetting();
 
             // Get the context
-            var context = InsertExecutionContextProvider.Create<TEntity>(connection,
+            var entityType = entity?.GetType() ?? typeof(TEntity);
+            var context = InsertExecutionContextProvider.Create(entityType,
+                connection,
                 tableName,
                 fields,
                 hints,
@@ -712,7 +714,9 @@ namespace RepoDb
             var dbSetting = connection.GetDbSetting();
 
             // Get the context
-            var context = await InsertExecutionContextProvider.CreateAsync<TEntity>(connection,
+            var entityType = entity?.GetType() ?? typeof(TEntity);
+            var context = await InsertExecutionContextProvider.CreateAsync(entityType, 
+                connection,
                 tableName,
                 fields,
                 hints,

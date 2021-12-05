@@ -21,20 +21,21 @@ namespace RepoDb.Contexts.Providers
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entityType"></param>
         /// <param name="tableName"></param>
         /// <param name="qualifiers"></param>
         /// <param name="fields"></param>
         /// <param name="batchSize"></param>
         /// <param name="hints"></param>
         /// <returns></returns>
-        private static string GetKey<TEntity>(string tableName,
+        private static string GetKey(Type entityType,
+            string tableName,
             IEnumerable<Field> qualifiers,
             IEnumerable<Field> fields,
             int batchSize,
             string hints)
         {
-            return string.Concat(typeof(TEntity).FullName,
+            return string.Concat(entityType.FullName,
                 ";",
                 tableName,
                 ";",
@@ -50,7 +51,7 @@ namespace RepoDb.Contexts.Providers
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entityType"></param>
         /// <param name="connection"></param>
         /// <param name="entities"></param>
         /// <param name="tableName"></param>
@@ -61,8 +62,9 @@ namespace RepoDb.Contexts.Providers
         /// <param name="transaction"></param>
         /// <param name="statementBuilder"></param>
         /// <returns></returns>
-        public static MergeAllExecutionContext<TEntity> Create<TEntity>(IDbConnection connection,
-            IEnumerable<TEntity> entities,
+        public static MergeAllExecutionContext Create(Type entityType,
+            IDbConnection connection,
+            IEnumerable<object> entities,
             string tableName,
             IEnumerable<Field> qualifiers,
             int batchSize,
@@ -70,12 +72,11 @@ namespace RepoDb.Contexts.Providers
             string hints = null,
             IDbTransaction transaction = null,
             IStatementBuilder statementBuilder = null)
-            where TEntity : class
         {
-            var key = GetKey<TEntity>(tableName, qualifiers, fields, batchSize, hints);
+            var key = GetKey(entityType, tableName, qualifiers, fields, batchSize, hints);
 
             // Get from cache
-            var context = MergeAllExecutionContextCache.Get<TEntity>(key);
+            var context = MergeAllExecutionContextCache.Get(key);
             if (context != null)
             {
                 return context;
@@ -111,7 +112,8 @@ namespace RepoDb.Contexts.Providers
             }
 
             // Call
-            context = CreateInternal<TEntity>(connection,
+            context = CreateInternal(entityType,
+                connection,
                 entities,
                 dbFields,
                 tableName,
@@ -121,7 +123,7 @@ namespace RepoDb.Contexts.Providers
                 commandText);
 
             // Add to cache
-            MergeAllExecutionContextCache.Add<TEntity>(key, context);
+            MergeAllExecutionContextCache.Add(key, context);
 
             // Return
             return context;
@@ -130,7 +132,7 @@ namespace RepoDb.Contexts.Providers
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entityType"></param>
         /// <param name="connection"></param>
         /// <param name="entities"></param>
         /// <param name="tableName"></param>
@@ -142,8 +144,9 @@ namespace RepoDb.Contexts.Providers
         /// <param name="statementBuilder"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static async Task<MergeAllExecutionContext<TEntity>> CreateAsync<TEntity>(IDbConnection connection,
-            IEnumerable<TEntity> entities,
+        public static async Task<MergeAllExecutionContext> CreateAsync(Type entityType,
+            IDbConnection connection,
+            IEnumerable<object> entities,
             string tableName,
             IEnumerable<Field> qualifiers,
             int batchSize,
@@ -152,12 +155,11 @@ namespace RepoDb.Contexts.Providers
             IDbTransaction transaction = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
-            where TEntity : class
         {
-            var key = GetKey<TEntity>(tableName, qualifiers, fields, batchSize, hints);
+            var key = GetKey(entityType, tableName, qualifiers, fields, batchSize, hints);
 
             // Get from cache
-            var context = MergeAllExecutionContextCache.Get<TEntity>(key);
+            var context = MergeAllExecutionContextCache.Get(key);
             if (context != null)
             {
                 return context;
@@ -193,7 +195,8 @@ namespace RepoDb.Contexts.Providers
             }
 
             // Call
-            context = CreateInternal<TEntity>(connection,
+            context = CreateInternal(entityType,
+                connection,
                 entities,
                 dbFields,
                 tableName,
@@ -203,7 +206,7 @@ namespace RepoDb.Contexts.Providers
                 commandText);
 
             // Add to cache
-            MergeAllExecutionContextCache.Add<TEntity>(key, context);
+            MergeAllExecutionContextCache.Add(key, context);
 
             // Return
             return context;
@@ -212,7 +215,7 @@ namespace RepoDb.Contexts.Providers
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entityType"></param>
         /// <param name="connection"></param>
         /// <param name="entities"></param>
         /// <param name="dbFields"></param>
@@ -222,15 +225,15 @@ namespace RepoDb.Contexts.Providers
         /// <param name="fields"></param>
         /// <param name="commandText"></param>
         /// <returns></returns>
-        private static MergeAllExecutionContext<TEntity> CreateInternal<TEntity>(IDbConnection connection,
-            IEnumerable<TEntity> entities,
+        private static MergeAllExecutionContext CreateInternal(Type entityType,
+            IDbConnection connection,
+            IEnumerable<object> entities,
             IEnumerable<DbField> dbFields,
             string tableName,
             IEnumerable<Field> qualifiers,
             int batchSize,
             IEnumerable<Field> fields,
             string commandText)
-            where TEntity : class
         {
             var dbSetting = connection.GetDbSetting();
             var identity = (Field)null;
@@ -251,9 +254,9 @@ namespace RepoDb.Contexts.Providers
             }
 
             // Set the identity field
-            identity = IdentityCache.Get<TEntity>()?.AsField() ??
+            identity = IdentityCache.Get(entityType)?.AsField() ??
                 FieldCache
-                    .Get<TEntity>()?
+                    .Get(entityType)?
                     .FirstOrDefault(field =>
                         string.Equals(field.Name.AsUnquoted(true, dbSetting), identityDbField?.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) ??
                 identityDbField?.AsField();
@@ -265,7 +268,7 @@ namespace RepoDb.Contexts.Providers
                 .AsList();
 
             // Exclude the fields not on the actual entity
-            if (typeof(TEntity).IsClassType() == false)
+            if (entityType.IsClassType() == false)
             {
                 var entityFields = Field.Parse(entities?.FirstOrDefault());
                 inputFields = inputFields?
@@ -275,37 +278,37 @@ namespace RepoDb.Contexts.Providers
             }
 
             // Variables for the context
-            var multipleEntitiesFunc = (Action<DbCommand, IList<TEntity>>)null;
-            var singleEntityFunc = (Action<DbCommand, TEntity>)null;
-            var identitySetterFunc = (Action<TEntity, object>)null;
+            var multipleEntitiesFunc = (Action<DbCommand, IList<object>>)null;
+            var singleEntityFunc = (Action<DbCommand, object>)null;
+            var identitySetterFunc = (Action<object, object>)null;
 
             // Get if we have not skipped it
             if (identity != null)
             {
-                identitySetterFunc = FunctionCache.GetDataEntityPropertySetterCompiledFunction<TEntity>(identity);
+                identitySetterFunc = FunctionCache.GetDataEntityPropertySetterCompiledFunction(entityType, identity);
             }
 
             // Identity which objects to set
             if (batchSize <= 1)
             {
-                singleEntityFunc = FunctionCache.GetDataEntityDbParameterSetterCompiledFunction<TEntity>(
-                    string.Concat(typeof(TEntity).FullName, StringConstant.Period, tableName, ".MergeAll"),
-                    inputFields?.AsList(),
+                singleEntityFunc = FunctionCache.GetDataEntityDbParameterSetterCompiledFunction(entityType,
+                    string.Concat(entityType.FullName, StringConstant.Period, tableName, ".MergeAll"),
+                    inputFields,
                     null,
                     dbSetting);
             }
             else
             {
-                multipleEntitiesFunc = FunctionCache.GetDataEntityListDbParameterSetterCompiledFunction<TEntity>(
-                    string.Concat(typeof(TEntity).FullName, StringConstant.Period, tableName, ".MergeAll"),
-                    inputFields?.AsList(),
+                multipleEntitiesFunc = FunctionCache.GetDataEntityListDbParameterSetterCompiledFunction(entityType,
+                    string.Concat(entityType.FullName, StringConstant.Period, tableName, ".MergeAll"),
+                    inputFields,
                     null,
                     batchSize,
                     dbSetting);
             }
 
             // Return the value
-            return new MergeAllExecutionContext<TEntity>
+            return new MergeAllExecutionContext
             {
                 CommandText = commandText,
                 InputFields = inputFields,

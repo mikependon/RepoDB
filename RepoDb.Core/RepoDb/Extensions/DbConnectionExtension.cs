@@ -1904,28 +1904,15 @@ namespace RepoDb
         /// <summary>
         ///
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entityType"></param>
         /// <param name="connection"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        internal static Field GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(IDbConnection connection,
-            IDbTransaction transaction)
-            where TEntity : class =>
-            GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
-
-        /// <summary>
-        ///
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="connection"></param>
-        /// <param name="tableName"></param>
-        /// <param name="transaction"></param>
-        /// <returns></returns>
-        internal static Field GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(IDbConnection connection,
-            string tableName,
-            IDbTransaction transaction)
-            where TEntity : class =>
-            GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction, typeof(TEntity));
+        internal static Field GetAndGuardPrimaryKeyOrIdentityKey(Type entityType,
+            IDbConnection connection,
+            IDbTransaction transaction) =>
+            GetAndGuardPrimaryKeyOrIdentityKey(connection, ClassMappedNameCache.Get(entityType),
+                transaction, entityType);
 
         /// <summary>
         ///
@@ -1933,47 +1920,48 @@ namespace RepoDb
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="transaction"></param>
-        /// <param name="entity"></param>
+        /// <param name="entityType"></param>
         /// <returns></returns>
         internal static Field GetAndGuardPrimaryKeyOrIdentityKey(IDbConnection connection,
             string tableName,
             IDbTransaction transaction,
-            Type entity)
+            Type entityType)
         {
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var key = GetAndGuardPrimaryKeyOrIdentityKey(entity, dbFields) ?? GetPrimaryOrIdentityKey(entity);
+            var key = GetAndGuardPrimaryKeyOrIdentityKey(entityType, dbFields) ?? GetPrimaryOrIdentityKey(entityType);
             return GetAndGuardPrimaryKeyOrIdentityKey(tableName, key);
         }
 
         /// <summary>
         ///
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
         /// <param name="connection"></param>
+        /// <param name="tableName"></param>
         /// <param name="transaction"></param>
-        /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        internal static Task<Field> GetAndGuardPrimaryKeyOrIdentityKeyAsync<TEntity>(IDbConnection connection,
-            IDbTransaction transaction,
-            CancellationToken cancellationToken = default)
-            where TEntity : class =>
-            GetAndGuardPrimaryKeyOrIdentityKeyAsync<TEntity>(connection, ClassMappedNameCache.Get<TEntity>(), transaction, cancellationToken);
+        internal static DbField GetAndGuardPrimaryKeyOrIdentityKey(IDbConnection connection,
+            string tableName,
+            IDbTransaction transaction)
+        {
+            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+            var dbField = dbFields?.FirstOrDefault(df => df.IsPrimary == true) ?? dbFields?.FirstOrDefault(df => df.IsIdentity == true);
+            return GetAndGuardPrimaryKeyOrIdentityKey(tableName, dbField);
+        }
 
         /// <summary>
         ///
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entityType"></param>
         /// <param name="connection"></param>
-        /// <param name="tableName"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        internal static Task<Field> GetAndGuardPrimaryKeyOrIdentityKeyAsync<TEntity>(IDbConnection connection,
-            string tableName,
+        internal static Task<Field> GetAndGuardPrimaryKeyOrIdentityKeyAsync(Type entityType,
+            IDbConnection connection,
             IDbTransaction transaction,
-            CancellationToken cancellationToken = default)
-            where TEntity : class =>
-            GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction, typeof(TEntity), cancellationToken);
+            CancellationToken cancellationToken = default) =>
+            GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, ClassMappedNameCache.Get(entityType),
+                transaction, entityType, cancellationToken);
 
         /// <summary>
         ///
@@ -1993,6 +1981,24 @@ namespace RepoDb
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
             var property = GetAndGuardPrimaryKeyOrIdentityKey(entityType, dbFields) ?? GetPrimaryOrIdentityKey(entityType);
             return GetAndGuardPrimaryKeyOrIdentityKey(tableName, property);
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        internal static async Task<DbField> GetAndGuardPrimaryKeyOrIdentityKeyAsync(IDbConnection connection,
+            string tableName,
+            IDbTransaction transaction,
+            CancellationToken cancellationToken = default)
+        {
+            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
+            var dbField = dbFields?.FirstOrDefault(df => df.IsPrimary == true) ?? dbFields?.FirstOrDefault(df => df.IsIdentity == true);
+            return GetAndGuardPrimaryKeyOrIdentityKey(tableName, dbField);
         }
 
         /// <summary>
@@ -2109,40 +2115,6 @@ namespace RepoDb
         internal static KeyFieldNotFoundException GetKeyFieldNotFoundException(Type type) =>
             new KeyFieldNotFoundException($"No primary key and identify found at the target table and also to the given '{type.FullName}' object.");
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="tableName"></param>
-        /// <param name="transaction"></param>
-        /// <returns></returns>
-        internal static DbField GetAndGuardPrimaryKeyOrIdentityKey(IDbConnection connection,
-            string tableName,
-            IDbTransaction transaction)
-        {
-            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var dbField = dbFields?.FirstOrDefault(df => df.IsPrimary == true) ?? dbFields?.FirstOrDefault(df => df.IsIdentity == true);
-            return GetAndGuardPrimaryKeyOrIdentityKey(tableName, dbField);
-        }
-
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="connection"></param>
-        /// <param name="tableName"></param>
-        /// <param name="transaction"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        internal static async Task<DbField> GetAndGuardPrimaryKeyOrIdentityKeyAsync(IDbConnection connection,
-            string tableName,
-            IDbTransaction transaction,
-            CancellationToken cancellationToken = default)
-        {
-            var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
-            var dbField = dbFields?.FirstOrDefault(df => df.IsPrimary == true) ?? dbFields?.FirstOrDefault(df => df.IsIdentity == true);
-            return GetAndGuardPrimaryKeyOrIdentityKey(tableName, dbField);
-        }
-
         #endregion
 
         #region WhatToQueryGroup
@@ -2247,15 +2219,15 @@ namespace RepoDb
         /// <summary>
         ///
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entityType"></param>
         /// <param name="connection"></param>
         /// <param name="what"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        internal static QueryGroup WhatToQueryGroup<TEntity>(IDbConnection connection,
+        internal static QueryGroup WhatToQueryGroup(Type entityType,
+            IDbConnection connection,
             object what,
             IDbTransaction transaction)
-            where TEntity : class
         {
             if (what == null)
             {
@@ -2266,24 +2238,24 @@ namespace RepoDb
             {
                 return queryGroup;
             }
-            var key = GetAndGuardPrimaryKeyOrIdentityKey<TEntity>(connection, ClassMappedNameCache.Get<TEntity>(), transaction);
+            var key = GetAndGuardPrimaryKeyOrIdentityKey(entityType, connection, transaction);
             return WhatToQueryGroup(key, what);
         }
 
         /// <summary>
         ///
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entityType"></param>
         /// <param name="connection"></param>
         /// <param name="what"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        internal static async Task<QueryGroup> WhatToQueryGroupAsync<TEntity>(IDbConnection connection,
+        internal static async Task<QueryGroup> WhatToQueryGroupAsync(Type entityType,
+            IDbConnection connection,
             object what,
             IDbTransaction transaction,
             CancellationToken cancellationToken = default)
-            where TEntity : class
         {
             if (what == null)
             {
@@ -2294,7 +2266,7 @@ namespace RepoDb
             {
                 return queryGroup;
             }
-            var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync<TEntity>(connection, ClassMappedNameCache.Get<TEntity>(), transaction, cancellationToken);
+            var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(entityType, connection, transaction, cancellationToken);
             return WhatToQueryGroup(key, what);
         }
 
@@ -3285,6 +3257,46 @@ namespace RepoDb
         }
 
         #endregion
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entities"></param>
+        /// <returns></returns>
+        internal static string GetMappedName<TEntity>(IEnumerable<TEntity> entities)
+            where TEntity : class =>
+            GetMappedName<TEntity>(entities?.FirstOrDefault());
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        internal static string GetMappedName<TEntity>(TEntity entity)
+            where TEntity : class =>
+            entity != null ? ClassMappedNameCache.Get(entity.GetType()) : ClassMappedNameCache.Get<TEntity>();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entities"></param>
+        /// <returns></returns>
+        internal static Type GetEntityType<TEntity>(IEnumerable<TEntity> entities)
+            where TEntity : class =>
+            GetEntityType<TEntity>(entities?.FirstOrDefault());
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        internal static Type GetEntityType<TEntity>(TEntity entity)
+            where TEntity : class =>
+            entity.GetType() ?? typeof(TEntity);
 
         #endregion
     }

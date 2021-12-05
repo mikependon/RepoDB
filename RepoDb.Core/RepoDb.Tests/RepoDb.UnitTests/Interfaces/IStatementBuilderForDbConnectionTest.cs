@@ -1268,7 +1268,9 @@ namespace RepoDb.UnitTests.Interfaces
             connection.InsertAll(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
                 new[]
                 {
-                    new { Name = "Name" }
+                    new { Name = "Name1" },
+                    new { Name = "Name2" },
+                    new { Name = "Name3" }
                 },
                 fields: new[] { new Field("Id", typeof(int)), new Field("Name", typeof(string)) },
                 batchSize: 1,
@@ -1291,7 +1293,9 @@ namespace RepoDb.UnitTests.Interfaces
             connection.InsertAll(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
                 new[]
                 {
-                    new { Name = "Name" }
+                    new { Name = "Name1" },
+                    new { Name = "Name2" },
+                    new { Name = "Name3" }
                 },
                 fields: new[] { new Field("Id", typeof(int)), new Field("Name", typeof(string)) },
                 batchSize: 1,
@@ -1349,7 +1353,7 @@ namespace RepoDb.UnitTests.Interfaces
                     new { Name = "Name2" },
                     new { Name = "Name3" }
                 },
-                fields: new[] { new Field("Id", typeof(int)), new Field("Name", typeof(string)) },
+                fields: FieldCache.Get<StatementBuilderEntityForCrossCall>(),
                 statementBuilder: statementBuilderNever.Object);
 
             // Assert
@@ -2093,9 +2097,9 @@ namespace RepoDb.UnitTests.Interfaces
             connection.MergeAll(ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>(),
                 new[]
                 {
-                    new { Name = "Name1" },
-                    new { Name = "Name2" },
-                    new { Name = "Name3" }
+                    new { Id = 0, Name = "Name1" },
+                    new { Id = 0, Name = "Name2" },
+                    new { Id = 0, Name = "Name3" }
                 },
                 new Field(nameof(StatementBuilderEntityForCrossCall.Id)),
                 fields: FieldCache.Get<StatementBuilderEntityForCrossCall>(),
@@ -2127,7 +2131,9 @@ namespace RepoDb.UnitTests.Interfaces
             connection.MergeAll<StatementBuilderEntityForCrossCall>(
                 new[]
                 {
-                    new StatementBuilderEntityForCrossCall { Name = "Name1" }
+                    new StatementBuilderEntityForCrossCall { Name = "Name1" },
+                    new StatementBuilderEntityForCrossCall { Name = "Name2" },
+                    new StatementBuilderEntityForCrossCall { Name = "Name3" }
                 },
                 new Field(nameof(StatementBuilderEntityForCrossCall.Id)),
                 batchSize: 1,
@@ -2151,7 +2157,9 @@ namespace RepoDb.UnitTests.Interfaces
             connection.MergeAll(ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>(),
                 new[]
                 {
-                    new { Name = "Name1" }
+                    new { Id = 0, Name = "Name1" },
+                    new { Id = 0, Name = "Name2" },
+                    new { Id = 0, Name = "Name3" }
                 },
                 new Field(nameof(StatementBuilderEntityForCrossCall.Id)),
                 batchSize: 1,
@@ -3491,9 +3499,9 @@ namespace RepoDb.UnitTests.Interfaces
             connection.UpdateAll(ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>(),
                 new[]
                 {
-                    new { Name = "Name1" },
-                    new { Name = "Name2" },
-                    new { Name = "Name3" }
+                    new { Id = 0, Name = "Name1" },
+                    new { Id = 0, Name = "Name2" },
+                    new { Id = 0, Name = "Name3" }
                 },
                 new Field(nameof(StatementBuilderEntityForCrossCall.Id)),
                 fields: FieldCache.Get<StatementBuilderEntityForCrossCall>(),
@@ -5526,9 +5534,9 @@ namespace RepoDb.UnitTests.Interfaces
             connection.MergeAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>(),
                 new[]
                 {
-                    new { Name = "Name1" },
-                    new { Name = "Name2" },
-                    new { Name = "Name3" }
+                    new { Id = 0, Name = "Name1" },
+                    new { Id = 0, Name = "Name2" },
+                    new { Id = 0, Name = "Name3" }
                 },
                 new Field(nameof(StatementBuilderEntityForCrossCall.Id)),
                 fields: FieldCache.Get<StatementBuilderEntityForCrossCall>(),
@@ -5560,7 +5568,9 @@ namespace RepoDb.UnitTests.Interfaces
             connection.MergeAllAsync<StatementBuilderEntityForCrossCall>(
                 new[]
                 {
-                    new StatementBuilderEntityForCrossCall { Name = "Name1" }
+                    new StatementBuilderEntityForCrossCall { Name = "Name1" },
+                    new StatementBuilderEntityForCrossCall { Name = "Name2" },
+                    new StatementBuilderEntityForCrossCall { Name = "Name3" }
                 },
                 new Field(nameof(StatementBuilderEntityForCrossCall.Id)),
                 batchSize: 1,
@@ -5584,7 +5594,9 @@ namespace RepoDb.UnitTests.Interfaces
             connection.MergeAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>(),
                 new[]
                 {
-                    new { Name = "Name1" }
+                    new { Id = 0, Name = "Name1" },
+                    new { Id = 0, Name = "Name2" },
+                    new { Id = 0, Name = "Name3" }
                 },
                 new Field(nameof(StatementBuilderEntityForCrossCall.Id)),
                 batchSize: 1,
@@ -6924,9 +6936,9 @@ namespace RepoDb.UnitTests.Interfaces
             connection.UpdateAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>(),
                 new[]
                 {
-                    new { Name = "Name1" },
-                    new { Name = "Name2" },
-                    new { Name = "Name3" }
+                    new { Id = 0, Name = "Name1" },
+                    new { Id = 0, Name = "Name2" },
+                    new { Id = 0, Name = "Name3" }
                 },
                 new Field(nameof(StatementBuilderEntityForCrossCall.Id)),
                 fields: FieldCache.Get<StatementBuilderEntityForCrossCall>(),

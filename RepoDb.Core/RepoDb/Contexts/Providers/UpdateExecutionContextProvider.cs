@@ -20,18 +20,19 @@ namespace RepoDb.Contexts.Providers
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entityType"></param>
         /// <param name="tableName"></param>
         /// <param name="fields"></param>
         /// <param name="hints"></param>
         /// <param name="where"></param>
         /// <returns></returns>
-        private static string GetKey<TEntity>(string tableName,
+        private static string GetKey(Type entityType,
+            string tableName,
             IEnumerable<Field> fields,
             string hints,
             QueryGroup where)
         {
-            return string.Concat(typeof(TEntity).FullName,
+            return string.Concat(entityType.FullName,
                 ";",
                 tableName,
                 ";",
@@ -45,7 +46,7 @@ namespace RepoDb.Contexts.Providers
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entityType"></param>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="where"></param>
@@ -54,19 +55,19 @@ namespace RepoDb.Contexts.Providers
         /// <param name="transaction"></param>
         /// <param name="statementBuilder"></param>
         /// <returns></returns>
-        public static UpdateExecutionContext<TEntity> Create<TEntity>(IDbConnection connection,
+        public static UpdateExecutionContext Create(Type entityType,
+            IDbConnection connection,
             string tableName,
             QueryGroup where,
             IEnumerable<Field> fields,
             string hints = null,
             IDbTransaction transaction = null,
             IStatementBuilder statementBuilder = null)
-            where TEntity : class
         {
-            var key = GetKey<TEntity>(tableName, fields, hints, where);
+            var key = GetKey(entityType, tableName, fields, hints, where);
 
             // Get from cache
-            var context = UpdateExecutionContextCache.Get<TEntity>(key);
+            var context = UpdateExecutionContextCache.Get(key);
             if (context != null)
             {
                 return context;
@@ -84,14 +85,15 @@ namespace RepoDb.Contexts.Providers
             var commandText = CommandTextCache.GetUpdateText(request);
 
             // Call
-            context = CreateInternal<TEntity>(connection,
+            context = CreateInternal(entityType,
+                connection,
                 tableName,
                 dbFields,
                 fields,
                 commandText);
 
             // Add to cache
-            UpdateExecutionContextCache.Add<TEntity>(key, context);
+            UpdateExecutionContextCache.Add(key, context);
 
             // Return
             return context;
@@ -100,7 +102,7 @@ namespace RepoDb.Contexts.Providers
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entityType"></param>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="where"></param>
@@ -110,7 +112,8 @@ namespace RepoDb.Contexts.Providers
         /// <param name="statementBuilder"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static async Task<UpdateExecutionContext<TEntity>> CreateAsync<TEntity>(IDbConnection connection,
+        public static async Task<UpdateExecutionContext> CreateAsync(Type entityType,
+            IDbConnection connection,
             string tableName,
             QueryGroup where,
             IEnumerable<Field> fields,
@@ -118,12 +121,11 @@ namespace RepoDb.Contexts.Providers
             IDbTransaction transaction = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
-            where TEntity : class
         {
-            var key = GetKey<TEntity>(tableName, fields, hints, where);
+            var key = GetKey(entityType, tableName, fields, hints, where);
 
             // Get from cache
-            var context = UpdateExecutionContextCache.Get<TEntity>(key);
+            var context = UpdateExecutionContextCache.Get(key);
             if (context != null)
             {
                 return context;
@@ -141,14 +143,15 @@ namespace RepoDb.Contexts.Providers
             var commandText = await CommandTextCache.GetUpdateTextAsync(request, cancellationToken);
 
             // Call
-            context = CreateInternal<TEntity>(connection,
+            context = CreateInternal(entityType,
+                connection,
                 tableName,
                 dbFields,
                 fields,
                 commandText);
 
             // Add to cache
-            UpdateExecutionContextCache.Add<TEntity>(key, context);
+            UpdateExecutionContextCache.Add(key, context);
 
             // Return
             return context;
@@ -157,19 +160,19 @@ namespace RepoDb.Contexts.Providers
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entityType"></param>
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="dbFields"></param>
         /// <param name="fields"></param>
         /// <param name="commandText"></param>
         /// <returns></returns>
-        private static UpdateExecutionContext<TEntity> CreateInternal<TEntity>(IDbConnection connection,
+        private static UpdateExecutionContext CreateInternal(Type entityType,
+            IDbConnection connection,
             string tableName,
             IEnumerable<DbField> dbFields,
             IEnumerable<Field> fields,
             string commandText)
-            where TEntity : class
         {
             var dbSetting = connection.GetDbSetting();
             var inputFields = new List<DbField>();
@@ -182,12 +185,12 @@ namespace RepoDb.Contexts.Providers
                 .AsList();
 
             // Return the value
-            return new UpdateExecutionContext<TEntity>
+            return new UpdateExecutionContext
             {
                 CommandText = commandText,
                 InputFields = inputFields,
-                ParametersSetterFunc = FunctionCache.GetDataEntityDbParameterSetterCompiledFunction<TEntity>(
-                    string.Concat(typeof(TEntity).FullName, StringConstant.Period, tableName, ".Update"),
+                ParametersSetterFunc = FunctionCache.GetDataEntityDbParameterSetterCompiledFunction(entityType,
+                    string.Concat(entityType.FullName, StringConstant.Period, tableName, ".Update"),
                     inputFields?.AsList(),
                     null,
                     dbSetting)

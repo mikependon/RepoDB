@@ -85,7 +85,7 @@ namespace RepoDb
             where TEntity : class
         {
             return InsertAllInternal<TEntity>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entities),
                 entities: entities,
                 batchSize: batchSize,
                 fields: fields,
@@ -123,7 +123,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            if ((entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity)).IsDictionaryStringObject())
+            if (GetEntityType<TEntity>(entities).IsDictionaryStringObject())
             {
                 return InsertAllInternalBase<IDictionary<string, object>>(connection: connection,
                     tableName: tableName,
@@ -225,7 +225,7 @@ namespace RepoDb
             where TEntity : class
         {
             return InsertAllAsyncInternal<TEntity>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entities),
                 entities: entities,
                 batchSize: batchSize,
                 fields: fields,
@@ -266,7 +266,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            if ((entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity)).IsDictionaryStringObject())
+            if (GetEntityType<TEntity>(entities).IsDictionaryStringObject())
             {
                 return InsertAllAsyncInternalBase<IDictionary<string, object>>(connection: connection,
                     tableName: tableName,
@@ -425,7 +425,9 @@ namespace RepoDb
             batchSize = (dbSetting.IsMultiStatementExecutable == true) ? Math.Min(batchSize, entities.Count()) : 1;
 
             // Get the context
-            var context = InsertAllExecutionContextProvider.Create<TEntity>(connection,
+            var entityType = GetEntityType<TEntity>(entities);
+            var context = InsertAllExecutionContextProvider.Create(entityType,
+                connection,
                 tableName,
                 batchSize,
                 fields,
@@ -525,7 +527,8 @@ namespace RepoDb
                             if (batchItems.Count != batchSize)
                             {
                                 // Get a new execution context from cache
-                                context = InsertAllExecutionContextProvider.Create<TEntity>(connection,
+                                context = InsertAllExecutionContextProvider.Create(entityType,
+                                    connection,
                                     tableName,
                                     batchItems.Count,
                                     fields,
@@ -544,7 +547,7 @@ namespace RepoDb
                             }
                             else
                             {
-                                context.MultipleDataEntitiesParametersSetterFunc?.Invoke(command, batchItems);
+                                context.MultipleDataEntitiesParametersSetterFunc?.Invoke(command, batchItems.OfType<object>().AsList());
                                 AddOrderColumnParameters(command, batchItems);
                             }
 
@@ -662,7 +665,9 @@ namespace RepoDb
             batchSize = (dbSetting.IsMultiStatementExecutable == true) ? Math.Min(batchSize, entities.Count()) : 1;
 
             // Get the context
-            var context = await InsertAllExecutionContextProvider.CreateAsync<TEntity>(connection,
+            var entityType = GetEntityType<TEntity>(entities);
+            var context = await InsertAllExecutionContextProvider.CreateAsync(entityType,
+                connection,
                 tableName,
                 batchSize,
                 fields,
@@ -763,7 +768,8 @@ namespace RepoDb
                             if (batchItems.Count != batchSize)
                             {
                                 // Get a new execution context from cache
-                                context = await InsertAllExecutionContextProvider.CreateAsync<TEntity>(connection,
+                                context = await InsertAllExecutionContextProvider.CreateAsync(entityType,
+                                    connection,
                                     tableName,
                                     batchItems.Count,
                                     fields,
@@ -783,7 +789,7 @@ namespace RepoDb
                             }
                             else
                             {
-                                context.MultipleDataEntitiesParametersSetterFunc?.Invoke(command, batchItems);
+                                context.MultipleDataEntitiesParametersSetterFunc?.Invoke(command, batchItems.OfType<object>().AsList());
                                 AddOrderColumnParameters<TEntity>(command, batchItems);
                             }
 
@@ -803,7 +809,7 @@ namespace RepoDb
                             {
                                 // Set the identity back
                                 using var reader = await command.ExecuteReaderAsync(cancellationToken);
-                                
+
                                 // Get the results
                                 var position = 0;
                                 do

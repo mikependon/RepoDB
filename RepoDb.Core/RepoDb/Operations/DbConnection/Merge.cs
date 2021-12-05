@@ -356,7 +356,7 @@ namespace RepoDb
             where TEntity : class
         {
             return MergeInternal<TEntity, object>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entity),
                 entity: entity,
                 qualifiers: null,
                 fields: fields,
@@ -393,7 +393,7 @@ namespace RepoDb
             where TEntity : class
         {
             return MergeInternal<TEntity, object>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entity),
                 entity: entity,
                 qualifiers: qualifier?.AsEnumerable(),
                 fields: fields,
@@ -430,7 +430,7 @@ namespace RepoDb
             where TEntity : class
         {
             return MergeInternal<TEntity, object>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entity),
                 entity: entity,
                 qualifiers: qualifiers,
                 fields: fields,
@@ -467,7 +467,7 @@ namespace RepoDb
             where TEntity : class
         {
             return MergeInternal<TEntity, object>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entity),
                 entity: entity,
                 qualifiers: Field.Parse<TEntity>(qualifiers),
                 fields: fields,
@@ -503,7 +503,7 @@ namespace RepoDb
             where TEntity : class
         {
             return MergeInternal<TEntity, TResult>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entity),
                 entity: entity,
                 qualifiers: null,
                 fields: fields,
@@ -541,7 +541,7 @@ namespace RepoDb
             where TEntity : class
         {
             return MergeInternal<TEntity, TResult>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entity),
                 entity: entity,
                 qualifiers: qualifier?.AsEnumerable(),
                 fields: fields,
@@ -579,7 +579,7 @@ namespace RepoDb
             where TEntity : class
         {
             return MergeInternal<TEntity, TResult>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entity),
                 entity: entity,
                 qualifiers: qualifiers,
                 fields: fields,
@@ -617,7 +617,7 @@ namespace RepoDb
             where TEntity : class
         {
             return MergeInternal<TEntity, TResult>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entity),
                 entity: entity,
                 qualifiers: Field.Parse<TEntity>(qualifiers),
                 fields: fields,
@@ -662,7 +662,7 @@ namespace RepoDb
             // Return the result
             if (setting.IsUseUpsert == false)
             {
-                if (entity?.GetType().IsDictionaryStringObject() == true)
+                if (GetEntityType<TEntity>(entity).IsDictionaryStringObject() == true)
                 {
                     return MergeInternalBase<IDictionary<string, object>, TResult>(connection: connection,
                         tableName: tableName,
@@ -691,7 +691,7 @@ namespace RepoDb
             }
             else
             {
-                if (entity?.GetType().IsDictionaryStringObject() == true)
+                if (GetEntityType<TEntity>(entity).IsDictionaryStringObject() == true)
                 {
                     return UpsertInternalBase<IDictionary<string, object>, TResult>(connection: connection,
                         tableName: tableName,
@@ -1086,7 +1086,7 @@ namespace RepoDb
             where TEntity : class
         {
             return MergeAsyncInternal<TEntity, object>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entity),
                 entity: entity,
                 qualifiers: null,
                 fields: fields,
@@ -1126,7 +1126,7 @@ namespace RepoDb
             where TEntity : class
         {
             return MergeAsyncInternal<TEntity, object>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entity),
                 entity: entity,
                 qualifiers: qualifier?.AsEnumerable(),
                 fields: fields,
@@ -1166,7 +1166,7 @@ namespace RepoDb
             where TEntity : class
         {
             return MergeAsyncInternal<TEntity, object>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entity),
                 entity: entity,
                 qualifiers: qualifiers,
                 fields: fields,
@@ -1206,7 +1206,7 @@ namespace RepoDb
             where TEntity : class
         {
             return MergeAsyncInternal<TEntity, object>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entity),
                 entity: entity,
                 qualifiers: Field.Parse<TEntity>(qualifiers),
                 fields: fields,
@@ -1245,7 +1245,7 @@ namespace RepoDb
             where TEntity : class
         {
             return MergeAsyncInternal<TEntity, TResult>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entity),
                 entity: entity,
                 qualifiers: null,
                 fields: fields,
@@ -1286,7 +1286,7 @@ namespace RepoDb
             where TEntity : class
         {
             return MergeAsyncInternal<TEntity, TResult>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entity),
                 entity: entity,
                 qualifiers: qualifier?.AsEnumerable(),
                 fields: fields,
@@ -1327,7 +1327,7 @@ namespace RepoDb
             where TEntity : class
         {
             return MergeAsyncInternal<TEntity, TResult>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entity),
                 entity: entity,
                 qualifiers: qualifiers,
                 fields: fields,
@@ -1368,7 +1368,7 @@ namespace RepoDb
             where TEntity : class
         {
             return MergeAsyncInternal<TEntity, TResult>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entity),
                 entity: entity,
                 qualifiers: Field.Parse<TEntity>(qualifiers),
                 fields: fields,
@@ -1416,7 +1416,7 @@ namespace RepoDb
             // Return the result
             if (setting.IsUseUpsert == false)
             {
-                if (entity?.GetType().IsDictionaryStringObject() == true)
+                if (GetEntityType<TEntity>(entity).IsDictionaryStringObject() == true)
                 {
                     return MergeAsyncInternalBase<IDictionary<string, object>, TResult>(connection: connection,
                         tableName: tableName,
@@ -1447,7 +1447,7 @@ namespace RepoDb
             }
             else
             {
-                if (entity?.GetType().IsDictionaryStringObject() == true)
+                if (GetEntityType<TEntity>(entity).IsDictionaryStringObject() == true)
                 {
                     return UpsertAsyncInternalBase<IDictionary<string, object>, TResult>(connection: connection,
                         tableName: tableName,
@@ -1987,7 +1987,9 @@ namespace RepoDb
             }
 
             // Get the context
-            var context = MergeExecutionContextProvider.Create<TEntity>(connection,
+            var entityType = entity?.GetType() ?? typeof(TEntity);
+            var context = MergeExecutionContextProvider.Create(entityType,
+                connection,
                 tableName,
                 qualifiers,
                 fields,
@@ -2267,7 +2269,9 @@ namespace RepoDb
             }
 
             // Get the context
-            var context = await MergeExecutionContextProvider.CreateAsync<TEntity>(connection,
+            var entityType = entity?.GetType() ?? typeof(TEntity);
+            var context = await MergeExecutionContextProvider.CreateAsync(entityType,
+                connection,
                 tableName,
                 qualifiers,
                 fields,

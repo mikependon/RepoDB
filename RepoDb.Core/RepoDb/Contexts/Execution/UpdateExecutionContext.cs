@@ -5,11 +5,9 @@ using System.Data.Common;
 namespace RepoDb.Contexts.Execution
 {
     /// <summary>
-    /// An execution context class used by update operation.
+    /// 
     /// </summary>
-    /// <typeparam name="TEntity">The type of the data entity.</typeparam>
-    internal class UpdateExecutionContext<TEntity>
-        where TEntity : class
+    internal class UpdateExecutionContext
     {
         /// <summary>
         /// The execution command text.
@@ -17,13 +15,13 @@ namespace RepoDb.Contexts.Execution
         public string CommandText { get; set; }
 
         /// <summary>
-        /// The list of the input <see cref="DbField"/> objects to be included in the execution.
+        /// 
         /// </summary>
         public IEnumerable<DbField> InputFields { get; set; }
 
         /// <summary>
-        /// The compiled function that is used to set the <see cref="DbCommand"/> parameters.
+        /// 
         /// </summary>
-        public Action<DbCommand, TEntity> ParametersSetterFunc { get; set; }
+        public Action<DbCommand, object> ParametersSetterFunc { get; set; }
     }
 }

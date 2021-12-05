@@ -40,7 +40,7 @@ namespace RepoDb
             where TEntity : class
         {
             return ExistsInternal<TEntity>(connection: connection,
-                where: WhatToQueryGroup<TEntity>(connection, what, transaction),
+                where: WhatToQueryGroup(typeof(TEntity), connection, what, transaction),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -71,7 +71,7 @@ namespace RepoDb
             where TEntity : class
         {
             return ExistsInternal<TEntity>(connection: connection,
-                where: WhatToQueryGroup<TEntity>(connection, what, transaction),
+                where: WhatToQueryGroup(typeof(TEntity), connection, what, transaction),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -272,7 +272,7 @@ namespace RepoDb
             where TEntity : class
         {
             return await ExistsAsyncInternal<TEntity>(connection: connection,
-                where: await WhatToQueryGroupAsync<TEntity>(connection, what, transaction, cancellationToken),
+                where: await WhatToQueryGroupAsync(typeof(TEntity), connection, what, transaction, cancellationToken),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
@@ -306,7 +306,7 @@ namespace RepoDb
             where TEntity : class
         {
             return await ExistsAsyncInternal<TEntity>(connection: connection,
-                where: await WhatToQueryGroupAsync<TEntity>(connection, what, transaction, cancellationToken),
+                where: await WhatToQueryGroupAsync(typeof(TEntity), connection, what, transaction, cancellationToken),
                 hints: hints,
                 commandTimeout: commandTimeout,
                 transaction: transaction,

@@ -213,7 +213,7 @@ namespace RepoDb
             where TEntity : class
         {
             return MergeAllInternal<TEntity>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entities),
                 entities: entities,
                 qualifiers: null,
                 batchSize: batchSize,
@@ -253,7 +253,7 @@ namespace RepoDb
             where TEntity : class
         {
             return MergeAllInternal<TEntity>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entities),
                 entities: entities,
                 qualifiers: qualifier.AsEnumerable(),
                 batchSize: batchSize,
@@ -293,7 +293,7 @@ namespace RepoDb
             where TEntity : class
         {
             return MergeAllInternal<TEntity>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entities),
                 entities: entities,
                 qualifiers: qualifiers,
                 batchSize: batchSize,
@@ -333,7 +333,7 @@ namespace RepoDb
             where TEntity : class
         {
             return MergeAllInternal<TEntity>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entities),
                 entities: entities,
                 qualifiers: Field.Parse<TEntity>(qualifiers),
                 batchSize: batchSize,
@@ -378,7 +378,7 @@ namespace RepoDb
             if (qualifiers?.Any() != true)
             {
                 var key = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction,
-                    entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity));
+                    GetEntityType<TEntity>(entities));
                 qualifiers = key.AsEnumerable();
             }
 
@@ -388,7 +388,7 @@ namespace RepoDb
             // Return the result
             if (setting.IsUseUpsert == false)
             {
-                if ((entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity)).IsDictionaryStringObject())
+                if (GetEntityType<TEntity>(entities).IsDictionaryStringObject())
                 {
                     return MergeAllInternalBase<IDictionary<string, object>>(connection: connection,
                         tableName: tableName,
@@ -419,7 +419,7 @@ namespace RepoDb
             }
             else
             {
-                if ((entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity)).IsDictionaryStringObject())
+                if (GetEntityType<TEntity>(entities).IsDictionaryStringObject())
                 {
                     return UpsertAllInternalBase<IDictionary<string, object>>(connection: connection,
                         tableName: tableName,
@@ -658,7 +658,7 @@ namespace RepoDb
             where TEntity : class
         {
             return MergeAllAsyncInternal<TEntity>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entities),
                 entities: entities,
                 qualifiers: null,
                 batchSize: batchSize,
@@ -701,7 +701,7 @@ namespace RepoDb
             where TEntity : class
         {
             return MergeAllAsyncInternal<TEntity>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entities),
                 entities: entities,
                 qualifiers: qualifier.AsEnumerable(),
                 batchSize: batchSize,
@@ -744,7 +744,7 @@ namespace RepoDb
             where TEntity : class
         {
             return MergeAllAsyncInternal<TEntity>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entities),
                 entities: entities,
                 qualifiers: qualifiers,
                 batchSize: batchSize,
@@ -787,7 +787,7 @@ namespace RepoDb
             where TEntity : class
         {
             return MergeAllAsyncInternal<TEntity>(connection: connection,
-                tableName: ClassMappedNameCache.Get<TEntity>(),
+                tableName: GetMappedName<TEntity>(entities),
                 entities: entities,
                 qualifiers: Field.Parse<TEntity>(qualifiers),
                 batchSize: batchSize,
@@ -835,7 +835,7 @@ namespace RepoDb
             if (qualifiers?.Any() != true)
             {
                 var key = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction,
-                    entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity), cancellationToken);
+                    GetEntityType<TEntity>(entities), cancellationToken);
                 qualifiers = key.AsEnumerable();
             }
 
@@ -845,7 +845,7 @@ namespace RepoDb
             // Return the result
             if (setting.IsUseUpsert == false)
             {
-                if ((entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity)).IsDictionaryStringObject())
+                if (GetEntityType<TEntity>(entities).IsDictionaryStringObject())
                 {
                     return await MergeAllAsyncInternalBase<IDictionary<string, object>>(connection: connection,
                         tableName: tableName,
@@ -878,7 +878,7 @@ namespace RepoDb
             }
             else
             {
-                if ((entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity)).IsDictionaryStringObject())
+                if (GetEntityType<TEntity>(entities).IsDictionaryStringObject())
                 {
                     return await UpsertAllAsyncInternalBase<IDictionary<string, object>>(connection: connection,
                         tableName: tableName,
@@ -1208,7 +1208,9 @@ namespace RepoDb
             batchSize = Math.Min(batchSize, entities.Count());
 
             // Get the context
-            var context = MergeAllExecutionContextProvider.Create<TEntity>(connection,
+            var entityType = GetEntityType<TEntity>(entities);
+            var context = MergeAllExecutionContextProvider.Create(entityType,
+                connection,
                 entities,
                 tableName,
                 qualifiers,
@@ -1306,7 +1308,8 @@ namespace RepoDb
                             if (batchItems.Count != batchSize)
                             {
                                 // Get a new execution context from cache
-                                context = MergeAllExecutionContextProvider.Create<TEntity>(connection,
+                                context = MergeAllExecutionContextProvider.Create(entityType,
+                                    connection,
                                     batchItems,
                                     tableName,
                                     qualifiers,
@@ -1327,7 +1330,7 @@ namespace RepoDb
                             }
                             else
                             {
-                                context.MultipleDataEntitiesParametersSetterFunc?.Invoke(command, batchItems);
+                                context.MultipleDataEntitiesParametersSetterFunc?.Invoke(command, batchItems.OfType<object>().AsList());
                                 AddOrderColumnParameters(command, batchItems);
                             }
 
@@ -1431,7 +1434,7 @@ namespace RepoDb
             where TEntity : class
         {
             // Variables needed
-            var type = entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity);
+            var type = GetEntityType<TEntity>(entities);
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var primary = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
             var properties = (IEnumerable<ClassProperty>)null;
@@ -1604,7 +1607,9 @@ namespace RepoDb
             batchSize = Math.Min(batchSize, entities.Count());
 
             // Get the context
-            var context = await MergeAllExecutionContextProvider.CreateAsync<TEntity>(connection,
+            var entityType = GetEntityType<TEntity>(entities);
+            var context = await MergeAllExecutionContextProvider.CreateAsync(entityType,
+                connection,
                 entities,
                 tableName,
                 qualifiers,
@@ -1703,7 +1708,8 @@ namespace RepoDb
                             if (batchItems.Count != batchSize)
                             {
                                 // Get a new execution context from cache
-                                context = await MergeAllExecutionContextProvider.CreateAsync<TEntity>(connection,
+                                context = await MergeAllExecutionContextProvider.CreateAsync(entityType,
+                                    connection,
                                     batchItems,
                                     tableName,
                                     qualifiers,
@@ -1725,7 +1731,7 @@ namespace RepoDb
                             }
                             else
                             {
-                                context.MultipleDataEntitiesParametersSetterFunc?.Invoke(command, batchItems);
+                                context.MultipleDataEntitiesParametersSetterFunc?.Invoke(command, batchItems.OfType<object>().AsList());
                                 AddOrderColumnParameters<TEntity>(command, batchItems);
                             }
 
@@ -1832,7 +1838,7 @@ namespace RepoDb
             where TEntity : class
         {
             // Variables needed
-            var type = entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity);
+            var type = GetEntityType<TEntity>(entities);
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
             var primary = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
             var properties = (IEnumerable<ClassProperty>)null;

@@ -24,7 +24,7 @@ namespace RepoDb
         private static long GetReaderFieldsHashCode(DbDataReader reader)
         {
             long hashCode = 0;
-            
+
             if (reader is not null)
             {
                 for (var ordinal = 0; ordinal < reader.FieldCount; ordinal++)
@@ -32,7 +32,7 @@ namespace RepoDb
                     hashCode += HashCode.Combine(reader.GetName(ordinal), ordinal, reader.GetFieldType(ordinal));
                 }
             }
-            
+
             return hashCode;
         }
 
@@ -157,53 +157,57 @@ namespace RepoDb
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entityType"></param>
         /// <param name="cacheKey"></param>
         /// <param name="inputFields"></param>
         /// <param name="outputFields"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        internal static Action<DbCommand, TEntity> GetDataEntityDbParameterSetterCompiledFunction<TEntity>(string cacheKey,
+        internal static Action<DbCommand, object> GetDataEntityDbParameterSetterCompiledFunction(Type entityType,
+            string cacheKey,
             IEnumerable<DbField> inputFields,
             IEnumerable<DbField> outputFields,
-            IDbSetting dbSetting = null)
-            where TEntity : class =>
-            DataEntityDbParameterSetterCache<TEntity>.Get(cacheKey, inputFields, outputFields, dbSetting);
+            IDbSetting dbSetting = null) =>
+            DataEntityDbParameterSetterCache.Get(entityType,
+                cacheKey,
+                inputFields,
+                outputFields,
+                dbSetting);
 
         #region DataEntityDbParameterSetterCache
 
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        private static class DataEntityDbParameterSetterCache<TEntity>
-            where TEntity : class
+        private static class DataEntityDbParameterSetterCache
         {
-            private static ConcurrentDictionary<long, Action<DbCommand, TEntity>> cache = new();
+            private static ConcurrentDictionary<long, Action<DbCommand, object>> cache = new();
 
             /// <summary>
             /// 
             /// </summary>
+            /// <param name="entityType"></param>
             /// <param name="cacheKey"></param>
             /// <param name="inputFields"></param>
             /// <param name="outputFields"></param>
             /// <param name="dbSetting"></param>
             /// <returns></returns>
-            internal static Action<DbCommand, TEntity> Get(string cacheKey,
+            internal static Action<DbCommand, object> Get(Type entityType,
+                string cacheKey,
                 IEnumerable<DbField> inputFields,
                 IEnumerable<DbField> outputFields,
                 IDbSetting dbSetting = null)
             {
-                var key = GetKey(cacheKey, inputFields, outputFields);
+                var key = GetKey(entityType, cacheKey, inputFields, outputFields);
                 if (cache.TryGetValue(key, out var func) == false)
                 {
-                    if (typeof(TEntity).IsDictionaryStringObject())
+                    if (entityType.IsDictionaryStringObject())
                     {
-                        func = FunctionFactory.CompileDictionaryStringObjectDbParameterSetter<TEntity>(inputFields, dbSetting);
+                        func = FunctionFactory.CompileDictionaryStringObjectDbParameterSetter(entityType, inputFields, dbSetting);
                     }
                     else
                     {
-                        func = FunctionFactory.CompileDataEntityDbParameterSetter<TEntity>(inputFields, outputFields, dbSetting);
+                        func = FunctionFactory.CompileDataEntityDbParameterSetter(entityType, inputFields, outputFields, dbSetting);
                     }
                 }
                 return func;
@@ -212,15 +216,17 @@ namespace RepoDb
             /// <summary>
             /// 
             /// </summary>
+            /// <param name="entityType"></param>
             /// <param name="cacheKey"></param>
             /// <param name="inputFields"></param>
             /// <param name="outputFields"></param>
             /// <returns></returns>
-            private static long GetKey(string cacheKey,
+            private static long GetKey(Type entityType,
+                string cacheKey,
                 IEnumerable<DbField> inputFields,
                 IEnumerable<DbField> outputFields)
             {
-                var key = (long)typeof(TEntity).GetHashCode() + cacheKey.GetHashCode();
+                var key = (long)entityType.GetHashCode() + cacheKey.GetHashCode();
                 if (inputFields != null)
                 {
                     foreach (var field in inputFields)
@@ -248,57 +254,64 @@ namespace RepoDb
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entityType"></param>
         /// <param name="cacheKey"></param>
         /// <param name="inputFields"></param>
         /// <param name="outputFields"></param>
         /// <param name="batchSize"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        internal static Action<DbCommand, IList<TEntity>> GetDataEntityListDbParameterSetterCompiledFunction<TEntity>(string cacheKey,
+        internal static Action<DbCommand, IList<object>> GetDataEntityListDbParameterSetterCompiledFunction(Type entityType,
+            string cacheKey,
             IEnumerable<DbField> inputFields,
             IEnumerable<DbField> outputFields,
             int batchSize,
-            IDbSetting dbSetting = null)
-            where TEntity : class =>
-            DataEntityListDbParameterSetterCache<TEntity>.Get(cacheKey, inputFields, outputFields, batchSize, dbSetting);
+            IDbSetting dbSetting = null) =>
+            DataEntityListDbParameterSetterCache.Get(entityType, cacheKey, inputFields, outputFields, batchSize, dbSetting);
 
         #region DataEntityListDbParameterSetterCache
 
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        private static class DataEntityListDbParameterSetterCache<TEntity>
-            where TEntity : class
+        private static class DataEntityListDbParameterSetterCache
         {
-            private static ConcurrentDictionary<long, Action<DbCommand, IList<TEntity>>> cache = new();
+            private static ConcurrentDictionary<long, Action<DbCommand, IList<object>>> cache = new();
 
             /// <summary>
             /// 
             /// </summary>
+            /// <param name="entityType"></param>
             /// <param name="cacheKey"></param>
             /// <param name="inputFields"></param>
             /// <param name="outputFields"></param>
             /// <param name="batchSize"></param>
             /// <param name="dbSetting"></param>
             /// <returns></returns>
-            internal static Action<DbCommand, IList<TEntity>> Get(string cacheKey,
+            internal static Action<DbCommand, IList<object>> Get(Type entityType,
+                string cacheKey,
                 IEnumerable<DbField> inputFields,
                 IEnumerable<DbField> outputFields,
                 int batchSize,
                 IDbSetting dbSetting = null)
             {
-                var key = GetKey(cacheKey, inputFields, outputFields, batchSize);
+                var key = GetKey(entityType, cacheKey, inputFields, outputFields, batchSize);
                 if (cache.TryGetValue(key, out var func) == false)
                 {
-                    if (typeof(TEntity).IsDictionaryStringObject())
+                    if (entityType.IsDictionaryStringObject())
                     {
-                        func = FunctionFactory.CompileDictionaryStringObjectListDbParameterSetter<TEntity>(inputFields, batchSize, dbSetting);
+                        func = FunctionFactory.CompileDictionaryStringObjectListDbParameterSetter(entityType,
+                            inputFields,
+                            batchSize,
+                            dbSetting);
                     }
                     else
                     {
-                        func = FunctionFactory.CompileDataEntityListDbParameterSetter<TEntity>(inputFields, outputFields, batchSize, dbSetting);
+                        func = FunctionFactory.CompileDataEntityListDbParameterSetter(entityType,
+                            inputFields,
+                            outputFields,
+                            batchSize,
+                            dbSetting);
                     }
                     cache.TryAdd(key, func);
                 }
@@ -308,17 +321,19 @@ namespace RepoDb
             /// <summary>
             /// 
             /// </summary>
+            /// <param name="entityType"></param>
             /// <param name="cacheKey"></param>
             /// <param name="inputFields"></param>
             /// <param name="outputFields"></param>
             /// <param name="batchSize"></param>
             /// <returns></returns>
-            private static long GetKey(string cacheKey,
+            private static long GetKey(Type entityType,
+                string cacheKey,
                 IEnumerable<DbField> inputFields,
                 IEnumerable<DbField> outputFields,
                 int batchSize)
             {
-                var key = (long)typeof(TEntity).GetHashCode() + batchSize.GetHashCode() +
+                var key = (long)entityType.GetHashCode() + batchSize.GetHashCode() +
                     (cacheKey?.GetHashCode()).GetValueOrDefault();
                 if (inputFields?.Any() == true)
                 {
@@ -404,41 +419,41 @@ namespace RepoDb
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="entityType"></param>
         /// <param name="field"></param>
         /// <returns></returns>
-        internal static Action<TEntity, object> GetDataEntityPropertySetterCompiledFunction<TEntity>(Field field)
-            where TEntity : class =>
-            DataEntityPropertySetterCache<TEntity>.Get(field);
+        internal static Action<object, object> GetDataEntityPropertySetterCompiledFunction(Type entityType,
+            Field field) =>
+            DataEntityPropertySetterCache.Get(entityType, field);
 
         #region DataEntityPropertySetterCache
 
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        private static class DataEntityPropertySetterCache<TEntity>
-            where TEntity : class
+        private static class DataEntityPropertySetterCache
         {
-            private static ConcurrentDictionary<long, Action<TEntity, object>> cache = new();
+            private static ConcurrentDictionary<long, Action<object, object>> cache = new();
 
             /// <summary>
             /// 
             /// </summary>
+            /// <param name="type"></param>
             /// <param name="field"></param>
             /// <returns></returns>
-            internal static Action<TEntity, object> Get(Field field)
+            internal static Action<object, object> Get(Type type,
+                Field field)
             {
-                var key = (long)typeof(TEntity).GetHashCode() + field.GetHashCode();
+                var key = (long)type.GetHashCode() + field.GetHashCode();
                 if (cache.TryGetValue(key, out var func) == false)
                 {
-                    if (typeof(TEntity).IsDictionaryStringObject())
+                    if (type.IsDictionaryStringObject())
                     {
-                        func = FunctionFactory.CompileDictionaryStringObjectItemSetter<TEntity>(field);
+                        func = FunctionFactory.CompileDictionaryStringObjectItemSetter(type, field);
                     }
                     else
                     {
-                        func = FunctionFactory.CompileDataEntityPropertySetter<TEntity>(field);
+                        func = FunctionFactory.CompileDataEntityPropertySetter(type, field);
                     }
                     cache.TryAdd(key, func);
                 }

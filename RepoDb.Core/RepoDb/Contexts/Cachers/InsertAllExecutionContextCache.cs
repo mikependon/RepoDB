@@ -8,7 +8,7 @@ namespace RepoDb.Contexts.Cachers
     /// </summary>
     public static class InsertAllExecutionContextCache
     {
-        private static ConcurrentDictionary<string, object> cache = new();
+        private static ConcurrentDictionary<string, InsertAllExecutionContext> cache = new();
 
         /// <summary>
         /// Flushes all the cached execution context.
@@ -19,26 +19,22 @@ namespace RepoDb.Contexts.Cachers
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
         /// <param name="key"></param>
         /// <param name="context"></param>
-        internal static void Add<TEntity>(string key,
-            InsertAllExecutionContext<TEntity> context)
-            where TEntity : class =>
+        internal static void Add(string key,
+            InsertAllExecutionContext context) =>
             cache.TryAdd(key, context);
 
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
         /// <param name="key"></param>
         /// <returns></returns>
-        internal static InsertAllExecutionContext<TEntity> Get<TEntity>(string key)
-            where TEntity : class
+        internal static InsertAllExecutionContext Get(string key)
         {
             if (cache.TryGetValue(key, out var result))
             {
-                return result as InsertAllExecutionContext<TEntity>;
+                return result;
             }
             return null;
         }
