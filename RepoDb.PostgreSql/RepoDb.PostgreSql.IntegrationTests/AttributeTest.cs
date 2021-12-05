@@ -2,6 +2,7 @@
 using Npgsql;
 using NpgsqlTypes;
 using RepoDb.Attributes;
+using RepoDb.Attributes.Parameter.Npgsql;
 using RepoDb.Extensions;
 using RepoDb.PostgreSql.IntegrationTests.Setup;
 using System;
@@ -35,16 +36,16 @@ namespace RepoDb.PostgreSql.IntegrationTests
         {
             public int Id { get; set; }
 
-            [NpgsqlTypeMap(NpgsqlDbType.Bytea)]
+            [NpgsqlDbType(NpgsqlDbType.Bytea)]
             public byte[] ColumnByteA { get; set; }
 
-            [NpgsqlTypeMap(NpgsqlDbType.Bigint)]
+            [NpgsqlDbType(NpgsqlDbType.Bigint)]
             public long ColumnBigInt { get; set; }
 
-            [NpgsqlTypeMap(NpgsqlDbType.Date)]
+            [NpgsqlDbType(NpgsqlDbType.Date)]
             public DateTime ColumnDate { get; set; }
 
-            [NpgsqlTypeMap(NpgsqlDbType.Text)]
+            [NpgsqlDbType(NpgsqlDbType.Text)]
             public string ColumnText { get; set; }
         }
 

@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Npgsql;
 using RepoDb.Attributes;
+using RepoDb.Attributes.Parameter.Npgsql;
 using RepoDb.Extensions;
 using RepoDb.PostgreSql.IntegrationTests.Setup;
 using System;
@@ -64,7 +65,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         public class PersonWithEnum
         {
             public System.Int64 Id { get; set; }
-            [NpgsqlTypeMap(NpgsqlTypes.NpgsqlDbType.Unknown)]
+            [NpgsqlDbType(NpgsqlTypes.NpgsqlDbType.Unknown)]
             public Hands ColumnEnum { get; set; }
         }
 
@@ -72,7 +73,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         public class PersonWithNullableEnum
         {
             public System.Int64 Id { get; set; }
-            [NpgsqlTypeMap(NpgsqlTypes.NpgsqlDbType.Unknown)]
+            [NpgsqlDbType(NpgsqlTypes.NpgsqlDbType.Unknown)]
             public Hands? ColumnEnum { get; set; }
         }
 

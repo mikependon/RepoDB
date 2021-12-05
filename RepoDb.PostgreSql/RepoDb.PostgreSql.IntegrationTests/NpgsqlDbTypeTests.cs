@@ -2,6 +2,7 @@
 using Npgsql;
 using NpgsqlTypes;
 using RepoDb.Attributes;
+using RepoDb.Attributes.Parameter.Npgsql;
 using RepoDb.Extensions;
 using RepoDb.PostgreSql.IntegrationTests.Setup;
 using System;
@@ -33,7 +34,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         private class CompleteTableForJson
         {
             public System.Int64 Id { get; set; }
-            [NpgsqlTypeMap(NpgsqlDbType.Json)]
+            [NpgsqlDbType(NpgsqlDbType.Json)]
             public System.String ColumnJson { get; set; }
         }
 
@@ -41,9 +42,9 @@ namespace RepoDb.PostgreSql.IntegrationTests
         private class CompleteTableForDateTime
         {
             public System.Int64 Id { get; set; }
-            [NpgsqlTypeMap(NpgsqlDbType.TimestampTz)]
+            [NpgsqlDbType(NpgsqlDbType.TimestampTz)]
             public System.DateTime ColumnTimestampWithTimeZone { get; set; }
-            [NpgsqlTypeMap(NpgsqlDbType.Timestamp)]
+            [NpgsqlDbType(NpgsqlDbType.Timestamp)]
             public System.DateTime ColumnTimestampWithoutTimeZone { get; set; }
         }
 
