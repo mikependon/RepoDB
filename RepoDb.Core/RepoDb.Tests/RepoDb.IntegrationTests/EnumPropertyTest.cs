@@ -33,7 +33,7 @@ namespace RepoDb.IntegrationTests
 
         #region PropertyHandlers
 
-        public class DirectionPropertyHandlerForBit : IPropertyHandler<bool?, BooleanValue?>
+        public class BooleanValuePropertyHandler : IPropertyHandler<bool?, BooleanValue?>
         {
             public BooleanValue? Get(bool? input, ClassProperty property)
             {
@@ -54,7 +54,7 @@ namespace RepoDb.IntegrationTests
             }
         }
 
-        public class DirectionPropertyHandlerForString : IPropertyHandler<string, Direction?>
+        public class DirectionPropertyHandler : IPropertyHandler<string, Direction?>
         {
             public Direction? Get(string input, ClassProperty property)
             {
@@ -62,7 +62,15 @@ namespace RepoDb.IntegrationTests
                 {
                     return null;
                 }
-                return (Direction)Enum.Parse(typeof(Direction), input);
+                if (!string.IsNullOrEmpty(input))
+                {
+                    var type = typeof(Direction);
+                    if (Enum.IsDefined(type, input))
+                    {
+                        return (Direction)Enum.Parse(typeof(Direction), input);
+                    }
+                }
+                return null;
             }
 
             public string Set(Direction? input, ClassProperty property)
@@ -83,9 +91,19 @@ namespace RepoDb.IntegrationTests
         public class EnumCompleteTableWithPropertyHandler
         {
             public Guid SessionId { get; set; }
-            [PropertyHandler(typeof(DirectionPropertyHandlerForBit))]
+            [PropertyHandler(typeof(BooleanValuePropertyHandler))]
+            public BooleanValue ColumnBit { get; set; }
+            [PropertyHandler(typeof(DirectionPropertyHandler))]
+            public Direction ColumnNVarChar { get; set; }
+        }
+
+        [Map("[dbo].[CompleteTable]")]
+        public class EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler
+        {
+            public Guid SessionId { get; set; }
+            [PropertyHandler(typeof(BooleanValuePropertyHandler))]
             public BooleanValue? ColumnBit { get; set; }
-            [PropertyHandler(typeof(DirectionPropertyHandlerForString))]
+            [PropertyHandler(typeof(DirectionPropertyHandler))]
             public Direction? ColumnNVarChar { get; set; }
         }
 
@@ -93,9 +111,9 @@ namespace RepoDb.IntegrationTests
 
         #region Helpers
 
-        public EnumCompleteTableWithPropertyHandler CreateEnumCompleteTableWithPropertyHandler()
+        public EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler CreateEnumCompleteTableNullablePropertiesAndWithPropertyHandler()
         {
-            return new EnumCompleteTableWithPropertyHandler
+            return new EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler
             {
                 SessionId = Guid.NewGuid(),
                 ColumnBit = DateTime.UtcNow.Ticks % 2 == 0 ? BooleanValue.True : BooleanValue.False,
@@ -103,9 +121,19 @@ namespace RepoDb.IntegrationTests
             };
         }
 
-        public EnumCompleteTableWithPropertyHandler CreateEnumCompleteTableWithPropertyHandlerAndWithNullValues()
+        public EnumCompleteTableWithPropertyHandler CreateEnumCompleteTableWithPropertyHandler()
         {
             return new EnumCompleteTableWithPropertyHandler
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnBit = BooleanValue.True,
+                ColumnNVarChar = Direction.West
+            };
+        }
+
+        public EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler CreateEnumCompleteTableWithNullablePropertiesAndWithPropertyHandler()
+        {
+            return new EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler
             {
                 SessionId = Guid.NewGuid(),
                 ColumnBit = null,
@@ -113,11 +141,11 @@ namespace RepoDb.IntegrationTests
             };
         }
 
-        public IEnumerable<EnumCompleteTableWithPropertyHandler> CreateEnumCompleteTableWithPropertyHandlers(int count = 10)
+        public IEnumerable<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler> CreateEnumCompleteTableWithPropertyHandlers(int count = 10)
         {
             for (var i = 0; i < count; i++)
             {
-                yield return new EnumCompleteTableWithPropertyHandler
+                yield return new EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler
                 {
                     SessionId = Guid.NewGuid(),
                     ColumnBit = DateTime.UtcNow.Ticks % 2 == 0 ? BooleanValue.True : BooleanValue.False,
@@ -126,9 +154,9 @@ namespace RepoDb.IntegrationTests
             }
         }
 
-        public EnumCompleteTableWithPropertyHandler CreateEnumCompleteTableWithPropertyHandlerAsNull()
+        public EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler CreateEnumCompleteTableWithPropertyHandlerAsNull()
         {
-            return new EnumCompleteTableWithPropertyHandler
+            return new EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler
             {
                 SessionId = Guid.NewGuid(),
                 ColumnBit = null,
@@ -136,11 +164,11 @@ namespace RepoDb.IntegrationTests
             };
         }
 
-        public IEnumerable<EnumCompleteTableWithPropertyHandler> CreateEnumCompleteTableWithPropertyHandlersAsNull(int count = 10)
+        public IEnumerable<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler> CreateEnumCompleteTableWithPropertyHandlersAsNull(int count = 10)
         {
             for (var i = 0; i < count; i++)
             {
-                yield return new EnumCompleteTableWithPropertyHandler
+                yield return new EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler
                 {
                     SessionId = Guid.NewGuid(),
                     ColumnBit = null,
@@ -178,7 +206,7 @@ namespace RepoDb.IntegrationTests
         public void TestExecuteScalarForEnumWithPropertyHandlerFor()
         {
             // Setup
-            var entity = CreateEnumCompleteTableWithPropertyHandler();
+            var entity = CreateEnumCompleteTableWithNullablePropertiesAndWithPropertyHandler();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -190,7 +218,7 @@ namespace RepoDb.IntegrationTests
                     "SELECT CONVERT(UNIQUEIDENTIFIER, @SessionId);", entity);
 
                 // Assert
-                Assert.AreEqual(1, connection.CountAll<EnumCompleteTableWithPropertyHandler>());
+                Assert.AreEqual(1, connection.CountAll<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler>());
                 Assert.AreNotEqual(id, Guid.Empty);
                 Assert.AreEqual(entity.SessionId, id);
             }
@@ -204,15 +232,15 @@ namespace RepoDb.IntegrationTests
         public void TestInsertForEnumWithPropertyHandler()
         {
             // Setup
-            var entity = CreateEnumCompleteTableWithPropertyHandler();
+            var entity = CreateEnumCompleteTableWithNullablePropertiesAndWithPropertyHandler();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var id = connection.Insert<EnumCompleteTableWithPropertyHandler, Guid>(entity);
+                var id = connection.Insert<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler, Guid>(entity);
 
                 // Assert
-                Assert.AreEqual(1, connection.CountAll<EnumCompleteTableWithPropertyHandler>());
+                Assert.AreEqual(1, connection.CountAll<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler>());
                 Assert.AreNotEqual(id, Guid.Empty);
                 Assert.AreEqual(entity.SessionId, id);
             }
@@ -227,10 +255,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var id = connection.Insert<EnumCompleteTableWithPropertyHandler, Guid>(entity);
+                var id = connection.Insert<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler, Guid>(entity);
 
                 // Assert
-                Assert.AreEqual(1, connection.CountAll<EnumCompleteTableWithPropertyHandler>());
+                Assert.AreEqual(1, connection.CountAll<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler>());
                 Assert.AreNotEqual(id, Guid.Empty);
                 Assert.AreEqual(entity.SessionId, id);
             }
@@ -249,10 +277,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.InsertAll<EnumCompleteTableWithPropertyHandler>(entities);
+                var result = connection.InsertAll<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler>(entities);
 
                 // Assert
-                Assert.AreEqual(entities.Count(), connection.CountAll<EnumCompleteTableWithPropertyHandler>());
+                Assert.AreEqual(entities.Count(), connection.CountAll<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler>());
             }
         }
 
@@ -265,10 +293,10 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.InsertAll<EnumCompleteTableWithPropertyHandler>(entities);
+                var result = connection.InsertAll<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler>(entities);
 
                 // Assert
-                Assert.AreEqual(entities.Count(), connection.CountAll<EnumCompleteTableWithPropertyHandler>());
+                Assert.AreEqual(entities.Count(), connection.CountAll<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler>());
             }
         }
 
@@ -280,13 +308,13 @@ namespace RepoDb.IntegrationTests
         public void TestQueryForEnumWithPropertyHandler()
         {
             // Setup
-            var entity = CreateEnumCompleteTableWithPropertyHandler();
+            var entity = CreateEnumCompleteTableWithNullablePropertiesAndWithPropertyHandler();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var insertResult = connection.Insert<EnumCompleteTableWithPropertyHandler, Guid>(entity);
-                var queryResult = connection.Query<EnumCompleteTableWithPropertyHandler>(insertResult).First();
+                var insertResult = connection.Insert<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler, Guid>(entity);
+                var queryResult = connection.Query<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler>(insertResult).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -302,8 +330,8 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var insertResult = connection.Insert<EnumCompleteTableWithPropertyHandler, Guid>(entity);
-                var queryResult = connection.Query<EnumCompleteTableWithPropertyHandler>(insertResult).First();
+                var insertResult = connection.Insert<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler, Guid>(entity);
+                var queryResult = connection.Query<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler>(insertResult).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(entity, queryResult);
@@ -323,8 +351,8 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var insertResult = connection.InsertAll<EnumCompleteTableWithPropertyHandler>(entities);
-                var queryResult = connection.QueryAll<EnumCompleteTableWithPropertyHandler>().AsList();
+                var insertResult = connection.InsertAll<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler>(entities);
+                var queryResult = connection.QueryAll<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler>().AsList();
 
                 // Assert
                 entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
@@ -340,8 +368,8 @@ namespace RepoDb.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var insertResult = connection.InsertAll<EnumCompleteTableWithPropertyHandler>(entities);
-                var queryResult = connection.QueryAll<EnumCompleteTableWithPropertyHandler>().AsList();
+                var insertResult = connection.InsertAll<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler>(entities);
+                var queryResult = connection.QueryAll<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler>().AsList();
 
                 // Assert
                 entities.ForEach(entity => Helper.AssertPropertiesEquality(entity, queryResult.First(item => item.SessionId == entity.SessionId)));
@@ -2361,10 +2389,10 @@ namespace RepoDb.IntegrationTests
         #region Insert
 
         [TestMethod]
-        public void TestInsertForEnumWithPropertyHandlerAndWithNullValues()
+        public void TestInsertForEnumWithPropertyHandlerForInvalid()
         {
             // Setup
-            var entity = CreateEnumCompleteTableWithPropertyHandlerAndWithNullValues();
+            var entity = CreateEnumCompleteTableWithPropertyHandler();
 
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -2384,12 +2412,36 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        [TestMethod]
+        public void TestInsertForEnumWithNullPropertiesAndWithPropertyHandlerForInvalid()
+        {
+            // Setup
+            var entity = CreateEnumCompleteTableNullablePropertiesAndWithPropertyHandler();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var id = connection.Insert<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler, Guid>(entity);
+
+                // Assert
+                Assert.AreEqual(1, connection.CountAll<EnumCompleteTable>());
+                Assert.AreNotEqual(id, Guid.Empty);
+                Assert.AreEqual(entity.SessionId, id);
+
+                // Act
+                var queryResult = connection.Query<EnumCompleteTable>(id);
+
+                // Assert
+                Helper.AssertPropertiesEquality(entity, queryResult.First());
+            }
+        }
+
         #endregion
 
         #region Query
 
         [TestMethod]
-        public void TestQueryForEnumWithPropertyHandlerAndWithNullValues()
+        public void TestQueryForEnumWithNullPropertiesAndWithPropertyHandlerForInvalid()
         {
             // Setup
             var entity = new
@@ -2408,10 +2460,42 @@ namespace RepoDb.IntegrationTests
                 Assert.AreEqual(1, connection.CountAll<EnumCompleteTable>());
 
                 // Act
-                var queryResult = connection.Query<EnumCompleteTableWithPropertyHandler>(id);
+                var queryResult = connection.Query<EnumCompleteTableWithNullablePropertiesAndWithPropertyHandler>(id);
+
+                // Setup
+                var expected = new
+                {
+                    SessionId = entity.SessionId,
+                    ColumnBit = BooleanValue.True,
+                    ColumnNVarChar = (Direction?)null,
+                };
 
                 // Assert
-                Helper.AssertPropertiesEquality(entity, queryResult.First());
+                Helper.AssertPropertiesEquality(expected, queryResult.First());
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(InvalidOperationException))]
+        public void ThrowExceptionOnQueryForEnumWithPropertyHandlerForInvalid()
+        {
+            // Setup
+            var entity = new
+            {
+                SessionId = Guid.NewGuid(),
+                ColumnBit = -1,
+                ColumnNVarChar = "OutsideOfEnumRange"
+            };
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var id = connection.Insert<Guid>(ClassMappedNameCache.Get<EnumCompleteTable>(), entity);
+
+                // Assert
+                Assert.AreEqual(1, connection.CountAll<EnumCompleteTable>());
+
+                // Act
+                connection.Query<EnumCompleteTableWithPropertyHandler>(id);
             }
         }
 

@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net5.0;net6.0</TargetFrameworks>
-    <Version>1.12.10-beta1</Version>
-    <AssemblyVersion>1.12.10.1</AssemblyVersion>
-    <FileVersion>1.12.10.1</FileVersion>
+    <Version>1.12.10-beta2</Version>
+    <AssemblyVersion>1.12.10.2</AssemblyVersion>
+    <FileVersion>1.12.10.2</FileVersion>
     <Description>A hybrid ORM library for .NET.</Description>
     <PackageReleaseNotes>http://repodb.net/release/core</PackageReleaseNotes>
     <PackageProjectUrl>https://repodb.net/</PackageProjectUrl>

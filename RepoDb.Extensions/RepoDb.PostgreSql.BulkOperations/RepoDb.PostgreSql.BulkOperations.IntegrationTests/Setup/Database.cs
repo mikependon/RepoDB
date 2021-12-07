@@ -1,5 +1,4 @@
 ﻿using Npgsql;
-using RepoDb.PostgreSql.BulkOperations.IntegrationTests.Models;
 using System;
 
 namespace RepoDb.IntegrationTests.Setup
@@ -66,6 +65,7 @@ namespace RepoDb.IntegrationTests.Setup
         public static void CreateTables()
         {
             CreateBulkOperationIdentityTable();
+            CreateEnumTable();
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace RepoDb.IntegrationTests.Setup
 
         #endregion
 
-        #region CreateTables
+        #region BulkOperationIdentityTable
 
         /// <summary>
         /// Creates an identity table that has some important fields. All fields are nullable.
@@ -118,6 +118,32 @@ namespace RepoDb.IntegrationTests.Setup
             using (var connection = new NpgsqlConnection(ConnectionStringForRepoDb))
             {
                 connection.ExecuteNonQuery(commandText);
+            }
+        }
+
+        #endregion
+
+        #region EnumTable
+
+        private static void CreateEnumTable()
+        {
+            using (var connection = new NpgsqlConnection(ConnectionStringForRepoDb))
+            {
+                connection.ExecuteNonQuery(@"
+                    DO $$
+                    BEGIN
+                        IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'hand') THEN
+                            CREATE TYPE hand AS ENUM ('Unidentified', 'Left', 'Right');
+                        END IF;
+                    END
+                    $$;
+
+                    CREATE TABLE IF NOT EXISTS public.""EnumTable"" (
+                        ""Id"" bigint primary key,
+                        ""ColumnEnumText"" text null COLLATE pg_catalog.""default"",
+                        ""ColumnEnumInt"" integer null,
+                        ""ColumnEnumHand"" hand null
+                    );");
             }
         }
 
