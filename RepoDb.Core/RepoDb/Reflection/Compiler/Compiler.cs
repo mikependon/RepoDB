@@ -753,6 +753,11 @@ namespace RepoDb.Reflection
         internal static Expression ConvertExpressionToNullableExpression(Expression expression,
             Type targetNullableType)
         {
+            if (expression.Type.IsValueType == false)
+            {
+                return expression;
+            }
+
             var underlyingType = Nullable.GetUnderlyingType(expression.Type);
             targetNullableType = targetNullableType.GetUnderlyingType();
 
@@ -881,10 +886,8 @@ namespace RepoDb.Reflection
             var setParameter = GetPropertyHandlerSetParameter(setMethod);
 
             // Nullable
-            if (Nullable.GetUnderlyingType(setParameter.ParameterType) != null)
-            {
-                expression = ConvertExpressionToNullableExpression(expression, targetType);
-            }
+            expression = ConvertExpressionToNullableExpression(expression,
+                Nullable.GetUnderlyingType(setParameter.ParameterType) ?? targetType);
 
             // Call
             var valueExpression = ConvertExpressionToTypeExpression(expression, setParameter.ParameterType);

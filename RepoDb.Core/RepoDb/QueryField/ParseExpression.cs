@@ -189,7 +189,18 @@ namespace RepoDb
         /// <returns></returns>
         private static object ToEnumValue(Type enumType,
             object value) =>
-            Enum.Parse(enumType, Enum.GetName(enumType, value));
+            value != null ? ToEnumValue(enumType, Enum.GetName(enumType, value)) : null;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="enumType"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        private static object ToEnumValue(Type enumType,
+            string name) =>
+            !string.IsNullOrEmpty(name) && Enum.IsDefined(enumType, name) ?
+                Enum.Parse(enumType, name) : null;
 
         /*
          * Member
