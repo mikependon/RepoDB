@@ -1,17 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <Title>RepoDB</Title>
     <TargetFrameworks>netstandard2.0;net5.0;net6.0</TargetFrameworks>
-    <Version>1.12.10-beta2</Version>
-    <AssemblyVersion>1.12.10.2</AssemblyVersion>
-    <FileVersion>1.12.10.2</FileVersion>
+    <Version>1.12.10-beta3</Version>
+    <AssemblyVersion>1.12.10.3</AssemblyVersion>
+    <FileVersion>1.12.10.3</FileVersion>
     <Description>A hybrid ORM library for .NET.</Description>
+	<PackageTags>orm hybrid-orm micro-orm</PackageTags>
     <PackageReleaseNotes>http://repodb.net/release/core</PackageReleaseNotes>
     <PackageProjectUrl>https://repodb.net/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core</RepositoryUrl>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-  </PropertyGroup>
+  
+</PropertyGroup>
 
   <ItemGroup>
     <Compile Remove="Reflection\DataCommand.cs" />
