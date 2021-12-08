@@ -189,7 +189,8 @@ namespace RepoDb
         /// <returns></returns>
         private static object ToEnumValue(Type enumType,
             object value) =>
-            value != null ? ToEnumValue(enumType, Enum.GetName(enumType, value)) : null;
+            (value != null ?
+                ToEnumValue(enumType, Enum.GetName(enumType, value)) : null) ?? value;
 
         /// <summary>
         /// 
