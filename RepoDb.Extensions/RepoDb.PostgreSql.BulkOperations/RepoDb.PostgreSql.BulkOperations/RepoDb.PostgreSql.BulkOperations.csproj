@@ -9,7 +9,6 @@
     <Description>An extension library that contains the official Bulk Operations of RepoDb for PostgreSQL.</Description>
 	<PackageTags>orm hybrid-orm micro-orm postgresql bulkoperations</PackageTags>
     <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.PostgreSql.BulkOperations</RepositoryUrl>
-    <PackageTags>orm orm-framework orm-library hybrid-orm bulk bulk-operations</PackageTags>
     <PackageReleaseNotes>http://repodb.net/release/postgresqlbulk</PackageReleaseNotes>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
