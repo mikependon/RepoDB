@@ -28,7 +28,7 @@ namespace RepoDb.Reflection
                 string.Concat("parameter", dbField.Name.AsUnquoted(true, dbSetting).AsAlphaNumeric()));
 
             // Variable
-            var createParameterExpression = GetDbCommandCreateParameterExpression(commandParameterExpression);
+            var createParameterExpression = GetDbCommandCreateParameterExpression(commandParameterExpression, dbField);
             parameterAssignmentExpressions.AddIfNotNull(Expression.Assign(parameterVariableExpression, createParameterExpression));
 
             // DbParameter.Name
@@ -81,6 +81,13 @@ namespace RepoDb.Reflection
             // DbCommand.Parameters.Add
             var dbParametersAddExpression = GetDbCommandParametersAddExpression(commandParameterExpression, parameterVariableExpression);
             parameterAssignmentExpressions.AddIfNotNull(dbParametersAddExpression);
+
+            // Npgsql (Unknown)
+            if (IsPostgreSqlUserDefined(dbField))
+            {
+                var setToUnknownExpression = GetSetToUnknownNpgsqlParameterExpression(parameterVariableExpression);
+                parameterAssignmentExpressions.AddIfNotNull(setToUnknownExpression);
+            }
 
             // Add to body
             return Expression.Block(new[] { parameterVariableExpression }, parameterAssignmentExpressions);

@@ -1634,14 +1634,30 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         /// <param name="commandParameterExpression"></param>
+        /// <param name="dbField"></param>
         /// <returns></returns>
-        internal static MethodCallExpression GetDbCommandCreateParameterExpression(ParameterExpression commandParameterExpression)
+        internal static MethodCallExpression GetDbCommandCreateParameterExpression(ParameterExpression commandParameterExpression,
+            DbField dbField)
         {
             var dbCommandCreateParameterMethod = StaticType.DbCommand.GetMethod("CreateParameter");
             return Expression.Call(commandParameterExpression, dbCommandCreateParameterMethod);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="commandParameterExpression"></param>
+        /// <returns></returns>
+        internal static MethodCallExpression GetSetToUnknownNpgsqlParameterExpression(ParameterExpression commandParameterExpression)
+        {
+            var assembly = Assembly.LoadFrom("RepoDb.PostgreSql.dll");
+            var type = assembly.GetType("RepoDb.Extensions.DbParameterExtension");
+            var method = type.GetMethod("SetToUnknownNpgsqlParameter",
+                BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.InvokeMethod);
+            return Expression.Call(method, commandParameterExpression);
         }
 
         /// <summary>
@@ -1652,9 +1668,9 @@ namespace RepoDb.Reflection
         /// <param name="entityIndex"></param>
         /// <param name="dbSetting"></param>
         internal static MethodCallExpression GetDbParameterNameAssignmentExpression(ParameterExpression parameterVariableExpression,
-            DbField dbField,
-            int entityIndex,
-            IDbSetting dbSetting)
+        DbField dbField,
+        int entityIndex,
+        IDbSetting dbSetting)
         {
             var dbParameterParameterNameSetMethod = StaticType.DbParameter.GetProperty("ParameterName").SetMethod;
             var parameterName = dbField.Name.AsUnquoted(true, dbSetting).AsAlphaNumeric();
