@@ -11,6 +11,7 @@ using System.Data;
 using System.Data.Common;
 using System.Dynamic;
 using System.Linq;
+using System.Reflection;
 
 namespace RepoDb
 {
@@ -158,17 +159,22 @@ namespace RepoDb
                 includeIdentity,
                 dbSetting);
 
-            return matchedProperties
-                .Select(property =>
-                    GetMapping(property.PropertyInfo.Name,
-                        property.GetMappedName(),
-                        dbFields,
-                        includePrimary,
-                        includeIdentity,
-                        property.PropertyInfo.PropertyType,
-                        GetMappedNpgsqlDbTypeFromAttributes(property.GetPropertyValueAttributes()),
-                        dbSetting))
-                .Where(property => property != null);
+            foreach (var property in matchedProperties)
+            {
+                var mapping = GetMapping(property.PropertyInfo.Name,
+                    property.GetMappedName(),
+                    dbFields,
+                    includePrimary,
+                    includeIdentity,
+                    property.PropertyInfo.PropertyType,
+                    GetMappedNpgsqlDbTypeFromAttributes(property.GetPropertyValueAttributes()),
+                    dbSetting);
+
+                if (mapping != null)
+                {
+                    yield return mapping;
+                }
+            }
         }
 
         /// <summary>
@@ -340,8 +346,9 @@ namespace RepoDb
         /// <param name="mappings"></param>
         private static IEnumerable<NpgsqlBulkInsertMapItem> AddOrderColumnMapping(IEnumerable<NpgsqlBulkInsertMapItem> mappings)
         {
-            var list = mappings.AsList();
-            list.Insert(0, new NpgsqlBulkInsertMapItem("__RepoDb_OrderColumn", "__RepoDb_OrderColumn", NpgsqlTypes.NpgsqlDbType.Integer));
+            var list = new List<NpgsqlBulkInsertMapItem>(mappings);
+            list.Insert(0,
+                new NpgsqlBulkInsertMapItem("__RepoDb_OrderColumn", "__RepoDb_OrderColumn", NpgsqlDbType.Integer));
             return list;
         }
 
@@ -588,7 +595,7 @@ namespace RepoDb
         /// <param name="primary"></param>
         /// <returns></returns>
         private static bool IsPrimaryAnIdentity(DbField primary) =>
-            primary.IsPrimary && primary.IsIdentity;
+            primary?.IsPrimary == true && primary?.IsIdentity == true;
 
         /// <summary>
         /// 
