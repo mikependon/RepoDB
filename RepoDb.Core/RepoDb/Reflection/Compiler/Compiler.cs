@@ -1524,7 +1524,7 @@ namespace RepoDb.Reflection
             DbField dbField,
             IDbSetting dbSetting)
         {
-            var expression = (Expression)null;
+            Expression expression;
 
             // Get the property value
             if (propertyExpression.Type == StaticType.PropertyInfo)
@@ -1571,13 +1571,19 @@ namespace RepoDb.Reflection
             return Expression.Call(parameterVariableExpression, GetDbParameterValueSetMethod(), expression);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="classProperty"></param>
+        /// <param name="dbField"></param>
+        /// <returns></returns>
         private static DbType? GetDbType(ClassProperty classProperty,
-            Type dbFieldType)
+            DbField dbField)
         {
-            var dbType = classProperty?.GetDbType();
+            var dbType = IsPostgreSqlUserDefined(dbField) ? DbType.Object : classProperty?.GetDbType();
             if (dbType == null)
             {
-                var underlyingType = dbFieldType?.GetUnderlyingType();
+                var underlyingType = dbField?.Type?.GetUnderlyingType();
                 dbType = TypeMapper.Get(underlyingType) ?? new ClientTypeToDbTypeResolver().Resolve(underlyingType);
             }
             return dbType;
@@ -1593,7 +1599,7 @@ namespace RepoDb.Reflection
         internal static MethodCallExpression GetDbParameterDbTypeAssignmentExpression(ParameterExpression parameterVariableExpression,
             ClassProperty classProperty,
             DbField dbField) =>
-            GetDbParameterDbTypeAssignmentExpression(parameterVariableExpression, GetDbType(classProperty, dbField.Type));
+            GetDbParameterDbTypeAssignmentExpression(parameterVariableExpression, GetDbType(classProperty, dbField));
 
         /// <summary>
         ///
@@ -1603,7 +1609,7 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static MethodCallExpression GetDbParameterDbTypeAssignmentExpression(ParameterExpression parameterVariableExpression,
             DbField dbField) =>
-            GetDbParameterDbTypeAssignmentExpression(parameterVariableExpression, GetDbType(null, dbField.Type));
+            GetDbParameterDbTypeAssignmentExpression(parameterVariableExpression, GetDbType(null, dbField));
 
         /// <summary>
         ///

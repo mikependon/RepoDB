@@ -65,7 +65,7 @@ namespace RepoDb
                     var includePrimary = isPrimaryAnIdentity == false ||
                         (isPrimaryAnIdentity && includeIdentity);
 
-                    return mappings = mappings = mappings?.Any() == true ? mappings :
+                    return mappings = mappings?.Any() == true ? mappings :
                         isDictionary ?
                         GetMappings(entities?.First() as IDictionary<string, object>,
                             dbFields,

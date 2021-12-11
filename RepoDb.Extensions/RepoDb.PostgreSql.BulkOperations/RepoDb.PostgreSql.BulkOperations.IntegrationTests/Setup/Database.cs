@@ -76,6 +76,7 @@ namespace RepoDb.IntegrationTests.Setup
             using (var connection = new NpgsqlConnection(ConnectionStringForRepoDb))
             {
                 connection.Truncate("BulkOperationIdentityTable");
+                connection.Truncate("EnumTable");
             }
         }
 
@@ -139,10 +140,11 @@ namespace RepoDb.IntegrationTests.Setup
                     $$;
 
                     CREATE TABLE IF NOT EXISTS public.""EnumTable"" (
-                        ""Id"" bigint primary key,
+                        ""Id"" bigint GENERATED ALWAYS AS IDENTITY,
                         ""ColumnEnumText"" text null COLLATE pg_catalog.""default"",
                         ""ColumnEnumInt"" integer null,
-                        ""ColumnEnumHand"" hand null
+                        ""ColumnEnumHand"" hand null,
+                        CONSTRAINT ""EnumTable_PrimaryKey"" PRIMARY KEY (""Id"")
                     );");
             }
         }

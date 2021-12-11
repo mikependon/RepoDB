@@ -66,7 +66,7 @@ namespace RepoDb
                     var includeIdentity = identityBehavior == BulkImportIdentityBehavior.KeepIdentity;
                     var includePrimary = true;
 
-                    return mappings = mappings = mappings?.Any() == true ? mappings :
+                    return mappings = mappings?.Any() == true ? mappings :
                         isDictionary ?
                         GetMappings(entities?.First() as IDictionary<string, object>,
                             dbFields,

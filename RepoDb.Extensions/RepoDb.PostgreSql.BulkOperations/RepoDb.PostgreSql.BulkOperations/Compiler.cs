@@ -2,6 +2,7 @@
 using NpgsqlTypes;
 using RepoDb.Enumerations.PostgreSql;
 using RepoDb.Exceptions;
+using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using System;
 using System.Collections.Concurrent;
@@ -147,8 +148,14 @@ namespace RepoDb.PostgreSql.BulkOperations
                 // Mappings
                 foreach (var mapping in mappings)
                 {
-                    var propertyExpression = Expression.Convert(GetEntityPropertyExpression(entityExpression, entityType, mapping.SourceColumn), typeof(object));
-                    var parameters = mapping.NpgsqlDbType.HasValue ? new Expression[] { propertyExpression, Expression.Constant(mapping.NpgsqlDbType) } :
+                    var entityPropertyExpression = GetEntityPropertyExpression(entityExpression, entityType, mapping);
+                    var propertyExpression = Expression.Convert(entityPropertyExpression, typeof(object));
+                    var parameters = mapping.NpgsqlDbType.HasValue ?
+                        new Expression[]
+                        {
+                            propertyExpression,
+                            Expression.Constant(mapping.NpgsqlDbType)
+                        } :
                         new[] { propertyExpression };
                     var writeMethod = mapping.NpgsqlDbType.HasValue ?
                         GetNpgsqlBinaryImporterWriteWithNpgsqlDbTypeMethod() : GetNpgsqlBinaryImporterWriteMethod();
@@ -314,7 +321,8 @@ namespace RepoDb.PostgreSql.BulkOperations
                 // Mappings
                 foreach (var mapping in mappings)
                 {
-                    var propertyExpression = Expression.Convert(GetEntityPropertyExpression(entityExpression, entityType, mapping.SourceColumn), typeof(object));
+                    var entityPropertyExpression = GetEntityPropertyExpression(entityExpression, entityType, mapping);
+                    var propertyExpression = Expression.Convert(entityPropertyExpression, typeof(object));
                     var parameters = mapping.NpgsqlDbType.HasValue ?
                         new Expression[] { propertyExpression, Expression.Constant(mapping.NpgsqlDbType), cancellationTokenExpression } :
                         new Expression[] { propertyExpression, cancellationTokenExpression };
@@ -424,28 +432,112 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// </summary>
         /// <param name="entityExpression"></param>
         /// <param name="entityType"></param>
-        /// <param name="propertyName"></param>
+        /// <param name="mapping"></param>
         /// <returns></returns>
         private static Expression GetEntityPropertyExpression(Expression entityExpression,
             Type entityType,
-            string propertyName)
+            NpgsqlBulkInsertMapItem mapping)
         {
-            var classProperty = PropertyCache.Get(entityType);
+            // Property
+            var classProperty = PropertyCache.Get(entityType, mapping.SourceColumn);
             if (classProperty == null)
             {
-                throw new PropertyNotFoundException($"Property '{propertyName}' is not found from type '{entityType.FullName}'.");
+                throw new PropertyNotFoundException($"Property '{mapping.SourceColumn}' is not found from type '{entityType.FullName}'.");
             }
-            return Expression.Property(entityExpression, propertyName);
+
+            var propertyExpression = (Expression)Expression.Property(entityExpression, mapping.SourceColumn);
+
+            // Enum
+            if (classProperty.PropertyInfo.PropertyType.GetUnderlyingType().IsEnum)
+            {
+                propertyExpression = GetEntityPropertyExpressionForEnum(propertyExpression, mapping.NpgsqlDbType);
+            }
+
+            // Return
+            return propertyExpression;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="tableName"></param>
+        /// <param name="propertyExpression"></param>
+        /// <param name="npgsqlDbType"></param>
         /// <returns></returns>
-        private static int GetHashCode<TEntity>(string tableName) =>
-            GetHashCode(typeof(TEntity), tableName);
+        private static Expression GetEntityPropertyExpressionForEnum(Expression propertyExpression,
+            NpgsqlDbType? npgsqlDbType)
+        {
+            var expression = npgsqlDbType switch
+            {
+                NpgsqlDbType.Text => ConvertEnumExpressionToString(propertyExpression),
+                NpgsqlDbType.Integer => ConvertEnumExpressionToIntBasedType(propertyExpression, typeof(int)),
+                NpgsqlDbType.Bigint => ConvertEnumExpressionToIntBasedType(propertyExpression, typeof(long)),
+                NpgsqlDbType.Smallint => ConvertEnumExpressionToIntBasedType(propertyExpression, typeof(short)),
+                _ => propertyExpression
+            };
+
+            if (propertyExpression.Type.IsNullable())
+            {
+                var underlyingType = expression.Type.GetUnderlyingType();
+                var nullableType = underlyingType.IsValueType ?
+                    typeof(Nullable<>).MakeGenericType(underlyingType) : underlyingType;
+                var testExpression = Expression.Equal(Expression.Constant(null), propertyExpression);
+                var trueExpression = Expression.Default(nullableType);
+                var falseExpression = underlyingType.IsValueType && npgsqlDbType != NpgsqlDbType.Unknown ?
+                    Expression.New(nullableType.GetConstructor(new[] { underlyingType }), expression) : expression;
+                expression = Expression.Condition(testExpression, trueExpression, falseExpression);
+            }
+
+            return expression;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="propertyExpression"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
+        private static Expression ConvertEnumExpressionToString(Expression propertyExpression) =>
+            Expression.Call(GetConvertToTypeMethod(typeof(string)),
+                Expression.Convert(propertyExpression, typeof(object)));
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="propertyExpression"></param>
+        /// <param name="intBasedType"></param>
+        /// <returns></returns>
+        private static Expression ConvertEnumExpressionToIntBasedType(Expression propertyExpression,
+            Type intBasedType)
+        {
+            var typeExpression = Expression.Constant(propertyExpression.Type.GetUnderlyingType());
+            var nameExpression = Expression.Call(GetEnumGetNameMethod(),
+                Expression.Constant(propertyExpression.Type.GetUnderlyingType()),
+                Expression.Convert(propertyExpression, typeof(object)));
+            var ignoreCaseExpression = Expression.Constant(true);
+            var valueExpression = Expression.Call(GetEnumParseMethod(), typeExpression, nameExpression, ignoreCaseExpression);
+            return Expression.Call(GetConvertToTypeMethod(intBasedType), valueExpression);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        private static MethodInfo GetEnumParseMethod() =>
+            typeof(Enum).GetMethod("Parse", new[] { typeof(Type), typeof(string), typeof(bool) });
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        private static MethodInfo GetEnumGetNameMethod() =>
+            typeof(Enum).GetMethod("GetName", new[] { typeof(Type), typeof(object) });
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        private static MethodInfo GetConvertToTypeMethod(Type type) =>
+            typeof(Convert).GetMethod($"To{type.Name}", new[] { typeof(object) });
 
         /// <summary>
         /// 
@@ -492,38 +584,6 @@ namespace RepoDb.PostgreSql.BulkOperations
             return hashCode;
         }
 
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <typeparam name="TEntity"></typeparam>
-        ///// <param name="tableName"></param>
-        ///// <param name="dbFields"></param>
-        ///// <param name="fields"></param>
-        ///// <returns></returns>
-        //private static int GetHashCode<TEntity>(string tableName,
-        //    IEnumerable<DbField> dbFields,
-        //    IEnumerable<ClassProperty> fields)
-        //{
-        //    var hashCode = GetHashCode<TEntity>(tableName);
-
-        //    if (dbFields?.Any() == true)
-        //    {
-        //        foreach (var dbField in dbFields)
-        //        {
-        //            hashCode += HashCode.Combine(hashCode, dbField.GetHashCode());
-        //        }
-        //    }
-
-        //    if (fields?.Any() == true)
-        //    {
-        //        foreach (var field in fields)
-        //        {
-        //            hashCode += HashCode.Combine(hashCode, field.GetHashCode());
-        //        }
-        //    }
-
-        //    return hashCode;
-        //}
 
         #endregion
 
@@ -531,7 +591,7 @@ namespace RepoDb.PostgreSql.BulkOperations
 
 
 
-
+        // TODO: Remove
 
         #region GetMethodFunc
 

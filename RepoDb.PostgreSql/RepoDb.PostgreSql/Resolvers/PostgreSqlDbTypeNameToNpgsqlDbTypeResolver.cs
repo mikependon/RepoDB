@@ -17,15 +17,21 @@ namespace RepoDb.Resolvers
         /// <returns>The equivalent <see cref="NpgsqlDbType"/>.</returns>
         public virtual NpgsqlDbType? Resolve(string dbTypeName)
         {
-            if (dbTypeName == null)
+            if (string.IsNullOrWhiteSpace(dbTypeName))
             {
-                throw new NullReferenceException("The DB Type name must not be null.");
+                throw new NullReferenceException("The database type name must not be a null or whitespace.");
             }
 
             // Try parse
             if (Enum.TryParse<NpgsqlDbType>(dbTypeName, true, out var result))
             {
                 return result;
+            }
+
+            // User-Defined
+            if ("USER-DEFINED".Equals(dbTypeName, StringComparison.OrdinalIgnoreCase))
+            {
+                return NpgsqlDbType.Unknown;
             }
 
             // Covert to .NET CLR Type

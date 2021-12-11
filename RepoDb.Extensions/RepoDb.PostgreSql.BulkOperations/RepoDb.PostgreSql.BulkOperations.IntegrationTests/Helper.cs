@@ -2,6 +2,7 @@
 using Npgsql;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
+using RepoDb.PostgreSql.BulkOperations.IntegrationTests.Enumerations;
 using RepoDb.PostgreSql.BulkOperations.IntegrationTests.Models;
 using System;
 using System.Collections.Generic;
@@ -442,6 +443,36 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #endregion
 
+        #region EnumTable
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="count"></param>
+        /// <param name="hasId"></param>
+        /// <param name="addToKey"></param>
+        /// <returns></returns>
+        public static List<EnumTable> CreateEnumTables(int count,
+            bool hasId = false,
+            long addToKey = 0)
+        {
+            var tables = new List<EnumTable>();
+            for (var i = 0; i < count; i++)
+            {
+                var index = i + 1;
+                tables.Add(new EnumTable
+                {
+                    Id = (long)(hasId ? index + addToKey : 0),
+                    ColumnEnumHand = Hands.Right,
+                    ColumnEnumInt = Hands.Left,
+                    ColumnEnumText = Hands.Unidentified
+                });
+            }
+            return tables;
+        }
+
+        #endregion
+
         #endregion
 
         #region Anonymous
@@ -566,6 +597,36 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #endregion
 
+        #region EnumTableAnonymousTable
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="count"></param>
+        /// <param name="hasId"></param>
+        /// <param name="addToKey"></param>
+        /// <returns></returns>
+        public static List<dynamic> CreateEnumTableAnonymousTables(int count,
+            bool hasId = false,
+            long addToKey = 0)
+        {
+            var tables = new List<dynamic>();
+            for (var i = 0; i < count; i++)
+            {
+                var index = i + 1;
+                tables.Add(new
+                {
+                    Id = (long)(hasId ? index + addToKey : 0),
+                    ColumnEnumHand = Hands.Right,
+                    ColumnEnumInt = Hands.Left,
+                    ColumnEnumText = Hands.Unidentified
+                });
+            }
+            return tables;
+        }
+
+        #endregion
+
         #endregion
 
         #region ExpandoObject
@@ -678,6 +739,35 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #endregion
 
+        #region EnumTableExpandoObjectTable
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="count"></param>
+        /// <param name="hasId"></param>
+        /// <param name="addToKey"></param>
+        /// <returns></returns>
+        public static List<dynamic> CreateEnumTableExpandoObjectTables(int count,
+            bool hasId = false,
+            long addToKey = 0)
+        {
+            var tables = new List<dynamic>();
+            for (var i = 0; i < count; i++)
+            {
+                var expandoObject = new ExpandoObject() as IDictionary<string, object>;
+                var index = i + 1;
+                expandoObject["Id"] = (long)(hasId ? index + addToKey : 0);
+                expandoObject["ColumnEnumHand"] = Hands.Right;
+                expandoObject["ColumnEnumInt"] = Hands.Left;
+                expandoObject["ColumnEnumText"] = Hands.Unidentified;
+                tables.Add((ExpandoObject)expandoObject);
+            }
+            return tables;
+        }
+
+        #endregion
+
         #endregion
 
         #region DataTable
@@ -769,6 +859,25 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
         /// <returns></returns>
         public static DataTable UpdateBulkOperationDataTableUnmatchedIdentityTables(List<BulkOperationUnmatchedIdentityTable> data) =>
             ToDataTable("BulkOperationIdentityTable", UpdateBulkOperationUnmatchedIdentityTables(data));
+
+        #endregion
+
+        #region EnumTableDataTableTable
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="count"></param>
+        /// <param name="hasId"></param>
+        /// <param name="addToKey"></param>
+        /// <returns></returns>
+        public static DataTable CreateEnumTableDataTable(int count,
+            bool hasId = false,
+            long addToKey = 0)
+        {
+            var tables = CreateEnumTables(count, hasId, addToKey);
+            return ToDataTable("EnumTable", tables);
+        }
 
         #endregion
 
