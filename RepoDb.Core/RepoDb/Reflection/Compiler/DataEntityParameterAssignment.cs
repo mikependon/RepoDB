@@ -35,7 +35,7 @@ namespace RepoDb.Reflection
                 string.Concat("parameter", dbField.Name.AsUnquoted(true, dbSetting).AsAlphaNumeric()));
 
             // Variable
-            var createParameterExpression = GetDbCommandCreateParameterExpression(commandParameterExpression);
+            var createParameterExpression = GetDbCommandCreateParameterExpression(commandParameterExpression, dbField);
             parameterAssignmentExpressions.AddIfNotNull(Expression.Assign(parameterVariableExpression, createParameterExpression));
 
             // DbParameter.Name
@@ -88,6 +88,13 @@ namespace RepoDb.Reflection
             {
                 var scaleAssignmentExpression = GetDbParameterScaleAssignmentExpression(parameterVariableExpression, dbField.Scale.Value);
                 parameterAssignmentExpressions.AddIfNotNull(scaleAssignmentExpression);
+            }
+
+            // Npgsql (Unknown)
+            if (IsPostgreSqlUserDefined(dbField))
+            {
+                var setToUnknownExpression = GetSetToUnknownNpgsqlParameterExpression(parameterVariableExpression);
+                parameterAssignmentExpressions.AddIfNotNull(setToUnknownExpression);
             }
 
             // PropertyValueAttributes / DbField must precide
