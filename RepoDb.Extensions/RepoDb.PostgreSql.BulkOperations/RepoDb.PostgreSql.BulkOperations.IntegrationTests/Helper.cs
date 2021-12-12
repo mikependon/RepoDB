@@ -759,8 +759,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var index = i + 1;
                 expandoObject["Id"] = (long)(hasId ? index + addToKey : 0);
                 expandoObject["ColumnEnumHand"] = Hands.Right;
-                expandoObject["ColumnEnumInt"] = Hands.Left;
-                expandoObject["ColumnEnumText"] = Hands.Unidentified;
+                expandoObject["ColumnEnumInt"] = (int?)null; // Hands.Left;
+                expandoObject["ColumnEnumText"] = (string?)null; // Hands.Unidentified;
                 tables.Add((ExpandoObject)expandoObject);
             }
             return tables;
@@ -783,7 +783,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
             where TEntity : class
         {
             var table = new DataTable() { TableName = tableName ?? ClassMappedNameCache.Get<TEntity>() };
-            var properties = PropertyCache.Get<TEntity>();
+            var properties = PropertyCache.Get(entities?.First()?.GetType() ?? typeof(TEntity));
 
             // Columns
             foreach (var property in properties)
@@ -798,7 +798,8 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
                 foreach (var property in properties)
                 {
-                    row[property.PropertyInfo.Name] = property.PropertyInfo.GetValue(entity);
+                    var value = property.PropertyInfo.GetValue(entity);
+                    row[property.PropertyInfo.Name] = value == null ? DBNull.Value : value;
                 }
 
                 table.Rows.Add(row);

@@ -735,13 +735,9 @@ namespace RepoDb.Reflection
         internal static Expression ConvertExpressionToDbNullExpression(Expression expression,
             string propertyName)
         {
-            var valueVariable = Expression.Variable(StaticType.Object, string.Concat("valueOf", propertyName));
-            var valueIsNull = Expression.Equal(valueVariable, Expression.Constant(null));
-            var dbNullValue = ConvertExpressionToTypeExpression(Expression.Constant(DBNull.Value), StaticType.Object);
-
-            // Set the property value
-            return Expression.Block(new[] { valueVariable }, Expression.Assign(valueVariable, expression),
-                Expression.Condition(valueIsNull, dbNullValue, valueVariable));
+            var valueIsNullExpression = Expression.Equal(expression, Expression.Constant(null));
+            var dbNullValueExpresion = ConvertExpressionToTypeExpression(Expression.Constant(DBNull.Value), StaticType.Object);
+            return Expression.Condition(valueIsNullExpression, dbNullValueExpresion, expression);
         }
 
         /// <summary>
@@ -1679,9 +1675,9 @@ namespace RepoDb.Reflection
         /// <param name="entityIndex"></param>
         /// <param name="dbSetting"></param>
         internal static MethodCallExpression GetDbParameterNameAssignmentExpression(ParameterExpression parameterVariableExpression,
-        DbField dbField,
-        int entityIndex,
-        IDbSetting dbSetting)
+            DbField dbField,
+            int entityIndex,
+            IDbSetting dbSetting)
         {
             var dbParameterParameterNameSetMethod = StaticType.DbParameter.GetProperty("ParameterName").SetMethod;
             var parameterName = dbField.Name.AsUnquoted(true, dbSetting).AsAlphaNumeric();
