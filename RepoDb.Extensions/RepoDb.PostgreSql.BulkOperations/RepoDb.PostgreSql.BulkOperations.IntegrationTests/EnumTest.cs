@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Npgsql;
-using RepoDb.Attributes.Parameter.Npgsql;
 using RepoDb.IntegrationTests.Setup;
 using RepoDb.PostgreSql.BulkOperations.IntegrationTests.Enumerations;
 using RepoDb.PostgreSql.BulkOperations.IntegrationTests.Models;
@@ -18,10 +17,10 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
             Database.Initialize();
             Cleanup();
 
-            FluentMapper
-                .Entity<EnumTable>()
-                .PropertyValueAttributes(e => e.ColumnEnumHand,
-                    new[] { new NpgsqlDbTypeAttribute(NpgsqlTypes.NpgsqlDbType.Unknown) }, true);
+            //FluentMapper
+                //.Entity<EnumTable>()
+                //.PropertyValueAttributes(e => e.ColumnEnumHand,
+                    //new[] { new NpgsqlDbTypeAttribute(NpgsqlTypes.NpgsqlDbType.Unknown) }, true);
         }
 
         [TestCleanup]

@@ -1650,14 +1650,25 @@ namespace RepoDb.Reflection
         /// 
         /// </summary>
         /// <param name="commandParameterExpression"></param>
+        /// <param name="dbField"></param>
         /// <returns></returns>
-        internal static MethodCallExpression GetSetToUnknownNpgsqlParameterExpression(ParameterExpression commandParameterExpression)
+        internal static MethodCallExpression GetSetToUnknownNpgsqlParameterExpression(ParameterExpression commandParameterExpression,
+            DbField dbField)
         {
             var assembly = Assembly.LoadFrom("RepoDb.PostgreSql.dll");
-            var type = assembly.GetType("RepoDb.Extensions.DbParameterExtension");
-            var method = type.GetMethod("SetToUnknownNpgsqlParameter",
+            var type = assembly?.GetType("RepoDb.Extensions.DbParameterExtension");
+            var method = type?.GetMethod("SetToUnknown",
                 BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.InvokeMethod);
-            return Expression.Call(method, commandParameterExpression);
+
+            if (method != null)
+            {
+                return Expression.Call(method, commandParameterExpression);
+            }
+            else
+            {
+                throw new InvalidOperationException($"The parameter extension method named 'SetToUnknownInternal' has not been loaded property. " +
+                    $"Error when setting the parameter object to an unknown type for the database field '{dbField}'.");
+            }
         }
 
         /// <summary>
