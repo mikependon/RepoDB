@@ -132,7 +132,21 @@ namespace RepoDb
                 {
                     foreach (var mapping in mappings)
                     {
-                        BinaryImportWrite(importer, row[mapping.SourceColumn], mapping.NpgsqlDbType);
+                        var data = row[mapping.SourceColumn];
+                        if (data is Enum)
+                        {
+                            if (mapping.NpgsqlDbType == NpgsqlDbType.Integer ||
+                                mapping.NpgsqlDbType == NpgsqlDbType.Bigint ||
+                                mapping.NpgsqlDbType == NpgsqlDbType.Smallint)
+                            {
+                                data = Convert.ToInt32(data);
+                            }
+                            else if (mapping.NpgsqlDbType == NpgsqlDbType.Text)
+                            {
+                                data = Convert.ToString(data);
+                            }
+                        }
+                        BinaryImportWrite(importer, data, mapping.NpgsqlDbType);
                     }
                 },
                 identityBehavior);
@@ -214,6 +228,19 @@ namespace RepoDb
             {
                 if (npgsqlDbType != null)
                 {
+                    if (data is Enum)
+                    {
+                        if (npgsqlDbType == NpgsqlDbType.Integer ||
+                            npgsqlDbType == NpgsqlDbType.Bigint ||
+                            npgsqlDbType == NpgsqlDbType.Smallint)
+                        {
+                            data = Convert.ToInt32(data);
+                        }
+                        else if (npgsqlDbType == NpgsqlDbType.Text)
+                        {
+                            data = Convert.ToString(data);
+                        }
+                    }
                     importer.Write(data, npgsqlDbType.Value);
                 }
                 else

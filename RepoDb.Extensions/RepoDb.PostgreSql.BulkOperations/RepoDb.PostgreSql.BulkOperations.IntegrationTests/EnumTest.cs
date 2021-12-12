@@ -4,6 +4,7 @@ using RepoDb.IntegrationTests.Setup;
 using RepoDb.PostgreSql.BulkOperations.IntegrationTests.Enumerations;
 using RepoDb.PostgreSql.BulkOperations.IntegrationTests.Models;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 
 namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
@@ -18,9 +19,9 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
             Cleanup();
 
             //FluentMapper
-                //.Entity<EnumTable>()
-                //.PropertyValueAttributes(e => e.ColumnEnumHand,
-                    //new[] { new NpgsqlDbTypeAttribute(NpgsqlTypes.NpgsqlDbType.Unknown) }, true);
+            //.Entity<EnumTable>()
+            //.PropertyValueAttributes(e => e.ColumnEnumHand,
+            //new[] { new NpgsqlDbTypeAttribute(NpgsqlTypes.NpgsqlDbType.Unknown) }, true);
         }
 
         [TestCleanup]
@@ -67,6 +68,62 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                     ColumnEnumHand = (Hands?)null,
                     ColumnEnumInt = (Hands?)null,
                     ColumnEnumText = (Hands?)null
+                });
+            }
+            return tables;
+        }
+
+        public static List<dynamic> CreateEnumTablesForExpandoObjectWithNullValues(int count,
+            bool hasId = false,
+            long addToKey = 0)
+        {
+            var tables = new List<dynamic>();
+            for (var i = 0; i < count; i++)
+            {
+                var expandoObject = new ExpandoObject() as IDictionary<string, object>;
+                var index = i + 1;
+                expandoObject["Id"] = (long)(hasId ? index + addToKey : 0);
+                expandoObject["ColumnEnumHand"] = (Hands?)null;
+                expandoObject["ColumnEnumInt"] = (Hands?)null;
+                expandoObject["ColumnEnumText"] = (Hands?)null;
+                tables.Add((ExpandoObject)expandoObject);
+            }
+            return tables;
+        }
+
+        public static List<dynamic> CreateEnumTablesForDataTable(int count,
+            bool hasId = false,
+            long addToKey = 0)
+        {
+            var tables = new List<dynamic>();
+            for (var i = 0; i < count; i++)
+            {
+                var index = i + 1;
+                tables.Add(new
+                {
+                    Id = (long)(hasId ? index + addToKey : 0),
+                    ColumnEnumHand = Hands.Right.ToString(),
+                    ColumnEnumInt = (int?)Hands.Left,
+                    ColumnEnumText = Hands.Unidentified.ToString()
+                });
+            }
+            return tables;
+        }
+
+        public static List<dynamic> CreateEnumTablesForDataTableWithNullValues(int count,
+            bool hasId = false,
+            long addToKey = 0)
+        {
+            var tables = new List<dynamic>();
+            for (var i = 0; i < count; i++)
+            {
+                var index = i + 1;
+                tables.Add(new
+                {
+                    Id = (long)(hasId ? index + addToKey : 0),
+                    ColumnEnumHand = (string)null,
+                    ColumnEnumInt = (int?)null,
+                    ColumnEnumText = (string)null
                 });
             }
             return tables;
@@ -520,6 +577,441 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #endregion
 
+        #region IDictionary<string, object>
+
+        #region BinaryBulkInsert
+
+        [TestMethod]
+        public void TestBinaryBulkInsertForEnumForExpandoObject()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = Helper.CreateEnumTableExpandoObjectTables(10, false);
+                var tableName = "EnumTable";
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                    tableName,
+                    entities: entities);
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+
+                // Assert
+                var queryResult = connection.QueryAll<EnumTable>(tableName).ToList();
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => entities.IndexOf(t1) == queryResult.IndexOf(t2));
+                Assert.AreEqual(entities.Count(), assertCount);
+            }
+        }
+
+        [TestMethod]
+        public void TestBinaryBulkInsertForEnumForExpandoObjectWithNullValues()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = CreateEnumTablesForExpandoObjectWithNullValues(10, false);
+                var tableName = "EnumTable";
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                    tableName,
+                    entities: entities);
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+
+                // Assert
+                var queryResult = connection.QueryAll<EnumTable>(tableName).ToList();
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => entities.IndexOf(t1) == queryResult.IndexOf(t2));
+                Assert.AreEqual(entities.Count(), assertCount);
+            }
+        }
+
+        #endregion
+
+        #region BinaryBulkDelete
+
+        [TestMethod]
+        public void TestBinaryBulkDeleteForEnumForExpandoObject()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = Helper.CreateEnumTableExpandoObjectTables(10, true);
+                var tableName = "EnumTable";
+
+                // Act
+                connection.InsertAll(tableName, entities);
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryBulkDelete(connection,
+                    tableName,
+                    entities: entities);
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+
+                // Assert
+                var countResult = connection.CountAll<EnumTable>();
+                Assert.AreEqual(0, countResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestBinaryBulkDeleteForEnumForExpandoObjectWithNullValues()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = CreateEnumTablesForExpandoObjectWithNullValues(10, true);
+                var tableName = "EnumTable";
+
+                // Act
+                connection.InsertAll(tableName, entities);
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryBulkDelete(connection,
+                    tableName,
+                    entities: entities);
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+
+                // Assert
+                var countResult = connection.CountAll<EnumTable>();
+                Assert.AreEqual(0, countResult);
+            }
+        }
+
+        #endregion
+
+        #region BinaryBulkMerge
+
+        [TestMethod]
+        public void TestBinaryBulkMergeForEnumForExpandoObject()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = Helper.CreateEnumTableExpandoObjectTables(10, false);
+                var tableName = "EnumTable";
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryBulkMerge(connection,
+                    tableName,
+                    entities: entities);
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+
+                // Assert
+                var queryResult = connection.QueryAll<EnumTable>(tableName).ToList();
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => entities.IndexOf(t1) == queryResult.IndexOf(t2));
+                Assert.AreEqual(entities.Count(), assertCount);
+            }
+        }
+
+        [TestMethod]
+        public void TestBinaryBulkMergeForEnumForExpandoObjectWithNullValues()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = CreateEnumTablesForExpandoObjectWithNullValues(10, false);
+                var tableName = "EnumTable";
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryBulkMerge(connection,
+                    tableName,
+                    entities: entities);
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+
+                // Assert
+                var queryResult = connection.QueryAll<EnumTable>(tableName).ToList();
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => entities.IndexOf(t1) == queryResult.IndexOf(t2));
+                Assert.AreEqual(entities.Count(), assertCount);
+            }
+        }
+
+        #endregion
+
+        #region BinaryBulkUpdate
+
+        [TestMethod]
+        public void TestBinaryBulkUpdateForEnumForExpandoObject()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = Helper.CreateEnumTableExpandoObjectTables(10, true);
+                var tableName = "EnumTable";
+
+                // Act
+                connection.InsertAll(tableName, entities);
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryBulkUpdate(connection,
+                    tableName,
+                    entities: entities);
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+
+                // Assert
+                var queryResult = connection.QueryAll<EnumTable>(tableName).ToList();
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => entities.IndexOf(t1) == queryResult.IndexOf(t2));
+                Assert.AreEqual(entities.Count(), assertCount);
+            }
+        }
+
+        [TestMethod]
+        public void TestBinaryBulkUpdateForEnumForExpandoObjectWithNullValues()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = CreateEnumTablesForExpandoObjectWithNullValues(10, true);
+                var tableName = "EnumTable";
+
+                // Act
+                connection.InsertAll(tableName, entities);
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryBulkUpdate(connection,
+                    tableName,
+                    entities: entities);
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+
+                // Assert
+                var queryResult = connection.QueryAll<EnumTable>(tableName).ToList();
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => entities.IndexOf(t1) == queryResult.IndexOf(t2));
+                Assert.AreEqual(entities.Count(), assertCount);
+            }
+        }
+
+        #endregion
+
+        #endregion
+
+        #region DataTable
+
+        #region BinaryBulkInsert
+
+        [TestMethod]
+        public void TestBinaryBulkInsertForEnumForDataTable()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = CreateEnumTablesForDataTable(10, false);
+                var tableName = "EnumTable";
+                var table = Helper.ToDataTable(tableName, entities);
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                    tableName,
+                    table);
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestBinaryBulkInsertForEnumForDataTableWithNullValues()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = CreateEnumTablesForDataTableWithNullValues(10, false);
+                var tableName = "EnumTable";
+                var table = Helper.ToDataTable(tableName, entities);
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryBulkInsert(connection,
+                    tableName,
+                    table);
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+
+                // Assert
+                var queryResult = connection.QueryAll<EnumTable>(tableName).ToList();
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => entities.IndexOf(t1) == queryResult.IndexOf(t2));
+                Assert.AreEqual(entities.Count(), assertCount);
+            }
+        }
+
+        #endregion
+
+        #region BinaryBulkDelete
+
+        [TestMethod]
+        public void TestBinaryBulkDeleteForEnumForDataTable()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = CreateEnumTablesForDataTable(10, true);
+                var tableName = "EnumTable";
+                var table = Helper.ToDataTable(tableName, entities);
+
+                // Act
+                connection.InsertAll(tableName, entities);
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryBulkDelete(connection,
+                    tableName,
+                    table);
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+
+                // Assert
+                var countResult = connection.CountAll<EnumTable>();
+                Assert.AreEqual(0, countResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestBinaryBulkDeleteForEnumForDataTableWithNullValues()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = CreateEnumTablesForDataTableWithNullValues(10, true);
+                var tableName = "EnumTable";
+                var table = Helper.ToDataTable(tableName, entities);
+
+                // Act
+                connection.InsertAll(tableName, entities);
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryBulkDelete(connection,
+                    tableName,
+                    table);
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+
+                // Assert
+                var countResult = connection.CountAll<EnumTable>();
+                Assert.AreEqual(0, countResult);
+            }
+        }
+
+        #endregion
+
+        #region BinaryBulkMerge
+
+        [TestMethod]
+        public void TestBinaryBulkMergeForEnumForDataTable()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = CreateEnumTablesForDataTable(10, false);
+                var tableName = "EnumTable";
+                var table = Helper.ToDataTable(tableName, entities);
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryBulkMerge(connection,
+                    tableName,
+                    table);
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+
+                // Assert
+                var countResult = connection.CountAll<EnumTable>();
+                Assert.AreEqual(entities.Count(), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestBinaryBulkMergeForEnumForDataTableWithNullValues()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = CreateEnumTablesForDataTableWithNullValues(10, false);
+                var tableName = "EnumTable";
+                var table = Helper.ToDataTable(tableName, entities);
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryBulkMerge(connection,
+                    tableName,
+                    table);
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+
+                // Assert
+                var countResult = connection.CountAll<EnumTable>();
+                Assert.AreEqual(entities.Count(), result);
+            }
+        }
+
+        #endregion
+
+        #region BinaryBulkUpdate
+
+        [TestMethod]
+        public void TestBinaryBulkUpdateForEnumForDataTable()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = CreateEnumTablesForDataTable(10, true);
+                var tableName = "EnumTable";
+                var table = Helper.ToDataTable(tableName, entities);
+
+                // Act
+                connection.InsertAll(tableName, entities);
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryBulkUpdate(connection,
+                    tableName,
+                    table);
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestBinaryBulkUpdateForEnumForDataTableWithNullValues()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = CreateEnumTablesForDataTableWithNullValues(10, true);
+                var tableName = "EnumTable";
+                var table = Helper.ToDataTable(tableName, entities);
+
+                // Act
+                connection.InsertAll(tableName, entities);
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryBulkUpdate(connection,
+                    tableName,
+                    table);
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+            }
+        }
+
+        #endregion
+
+        #endregion
+
         #endregion
 
         #region Async
@@ -578,7 +1070,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #endregion
 
-        #region BinaryBulkDelete
+        #region BinaryBulkDeleteAsync
 
         [TestMethod]
         public void TestBinaryBulkDeleteAsyncForEnum()
@@ -634,7 +1126,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #endregion
 
-        #region BinaryBulkMerge
+        #region BinaryBulkMergeAsync
 
         [TestMethod]
         public void TestBinaryBulkMergeAsyncForEnum()
@@ -686,7 +1178,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #endregion
 
-        #region BinaryBulkUpdate
+        #region BinaryBulkUpdateAsync
 
         [TestMethod]
         public void TestBinaryBulkUpdateAsyncForEnum()
@@ -748,7 +1240,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #region Anonymous
 
-        #region BinaryBulkInsert
+        #region BinaryBulkInsertAsync
 
         [TestMethod]
         public void TestBinaryBulkInsertAsyncForEnumForAnonymous()
@@ -800,7 +1292,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #endregion
 
-        #region BinaryBulkDelete
+        #region BinaryBulkDeleteAsync
 
         [TestMethod]
         public void TestBinaryBulkDeleteAsyncForEnumForAnonymous()
@@ -856,7 +1348,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #endregion
 
-        #region BinaryBulkMerge
+        #region BinaryBulkMergeAsync
 
         [TestMethod]
         public void TestBinaryBulkMergeAsyncForEnumForAnonymous()
@@ -908,7 +1400,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 
         #endregion
 
-        #region BinaryBulkUpdate
+        #region BinaryBulkUpdateAsync
 
         [TestMethod]
         public void TestBinaryBulkUpdateAsyncForEnumForAnonymous()
@@ -961,6 +1453,441 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 var queryResult = connection.QueryAll<EnumTable>(tableName).ToList();
                 var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => entities.IndexOf(t1) == queryResult.IndexOf(t2));
                 Assert.AreEqual(entities.Count(), assertCount);
+            }
+        }
+
+        #endregion
+
+        #endregion
+
+        #region IDictionary<string, object>
+
+        #region BinaryBulkInsertAsync
+
+        [TestMethod]
+        public void TestBinaryBulkInsertAsyncForEnumForExpandoObject()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = Helper.CreateEnumTableExpandoObjectTables(10, false);
+                var tableName = "EnumTable";
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                    tableName,
+                    entities: entities).Result;
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+
+                // Assert
+                var queryResult = connection.QueryAll<EnumTable>(tableName).ToList();
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => entities.IndexOf(t1) == queryResult.IndexOf(t2));
+                Assert.AreEqual(entities.Count(), assertCount);
+            }
+        }
+
+        [TestMethod]
+        public void TestBinaryBulkInsertAsyncForEnumForExpandoObjectWithNullValues()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = CreateEnumTablesForExpandoObjectWithNullValues(10, false);
+                var tableName = "EnumTable";
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                    tableName,
+                    entities: entities).Result;
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+
+                // Assert
+                var queryResult = connection.QueryAll<EnumTable>(tableName).ToList();
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => entities.IndexOf(t1) == queryResult.IndexOf(t2));
+                Assert.AreEqual(entities.Count(), assertCount);
+            }
+        }
+
+        #endregion
+
+        #region BinaryBulkDeleteAsync
+
+        [TestMethod]
+        public void TestBinaryBulkDeleteAsyncForEnumForExpandoObject()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = Helper.CreateEnumTableExpandoObjectTables(10, true);
+                var tableName = "EnumTable";
+
+                // Act
+                connection.InsertAll(tableName, entities);
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryBulkDeleteAsync(connection,
+                    tableName,
+                    entities: entities).Result;
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+
+                // Assert
+                var countResult = connection.CountAll<EnumTable>();
+                Assert.AreEqual(0, countResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestBinaryBulkDeleteAsyncForEnumForExpandoObjectWithNullValues()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = CreateEnumTablesForExpandoObjectWithNullValues(10, true);
+                var tableName = "EnumTable";
+
+                // Act
+                connection.InsertAll(tableName, entities);
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryBulkDeleteAsync(connection,
+                    tableName,
+                    entities: entities).Result;
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+
+                // Assert
+                var countResult = connection.CountAll<EnumTable>();
+                Assert.AreEqual(0, countResult);
+            }
+        }
+
+        #endregion
+
+        #region BinaryBulkMergeAsync
+
+        [TestMethod]
+        public void TestBinaryBulkMergeAsyncForEnumForExpandoObject()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = Helper.CreateEnumTableExpandoObjectTables(10, false);
+                var tableName = "EnumTable";
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryBulkMergeAsync(connection,
+                    tableName,
+                    entities: entities).Result;
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+
+                // Assert
+                var queryResult = connection.QueryAll<EnumTable>(tableName).ToList();
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => entities.IndexOf(t1) == queryResult.IndexOf(t2));
+                Assert.AreEqual(entities.Count(), assertCount);
+            }
+        }
+
+        [TestMethod]
+        public void TestBinaryBulkMergeAsyncForEnumForExpandoObjectWithNullValues()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = CreateEnumTablesForExpandoObjectWithNullValues(10, false);
+                var tableName = "EnumTable";
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryBulkMergeAsync(connection,
+                    tableName,
+                    entities: entities).Result;
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+
+                // Assert
+                var queryResult = connection.QueryAll<EnumTable>(tableName).ToList();
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => entities.IndexOf(t1) == queryResult.IndexOf(t2));
+                Assert.AreEqual(entities.Count(), assertCount);
+            }
+        }
+
+        #endregion
+
+        #region BinaryBulkUpdateAsync
+
+        [TestMethod]
+        public void TestBinaryBulkUpdateAsyncForEnumForExpandoObject()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = Helper.CreateEnumTableExpandoObjectTables(10, true);
+                var tableName = "EnumTable";
+
+                // Act
+                connection.InsertAll(tableName, entities);
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryBulkUpdateAsync(connection,
+                    tableName,
+                    entities: entities).Result;
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+
+                // Assert
+                var queryResult = connection.QueryAll<EnumTable>(tableName).ToList();
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => entities.IndexOf(t1) == queryResult.IndexOf(t2));
+                Assert.AreEqual(entities.Count(), assertCount);
+            }
+        }
+
+        [TestMethod]
+        public void TestBinaryBulkUpdateAsyncForEnumForExpandoObjectWithNullValues()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = CreateEnumTablesForExpandoObjectWithNullValues(10, true);
+                var tableName = "EnumTable";
+
+                // Act
+                connection.InsertAll(tableName, entities);
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryBulkUpdateAsync(connection,
+                    tableName,
+                    entities: entities).Result;
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+
+                // Assert
+                var queryResult = connection.QueryAll<EnumTable>(tableName).ToList();
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => entities.IndexOf(t1) == queryResult.IndexOf(t2));
+                Assert.AreEqual(entities.Count(), assertCount);
+            }
+        }
+
+        #endregion
+
+        #endregion
+
+        #region DataTable
+
+        #region BinaryBulkInsertAsync
+
+        [TestMethod]
+        public void TestBinaryBulkInsertAsyncForEnumForDataTable()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = CreateEnumTablesForDataTable(10, false);
+                var tableName = "EnumTable";
+                var table = Helper.ToDataTable(tableName, entities);
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                    tableName,
+                    table).Result;
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestBinaryBulkInsertAsyncForEnumForDataTableWithNullValues()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = CreateEnumTablesForDataTableWithNullValues(10, false);
+                var tableName = "EnumTable";
+                var table = Helper.ToDataTable(tableName, entities);
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryBulkInsertAsync(connection,
+                    tableName,
+                    table).Result;
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+
+                // Assert
+                var queryResult = connection.QueryAll<EnumTable>(tableName).ToList();
+                var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => entities.IndexOf(t1) == queryResult.IndexOf(t2));
+                Assert.AreEqual(entities.Count(), assertCount);
+            }
+        }
+
+        #endregion
+
+        #region BinaryBulkDeleteAsync
+
+        [TestMethod]
+        public void TestBinaryBulkDeleteAsyncForEnumForDataTable()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = CreateEnumTablesForDataTable(10, true);
+                var tableName = "EnumTable";
+                var table = Helper.ToDataTable(tableName, entities);
+
+                // Act
+                connection.InsertAll(tableName, entities);
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryBulkDeleteAsync(connection,
+                    tableName,
+                    table).Result;
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+
+                // Assert
+                var countResult = connection.CountAll<EnumTable>();
+                Assert.AreEqual(0, countResult);
+            }
+        }
+
+        [TestMethod]
+        public void TestBinaryBulkDeleteAsyncForEnumForDataTableWithNullValues()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = CreateEnumTablesForDataTableWithNullValues(10, true);
+                var tableName = "EnumTable";
+                var table = Helper.ToDataTable(tableName, entities);
+
+                // Act
+                connection.InsertAll(tableName, entities);
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryBulkDeleteAsync(connection,
+                    tableName,
+                    table).Result;
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+
+                // Assert
+                var countResult = connection.CountAll<EnumTable>();
+                Assert.AreEqual(0, countResult);
+            }
+        }
+
+        #endregion
+
+        #region BinaryBulkMergeAsync
+
+        [TestMethod]
+        public void TestBinaryBulkMergeAsyncForEnumForDataTable()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = CreateEnumTablesForDataTable(10, false);
+                var tableName = "EnumTable";
+                var table = Helper.ToDataTable(tableName, entities);
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryBulkMergeAsync(connection,
+                    tableName,
+                    table).Result;
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+
+                // Assert
+                var countResult = connection.CountAll<EnumTable>();
+                Assert.AreEqual(entities.Count(), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestBinaryBulkMergeAsyncForEnumForDataTableWithNullValues()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = CreateEnumTablesForDataTableWithNullValues(10, false);
+                var tableName = "EnumTable";
+                var table = Helper.ToDataTable(tableName, entities);
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryBulkMergeAsync(connection,
+                    tableName,
+                    table).Result;
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+
+                // Assert
+                var countResult = connection.CountAll<EnumTable>();
+                Assert.AreEqual(entities.Count(), result);
+            }
+        }
+
+        #endregion
+
+        #region BinaryBulkUpdateAsync
+
+        [TestMethod]
+        public void TestBinaryBulkUpdateAsyncForEnumForDataTable()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = CreateEnumTablesForDataTable(10, true);
+                var tableName = "EnumTable";
+                var table = Helper.ToDataTable(tableName, entities);
+
+                // Act
+                connection.InsertAll(tableName, entities);
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryBulkUpdateAsync(connection,
+                    tableName,
+                    table).Result;
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
+            }
+        }
+
+        [TestMethod]
+        public void TestBinaryBulkUpdateAsyncForEnumForDataTableWithNullValues()
+        {
+            using (var connection = GetConnection())
+            {
+                // Prepare
+                var entities = CreateEnumTablesForDataTableWithNullValues(10, true);
+                var tableName = "EnumTable";
+                var table = Helper.ToDataTable(tableName, entities);
+
+                // Act
+                connection.InsertAll(tableName, entities);
+
+                // Act
+                var result = NpgsqlConnectionExtension.BinaryBulkUpdateAsync(connection,
+                    tableName,
+                    table).Result;
+
+                // Assert
+                Assert.AreEqual(entities.Count(), result);
             }
         }
 
