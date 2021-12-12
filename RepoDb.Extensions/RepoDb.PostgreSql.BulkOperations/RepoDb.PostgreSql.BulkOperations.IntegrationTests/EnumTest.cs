@@ -17,11 +17,6 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
         {
             Database.Initialize();
             Cleanup();
-
-            //FluentMapper
-            //.Entity<EnumTable>()
-            //.PropertyValueAttributes(e => e.ColumnEnumHand,
-            //new[] { new NpgsqlDbTypeAttribute(NpgsqlTypes.NpgsqlDbType.Unknown) }, true);
         }
 
         [TestCleanup]

@@ -139,13 +139,15 @@ namespace RepoDb.IntegrationTests.Setup
                     END
                     $$;
 
-                    CREATE TABLE IF NOT EXISTS public.""EnumTable"" (
+                    CREATE TABLE IF NOT EXISTS public.""EnumTable""
+                    (
                         ""Id"" bigint GENERATED ALWAYS AS IDENTITY,
                         ""ColumnEnumText"" text null COLLATE pg_catalog.""default"",
                         ""ColumnEnumInt"" integer null,
                         ""ColumnEnumHand"" hand null,
                         CONSTRAINT ""EnumTable_PrimaryKey"" PRIMARY KEY (""Id"")
                     );");
+                connection.ReloadTypes();
             }
         }
 
