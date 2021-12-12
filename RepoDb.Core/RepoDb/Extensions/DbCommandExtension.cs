@@ -350,7 +350,7 @@ namespace RepoDb.Extensions
 
             // DbType
             var dbType = IsPostgreSqlUserDefined(dbField) ? default :
-                classProperty.GetDbType() ??
+                classProperty?.GetDbType() ??
                 valueType.GetDbType() ??
                 (dbField != null ? clientTypeToDbTypeResolver.Resolve(dbField.Type) : null) ??
                 (DbType?)Converter.EnumDefaultDatabaseType;

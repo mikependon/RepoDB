@@ -1,16 +1,10 @@
-﻿namespace RepoDb.PostgreSql.IntegrationTests.Models
+﻿using RepoDb.PostgreSql.IntegrationTests.Enumerations;
+
+namespace RepoDb.PostgreSql.IntegrationTests.Models
 {
     public class EnumTable
     {
-
-        public System.Int64 Id { get; set; }
-        public Hands? ColumnEnum { get; set; }
-        public enum Hands
-        {
-            Unidentified,
-            Left,
-            Right
-        }
+        public long Id { get; set; }
+        public Hands? ColumnEnumHand { get; set; }
     }
-
 }

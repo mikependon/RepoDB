@@ -444,11 +444,12 @@ namespace RepoDb.PostgreSql.IntegrationTests.Setup
                     END
                     $$;
 
-                    CREATE TABLE IF NOT EXISTS public.""EnumTable"" (
+                    CREATE TABLE IF NOT EXISTS public.""EnumTable""
+                    (
                         ""Id"" bigint primary key,
-                        ""ColumnEnum"" hand null
+                        ""ColumnEnumHand"" hand null
                     );");
-
+                connection.ReloadTypes();
             }
         }
 

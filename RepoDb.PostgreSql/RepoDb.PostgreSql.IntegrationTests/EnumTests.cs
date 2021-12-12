@@ -66,7 +66,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         {
             public System.Int64 Id { get; set; }
             [NpgsqlDbType(NpgsqlTypes.NpgsqlDbType.Unknown)]
-            public Hands ColumnEnum { get; set; }
+            public Hands ColumnEnumHand { get; set; }
         }
 
         [Map("EnumTable")]
@@ -74,7 +74,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         {
             public System.Int64 Id { get; set; }
             [NpgsqlDbType(NpgsqlTypes.NpgsqlDbType.Unknown)]
-            public Hands? ColumnEnum { get; set; }
+            public Hands? ColumnEnumHand { get; set; }
         }
 
         #endregion
@@ -132,7 +132,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 yield return new PersonWithEnum
                 {
                     Id = i,
-                    ColumnEnum = hand
+                    ColumnEnumHand = hand
                 };
             }
         }
@@ -146,7 +146,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 yield return new PersonWithNullableEnum
                 {
                     Id = i,
-                    ColumnEnum = hand
+                    ColumnEnumHand = hand
                 };
             }
         }
@@ -335,7 +335,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 var queryResult = connection.Query<PersonWithEnum>(person.Id).First();
 
                 // Assert
-                Assert.AreEqual(person.ColumnEnum, queryResult.ColumnEnum);
+                Assert.AreEqual(person.ColumnEnumHand, queryResult.ColumnEnumHand);
             }
         }
 
@@ -358,7 +358,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 people.ForEach(p =>
                 {
                     var item = queryResult.First(e => e.Id == p.Id);
-                    Assert.AreEqual(p.ColumnEnum, item.ColumnEnum);
+                    Assert.AreEqual(p.ColumnEnumHand, item.ColumnEnumHand);
                 });
             }
         }
@@ -376,10 +376,10 @@ namespace RepoDb.PostgreSql.IntegrationTests
 
                 // Query
                 connection.ReloadTypes();
-                var queryResult = connection.Query<PersonWithEnum>(where: p => p.ColumnEnum == person.ColumnEnum).First();
+                var queryResult = connection.Query<PersonWithEnum>(where: p => p.ColumnEnumHand == person.ColumnEnumHand).First();
 
                 // Assert
-                Assert.AreEqual(person.ColumnEnum, queryResult.ColumnEnum);
+                Assert.AreEqual(person.ColumnEnumHand, queryResult.ColumnEnumHand);
             }
         }
 
@@ -396,10 +396,10 @@ namespace RepoDb.PostgreSql.IntegrationTests
 
                 // Query
                 connection.ReloadTypes();
-                var queryResult = connection.Query<PersonWithEnum>(new { ColumnEnum = person.ColumnEnum }).First();
+                var queryResult = connection.Query<PersonWithEnum>(new { ColumnEnumHand = person.ColumnEnumHand }).First();
 
                 // Assert
-                Assert.AreEqual(person.ColumnEnum, queryResult.ColumnEnum);
+                Assert.AreEqual(person.ColumnEnumHand, queryResult.ColumnEnumHand);
             }
         }
 
@@ -410,7 +410,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
             {
                 // Setup
                 var person = GetPersonWithNullableEnum(1).First();
-                person.ColumnEnum = null;
+                person.ColumnEnumHand = null;
 
                 // Act
                 connection.Insert(person);
@@ -420,7 +420,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 var queryResult = connection.Query<PersonWithNullableEnum>(person.Id).First();
 
                 // Assert
-                Assert.IsNull(queryResult.ColumnEnum);
+                Assert.IsNull(queryResult.ColumnEnumHand);
             }
         }
 
@@ -440,7 +440,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 var queryResult = connection.Query<PersonWithNullableEnum>(person.Id).First();
 
                 // Assert
-                Assert.AreEqual(person.ColumnEnum, queryResult.ColumnEnum);
+                Assert.AreEqual(person.ColumnEnumHand, queryResult.ColumnEnumHand);
             }
         }
 
@@ -463,7 +463,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 people.ForEach(p =>
                 {
                     var item = queryResult.First(e => e.Id == p.Id);
-                    Assert.AreEqual(p.ColumnEnum, item.ColumnEnum);
+                    Assert.AreEqual(p.ColumnEnumHand, item.ColumnEnumHand);
                 });
             }
         }
@@ -481,10 +481,10 @@ namespace RepoDb.PostgreSql.IntegrationTests
 
                 // Query
                 connection.ReloadTypes();
-                var queryResult = connection.Query<PersonWithNullableEnum>(where: p => p.ColumnEnum == person.ColumnEnum).First();
+                var queryResult = connection.Query<PersonWithNullableEnum>(where: p => p.ColumnEnumHand == person.ColumnEnumHand).First();
 
                 // Assert
-                Assert.AreEqual(person.ColumnEnum, queryResult.ColumnEnum);
+                Assert.AreEqual(person.ColumnEnumHand, queryResult.ColumnEnumHand);
             }
         }
     }
