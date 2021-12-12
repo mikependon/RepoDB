@@ -1,7 +1,6 @@
 ﻿using Npgsql;
 using NpgsqlTypes;
 using System;
-using System.Data;
 using System.Data.Common;
 
 namespace RepoDb.Extensions
@@ -13,10 +12,10 @@ namespace RepoDb.Extensions
     {
         /// <summary>
         /// Sets the instance of <see cref="NpgsqlParameter"/> object <see cref="NpgsqlParameter.NpgsqlDbType"/> property to <see cref="NpgsqlDbType.Unknown"/>.
-        /// (This is being used by the compiler)
+        /// This method is being used by the compiler to compliment the needs for the customized PGSQL objects.
         /// </summary>
         /// <param name="parameter">The instance of the <see cref="NpgsqlParameter"/> object.</param>
-        private static void SetToUnknownNpgsqlParameter(this DbParameter parameter)
+        internal static void SetToUnknown(this DbParameter parameter)
         {
             if (parameter is NpgsqlParameter p)
             {

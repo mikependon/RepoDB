@@ -85,7 +85,7 @@ namespace RepoDb.Reflection
             // Npgsql (Unknown)
             if (IsPostgreSqlUserDefined(dbField))
             {
-                var setToUnknownExpression = GetSetToUnknownNpgsqlParameterExpression(parameterVariableExpression);
+                var setToUnknownExpression = GetSetToUnknownNpgsqlParameterExpression(parameterVariableExpression, dbField);
                 parameterAssignmentExpressions.AddIfNotNull(setToUnknownExpression);
             }
 
