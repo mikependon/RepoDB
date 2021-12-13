@@ -20,10 +20,10 @@ namespace RepoDb.IntegrationTests.Setup
             var connectionString = Environment.GetEnvironmentVariable("REPODB_CONSTR", EnvironmentVariableTarget.Process);
 
             // Master connection
-            ConnectionStringForMaster = (connectionStringForMaster ?? @"Server=(local);Database=master;Integrated Security=SSPI;");
+            ConnectionStringForMaster = (connectionStringForMaster ?? @"Server=(local);Database=master;Integrated Security=SSPI;TrustServerCertificate=True;");
 
             // RepoDb connection
-            ConnectionStringForRepoDb = (connectionString ?? @"Server=(local);Database=RepoDb;Integrated Security=SSPI;");
+            ConnectionStringForRepoDb = (connectionString ?? @"Server=(local);Database=RepoDb;Integrated Security=SSPI;TrustServerCertificate=True;");
 
             // Initialize the SqlServer
             SqlServerBootstrap.Initialize();

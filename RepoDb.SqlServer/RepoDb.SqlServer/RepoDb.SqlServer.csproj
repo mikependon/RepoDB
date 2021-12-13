@@ -3,9 +3,9 @@
   <PropertyGroup>
 	<Title>RepoDb.SqlServer</Title>
     <TargetFrameworks>netstandard2.0;net5.0;net6.0</TargetFrameworks>
-    <Version>1.1.5-beta3</Version>
-    <AssemblyVersion>1.1.5.3</AssemblyVersion>
-    <FileVersion>1.1.5.3</FileVersion>
+    <Version>1.1.5-beta4</Version>
+    <AssemblyVersion>1.1.5.4</AssemblyVersion>
+    <FileVersion>1.1.5.4</FileVersion>
     <Description>A hybrid .NET ORM library for SQL Server.</Description>
 	<PackageTags>orm hybrid-orm micro-orm sqlserver</PackageTags>
     <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.SqlServer</RepositoryUrl>
@@ -16,7 +16,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="3.0.1" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="4.0.0" />
     <PackageReference Include="RepoDb" Version="1.12.10-beta3" />
   </ItemGroup>
 
