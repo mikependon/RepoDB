@@ -26,15 +26,13 @@ namespace RepoDb.SqlServer.IntegrationTests.Setup
 
         public static void Initialize()
         {
-            // Check the connection string
-            var connectionStringForMaster = Environment.GetEnvironmentVariable("REPODB_CONSTR_MASTER", EnvironmentVariableTarget.Process);
-            var connectionString = Environment.GetEnvironmentVariable("REPODB_CONSTR", EnvironmentVariableTarget.Process);
-
             // Master connection
-            ConnectionStringForMaster = (connectionStringForMaster ?? @"Server=(local);Database=master;Integrated Security=SSPI;");
+            ConnectionStringForMaster = Environment.GetEnvironmentVariable("REPODB_CONSTR_MASTER", EnvironmentVariableTarget.Process) ??
+                @"Server=(local);Database=master;Integrated Security=SSPI;TrustServerCertificate=True;";
 
             // RepoDb connection
-            ConnectionString = (connectionString ?? @"Server=(local);Database=RepoDbTest;Integrated Security=SSPI;");
+            ConnectionString = Environment.GetEnvironmentVariable("REPODB_CONSTR", EnvironmentVariableTarget.Process) ??
+                @"Server=(local);Database=RepoDbTest;Integrated Security=SSPI;TrustServerCertificate=True;";
 
             // Initialize the SqlServer
             SqlServerBootstrap.Initialize();

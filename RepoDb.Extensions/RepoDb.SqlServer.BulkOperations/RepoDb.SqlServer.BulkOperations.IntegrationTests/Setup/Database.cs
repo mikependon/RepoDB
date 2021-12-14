@@ -1,5 +1,4 @@
 ﻿using Microsoft.Data.SqlClient;
-using RepoDb.SqlServer;
 using RepoDb.SqlServer.BulkOperations.IntegrationTests.Models;
 using System;
 
@@ -15,15 +14,13 @@ namespace RepoDb.IntegrationTests.Setup
         /// </summary>
         public static void Initialize()
         {
-            // Get the connection string
-            var connectionStringForMaster = Environment.GetEnvironmentVariable("REPODB_CONSTR_MASTER", EnvironmentVariableTarget.Process);
-            var connectionString = Environment.GetEnvironmentVariable("REPODB_CONSTR", EnvironmentVariableTarget.Process);
-
             // Master connection
-            ConnectionStringForMaster = (connectionStringForMaster ?? @"Server=(local);Database=master;Integrated Security=SSPI;TrustServerCertificate=True;");
+            ConnectionStringForMaster = Environment.GetEnvironmentVariable("REPODB_CONSTR_MASTER", EnvironmentVariableTarget.Process) ??
+                @"Server=(local);Database=master;Integrated Security=SSPI;TrustServerCertificate=True;";
 
             // RepoDb connection
-            ConnectionStringForRepoDb = (connectionString ?? @"Server=(local);Database=RepoDb;Integrated Security=SSPI;TrustServerCertificate=True;");
+            ConnectionStringForRepoDb = Environment.GetEnvironmentVariable("REPODB_CONSTR", EnvironmentVariableTarget.Process) ??
+                @"Server=(local);Database=RepoDb;Integrated Security=SSPI;TrustServerCertificate=True;";
 
             // Initialize the SqlServer
             SqlServerBootstrap.Initialize();
