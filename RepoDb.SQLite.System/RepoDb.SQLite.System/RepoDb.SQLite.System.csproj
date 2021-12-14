@@ -27,12 +27,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="RepoDb" Version="1.12.9" />
-    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.115.5" />
+    <Compile Remove="Properties\**" />
+    <EmbeddedResource Remove="Properties\**" />
+    <None Remove="Properties\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Properties\" />
+    <PackageReference Include="RepoDb" Version="1.12.9" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.115.5" />
   </ItemGroup>
 
   <ItemGroup>
