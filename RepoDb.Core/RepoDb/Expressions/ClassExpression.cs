@@ -129,8 +129,8 @@ namespace RepoDb
                     throw new NullReferenceException("Property");
                 }
 
-                // Check the equality
-                if (typeof(TEntity) != property.PropertyInfo.DeclaringType)
+                // Check the type (polymorphism)
+                if (!property.PropertyInfo.DeclaringType.IsAssignableFrom(typeof(TEntity)))
                 {
                     throw new InvalidOperationException("The declaring type of the property is not equal to the target entity type.");
                 }

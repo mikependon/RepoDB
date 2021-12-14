@@ -51,7 +51,7 @@ namespace RepoDb
             where TEntity : class
         {
             var key = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction, GetEntityType<TEntity>(entities));
-            var keys = ExtractPropertyValues<TEntity, object>(entities, PropertyCache.Get<TEntity>(key, true)).AsList();
+            var keys = ExtractPropertyValues<TEntity, object>(entities, PropertyCache.Get(GetEntityType<TEntity>(entities), key, true)).AsList();
 
             return DeleteAllInternal(connection: connection,
                 tableName: tableName,
@@ -152,7 +152,7 @@ namespace RepoDb
             where TEntity : class
         {
             var key = GetAndGuardPrimaryKeyOrIdentityKey(GetEntityType<TEntity>(entities), connection, transaction);
-            var keys = ExtractPropertyValues<TEntity, object>(entities, PropertyCache.Get<TEntity>(key, true))?.AsList();
+            var keys = ExtractPropertyValues<TEntity, object>(entities, PropertyCache.Get(GetEntityType<TEntity>(entities), key, true))?.AsList();
 
             return DeleteAllInternal(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),

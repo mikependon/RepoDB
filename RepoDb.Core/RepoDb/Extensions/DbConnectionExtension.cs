@@ -3296,7 +3296,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static Type GetEntityType<TEntity>(TEntity entity)
             where TEntity : class =>
-            entity.GetType() ?? typeof(TEntity);
+            entity?.GetType() ?? typeof(TEntity);
 
         #endregion
     }
