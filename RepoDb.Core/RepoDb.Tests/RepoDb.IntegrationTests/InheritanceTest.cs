@@ -67,6 +67,51 @@ namespace RepoDb.IntegrationTests
 
         #endregion
 
+        #region DeleteAll
+
+        [TestMethod]
+        public void TestSqlConnectionDeleteAllForInheritedViaDataEntity()
+        {
+            // Setup
+            var entities = Helper.CreateInheritedIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll<InheritedIdentityTable>(entities);
+
+                // Act
+                var deleteResult = connection.DeleteAll<InheritedIdentityTable>(entities);
+
+                // Assert
+                Assert.AreEqual(entities.Count(), deleteResult);
+                Assert.AreEqual(0, connection.CountAll<InheritedIdentityTable>());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionDeleteAllForInheritedViaPrimary()
+        {
+            // Setup
+            var entities = Helper.CreateInheritedIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll<InheritedIdentityTable>(entities);
+
+                // Act
+                var deleteResult = connection.DeleteAll<InheritedIdentityTable>(
+                    ClassExpression.GetEntitiesPropertyValues<InheritedIdentityTable, object>(entities, "Id"));
+
+                // Assert
+                Assert.AreEqual(entities.Count(), deleteResult);
+                Assert.AreEqual(0, connection.CountAll<InheritedIdentityTable>());
+            }
+        }
+
+        #endregion
+
         #region Insert
 
         [TestMethod]
