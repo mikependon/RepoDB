@@ -120,22 +120,6 @@ You can always target the version when installing the library, even it is on a s
 > Install-Package RepoDb -version 1.x.x-betaX
 ```
 
-## Trusted Certificate
-
-For the [RepoDb.SqlServer](https://www.nuget.org/packages/RepoDb.SqlServer), starting the version [v1.1.5-beta4](https://www.nuget.org/packages/RepoDb.SqlServer/1.1.5-beta4), the [Microsoft.Data.SqlClient v4.0.0](https://www.nuget.org/packages/Microsoft.Data.SqlClient/4.0.0) is used, however, it requires a TLS 1.2 when connecting to the database via Integrated Security. When upgrading the legacy systems, an exception like below is thrown if the mentioned security chain is not enabled.
-
-```csharp
-A connection was successfully established with the server, but then an error occurred during the login process.
-(provider: SSL Provider, error: 0 - The certificate chain was issued by an authority that is not trusted.)
----> System.ComponentModel.Win32Exception: The certificate chain was issued by an authority that is not trusted..
-```
-
-The issue above can be rectified by enabling the TLS 1.2.
-
-To manually enable the TLS 1.2, please follow this [article](https://www.partitionwizard.com/partitionmanager/enable-tls-on-windows-server.html). If the issue still persists, the `TrustServerCertificate=True;` argument can used on the connection string.
-
-**Note:** Enabling this argument is not advisable for all the obsolete non-secured transport security layers.
-
 ## .NET Type Coercion
 
 By default, RepoDB does not do the automatic .NET CLR Type conversion during the serialization and deserialization process. The coercion support is completely dependent to the ADO.NET coercion capability.
@@ -172,6 +156,22 @@ StatementBuilderMapper
 ```
 
 Or, you can replicate the actual [SqlServerBootstrap](https://github.com/mikependon/RepoDB/blob/master/RepoDb.SqlServer/RepoDb.SqlServer/SqlServerBootstrap.cs) class implementation and attach it to your solution. Then, call the local class initializer method explicitly.
+
+## Trust Server Certificate
+
+For the [RepoDb.SqlServer](https://www.nuget.org/packages/RepoDb.SqlServer), starting the version [v1.1.5-beta4](https://www.nuget.org/packages/RepoDb.SqlServer/1.1.5-beta4), the [Microsoft.Data.SqlClient v4.0.0](https://www.nuget.org/packages/Microsoft.Data.SqlClient/4.0.0) is used, however, it seems to require a TLS 1.2 when connecting to the database via Integrated Security.
+
+In most cases, an exception below is thrown if the mentioned security chain is not enabled.
+
+```csharp
+A connection was successfully established with the server, but then an error occurred during the login process.
+(provider: SSL Provider, error: 0 - The certificate chain was issued by an authority that is not trusted.)
+---> System.ComponentModel.Win32Exception: The certificate chain was issued by an authority that is not trusted..
+```
+
+Usually, the issue above can be rectified by simply enabling the TLS 1.2. If the issue still persists, the argument [TrustServerCertificate](https://docs.microsoft.com/en-us/dotnet/api/system.data.sqlclient.sqlconnectionstringbuilder.trustservercertificate?view=dotnet-plat-ext-6.0) can used on the connection string.
+
+**Note:** By enabling the [TrustServerCertificate](https://docs.microsoft.com/en-us/dotnet/api/system.data.sqlclient.sqlconnectionstringbuilder.trustservercertificate?view=dotnet-plat-ext-6.0) argument, "the transport layer will use SSL to encrypt the channel and bypass walking the certificate chain to validate trust". Therefore, only enable this flag if needed.
 
 ## Library Limitations
 
