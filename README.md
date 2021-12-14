@@ -159,7 +159,7 @@ Or, you can replicate the actual [SqlServerBootstrap](https://github.com/mikepen
 
 ## Trust Server Certificate
 
-For the [RepoDb.SqlServer](https://www.nuget.org/packages/RepoDb.SqlServer), starting the version [v1.1.5-beta4](https://www.nuget.org/packages/RepoDb.SqlServer/1.1.5-beta4), the [Microsoft.Data.SqlClient v4.0.0](https://www.nuget.org/packages/Microsoft.Data.SqlClient/4.0.0) is used, however, it seems to require a TLS 1.2 when connecting to the database via Integrated Security.
+For [RepoDb.SqlServer](https://www.nuget.org/packages/RepoDb.SqlServer) package, starting the version [v1.1.5-beta4](https://www.nuget.org/packages/RepoDb.SqlServer/1.1.5-beta4), the [Microsoft.Data.SqlClient v4.0.0](https://www.nuget.org/packages/Microsoft.Data.SqlClient/4.0.0) is used, however, it seems to require a TLS 1.2 when connecting to the database via Integrated Security.
 
 In most cases, an exception below is thrown if the mentioned security chain is not enabled.
 
@@ -169,9 +169,9 @@ A connection was successfully established with the server, but then an error occ
 ---> System.ComponentModel.Win32Exception: The certificate chain was issued by an authority that is not trusted..
 ```
 
-Usually, the issue above can be rectified by simply enabling the TLS 1.2. If the issue still persists, the argument [TrustServerCertificate](https://docs.microsoft.com/en-us/dotnet/api/system.data.sqlclient.sqlconnectionstringbuilder.trustservercertificate?view=dotnet-plat-ext-6.0) can used on the connection string.
+The issue above can be rectified by simply enabling the TLS 1.2. Alternatively, the argument [TrustServerCertificate](https://docs.microsoft.com/en-us/dotnet/api/system.data.sqlclient.sqlconnectionstringbuilder.trustservercertificate?view=dotnet-plat-ext-6.0) can be used on the connection string.
 
-**Note:** By enabling the [TrustServerCertificate](https://docs.microsoft.com/en-us/dotnet/api/system.data.sqlclient.sqlconnectionstringbuilder.trustservercertificate?view=dotnet-plat-ext-6.0) argument, "the transport layer will use SSL to encrypt the channel and bypass walking the certificate chain to validate trust". Therefore, only enable this flag if needed.
+**Note:** By enabling the [TrustServerCertificate](https://docs.microsoft.com/en-us/dotnet/api/system.data.sqlclient.sqlconnectionstringbuilder.trustservercertificate?view=dotnet-plat-ext-6.0) argument, as per Microsoft, _the transport layer will use SSL to encrypt the channel and bypass walking the certificate chain to validate trust_. Therefore, only enable this flag if needed.
 
 ## Library Limitations
 
