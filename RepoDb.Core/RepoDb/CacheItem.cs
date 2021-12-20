@@ -48,18 +48,18 @@ namespace RepoDb
         /// Updates the value of the current item based from the source item.
         /// </summary>
         /// <param name="item">The source item.</param>
-        internal void UpdateFrom(CacheItem<T> item)
+        /// <param name="throwException">Throws an exception if the operation has failed to update an item.</param>
+        internal void UpdateFrom(CacheItem<T> item,
+            bool throwException = true)
         {
-            if (!IsExpired())
+            if (!IsExpired() && throwException)
             {
                 throw new InvalidOperationException($"Cannot update the item that is not yet expired.");
             }
-            else
-            {
-                Value = item.Value;
-                CreatedDate = DateTime.UtcNow;
-                Expiration = CreatedDate.AddMinutes(Constant.DefaultCacheItemExpirationInMinutes);
-            }
+
+            Value = item.Value;
+            CreatedDate = item.CreatedDate;
+            Expiration = CreatedDate.AddMinutes(item.CacheItemExpiration ?? Constant.DefaultCacheItemExpirationInMinutes);
         }
 
         #endregion
