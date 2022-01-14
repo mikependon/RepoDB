@@ -67,6 +67,26 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
+        /// Check whether the string value is open-quoted.
+        /// </summary>
+        /// <param name="value">The string value to be checked.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
+        /// <returns>True if the value is open-quoted.</returns>
+        public static bool IsOpenQuoted(this string value,
+            IDbSetting dbSetting) =>
+            dbSetting != null ? value.StartsWith(dbSetting.OpeningQuote) : false;
+
+        /// <summary>
+        /// Check whether the string value is close-quoted.
+        /// </summary>
+        /// <param name="value">The string value to be checked.</param>
+        /// <param name="dbSetting">The currently in used <see cref="IDbSetting"/> object.</param>
+        /// <returns>True if the value is close-quoted.</returns>
+        public static bool IsCloseQuoted(this string value,
+            IDbSetting dbSetting) =>
+            dbSetting != null ? value.EndsWith(dbSetting.ClosingQuote) : false;
+
+        /// <summary>
         /// Unquotes a string.
         /// </summary>
         /// <param name="value">The string value to be unqouted.</param>

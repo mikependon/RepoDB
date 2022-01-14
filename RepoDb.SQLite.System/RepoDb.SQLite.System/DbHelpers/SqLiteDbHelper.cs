@@ -51,7 +51,7 @@ namespace RepoDb.DbHelpers
         /// <param name="tableName"></param>
         /// <returns></returns>
         private string GetCommandText(string tableName) =>
-            $"pragma table_info({DataEntityExtension.GetTableName(tableName)});";
+            $"pragma table_info({DataEntityExtension.GetTableName(tableName, DbSetting).AsUnquoted(DbSetting)});";
 
         /// <summary>
         ///
@@ -113,7 +113,7 @@ namespace RepoDb.DbHelpers
             // Sql text
             var commandText = "SELECT sql FROM [sqlite_master] WHERE name = @TableName AND type = 'table';";
             var sql = connection.ExecuteScalar<string>(commandText: commandText,
-                param: new { TableName = DataEntityExtension.GetTableName(tableName).AsUnquoted(DbSetting) },
+                param: new { TableName = DataEntityExtension.GetTableName(tableName, DbSetting).AsUnquoted(DbSetting) },
                 transaction: transaction);
 
             // Return
@@ -140,7 +140,7 @@ namespace RepoDb.DbHelpers
             // Sql text
             var commandText = "SELECT sql FROM [sqlite_master] WHERE name = @TableName AND type = 'table';";
             var sql = await connection.ExecuteScalarAsync<string>(commandText: commandText,
-                param: new { TableName = DataEntityExtension.GetTableName(tableName).AsUnquoted(DbSetting) },
+                param: new { TableName = DataEntityExtension.GetTableName(tableName, DbSetting).AsUnquoted(DbSetting) },
                 transaction: transaction,
                 cancellationToken: cancellationToken);
 
@@ -197,7 +197,7 @@ namespace RepoDb.DbHelpers
         private bool IsIdentity(string field)
         {
             return field.Contains("AUTOINCREMENT", StringComparison.OrdinalIgnoreCase) ||
-                   (field.Contains("INTEGER", StringComparison.OrdinalIgnoreCase) 
+                   (field.Contains("INTEGER", StringComparison.OrdinalIgnoreCase)
                     && field.Contains("PRIMARY KEY", StringComparison.OrdinalIgnoreCase));
         }
 

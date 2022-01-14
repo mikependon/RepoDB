@@ -78,6 +78,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="tableName">The name of the table.</param>
         /// <returns>The schema of the passed table name.</returns>
+        [Obsolete("Use the overloaded method instead.")]
         public static string GetSchema(string tableName) =>
             GetSchema(tableName, null);
 
@@ -90,14 +91,24 @@ namespace RepoDb.Extensions
         public static string GetSchema(string tableName,
             IDbSetting dbSetting)
         {
-            // Get the schema and table name
-            var index = tableName.IndexOf(CharConstant.Period);
-            if (index > 0)
+            if (tableName.IsOpenQuoted(dbSetting))
             {
-                return tableName.Substring(0, index).AsUnquoted(true, dbSetting);
+                var index = tableName.IndexOf(string.Concat(dbSetting.ClosingQuote, CharConstant.Period));
+                if (index >= 0)
+                {
+                    return tableName.Substring(0, index + 1);
+                }
+            }
+            else
+            {
+                var index = tableName.IndexOf(CharConstant.Period);
+                if (index >= 0)
+                {
+                    return tableName.Substring(0, index);
+                }
+
             }
 
-            // Return the unquoted
             return dbSetting?.DefaultSchema;
         }
 
@@ -106,6 +117,7 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="tableName">The name of the table.</param>
         /// <returns>The actual table name.</returns>
+        [Obsolete("Use the overloaded method instead.")]
         public static string GetTableName(string tableName) =>
             GetTableName(tableName, null);
 
@@ -118,18 +130,25 @@ namespace RepoDb.Extensions
         public static string GetTableName(string tableName,
             IDbSetting dbSetting)
         {
-            // Get the schema and table name
-            var index = tableName.IndexOf(CharConstant.Period);
-            if (index > 0)
+            if (tableName.IsOpenQuoted(dbSetting))
             {
-                if (tableName.Length > index)
+                var index = tableName.IndexOf(string.Concat(dbSetting.ClosingQuote, CharConstant.Period));
+                if (index >= 0 && tableName.Length > index + 2)
                 {
-                    return tableName.Substring(index + 1).AsUnquoted(true, dbSetting);
+                    return tableName.Substring(index + 2);
                 }
             }
+            else
+            {
+                var index = tableName.IndexOf(CharConstant.Period);
+                if (index >= 0 && tableName.Length > index)
+                {
+                    return tableName.Substring(index + 1);
+                }
 
-            // Return the unquoted
-            return tableName.AsUnquoted(true, dbSetting);
+            }
+
+            return tableName;
         }
 
         /// <summary>
