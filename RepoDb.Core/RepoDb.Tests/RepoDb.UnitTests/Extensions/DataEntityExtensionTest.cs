@@ -15,22 +15,8 @@ namespace RepoDb.UnitTests.Extensions
 
         #region GetSchema
 
-        /*
-         * Unquoted
-         */
-
         [TestMethod]
         public void TestDataEntityExtensionGetSchema()
-        {
-            // Act
-            var schema = DataEntityExtension.GetSchema("SchemaName.TableName");
-
-            // Assert
-            Assert.AreEqual("SchemaName", schema);
-        }
-
-        [TestMethod]
-        public void TestDataEntityExtensionGetSchemaWithDbSetting()
         {
             // Prepare
             var dbSetting = new CustomDbSetting();
@@ -42,22 +28,8 @@ namespace RepoDb.UnitTests.Extensions
             Assert.AreEqual("SchemaName", schema);
         }
 
-        /*
-         * Quoted
-         */
-
         [TestMethod]
         public void TestDataEntityExtensionGetSchemaFromQuoted()
-        {
-            // Act
-            var schema = DataEntityExtension.GetSchema("[SchemaName].[TableName]");
-
-            // Assert
-            Assert.AreEqual("[SchemaName]", schema);
-        }
-
-        [TestMethod]
-        public void TestDataEntityExtensionGetSchemaFromQuotedWithDbSetting()
         {
             // Prepare
             var dbSetting = new CustomDbSetting();
@@ -69,22 +41,21 @@ namespace RepoDb.UnitTests.Extensions
             Assert.AreEqual("[SchemaName]", schema);
         }
 
-        /*
-         * Dotted
-         */
-
         [TestMethod]
-        public void TestDataEntityExtensionGetSchemaFromDotted()
+        public void TestDataEntityExtensionGetSchemaFromWhitespaced()
         {
+            // Prepare
+            var dbSetting = new CustomDbSetting();
+
             // Act
-            var schema = DataEntityExtension.GetSchema("[Schema.Name].[TableName]");
+            var schema = DataEntityExtension.GetSchema("Schema Name.TableName", dbSetting);
 
             // Assert
-            Assert.AreEqual("[Schema.Name]", schema);
+            Assert.AreEqual("Schema Name", schema);
         }
 
         [TestMethod]
-        public void TestDataEntityExtensionGetSchemaFromDottedWithDbSetting()
+        public void TestDataEntityExtensionGetSchemaFromQuotedAndIsDotted()
         {
             // Prepare
             var dbSetting = new CustomDbSetting();
@@ -96,26 +67,90 @@ namespace RepoDb.UnitTests.Extensions
             Assert.AreEqual("[Schema.Name]", schema);
         }
 
+        [TestMethod]
+        public void TestDataEntityExtensionGetSchemaFromQuotedAndIsWhitespaced()
+        {
+            // Prepare
+            var dbSetting = new CustomDbSetting();
+
+            // Act
+            var schema = DataEntityExtension.GetSchema("[Schema Name].[TableName]", dbSetting);
+
+            // Assert
+            Assert.AreEqual("[Schema Name]", schema);
+        }
+
         #endregion
 
         #region GetTableName
 
-        /*
-         * Unquoted
-         */
-
         [TestMethod]
         public void TestDataEntityExtensionGetTableName()
         {
+            // Prepare
+            var dbSetting = new CustomDbSetting();
+
             // Act
-            var schema = DataEntityExtension.GetTableName("SchemaName.TableName");
+            var schema = DataEntityExtension.GetTableName("TableName", dbSetting);
 
             // Assert
             Assert.AreEqual("TableName", schema);
         }
 
         [TestMethod]
-        public void TestDataEntityExtensionGetTableNameWithDbSetting()
+        public void TestDataEntityExtensionGetTableNameFromQuoted()
+        {
+            // Prepare
+            var dbSetting = new CustomDbSetting();
+
+            // Act
+            var schema = DataEntityExtension.GetTableName("[TableName]", dbSetting);
+
+            // Assert
+            Assert.AreEqual("[TableName]", schema);
+        }
+
+        [TestMethod]
+        public void TestDataEntityExtensionGetTableNameFromWhitespaced()
+        {
+            // Prepare
+            var dbSetting = new CustomDbSetting();
+
+            // Act
+            var schema = DataEntityExtension.GetTableName("Table Name", dbSetting);
+
+            // Assert
+            Assert.AreEqual("Table Name", schema);
+        }
+
+        [TestMethod]
+        public void TestDataEntityExtensionGetTableNameFromDotted()
+        {
+            // Prepare
+            var dbSetting = new CustomDbSetting();
+
+            // Act
+            var schema = DataEntityExtension.GetTableName("[Table.Name]", dbSetting);
+
+            // Assert
+            Assert.AreEqual("[Table.Name]", schema);
+        }
+
+        [TestMethod]
+        public void TestDataEntityExtensionGetTableNameFromQuotedAndIsWhitespaced()
+        {
+            // Prepare
+            var dbSetting = new CustomDbSetting();
+
+            // Act
+            var schema = DataEntityExtension.GetTableName("[Table Name]", dbSetting);
+
+            // Assert
+            Assert.AreEqual("[Table Name]", schema);
+        }
+
+        [TestMethod]
+        public void TestDataEntityExtensionGetTableNameWithSchema()
         {
             // Prepare
             var dbSetting = new CustomDbSetting();
@@ -127,22 +162,21 @@ namespace RepoDb.UnitTests.Extensions
             Assert.AreEqual("TableName", schema);
         }
 
-        /*
-         * Quoted
-         */
-
         [TestMethod]
-        public void TestDataEntityExtensionGetTableNameFromQuoted()
+        public void TestDataEntityExtensionGetTableNameWithSchemaAndIsWhitespaced()
         {
+            // Prepare
+            var dbSetting = new CustomDbSetting();
+
             // Act
-            var schema = DataEntityExtension.GetTableName("[SchemaName].[TableName]");
+            var schema = DataEntityExtension.GetTableName("SchemaName.Table Name", dbSetting);
 
             // Assert
-            Assert.AreEqual("[TableName]", schema);
+            Assert.AreEqual("Table Name", schema);
         }
 
         [TestMethod]
-        public void TestDataEntityExtensionGetTableNameFromQuotedWithDbSetting()
+        public void TestDataEntityExtensionGetTableNameWithSchemaFromQuoted()
         {
             // Prepare
             var dbSetting = new CustomDbSetting();
@@ -154,22 +188,8 @@ namespace RepoDb.UnitTests.Extensions
             Assert.AreEqual("[TableName]", schema);
         }
 
-        /*
-         * Dotted
-         */
-
         [TestMethod]
-        public void TestDataEntityExtensionGetTableNameFromDotted()
-        {
-            // Act
-            var schema = DataEntityExtension.GetTableName("[SchemaName].[Table.Name]");
-
-            // Assert
-            Assert.AreEqual("[Table.Name]", schema);
-        }
-
-        [TestMethod]
-        public void TestDataEntityExtensionGetTableNameFromDottedWithDbSetting()
+        public void TestDataEntityExtensionGetTableNameWithSchemaFromQuotedAndIsDotted()
         {
             // Prepare
             var dbSetting = new CustomDbSetting();
@@ -179,6 +199,19 @@ namespace RepoDb.UnitTests.Extensions
 
             // Assert
             Assert.AreEqual("[Table.Name]", schema);
+        }
+
+        [TestMethod]
+        public void TestDataEntityExtensionGetTableNameWithSchemaFromQuotedAndIsWhitespaced()
+        {
+            // Prepare
+            var dbSetting = new CustomDbSetting();
+
+            // Act
+            var schema = DataEntityExtension.GetTableName("[SchemaName].[Table Name]", dbSetting);
+
+            // Assert
+            Assert.AreEqual("[Table Name]", schema);
         }
 
         #endregion
