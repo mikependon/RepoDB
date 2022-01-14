@@ -157,8 +157,8 @@ namespace RepoDb.DbHelpers
             var setting = connection.GetDbSetting();
             var param = new
             {
-                Schema = DataEntityExtension.GetSchema(tableName, setting),
-                TableName = DataEntityExtension.GetTableName(tableName, setting)
+                Schema = DataEntityExtension.GetSchema(tableName, setting).AsUnquoted(setting),
+                TableName = DataEntityExtension.GetTableName(tableName, setting).AsUnquoted(setting)
             };
 
             // Iterate and extract
@@ -194,8 +194,8 @@ namespace RepoDb.DbHelpers
             var setting = connection.GetDbSetting();
             var param = new
             {
-                Schema = DataEntityExtension.GetSchema(tableName, setting),
-                TableName = DataEntityExtension.GetTableName(tableName, setting)
+                Schema = DataEntityExtension.GetSchema(tableName, setting).AsUnquoted(setting),
+                TableName = DataEntityExtension.GetTableName(tableName, setting).AsUnquoted(setting)
             };
 
             // Iterate and extract

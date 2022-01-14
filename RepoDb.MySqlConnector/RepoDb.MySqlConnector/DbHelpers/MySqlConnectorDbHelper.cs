@@ -171,7 +171,7 @@ namespace RepoDb.DbHelpers
             var param = new
             {
                 TableSchema = connection.Database,
-                TableName = DataEntityExtension.GetTableName(tableName, m_dbSetting)
+                TableName = DataEntityExtension.GetTableName(tableName, m_dbSetting).AsUnquoted(m_dbSetting)
             };
 
             // Iterate and extract
@@ -209,7 +209,7 @@ namespace RepoDb.DbHelpers
             var param = new
             {
                 TableSchema = connection.Database,
-                TableName = DataEntityExtension.GetTableName(tableName, m_dbSetting)
+                TableName = DataEntityExtension.GetTableName(tableName, m_dbSetting).AsUnquoted(m_dbSetting)
             };
 
             // Iterate and extract

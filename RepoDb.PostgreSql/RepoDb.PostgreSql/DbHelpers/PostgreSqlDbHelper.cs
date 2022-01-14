@@ -147,8 +147,8 @@ namespace RepoDb.DbHelpers
             var commandText = GetCommandText();
             var param = new
             {
-                Schema = DataEntityExtension.GetSchema(tableName, m_dbSetting),
-                TableName = DataEntityExtension.GetTableName(tableName, m_dbSetting)
+                Schema = DataEntityExtension.GetSchema(tableName, m_dbSetting).AsUnquoted(m_dbSetting),
+                TableName = DataEntityExtension.GetTableName(tableName, m_dbSetting).AsUnquoted(m_dbSetting)
             };
 
             // Iterate and extract
@@ -183,8 +183,8 @@ namespace RepoDb.DbHelpers
             var commandText = GetCommandText();
             var param = new
             {
-                Schema = DataEntityExtension.GetSchema(tableName, m_dbSetting),
-                TableName = DataEntityExtension.GetTableName(tableName, m_dbSetting)
+                Schema = DataEntityExtension.GetSchema(tableName, m_dbSetting).AsUnquoted(m_dbSetting),
+                TableName = DataEntityExtension.GetTableName(tableName, m_dbSetting).AsUnquoted(m_dbSetting)
             };
 
             // Iterate and extract
