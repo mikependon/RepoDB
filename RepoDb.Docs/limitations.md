@@ -456,19 +456,18 @@ It is also important to take note that the complex first level deep is somewhat 
 
 ## Multiple Identity Columns
 
-In PosgreSQL, you can identity multiple identity columns in a single table. See below.
+As recently discovered edge-case scenario, in PosgreSQL, multiple identity columns can be identified in a single table, unlike with other RDBMS. See below.
 
 ```csharp
 CREATE TABLE IF NOT EXISTS public."Person"
 (
     "Id" bigint NOT NULL DEFAULT nextval('person_id_seq'::regclass),
     "OtherId" bigint NOT NULL DEFAULT nextval('person_otherid_seq'::regclass),
-    "Street" character varying(50) COLLATE pg_catalog."default" NOT NULL,
-    "City" character varying(50) COLLATE pg_catalog."default" NOT NULL,
-    CONSTRAINT person_pkey PRIMARY KEY (Id)
+    ...
+    CONSTRAINT person_pkey PRIMARY KEY ("Id")
 );
 ```
 
-The library core SQL Builder is only limited to construct a SQL Statement with only identity column (at max) available on the table. This is true to all the supported RDBMS statement builders. Any identity column on top of the default (usual use-case) identity/primary column will fail the library as it is being excluded on the parameter passing in all push operations.
+The library core SQL Statement builder is only limited to construct a SQL statement with only identity column (at max) available on the table. This is also true to all the other supported RDBMS. Any identity column on top of the default (usual use-case) identity/primary column will be excluded on the parameter passing in all push operations, forcing the library to fail.
 
 It is unfortunate, there is no rectification to this other than by maintaining a single identity column on the table.
