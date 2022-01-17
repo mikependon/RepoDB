@@ -11,6 +11,7 @@ We would like you and the community of .NET to understand the limitations of the
 - [JOIN Query (Support)](#join-query-support)
 - [Cache Invalidation](#cache-invalidation)
 - [Advance Query Tree Expression](#advance-query-tree-expression)
+- [Multiple Identity Columns](#multiple-identity-columns)
 
 ## Composite Keys
 
@@ -451,3 +452,23 @@ using (var customer = new SqlConnection(connectionString))
 ### Other Expressions
 
 It is also important to take note that the complex first level deep is somewhat not supported. As part of our [disclaimer](https://repodb.net/feature/expressiontrees) in the query expression trees, we therefore highly recommend to always use the [QueryField](https://repodb.net/class/queryfield) or [QueryGroup](https://repodb.net/class/querygroup) objects when composing the complex expression trees.
+
+
+## Multiple Identity Columns
+
+In PosgreSQL, you can identity multiple identity columns in a single table. See below.
+
+```csharp
+CREATE TABLE IF NOT EXISTS public."Person"
+(
+    "Id" bigint NOT NULL DEFAULT nextval('person_id_seq'::regclass),
+    "OtherId" bigint NOT NULL DEFAULT nextval('person_otherid_seq'::regclass),
+    "Street" character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    "City" character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT person_pkey PRIMARY KEY (Id)
+);
+```
+
+The library core SQL Builder is only limited to construct a SQL Statement with only identity column (at max) available on the table. This is true to all the supported RDBMS statement builders. Any identity column on top of the default (usual use-case) identity/primary column will fail the library as it is being excluded on the parameter passing in all push operations.
+
+It is unfortunate, there is no rectification to this other than by maintaining a single identity column on the table.
