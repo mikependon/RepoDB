@@ -42,6 +42,12 @@ namespace RepoDb.IntegrationTests
                 .PropertyHandler<PropertyToClassHandler>(e => e.NVarCharAsClass);
 
             FluentMapper
+                .Entity<ImmutableEntityModelForClass>()
+                .Table("[dbo].[PropertyHandler]")
+                .Column(e => e.NVarCharAsClass, "ColumnNVarChar")
+                .PropertyHandler<PropertyToClassHandler>(e => e.NVarCharAsClass);
+
+            FluentMapper
                 .Entity<EntityModelForIntToStringType>()
                 .Table("[dbo].[PropertyHandler]")
                 .Column(e => e.IntAsString, "ColumnInt")
@@ -224,6 +230,32 @@ namespace RepoDb.IntegrationTests
             public DateTime ColumnDateTime2NotNull { get; set; } = System.DateTime.UtcNow;
         }
 
+        private class ImmutableEntityModelForClass
+        {
+            public ImmutableEntityModelForClass(long id,
+                TargetModel nvarCharAsClass)
+            {
+                Id = id;
+                NVarCharAsClass = nvarCharAsClass;
+            }
+
+            public long Id { get; }
+
+            public TargetModel NVarCharAsClass { get; }
+
+            // Other non-nullables
+
+            public int ColumnIntNotNull { get; set; } = 0;
+
+            public decimal ColumnDecimalNotNull { get; set; } = 0;
+
+            public short ColumnFloatNotNull { get; set; } = 0;
+
+            public DateTime ColumnDateTimeNotNull { get; set; } = System.DateTime.UtcNow.Date;
+
+            public DateTime ColumnDateTime2NotNull { get; set; } = System.DateTime.UtcNow;
+        }
+
         private class EntityModelForIntToStringType
         {
             public long Id { get; set; }
@@ -301,6 +333,19 @@ namespace RepoDb.IntegrationTests
                         Value = $"Value-{i}-{Guid.NewGuid()}",
                     }
                 };
+            }
+        }
+
+        private IEnumerable<ImmutableEntityModelForClass> CreateImmutableEntityModelForClasses(int count,
+            bool isModelNull = false)
+        {
+            for (var i = 0; i < count; i++)
+            {
+                yield return new ImmutableEntityModelForClass((i + 1), isModelNull ? null :
+                    new TargetModel
+                    {
+                        Value = $"Value-{i}-{Guid.NewGuid()}",
+                    });
             }
         }
 
@@ -429,6 +474,102 @@ namespace RepoDb.IntegrationTests
 
                 // Act
                 var result = connection.QueryAll<EntityModelForClass>();
+
+                // Assert
+                models.ForEach(e =>
+                {
+                    var item = result.First(obj => obj.Id == e.Id);
+                    Assert.IsNull(item.NVarCharAsClass.Value);
+                });
+            }
+        }
+
+        #endregion
+
+        #region PropertyToImmutableClass
+
+        [TestMethod]
+        public void TestPropertyHandlerImplicitWithPropertyToImmutableClassHandler()
+        {
+            // Setup
+            var models = CreateImmutableEntityModelForClasses(10).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(models);
+
+                // Act
+                var result = connection.QueryAll<ImmutableEntityModelForClass>();
+
+                // Assert
+                models.ForEach(e =>
+                {
+                    var item = result.First(obj => obj.Id == e.Id);
+                    Helper.AssertPropertiesEquality(e.NVarCharAsClass, item.NVarCharAsClass);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestPropertyHandlerImplicitWithPropertyToImmutableClassHandlerAtomic()
+        {
+            // Setup
+            var models = CreateImmutableEntityModelForClasses(10).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                models.ForEach(e => connection.Insert(e));
+
+                // Act
+                var result = connection.QueryAll<ImmutableEntityModelForClass>();
+
+                // Assert
+                models.ForEach(e =>
+                {
+                    var item = result.First(obj => obj.Id == e.Id);
+                    Helper.AssertPropertiesEquality(e.NVarCharAsClass, item.NVarCharAsClass);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestPropertyHandlerImplicitWithPropertyToImmutableClassHandlerAsNull()
+        {
+            // Setup
+            var models = CreateImmutableEntityModelForClasses(10, true).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(models);
+
+                // Act
+                var result = connection.QueryAll<ImmutableEntityModelForClass>();
+
+                // Assert
+                models.ForEach(e =>
+                {
+                    var item = result.First(obj => obj.Id == e.Id);
+                    Assert.IsNull(item.NVarCharAsClass.Value);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestPropertyHandlerImplicitWithPropertyToImmutableClassHandlerAsNullAtomic()
+        {
+            // Setup
+            var models = CreateImmutableEntityModelForClasses(10, true).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                models.ForEach(e => connection.Insert(e));
+
+                // Act
+                var result = connection.QueryAll<ImmutableEntityModelForClass>();
 
                 // Assert
                 models.ForEach(e =>
