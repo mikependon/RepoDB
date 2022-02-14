@@ -230,7 +230,24 @@ namespace RepoDb.Reflection
         /// <param name="handlerInstance"></param>
         /// <returns></returns>
         internal static MethodInfo GetPropertyHandlerGetMethod(object handlerInstance) =>
-            handlerInstance?.GetType().GetMethod("Get");
+            handlerInstance?.GetType().GetMethod("Get") ??
+            // In F#, the instance is not a concrete class, therefore, we need to extract it by interface
+            GetPropertyHandlerGetMethodFromInterface(handlerInstance);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="handlerInstance"></param>
+        /// <returns></returns>
+        internal static MethodInfo GetPropertyHandlerGetMethodFromInterface(object handlerInstance)
+        {
+            var propertyHandlerInterface = handlerInstance?
+                .GetType()?
+                .GetInterfaces()
+                .FirstOrDefault(interfaceType =>
+                    interfaceType.IsInterfacedTo(StaticType.IPropertyHandler));
+            return propertyHandlerInterface?.GetMethod("Get");
+        }
 
         /// <summary>
         ///
@@ -854,8 +871,8 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static Expression ConvertExpressionToPropertyHandlerSetExpression(Expression expression,
             ClassProperty classProperty,
-            Type targetType)
-            => ConvertExpressionToPropertyHandlerSetExpressionTuple(expression, classProperty, targetType).convertedExpression;
+            Type targetType) =>
+            ConvertExpressionToPropertyHandlerSetExpressionTuple(expression, classProperty, targetType).convertedExpression;
 
         /// <summary>
         ///
@@ -1189,7 +1206,7 @@ namespace RepoDb.Reflection
                     {
                         list.Add(new ClassPropertyParameterInfo
                         {
-                            ClassProperty = classProperty.PropertyInfo.CanWrite ? classProperty : null,
+                            ClassProperty = classProperty, //classProperty.PropertyInfo.CanWrite ? classProperty : null,
                             ParameterInfo = parameterInfo,
                             ParameterInfoMappedClassProperty = classProperty
                         });
@@ -1261,7 +1278,7 @@ namespace RepoDb.Reflection
                 try
                 {
                     // Member values
-                    var memberAssignment = classPropertyParameterInfo.ClassProperty != null ?
+                    var memberAssignment = classPropertyParameterInfo.ClassProperty?.PropertyInfo?.CanWrite == true ?
                         Expression.Bind(classPropertyParameterInfo.ClassProperty.PropertyInfo, expression) : null;
                     var argument = classPropertyParameterInfo.ParameterInfo != null ? expression : null;
 

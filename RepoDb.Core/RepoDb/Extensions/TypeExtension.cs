@@ -150,7 +150,9 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="type">The current type.</param>
         /// <returns>The list of the interface types.</returns>
+        [Obsolete("Please use the Type.GetInterfaces() method instead.")]
         public static Type[] GetImplementedInterfaces(this Type type) =>
+            type?.GetInterfaces() ??
             type?.GetType().GetProperty("ImplementedInterfaces")?.GetValue(type) as Type[];
 
         /// <summary>
@@ -179,10 +181,11 @@ namespace RepoDb.Extensions
         public static bool IsInterfacedTo(this Type currentType,
             Type interfaceType)
         {
-            var targetInterface = currentType?
-                .GetImplementedInterfaces()?
-                .FirstOrDefault(item =>
-                    item.Name == interfaceType.Name && item.Namespace == interfaceType.Namespace);
+            var targetInterface = currentType.IsInterface ? currentType :
+                currentType?
+                    .GetInterfaces()?
+                    .FirstOrDefault(item =>
+                        item.Name == interfaceType.Name && item.Namespace == interfaceType.Namespace);
             interfaceType = interfaceType?.MakeGenericTypeFrom(targetInterface);
             return interfaceType?.IsAssignableFrom(currentType) == true;
         }
@@ -197,7 +200,7 @@ namespace RepoDb.Extensions
             Type targetModelType)
         {
             var targetInterface = classHandlerType?
-                .GetImplementedInterfaces()?
+                .GetInterfaces()?
                 .FirstOrDefault(item =>
                     item.Name == StaticType.IClassHandler.Name && item.Namespace == StaticType.IClassHandler.Namespace);
             if (targetInterface != null)
