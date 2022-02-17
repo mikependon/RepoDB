@@ -377,22 +377,23 @@ namespace RepoDb.StatementBuilders
                 throw new EmptyException($"The list of insertable fields must not be null or empty for '{tableName}'.");
             }
 
-            // Ensure the primary is on the list if it is not an identity
-            if (primaryField != null)
+            // Ensure the primary is on the list if it is not an identity and no default value
+            if (primaryField != null &&
+                primaryField.HasDefaultValue == false &&
+                primaryField != identityField)
             {
-                if (primaryField != identityField)
+                var isPresent = fields.FirstOrDefault(f =>
+                    string.Equals(f.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase)) != null;
+                if (isPresent == false)
                 {
-                    var isPresent = fields.FirstOrDefault(f => string.Equals(f.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase)) != null;
-                    if (isPresent == false)
-                    {
-                        throw new PrimaryFieldNotFoundException("The non-identity primary field must be present during insert operation.");
-                    }
+                    throw new PrimaryFieldNotFoundException("The non-identity primary field must be present during insert operation.");
                 }
             }
 
             // Variables needed
             var insertableFields = fields
-                .Where(f => !string.Equals(f.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase));
+                .Where(f =>
+                    !string.Equals(f.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase));
 
             // Initialize the builder
             var builder = queryBuilder ?? new QueryBuilder();

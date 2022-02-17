@@ -237,31 +237,52 @@ namespace RepoDb.StatementBuilders
                 hints);
 
             // Variables needed
-            var databaseType = "BIGINT";
+            string statement;
 
-            // Check for the identity
-            if (identityField != null)
+            if (primaryField.HasDefaultValue)
             {
-                var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
-                if (dbType != null)
+                statement = builder
+                    .GetString();
+
+                statement = statement
+                    .Replace("VALUES", $"OUTPUT inserted.{primaryField.Name.AsQuoted(DbSetting)} VALUES");
+            }
+            else
+            {
+                string databaseType = null;
+
+                // Check for the identity
+                if (identityField == primaryField)
                 {
-                    databaseType = new DbTypeToSqlServerStringNameResolver().Resolve(dbType.Value);
+                    var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
+                    if (dbType != null)
+                    {
+                        databaseType = new DbTypeToSqlServerStringNameResolver().Resolve(dbType.Value);
+                    }
                 }
+
+                // Throw if null
+                if (string.IsNullOrWhiteSpace(databaseType))
+                {
+                    throw new InvalidOperationException($"The desired database type is not found for the identity column '{identityField.Name}'.");
+                }
+
+                // Set the return value
+                var result = identityField == primaryField ?
+                    string.Concat("CONVERT(", databaseType, ", SCOPE_IDENTITY())") :
+                        primaryField != null ? primaryField.Name.AsParameter(DbSetting) : "NULL";
+
+                builder
+                    .Select()
+                    .WriteText(result)
+                    .As("[Result]")
+                    .End();
+
+                statement = builder.GetString();
             }
 
-            // Set the return value
-            var result = identityField != null ?
-                string.Concat("CONVERT(", databaseType, ", SCOPE_IDENTITY())") :
-                    primaryField != null ? primaryField.Name.AsParameter(DbSetting) : "NULL";
-
-            builder
-                .Select()
-                .WriteText(result)
-                .As("[Result]")
-                .End();
-
             // Return the query
-            return builder.GetString();
+            return statement;
         }
 
         #endregion

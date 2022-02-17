@@ -61,6 +61,7 @@ namespace RepoDb.DbHelpers
 	                  END AS Size
 	                , CONVERT(TINYINT, COALESCE(TMP.precision, 1)) AS Precision
 	                , CONVERT(TINYINT, COALESCE(TMP.scale, 1)) AS Scale
+	                , CONVERT(BIT, IIF(C.COLUMN_DEFAULT IS NOT NULL, 1, 0)) AS DefaultValue
                 FROM INFORMATION_SCHEMA.COLUMNS C
                 OUTER APPLY
                 (
@@ -111,6 +112,7 @@ namespace RepoDb.DbHelpers
                 reader.IsDBNull(6) ? (byte?)0 : reader.GetByte(6),
                 reader.IsDBNull(7) ? (byte?)0 : reader.GetByte(7),
                 reader.IsDBNull(7) ? "text" : reader.GetString(4),
+                !reader.IsDBNull(8) && reader.GetBoolean(8),
                 "MSSQL");
         }
 
@@ -132,6 +134,7 @@ namespace RepoDb.DbHelpers
                 await reader.IsDBNullAsync(6, cancellationToken) ? (byte?)0 : await reader.GetFieldValueAsync<byte>(6, cancellationToken),
                 await reader.IsDBNullAsync(7, cancellationToken) ? (byte?)0 : await reader.GetFieldValueAsync<byte>(7, cancellationToken),
                 await reader.IsDBNullAsync(7, cancellationToken) ? "text" : await reader.GetFieldValueAsync<string>(4, cancellationToken),
+                !await reader.IsDBNullAsync(8, cancellationToken) && await reader.GetFieldValueAsync<bool>(8, cancellationToken),
                 "MSSQL");
         }
 

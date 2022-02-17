@@ -21,6 +21,7 @@ namespace RepoDb
         /// <param name="precision">The precision of the field.</param>
         /// <param name="scale">The scale of the field.</param>
         /// <param name="databaseType">The database type of the field.</param>
+        /// <param name="hasDefaultValue">The value that defines whether the column has a default value..</param>
         /// <param name="provider">The database provider who created this instance.</param>
         public DbField(string name,
             bool isPrimary,
@@ -31,6 +32,7 @@ namespace RepoDb
             byte? precision,
             byte? scale,
             string databaseType,
+            bool hasDefaultValue,
             string provider = null)
         {
             // Name is required
@@ -56,6 +58,7 @@ namespace RepoDb
             }
             Scale = scale;
             DatabaseType = databaseType;
+            HasDefaultValue = hasDefaultValue;
             Provider = provider;
         }
 
@@ -67,17 +70,17 @@ namespace RepoDb
         public string Name { get; }
 
         /// <summary>
-        /// Gets the value whether the column is a primary column.
+        /// Gets the value that indicates whether the column is a primary column.
         /// </summary>
         public bool IsPrimary { get; }
 
         /// <summary>
-        /// Gets the value whether the column is an identify column.
+        /// Gets the value that indicates whether the column is an identify column.
         /// </summary>
         public bool IsIdentity { get; }
 
         /// <summary>
-        /// Gets the value whether the column is nullable.
+        /// Gets the value that indicates whether the column is nullable.
         /// </summary>
         public bool IsNullable { get; }
 
@@ -105,6 +108,11 @@ namespace RepoDb
         /// Gets the database type of the column.
         /// </summary>
         public string DatabaseType { get; }
+
+        /// <summary>
+        /// Gets the value that defines whether the column has a default value.
+        /// </summary>
+        public bool HasDefaultValue { get; }
 
         /// <summary>
         /// Gets the database provider who created this instance.

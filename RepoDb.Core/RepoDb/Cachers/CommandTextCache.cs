@@ -1093,7 +1093,8 @@ namespace RepoDb
                         null,
                         null,
                         null,
-                        null);
+                        null,
+                        false);
                 }
             }
             return DbFieldCache.Get(request.Connection, request.Name, request.Transaction)?.FirstOrDefault(f => f.IsPrimary);
@@ -1125,7 +1126,8 @@ namespace RepoDb
                         null,
                         null,
                         null,
-                        null);
+                        null,
+                        false);
                 }
             }
             return DbFieldCache.Get(request.Connection, request.Name, request.Transaction)?.FirstOrDefault(f => f.IsIdentity);
