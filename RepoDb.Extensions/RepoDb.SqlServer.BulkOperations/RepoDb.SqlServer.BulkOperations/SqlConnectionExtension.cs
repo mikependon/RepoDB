@@ -349,8 +349,9 @@ namespace RepoDb
                 throw new EmptyException("The entities must not be empty.");
             }
         }
-        
-        private static void CommitTransaction(IDbTransaction transaction, bool hasTransaction)
+
+        private static void CommitTransaction(IDbTransaction transaction,
+            bool hasTransaction)
         {
             if (hasTransaction == false)
             {
@@ -358,7 +359,8 @@ namespace RepoDb
             }
         }
 
-        private static void RollbackTransaction(IDbTransaction transaction, bool hasTransaction)
+        private static void RollbackTransaction(IDbTransaction transaction,
+            bool hasTransaction)
         {
             if (hasTransaction == false)
             {
@@ -366,7 +368,8 @@ namespace RepoDb
             }
         }
 
-        private static void DisposeTransaction(IDbTransaction transaction, bool hasTransaction)
+        private static void DisposeTransaction(IDbTransaction transaction,
+            bool hasTransaction)
         {
             if (hasTransaction == false)
             {
@@ -374,7 +377,8 @@ namespace RepoDb
             }
         }
 
-        private static T CreateOrValidateCurrentTransaction<T>(IDbConnection connection, T transaction)
+        private static T CreateOrValidateCurrentTransaction<T>(IDbConnection connection,
+            T transaction)
             where T : DbTransaction
         {
             // Check the transaction
@@ -389,8 +393,9 @@ namespace RepoDb
 
             return transaction;
         }
-        
-        private static async Task<T> CreateOrValidateCurrentTransactionAsync<T>(IDbConnection connection, T transaction, 
+
+        private static async Task<T> CreateOrValidateCurrentTransactionAsync<T>(IDbConnection connection,
+            T transaction,
             CancellationToken cancellationToken = default)
             where T : DbTransaction
         {
@@ -407,36 +412,47 @@ namespace RepoDb
             return transaction;
         }
 
-        private static string CreateBulkUpdateTempTableName(string tableName, bool? usePhysicalPseudoTempTable, IDbSetting dbSetting) => 
+        private static string CreateBulkUpdateTempTableName(string tableName,
+            bool? usePhysicalPseudoTempTable,
+            IDbSetting dbSetting) =>
             CreateBulkTempTableName(tableName, "Update", usePhysicalPseudoTempTable, dbSetting);
-        
-        private static string CreateBulkMergeTempTableName(string tableName, bool? usePhysicalPseudoTempTable, IDbSetting dbSetting) => 
+
+        private static string CreateBulkMergeTempTableName(string tableName,
+            bool? usePhysicalPseudoTempTable,
+            IDbSetting dbSetting) =>
             CreateBulkTempTableName(tableName, "Merge", usePhysicalPseudoTempTable, dbSetting);
 
-        private static string CreateBulkInsertTempTableName(string tableName, bool? usePhysicalPseudoTempTable, IDbSetting dbSetting) => 
+        private static string CreateBulkInsertTempTableName(string tableName,
+            bool? usePhysicalPseudoTempTable,
+            IDbSetting dbSetting) =>
             CreateBulkTempTableName(tableName, "Insert", usePhysicalPseudoTempTable, dbSetting);
-        
-        private static string CreateBulkDeleteTempTableName(string tableName, bool? usePhysicalPseudoTempTable, IDbSetting dbSetting) => 
+
+        private static string CreateBulkDeleteTempTableName(string tableName,
+            bool? usePhysicalPseudoTempTable,
+            IDbSetting dbSetting) =>
             CreateBulkTempTableName(tableName, "Delete", usePhysicalPseudoTempTable, dbSetting);
 
-        private static string CreateBulkTempTableName(string tableName, string operation, bool? usePhysicalPseudoTempTable, IDbSetting dbSetting)
+        private static string CreateBulkTempTableName(string tableName,
+            string operation,
+            bool? usePhysicalPseudoTempTable,
+            IDbSetting dbSetting)
         {
             var tempTableName = new StringBuilder();
-            
+
             // Must be fixed name so the RepoDb.Core caches will not be bloated
             tempTableName
                 .Append("_RepoDb_Bulk")
                 .Append(operation)
                 .Append('_')
-                .Append(GetTableName(tableName, dbSetting));
-            
+                .Append(GetTableName(tableName, dbSetting).AsUnquoted(dbSetting));
+
             // Add a # prefix if not physical
-            if (usePhysicalPseudoTempTable != true) 
+            if (usePhysicalPseudoTempTable != true)
                 tempTableName.Insert(0, '#');
 
             return tempTableName.ToString();
         }
-        
+
         #endregion
 
         #region SQL Helpers

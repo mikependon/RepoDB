@@ -3,7 +3,7 @@
   <PropertyGroup>
 	<Title>RepoDb.Sqlite.Microsoft</Title>
     <TargetFrameworks>netstandard2.0;net5.0;net6.0</TargetFrameworks>
-    <Version>1.0.1-beta1</Version>
+    <Version>1.0.1</Version>
     <AssemblyVersion>1.0.0.1</AssemblyVersion>
     <FileVersion>1.0.0.1</FileVersion>
     <Description>A hybrid .NET ORM library for SQLite (using Microsoft.Data.Sqlite).</Description>
@@ -35,8 +35,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="6.0.1" />
-    <PackageReference Include="RepoDb" Version="1.12.10-beta4" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="6.0.2" />
+    <PackageReference Include="RepoDb" Version="1.12.10" />
   </ItemGroup>
 
   <ItemGroup>

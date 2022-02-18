@@ -3,9 +3,9 @@
   <PropertyGroup>
 	<Title>RepoDb.MySql</Title>
     <TargetFrameworks>netstandard2.0;net5.0;net6.0</TargetFrameworks>
-    <Version>1.1.5</Version>
-    <AssemblyVersion>1.1.5.2</AssemblyVersion>
-    <FileVersion>1.1.5.2</FileVersion>
+    <Version>1.1.6</Version>
+    <AssemblyVersion>1.1.6.0</AssemblyVersion>
+    <FileVersion>1.1.6.0</FileVersion>
     <Description>A hybrid .NET ORM library for MySQL (using MySql.Data).</Description>
 	<PackageTags>orm hybrid-orm micro-orm mysql</PackageTags>
     <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.MySql</RepositoryUrl>
@@ -16,8 +16,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MySql.Data" Version="8.0.27" />
-    <PackageReference Include="RepoDb" Version="1.12.8" />
+    <PackageReference Include="MySql.Data" Version="8.0.28" />
+    <PackageReference Include="RepoDb" Version="1.12.10" />
     <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
   </ItemGroup>
 
