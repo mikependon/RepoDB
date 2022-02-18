@@ -276,13 +276,12 @@ namespace RepoDb
                 return this.hashCode.Value;
             }
 
-            var hashCode = 0;
+            var hashCode = Name.GetHashCode();
 
             // Set the hash code
-            hashCode = Name.GetHashCode();
             if (Type != null)
             {
-                hashCode += Type.GetHashCode();
+                hashCode = HashCode.Combine(hashCode, Type);
             }
 
             // Set and return the hashcode
@@ -297,7 +296,7 @@ namespace RepoDb
         public override bool Equals(object obj)
         {
             if (obj is null) return false;
-            
+
             return obj.GetHashCode() == GetHashCode();
         }
 
@@ -309,7 +308,7 @@ namespace RepoDb
         public bool Equals(Field other)
         {
             if (other is null) return false;
-            
+
             return other.GetHashCode() == GetHashCode();
         }
 

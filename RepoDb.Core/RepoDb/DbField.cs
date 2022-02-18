@@ -137,33 +137,32 @@ namespace RepoDb
                 return this.hashCode.Value;
             }
 
-            var hashCode = 0;
-
             // Set the hashcode
-            hashCode = Name.GetHashCode() + IsPrimary.GetHashCode() + IsIdentity.GetHashCode() + IsNullable.GetHashCode();
+            var hashCode = HashCode.Combine(Name, IsPrimary, IsIdentity, IsNullable);
+
             if (Type != null)
             {
-                hashCode += Type.GetHashCode();
+                hashCode = HashCode.Combine(hashCode, Type);
             }
             if (Size != null)
             {
-                hashCode += Size.GetHashCode();
+                hashCode = HashCode.Combine(hashCode, Size);
             }
             if (Precision != null)
             {
-                hashCode += Precision.GetHashCode();
+                hashCode = HashCode.Combine(hashCode, Precision);
             }
             if (Scale != null)
             {
-                hashCode += Scale.GetHashCode();
+                hashCode = HashCode.Combine(hashCode, Scale);
             }
             if (DatabaseType != null)
             {
-                hashCode += DatabaseType.GetHashCode();
+                hashCode = HashCode.Combine(hashCode, DatabaseType);
             }
             if (Provider != null)
             {
-                hashCode += Provider.GetHashCode();
+                hashCode = HashCode.Combine(hashCode, Provider);
             }
 
             // Set and return the hashcode

@@ -178,13 +178,8 @@ namespace RepoDb
                 return this.hashCode.Value;
             }
 
-            var hashCode = 0;
-
-            // Set the hashcode
-            hashCode = Name.GetHashCode() + (int)Order;
-
             // Set and return the hashcode
-            return (this.hashCode = hashCode).Value;
+            return (this.hashCode = HashCode.Combine(Name, Order)).Value;
         }
 
         /// <summary>
