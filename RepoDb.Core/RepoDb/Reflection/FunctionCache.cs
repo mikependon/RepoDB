@@ -29,7 +29,7 @@ namespace RepoDb
             {
                 for (var ordinal = 0; ordinal < reader.FieldCount; ordinal++)
                 {
-                    hashCode += HashCode.Combine(reader.GetName(ordinal), ordinal, reader.GetFieldType(ordinal));
+                    hashCode = HashCode.Combine(hashCode, reader.GetName(ordinal), ordinal, reader.GetFieldType(ordinal));
                 }
             }
 

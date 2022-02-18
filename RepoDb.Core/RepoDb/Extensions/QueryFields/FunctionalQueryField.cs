@@ -110,12 +110,12 @@ namespace RepoDb.Extensions.QueryFields
             var hashCode = GetType().FullName.GetHashCode();
 
             // Base
-            hashCode += base.GetHashCode();
+            hashCode = HashCode.Combine(hashCode, base.GetHashCode());
 
             // Format
             if (Format != null)
             {
-                hashCode += Format.GetHashCode();
+                hashCode = HashCode.Combine(hashCode, Format);
             }
 
             // Return

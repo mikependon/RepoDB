@@ -120,21 +120,21 @@ namespace RepoDb.Requests
             }
 
             // Get first the entity hash code
-            var hashCode = base.GetHashCode() + HashCode.Combine(Name, ".Query");
+            var hashCode = HashCode.Combine(base.GetHashCode(), Name, ".Query");
 
             // Get the qualifier <see cref="Field"/> objects
             if (Fields != null)
             {
                 foreach (var field in Fields)
                 {
-                    hashCode += field.GetHashCode();
+                    hashCode = HashCode.Combine(hashCode, field);
                 }
             }
 
             // Add the expression
             if (Where != null)
             {
-                hashCode += Where.GetHashCode();
+                hashCode = HashCode.Combine(hashCode, Where);
             }
 
             // Add the order fields
@@ -142,20 +142,20 @@ namespace RepoDb.Requests
             {
                 foreach (var orderField in OrderBy)
                 {
-                    hashCode += orderField.GetHashCode();
+                    hashCode = HashCode.Combine(hashCode, orderField);
                 }
             }
 
             // Add the filter
             if (Top != null)
             {
-                hashCode += Top.GetHashCode();
+                hashCode = HashCode.Combine(hashCode, Top);
             }
 
             // Add the hints
             if (!string.IsNullOrWhiteSpace(Hints))
             {
-                hashCode += Hints.GetHashCode();
+                hashCode = HashCode.Combine(hashCode, Hints);
             }
 
             // Set and return the hashcode

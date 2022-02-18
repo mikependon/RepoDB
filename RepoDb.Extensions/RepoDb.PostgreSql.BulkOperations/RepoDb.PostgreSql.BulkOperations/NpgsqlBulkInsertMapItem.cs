@@ -94,7 +94,7 @@ namespace RepoDb.PostgreSql.BulkOperations
             var hashCode = base.GetHashCode();
 
             // NpgsqlDbType
-            hashCode = HashCode.Combine(hashCode, NpgsqlDbType.GetHashCode());
+            hashCode = HashCode.Combine(hashCode, NpgsqlDbType);
 
             // Set and return the hashcode
             return (this.hashCode = hashCode).Value;

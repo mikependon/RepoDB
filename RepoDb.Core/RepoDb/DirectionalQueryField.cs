@@ -283,21 +283,21 @@ namespace RepoDb
             var hashCode = 0;
 
             // Get the hashcode of the base query field
-            hashCode += base.GetHashCode();
+            hashCode = HashCode.Combine(hashCode, base.GetHashCode());
 
             // Add the parameter direction
-            hashCode += Direction.GetHashCode();
+            hashCode = HashCode.Combine(hashCode, Direction);
 
             // Add the type
             if (Type != null)
             {
-                hashCode += Type.GetHashCode();
+                hashCode = HashCode.Combine(hashCode, Type);
             }
 
             // Add the size
             if (Size.HasValue)
             {
-                hashCode += Size.Value.GetHashCode();
+                hashCode = HashCode.Combine(hashCode, Size.Value);
             }
 
             // Set and return the hashcode

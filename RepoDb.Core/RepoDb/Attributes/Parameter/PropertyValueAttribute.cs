@@ -177,30 +177,30 @@ namespace RepoDb.Attributes.Parameter
             // FullName: This is to ensure that even the user has created an identical formatting 
             //  on the derived class with the existing classes, the Type.FullName could still 
             // differentiate the instances
-            var hashCode = GetType().FullName.GetHashCode();
+            var hashCode = HashCode.Combine(GetType().FullName);
 
             // Base
-            hashCode += base.GetHashCode();
+            hashCode = HashCode.Combine(hashCode, base.GetHashCode());
 
             // PropertyName
             if (PropertyName != null)
             {
-                hashCode += PropertyName.GetHashCode();
+                hashCode = HashCode.Combine(hashCode, PropertyName);
             }
 
             // ParameterType
             if (ParameterType != null)
             {
-                hashCode += ParameterType.GetHashCode();
+                hashCode = HashCode.Combine(hashCode, ParameterType);
             }
 
             // IncludedInCompilation
-            hashCode += IncludedInCompilation.GetHashCode();
+            hashCode = HashCode.Combine(hashCode, IncludedInCompilation);
 
             // Value
             if (Value != null)
             {
-                hashCode += Value.GetHashCode();
+                hashCode = HashCode.Combine(hashCode, Value);
             }
 
             // Return

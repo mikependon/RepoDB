@@ -1,4 +1,5 @@
 ﻿using RepoDb.Enumerations;
+using System;
 
 namespace RepoDb.Extensions.QueryFields
 {
@@ -96,7 +97,7 @@ namespace RepoDb.Extensions.QueryFields
             var hashCode = base.GetHashCode();
             
             // CharCount
-            hashCode += CharCount.GetHashCode();
+            hashCode = HashCode.Combine(hashCode, CharCount);
 
             // Return
             return (this.hashCode = hashCode).Value;

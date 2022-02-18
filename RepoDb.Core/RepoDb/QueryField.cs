@@ -250,35 +250,29 @@ namespace RepoDb
                 return this.hashCode.Value;
             }
 
-            var hashCode = 0;
-
             // Set in the combination of the properties
-            hashCode += (Field.GetHashCode() + (int)Operation + Parameter.GetHashCode());
+            var hashCode = HashCode.Combine(Field, Operation, Parameter);
 
             // The (IS NULL) affects the uniqueness of the object
             if (Operation == Operation.Equal && Parameter.Value == null)
             {
-                hashCode += HASHCODE_ISNULL;
+                hashCode = HashCode.Combine(hashCode, HASHCODE_ISNULL);
             }
             // The (IS NOT NULL) affects the uniqueness of the object
             else if (Operation == Operation.NotEqual && Parameter.Value == null)
             {
-                hashCode += HASHCODE_ISNOTNULL;
+                hashCode = HashCode.Combine(hashCode, HASHCODE_ISNOTNULL);
             }
             // The parameter's length affects the uniqueness of the object
             else if ((Operation == Operation.In || Operation == Operation.NotIn) &&
                 Parameter.Value != null && Parameter.Value is IEnumerable enumerable)
             {
-                var items = enumerable;
-                hashCode += items
-                    .WithType<object>()
-                    .Count()
-                    .GetHashCode();
+                hashCode = HashCode.Combine(hashCode, enumerable.WithType<object>().Count());
             }
             // The string representation affects the collision
             // var objA = QueryGroup.Parse<EntityClass>(c => c.Id == 1 && c.Value != 1);
             // var objB = QueryGroup.Parse<EntityClass>(c => c.Id != 1 && c.Value == 1);
-            hashCode += HashCode.Combine(Field.Name, Operation.GetText());
+            hashCode = HashCode.Combine(hashCode, Field.Name, Operation.GetText());
 
             // Set and return the hashcode
             return (this.hashCode = hashCode).Value;
