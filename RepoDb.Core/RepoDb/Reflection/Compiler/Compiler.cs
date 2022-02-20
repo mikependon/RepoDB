@@ -1453,9 +1453,8 @@ namespace RepoDb.Reflection
                     $"{classProperty}", ex);
             }
 
-            // Return the Value / DBNull.Value (if needed)
-            return ConvertExpressionToDbNullExpression(
-                ConvertExpressionToTypeExpression(expression, StaticType.Object));
+            // Return the Value
+            return ConvertExpressionToTypeExpression(expression, StaticType.Object);
         }
 
         /// <summary>
