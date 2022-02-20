@@ -495,16 +495,10 @@ namespace RepoDb
                             // Actual Execution
                             var returnValue = Converter.DbNullToNull(command.ExecuteScalar());
 
-                            // Get explicitly if needed
-                            if (Equals(returnValue, null) == true && dbSetting.IsMultiStatementExecutable == false)
-                            {
-                                returnValue = Converter.DbNullToNull(connection.GetDbHelper().GetScopeIdentity(connection, transaction));
-                            }
-
                             // Set the return value
                             if (returnValue != null)
                             {
-                                context.IdentityPropertySetterFunc?.Invoke(entity, returnValue);
+                                context.PrimaryPropertySetterFunc?.Invoke(entity, returnValue);
                             }
 
                             // Iterate the result
@@ -558,7 +552,7 @@ namespace RepoDb
                             }
 
                             // Actual Execution
-                            if (context.IdentityPropertySetterFunc == null)
+                            if (context.PrimaryPropertySetterFunc == null)
                             {
                                 // No identity setters
                                 result += command.ExecuteNonQuery();
@@ -576,7 +570,7 @@ namespace RepoDb
                                     {
                                         var value = Converter.DbNullToNull(reader.GetValue(0));
                                         var index = batchItems.Count > 1 && reader.FieldCount > 1 ? reader.GetInt32(1) : position;
-                                        context.IdentityPropertySetterFunc.Invoke(batchItems[index], value);
+                                        context.PrimaryPropertySetterFunc.Invoke(batchItems[index], value);
                                         result++;
                                     }
                                     position++;
@@ -736,16 +730,10 @@ namespace RepoDb
                             // Actual Execution
                             var returnValue = Converter.DbNullToNull(await command.ExecuteScalarAsync(cancellationToken));
 
-                            // Get explicitly if needed
-                            if (Equals(returnValue, null) == true && dbSetting.IsMultiStatementExecutable == false)
-                            {
-                                returnValue = Converter.DbNullToNull(await connection.GetDbHelper().GetScopeIdentityAsync(connection, transaction, cancellationToken));
-                            }
-
                             // Set the return value
                             if (returnValue != null)
                             {
-                                context.IdentityPropertySetterFunc?.Invoke(entity, returnValue);
+                                context.PrimaryPropertySetterFunc?.Invoke(entity, returnValue);
                             }
 
                             // Iterate the result
@@ -800,7 +788,7 @@ namespace RepoDb
                             }
 
                             // Actual Execution
-                            if (context.IdentityPropertySetterFunc == null)
+                            if (context.PrimaryPropertySetterFunc == null)
                             {
                                 // No identity setters
                                 result += await command.ExecuteNonQueryAsync(cancellationToken);
@@ -819,7 +807,7 @@ namespace RepoDb
                                         // No need to use async on this level (await reader.GetFieldValueAsync<object>(0, cancellationToken))
                                         var value = Converter.DbNullToNull(reader.GetValue(0));
                                         var index = batchItems.Count > 1 && reader.FieldCount > 1 ? reader.GetInt32(1) : position;
-                                        context.IdentityPropertySetterFunc.Invoke(batchItems[index], value);
+                                        context.PrimaryPropertySetterFunc.Invoke(batchItems[index], value);
                                         result++;
                                     }
                                     position++;

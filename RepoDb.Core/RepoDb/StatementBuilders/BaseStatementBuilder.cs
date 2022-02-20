@@ -377,20 +377,22 @@ namespace RepoDb.StatementBuilders
                 throw new EmptyException($"The list of insertable fields must not be null or empty for '{tableName}'.");
             }
 
-            // Ensure the primary is on the list if it is not an identity and no default value
+            // Primary Key
             if (primaryField != null &&
                 primaryField.HasDefaultValue == false &&
                 primaryField != identityField)
             {
-                var isPresent = fields.FirstOrDefault(f =>
-                    string.Equals(f.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase)) != null;
+                var isPresent = fields
+                    .FirstOrDefault(f =>
+                        string.Equals(f.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase)) != null;
+
                 if (isPresent == false)
                 {
-                    throw new PrimaryFieldNotFoundException("The non-identity primary field must be present during insert operation.");
+                    throw new PrimaryFieldNotFoundException($"As the primary field '{primaryField.Name}' is not an identity nor has a default value, it must be present on the insert operation.");
                 }
             }
 
-            // Variables needed
+            // Insertable fields
             var insertableFields = fields
                 .Where(f =>
                     !string.Equals(f.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase));
@@ -452,25 +454,28 @@ namespace RepoDb.StatementBuilders
             // Verify the fields
             if (fields?.Any() != true)
             {
-                throw new EmptyException($"The list of fields cannot be null or empty.");
+                throw new EmptyException("The list of fields cannot be null or empty.");
             }
 
-            // Ensure the primary is on the list if it is not an identity
-            if (primaryField != null)
+            // Primary Key
+            if (primaryField != null &&
+                primaryField.HasDefaultValue == false &&
+                primaryField != identityField)
             {
-                if (primaryField != identityField)
+                var isPresent = fields
+                    .FirstOrDefault(f =>
+                        string.Equals(f.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase)) != null;
+
+                if (isPresent == false)
                 {
-                    var isPresent = fields.FirstOrDefault(f => string.Equals(f.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase)) != null;
-                    if (isPresent == false)
-                    {
-                        throw new PrimaryFieldNotFoundException("The non-identity primary field must be present during insert operation.");
-                    }
+                    throw new PrimaryFieldNotFoundException($"As the primary field '{primaryField.Name}' is not an identity nor has a default value, it must be present on the insert operation.");
                 }
             }
 
-            // Variables needed
+            // Insertable fields
             var insertableFields = fields
-                .Where(f => !string.Equals(f.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase));
+                .Where(f =>
+                    !string.Equals(f.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase));
 
             // Initialize the builder
             var builder = queryBuilder ?? new QueryBuilder();

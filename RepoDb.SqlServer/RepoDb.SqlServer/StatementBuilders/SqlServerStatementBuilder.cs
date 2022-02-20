@@ -236,53 +236,19 @@ namespace RepoDb.StatementBuilders
                 identityField,
                 hints);
 
-            // Variables needed
-            string statement;
-
-            if (primaryField.HasDefaultValue)
+            // Primary Key
+            if (primaryField != null)
             {
-                statement = builder
-                    .GetString();
-
-                statement = statement
-                    .Replace("VALUES", $"OUTPUT inserted.{primaryField.Name.AsQuoted(DbSetting)} VALUES");
+                var statement = builder
+                   .GetString()
+                   .Replace("VALUES", $"OUTPUT [inserted].{primaryField.Name.AsQuoted(DbSetting)} VALUES");
+                return statement;
             }
             else
             {
-                string databaseType = null;
-
-                // Check for the identity
-                if (identityField == primaryField)
-                {
-                    var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
-                    if (dbType != null)
-                    {
-                        databaseType = new DbTypeToSqlServerStringNameResolver().Resolve(dbType.Value);
-                    }
-                }
-
-                // Throw if null
-                if (string.IsNullOrWhiteSpace(databaseType))
-                {
-                    throw new InvalidOperationException($"The desired database type is not found for the identity column '{identityField.Name}'.");
-                }
-
-                // Set the return value
-                var result = identityField == primaryField ?
-                    string.Concat("CONVERT(", databaseType, ", SCOPE_IDENTITY())") :
-                        primaryField != null ? primaryField.Name.AsParameter(DbSetting) : "NULL";
-
-                builder
-                    .Select()
-                    .WriteText(result)
-                    .As("[Result]")
-                    .End();
-
-                statement = builder.GetString();
+                return builder
+                    .GetString();
             }
-
-            // Return the query
-            return statement;
         }
 
         #endregion
@@ -312,7 +278,7 @@ namespace RepoDb.StatementBuilders
             var builder = queryBuilder ?? new QueryBuilder();
 
             // Call the base
-            var commandText = base.CreateInsertAll(builder,
+            base.CreateInsertAll(builder,
                 tableName,
                 fields,
                 batchSize,
@@ -320,41 +286,20 @@ namespace RepoDb.StatementBuilders
                 identityField,
                 hints);
 
-            // Variables needed
-            var databaseType = (string)null;
-
-            // Check for the identity
-            if (identityField != null)
+            // Primary Key
+            if (primaryField != null)
             {
-                var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
-                if (dbType != null)
-                {
-                    databaseType = new DbTypeToSqlServerStringNameResolver().Resolve(dbType.Value);
-                }
-            }
+                var statement = builder
+                    .GetString()
+                    .Replace("VALUES", $"OUTPUT [inserted].{primaryField.Name.AsQuoted(DbSetting)} VALUES");
 
-            if (identityField != null)
+                return statement;
+            }
+            else
             {
-                // Variables needed
-                var commandTexts = new List<string>();
-                var splitted = commandText.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-
-                // Iterate the indexes
-                for (var index = 0; index < splitted.Length; index++)
-                {
-                    var line = splitted[index].Trim();
-                    var returnValue = string.IsNullOrEmpty(databaseType) ?
-                        "SELECT SCOPE_IDENTITY()" :
-                        $"SELECT CONVERT({databaseType}, SCOPE_IDENTITY()) AS [Id]";
-                    commandTexts.Add(string.Concat(line, " ; ", returnValue, $", {DbSetting.ParameterPrefix}__RepoDb_OrderColumn_{index} AS [OrderColumn] ;"));
-                }
-
-                // Set the command text
-                commandText = commandTexts.Join(" ");
+                return builder
+                    .GetString();
             }
-
-            // Return the query
-            return commandText;
         }
 
         #endregion

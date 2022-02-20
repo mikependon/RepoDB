@@ -657,16 +657,10 @@ namespace RepoDb
                 // Actual Execution
                 result = Converter.ToType<TResult>(command.ExecuteScalar());
 
-                // Get explicitly if needed
-                if (Equals(result, default(TResult)) == true && dbSetting.IsMultiStatementExecutable == false)
-                {
-                    result = Converter.ToType<TResult>(connection.GetDbHelper().GetScopeIdentity(connection, transaction));
-                }
-
                 // Set the return value
-                if (Equals(result, default(TResult)) == false)
+                if (result != null)
                 {
-                    context.IdentityPropertySetterFunc?.Invoke(entity, result);
+                    context.PrimaryPropertySetterFunc?.Invoke(entity, result);
                 }
             }
 
@@ -715,7 +709,7 @@ namespace RepoDb
 
             // Get the context
             var entityType = entity?.GetType() ?? typeof(TEntity);
-            var context = await InsertExecutionContextProvider.CreateAsync(entityType, 
+            var context = await InsertExecutionContextProvider.CreateAsync(entityType,
                 connection,
                 tableName,
                 fields,
@@ -759,16 +753,10 @@ namespace RepoDb
                 // Actual Execution
                 result = Converter.ToType<TResult>(await command.ExecuteScalarAsync(cancellationToken));
 
-                // Get explicitly if needed
-                if (Equals(result, default(TResult)) == true && dbSetting.IsMultiStatementExecutable == false)
-                {
-                    result = Converter.ToType<TResult>(await connection.GetDbHelper().GetScopeIdentityAsync(connection, transaction, cancellationToken));
-                }
-
                 // Set the return value
-                if (Equals(result, default(TResult)) == false)
+                if (result != null)
                 {
-                    context.IdentityPropertySetterFunc?.Invoke(entity, result);
+                    context.PrimaryPropertySetterFunc?.Invoke(entity, result);
                 }
             }
 

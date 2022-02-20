@@ -175,31 +175,33 @@ namespace RepoDb.Contexts.Providers
             string commandText)
         {
             var dbSetting = connection.GetDbSetting();
-            var identity = (Field)null;
+            var primary = (Field)null;
             var inputFields = new List<DbField>();
-            var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
+            var primaryDbField = dbFields?.FirstOrDefault(f => f.IsPrimary);
 
-            // Set the identity field
-            identity = IdentityCache.Get(entityType)?.AsField() ??
+            // Set the primary field
+            primary = PrimaryCache.Get(entityType)?.AsField() ??
                 FieldCache
                     .Get(entityType)?
                     .FirstOrDefault(field =>
-                        string.Equals(field.Name.AsUnquoted(true, dbSetting), identityDbField?.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) ??
-                identityDbField?.AsField();
+                        string.Equals(field.Name.AsUnquoted(true, dbSetting), primaryDbField?.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) ??
+                primaryDbField?.AsField();
 
             // Filter the actual properties for input fields
             inputFields = dbFields?
                 .Where(dbField =>
-                    fields.FirstOrDefault(field => string.Equals(field.Name.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
+                    fields.FirstOrDefault(field =>
+                        string.Equals(field.Name.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
                 .AsList();
 
             // Variables for the entity action
-            var identityPropertySetter = (Action<object, object>)null;
+            var primaryPropertySetter = (Action<object, object>)null;
 
             // Get the identity setter
-            if (identity != null)
+            if (primary != null)
             {
-                identityPropertySetter = FunctionCache.GetDataEntityPropertySetterCompiledFunction(entityType, identity);
+                primaryPropertySetter = FunctionCache
+                    .GetDataEntityPropertySetterCompiledFunction(entityType, primary);
             }
 
             // Return the value
@@ -207,12 +209,13 @@ namespace RepoDb.Contexts.Providers
             {
                 CommandText = commandText,
                 InputFields = inputFields,
-                ParametersSetterFunc = FunctionCache.GetDataEntityDbParameterSetterCompiledFunction(entityType,
-                    string.Concat(entityType.FullName, StringConstant.Period, tableName, ".Merge"),
-                    inputFields?.AsList(),
-                    null,
-                    dbSetting),
-                IdentityPropertySetterFunc = identityPropertySetter
+                ParametersSetterFunc = FunctionCache
+                    .GetDataEntityDbParameterSetterCompiledFunction(entityType,
+                        string.Concat(entityType.FullName, StringConstant.Period, tableName, ".Merge"),
+                        inputFields?.AsList(),
+                        null,
+                        dbSetting),
+                PrimaryPropertySetterFunc = primaryPropertySetter
             };
         }
     }

@@ -2033,9 +2033,9 @@ namespace RepoDb
                 result = Converter.ToType<TResult>(command.ExecuteScalar());
 
                 // Set the return value
-                if (Equals(result, default(TResult)) == false)
+                if (result != null)
                 {
-                    context.IdentityPropertySetterFunc?.Invoke(entity, result);
+                    context.PrimaryPropertySetterFunc?.Invoke(entity, result);
                 }
             }
 
@@ -2316,9 +2316,9 @@ namespace RepoDb
                 result = Converter.ToType<TResult>(await command.ExecuteScalarAsync(cancellationToken));
 
                 // Set the return value
-                if (Equals(result, default(TResult)) == false)
+                if (result != null)
                 {
-                    context.IdentityPropertySetterFunc?.Invoke(entity, result);
+                    context.PrimaryPropertySetterFunc?.Invoke(entity, result);
                 }
             }
 
