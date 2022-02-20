@@ -109,14 +109,14 @@ namespace RepoDb.Requests
             }
 
             // Get first the entity hash code
-            var hashCode = base.GetHashCode() + HashCode.Combine(Name, ".UpdateAll");
+            var hashCode = HashCode.Combine(base.GetHashCode(), Name, ".UpdateAll");
 
             // Get the fields
             if (Fields != null)
             {
                 foreach (var field in Fields)
                 {
-                    hashCode += field.GetHashCode();
+                    hashCode = HashCode.Combine(hashCode, field);
                 }
             }
 
@@ -125,20 +125,20 @@ namespace RepoDb.Requests
             {
                 foreach (var field in Qualifiers)
                 {
-                    hashCode += field.GetHashCode();
+                    hashCode = HashCode.Combine(hashCode, field);
                 }
             }
 
             // Get the batch size
             if (BatchSize > 0)
             {
-                hashCode += BatchSize.GetHashCode();
+                hashCode = HashCode.Combine(hashCode, BatchSize);
             }
 
             // Add the hints
             if (!string.IsNullOrWhiteSpace(Hints))
             {
-                hashCode += Hints.GetHashCode();
+                hashCode = HashCode.Combine(hashCode, Hints);
             }
 
             // Set and return the hashcode

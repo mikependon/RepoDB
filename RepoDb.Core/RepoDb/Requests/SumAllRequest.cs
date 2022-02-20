@@ -85,18 +85,18 @@ namespace RepoDb.Requests
             }
 
             // Get first the entity hash code
-            var hashCode = base.GetHashCode() + HashCode.Combine(Name, ".SumAll");
+            var hashCode = HashCode.Combine(base.GetHashCode(), Name, ".SumAll");
 
             // Add the field
             if (Field != null)
             {
-                hashCode += Field.GetHashCode();
+                hashCode = HashCode.Combine(hashCode, Field);
             }
 
             // Add the hints
             if (!string.IsNullOrWhiteSpace(Hints))
             {
-                hashCode += Hints.GetHashCode();
+                hashCode = HashCode.Combine(hashCode, Hints);
             }
 
             // Set and return the hashcode

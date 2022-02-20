@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using RepoDb.Enumerations;
@@ -788,7 +788,7 @@ namespace RepoDb
             {
                 foreach (var queryField in QueryFields)
                 {
-                    hashCode += queryField.GetHashCode();
+                    hashCode = HashCode.Combine(hashCode, queryField);
                 }
             }
 
@@ -797,15 +797,15 @@ namespace RepoDb
             {
                 foreach (var queryGroup in QueryGroups)
                 {
-                    hashCode += queryGroup.GetHashCode();
+                    hashCode = HashCode.Combine(hashCode, queryGroup);
                 }
             }
 
             // Set with conjunction
-            hashCode += (int)Conjunction;
+            hashCode = HashCode.Combine(hashCode, Conjunction);
 
             // Set the IsNot
-            hashCode += IsNot.GetHashCode();
+            hashCode = HashCode.Combine(hashCode, IsNot);
 
             // Set and return the hashcode
             return (this.hashCode = hashCode).Value;

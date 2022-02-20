@@ -79,7 +79,7 @@ namespace RepoDb.Requests
             // Add the hints
             if (!string.IsNullOrWhiteSpace(Hints))
             {
-                hashCode += Hints.GetHashCode();
+                hashCode = HashCode.Combine(hashCode, Hints);
             }
 
             // Set and return the hashcode

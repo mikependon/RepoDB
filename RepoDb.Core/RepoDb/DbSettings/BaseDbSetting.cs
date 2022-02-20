@@ -119,51 +119,51 @@ namespace RepoDb.DbSettings
             var hashCode = 0;
 
             // AreTableHintsSupported
-            hashCode += AreTableHintsSupported.GetHashCode();
+            hashCode = HashCode.Combine(hashCode, AreTableHintsSupported);
 
             // ClosingQuote
             if (!string.IsNullOrWhiteSpace(ClosingQuote))
             {
-                hashCode += ClosingQuote.GetHashCode();
+                hashCode = HashCode.Combine(hashCode, ClosingQuote);
             }
 
             // DefaultAverageableType
             if (AverageableType != null)
             {
-                hashCode += AverageableType.GetHashCode();
+                hashCode = HashCode.Combine(hashCode, AverageableType);
             }
 
             // DefaultSchema
             if (!string.IsNullOrWhiteSpace(DefaultSchema))
             {
-                hashCode += DefaultSchema.GetHashCode();
+                hashCode = HashCode.Combine(hashCode, DefaultSchema);
             }
 
-            // IsDbParameterDirectionSettingSupported
-            hashCode += IsDirectionSupported.GetHashCode();
+            // IsDirectionSupported
+            hashCode = HashCode.Combine(hashCode, IsDirectionSupported);
 
-            // IsDisposeDbCommandAfterExecuteReader
-            hashCode += IsExecuteReaderDisposable.GetHashCode();
+            // IsExecuteReaderDisposable
+            hashCode = HashCode.Combine(hashCode, IsExecuteReaderDisposable);
 
-            // IsMultipleStatementExecutionSupported
-            hashCode += IsMultiStatementExecutable.GetHashCode();
+            // IsMultiStatementExecutable
+            hashCode = HashCode.Combine(hashCode, IsMultiStatementExecutable);
 
             // IsPreparable
-            hashCode += IsPreparable.GetHashCode();
+            hashCode = HashCode.Combine(hashCode, IsPreparable);
 
-            // IsUseUpsertForMergeOperation
-            hashCode += IsUseUpsert.GetHashCode();
+            // IsUseUpsert
+            hashCode = HashCode.Combine(hashCode, IsUseUpsert);
 
             // OpeningQuote
             if (!string.IsNullOrWhiteSpace(OpeningQuote))
             {
-                hashCode += OpeningQuote.GetHashCode();
+                hashCode = HashCode.Combine(hashCode, OpeningQuote);
             }
 
             // ParameterPrefix
             if (!string.IsNullOrWhiteSpace(ParameterPrefix))
             {
-                hashCode += ParameterPrefix.GetHashCode();
+                hashCode = HashCode.Combine(hashCode, ParameterPrefix);
             }
 
             // Set and return the hashcode

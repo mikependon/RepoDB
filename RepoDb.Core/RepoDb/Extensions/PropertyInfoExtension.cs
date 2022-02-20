@@ -148,7 +148,7 @@ namespace RepoDb.Extensions
         /// <returns>The generated hashcode.</returns>
         internal static int GenerateCustomizedHashCode(this PropertyInfo property,
             Type declaringType) =>
-            (declaringType ?? property.DeclaringType).GetHashCode() ^ property.Name.GetHashCode() ^ property.PropertyType.GetHashCode();
+            HashCode.Combine((declaringType ?? property.DeclaringType), property.Name, property.PropertyType);
 
         /// <summary>
         /// Converts an instance of <see cref="PropertyInfo"/> object into <see cref="Field"/> object.

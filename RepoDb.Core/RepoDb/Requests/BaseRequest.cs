@@ -68,11 +68,8 @@ namespace RepoDb.Requests
                 return this.hashCode.Value;
             }
 
-            // Get first the entity hash code
-            var hashCode = GetType().GetHashCode();
-
             // Set and return the hashcode
-            return (this.hashCode = hashCode).Value;
+            return (this.hashCode = GetType().GetHashCode()).Value;
         }
 
         /// <summary>

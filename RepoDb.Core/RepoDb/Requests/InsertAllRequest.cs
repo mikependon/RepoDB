@@ -98,27 +98,27 @@ namespace RepoDb.Requests
             }
 
             // Get first the entity hash code
-            var hashCode = base.GetHashCode() + HashCode.Combine(Name, ".InsertAll");
+            var hashCode = HashCode.Combine(base.GetHashCode(), Name, ".InsertAll");
 
             // Get the qualifier <see cref="Field"/> objects
             if (Fields != null)
             {
                 foreach (var field in Fields)
                 {
-                    hashCode += field.GetHashCode();
+                    hashCode = HashCode.Combine(hashCode, field);
                 }
             }
 
             // Get the batch size
             if (BatchSize > 0)
             {
-                hashCode += BatchSize.GetHashCode();
+                hashCode = HashCode.Combine(hashCode, BatchSize);
             }
 
             // Add the hints
             if (!string.IsNullOrWhiteSpace(Hints))
             {
-                hashCode += Hints.GetHashCode();
+                hashCode = HashCode.Combine(hashCode, Hints);
             }
 
             // Set and return the hashcode
