@@ -54,25 +54,25 @@ namespace RepoDb.DbHelpers
             return @"
                 SELECT C.column_name
 	                , CAST((CASE WHEN C.column_name = TMP.column_name THEN 1 ELSE 0 END) AS BOOLEAN) AS IsPrimary
-	                , CAST(
-		                (
-			                CASE WHEN
-			                (
-				                C.is_identity = 'YES'
-				                OR
-				                POSITION('NEXTVAL' IN UPPER(C.column_default)) >= 1
-			                )
-			                THEN 1 ELSE 0 END
-		                )
-		                AS BOOLEAN) AS IsIdentity
+	                , CASE WHEN C.is_identity = 'YES' OR POSITION('NEXTVAL' IN UPPER(C.column_default)) >= 1 THEN
+		                true
+	                  ELSE
+	  	                false
+	                  END AS IsIdentity
 	                , CAST(C.is_nullable AS BOOLEAN) AS IsNullable
 	                , C.data_type AS DataType
+	                , CASE WHEN C.column_default IS NOT NULL THEN
+		                true
+	                  ELSE
+	  	                false
+	                  END AS IsNullable
                 FROM information_schema.columns C
                 LEFT JOIN
                 (
 	                SELECT C.table_schema
 		                , C.table_name
 		                , C.column_name
+		                , C.column_default
 	                FROM information_schema.table_constraints TC 
 	                JOIN information_schema.constraint_column_usage AS CCU USING (constraint_schema, constraint_name) 
 	                JOIN information_schema.columns AS C ON C.table_schema = TC.constraint_schema
@@ -102,6 +102,7 @@ namespace RepoDb.DbHelpers
                 null,
                 null,
                 reader.IsDBNull(4) ? "text" : reader.GetString(4),
+                !reader.IsDBNull(5) && reader.GetBoolean(5),
                 "PGSQL");
         }
 
@@ -123,6 +124,7 @@ namespace RepoDb.DbHelpers
                 null,
                 null,
                 await reader.IsDBNullAsync(4, cancellationToken) ? "text" : reader.GetString(4),
+                !await reader.IsDBNullAsync(5, cancellationToken) && await reader.GetFieldValueAsync<bool>(5, cancellationToken),
                 "PGSQL");
         }
 

@@ -184,35 +184,24 @@ namespace RepoDb.StatementBuilders
                 identityField,
                 hints);
 
-            // Variables needed
-            var databaseType = (string)null;
-
-            // Check for the identity
-            if (identityField != null)
+            // Return
+            if (primaryField != null)
             {
-                var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
-                if (dbType != null)
-                {
-                    databaseType = new DbTypeToPostgreSqlStringNameResolver().Resolve(dbType.Value);
-                }
+                var sql = builder
+                   .GetString()
+                   .Trim();
+
+                sql = string.Concat(sql.Substring(0, sql.Length - 1),
+                    "RETURNING ", primaryField.Name.AsField(DbSetting), " AS ",
+                    "Result".AsQuoted(DbSetting), " ;");
+
+                return sql;
             }
-
-            // Set the return value
-            var result = identityField != null ?
-                string.IsNullOrEmpty(databaseType) ?
-                    identityField.Name.AsQuoted(DbSetting) :
-                        $"CAST({identityField.Name.AsQuoted(DbSetting)} AS {databaseType})" :
-                            primaryField != null ? primaryField.Name.AsQuoted(DbSetting) : "NULL";
-
-            // Get the string
-            var sql = builder.GetString().Trim();
-
-            // Append the result
-            sql = string.Concat(sql.Substring(0, sql.Length - 1),
-                "RETURNING ", result, " AS ", "Result".AsQuoted(DbSetting), " ;");
-
-            // Return the query
-            return sql;
+            else
+            {
+                return builder
+                    .GetString();
+            }
         }
 
         #endregion
@@ -242,7 +231,7 @@ namespace RepoDb.StatementBuilders
             var builder = queryBuilder ?? new QueryBuilder();
 
             // Call the base
-            var commandText = base.CreateInsertAll(builder,
+            base.CreateInsertAll(builder,
                 tableName,
                 fields,
                 batchSize,
@@ -250,43 +239,27 @@ namespace RepoDb.StatementBuilders
                 identityField,
                 hints);
 
-            // Variables needed
-            var databaseType = "BIGINT";
-
-            // Check for the identity
-            if (identityField != null)
+            // Return
+            if (primaryField != null)
             {
-                var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
-                if (dbType != null)
+                var splitted = builder
+                    .GetString()
+                    .Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+
+                for (var index = 0; index < splitted.Length; index++)
                 {
-                    databaseType = new DbTypeToPostgreSqlStringNameResolver().Resolve(dbType.Value);
+                    var line = splitted[index].Trim();
+                    splitted[index] = $"{line} RETURNING { primaryField.Name.AsField(DbSetting)} AS {"Id".AsQuoted(DbSetting)}, " +
+                        $"{DbSetting.ParameterPrefix}__RepoDb_OrderColumn_{index} AS {"OrderColumn".AsQuoted(DbSetting)}";
                 }
+
+                return string.Concat(string.Join(" ; ", splitted), " ;");
             }
-
-            // Variables needed
-            var commandTexts = new List<string>();
-            var splitted = commandText.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-
-            // Iterate the indexes
-            for (var index = 0; index < splitted.Length; index++)
+            else
             {
-                var line = splitted[index].Trim();
-
-                // Set the return value
-                var returnValue = identityField != null ?
-                    string.IsNullOrEmpty(databaseType) ?
-                        identityField.Name.AsQuoted(DbSetting) :
-                        $"CAST({identityField.Name.AsQuoted(DbSetting)} AS {databaseType})" :
-                    primaryField != null ? primaryField.Name.AsQuoted(DbSetting) : "NULL";
-                commandTexts.Add(string.Concat(line, " RETURNING ", returnValue, " AS ", "Id".AsQuoted(DbSetting), ", ",
-                    $"{DbSetting.ParameterPrefix}__RepoDb_OrderColumn_{index} AS ", "OrderColumn".AsQuoted(DbSetting), " ;"));
+                return builder
+                    .GetString();
             }
-
-            // Set the command text
-            commandText = commandTexts.Join(" ");
-
-            // Return the query
-            return commandText;
         }
 
         #endregion

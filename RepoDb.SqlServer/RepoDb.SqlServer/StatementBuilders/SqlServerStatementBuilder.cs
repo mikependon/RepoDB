@@ -239,10 +239,10 @@ namespace RepoDb.StatementBuilders
             // Return
             if (primaryField != null)
             {
-                var statement = builder
+                var sql = builder
                    .GetString()
                    .Replace("VALUES", $"OUTPUT [INSERTED].{primaryField.Name.AsField(DbSetting)} VALUES");
-                return statement;
+                return sql;
             }
             else
             {
@@ -291,16 +291,16 @@ namespace RepoDb.StatementBuilders
             {
                 var splitted = builder
                     .GetString()
-                    .Split(new[] { "VALUES" }, StringSplitOptions.None);
+                    .Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 
-                for (var index = 0; index < splitted.Length - 1; index++)
+                for (var index = 0; index < splitted.Length; index++)
                 {
-                    var item = splitted[index];
-                    splitted[index] = $"{item}OUTPUT [INSERTED].{ primaryField.Name.AsField(DbSetting)}, " +
-                        $"{DbSetting.ParameterPrefix}__RepoDb_OrderColumn_{index} ";
+                    var line = splitted[index].Trim();
+                    splitted[index] = line.Replace("VALUES",
+                        $"OUTPUT [INSERTED].{ primaryField.Name.AsField(DbSetting)}, {DbSetting.ParameterPrefix}__RepoDb_OrderColumn_{index} VALUES");
                 }
 
-                return string.Join("VALUES", splitted);
+                return string.Concat(string.Join(" ; ", splitted), " ;");
             }
             else
             {
