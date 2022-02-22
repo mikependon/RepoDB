@@ -900,7 +900,7 @@ namespace RepoDb.Reflection
 
             // Nullable
             expression = ConvertExpressionToNullableExpression(expression,
-                Nullable.GetUnderlyingType(setParameter.ParameterType) ?? targetType);
+                setParameter.ParameterType.GetUnderlyingType() ?? targetType);
 
             // Call
             var valueExpression = ConvertExpressionToTypeExpression(expression, setParameter.ParameterType);
