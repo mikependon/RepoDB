@@ -179,6 +179,18 @@ namespace RepoDb.IntegrationTests
             }
         }
 
+        /// <summary>
+        /// A class used to handle the property transformation of <see cref="TimeSpan" /> property.
+        /// </summary>
+        public class IntPropertyHandlerForTimeSpan : IPropertyHandler<long, TimeSpan>
+        {
+            public TimeSpan Get(long input, ClassProperty property) =>
+                TimeSpan.FromTicks(input);
+
+            public long Set(TimeSpan input, ClassProperty property) =>
+                input.Ticks;
+        }
+
         #endregion
 
         #region Classes
@@ -317,6 +329,14 @@ namespace RepoDb.IntegrationTests
             public IDictionary<string, string> ColumnNVarChar { get; set; }
         }
 
+        [Map("[dbo].[CompleteTable]")]
+        public class CompleteTableWithPropertyHandlerForTimeSpan
+        {
+            public Guid SessionId { get; set; }
+            [PropertyHandler(typeof(IntPropertyHandlerForTimeSpan))]
+            public TimeSpan ColumnBigInt { get; set; }
+        }
+
         #endregion
 
         #region Helpers
@@ -416,7 +436,7 @@ namespace RepoDb.IntegrationTests
             };
         }
 
-        public IEnumerable<CompleteTableWithPropertyHandlerForDictionary> CreateompleteTableWithPropertyHandlerForDictionaries(int count = 0)
+        public IEnumerable<CompleteTableWithPropertyHandlerForDictionary> CreateCompleteTableWithPropertyHandlerForDictionaries(int count = 0)
         {
             for (var i = 0; i < count; i++)
             {
@@ -424,6 +444,18 @@ namespace RepoDb.IntegrationTests
                 {
                     SessionId = Guid.NewGuid(),
                     ColumnNVarChar = new Dictionary<string, string>() { { $"Key-{i}", $"Value-{Guid.NewGuid()}" } }
+                };
+            }
+        }
+
+        public IEnumerable<CompleteTableWithPropertyHandlerForTimeSpan> CreateCompleteTableWithPropertyHandlerForTimeSpans(int count = 0)
+        {
+            for (var i = 0; i < count; i++)
+            {
+                yield return new CompleteTableWithPropertyHandlerForTimeSpan
+                {
+                    SessionId = Guid.NewGuid(),
+                    ColumnBigInt = DateTime.UtcNow.TimeOfDay
                 };
             }
         }
@@ -1029,6 +1061,56 @@ namespace RepoDb.IntegrationTests
                 models.ForEach(e =>
                 {
                     var item = result.First(obj => obj.Id == e.Id);
+                    Helper.AssertPropertiesEquality(e, item);
+                });
+            }
+        }
+
+        #endregion
+
+        #region TimeSpanToLong
+
+        [TestMethod]
+        public void TestPropertyHandlerWithTimeSpanToLongTypeHandler()
+        {
+            // Setup
+            var models = CreateCompleteTableWithPropertyHandlerForTimeSpans(10).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(models);
+
+                // Act
+                var result = connection.QueryAll<CompleteTableWithPropertyHandlerForTimeSpan>();
+
+                // Assert
+                models.ForEach(e =>
+                {
+                    var item = result.First(obj => obj.SessionId == e.SessionId);
+                    Helper.AssertPropertiesEquality(e, item);
+                });
+            }
+        }
+
+        [TestMethod]
+        public void TestPropertyHandlerWithTimeSpanToLongTypeHandlerAtomic()
+        {
+            // Setup
+            var models = CreateCompleteTableWithPropertyHandlerForTimeSpans(10).AsList();
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                models.ForEach(e => connection.Insert(e));
+
+                // Act
+                var result = connection.QueryAll<CompleteTableWithPropertyHandlerForTimeSpan>();
+
+                // Assert
+                models.ForEach(e =>
+                {
+                    var item = result.First(obj => obj.SessionId == e.SessionId);
                     Helper.AssertPropertiesEquality(e, item);
                 });
             }
