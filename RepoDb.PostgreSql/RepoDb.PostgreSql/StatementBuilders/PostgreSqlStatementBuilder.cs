@@ -322,7 +322,8 @@ namespace RepoDb.StatementBuilders
             // Remove the qualifiers from the fields
             var updatableFields = fields
                 .Where(f =>
-                    qualifiers?.Any(qf => string.Equals(qf.Name, f.Name, StringComparison.OrdinalIgnoreCase)) != true)
+                    qualifiers?.Any(qf =>
+                        string.Equals(qf.Name, f.Name, StringComparison.OrdinalIgnoreCase)) != true)
                 .AsList();
 
             // Build the query
@@ -351,28 +352,11 @@ namespace RepoDb.StatementBuilders
                 .Set()
                 .FieldsAndParametersFrom(updatableFields, 0, DbSetting);
 
-            // Variables needed
-            var databaseType = (string)null;
-
-            // Check for the identity
-            if (identityField != null)
-            {
-                var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
-                if (dbType != null)
-                {
-                    databaseType = new DbTypeToPostgreSqlStringNameResolver().Resolve(dbType.Value);
-                }
-            }
-
             // Set the return value
-            var result = identityField == null ? primaryField.Name.AsParameter(DbSetting) :
-                string.IsNullOrEmpty(databaseType) ? identityField.Name.AsQuoted(DbSetting) :
-                $"CAST({identityField.Name.AsQuoted(DbSetting)} AS {databaseType})";
-
-            if (!string.IsNullOrEmpty(result))
+            if (primaryField != null)
             {
                 // Get the string
-                var sql = string.Concat("RETURNING ", result, " AS ", "Result".AsQuoted(DbSetting));
+                var sql = string.Concat("RETURNING ", primaryField.Name.AsQuoted(DbSetting), " AS ", "Result".AsQuoted(DbSetting));
 
                 // Set the result
                 builder
@@ -448,7 +432,8 @@ namespace RepoDb.StatementBuilders
             // Remove the qualifiers from the fields
             var updatableFields = fields
                 .Where(f =>
-                    qualifiers?.Any(qf => string.Equals(qf.Name, f.Name, StringComparison.OrdinalIgnoreCase)) != true)
+                    qualifiers?.Any(qf =>
+                        string.Equals(qf.Name, f.Name, StringComparison.OrdinalIgnoreCase)) != true)
                 .AsList();
 
             // Variables needed
@@ -463,11 +448,6 @@ namespace RepoDb.StatementBuilders
                     databaseType = new DbTypeToPostgreSqlStringNameResolver().Resolve(dbType.Value);
                 }
             }
-
-            // Set the return value
-            var result = identityField == null ? primaryField.Name.AsParameter(DbSetting) :
-                string.IsNullOrEmpty(databaseType) ? identityField.Name.AsQuoted(DbSetting) :
-                $"CAST({identityField.Name.AsQuoted(DbSetting)} AS {databaseType})";
 
             // Clear the builder
             builder.Clear();
@@ -501,10 +481,11 @@ namespace RepoDb.StatementBuilders
                     .Set()
                     .FieldsAndParametersFrom(updatableFields, index, DbSetting);
 
-                if (!string.IsNullOrEmpty(result))
+                // Set the return value
+                if (primaryField != null)
                 {
                     // Get the string
-                    var sql = string.Concat("RETURNING ", result, " AS ", "Id".AsQuoted(DbSetting), ", ",
+                    var sql = string.Concat("RETURNING ", primaryField.Name.AsQuoted(DbSetting), " AS ", "Id".AsQuoted(DbSetting), ", ",
                         $"{DbSetting.ParameterPrefix}__RepoDb_OrderColumn_{index}", " AS ", "OrderColumn".AsQuoted(DbSetting));
 
                     // Set the result
