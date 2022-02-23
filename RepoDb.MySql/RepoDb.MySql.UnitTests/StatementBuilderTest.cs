@@ -267,7 +267,7 @@ namespace RepoDb.MySql.UnitTests
             var query = builder.CreateInsert(new QueryBuilder(),
                 "Table",
                 Field.From("Id", "Name", "Address"),
-                new DbField("Id", true, false, false, typeof(int), null, null, null, null),
+                new DbField("Id", true, false, false, typeof(int), null, null, null, null, false),
                 null);
             var expected = "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id, @Name, @Address ) ; SELECT @Id AS `Result` ;";
 
@@ -286,7 +286,7 @@ namespace RepoDb.MySql.UnitTests
                 "Table",
                 Field.From("Id", "Name", "Address"),
                 null,
-                new DbField("Id", false, true, false, typeof(int), null, null, null, null));
+                new DbField("Id", false, true, false, typeof(int), null, null, null, null, false));
             var expected = "INSERT INTO `Table` ( `Name`, `Address` ) VALUES ( @Name, @Address ) ; SELECT LAST_INSERT_ID() AS `Result` ;";
 
             // Assert
@@ -304,7 +304,7 @@ namespace RepoDb.MySql.UnitTests
                 "Table",
                 Field.From("Id", "Name", "Address"),
                 null,
-                new DbField("Id", false, true, false, typeof(int), null, null, null, null),
+                new DbField("Id", false, true, false, typeof(int), null, null, null, null, false),
                 "WhatEver");
         }
 
@@ -344,7 +344,7 @@ namespace RepoDb.MySql.UnitTests
                 "Table",
                 Field.From("Id", "Name", "Address"),
                 3,
-                new DbField("Id", true, false, false, typeof(int), null, null, null, null),
+                new DbField("Id", true, false, false, typeof(int), null, null, null, null, false),
                 null);
             var expected = "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id, @Name, @Address ) ; " +
                 "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id_1, @Name_1, @Address_1 ) ; " +
@@ -366,7 +366,7 @@ namespace RepoDb.MySql.UnitTests
                 Field.From("Id", "Name", "Address"),
                 3,
                 null,
-                new DbField("Id", false, true, false, typeof(int), null, null, null, null));
+                new DbField("Id", false, true, false, typeof(int), null, null, null, null, false));
             var expected = "INSERT INTO `Table` ( `Name`, `Address` ) VALUES ( @Name, @Address ) ; SELECT LAST_INSERT_ID() AS `Id`, @__RepoDb_OrderColumn_0 AS `OrderColumn` ; " +
                 "INSERT INTO `Table` ( `Name`, `Address` ) VALUES ( @Name_1, @Address_1 ) ; SELECT LAST_INSERT_ID() AS `Id`, @__RepoDb_OrderColumn_1 AS `OrderColumn` ; " +
                 "INSERT INTO `Table` ( `Name`, `Address` ) VALUES ( @Name_2, @Address_2 ) ; SELECT LAST_INSERT_ID() AS `Id`, @__RepoDb_OrderColumn_2 AS `OrderColumn` ;";
@@ -387,7 +387,7 @@ namespace RepoDb.MySql.UnitTests
                 Field.From("Id", "Name", "Address"),
                 3,
                 null,
-                new DbField("Id", false, true, false, typeof(int), null, null, null, null),
+                new DbField("Id", false, true, false, typeof(int), null, null, null, null, false),
                 "WhatEver");
         }
 
@@ -582,7 +582,7 @@ namespace RepoDb.MySql.UnitTests
                 "Table",
                 Field.From("Id", "Name", "Address"),
                 null,
-                new DbField("Id", true, false, false, typeof(int), null, null, null, null),
+                new DbField("Id", true, false, false, typeof(int), null, null, null, null, false),
                 null);
             var expected = "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id, @Name, @Address ) ON DUPLICATE KEY " +
                 "UPDATE `Id` = @Id, `Name` = @Name, `Address` = @Address ; SELECT COALESCE(@Id, LAST_INSERT_ID()) AS `Result` ;";
@@ -602,7 +602,7 @@ namespace RepoDb.MySql.UnitTests
                 "Table",
                 Field.From("Id", "Name", "Address"),
                 Field.From("Id"),
-                new DbField("Id", true, false, false, typeof(int), null, null, null, null),
+                new DbField("Id", true, false, false, typeof(int), null, null, null, null, false),
                 null);
             var expected = "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id, @Name, @Address ) ON DUPLICATE KEY " +
                 "UPDATE `Id` = @Id, `Name` = @Name, `Address` = @Address ; SELECT COALESCE(@Id, LAST_INSERT_ID()) AS `Result` ;";
@@ -622,8 +622,8 @@ namespace RepoDb.MySql.UnitTests
                 "Table",
                 Field.From("Id", "Name", "Address"),
                 null,
-                new DbField("Id", true, false, false, typeof(int), null, null, null, null),
-                new DbField("Id", false, true, false, typeof(int), null, null, null, null));
+                new DbField("Id", true, false, false, typeof(int), null, null, null, null, false),
+                new DbField("Id", false, true, false, typeof(int), null, null, null, null, false));
             var expected = "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id, @Name, @Address ) ON DUPLICATE KEY " +
                 "UPDATE `Id` = @Id, `Name` = @Name, `Address` = @Address ; SELECT COALESCE(@Id, LAST_INSERT_ID()) AS `Result` ;";
 
@@ -672,7 +672,7 @@ namespace RepoDb.MySql.UnitTests
                 "Table",
                 Field.From("Id", "Name", "Address"),
                 Field.From("Id", "Name"),
-                new DbField("Id", true, false, false, typeof(int), null, null, null, null),
+                new DbField("Id", true, false, false, typeof(int), null, null, null, null, false),
                 null,
                 "WhatEver");
         }
@@ -693,7 +693,7 @@ namespace RepoDb.MySql.UnitTests
                 Field.From("Id", "Name", "Address"),
                 null,
                 3,
-                new DbField("Id", true, false, false, typeof(int), null, null, null, null),
+                new DbField("Id", true, false, false, typeof(int), null, null, null, null, false),
                 null);
             var expected = "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id, @Name, @Address ) ON DUPLICATE KEY UPDATE `Id` = @Id, `Name` = @Name, `Address` = @Address ; SELECT COALESCE(@Id, LAST_INSERT_ID()) AS `Id`, @__RepoDb_OrderColumn_0 AS `OrderColumn` ; " +
                 "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id_1, @Name_1, @Address_1 ) ON DUPLICATE KEY UPDATE `Id` = @Id_1, `Name` = @Name_1, `Address` = @Address_1 ; SELECT COALESCE(@Id_1, LAST_INSERT_ID()) AS `Id`, @__RepoDb_OrderColumn_1 AS `OrderColumn` ; " +
@@ -715,7 +715,7 @@ namespace RepoDb.MySql.UnitTests
                 Field.From("Id", "Name", "Address"),
                 Field.From("Id"),
                 3,
-                new DbField("Id", true, false, false, typeof(int), null, null, null, null),
+                new DbField("Id", true, false, false, typeof(int), null, null, null, null, false),
                 null);
             var expected = "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id, @Name, @Address ) ON DUPLICATE KEY UPDATE `Id` = @Id, `Name` = @Name, `Address` = @Address ; SELECT COALESCE(@Id, LAST_INSERT_ID()) AS `Id`, @__RepoDb_OrderColumn_0 AS `OrderColumn` ; " +
                 "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id_1, @Name_1, @Address_1 ) ON DUPLICATE KEY UPDATE `Id` = @Id_1, `Name` = @Name_1, `Address` = @Address_1 ; SELECT COALESCE(@Id_1, LAST_INSERT_ID()) AS `Id`, @__RepoDb_OrderColumn_1 AS `OrderColumn` ; " +
@@ -737,8 +737,8 @@ namespace RepoDb.MySql.UnitTests
                 Field.From("Id", "Name", "Address"),
                 null,
                 3,
-                new DbField("Id", true, false, false, typeof(int), null, null, null, null),
-                new DbField("Id", false, true, false, typeof(int), null, null, null, null));
+                new DbField("Id", true, false, false, typeof(int), null, null, null, null, false),
+                new DbField("Id", false, true, false, typeof(int), null, null, null, null, false));
             var expected = "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id, @Name, @Address ) ON DUPLICATE KEY UPDATE `Id` = @Id, `Name` = @Name, `Address` = @Address ; SELECT COALESCE(@Id, LAST_INSERT_ID()) AS `Id`, @__RepoDb_OrderColumn_0 AS `OrderColumn` ; " +
                 "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id_1, @Name_1, @Address_1 ) ON DUPLICATE KEY UPDATE `Id` = @Id_1, `Name` = @Name_1, `Address` = @Address_1 ; SELECT COALESCE(@Id_1, LAST_INSERT_ID()) AS `Id`, @__RepoDb_OrderColumn_1 AS `OrderColumn` ; " +
                 "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id_2, @Name_2, @Address_2 ) ON DUPLICATE KEY UPDATE `Id` = @Id_2, `Name` = @Name_2, `Address` = @Address_2 ; SELECT COALESCE(@Id_2, LAST_INSERT_ID()) AS `Id`, @__RepoDb_OrderColumn_2 AS `OrderColumn` ;";
@@ -791,7 +791,7 @@ namespace RepoDb.MySql.UnitTests
                 Field.From("Id", "Name", "Address"),
                 Field.From("Id", "Name"),
                 3,
-                new DbField("Id", true, false, false, typeof(int), null, null, null, null),
+                new DbField("Id", true, false, false, typeof(int), null, null, null, null, false),
                 null,
                 "WhatEver");
         }

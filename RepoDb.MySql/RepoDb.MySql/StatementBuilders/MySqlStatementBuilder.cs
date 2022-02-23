@@ -233,15 +233,14 @@ namespace RepoDb.StatementBuilders
                 hints);
 
             // Set the return value
-            var result = identityField != null ?
-                "LAST_INSERT_ID()" :
-                    primaryField != null ? primaryField.Name.AsParameter(DbSetting) : "NULL";
-
-            builder
-                .Select()
-                .WriteText(result)
-                .As("Result".AsQuoted(DbSetting))
-                .End();
+            if (primaryField == identityField)
+            {
+                builder
+                    .Select()
+                    .WriteText("LAST_INSERT_ID()")
+                    .As("Result".AsQuoted(DbSetting))
+                    .End();
+            }
 
             // Return the query
             return builder.GetString();
@@ -282,7 +281,7 @@ namespace RepoDb.StatementBuilders
                 identityField,
                 hints);
 
-            if (identityField != null)
+            if (primaryField == identityField)
             {
                 // Variables needed
                 var commandTexts = new List<string>();
@@ -403,21 +402,6 @@ namespace RepoDb.StatementBuilders
             // Initialize the builder
             var builder = queryBuilder ?? new QueryBuilder();
 
-            // Set the return value
-            var result = (string)null;
-
-            // Check both primary and identity
-            if (identityField != null && !string.Equals(identityField.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase))
-            {
-                result = $"(CASE WHEN {identityField.Name.AsParameter(DbSetting)} > 0 THEN " +
-                    $"{identityField.Name.AsParameter(DbSetting)} ELSE " +
-                    $"{primaryField.Name.AsParameter(DbSetting)} END)";
-            }
-            else
-            {
-                result = $"COALESCE({primaryField.Name.AsParameter(DbSetting)}, LAST_INSERT_ID())";
-            }
-
             // Build the query
             builder.Clear()
                 .Insert()
@@ -435,12 +419,12 @@ namespace RepoDb.StatementBuilders
                 .FieldsAndParametersFrom(fields, 0, DbSetting)
                 .End();
 
-            if (!string.IsNullOrEmpty(result))
+            if (primaryField == identityField)
             {
                 // Set the result
                 builder
                     .Select()
-                    .WriteText(result)
+                    .WriteText("LAST_INSERT_ID()")
                     .As("Result".AsQuoted(DbSetting))
                     .End();
             }
@@ -495,9 +479,6 @@ namespace RepoDb.StatementBuilders
             // Initialize the builder
             var builder = queryBuilder ?? new QueryBuilder();
 
-            // Set the return value
-            var result = (string)null;
-
             // Clear the builder
             builder.Clear();
 
@@ -521,25 +502,15 @@ namespace RepoDb.StatementBuilders
                     .FieldsAndParametersFrom(fields, index, DbSetting)
                     .End();
 
-                // Check both primary and identity
-                if (identityField != null && !string.Equals(identityField.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase))
-                {
-                    result = $"(CASE WHEN {identityField.Name.AsParameter(index, DbSetting)} > 0 THEN " +
-                        $"{identityField.Name.AsParameter(index, DbSetting)} ELSE " +
-                        $"{primaryField.Name.AsParameter(index, DbSetting)} END)";
-                }
-                else
-                {
-                    result = $"COALESCE({primaryField.Name.AsParameter(index, DbSetting)}, LAST_INSERT_ID())";
-                }
-
-                if (!string.IsNullOrEmpty(result))
+                if (primaryField == identityField)
                 {
                     // Set the result
                     builder
                         .Select()
-                        .WriteText(string.Concat(result, " AS ", "Id".AsQuoted(DbSetting), ","))
-                        .WriteText(string.Concat($"{DbSetting.ParameterPrefix}__RepoDb_OrderColumn_{index}", " AS ", "OrderColumn".AsQuoted(DbSetting)));
+                        .WriteText(
+                            string.Concat("LAST_INSERT_ID() AS ", "Id".AsQuoted(DbSetting), ","))
+                        .WriteText(
+                            string.Concat($"{DbSetting.ParameterPrefix}__RepoDb_OrderColumn_{index}", " AS ", "OrderColumn".AsQuoted(DbSetting)));
                 }
 
                 // End the builder

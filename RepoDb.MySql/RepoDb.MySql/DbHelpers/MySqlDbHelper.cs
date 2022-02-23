@@ -60,6 +60,7 @@ namespace RepoDb.DbHelpers
                 , COALESCE(NUMERIC_PRECISION, DATETIME_PRECISION) AS `Precision`
                 , NUMERIC_SCALE AS Scale
                 , DATA_TYPE AS DatabaseType
+                , CASE WHEN COLUMN_DEFAULT IS NOT NULL THEN 1 ELSE 0 END AS HasDefaultValue
             FROM INFORMATION_SCHEMA.COLUMNS
             WHERE TABLE_SCHEMA = @TableSchema
                 AND TABLE_NAME = @TableName
@@ -113,6 +114,7 @@ namespace RepoDb.DbHelpers
                 reader.IsDBNull(6) ? (byte?)null : byte.Parse(reader.GetInt32(6).ToString()),
                 reader.IsDBNull(7) ? (byte?)null : byte.Parse(reader.GetInt32(7).ToString()),
                 reader.GetString(8),
+                reader.GetBoolean(9),
                 "MYSQL");
         }
 
@@ -146,6 +148,7 @@ namespace RepoDb.DbHelpers
                 await reader.IsDBNullAsync(6, cancellationToken) ? (byte?)null : byte.Parse((await reader.GetFieldValueAsync<ulong>(6, cancellationToken)).ToString()),
                 await reader.IsDBNullAsync(7, cancellationToken) ? (byte?)null : byte.Parse((await reader.GetFieldValueAsync<ulong>(7, cancellationToken)).ToString()),
                 await reader.GetFieldValueAsync<string>(8, cancellationToken),
+                Convert.ToBoolean(await reader.GetFieldValueAsync<int>(1, cancellationToken)),
                 "MYSQL");
         }
 

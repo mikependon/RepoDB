@@ -436,19 +436,6 @@ namespace RepoDb.StatementBuilders
                         string.Equals(qf.Name, f.Name, StringComparison.OrdinalIgnoreCase)) != true)
                 .AsList();
 
-            // Variables needed
-            var databaseType = (string)null;
-
-            // Check for the identity
-            if (identityField != null)
-            {
-                var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
-                if (dbType != null)
-                {
-                    databaseType = new DbTypeToPostgreSqlStringNameResolver().Resolve(dbType.Value);
-                }
-            }
-
             // Clear the builder
             builder.Clear();
 
