@@ -72,7 +72,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"WITH CTE AS " +
                 $"( " +
                 $"SELECT TOP (20) ROW_NUMBER() OVER ( ORDER BY [Field1] ASC ) AS [RowNumber], [Field1], [Field2] " +
-                $"FROM [Table] " + 
+                $"FROM [Table] " +
                 $"ORDER BY [Field1] ASC " +
                 $") " +
                 $"SELECT [Field1], [Field2] " +
@@ -592,56 +592,56 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         #region CreateInsertAll
 
         [TestMethod]
-        public void TestSqlServerStatementBuilderCreateInsertAllWithIdentity()
+        public void TestSqlServerStatementBuilderCreateInsertAllWithPrimaryKey()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
-            var identityField = new DbField("Field1", false, true, false, typeof(int), null, null, null, null);
+            var primaryKey = new DbField("Field1", true, true, false, typeof(int), null, null, null, null, false);
 
             // Act
             var actual = statementBuilder.CreateInsertAll(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
                 batchSize: 1,
-                primaryField: null,
-                identityField: identityField);
+                primaryField: primaryKey,
+                identityField: primaryKey);
             var expected = $"" +
                 $"INSERT INTO [Table] " +
                 $"( [Field2], [Field3] ) " +
+                $"OUTPUT [INSERTED].[Field1], @__RepoDb_OrderColumn_0 " +
                 $"VALUES " +
-                $"( @Field2, @Field3 ) ; " +
-                $"SELECT CONVERT(INT, SCOPE_IDENTITY()) AS [Id], @__RepoDb_OrderColumn_0 AS [OrderColumn] ;";
+                $"( @Field2, @Field3 ) ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
-        public void TestSqlServerStatementBuilderCreateInsertAllWithIdentityAsBigInt()
+        public void TestSqlServerStatementBuilderCreateInsertAllWithPrimaryKeyAsBigInt()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
-            var identityField = new DbField("Field1", false, true, false, typeof(long), null, null, null, null);
+            var primaryKey = new DbField("Field1", true, true, false, typeof(long), null, null, null, null, false);
 
             // Act
             var actual = statementBuilder.CreateInsertAll(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
                 batchSize: 1,
-                primaryField: null,
-                identityField: identityField);
+                primaryField: primaryKey,
+                identityField: primaryKey);
             var expected = $"" +
                 $"INSERT INTO [Table] " +
                 $"( [Field2], [Field3] ) " +
+                $"OUTPUT [INSERTED].[Field1], @__RepoDb_OrderColumn_0 " +
                 $"VALUES " +
-                $"( @Field2, @Field3 ) ; " +
-                $"SELECT CONVERT(BIGINT, SCOPE_IDENTITY()) AS [Id], @__RepoDb_OrderColumn_0 AS [OrderColumn] ;";
+                $"( @Field2, @Field3 ) ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -655,22 +655,22 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
-            var primaryField = new DbField("Field1", true, false, false, typeof(int), null, null, null, null);
-            var identityField = new DbField("Field2", false, true, false, typeof(int), null, null, null, null);
+            var primaryField = new DbField("Field1", true, false, false, typeof(int), null, null, null, null, false);
+            var identityField = new DbField("Field2", false, true, false, typeof(int), null, null, null, null, false);
 
             // Act
             var actual = statementBuilder.CreateInsertAll(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
                 batchSize: 1,
-                primaryField: null,
+                primaryField: primaryField,
                 identityField: identityField);
             var expected = $"" +
                 $"INSERT INTO [Table] " +
                 $"( [Field1], [Field3] ) " +
+                $"OUTPUT [INSERTED].[Field1], @__RepoDb_OrderColumn_0 " +
                 $"VALUES " +
-                $"( @Field1, @Field3 ) ; " +
-                $"SELECT CONVERT(INT, SCOPE_IDENTITY()) AS [Id], @__RepoDb_OrderColumn_0 AS [OrderColumn] ;";
+                $"( @Field1, @Field3 ) ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -684,128 +684,128 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
-            var primaryField = new DbField("Field1", true, false, false, typeof(int), null, null, null, null);
-            var identityField = new DbField("Field2", false, true, false, typeof(long), null, null, null, null);
+            var primaryField = new DbField("Field1", true, false, false, typeof(int), null, null, null, null, false);
+            var identityField = new DbField("Field2", false, true, false, typeof(long), null, null, null, null, false);
 
             // Act
             var actual = statementBuilder.CreateInsertAll(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
                 batchSize: 1,
-                primaryField: null,
+                primaryField: primaryField,
                 identityField: identityField);
             var expected = $"" +
                 $"INSERT INTO [Table] " +
                 $"( [Field1], [Field3] ) " +
+                $"OUTPUT [INSERTED].[Field1], @__RepoDb_OrderColumn_0 " +
                 $"VALUES " +
-                $"( @Field1, @Field3 ) ; " +
-                $"SELECT CONVERT(BIGINT, SCOPE_IDENTITY()) AS [Id], @__RepoDb_OrderColumn_0 AS [OrderColumn] ;";
+                $"( @Field1, @Field3 ) ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
-        public void TestSqlServerStatementBuilderCreateInsertAllWithIdentityForThreeBatches()
+        public void TestSqlServerStatementBuilderCreateInsertAllWithPrimaryKeyForThreeBatches()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
-            var identityField = new DbField("Field1", false, true, false, typeof(int), null, null, null, null);
+            var primaryKey = new DbField("Field1", true, true, false, typeof(int), null, null, null, null, false);
 
             // Act
             var actual = statementBuilder.CreateInsertAll(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
                 batchSize: 3,
-                primaryField: null,
-                identityField: identityField);
+                primaryField: primaryKey,
+                identityField: primaryKey);
             var expected = $"" +
                 $"INSERT INTO [Table] " +
                 $"( [Field2], [Field3] ) " +
+                $"OUTPUT [INSERTED].[Field1], @__RepoDb_OrderColumn_0 " +
                 $"VALUES " +
                 $"( @Field2, @Field3 ) ; " +
-                $"SELECT CONVERT(INT, SCOPE_IDENTITY()) AS [Id], @__RepoDb_OrderColumn_0 AS [OrderColumn] ; " +
                 $"INSERT INTO [Table] " +
                 $"( [Field2], [Field3] ) " +
+                $"OUTPUT [INSERTED].[Field1], @__RepoDb_OrderColumn_1 " +
                 $"VALUES " +
                 $"( @Field2_1, @Field3_1 ) ; " +
-                $"SELECT CONVERT(INT, SCOPE_IDENTITY()) AS [Id], @__RepoDb_OrderColumn_1 AS [OrderColumn] ; " +
                 $"INSERT INTO [Table] " +
                 $"( [Field2], [Field3] ) " +
+                $"OUTPUT [INSERTED].[Field1], @__RepoDb_OrderColumn_2 " +
                 $"VALUES " +
-                $"( @Field2_2, @Field3_2 ) ; " +
-                $"SELECT CONVERT(INT, SCOPE_IDENTITY()) AS [Id], @__RepoDb_OrderColumn_2 AS [OrderColumn] ;";
+                $"( @Field2_2, @Field3_2 ) ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
-        public void TestSqlServerStatementBuilderCreateInsertAllWithIdentityWithHints()
+        public void TestSqlServerStatementBuilderCreateInsertAllWithPrimaryWithHints()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
-            var identityField = new DbField("Field1", false, true, false, typeof(int), null, null, null, null);
+            var primaryField = new DbField("Field1", true, true, false, typeof(int), null, null, null, null, false);
 
             // Act
             var actual = statementBuilder.CreateInsertAll(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
                 batchSize: 1,
-                primaryField: null,
-                identityField: identityField,
+                primaryField: primaryField,
+                identityField: primaryField,
                 hints: SqlServerTableHints.TabLock);
             var expected = $"" +
                 $"INSERT INTO [Table] WITH (TABLOCK) " +
                 $"( [Field2], [Field3] ) " +
+                $"OUTPUT [INSERTED].[Field1], @__RepoDb_OrderColumn_0 " +
                 $"VALUES " +
-                $"( @Field2, @Field3 ) ; " +
-                $"SELECT CONVERT(INT, SCOPE_IDENTITY()) AS [Id], @__RepoDb_OrderColumn_0 AS [OrderColumn] ;";
+                $"( @Field2, @Field3 ) ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
-        public void TestSqlServerStatementBuilderCreateInsertAllWithIdentityForThreeBatchesWithHints()
+        public void TestSqlServerStatementBuilderCreateInsertAllWithPrimaryForThreeBatchesWithHints()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
-            var identityField = new DbField("Field1", false, true, false, typeof(int), null, null, null, null);
+            var primaryField = new DbField("Field1", true, true, false, typeof(int), null, null, null, null, false);
 
             // Act
             var actual = statementBuilder.CreateInsertAll(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
                 batchSize: 3,
-                primaryField: null,
-                identityField: identityField,
+                primaryField: primaryField,
+                identityField: primaryField,
                 hints: SqlServerTableHints.TabLock);
             var expected = $"" +
                 $"INSERT INTO [Table] WITH (TABLOCK) " +
                 $"( [Field2], [Field3] ) " +
+                $"OUTPUT [INSERTED].[Field1], @__RepoDb_OrderColumn_0 " +
                 $"VALUES " +
                 $"( @Field2, @Field3 ) ; " +
-                $"SELECT CONVERT(INT, SCOPE_IDENTITY()) AS [Id], @__RepoDb_OrderColumn_0 AS [OrderColumn] ; " +
                 $"INSERT INTO [Table] WITH (TABLOCK) " +
                 $"( [Field2], [Field3] ) " +
+                $"OUTPUT [INSERTED].[Field1], @__RepoDb_OrderColumn_1 " +
                 $"VALUES " +
                 $"( @Field2_1, @Field3_1 ) ; " +
-                $"SELECT CONVERT(INT, SCOPE_IDENTITY()) AS [Id], @__RepoDb_OrderColumn_1 AS [OrderColumn] ; " +
                 $"INSERT INTO [Table] WITH (TABLOCK) " +
                 $"( [Field2], [Field3] ) " +
+                $"OUTPUT [INSERTED].[Field1], @__RepoDb_OrderColumn_2 " +
                 $"VALUES " +
-                $"( @Field2_2, @Field3_2 ) ; " +
-                $"SELECT CONVERT(INT, SCOPE_IDENTITY()) AS [Id], @__RepoDb_OrderColumn_2 AS [OrderColumn] ;";
+                $"( @Field2_2, @Field3_2 ) ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -834,8 +834,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"INSERT INTO [Table] " +
                 $"( [Field1], [Field2], [Field3] ) " +
                 $"VALUES " +
-                $"( @Field1, @Field2, @Field3 ) ; " +
-                $"SELECT NULL AS [Result] ;";
+                $"( @Field1, @Field2, @Field3 ) ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -860,8 +859,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"INSERT INTO [dbo].[Table] " +
                 $"( [Field1], [Field2], [Field3] ) " +
                 $"VALUES " +
-                $"( @Field1, @Field2, @Field3 ) ; " +
-                $"SELECT NULL AS [Result] ;";
+                $"( @Field1, @Field2, @Field3 ) ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -886,8 +884,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"INSERT INTO [dbo].[Table] " +
                 $"( [Field1], [Field2], [Field3] ) " +
                 $"VALUES " +
-                $"( @Field1, @Field2, @Field3 ) ; " +
-                $"SELECT NULL AS [Result] ;";
+                $"( @Field1, @Field2, @Field3 ) ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -901,7 +898,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
-            var primaryField = new DbField("Field1", true, false, false, typeof(int), null, null, null, null);
+            var primaryField = new DbField("Field1", true, false, false, typeof(int), null, null, null, null, false);
 
             // Act
             var actual = statementBuilder.CreateInsert(queryBuilder: queryBuilder,
@@ -912,67 +909,66 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var expected = $"" +
                 $"INSERT INTO [Table] " +
                 $"( [Field1], [Field2], [Field3] ) " +
+                $"OUTPUT [INSERTED].[Field1] " +
                 $"VALUES " +
-                $"( @Field1, @Field2, @Field3 ) ; " +
-                $"SELECT @Field1 AS [Result] ;";
+                $"( @Field1, @Field2, @Field3 ) ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod]
-        public void TestSqlServerStatementBuilderCreateInsertWithIdentity()
-        {
-            // Setup
-            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
-            var queryBuilder = new QueryBuilder();
-            var tableName = "Table";
-            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
-            var identityField = new DbField("Field1", false, true, false, typeof(int), null, null, null, null);
+        //[TestMethod]
+        //public void TestSqlServerStatementBuilderCreateInsertWithIdentity()
+        //{
+        //    // Setup
+        //    var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
+        //    var queryBuilder = new QueryBuilder();
+        //    var tableName = "Table";
+        //    var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+        //    var identityField = new DbField("Field1", false, true, false, typeof(int), null, null, null, null, false);
 
-            // Act
-            var actual = statementBuilder.CreateInsert(queryBuilder: queryBuilder,
-                tableName: tableName,
-                fields: fields,
-                primaryField: null,
-                identityField: identityField);
-            var expected = $"" +
-                $"INSERT INTO [Table] " +
-                $"( [Field2], [Field3] ) " +
-                $"VALUES " +
-                $"( @Field2, @Field3 ) ; " +
-                $"SELECT CONVERT(INT, SCOPE_IDENTITY()) AS [Result] ;";
+        //    // Act
+        //    var actual = statementBuilder.CreateInsert(queryBuilder: queryBuilder,
+        //        tableName: tableName,
+        //        fields: fields,
+        //        primaryField: null,
+        //        identityField: identityField);
+        //    var expected = $"" +
+        //        $"INSERT INTO [Table] " +
+        //        $"( [Field2], [Field3] ) " +
+        //        $"VALUES " +
+        //        $"( @Field2, @Field3 ) ;";
 
-            // Assert
-            Assert.AreEqual(expected, actual);
-        }
+        //    // Assert
+        //    Assert.AreEqual(expected, actual);
+        //}
 
-        [TestMethod]
-        public void TestSqlServerStatementBuilderCreateInsertWithIdentityAsBigInt()
-        {
-            // Setup
-            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
-            var queryBuilder = new QueryBuilder();
-            var tableName = "Table";
-            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
-            var identityField = new DbField("Field1", false, true, false, typeof(long), null, null, null, null);
+        //[TestMethod]
+        //public void TestSqlServerStatementBuilderCreateInsertWithIdentityAsBigInt()
+        //{
+        //    // Setup
+        //    var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
+        //    var queryBuilder = new QueryBuilder();
+        //    var tableName = "Table";
+        //    var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+        //    var identityField = new DbField("Field1", false, true, false, typeof(long), null, null, null, null, false);
 
-            // Act
-            var actual = statementBuilder.CreateInsert(queryBuilder: queryBuilder,
-                tableName: tableName,
-                fields: fields,
-                primaryField: null,
-                identityField: identityField);
-            var expected = $"" +
-                $"INSERT INTO [Table] " +
-                $"( [Field2], [Field3] ) " +
-                $"VALUES " +
-                $"( @Field2, @Field3 ) ; " +
-                $"SELECT CONVERT(BIGINT, SCOPE_IDENTITY()) AS [Result] ;";
+        //    // Act
+        //    var actual = statementBuilder.CreateInsert(queryBuilder: queryBuilder,
+        //        tableName: tableName,
+        //        fields: fields,
+        //        primaryField: null,
+        //        identityField: identityField);
+        //    var expected = $"" +
+        //        $"INSERT INTO [Table] " +
+        //        $"( [Field2], [Field3] ) " +
+        //        $"VALUES " +
+        //        $"( @Field2, @Field3 ) ; " +
+        //        $"SELECT CONVERT(BIGINT, SCOPE_IDENTITY()) AS [Result] ;";
 
-            // Assert
-            Assert.AreEqual(expected, actual);
-        }
+        //    // Assert
+        //    Assert.AreEqual(expected, actual);
+        //}
 
         [TestMethod]
         public void TestSqlServerStatementBuilderCreateInsertWithPrimaryAndIdentity()
@@ -982,21 +978,21 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
-            var primaryField = new DbField("Field1", true, false, false, typeof(int), null, null, null, null);
-            var identityField = new DbField("Field2", false, true, false, typeof(int), null, null, null, null);
+            var primaryField = new DbField("Field1", true, false, false, typeof(int), null, null, null, null, false);
+            var identityField = new DbField("Field2", false, true, false, typeof(int), null, null, null, null, false);
 
             // Act
             var actual = statementBuilder.CreateInsert(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
-                primaryField: null,
+                primaryField: primaryField,
                 identityField: identityField);
             var expected = $"" +
                 $"INSERT INTO [Table] " +
                 $"( [Field1], [Field3] ) " +
+                $"OUTPUT [INSERTED].[Field1] " +
                 $"VALUES " +
-                $"( @Field1, @Field3 ) ; " +
-                $"SELECT CONVERT(INT, SCOPE_IDENTITY()) AS [Result] ;";
+                $"( @Field1, @Field3 ) ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -1010,21 +1006,21 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
-            var primaryField = new DbField("Field1", true, false, false, typeof(int), null, null, null, null);
-            var identityField = new DbField("Field2", false, true, false, typeof(long), null, null, null, null);
+            var primaryField = new DbField("Field1", true, false, false, typeof(int), null, null, null, null, false);
+            var identityField = new DbField("Field2", false, true, false, typeof(long), null, null, null, null, false);
 
             // Act
             var actual = statementBuilder.CreateInsert(queryBuilder: queryBuilder,
                 tableName: tableName,
                 fields: fields,
-                primaryField: null,
+                primaryField: primaryField,
                 identityField: identityField);
             var expected = $"" +
                 $"INSERT INTO [Table] " +
                 $"( [Field1], [Field3] ) " +
+                $"OUTPUT [INSERTED].[Field1] " +
                 $"VALUES " +
-                $"( @Field1, @Field3 ) ; " +
-                $"SELECT CONVERT(BIGINT, SCOPE_IDENTITY()) AS [Result] ;";
+                $"( @Field1, @Field3 ) ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -1050,8 +1046,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"INSERT INTO [Table] WITH (TABLOCK) " +
                 $"( [Field1], [Field2], [Field3] ) " +
                 $"VALUES " +
-                $"( @Field1, @Field2, @Field3 ) ; " +
-                $"SELECT NULL AS [Result] ;";
+                $"( @Field1, @Field2, @Field3 ) ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -1166,7 +1161,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
-            var primaryField = new DbField("Field1", true, false, false, typeof(int), null, null, null, null);
+            var primaryField = new DbField("Field1", true, false, false, typeof(int), null, null, null, null, false);
 
             // Act
             var actual = statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
@@ -1185,7 +1180,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
                 $"UPDATE SET T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
-                $"OUTPUT INSERTED.[Field1] AS [Id], @__RepoDb_OrderColumn_0 AS [OrderColumn] ;";
+                $"OUTPUT [INSERTED].[Field1] AS [Id], @__RepoDb_OrderColumn_0 AS [OrderColumn] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -1200,8 +1195,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
-            var primaryField = new DbField("Field1", true, true, false, typeof(int), null, null, null, null);
-            var identifyField = new DbField("Field1", true, true, false, typeof(int), null, null, null, null);
+            var primaryField = new DbField("Field1", true, true, false, typeof(int), null, null, null, null, false);
 
             // Act
             var actual = statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
@@ -1220,7 +1214,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"VALUES ( S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
                 $"UPDATE SET T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
-                $"OUTPUT INSERTED.[Field1] AS [Id], @__RepoDb_OrderColumn_0 AS [OrderColumn] ;";
+                $"OUTPUT [INSERTED].[Field1] AS [Id], @__RepoDb_OrderColumn_0 AS [OrderColumn] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -1235,7 +1229,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
-            var primaryField = new DbField("Id", true, true, false, typeof(int), null, null, null, null);
+            var primaryField = new DbField("Id", true, true, false, typeof(int), null, null, null, null, false);
 
             // Act
             var actual = statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
@@ -1254,7 +1248,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
                 $"UPDATE SET T.[Field1] = S.[Field1], T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
-                $"OUTPUT INSERTED.[Id] AS [Id], @__RepoDb_OrderColumn_0 AS [OrderColumn] ;";
+                $"OUTPUT [INSERTED].[Id] AS [Id], @__RepoDb_OrderColumn_0 AS [OrderColumn] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -1269,7 +1263,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
-            var identityField = new DbField("Field1", false, true, false, typeof(int), null, null, null, null);
+            var identityField = new DbField("Field1", false, true, false, typeof(int), null, null, null, null, false);
 
             // Act
             var actual = statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
@@ -1287,46 +1281,44 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"INSERT ( [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
-                $"UPDATE SET T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
-                $"OUTPUT INSERTED.[Field1] AS [Id], @__RepoDb_OrderColumn_0 AS [OrderColumn] ;";
+                $"UPDATE SET T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod]
-        public void TestSqlServerStatementBuilderCreateMergeAllWithUncoveredIdentity()
-        {
-            // Setup
-            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
-            var queryBuilder = new QueryBuilder();
-            var tableName = "Table";
-            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
-            var qualifiers = Field.From("Field1");
-            var identityField = new DbField("Id", false, true, false, typeof(int), null, null, null, null);
+        //[TestMethod]
+        //public void TestSqlServerStatementBuilderCreateMergeAllWithUncoveredPrimary()
+        //{
+        //    // Setup
+        //    var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
+        //    var queryBuilder = new QueryBuilder();
+        //    var tableName = "Table";
+        //    var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+        //    var qualifiers = Field.From("Field1");
+        //    var identityField = new DbField("Id", false, true, false, typeof(int), null, null, null, null, false);
 
-            // Act
-            var actual = statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
-                tableName: tableName,
-                fields: fields,
-                qualifiers: qualifiers,
-                batchSize: 1,
-                primaryField: null,
-                identityField: identityField);
-            var expected = $"" +
-                $"MERGE [Table] AS T " +
-                $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
-                $"AS S ON ( (S.[Field1] = T.[Field1] OR (S.[Field1] IS NULL AND T.[Field1] IS NULL)) ) " +
-                $"WHEN NOT MATCHED THEN " +
-                $"INSERT ( [Field1], [Field2], [Field3] ) " +
-                $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
-                $"WHEN MATCHED THEN " +
-                $"UPDATE SET T.[Field1] = S.[Field1], T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
-                $"OUTPUT INSERTED.[Id] AS [Id], @__RepoDb_OrderColumn_0 AS [OrderColumn] ;";
+        //    // Act
+        //    var actual = statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
+        //        tableName: tableName,
+        //        fields: fields,
+        //        qualifiers: qualifiers,
+        //        batchSize: 1,
+        //        primaryField: null,
+        //        identityField: identityField);
+        //    var expected = $"" +
+        //        $"MERGE [Table] AS T " +
+        //        $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
+        //        $"AS S ON ( (S.[Field1] = T.[Field1] OR (S.[Field1] IS NULL AND T.[Field1] IS NULL)) ) " +
+        //        $"WHEN NOT MATCHED THEN " +
+        //        $"INSERT ( [Field1], [Field2], [Field3] ) " +
+        //        $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
+        //        $"WHEN MATCHED THEN " +
+        //        $"UPDATE SET T.[Field1] = S.[Field1], T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] ;";
 
-            // Assert
-            Assert.AreEqual(expected, actual);
-        }
+        //    // Assert
+        //    Assert.AreEqual(expected, actual);
+        //}
 
         [TestMethod]
         public void TestSqlServerStatementBuilderCreateMergeAllWithCoveredPrimaryButWithoutQualifiers()
@@ -1336,7 +1328,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
-            var primaryField = new DbField("Field1", true, true, false, typeof(int), null, null, null, null);
+            var primaryField = new DbField("Field1", true, true, false, typeof(int), null, null, null, null, false);
 
             // Act
             var actual = statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
@@ -1355,7 +1347,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
                 $"UPDATE SET T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
-                $"OUTPUT INSERTED.[Field1] AS [Id], @__RepoDb_OrderColumn_0 AS [OrderColumn] ;";
+                $"OUTPUT [INSERTED].[Field1] AS [Id], @__RepoDb_OrderColumn_0 AS [OrderColumn] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -1369,8 +1361,8 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
-            var primaryField = new DbField("Field1", true, false, false, typeof(int), null, null, null, null);
-            var identityField = new DbField("Field2", false, true, false, typeof(int), null, null, null, null);
+            var primaryField = new DbField("Field1", true, false, false, typeof(int), null, null, null, null, false);
+            var identityField = new DbField("Field2", false, true, false, typeof(int), null, null, null, null, false);
 
             // Act
             var actual = statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
@@ -1389,14 +1381,14 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"VALUES ( S.[Field1], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
                 $"UPDATE SET T.[Field3] = S.[Field3] " +
-                $"OUTPUT INSERTED.[Field2] AS [Id], @__RepoDb_OrderColumn_0 AS [OrderColumn] ;";
+                $"OUTPUT [INSERTED].[Field1] AS [Id], @__RepoDb_OrderColumn_0 AS [OrderColumn] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
-        public void TestSqlServerStatementBuilderCreateMergeAllWithIdentityForThreeBatches()
+        public void TestSqlServerStatementBuilderCreateMergeAllWithPrimaryForThreeBatches()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
@@ -1404,7 +1396,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
-            var identityField = new DbField("Field1", false, true, false, typeof(int), null, null, null, null);
+            var primaryField = new DbField("Field1", true, true, false, typeof(int), null, null, null, null, false);
 
             // Act
             var actual = statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
@@ -1412,8 +1404,60 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 fields: fields,
                 qualifiers: qualifiers,
                 batchSize: 3,
-                primaryField: null,
-                identityField: identityField);
+                primaryField: primaryField,
+                identityField: null);
+            var expected = $"" +
+                $"MERGE [Table] AS T " +
+                $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
+                $"AS S ON ( (S.[Field1] = T.[Field1] OR (S.[Field1] IS NULL AND T.[Field1] IS NULL)) ) " +
+                $"WHEN NOT MATCHED THEN " +
+                $"INSERT ( [Field1], [Field2], [Field3] ) " +
+                $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
+                $"WHEN MATCHED THEN " +
+                $"UPDATE SET T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
+                $"OUTPUT [INSERTED].[Field1] AS [Id], @__RepoDb_OrderColumn_0 AS [OrderColumn] ; " +
+                $"MERGE [Table] AS T " +
+                $"USING ( SELECT @Field1_1 AS [Field1], @Field2_1 AS [Field2], @Field3_1 AS [Field3] ) " +
+                $"AS S ON ( (S.[Field1] = T.[Field1] OR (S.[Field1] IS NULL AND T.[Field1] IS NULL)) ) " +
+                $"WHEN NOT MATCHED THEN " +
+                $"INSERT ( [Field1], [Field2], [Field3] ) " +
+                $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
+                $"WHEN MATCHED THEN " +
+                $"UPDATE SET T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
+                $"OUTPUT [INSERTED].[Field1] AS [Id], @__RepoDb_OrderColumn_1 AS [OrderColumn] ; " +
+                $"MERGE [Table] AS T " +
+                $"USING ( SELECT @Field1_2 AS [Field1], @Field2_2 AS [Field2], @Field3_2 AS [Field3] ) " +
+                $"AS S ON ( (S.[Field1] = T.[Field1] OR (S.[Field1] IS NULL AND T.[Field1] IS NULL)) ) " +
+                $"WHEN NOT MATCHED THEN " +
+                $"INSERT ( [Field1], [Field2], [Field3] ) " +
+                $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
+                $"WHEN MATCHED THEN " +
+                $"UPDATE SET T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
+                $"OUTPUT [INSERTED].[Field1] AS [Id], @__RepoDb_OrderColumn_2 AS [OrderColumn] ;";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestSqlServerStatementBuilderCreateMergeAllWithPrimaryAsIdentityForThreeBatches()
+        {
+            // Setup
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
+            var queryBuilder = new QueryBuilder();
+            var tableName = "Table";
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+            var qualifiers = Field.From("Field1");
+            var primaryField = new DbField("Field1", true, true, false, typeof(int), null, null, null, null, false);
+
+            // Act
+            var actual = statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
+                tableName: tableName,
+                fields: fields,
+                qualifiers: qualifiers,
+                batchSize: 3,
+                primaryField: primaryField,
+                identityField: primaryField);
             var expected = $"" +
                 $"MERGE [Table] AS T " +
                 $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
@@ -1423,7 +1467,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"VALUES ( S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
                 $"UPDATE SET T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
-                $"OUTPUT INSERTED.[Field1] AS [Id], @__RepoDb_OrderColumn_0 AS [OrderColumn] ; " +
+                $"OUTPUT [INSERTED].[Field1] AS [Id], @__RepoDb_OrderColumn_0 AS [OrderColumn] ; " +
                 $"MERGE [Table] AS T " +
                 $"USING ( SELECT @Field1_1 AS [Field1], @Field2_1 AS [Field2], @Field3_1 AS [Field3] ) " +
                 $"AS S ON ( (S.[Field1] = T.[Field1] OR (S.[Field1] IS NULL AND T.[Field1] IS NULL)) ) " +
@@ -1432,7 +1476,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"VALUES ( S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
                 $"UPDATE SET T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
-                $"OUTPUT INSERTED.[Field1] AS [Id], @__RepoDb_OrderColumn_1 AS [OrderColumn] ; " +
+                $"OUTPUT [INSERTED].[Field1] AS [Id], @__RepoDb_OrderColumn_1 AS [OrderColumn] ; " +
                 $"MERGE [Table] AS T " +
                 $"USING ( SELECT @Field1_2 AS [Field1], @Field2_2 AS [Field2], @Field3_2 AS [Field3] ) " +
                 $"AS S ON ( (S.[Field1] = T.[Field1] OR (S.[Field1] IS NULL AND T.[Field1] IS NULL)) ) " +
@@ -1441,7 +1485,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"VALUES ( S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
                 $"UPDATE SET T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
-                $"OUTPUT INSERTED.[Field1] AS [Id], @__RepoDb_OrderColumn_2 AS [OrderColumn] ;";
+                $"OUTPUT [INSERTED].[Field1] AS [Id], @__RepoDb_OrderColumn_2 AS [OrderColumn] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -1481,7 +1525,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         }
 
         [TestMethod]
-        public void TestSqlServerStatementBuilderCreateMergeAllWithIdentityForThreeBatchesWithHints()
+        public void TestSqlServerStatementBuilderCreateMergeAllWithPrimaryForThreeBatchesWithHints()
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
@@ -1489,7 +1533,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
-            var identityField = new DbField("Field1", false, true, false, typeof(int), null, null, null, null);
+            var primaryField = new DbField("Field1", true, true, false, typeof(int), null, null, null, null, false);
 
             // Act
             var actual = statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
@@ -1497,8 +1541,61 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 fields: fields,
                 qualifiers: qualifiers,
                 batchSize: 3,
-                primaryField: null,
-                identityField: identityField,
+                primaryField: primaryField,
+                identityField: null,
+                hints: SqlServerTableHints.TabLock);
+            var expected = $"" +
+                $"MERGE [Table] WITH (TABLOCK) AS T " +
+                $"USING ( SELECT @Field1 AS [Field1], @Field2 AS [Field2], @Field3 AS [Field3] ) " +
+                $"AS S ON ( (S.[Field1] = T.[Field1] OR (S.[Field1] IS NULL AND T.[Field1] IS NULL)) ) " +
+                $"WHEN NOT MATCHED THEN " +
+                $"INSERT ( [Field1], [Field2], [Field3] ) " +
+                $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
+                $"WHEN MATCHED THEN " +
+                $"UPDATE SET T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
+                $"OUTPUT [INSERTED].[Field1] AS [Id], @__RepoDb_OrderColumn_0 AS [OrderColumn] ; " +
+                $"MERGE [Table] WITH (TABLOCK) AS T " +
+                $"USING ( SELECT @Field1_1 AS [Field1], @Field2_1 AS [Field2], @Field3_1 AS [Field3] ) " +
+                $"AS S ON ( (S.[Field1] = T.[Field1] OR (S.[Field1] IS NULL AND T.[Field1] IS NULL)) ) " +
+                $"WHEN NOT MATCHED THEN " +
+                $"INSERT ( [Field1], [Field2], [Field3] ) " +
+                $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
+                $"WHEN MATCHED THEN " +
+                $"UPDATE SET T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
+                $"OUTPUT [INSERTED].[Field1] AS [Id], @__RepoDb_OrderColumn_1 AS [OrderColumn] ; " +
+                $"MERGE [Table] WITH (TABLOCK) AS T " +
+                $"USING ( SELECT @Field1_2 AS [Field1], @Field2_2 AS [Field2], @Field3_2 AS [Field3] ) " +
+                $"AS S ON ( (S.[Field1] = T.[Field1] OR (S.[Field1] IS NULL AND T.[Field1] IS NULL)) ) " +
+                $"WHEN NOT MATCHED THEN " +
+                $"INSERT ( [Field1], [Field2], [Field3] ) " +
+                $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
+                $"WHEN MATCHED THEN " +
+                $"UPDATE SET T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
+                $"OUTPUT [INSERTED].[Field1] AS [Id], @__RepoDb_OrderColumn_2 AS [OrderColumn] ;";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestSqlServerStatementBuilderCreateMergeAllWithPrimaryAsIdentityForThreeBatchesWithHints()
+        {
+            // Setup
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
+            var queryBuilder = new QueryBuilder();
+            var tableName = "Table";
+            var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
+            var qualifiers = Field.From("Field1");
+            var primaryField = new DbField("Field1", true, true, false, typeof(int), null, null, null, null, false);
+
+            // Act
+            var actual = statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
+                tableName: tableName,
+                fields: fields,
+                qualifiers: qualifiers,
+                batchSize: 3,
+                primaryField: primaryField,
+                identityField: primaryField,
                 hints: SqlServerTableHints.TabLock);
             var expected = $"" +
                 $"MERGE [Table] WITH (TABLOCK) AS T " +
@@ -1509,7 +1606,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"VALUES ( S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
                 $"UPDATE SET T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
-                $"OUTPUT INSERTED.[Field1] AS [Id], @__RepoDb_OrderColumn_0 AS [OrderColumn] ; " +
+                $"OUTPUT [INSERTED].[Field1] AS [Id], @__RepoDb_OrderColumn_0 AS [OrderColumn] ; " +
                 $"MERGE [Table] WITH (TABLOCK) AS T " +
                 $"USING ( SELECT @Field1_1 AS [Field1], @Field2_1 AS [Field2], @Field3_1 AS [Field3] ) " +
                 $"AS S ON ( (S.[Field1] = T.[Field1] OR (S.[Field1] IS NULL AND T.[Field1] IS NULL)) ) " +
@@ -1518,7 +1615,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"VALUES ( S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
                 $"UPDATE SET T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
-                $"OUTPUT INSERTED.[Field1] AS [Id], @__RepoDb_OrderColumn_1 AS [OrderColumn] ; " +
+                $"OUTPUT [INSERTED].[Field1] AS [Id], @__RepoDb_OrderColumn_1 AS [OrderColumn] ; " +
                 $"MERGE [Table] WITH (TABLOCK) AS T " +
                 $"USING ( SELECT @Field1_2 AS [Field1], @Field2_2 AS [Field2], @Field3_2 AS [Field3] ) " +
                 $"AS S ON ( (S.[Field1] = T.[Field1] OR (S.[Field1] IS NULL AND T.[Field1] IS NULL)) ) " +
@@ -1527,7 +1624,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"VALUES ( S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
                 $"UPDATE SET T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
-                $"OUTPUT INSERTED.[Field1] AS [Id], @__RepoDb_OrderColumn_2 AS [OrderColumn] ;";
+                $"OUTPUT [INSERTED].[Field1] AS [Id], @__RepoDb_OrderColumn_2 AS [OrderColumn] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -1599,7 +1696,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
-            var primaryField = new DbField("Id", true, false, false, typeof(int), null, null, null, null);
+            var primaryField = new DbField("Id", true, false, false, typeof(int), null, null, null, null, false);
 
             // Act
             statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
@@ -1679,7 +1776,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
-            var primaryField = new DbField("Field1", false, false, false, typeof(int), null, null, null, null);
+            var primaryField = new DbField("Field1", false, false, false, typeof(int), null, null, null, null, false);
 
             // Act
             statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
@@ -1700,7 +1797,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
-            var identifyField = new DbField("Field2", false, false, false, typeof(int), null, null, null, null);
+            var identifyField = new DbField("Field2", false, false, false, typeof(int), null, null, null, null, false);
 
             // Act
             statementBuilder.CreateMergeAll(queryBuilder: queryBuilder,
@@ -1818,7 +1915,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
-            var primaryField = new DbField("Field1", true, false, false, typeof(int), null, null, null, null);
+            var primaryField = new DbField("Field1", true, false, false, typeof(int), null, null, null, null, false);
 
             // Act
             var actual = statementBuilder.CreateMerge(queryBuilder: queryBuilder,
@@ -1836,7 +1933,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
                 $"UPDATE SET T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
-                $"OUTPUT INSERTED.[Field1] AS [Result] ;";
+                $"OUTPUT [INSERTED].[Field1] AS [Result] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -1851,8 +1948,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
-            var primaryField = new DbField("Field1", true, true, false, typeof(int), null, null, null, null);
-            var identifyField = new DbField("Field1", true, true, false, typeof(int), null, null, null, null);
+            var primaryField = new DbField("Field1", true, true, false, typeof(int), null, null, null, null, false);
 
             // Act
             var actual = statementBuilder.CreateMerge(queryBuilder: queryBuilder,
@@ -1870,7 +1966,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"VALUES ( S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
                 $"UPDATE SET T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
-                $"OUTPUT INSERTED.[Field1] AS [Result] ;";
+                $"OUTPUT [INSERTED].[Field1] AS [Result] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -1885,7 +1981,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
-            var primaryField = new DbField("Id", true, true, false, typeof(int), null, null, null, null);
+            var primaryField = new DbField("Id", true, true, false, typeof(int), null, null, null, null, false);
 
             // Act
             var actual = statementBuilder.CreateMerge(queryBuilder: queryBuilder,
@@ -1903,7 +1999,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
                 $"UPDATE SET T.[Field1] = S.[Field1], T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
-                $"OUTPUT INSERTED.[Id] AS [Result] ;";
+                $"OUTPUT [INSERTED].[Id] AS [Result] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -1918,7 +2014,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
-            var identityField = new DbField("Field1", false, true, false, typeof(int), null, null, null, null);
+            var identityField = new DbField("Field1", false, true, false, typeof(int), null, null, null, null, false);
 
             // Act
             var actual = statementBuilder.CreateMerge(queryBuilder: queryBuilder,
@@ -1935,8 +2031,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"INSERT ( [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
-                $"UPDATE SET T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
-                $"OUTPUT INSERTED.[Field1] AS [Result] ;";
+                $"UPDATE SET T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -1951,7 +2046,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
-            var identityField = new DbField("Id", false, true, false, typeof(int), null, null, null, null);
+            var identityField = new DbField("Id", false, true, false, typeof(int), null, null, null, null, false);
 
             // Act
             var actual = statementBuilder.CreateMerge(queryBuilder: queryBuilder,
@@ -1968,8 +2063,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"INSERT ( [Field1], [Field2], [Field3] ) " +
                 $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
-                $"UPDATE SET T.[Field1] = S.[Field1], T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
-                $"OUTPUT INSERTED.[Id] AS [Result] ;";
+                $"UPDATE SET T.[Field1] = S.[Field1], T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -1983,7 +2077,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
-            var primaryField = new DbField("Field1", true, true, false, typeof(int), null, null, null, null);
+            var primaryField = new DbField("Field1", true, true, false, typeof(int), null, null, null, null, false);
 
             // Act
             var actual = statementBuilder.CreateMerge(queryBuilder: queryBuilder,
@@ -2001,7 +2095,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
                 $"UPDATE SET T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
-                $"OUTPUT INSERTED.[Field1] AS [Result] ;";
+                $"OUTPUT [INSERTED].[Field1] AS [Result] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -2015,8 +2109,8 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
-            var primaryField = new DbField("Field1", true, false, false, typeof(int), null, null, null, null);
-            var identityField = new DbField("Field2", false, true, false, typeof(int), null, null, null, null);
+            var primaryField = new DbField("Field1", true, false, false, typeof(int), null, null, null, null, false);
+            var identityField = new DbField("Field2", false, true, false, typeof(int), null, null, null, null, false);
 
             // Act
             var actual = statementBuilder.CreateMerge(queryBuilder: queryBuilder,
@@ -2034,7 +2128,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"VALUES ( S.[Field1], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
                 $"UPDATE SET T.[Field3] = S.[Field3] " +
-                $"OUTPUT INSERTED.[Field2] AS [Result] ;";
+                $"OUTPUT [INSERTED].[Field1] AS [Result] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -2135,7 +2229,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
-            var primaryField = new DbField("Id", true, false, false, typeof(int), null, null, null, null);
+            var primaryField = new DbField("Id", true, false, false, typeof(int), null, null, null, null, false);
 
             // Act
             statementBuilder.CreateMerge(queryBuilder: queryBuilder,
@@ -2211,7 +2305,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
-            var primaryField = new DbField("Field1", false, false, false, typeof(int), null, null, null, null);
+            var primaryField = new DbField("Field1", false, false, false, typeof(int), null, null, null, null, false);
 
             // Act
             statementBuilder.CreateMerge(queryBuilder: queryBuilder,
@@ -2231,7 +2325,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
-            var identifyField = new DbField("Field2", false, false, false, typeof(int), null, null, null, null);
+            var identifyField = new DbField("Field2", false, false, false, typeof(int), null, null, null, null, false);
 
             // Act
             statementBuilder.CreateMerge(queryBuilder: queryBuilder,
