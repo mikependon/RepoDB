@@ -333,12 +333,12 @@ namespace RepoDb.Extensions
             IDbSetting dbSetting)
         {
             var parameterPrefix = dbSetting?.ParameterPrefix ?? "@";
-            
+
             value = string.Concat(parameterPrefix,
                 (value.StartsWith(parameterPrefix, StringComparison.OrdinalIgnoreCase) ? value.Substring(1) : value)
                 .AsUnquoted(true, dbSetting).AsAlphaNumeric());
             value = index > 0 ? string.Concat(value, "_", index.ToString()) : value;
-            
+
             return value;
         }
 
