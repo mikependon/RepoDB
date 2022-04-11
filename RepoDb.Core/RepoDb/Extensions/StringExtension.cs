@@ -118,7 +118,7 @@ namespace RepoDb.Extensions
             }
             else
             {
-                var splitted = value.Split(StringConstant.Period.ToCharArray());
+                var splitted = value.Split(CharConstant.Period);
                 return splitted.Select(s => s.AsUnquotedInternal(trim, dbSetting)).Join(StringConstant.Period);
             }
         }
@@ -330,30 +330,16 @@ namespace RepoDb.Extensions
         /// <returns>The string value represented as database parameter.</returns>
         public static string AsParameter(this string value,
             int index,
-            IDbSetting dbSetting) =>
-            AsParameter(value, index, null, dbSetting);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="value"></param>
-        /// <param name="index"></param>
-        /// <param name="functionFormat"></param>
-        /// <param name="dbSetting"></param>
-        /// <returns></returns>
-        internal static string AsParameter(this string value,
-            int index,
-            string functionFormat,
             IDbSetting dbSetting)
         {
             var parameterPrefix = dbSetting?.ParameterPrefix ?? "@";
 
             value = string.Concat(parameterPrefix,
                 (value.StartsWith(parameterPrefix, StringComparison.OrdinalIgnoreCase) ? value.Substring(1) : value)
-                    .AsUnquoted(true, dbSetting).AsAlphaNumeric());
+                .AsUnquoted(true, dbSetting).AsAlphaNumeric());
             value = index > 0 ? string.Concat(value, "_", index.ToString()) : value;
 
-            return string.IsNullOrWhiteSpace(functionFormat) ? value : string.Format(functionFormat, value);
+            return value;
         }
 
 #if NETSTANDARD2_0
