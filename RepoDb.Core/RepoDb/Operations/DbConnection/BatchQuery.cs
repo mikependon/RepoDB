@@ -1754,7 +1754,7 @@ namespace RepoDb
                 DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Result
-            return result as IEnumerable<TEntity>;
+            return result;
         }
 
         #endregion
@@ -1856,7 +1856,7 @@ namespace RepoDb
                 DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Result
-            return result as IEnumerable<TEntity>;
+            return result;
         }
 
         #endregion

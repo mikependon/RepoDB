@@ -86,7 +86,7 @@ namespace RepoDb.Extensions
         /// <param name="parameter"></param>
         private static void EnsureTableValueParameter(IDbDataParameter parameter)
         {
-            if (parameter == null || parameter.Value is DataTable == false)
+            if (parameter == null || parameter.Value is DataTable table == false)
             {
                 return;
             }
@@ -96,8 +96,7 @@ namespace RepoDb.Extensions
             {
                 return;
             }
-
-            var table = ((DataTable)parameter.Value);
+            
             property.SetValue(parameter, table.TableName);
         }
 
@@ -187,9 +186,9 @@ namespace RepoDb.Extensions
             }
 
             // IDictionary<string, object>
-            if (param is ExpandoObject || param is IDictionary<string, object>)
+            if (param is IDictionary<string, object> objects)
             {
-                CreateParameters(command, (IDictionary<string, object>)param, propertiesToSkip, dbFields);
+                CreateParameters(command, objects, propertiesToSkip, dbFields);
             }
 
             // QueryField

@@ -14,9 +14,9 @@ namespace RepoDb.Extensions
         /// <returns>The extracted value from <see cref="MemberBinding"/> object.</returns>
         public static object GetValue(this MemberBinding member)
         {
-            if (member.IsMemberAssignment())
+            if (member is MemberAssignment memberAssignment)
             {
-                return member.ToMemberAssignment().Expression.GetValue();
+                return memberAssignment.Expression.GetValue();
             }
             return null;
         }
