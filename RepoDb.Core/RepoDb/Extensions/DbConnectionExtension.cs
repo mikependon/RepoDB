@@ -2882,12 +2882,9 @@ namespace RepoDb
             }
 
             // ExpandoObject
-            if (param is ExpandoObject || param is System.Collections.IDictionary)
+            if (param is IDictionary<string, object> objects)
             {
-                if (param is IDictionary<string, object> objects)
-                {
-                    return GetCommandArrayParametersText(commandText, objects, dbSetting);
-                }
+                return GetCommandArrayParametersText(commandText, objects, dbSetting);
             }
 
             // QueryField
@@ -3179,14 +3176,11 @@ namespace RepoDb
         {
             var valueType = value?.GetType();
             var propertyHandler = valueType != null ? PropertyHandlerCache.Get<object>(valueType) : null;
-            if (value == null || propertyHandler != null || value is string || value is System.Collections.IEnumerable == false)
+            if (value == null || propertyHandler != null || value is string || value is System.Collections.IEnumerable values == false)
             {
                 return null;
             }
-
-            // Values
-            var values = (System.Collections.IEnumerable)value;
-
+            
             // Return
             return new CommandArrayParameter(parameterName, values.WithType<object>());
         }
@@ -3210,7 +3204,7 @@ namespace RepoDb
             }
 
             // Items
-            var items = values is IEnumerable<object> objects ? objects : values.WithType<object>();
+            var items = values.WithType<object>();
             if (items.Any() != true)
             {
                 var parameter = parameterName.AsParameter(dbSetting);

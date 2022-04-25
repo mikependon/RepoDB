@@ -109,13 +109,14 @@ namespace RepoDb
             maps.TryGetValue(GenerateHashCode(type), out var value);
 
             // Check the result
-            if (value == null || value is TClassHandler)
+            return value switch
             {
-                return (TClassHandler)value;
-            }
-
-            // Throw an exception
-            throw new InvalidTypeException($"The cache item is not convertible to '{typeof(TClassHandler).FullName}' type.");
+                null => default,
+                TClassHandler classHandler => classHandler,
+                
+                // Throw an exception
+                _ => throw new InvalidTypeException($"The cache item is not convertible to '{typeof(TClassHandler).FullName}' type.")
+            };
         }
 
         /*
