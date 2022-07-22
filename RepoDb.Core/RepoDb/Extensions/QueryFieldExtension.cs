@@ -71,21 +71,7 @@ namespace RepoDb.Extensions
         internal static string AsParameter(this QueryField queryField,
             int index,
             IDbSetting dbSetting) =>
-            AsParameter(queryField, index, null, dbSetting);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="queryField"></param>
-        /// <param name="index"></param>
-        /// <param name="functionFormat"></param>
-        /// <param name="dbSetting"></param>
-        /// <returns></returns>
-        internal static string AsParameter(this QueryField queryField,
-            int index,
-            string functionFormat,
-            IDbSetting dbSetting) =>
-            queryField.Parameter.Name.AsParameter(index, functionFormat, dbSetting);
+            queryField.Parameter.Name.AsParameter(index, dbSetting);
 
         /// <summary>
         /// 

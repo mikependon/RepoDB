@@ -264,8 +264,8 @@ namespace RepoDb
                 hashCode = HashCode.Combine(hashCode, HASHCODE_ISNOTNULL);
             }
             // The parameter's length affects the uniqueness of the object
-            else if ((Operation == Operation.In || Operation == Operation.NotIn) &&
-                Parameter.Value != null && Parameter.Value is IEnumerable enumerable)
+            else if (Operation is Operation.In or Operation.NotIn &&
+                     Parameter.Value is IEnumerable enumerable)
             {
                 hashCode = HashCode.Combine(hashCode, enumerable.WithType<object>().Count());
             }

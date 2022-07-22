@@ -48,7 +48,7 @@ namespace RepoDb
             where TEntity : class
         {
             // Create a connection
-            var connection = CreateConnection();
+            var connection = transaction?.Connection ?? CreateConnection();
 
             try
             {
@@ -136,7 +136,7 @@ namespace RepoDb
             where TEntity : class
         {
             // Create a connection
-            var connection = CreateConnection();
+            var connection = transaction?.Connection ?? CreateConnection();
 
             try
             {
@@ -194,7 +194,7 @@ namespace RepoDb
             IDbTransaction transaction = null)
         {
             // Create a connection
-            var connection = CreateConnection();
+            var connection = transaction?.Connection ?? CreateConnection();
 
             try
             {
@@ -284,7 +284,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
         {
             // Create a connection
-            var connection = CreateConnection();
+            var connection = transaction?.Connection ?? CreateConnection();
 
             try
             {
