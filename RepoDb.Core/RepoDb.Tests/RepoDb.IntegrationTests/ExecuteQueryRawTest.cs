@@ -18,6 +18,9 @@ namespace RepoDb.IntegrationTests
         {
             FluentMapper.Type<DateTime>().DbType(DbType.DateTime2, true);
             FluentMapper.Type<uint>().PropertyHandler<IntPropertyHandler>(true);
+#if NET5_0_OR_GREATER
+            FluentMapper.Type<StringRecord>().DbType(DbType.AnsiString, true);
+#endif
         }
 
         [ClassCleanup]
@@ -146,6 +149,54 @@ namespace RepoDb.IntegrationTests
         }
 
         #endregion
+
+#if NET5_0_OR_GREATER
+
+        #region Records
+
+        public sealed record StringRecord(string Value) : IConvertible
+        {
+            public static implicit operator string(StringRecord source) => source.Value;
+            public static implicit operator StringRecord(string source) => new StringRecord(source);
+
+            public TypeCode GetTypeCode() => throw new NotImplementedException();
+
+            public bool ToBoolean(IFormatProvider? provider) => throw new NotImplementedException();
+
+            public byte ToByte(IFormatProvider? provider) => throw new NotImplementedException();
+
+            public char ToChar(IFormatProvider? provider) => throw new NotImplementedException();
+
+            public DateTime ToDateTime(IFormatProvider? provider) => throw new NotImplementedException();
+
+            public decimal ToDecimal(IFormatProvider? provider) => throw new NotImplementedException();
+
+            public double ToDouble(IFormatProvider? provider) => throw new NotImplementedException();
+
+            public short ToInt16(IFormatProvider? provider) => throw new NotImplementedException();
+
+            public int ToInt32(IFormatProvider? provider) => throw new NotImplementedException();
+
+            public long ToInt64(IFormatProvider? provider) => throw new NotImplementedException();
+
+            public sbyte ToSByte(IFormatProvider? provider) => throw new NotImplementedException();
+
+            public float ToSingle(IFormatProvider? provider) => throw new NotImplementedException();
+
+            public string ToString(IFormatProvider? provider) => Value;
+
+            public object ToType(Type conversionType, IFormatProvider? provider) => throw new NotImplementedException();
+
+            public ushort ToUInt16(IFormatProvider? provider) => throw new NotImplementedException();
+
+            public uint ToUInt32(IFormatProvider? provider) => throw new NotImplementedException();
+
+            public ulong ToUInt64(IFormatProvider? provider) => throw new NotImplementedException();
+        }
+
+        #endregion
+
+#endif
 
         #region ExecuteQuery
 
@@ -986,6 +1037,47 @@ namespace RepoDb.IntegrationTests
         #endregion
 
         #endregion
+
+
+#if NET5_0_OR_GREATER
+
+        #region Records
+        
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryWithStringRecordParam()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.ExecuteQuery<string>("WITH CTE AS (SELECT 'ABC' AS Value UNION ALL SELECT 'DEF') SELECT * FROM CTE WHERE Value = @Value;",
+                    new { Value = new StringRecord("ABC")}).AsList();
+
+                // Assert
+                Assert.AreEqual(1, result.Count);
+                Assert.AreEqual("ABC", result[0]);
+            }
+        }
+        
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryWithMultipleStringRecordParams()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.ExecuteQuery<string>("WITH CTE AS (SELECT 'ABC' AS Value UNION ALL SELECT 'DEF' UNION ALL SELECT 'GHI') SELECT * FROM CTE WHERE Value IN (@Values);",
+                    new { Values = new StringRecord[] { "ABC", "DEF", "GHI" } }).AsList();
+
+                // Assert
+                Assert.AreEqual(3, result.Count);
+                Assert.AreEqual("ABC", result[0]);
+                Assert.AreEqual("DEF", result[1]);
+                Assert.AreEqual("GHI", result[2]);
+            }
+        }
+
+        #endregion
+
+#endif
 
         #endregion
 

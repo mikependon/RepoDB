@@ -60,8 +60,8 @@ namespace RepoDb.Extensions
             parameter.ParameterName = name.AsParameter(DbSettingMapper.Get(command.Connection));
             parameter.Value = value ?? DBNull.Value;
 
-            // The DB Type is auto set when setting the values (so check properly Time/DateTime problem)
-            if (dbType != null) // && parameter.DbType != dbType.Value)
+            // The DB Type is auto set when setting the values
+            if (dbType != null)
             {
                 // Prepare() requires an explicit assignment, weird Microsoft
                 parameter.DbType = dbType.Value;
@@ -96,7 +96,7 @@ namespace RepoDb.Extensions
             {
                 return;
             }
-            
+
             property.SetValue(parameter, table.TableName);
         }
 
@@ -140,7 +140,9 @@ namespace RepoDb.Extensions
                 for (var i = 0; i < values.Length; i++)
                 {
                     var name = string.Concat(commandArrayParameter.ParameterName, i.ToString()).AsParameter(dbSetting);
-                    command.Parameters.Add(command.CreateParameter(name, values[i], null));
+                    var value = values[i];
+                    var dbType = value?.GetType().GetDbType();
+                    command.Parameters.Add(command.CreateParameter(name, value, dbType));
                 }
             }
         }
