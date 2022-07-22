@@ -2910,9 +2910,6 @@ namespace RepoDb
             {
                 return GetCommandArrayParametersTextInternal(commandText, param, dbSetting);
             }
-
-            // Return
-            return null;
         }
 
         /// <summary>
