@@ -1,9 +1,11 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Enumerations;
+using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
+using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
@@ -282,6 +284,19 @@ namespace RepoDb.IntegrationTests.Operations
                 {
                     Helper.AssertPropertiesEquality(table, result.FirstOrDefault(item => item.Id == table.Id));
                 });
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
+        public void ThrowExceptionOnSqlConnectionQueryAllWithInvalidOrderFields()
+        {
+            // Setup
+            var orderBy = new OrderField("InvalidColumn", Order.Descending);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.QueryAll<IdentityTable>(orderBy: orderBy.AsEnumerable());
             }
         }
 
@@ -573,6 +588,19 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionOnSqlConnectionQueryAllAsyncWithInvalidOrderFields()
+        {
+            // Setup
+            var orderBy = new OrderField("InvalidColumn", Order.Descending);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.QueryAllAsync<IdentityTable>(orderBy: orderBy.AsEnumerable()).Result;
+            }
+        }
+
         #endregion
 
         #region QueryAllAsync<TEntity>(Extra Fields)
@@ -815,6 +843,20 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
+        public void ThrowExceptionOnSqlConnectionQueryAllViaTableNameWithInvalidOrderFields()
+        {
+            // Setup
+            var orderBy = new OrderField("InvalidColumn", Order.Descending);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.QueryAll<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                    orderBy: orderBy.AsEnumerable());
+            }
+        }
+
         #endregion
 
         #region QueryAllAsync(TableName)
@@ -1027,6 +1069,20 @@ namespace RepoDb.IntegrationTests.Operations
                     Assert.AreEqual(entity.ColumnFloat, item.ColumnFloat);
                     Assert.AreEqual(entity.ColumnNVarChar, item.ColumnNVarChar);
                 });
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionOnSqlConnectionQueryAllAsyncViaTableNameWithInvalidOrderFields()
+        {
+            // Setup
+            var orderBy = new OrderField("InvalidColumn", Order.Descending);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.QueryAllAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                    orderBy: orderBy.AsEnumerable()).Result;
             }
         }
 
