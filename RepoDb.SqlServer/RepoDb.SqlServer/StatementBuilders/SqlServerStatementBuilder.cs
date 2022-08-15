@@ -69,7 +69,7 @@ namespace RepoDb.StatementBuilders
             // There should be fields
             if (fields?.Any() != true)
             {
-                throw new MissingFieldsException($"The list of queryable fields must not be null for '{tableName}'.");
+                throw new MissingFieldsException(fields.Select(f => f.Name));
             }
 
             // Validate order by
@@ -368,7 +368,7 @@ namespace RepoDb.StatementBuilders
             // Verify the fields
             if (fields?.Any() != true)
             {
-                throw new MissingFieldsException($"The list of fields cannot be null or empty.");
+                throw new MissingFieldsException();
             }
 
             // Check the qualifiers
@@ -525,7 +525,7 @@ namespace RepoDb.StatementBuilders
             // Verify the fields
             if (fields?.Any() != true)
             {
-                throw new MissingFieldsException($"The list of fields cannot be null or empty.");
+                throw new MissingFieldsException();
             }
 
             // Check the qualifiers

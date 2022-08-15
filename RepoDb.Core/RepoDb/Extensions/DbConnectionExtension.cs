@@ -2446,7 +2446,7 @@ namespace RepoDb
         {
             if (!dictionary.ContainsKey(field.Name))
             {
-                throw new MissingFieldsException($"The field '{field.Name}' is not found from the given dictionary object.");
+                throw new MissingFieldsException(new[] { field.Name });
             }
             return ToQueryGroup(new QueryField(field, dictionary[field.Name]));
         }
@@ -2598,7 +2598,7 @@ namespace RepoDb
         {
             if (qualifiers?.Any() != true)
             {
-                throw new MissingFieldsException("No qualifier fields found for the 'Upsert' operation.");
+                throw new MissingFieldsException();
             }
 
             var queryFields = new List<QueryField>();
@@ -2613,7 +2613,7 @@ namespace RepoDb
 
             if (queryFields.Any() != true)
             {
-                throw new MissingFieldsException("No qualifier fields defined for the 'Upsert' operation. Please check the items defined at the dictionary object.");
+                throw new MissingFieldsException();
             }
 
             return new QueryGroup(queryFields);
@@ -3177,7 +3177,7 @@ namespace RepoDb
             {
                 return null;
             }
-            
+
             // Return
             return new CommandArrayParameter(parameterName, values.WithType<object>());
         }
