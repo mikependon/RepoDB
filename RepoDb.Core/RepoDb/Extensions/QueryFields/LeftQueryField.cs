@@ -1,5 +1,6 @@
 ﻿using RepoDb.Enumerations;
 using System;
+using System.Data;
 
 namespace RepoDb.Extensions.QueryFields
 {
@@ -17,9 +18,11 @@ namespace RepoDb.Extensions.QueryFields
         /// </summary>
         /// <param name="fieldName">The name of the field for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
+        /// <param name="dbType">The database type to be used for the query expression.</param>
         public LeftQueryField(string fieldName,
-            object value)
-            : this(fieldName, Operation.Equal, value)
+            object value,
+            DbType? dbType = null)
+            : this(fieldName, Operation.Equal, value, dbType)
         { }
 
         /// <summary>
@@ -27,9 +30,11 @@ namespace RepoDb.Extensions.QueryFields
         /// </summary>
         /// <param name="field">The actual field for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
+        /// <param name="dbType">The database type to be used for the query expression.</param>
         public LeftQueryField(Field field,
-            object value)
-            : this(field, Operation.Equal, value)
+            object value,
+            DbType? dbType = null)
+            : this(field, Operation.Equal, value, dbType)
         { }
 
         /// <summary>
@@ -38,10 +43,12 @@ namespace RepoDb.Extensions.QueryFields
         /// <param name="fieldName">The name of the field for the query expression.</param>
         /// <param name="operation">The operation to be used for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
+        /// <param name="dbType">The database type to be used for the query expression.</param>
         public LeftQueryField(string fieldName,
             Operation operation,
-            object value)
-            : this(new Field(fieldName), operation, value)
+            object value,
+            DbType? dbType = null)
+            : this(new Field(fieldName), operation, value, dbType)
         { }
 
         /// <summary>
@@ -50,21 +57,25 @@ namespace RepoDb.Extensions.QueryFields
         /// <param name="field">The actual field for the query expression.</param>
         /// <param name="operation">The operation to be used for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
+        /// <param name="dbType">The database type to be used for the query expression.</param>
         public LeftQueryField(Field field,
             Operation operation,
-            object value)
-            : this(field, operation, value, (value?.ToString()?.Length).GetValueOrDefault())
+            object value,
+            DbType? dbType = null)
+            : this(field, operation, value, dbType, (value?.ToString()?.Length).GetValueOrDefault())
         { }
 
         /// <param name="field">The actual field for the query expression.</param>
         /// <param name="operation">The operation to be used for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
+        /// <param name="dbType">The database type to be used for the query expression.</param>
         /// <param name="charCount">The number of characters from the left to be evaluated.</param>
         private LeftQueryField(Field field,
             Operation operation,
             object value,
-            int charCount)
-            : base(field, operation, value, $"LEFT({{0}}, {charCount})")
+            DbType? dbType = null,
+            int charCount = 0)
+            : base(field, operation, value, dbType, $"LEFT({{0}}, {charCount})")
         {
             CharCount = charCount;
         }
@@ -95,7 +106,7 @@ namespace RepoDb.Extensions.QueryFields
 
             // Base
             var hashCode = base.GetHashCode();
-            
+
             // CharCount
             hashCode = HashCode.Combine(hashCode, CharCount);
 

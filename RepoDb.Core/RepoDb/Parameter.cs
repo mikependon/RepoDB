@@ -1,5 +1,6 @@
 ﻿using RepoDb.Extensions;
 using System;
+using System.Data;
 
 namespace RepoDb
 {
@@ -17,9 +18,33 @@ namespace RepoDb
         /// </summary>
         /// <param name="name">The name of the parameter.</param>
         /// <param name="value">The value of the parameter.</param>
-        /// <param name="prependUnderscore">The value to identify whether the underscope prefix will be prepended.</param>
+        public Parameter(string name,
+            object value)
+            : this(name, value, null, false)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="Parameter"/> object.
+        /// </summary>
+        /// <param name="name">The name of the parameter.</param>
+        /// <param name="value">The value of the parameter.</param>
+        /// <param name="dbType">The database type of the parameter.</param>
         public Parameter(string name,
             object value,
+            DbType? dbType)
+            : this(name, value, dbType, false)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="Parameter"/> object.
+        /// </summary>
+        /// <param name="name">The name of the parameter.</param>
+        /// <param name="value">The value of the parameter.</param>
+        /// <param name="dbType">The database type of the parameter.</param>
+        /// <param name="prependUnderscore">The value to identify whether the underscope prefix will be prepended.</param>
+        internal Parameter(string name,
+            object value,
+            DbType? dbType,
             bool prependUnderscore)
         {
             // Name is required
@@ -33,6 +58,7 @@ namespace RepoDb
             Name = OriginalName;
             OriginalValue = value;
             Value = value;
+            DbType = dbType;
             if (prependUnderscore)
             {
                 PrependAnUnderscore();
@@ -62,6 +88,11 @@ namespace RepoDb
         /// Gets the original value of the parameter.
         /// </summary>
         private object OriginalValue { get; }
+
+        /// <summary>
+        /// Gets the database type of the parameter.
+        /// </summary>
+        public DbType? DbType { get; private set; }
 
         #endregion
 
@@ -124,8 +155,19 @@ namespace RepoDb
                 return this.hashCode.Value;
             }
 
+            var hashCode = 0;
+
+            // OriginalName
+            hashCode = OriginalName.GetHashCode();
+
+            // DbType
+            if (DbType.HasValue)
+            {
+                hashCode = HashCode.Combine(hashCode, DbType.Value.GetHashCode());
+            }
+
             // Set and return the hashcode
-            return (this.hashCode = OriginalName.GetHashCode()).Value;
+            return (this.hashCode = hashCode).Value;
         }
 
         /// <summary>

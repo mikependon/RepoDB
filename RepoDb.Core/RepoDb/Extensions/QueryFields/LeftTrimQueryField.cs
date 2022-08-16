@@ -1,4 +1,5 @@
 ﻿using RepoDb.Enumerations;
+using System.Data;
 
 namespace RepoDb.Extensions.QueryFields
 {
@@ -14,34 +15,42 @@ namespace RepoDb.Extensions.QueryFields
         /// </summary>
         /// <param name="fieldName">The name of the field for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
+        /// <param name="dbType">The database type to be used for the query expression.</param>
         public LeftTrimQueryField(string fieldName,
-            object value)
+            object value,
+            DbType? dbType = null)
             : this(fieldName, Operation.Equal, value)
         { }
 
         /// <param name="field">The actual field for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
+        /// <param name="dbType">The database type to be used for the query expression.</param>
         public LeftTrimQueryField(Field field,
-            object value)
-            : this(field, Operation.Equal, value)
+            object value,
+            DbType? dbType = null)
+            : this(field, Operation.Equal, value, dbType)
         { }
 
         /// <param name="fieldName">The name of the field for the query expression.</param>
         /// <param name="operation">The operation to be used for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
+        /// <param name="dbType">The database type to be used for the query expression.</param>
         public LeftTrimQueryField(string fieldName,
             Operation operation,
-            object value)
-            : this(new Field(fieldName), operation, value)
+            object value,
+            DbType? dbType = null)
+            : this(new Field(fieldName), operation, value, dbType)
         { }
 
         /// <param name="field">The actual field for the query expression.</param>
         /// <param name="operation">The operation to be used for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
+        /// <param name="dbType">The database type to be used for the query expression.</param>
         public LeftTrimQueryField(Field field,
             Operation operation,
-            object value)
-            : base(field, operation, value, "LTRIM({0})")
+            object value,
+            DbType? dbType = null)
+            : base(field, operation, value, dbType, "LTRIM({0})")
         { }
 
         #endregion

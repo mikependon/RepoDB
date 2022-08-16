@@ -228,6 +228,7 @@ namespace RepoDb.Extensions
         /// <param name="classProperty"></param>
         /// <param name="dbField"></param>
         /// <param name="parameterDirection"></param>
+        /// <param name="dbType"></param>
         /// <param name="fallbackType"></param>
         /// <returns></returns>
         private static IDbDataParameter CreateParameter(IDbCommand command,
@@ -237,6 +238,7 @@ namespace RepoDb.Extensions
             ClassProperty classProperty,
             DbField dbField,
             ParameterDirection? parameterDirection,
+            DbType? dbType,
             Type fallbackType)
         {
             var valueType = (value?.GetType() ?? classProperty?.PropertyInfo.PropertyType).GetUnderlyingType();
@@ -262,6 +264,7 @@ namespace RepoDb.Extensions
                     classProperty,
                     dbField,
                     parameterDirection,
+                    dbType,
                     fallbackType);
             }
         }
@@ -277,6 +280,7 @@ namespace RepoDb.Extensions
         /// <param name="classProperty"></param>
         /// <param name="dbField"></param>
         /// <param name="parameterDirection"></param>
+        /// <param name="dbType"></param>
         /// <param name="fallbackType"></param>
         /// <returns></returns>
         private static IDbDataParameter CreateParameterForNonEnum(IDbCommand command,
@@ -287,6 +291,7 @@ namespace RepoDb.Extensions
             ClassProperty classProperty,
             DbField dbField,
             ParameterDirection? parameterDirection,
+            DbType? dbType,
             Type fallbackType)
         {
             // Property Handler
@@ -298,8 +303,9 @@ namespace RepoDb.Extensions
             // The reason for not using classProperty.GetDbType() is to avoid getting the type level mapping.
 
             // DbType
-            var dbType = classProperty != null ? TypeMapCache.Get(classProperty.GetDeclaringType(), classProperty.PropertyInfo) :
-                null;
+            dbType = dbType ??
+                (classProperty != null ?
+                    TypeMapCache.Get(classProperty.GetDeclaringType(), classProperty.PropertyInfo) : null);
 
             valueType = (valueType ??= dbField?.Type.GetUnderlyingType() ?? fallbackType);
             if (dbType == null && valueType != null)
@@ -420,6 +426,7 @@ namespace RepoDb.Extensions
                     (entityClassProperty ?? paramClassProperty),
                     dbField,
                     null,
+                    null,
                     null);
                 command.Parameters.Add(parameter);
             }
@@ -460,6 +467,7 @@ namespace RepoDb.Extensions
                     dbField?.Size,
                     classProperty,
                     dbField,
+                    null,
                     null,
                     null);
                 command.Parameters.Add(parameter);
@@ -572,6 +580,7 @@ namespace RepoDb.Extensions
                 classProperty,
                 dbField,
                 direction,
+                queryField.Parameter.DbType,
                 fallbackType);
             command.Parameters.Add(parameter);
 
@@ -604,6 +613,7 @@ namespace RepoDb.Extensions
                         null,
                         dbField,
                         null,
+                        queryField.Parameter.DbType,
                         null);
                     command.Parameters.Add(parameter);
                 }
@@ -632,6 +642,7 @@ namespace RepoDb.Extensions
                     dbField?.Size,
                     null, dbField,
                     null,
+                    queryField.Parameter.DbType,
                     null);
                 command.Parameters.Add(leftParameter);
 
@@ -643,6 +654,7 @@ namespace RepoDb.Extensions
                     null,
                     dbField,
                     null,
+                    queryField.Parameter.DbType,
                     null);
                 command.Parameters.Add(rightParameter);
             }

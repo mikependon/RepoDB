@@ -178,7 +178,7 @@ namespace RepoDb
             }
 
             // Return the value
-            return new QueryField(field, operation, value).AsEnumerable();
+            return new QueryField(field, operation, value, null, false).AsEnumerable();
         }
 
         /// <summary>

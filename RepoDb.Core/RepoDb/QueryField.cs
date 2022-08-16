@@ -25,9 +25,11 @@ namespace RepoDb
         /// </summary>
         /// <param name="fieldName">The name of the field for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
+        /// <param name="dbType">The database type to be used for the query expression.</param>
         public QueryField(string fieldName,
-            object value)
-            : this(fieldName, Operation.Equal, value)
+            object value,
+            DbType? dbType = null)
+            : this(new Field(fieldName), Operation.Equal, value, dbType, false)
         { }
 
         /// <summary>
@@ -36,46 +38,24 @@ namespace RepoDb
         /// <param name="fieldName">The name of the field for the query expression.</param>
         /// <param name="operation">The operation to be used for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
-        public QueryField(string fieldName,
-            Operation operation,
-            object value)
-            : this(fieldName, operation, value, false)
-        { }
-
-        /// <summary>
-        /// Creates a new instance of <see cref="QueryField"/> object.
-        /// </summary>
-        /// <param name="field">The actual field for the query expression.</param>
-        /// <param name="value">The value to be used for the query expression.</param>
-        public QueryField(Field field,
-            object value)
-            : this(field, Operation.Equal, value, false)
-        { }
-
-        /// <summary>
-        /// Creates a new instance of <see cref="QueryField"/> object.
-        /// </summary>
-        /// <param name="field">The actual field for the query expression.</param>
-        /// <param name="operation">The operation to be used for the query expression.</param>
-        /// <param name="value">The value to be used for the query expression.</param>
-        public QueryField(Field field,
-            Operation operation,
-            object value)
-            : this(field, operation, value, false)
-        { }
-
-        /// <summary>
-        /// Creates a new instance of <see cref="QueryField"/> object.
-        /// </summary>
-        /// <param name="fieldName">The name of the field for the query expression.</param>
-        /// <param name="operation">The operation to be used for the query expression.</param>
-        /// <param name="value">The value to be used for the query expression.</param>
-        /// <param name="prependUnderscore">The value to identify whether the underscore prefix will be appended to the parameter name.</param>
+        /// <param name="dbType">The database type to be used for the query expression.</param>
         public QueryField(string fieldName,
             Operation operation,
             object value,
-            bool prependUnderscore)
-            : this(new Field(fieldName), operation, value, prependUnderscore)
+            DbType? dbType = null)
+            : this(new Field(fieldName), operation, value, dbType, false)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="QueryField"/> object.
+        /// </summary>
+        /// <param name="field">The actual field for the query expression.</param>
+        /// <param name="value">The value to be used for the query expression.</param>
+        /// <param name="dbType">The database type to be used for the query expression.</param>
+        public QueryField(Field field,
+            object value,
+            DbType? dbType = null)
+            : this(field, Operation.Equal, value, dbType, false)
         { }
 
         /// <summary>
@@ -84,15 +64,31 @@ namespace RepoDb
         /// <param name="field">The actual field for the query expression.</param>
         /// <param name="operation">The operation to be used for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
-        /// <param name="prependUnderscore">The value to identify whether the underscore prefix will be appended to the parameter name.</param>
+        /// <param name="dbType">The database type to be used for the query expression.</param>
         public QueryField(Field field,
             Operation operation,
             object value,
-            bool prependUnderscore)
+            DbType? dbType = null)
+            : this(field, operation, value, dbType, false)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="QueryField"/> object.
+        /// </summary>
+        /// <param name="field">The actual field for the query expression.</param>
+        /// <param name="operation">The operation to be used for the query expression.</param>
+        /// <param name="value">The value to be used for the query expression.</param>
+        /// <param name="dbType">The database type to be used for the query expression.</param>
+        /// <param name="prependUnderscore">The value to identify whether the underscore prefix will be appended to the parameter name.</param>
+        internal QueryField(Field field,
+            Operation operation,
+            object value,
+            DbType? dbType = null,
+            bool prependUnderscore = false)
         {
             Field = field;
             Operation = operation;
-            Parameter = new Parameter(field.Name, value, prependUnderscore);
+            Parameter = new Parameter(field.Name, value, dbType, prependUnderscore);
         }
 
         #endregion
@@ -254,7 +250,8 @@ namespace RepoDb
             var hashCode = HashCode.Combine(Field, Operation, Parameter);
 
             // The (IS NULL) affects the uniqueness of the object
-            if (Operation == Operation.Equal && Parameter.Value == null)
+            if (Operation == Operation.Equal &&
+                Parameter.Value == null)
             {
                 hashCode = HashCode.Combine(hashCode, HASHCODE_ISNULL);
             }
@@ -265,7 +262,7 @@ namespace RepoDb
             }
             // The parameter's length affects the uniqueness of the object
             else if (Operation is Operation.In or Operation.NotIn &&
-                     Parameter.Value is IEnumerable enumerable)
+                Parameter.Value is IEnumerable enumerable)
             {
                 hashCode = HashCode.Combine(hashCode, enumerable.WithType<object>().Count());
             }
