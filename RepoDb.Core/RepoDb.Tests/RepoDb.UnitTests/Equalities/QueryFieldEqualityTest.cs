@@ -3,6 +3,7 @@ using RepoDb.Enumerations;
 using System.Collections;
 using System.Collections.Generic;
 using Moq;
+using System.Data;
 
 namespace RepoDb.UnitTests.Equalities
 {
@@ -176,6 +177,34 @@ namespace RepoDb.UnitTests.Equalities
             
             // Assert
             mockOfFiled.Verify(x => x.GetHashCode(), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestQueryFieldWithDbTypeHashCodeEquality()
+        {
+            // Prepare
+            var objA = new QueryField("FieldName", Operation.Equal, "Value1", DbType.StringFixedLength);
+            var objB = new QueryField("FieldName", Operation.Equal, "Value2", DbType.StringFixedLength);
+
+            // Act
+            var equal = (objA.GetHashCode() == objB.GetHashCode());
+
+            // Assert
+            Assert.IsTrue(equal);
+        }
+
+        [TestMethod]
+        public void TestQueryFieldWithDbTypeObjectEquality()
+        {
+            // Prepare
+            var objA = new QueryField("FieldName", Operation.Equal, "Value1", DbType.StringFixedLength);
+            var objB = new QueryField("FieldName", Operation.Equal, "Value2", DbType.StringFixedLength);
+
+            // Act
+            var equal = (objA == objB);
+
+            // Assert
+            Assert.IsTrue(equal);
         }
     }
 }

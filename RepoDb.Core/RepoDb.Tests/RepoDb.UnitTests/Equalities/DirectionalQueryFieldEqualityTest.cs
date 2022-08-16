@@ -14,8 +14,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestDirectionalQueryFieldHashCodeEquality()
         {
             // Prepare
-            var objA = new DirectionalQueryField("FieldName", "Value1", ParameterDirection.Output);
-            var objB = new DirectionalQueryField("FieldName", "Value2", ParameterDirection.Output);
+            var objA = new DirectionalQueryField("FieldName", Operation.Equal, "Value1", null, ParameterDirection.Output, null);
+            var objB = new DirectionalQueryField("FieldName", Operation.Equal, "Value2", null, ParameterDirection.Output, null);
 
             // Act
             var equal = (objA.GetHashCode() == objB.GetHashCode());
@@ -28,8 +28,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestDirectionalQueryFieldWithOperationHashCodeEquality()
         {
             // Prepare
-            var objA = new DirectionalQueryField("FieldName", Operation.Equal, "Value1", ParameterDirection.Output);
-            var objB = new DirectionalQueryField("FieldName", Operation.Equal, "Value2", ParameterDirection.Output);
+            var objA = new DirectionalQueryField("FieldName", Operation.Equal, "Value1", null, ParameterDirection.Output, null);
+            var objB = new DirectionalQueryField("FieldName", Operation.Equal, "Value2", null, ParameterDirection.Output, null);
 
             // Act
             var equal = (objA.GetHashCode() == objB.GetHashCode());
@@ -42,8 +42,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestDirectionalQueryFieldWithDifferentOperationHashCodeEquality()
         {
             // Prepare
-            var objA = new DirectionalQueryField("FieldName", Operation.Equal, "Value1", ParameterDirection.Output);
-            var objB = new DirectionalQueryField("FieldName", Operation.NotEqual, "Value2", ParameterDirection.Output);
+            var objA = new DirectionalQueryField("FieldName", Operation.Equal, "Value1", null, ParameterDirection.Output, null);
+            var objB = new DirectionalQueryField("FieldName", Operation.NotEqual, "Value2", null, ParameterDirection.Output, null);
 
             // Act
             var equal = (objA.GetHashCode() == objB.GetHashCode());
@@ -56,8 +56,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestDirectionalQueryFieldWithSizeHashCodeEquality()
         {
             // Prepare
-            var objA = new DirectionalQueryField("FieldName", Operation.Equal, "Value1", 100, ParameterDirection.Output);
-            var objB = new DirectionalQueryField("FieldName", Operation.NotEqual, "Value2", 100, ParameterDirection.Output);
+            var objA = new DirectionalQueryField("FieldName", Operation.Equal, "Value1", 100, ParameterDirection.Output, null);
+            var objB = new DirectionalQueryField("FieldName", Operation.NotEqual, "Value2", 100, ParameterDirection.Output, null);
 
             // Act
             var equal = (objA.GetHashCode() == objB.GetHashCode());
@@ -70,8 +70,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestDirectionalQueryFieldWithTypeHashCodeEquality()
         {
             // Prepare
-            var objA = new DirectionalQueryField("FieldName", Operation.Equal, typeof(string), ParameterDirection.Output);
-            var objB = new DirectionalQueryField("FieldName", Operation.NotEqual, typeof(string), ParameterDirection.Output);
+            var objA = new DirectionalQueryField("FieldName", Operation.Equal, typeof(string), null, ParameterDirection.Output, null);
+            var objB = new DirectionalQueryField("FieldName", Operation.NotEqual, typeof(string), null, ParameterDirection.Output, null);
 
             // Act
             var equal = (objA.GetHashCode() == objB.GetHashCode());
@@ -84,8 +84,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestDirectionalQueryFieldObjectEquality()
         {
             // Prepare
-            var objA = new DirectionalQueryField("FieldName", Operation.Equal, "Value1", ParameterDirection.Output);
-            var objB = new DirectionalQueryField("FieldName", Operation.Equal, "Value2", ParameterDirection.Output);
+            var objA = new DirectionalQueryField("FieldName", Operation.Equal, "Value1", null, ParameterDirection.Output, null);
+            var objB = new DirectionalQueryField("FieldName", Operation.Equal, "Value2", null, ParameterDirection.Output, null);
 
             // Act
             var equal = (objA == objB);
@@ -98,8 +98,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestDirectionalQueryFieldObjectEqualityFromEqualsMethod()
         {
             // Prepare
-            var objA = new DirectionalQueryField("FieldName", Operation.Equal, "Value1", ParameterDirection.Output);
-            var objB = new DirectionalQueryField("FieldName", Operation.Equal, "Value2", ParameterDirection.Output);
+            var objA = new DirectionalQueryField("FieldName", Operation.Equal, "Value1", null, ParameterDirection.Output, null);
+            var objB = new DirectionalQueryField("FieldName", Operation.Equal, "Value2", null, ParameterDirection.Output, null);
 
             // Act
             var equal = Equals(objA, objB);
@@ -112,8 +112,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestDirectionalQueryFieldArrayListContainability()
         {
             // Prepare
-            var objA = new DirectionalQueryField("FieldName", Operation.Equal, "Value1", ParameterDirection.Output);
-            var objB = new DirectionalQueryField("FieldName", Operation.Equal, "Value2", ParameterDirection.Output);
+            var objA = new DirectionalQueryField("FieldName", Operation.Equal, "Value1", null, ParameterDirection.Output, null);
+            var objB = new DirectionalQueryField("FieldName", Operation.Equal, "Value2", null, ParameterDirection.Output, null);
             var list = new ArrayList();
 
             // Act
@@ -128,8 +128,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestDirectionalQueryFieldGenericListContainability()
         {
             // Prepare
-            var objA = new DirectionalQueryField("FieldName", Operation.Equal, "Value1", ParameterDirection.Output);
-            var objB = new DirectionalQueryField("FieldName", Operation.Equal, "Value2", ParameterDirection.Output);
+            var objA = new DirectionalQueryField("FieldName", Operation.Equal, "Value1", null, ParameterDirection.Output, null);
+            var objB = new DirectionalQueryField("FieldName", Operation.Equal, "Value2", null, ParameterDirection.Output, null);
             var list = new List<DirectionalQueryField>();
 
             // Act
@@ -144,7 +144,7 @@ namespace RepoDb.UnitTests.Equalities
         public void TestDirectionalQueryFieldGetHashCodeInvocationOnCheckNotNull()
         {
             // Prepare
-            var mockOfFiled = new Mock<DirectionalQueryField>("DirectionalQueryFieldName", Operation.Equal, "Value1", ParameterDirection.Output);
+            var mockOfFiled = new Mock<DirectionalQueryField>("DirectionalQueryFieldName", Operation.Equal, "Value1", null, ParameterDirection.Output, null);
 
             // Act
             if (mockOfFiled.Object != null) { }
@@ -157,7 +157,7 @@ namespace RepoDb.UnitTests.Equalities
         public void TestDirectionalQueryFieldGetHashCodeInvocationOnCheckNull()
         {
             // Prepare
-            var mockOfFiled = new Mock<DirectionalQueryField>("DirectionalQueryFieldName", Operation.Equal, "Value1", ParameterDirection.Output);
+            var mockOfFiled = new Mock<DirectionalQueryField>("DirectionalQueryFieldName", Operation.Equal, "Value1", null, ParameterDirection.Output, null);
 
             // Act
             if (mockOfFiled.Object == null) { }
@@ -170,7 +170,7 @@ namespace RepoDb.UnitTests.Equalities
         public void TestDirectionalQueryFieldGetHashCodeInvocationOnEqualsNull()
         {
             // Prepare
-            var mockOfFiled = new Mock<DirectionalQueryField>("DirectionalQueryFieldName", Operation.Equal, "Value1", ParameterDirection.Output);
+            var mockOfFiled = new Mock<DirectionalQueryField>("DirectionalQueryFieldName", Operation.Equal, "Value1", null, ParameterDirection.Output, null);
 
             // Act
             mockOfFiled.Object.Equals(null);
@@ -183,8 +183,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestDirectionalQueryFieldGetHashCodeInvocationOnEqualsNotNull()
         {
             // Prepare
-            var mockOfFiled = new Mock<DirectionalQueryField>("DirectionalQueryFieldName", Operation.Equal, "Value1", ParameterDirection.Output);
-            var otherFiled = new DirectionalQueryField("DirectionalQueryFieldName", Operation.Equal, "Value1", ParameterDirection.Output);
+            var mockOfFiled = new Mock<DirectionalQueryField>("DirectionalQueryFieldName", Operation.Equal, "Value1", null, ParameterDirection.Output, null);
+            var otherFiled = new DirectionalQueryField("DirectionalQueryFieldName", Operation.Equal, "Value1", null, ParameterDirection.Output, null);
 
             // Act
             mockOfFiled.Object.Equals(otherFiled);
@@ -197,8 +197,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestDirectionalQueryFieldGetHashCodeInvocationOnEqualityNotNull()
         {
             // Prepare
-            var mockOfFiled = new Mock<DirectionalQueryField>("DirectionalQueryFieldName", Operation.Equal, "Value1", ParameterDirection.Output);
-            var otherFiled = new DirectionalQueryField("DirectionalQueryFieldName", Operation.Equal, "Value1", ParameterDirection.Output);
+            var mockOfFiled = new Mock<DirectionalQueryField>("DirectionalQueryFieldName", Operation.Equal, "Value1", null, ParameterDirection.Output, null);
+            var otherFiled = new DirectionalQueryField("DirectionalQueryFieldName", Operation.Equal, "Value1", null, ParameterDirection.Output, null);
 
             // Act
             if (mockOfFiled.Object == otherFiled) { }
