@@ -35,7 +35,7 @@ namespace RepoDb.Extensions.QueryFields
             object value,
             DbType? dbType = null,
             string format = null)
-            : this(new Field(fieldName), Operation.Equal, value, dbType, format)
+            : this(new Field(fieldName), operation, value, dbType, format)
         { }
 
         /// <param name="field">The actual field for the query expression.</param>

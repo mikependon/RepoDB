@@ -25,11 +25,9 @@ namespace RepoDb
         /// </summary>
         /// <param name="fieldName">The name of the field for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
-        /// <param name="dbType">The database type to be used for the query expression.</param>
         public QueryField(string fieldName,
-            object value,
-            DbType? dbType = null)
-            : this(new Field(fieldName), Operation.Equal, value, dbType, false)
+            object value)
+            : this(new Field(fieldName), Operation.Equal, value, null, false)
         { }
 
         /// <summary>
@@ -51,11 +49,9 @@ namespace RepoDb
         /// </summary>
         /// <param name="field">The actual field for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
-        /// <param name="dbType">The database type to be used for the query expression.</param>
         public QueryField(Field field,
-            object value,
-            DbType? dbType = null)
-            : this(field, Operation.Equal, value, dbType, false)
+            object value)
+            : this(field, Operation.Equal, value, null, false)
         { }
 
         /// <summary>

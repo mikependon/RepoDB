@@ -111,72 +111,72 @@ namespace RepoDb.UnitTests.Equalities
             // Assert
             Assert.IsTrue(equal);
         }
-        
+
         [TestMethod]
         public void TestQueryFieldGetHashCodeInvocationOnCheckNotNull()
         {
             // Prepare
-            var mockOfFiled = new Mock<QueryField>("QueryFieldName", Operation.Equal, "Value1");
+            var mockOfField = new Mock<QueryField>("QueryFieldName", Operation.Equal, "Value1", null);
 
             // Act
-            if (mockOfFiled.Object != null){}
-            
+            if (mockOfField.Object != null) { }
+
             // Assert
-            mockOfFiled.Verify(x => x.GetHashCode(), Times.Never);
+            mockOfField.Verify(x => x.GetHashCode(), Times.Never);
         }
-        
+
         [TestMethod]
         public void TestQueryFieldGetHashCodeInvocationOnCheckNull()
         {
             // Prepare
-            var mockOfFiled = new Mock<QueryField>("QueryFieldName", Operation.Equal, "Value1");
+            var mockOfField = new Mock<QueryField>("QueryFieldName", Operation.Equal, "Value1", null);
 
             // Act
-            if (mockOfFiled.Object == null){}
-            
+            if (mockOfField.Object == null) { }
+
             // Assert
-            mockOfFiled.Verify(x => x.GetHashCode(), Times.Never);
+            mockOfField.Verify(x => x.GetHashCode(), Times.Never);
         }
-        
+
         [TestMethod]
         public void TestQueryFieldGetHashCodeInvocationOnEqualsNull()
         {
             // Prepare
-            var mockOfFiled = new Mock<QueryField>("QueryFieldName", Operation.Equal, "Value1");
+            var mockOfField = new Mock<QueryField>("QueryFieldName", Operation.Equal, "Value1", null);
 
             // Act
-            mockOfFiled.Object.Equals(null);
-            
+            mockOfField.Object.Equals(null);
+
             // Assert
-            mockOfFiled.Verify(x => x.GetHashCode(), Times.Never);
+            mockOfField.Verify(x => x.GetHashCode(), Times.Never);
         }
 
         [TestMethod]
         public void TestQueryFieldGetHashCodeInvocationOnEqualsNotNull()
         {
             // Prepare
-            var mockOfFiled = new Mock<QueryField>("QueryFieldName", Operation.Equal, "Value1");
-            var otherFiled = new QueryField("QueryFieldName", Operation.Equal, "Value1");
+            var mockOfField = new Mock<QueryField>("QueryFieldName", Operation.Equal, "Value1", null);
+            var otherField = new QueryField("QueryFieldName", Operation.Equal, "Value1");
 
             // Act
-            mockOfFiled.Object.Equals(otherFiled);
-            
+            mockOfField.Object.Equals(otherField);
+
             // Assert
-            mockOfFiled.Verify(x => x.GetHashCode(), Times.Once);
+            mockOfField.Verify(x => x.GetHashCode(), Times.Once);
         }
-        
+
         [TestMethod]
         public void TestQueryFieldGetHashCodeInvocationOnEqualityNotNull()
         {
             // Prepare
-            var mockOfFiled = new Mock<QueryField>("QueryFieldName", Operation.Equal, "Value1");
-            var otherFiled = new QueryField("QueryFieldName", Operation.Equal, "Value1");
+            var mockOfField = new Mock<QueryField>("QueryFieldName", Operation.Equal, "Value1", null);
+            var otherField = new QueryField("QueryFieldName", Operation.Equal, "Value1");
 
             // Act
-            if (mockOfFiled.Object == otherFiled) {}
-            
+            if (mockOfField.Object == otherField) { }
+
             // Assert
-            mockOfFiled.Verify(x => x.GetHashCode(), Times.Once);
+            mockOfField.Verify(x => x.GetHashCode(), Times.Once);
         }
 
         [TestMethod]
