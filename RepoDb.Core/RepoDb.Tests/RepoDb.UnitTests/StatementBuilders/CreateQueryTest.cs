@@ -34,7 +34,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
-            var actual = statementBuilder.CreateQuery(queryBuilder: queryBuilder,
+            var actual = statementBuilder.CreateQuery(
                 tableName: tableName,
                 fields: fields);
             var expected = "SELECT [Field1], [Field2], [Field3] FROM [Table] ;";
@@ -53,7 +53,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
-            var actual = statementBuilder.CreateQuery(queryBuilder: queryBuilder,
+            var actual = statementBuilder.CreateQuery(
                 tableName: tableName,
                 fields: fields);
             var expected = "SELECT [Field1], [Field2], [Field3] FROM [dbo].[Table] ;";
@@ -72,7 +72,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
-            var actual = statementBuilder.CreateQuery(queryBuilder: queryBuilder,
+            var actual = statementBuilder.CreateQuery(
                 tableName: tableName,
                 fields: fields);
             var expected = "SELECT [Field1], [Field2], [Field3] FROM [dbo].[Table] ;";
@@ -92,7 +92,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var where = new QueryGroup(new QueryField("Id", 1));
 
             // Act
-            var actual = statementBuilder.CreateQuery(queryBuilder: queryBuilder,
+            var actual = statementBuilder.CreateQuery(
                 tableName: tableName,
                 fields: fields,
                 where: where);
@@ -116,7 +116,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var orderBy = OrderField.Parse(new { Field1 = Order.Ascending, Field2 = Order.Descending });
 
             // Act
-            var actual = statementBuilder.CreateQuery(queryBuilder: queryBuilder,
+            var actual = statementBuilder.CreateQuery(
                 tableName: tableName,
                 fields: fields,
                 orderBy: orderBy);
@@ -140,7 +140,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var top = 100;
 
             // Act
-            var actual = statementBuilder.CreateQuery(queryBuilder: queryBuilder,
+            var actual = statementBuilder.CreateQuery(
                 tableName: tableName,
                 fields: fields,
                 top: top);
@@ -161,7 +161,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var hints = "WITH (NOLOCK)";
 
             // Act
-            var actual = statementBuilder.CreateQuery(queryBuilder: queryBuilder,
+            var actual = statementBuilder.CreateQuery(
                 tableName: tableName,
                 fields: fields,
                 hints: hints);
@@ -185,7 +185,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var hints = "WITH (NOLOCK)";
 
             // Act
-            var actual = statementBuilder.CreateQuery(queryBuilder: queryBuilder,
+            var actual = statementBuilder.CreateQuery(
                 tableName: tableName,
                 fields: fields,
                 where: where,
@@ -211,7 +211,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var tableName = "Table";
 
             // Act
-            statementBuilder.CreateQuery(queryBuilder: queryBuilder,
+            statementBuilder.CreateQuery(
                 tableName: tableName,
                 fields: null);
         }
@@ -226,7 +226,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
-            statementBuilder.CreateQuery(queryBuilder: queryBuilder,
+            statementBuilder.CreateQuery(
                 tableName: tableName,
                 fields: fields);
         }
@@ -241,7 +241,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
-            statementBuilder.CreateQuery(queryBuilder: queryBuilder,
+            statementBuilder.CreateQuery(
                 tableName: tableName,
                 fields: fields);
         }
@@ -256,7 +256,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
-            statementBuilder.CreateQuery(queryBuilder: queryBuilder,
+            statementBuilder.CreateQuery(
                 tableName: tableName,
                 fields: fields);
         }
@@ -271,7 +271,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
-            statementBuilder.CreateQuery(queryBuilder: queryBuilder,
+            statementBuilder.CreateQuery(
                 tableName: tableName,
                 fields: fields,
                 hints: "Hints");

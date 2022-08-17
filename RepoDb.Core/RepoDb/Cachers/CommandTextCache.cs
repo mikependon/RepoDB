@@ -673,7 +673,7 @@ namespace RepoDb
             IEnumerable<Field> fields)
         {
             var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-            return statementBuilder.CreateQuery(new QueryBuilder(),
+            return statementBuilder.CreateQuery(
                 request.Name,
                 fields,
                 request.Where,
@@ -823,7 +823,7 @@ namespace RepoDb
             where TEntity : class
         {
             var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-            return statementBuilder.CreateQuery(new QueryBuilder(),
+            return statementBuilder.CreateQuery(
                 request.Name,
                 fields,
                 request.Where,
