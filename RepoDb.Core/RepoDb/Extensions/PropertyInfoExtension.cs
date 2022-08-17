@@ -86,7 +86,7 @@ namespace RepoDb.Extensions
         internal static QueryField AsQueryField(this PropertyInfo property,
             object entity,
             bool prependUnderscore) =>
-            new(property.AsField(), Operation.Equal, property.GetHandledValue(entity), null, prependUnderscore);
+            new(property.Name, Operation.Equal, property.GetHandledValue(entity), null, prependUnderscore);
 
         /// <summary>
         /// Converts a <see cref="PropertyInfo"/> into a mapped name.

@@ -720,7 +720,7 @@ namespace RepoDb
                         {
                             break;
                         }
-                        var field = new QueryField(key.Name.AsQuoted(dbSetting), Operation.In, keyValues.AsList());
+                        var field = new QueryField(key.Name.AsQuoted(dbSetting), Operation.In, keyValues.AsList(), null, false);
                         deletedRows += DeleteInternal(connection: connection,
                             tableName: tableName,
                             where: new QueryGroup(field),
@@ -906,7 +906,7 @@ namespace RepoDb
                         {
                             break;
                         }
-                        var field = new QueryField(key.Name.AsQuoted(dbSetting), Operation.In, keyValues.AsList());
+                        var field = new QueryField(key.Name.AsQuoted(dbSetting), Operation.In, keyValues.AsList(), null, false);
                         deletedRows += await DeleteAsyncInternal(connection: connection,
                             tableName: tableName,
                             where: new QueryGroup(field),

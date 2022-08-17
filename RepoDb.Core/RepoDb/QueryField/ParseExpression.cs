@@ -70,7 +70,7 @@ namespace RepoDb
             ExpressionType? unaryNodeType = null)
         {
             var operation = unaryNodeType == ExpressionType.Not ? Operation.NotIn : Operation.In;
-            return new QueryField(fieldName, operation, enumerable.WithType<object>().AsArray());
+            return new QueryField(fieldName, operation, enumerable.WithType<object>().AsArray(), null, false);
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace RepoDb
                 Operation.NotEqual : Operation.Equal;
             foreach (var item in enumerable)
             {
-                yield return new QueryField(fieldName, operation, item);
+                yield return new QueryField(fieldName, operation, item, null, false);
             }
         }
 
@@ -104,7 +104,7 @@ namespace RepoDb
             ExpressionType? unaryNodeType = null)
         {
             var operation = unaryNodeType == ExpressionType.Not ? Operation.NotLike : Operation.Like;
-            return new QueryField(fieldName, operation, value);
+            return new QueryField(fieldName, operation, value, null, false);
         }
 
         /// <summary>
@@ -229,7 +229,7 @@ namespace RepoDb
             }
 
             // Return
-            return new QueryField(property.GetMappedName(), operation, value).AsEnumerable();
+            return new QueryField(property.GetMappedName(), operation, value, null, false).AsEnumerable();
         }
 
         /*

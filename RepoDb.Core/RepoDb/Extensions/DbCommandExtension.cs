@@ -19,6 +19,7 @@ namespace RepoDb.Extensions
         #region Privates
 
         private static ClientTypeToDbTypeResolver clientTypeToDbTypeResolver = new();
+        private static DbTypeToClientTypeResolver dbTypeToClientTypeResolver = new();
 
         #endregion
 
@@ -303,8 +304,7 @@ namespace RepoDb.Extensions
             // The reason for not using classProperty.GetDbType() is to avoid getting the type level mapping.
 
             // DbType
-            dbType = dbType ??
-                (classProperty != null ?
+            dbType ??= (classProperty != null ?
                     TypeMapCache.Get(classProperty.GetDeclaringType(), classProperty.PropertyInfo) : null);
 
             valueType = (valueType ??= dbField?.Type.GetUnderlyingType() ?? fallbackType);
@@ -322,7 +322,10 @@ namespace RepoDb.Extensions
 
             // Set the size
             var parameterSize = GetSize(size, dbField);
-            parameter.Size = (parameterSize > 0) ? parameterSize : parameter.Size;
+            if (parameterSize > 0)
+            {
+                parameter.Size = parameterSize;
+            }
 
             // Parameter values
             InvokePropertyValueAttributes(parameter, classProperty);
@@ -570,7 +573,12 @@ namespace RepoDb.Extensions
             var value = queryField.Parameter.Value;
             var classProperty = PropertyCache.Get(entityType, queryField.Field, true);
             var (direction, fallbackType, size) = queryField is DirectionalQueryField n ?
-                ((ParameterDirection?)n.Direction, n.Type, n.Size ?? dbField?.Size) : default;
+                (
+                    n.Direction,
+                    n.Parameter.DbType.HasValue ?
+                        dbTypeToClientTypeResolver.Resolve(n.Parameter.DbType.Value) : null,
+                    n.Size ?? dbField?.Size
+                ) : default;
 
             // Create the parameter
             var parameter = CreateParameter(command,

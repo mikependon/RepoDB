@@ -18,23 +18,33 @@ namespace RepoDb.Extensions.QueryFields
         /// </summary>
         /// <param name="fieldName">The name of the field for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
-        /// <param name="dbType">The database type to be used for the query expression.</param>
         public RightQueryField(string fieldName,
-            object value,
-            DbType? dbType = null)
-            : this(fieldName, Operation.Equal, value, dbType)
+            object value)
+            : this(fieldName, Operation.Equal, value, null)
         { }
 
         /// <summary>
         /// Creates a new instance of <see cref="RightQueryField"/> object.
         /// </summary>
-        /// <param name="field">The actual field for the query expression.</param>
+        /// <param name="fieldName">The name of the field for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
         /// <param name="dbType">The database type to be used for the query expression.</param>
-        public RightQueryField(Field field,
+        public RightQueryField(string fieldName,
             object value,
-            DbType? dbType = null)
-            : this(field, Operation.Equal, value, dbType)
+            DbType? dbType)
+            : this(fieldName, Operation.Equal, value, dbType, 0)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="RightQueryField"/> object.
+        /// </summary>
+        /// <param name="fieldName">The name of the field for the query expression.</param>
+        /// <param name="operation">The operation to be used for the query expression.</param>
+        /// <param name="value">The value to be used for the query expression.</param>
+        public RightQueryField(string fieldName,
+            Operation operation,
+            object value)
+            : this(fieldName, operation, value, null, 0)
         { }
 
         /// <summary>
@@ -47,35 +57,24 @@ namespace RepoDb.Extensions.QueryFields
         public RightQueryField(string fieldName,
             Operation operation,
             object value,
-            DbType? dbType = null)
-            : this(new Field(fieldName), operation, value, dbType)
+            DbType? dbType)
+            : this(fieldName, operation, value, dbType, 0)
         { }
 
         /// <summary>
         /// Creates a new instance of <see cref="RightQueryField"/> object.
         /// </summary>
-        /// <param name="field">The actual field for the query expression.</param>
+        /// <param name="fieldName">The name of the field for the query expression.</param>
         /// <param name="operation">The operation to be used for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
         /// <param name="dbType">The database type to be used for the query expression.</param>
-        public RightQueryField(Field field,
+        /// <param name="charCount">The number of characters from the right to be evaluated.</param>
+        private RightQueryField(string fieldName,
             Operation operation,
             object value,
-            DbType? dbType = null)
-            : this(field, operation, value, dbType, (value?.ToString()?.Length).GetValueOrDefault())
-        { }
-
-        /// <param name="field">The actual field for the query expression.</param>
-        /// <param name="operation">The operation to be used for the query expression.</param>
-        /// <param name="value">The value to be used for the query expression.</param>
-        /// <param name="dbType">The database type to be used for the query expression.</param>
-        /// <param name="charCount">The number of characters from the left to be evaluated.</param>
-        private RightQueryField(Field field,
-            Operation operation,
-            object value,
-            DbType? dbType = null,
+            DbType? dbType,
             int charCount = 0)
-            : base(field, operation, value, dbType, $"RIGHT({{0}}, {charCount})")
+            : base(fieldName, operation, value, dbType, $"RIGHT({{0}}, {(charCount > 0 ? charCount : (value?.ToString().Length).GetValueOrDefault())})")
         {
             CharCount = charCount;
         }
@@ -85,7 +84,7 @@ namespace RepoDb.Extensions.QueryFields
         #region Properties
 
         /// <summary>
-        /// Gets the value that defines the number of characters from the left to be evaluated.
+        /// Gets the value that defines the number of characters from the right to be evaluated.
         /// </summary>
         public int CharCount { get; }
 

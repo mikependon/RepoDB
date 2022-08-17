@@ -33,22 +33,9 @@ namespace RepoDb.Extensions.QueryFields
         public FunctionalQueryField(string fieldName,
             Operation operation,
             object value,
-            DbType? dbType = null,
+            DbType? dbType,
             string format = null)
-            : this(new Field(fieldName), operation, value, dbType, format)
-        { }
-
-        /// <param name="field">The actual field for the query expression.</param>
-        /// <param name="operation">The operation to be used for the query expression.</param>
-        /// <param name="value">The value to be used for the query expression.</param>
-        /// <param name="dbType">The database type to be used for the query expression.</param>
-        /// <param name="format">The properly constructed format of the target function to be used.</param>
-        public FunctionalQueryField(Field field,
-            Operation operation,
-            object value,
-            DbType? dbType = null,
-            string format = null)
-            : base(field, operation, value, dbType)
+            : base(fieldName, operation, value, dbType)
         {
             Format = format;
         }

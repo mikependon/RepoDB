@@ -52,7 +52,8 @@ namespace RepoDb
             // Iterate every property
             foreach (var property in type.GetProperties())
             {
-                queryFields.Add(new QueryField(property.AsField(), property.GetValue(obj)));
+                queryFields.Add(
+                    new QueryField(property.AsField(), Enumerations.Operation.Equal, property.GetValue(obj), null));
             }
 
             // Return

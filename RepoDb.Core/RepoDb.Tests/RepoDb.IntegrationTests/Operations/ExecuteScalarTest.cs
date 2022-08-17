@@ -178,7 +178,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Setup
-                var output = new DirectionalQueryField("Output", typeof(int), ParameterDirection.Output);
+                var output = new DirectionalQueryField("Output", ParameterDirection.Output, 16, DbType.Int32);
                 var param = new[]
                 {
                     new QueryField("Value1", 100),
@@ -374,7 +374,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Setup
-                var output = new DirectionalQueryField("Output", typeof(int), ParameterDirection.Output);
+                var output = new DirectionalQueryField("Output", ParameterDirection.Output, 16, DbType.Int32);
                 var param = new[]
                 {
                     new QueryField("Value1", 100),

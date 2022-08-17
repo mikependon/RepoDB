@@ -27,7 +27,19 @@ namespace RepoDb
         /// <param name="value">The value to be used for the query expression.</param>
         public QueryField(string fieldName,
             object value)
-            : this(new Field(fieldName), Operation.Equal, value, null, false)
+            : this(fieldName, Operation.Equal, value, null, false)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="QueryField"/> object.
+        /// </summary>
+        /// <param name="fieldName">The name of the field for the query expression.</param>
+        /// <param name="operation">The operation to be used for the query expression.</param>
+        /// <param name="value">The value to be used for the query expression.</param>
+        public QueryField(string fieldName,
+            Operation operation,
+            object value)
+            : this(fieldName, operation, value, null, false)
         { }
 
         /// <summary>
@@ -40,38 +52,30 @@ namespace RepoDb
         public QueryField(string fieldName,
             Operation operation,
             object value,
-            DbType? dbType = null)
+            DbType? dbType)
+            : this(fieldName, operation, value, dbType, false)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="QueryField"/> object.
+        /// </summary>
+        /// <param name="fieldName">The name of the field for the query expression.</param>
+        /// <param name="operation">The operation to be used for the query expression.</param>
+        /// <param name="value">The value to be used for the query expression.</param>
+        /// <param name="dbType">The database type to be used for the query expression.</param>
+        /// <param name="prependUnderscore">The value to identify whether the underscore prefix will be appended to the parameter name.</param>
+        public QueryField(string fieldName,
+            Operation operation,
+            object value,
+            DbType? dbType,
+            bool prependUnderscore = false)
             : this(new Field(fieldName), operation, value, dbType, false)
         { }
 
         /// <summary>
         /// Creates a new instance of <see cref="QueryField"/> object.
         /// </summary>
-        /// <param name="field">The actual field for the query expression.</param>
-        /// <param name="value">The value to be used for the query expression.</param>
-        public QueryField(Field field,
-            object value)
-            : this(field, Operation.Equal, value, null, false)
-        { }
-
-        /// <summary>
-        /// Creates a new instance of <see cref="QueryField"/> object.
-        /// </summary>
-        /// <param name="field">The actual field for the query expression.</param>
-        /// <param name="operation">The operation to be used for the query expression.</param>
-        /// <param name="value">The value to be used for the query expression.</param>
-        /// <param name="dbType">The database type to be used for the query expression.</param>
-        public QueryField(Field field,
-            Operation operation,
-            object value,
-            DbType? dbType = null)
-            : this(field, operation, value, dbType, false)
-        { }
-
-        /// <summary>
-        /// Creates a new instance of <see cref="QueryField"/> object.
-        /// </summary>
-        /// <param name="field">The actual field for the query expression.</param>
+        /// <param name="field">The instance of the field for the query expression.</param>
         /// <param name="operation">The operation to be used for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
         /// <param name="dbType">The database type to be used for the query expression.</param>
@@ -79,7 +83,7 @@ namespace RepoDb
         internal QueryField(Field field,
             Operation operation,
             object value,
-            DbType? dbType = null,
+            DbType? dbType,
             bool prependUnderscore = false)
         {
             Field = field;
