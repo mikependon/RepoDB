@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Dynamic;
 using System.Linq;
+using static RepoDb.DbConnectionExtension;
 
 namespace RepoDb.Extensions
 {
@@ -105,18 +106,20 @@ namespace RepoDb.Extensions
         ///
         /// </summary>
         /// <param name="command"></param>
-        /// <param name="commandArrayParameters"></param>
+        /// <param name="commandArrayParametersText"></param>
         internal static void CreateParametersFromArray(this IDbCommand command,
-            IEnumerable<CommandArrayParameter> commandArrayParameters)
+            CommandArrayParametersText commandArrayParametersText)
         {
-            if (commandArrayParameters.Any() != true)
+            if (commandArrayParametersText?.CommandArrayParameters?.Any() != true)
             {
                 return;
             }
             var dbSetting = command.Connection.GetDbSetting();
-            foreach (var commandArrayParameter in commandArrayParameters)
+            foreach (var commandArrayParameter in commandArrayParametersText?.CommandArrayParameters)
             {
-                CreateParametersFromArray(command, commandArrayParameter, dbSetting);
+                CreateParametersFromArray(command,
+                    commandArrayParameter,
+                    commandArrayParametersText.DbType, dbSetting);
             }
         }
 
@@ -125,16 +128,20 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="command"></param>
         /// <param name="commandArrayParameter"></param>
+        /// <param name="dbType"></param>
         /// <param name="dbSetting"></param>
         private static void CreateParametersFromArray(this IDbCommand command,
             CommandArrayParameter commandArrayParameter,
+            DbType? dbType,
             IDbSetting dbSetting)
         {
             var values = commandArrayParameter.Values.AsArray();
 
             if (values.Length == 0)
             {
-                command.Parameters.Add(command.CreateParameter(commandArrayParameter.ParameterName.AsParameter(dbSetting), null, null));
+                command.Parameters.Add(
+                    command.CreateParameter(
+                        commandArrayParameter.ParameterName.AsParameter(dbSetting), null, dbType));
             }
             else
             {
@@ -142,8 +149,9 @@ namespace RepoDb.Extensions
                 {
                     var name = string.Concat(commandArrayParameter.ParameterName, i.ToString()).AsParameter(dbSetting);
                     var value = values[i];
-                    var dbType = value?.GetType().GetDbType();
-                    command.Parameters.Add(command.CreateParameter(name, value, dbType));
+                    dbType ??= value?.GetType().GetDbType();
+                    command.Parameters.Add(
+                        command.CreateParameter(name, value, dbType));
                 }
             }
         }
@@ -253,7 +261,8 @@ namespace RepoDb.Extensions
                     size,
                     classProperty,
                     dbField,
-                    parameterDirection);
+                    parameterDirection,
+                    dbType);
             }
             else
             {
@@ -345,6 +354,7 @@ namespace RepoDb.Extensions
         /// <param name="classProperty"></param>
         /// <param name="dbField"></param>
         /// <param name="parameterDirection"></param>
+        /// <param name="dbType"></param>
         /// <returns></returns>
         private static IDbDataParameter CreateParameterForEnum(IDbCommand command,
             Type valueType,
@@ -353,13 +363,14 @@ namespace RepoDb.Extensions
             int? size,
             ClassProperty classProperty,
             DbField dbField,
-            ParameterDirection? parameterDirection)
+            ParameterDirection? parameterDirection,
+            DbType? dbType)
         {
             // Property handler
             InvokePropertyHandler(classProperty, ref valueType, ref value);
 
             // DbType
-            var dbType = IsPostgreSqlUserDefined(dbField) ? default :
+            dbType ??= IsPostgreSqlUserDefined(dbField) ? default :
                 classProperty?.GetDbType() ??
                 valueType.GetDbType() ??
                 (dbField != null ? clientTypeToDbTypeResolver.Resolve(dbField.Type) : null) ??
