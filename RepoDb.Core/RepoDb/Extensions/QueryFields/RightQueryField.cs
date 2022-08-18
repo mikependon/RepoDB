@@ -1,5 +1,6 @@
 ﻿using RepoDb.Enumerations;
 using System;
+using System.Data;
 
 namespace RepoDb.Extensions.QueryFields
 {
@@ -19,17 +20,19 @@ namespace RepoDb.Extensions.QueryFields
         /// <param name="value">The value to be used for the query expression.</param>
         public RightQueryField(string fieldName,
             object value)
-            : this(fieldName, Operation.Equal, value)
+            : this(fieldName, Operation.Equal, value, null)
         { }
 
         /// <summary>
         /// Creates a new instance of <see cref="RightQueryField"/> object.
         /// </summary>
-        /// <param name="field">The actual field for the query expression.</param>
+        /// <param name="fieldName">The name of the field for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
-        public RightQueryField(Field field,
-            object value)
-            : this(field, Operation.Equal, value)
+        /// <param name="dbType">The database type to be used for the query expression.</param>
+        public RightQueryField(string fieldName,
+            object value,
+            DbType? dbType)
+            : this(fieldName, Operation.Equal, value, dbType, 0)
         { }
 
         /// <summary>
@@ -41,30 +44,37 @@ namespace RepoDb.Extensions.QueryFields
         public RightQueryField(string fieldName,
             Operation operation,
             object value)
-            : this(new Field(fieldName), operation, value)
+            : this(fieldName, operation, value, null, 0)
         { }
 
         /// <summary>
         /// Creates a new instance of <see cref="RightQueryField"/> object.
         /// </summary>
-        /// <param name="field">The actual field for the query expression.</param>
+        /// <param name="fieldName">The name of the field for the query expression.</param>
         /// <param name="operation">The operation to be used for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
-        public RightQueryField(Field field,
-            Operation operation,
-            object value)
-            : this(field, operation, value, (value?.ToString()?.Length).GetValueOrDefault())
-        { }
-
-        /// <param name="field">The actual field for the query expression.</param>
-        /// <param name="operation">The operation to be used for the query expression.</param>
-        /// <param name="value">The value to be used for the query expression.</param>
-        /// <param name="charCount">The number of characters from the right to be evaluated.</param>
-        private RightQueryField(Field field,
+        /// <param name="dbType">The database type to be used for the query expression.</param>
+        public RightQueryField(string fieldName,
             Operation operation,
             object value,
-            int charCount)
-            : base(field, operation, value, $"RIGHT({{0}}, {charCount})")
+            DbType? dbType)
+            : this(fieldName, operation, value, dbType, 0)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="RightQueryField"/> object.
+        /// </summary>
+        /// <param name="fieldName">The name of the field for the query expression.</param>
+        /// <param name="operation">The operation to be used for the query expression.</param>
+        /// <param name="value">The value to be used for the query expression.</param>
+        /// <param name="dbType">The database type to be used for the query expression.</param>
+        /// <param name="charCount">The number of characters from the right to be evaluated.</param>
+        private RightQueryField(string fieldName,
+            Operation operation,
+            object value,
+            DbType? dbType,
+            int charCount = 0)
+            : base(fieldName, operation, value, dbType, $"RIGHT({{0}}, {(charCount > 0 ? charCount : (value?.ToString().Length).GetValueOrDefault())})")
         {
             CharCount = charCount;
         }

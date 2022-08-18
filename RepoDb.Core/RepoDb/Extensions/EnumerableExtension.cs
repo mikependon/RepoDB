@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -53,14 +54,14 @@ namespace RepoDb.Extensions
             value as IEnumerable<TargetType> ?? value.OfType<TargetType>();
 
         /// <summary>
-        /// Checks whether the instance of <see cref="System.Collections.IEnumerable"/> is of type <see cref="IEnumerable{T}"/>, then casts it, otherwise, 
+        /// Checks whether the instance of <see cref="IEnumerable"/> is of type <see cref="IEnumerable{T}"/>, then casts it, otherwise, 
         /// returns the instance of <see cref="IEnumerable{T}"/> with the specified items. The items that are not of type <typeparamref name="T"/> will be
-        /// eliminated from the result. This method is using the underlying method <see cref="Enumerable.OfType{TResult}(System.Collections.IEnumerable)"/>.
+        /// eliminated from the result. This method is using the underlying method <see cref="Enumerable.OfType{TResult}(IEnumerable)"/>.
         /// </summary>
         /// <typeparam name="T">The target type.</typeparam>
         /// <param name="value">The actual enumerable instance.</param>
         /// <returns>The <see cref="IEnumerable{T}"/> object in which the items are of type <typeparamref name="T"/>.</returns>
-        public static IEnumerable<T> WithType<T>(this System.Collections.IEnumerable value) =>
+        public static IEnumerable<T> WithType<T>(this IEnumerable value) =>
             value as IEnumerable<T> ?? value.OfType<T>();
 
         /// <summary>

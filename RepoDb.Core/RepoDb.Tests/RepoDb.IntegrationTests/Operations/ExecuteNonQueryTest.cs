@@ -280,7 +280,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Setup
-                var output = new DirectionalQueryField("Output", typeof(int), ParameterDirection.Output);
+                var output = new DirectionalQueryField("Output", ParameterDirection.Output, 16, DbType.Int32);
                 var param = new[]
                 {
                     new QueryField("Value1", 100),
@@ -305,9 +305,9 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Setup
-                var userId = new DirectionalQueryField("UserId", typeof(int), ParameterDirection.Output);
-                var serverName = new DirectionalQueryField("ServerName", typeof(string), 256, ParameterDirection.Output);
-                var dateTimeUtc = new DirectionalQueryField("DateTimeUtc", typeof(DateTime), ParameterDirection.Output);
+                var userId = new DirectionalQueryField("UserId", null, ParameterDirection.Output, 16);
+                var serverName = new DirectionalQueryField("ServerName", null, ParameterDirection.Output, 256);
+                var dateTimeUtc = new DirectionalQueryField("DateTimeUtc", null, ParameterDirection.Output, 16, DbType.DateTime2);
                 var param = new[]
                 {
                     userId,
@@ -605,7 +605,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Setup
-                var output = new DirectionalQueryField("Output", typeof(int), ParameterDirection.Output);
+                var output = new DirectionalQueryField("Output", ParameterDirection.Output, 16, DbType.Int32);
                 var param = new[]
                 {
                     new QueryField("Value1", 100),

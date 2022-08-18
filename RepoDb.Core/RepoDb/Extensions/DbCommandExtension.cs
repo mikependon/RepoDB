@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Dynamic;
 using System.Linq;
+using static RepoDb.DbConnectionExtension;
 
 namespace RepoDb.Extensions
 {
@@ -19,6 +20,7 @@ namespace RepoDb.Extensions
         #region Privates
 
         private static ClientTypeToDbTypeResolver clientTypeToDbTypeResolver = new();
+        private static DbTypeToClientTypeResolver dbTypeToClientTypeResolver = new();
 
         #endregion
 
@@ -104,18 +106,20 @@ namespace RepoDb.Extensions
         ///
         /// </summary>
         /// <param name="command"></param>
-        /// <param name="commandArrayParameters"></param>
+        /// <param name="commandArrayParametersText"></param>
         internal static void CreateParametersFromArray(this IDbCommand command,
-            IEnumerable<CommandArrayParameter> commandArrayParameters)
+            CommandArrayParametersText commandArrayParametersText)
         {
-            if (commandArrayParameters.Any() != true)
+            if (commandArrayParametersText?.CommandArrayParameters?.Any() != true)
             {
                 return;
             }
             var dbSetting = command.Connection.GetDbSetting();
-            foreach (var commandArrayParameter in commandArrayParameters)
+            foreach (var commandArrayParameter in commandArrayParametersText?.CommandArrayParameters)
             {
-                CreateParametersFromArray(command, commandArrayParameter, dbSetting);
+                CreateParametersFromArray(command,
+                    commandArrayParameter,
+                    commandArrayParametersText.DbType, dbSetting);
             }
         }
 
@@ -124,16 +128,20 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="command"></param>
         /// <param name="commandArrayParameter"></param>
+        /// <param name="dbType"></param>
         /// <param name="dbSetting"></param>
         private static void CreateParametersFromArray(this IDbCommand command,
             CommandArrayParameter commandArrayParameter,
+            DbType? dbType,
             IDbSetting dbSetting)
         {
             var values = commandArrayParameter.Values.AsArray();
 
             if (values.Length == 0)
             {
-                command.Parameters.Add(command.CreateParameter(commandArrayParameter.ParameterName.AsParameter(dbSetting), null, null));
+                command.Parameters.Add(
+                    command.CreateParameter(
+                        commandArrayParameter.ParameterName.AsParameter(dbSetting), null, dbType));
             }
             else
             {
@@ -141,8 +149,9 @@ namespace RepoDb.Extensions
                 {
                     var name = string.Concat(commandArrayParameter.ParameterName, i.ToString()).AsParameter(dbSetting);
                     var value = values[i];
-                    var dbType = value?.GetType().GetDbType();
-                    command.Parameters.Add(command.CreateParameter(name, value, dbType));
+                    dbType ??= value?.GetType().GetDbType();
+                    command.Parameters.Add(
+                        command.CreateParameter(name, value, dbType));
                 }
             }
         }
@@ -228,6 +237,7 @@ namespace RepoDb.Extensions
         /// <param name="classProperty"></param>
         /// <param name="dbField"></param>
         /// <param name="parameterDirection"></param>
+        /// <param name="dbType"></param>
         /// <param name="fallbackType"></param>
         /// <returns></returns>
         private static IDbDataParameter CreateParameter(IDbCommand command,
@@ -237,6 +247,7 @@ namespace RepoDb.Extensions
             ClassProperty classProperty,
             DbField dbField,
             ParameterDirection? parameterDirection,
+            DbType? dbType,
             Type fallbackType)
         {
             var valueType = (value?.GetType() ?? classProperty?.PropertyInfo.PropertyType).GetUnderlyingType();
@@ -250,7 +261,8 @@ namespace RepoDb.Extensions
                     size,
                     classProperty,
                     dbField,
-                    parameterDirection);
+                    parameterDirection,
+                    dbType);
             }
             else
             {
@@ -262,6 +274,7 @@ namespace RepoDb.Extensions
                     classProperty,
                     dbField,
                     parameterDirection,
+                    dbType,
                     fallbackType);
             }
         }
@@ -277,6 +290,7 @@ namespace RepoDb.Extensions
         /// <param name="classProperty"></param>
         /// <param name="dbField"></param>
         /// <param name="parameterDirection"></param>
+        /// <param name="dbType"></param>
         /// <param name="fallbackType"></param>
         /// <returns></returns>
         private static IDbDataParameter CreateParameterForNonEnum(IDbCommand command,
@@ -287,6 +301,7 @@ namespace RepoDb.Extensions
             ClassProperty classProperty,
             DbField dbField,
             ParameterDirection? parameterDirection,
+            DbType? dbType,
             Type fallbackType)
         {
             // Property Handler
@@ -298,8 +313,8 @@ namespace RepoDb.Extensions
             // The reason for not using classProperty.GetDbType() is to avoid getting the type level mapping.
 
             // DbType
-            var dbType = classProperty != null ? TypeMapCache.Get(classProperty.GetDeclaringType(), classProperty.PropertyInfo) :
-                null;
+            dbType ??= (classProperty != null ?
+                    TypeMapCache.Get(classProperty.GetDeclaringType(), classProperty.PropertyInfo) : null);
 
             valueType = (valueType ??= dbField?.Type.GetUnderlyingType() ?? fallbackType);
             if (dbType == null && valueType != null)
@@ -316,7 +331,10 @@ namespace RepoDb.Extensions
 
             // Set the size
             var parameterSize = GetSize(size, dbField);
-            parameter.Size = (parameterSize > 0) ? parameterSize : parameter.Size;
+            if (parameterSize > 0)
+            {
+                parameter.Size = parameterSize;
+            }
 
             // Parameter values
             InvokePropertyValueAttributes(parameter, classProperty);
@@ -336,6 +354,7 @@ namespace RepoDb.Extensions
         /// <param name="classProperty"></param>
         /// <param name="dbField"></param>
         /// <param name="parameterDirection"></param>
+        /// <param name="dbType"></param>
         /// <returns></returns>
         private static IDbDataParameter CreateParameterForEnum(IDbCommand command,
             Type valueType,
@@ -344,13 +363,14 @@ namespace RepoDb.Extensions
             int? size,
             ClassProperty classProperty,
             DbField dbField,
-            ParameterDirection? parameterDirection)
+            ParameterDirection? parameterDirection,
+            DbType? dbType)
         {
             // Property handler
             InvokePropertyHandler(classProperty, ref valueType, ref value);
 
             // DbType
-            var dbType = IsPostgreSqlUserDefined(dbField) ? default :
+            dbType ??= IsPostgreSqlUserDefined(dbField) ? default :
                 classProperty?.GetDbType() ??
                 valueType.GetDbType() ??
                 (dbField != null ? clientTypeToDbTypeResolver.Resolve(dbField.Type) : null) ??
@@ -420,6 +440,7 @@ namespace RepoDb.Extensions
                     (entityClassProperty ?? paramClassProperty),
                     dbField,
                     null,
+                    null,
                     null);
                 command.Parameters.Add(parameter);
             }
@@ -460,6 +481,7 @@ namespace RepoDb.Extensions
                     dbField?.Size,
                     classProperty,
                     dbField,
+                    null,
                     null,
                     null);
                 command.Parameters.Add(parameter);
@@ -562,7 +584,12 @@ namespace RepoDb.Extensions
             var value = queryField.Parameter.Value;
             var classProperty = PropertyCache.Get(entityType, queryField.Field, true);
             var (direction, fallbackType, size) = queryField is DirectionalQueryField n ?
-                ((ParameterDirection?)n.Direction, n.Type, n.Size ?? dbField?.Size) : default;
+                (
+                    n.Direction,
+                    n.Parameter.DbType.HasValue ?
+                        dbTypeToClientTypeResolver.Resolve(n.Parameter.DbType.Value) : null,
+                    n.Size ?? dbField?.Size
+                ) : default;
 
             // Create the parameter
             var parameter = CreateParameter(command,
@@ -572,6 +599,7 @@ namespace RepoDb.Extensions
                 classProperty,
                 dbField,
                 direction,
+                queryField.Parameter.DbType,
                 fallbackType);
             command.Parameters.Add(parameter);
 
@@ -604,6 +632,7 @@ namespace RepoDb.Extensions
                         null,
                         dbField,
                         null,
+                        queryField.Parameter.DbType,
                         null);
                     command.Parameters.Add(parameter);
                 }
@@ -632,6 +661,7 @@ namespace RepoDb.Extensions
                     dbField?.Size,
                     null, dbField,
                     null,
+                    queryField.Parameter.DbType,
                     null);
                 command.Parameters.Add(leftParameter);
 
@@ -643,6 +673,7 @@ namespace RepoDb.Extensions
                     null,
                     dbField,
                     null,
+                    queryField.Parameter.DbType,
                     null);
                 command.Parameters.Add(rightParameter);
             }
