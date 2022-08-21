@@ -662,6 +662,86 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestSqlConnectionQueryWithTypeResultViaIDbDataParameter()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Query<IdentityTable>(new { Id = new SqlParameter("_", 1) },
+                    fields: Field.Parse<IdentityTable>(e => e.ColumnNVarChar));
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryWithTypeResultViaQueryFieldForIDbDataParameter()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Query<IdentityTable>(new QueryField("Id", new SqlParameter("_", 1)),
+                    fields: Field.Parse<IdentityTable>(e => e.ColumnNVarChar));
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryWithTypeResultViaQueryFieldsForIDbDataParameter()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Query<IdentityTable>(new QueryField("Id", new SqlParameter("_", 1)).AsEnumerable(),
+                    fields: Field.Parse<IdentityTable>(e => e.ColumnNVarChar));
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryWithTypeResultViaQueryGroupForIDbDataParameter()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Query<IdentityTable>(new QueryGroup(new QueryField("Id", new SqlParameter("_", 1))),
+                    fields: Field.Parse<IdentityTable>(e => e.ColumnNVarChar));
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+            }
+        }
+
         [TestMethod, ExpectedException(typeof(MissingFieldsException))]
         public void ThrowExceptionOnSqlConnectionQueryWithInvalidOrderFields()
         {
@@ -1847,6 +1927,86 @@ namespace RepoDb.IntegrationTests.Operations
                 Assert.AreEqual(top, result.Count());
                 Helper.AssertPropertiesEquality(tables.ElementAt(7), result.First());
                 Helper.AssertPropertiesEquality(tables.ElementAt(5), result.Last());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncWithTypeResultViaIDbDataParameter()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAsync<IdentityTable>(new { Id = new SqlParameter("_", 1) },
+                    fields: Field.Parse<IdentityTable>(e => e.ColumnNVarChar)).Result;
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncWithTypeResultViaQueryFieldForIDbDataParameter()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAsync<IdentityTable>(new QueryField("Id", new SqlParameter("_", 1)),
+                    fields: Field.Parse<IdentityTable>(e => e.ColumnNVarChar)).Result;
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncWithTypeResultViaQueryFieldsForIDbDataParameter()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAsync<IdentityTable>(new QueryField("Id", new SqlParameter("_", 1)).AsEnumerable(),
+                    fields: Field.Parse<IdentityTable>(e => e.ColumnNVarChar)).Result;
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncWithTypeResultViaQueryGroupForIDbDataParameter()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAsync<IdentityTable>(new QueryGroup(new QueryField("Id", new SqlParameter("_", 1))),
+                    fields: Field.Parse<IdentityTable>(e => e.ColumnNVarChar)).Result;
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
             }
         }
 

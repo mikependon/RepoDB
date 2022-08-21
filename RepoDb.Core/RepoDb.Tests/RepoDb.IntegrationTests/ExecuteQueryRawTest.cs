@@ -1079,6 +1079,130 @@ namespace RepoDb.IntegrationTests
 
 #endif
 
+        #region IDbDataParameter
+
+        #region Sync
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryViaIDbDataParameter()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.ExecuteQuery<int>("SELECT 1 * @Value;",
+                    new { Value = new SqlParameter("_", 100) }).FirstOrDefault();
+
+                // Assert
+                Assert.AreEqual(100, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryViaQueryFieldForIDbDataParameter()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.ExecuteQuery<int>("SELECT 1 * @Value;",
+                    new QueryField("Value", new SqlParameter("_", 100))).FirstOrDefault();
+
+                // Assert
+                Assert.AreEqual(100, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryViaQueryFieldsForIDbDataParameter()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.ExecuteQuery<int>("SELECT 1 * @Value;",
+                    new QueryField("Value", new SqlParameter("_", 100)).AsEnumerable()).FirstOrDefault();
+
+                // Assert
+                Assert.AreEqual(100, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryViaQueryGroupsForIDbDataParameter()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.ExecuteQuery<int>("SELECT 1 * @Value;",
+                    new QueryGroup(new QueryField("Value", new SqlParameter("_", 100)))).FirstOrDefault();
+
+                // Assert
+                Assert.AreEqual(100, result);
+            }
+        }
+
+        #endregion
+
+        #region Async
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryAsyncViaIDbDataParameter()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.ExecuteQueryAsync<int>("SELECT 1 * @Value;",
+                    new { Value = new SqlParameter("_", 100) }).Result.FirstOrDefault();
+
+                // Assert
+                Assert.AreEqual(100, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryAsyncViaQueryFieldForIDbDataParameter()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.ExecuteQueryAsync<int>("SELECT 1 * @Value;",
+                    new QueryField("Value", new SqlParameter("_", 100))).Result.FirstOrDefault();
+
+                // Assert
+                Assert.AreEqual(100, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryAsyncViaQueryFieldsForIDbDataParameter()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.ExecuteQueryAsync<int>("SELECT 1 * @Value;",
+                    new QueryField("Value", new SqlParameter("_", 100)).AsEnumerable()).Result.FirstOrDefault();
+
+                // Assert
+                Assert.AreEqual(100, result);
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryAsyncViaQueryGroupsForIDbDataParameter()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.ExecuteQueryAsync<int>("SELECT 1 * @Value;",
+                    new QueryGroup(new QueryField("Value", new SqlParameter("_", 100)))).Result.FirstOrDefault();
+
+                // Assert
+                Assert.AreEqual(100, result);
+            }
+        }
+
+        #endregion
+
+        #endregion
+
         #endregion
 
         #region ExecuteQueryMultiple
@@ -1381,6 +1505,146 @@ namespace RepoDb.IntegrationTests
                 Assert.IsNotNull(secondResult);
                 Helper.AssertPropertiesEquality(param, firstResult);
                 Helper.AssertPropertiesEquality(param, secondResult);
+            }
+        }
+
+        #endregion
+
+        #endregion
+
+        #region IDbDataParameter
+
+        #region Sync
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleViaIDbDataParameter()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                using (var result = connection.ExecuteQueryMultiple("SELECT 1 * @Value;",
+                    new { Value = new SqlParameter("_", 100) }))
+                {
+                    var value = result.Extract<int>();
+                    // Assert
+                    Assert.AreEqual(100, result);
+                };
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleViaQueryFieldForIDbDataParameter()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                using (var result = connection.ExecuteQueryMultiple("SELECT 1 * @Value;",
+                    new QueryField("Value", new SqlParameter("_", 100))))
+                {
+                    var value = result.Extract<int>();
+                    // Assert
+                    Assert.AreEqual(100, result);
+                };
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleViaQueryFieldsForIDbDataParameter()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                using (var result = connection.ExecuteQueryMultiple("SELECT 1 * @Value;",
+                    new QueryField("Value", new SqlParameter("_", 100)).AsEnumerable()))
+                {
+                    var value = result.Extract<int>();
+                    // Assert
+                    Assert.AreEqual(100, result);
+                };
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleViaQueryGroupForIDbDataParameter()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                using (var result = connection.ExecuteQueryMultiple("SELECT 1 * @Value;",
+                    new QueryGroup(new QueryField("Value", new SqlParameter("_", 100)))))
+                {
+                    var value = result.Extract<int>();
+                    // Assert
+                    Assert.AreEqual(100, result);
+                };
+            }
+        }
+
+        #endregion
+
+        #region Async
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleAsyncViaIDbDataParameter()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                using (var result = connection.ExecuteQueryMultipleAsync("SELECT 1 * @Value;",
+                    new { Value = new SqlParameter("_", 100) }).Result)
+                {
+                    var value = result.ExtractAsync<int>();
+                    // Assert
+                    Assert.AreEqual(100, result);
+                };
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleAsyncViaQueryFieldForIDbDataParameter()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                using (var result = connection.ExecuteQueryMultipleAsync("SELECT 1 * @Value;",
+                    new QueryField("Value", new SqlParameter("_", 100))).Result)
+                {
+                    var value = result.Extract<int>();
+                    // Assert
+                    Assert.AreEqual(100, result);
+                };
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleAsyncViaQueryFieldsForIDbDataParameter()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                using (var result = connection.ExecuteQueryMultipleAsync("SELECT 1 * @Value;",
+                    new QueryField("Value", new SqlParameter("_", 100)).AsEnumerable()).Result)
+                {
+                    var value = result.Extract<int>();
+                    // Assert
+                    Assert.AreEqual(100, result);
+                };
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionExecuteQueryMultipleAsyncViaQueryGroupForIDbDataParameter()
+        {
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                using (var result = connection.ExecuteQueryMultipleAsync("SELECT 1 * @Value;",
+                    new QueryGroup(new QueryField("Value", new SqlParameter("_", 100)))).Result)
+                {
+                    var value = result.Extract<int>();
+                    // Assert
+                    Assert.AreEqual(100, result);
+                };
             }
         }
 
