@@ -390,6 +390,24 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        private static IDbDataParameter CreateParameterIf(string name,
+            object value)
+        {
+            if (value is IDbDataParameter parameter)
+            {
+                parameter.ParameterName = name;
+                return parameter;
+            }
+
+            return null;
+        }
+
+        /// <summary>
         ///
         /// </summary>
         /// <param name="command"></param>
@@ -433,15 +451,16 @@ namespace RepoDb.Extensions
                     .AsUnquoted(command.Connection.GetDbSetting());
                 var dbField = GetDbField(name, dbFields);
                 var value = paramClassProperty.PropertyInfo.GetValue(param);
-                var parameter = CreateParameter(command,
-                    name,
-                    value,
-                    dbField?.Size,
-                    (entityClassProperty ?? paramClassProperty),
-                    dbField,
-                    null,
-                    null,
-                    null);
+                var parameter = CreateParameterIf(name, value) ??
+                    CreateParameter(command,
+                        name,
+                        value,
+                        dbField?.Size,
+                        (entityClassProperty ?? paramClassProperty),
+                        dbField,
+                        null,
+                        null,
+                        null);
                 command.Parameters.Add(parameter);
             }
         }
@@ -475,15 +494,16 @@ namespace RepoDb.Extensions
                     dbField ??= GetDbField(commandParameter.Field.Name, dbFields);
                     classProperty = PropertyCache.Get(commandParameter.MappedToType, commandParameter.Field.Name, true);
                 }
-                var parameter = CreateParameter(command,
-                    kvp.Key,
-                    value,
-                    dbField?.Size,
-                    classProperty,
-                    dbField,
-                    null,
-                    null,
-                    null);
+                var parameter = CreateParameterIf(kvp.Key, value) ??
+                    CreateParameter(command,
+                        kvp.Key,
+                        value,
+                        dbField?.Size,
+                        classProperty,
+                        dbField,
+                        null,
+                        null,
+                        null);
                 command.Parameters.Add(parameter);
             }
         }
@@ -592,15 +612,16 @@ namespace RepoDb.Extensions
                 ) : default;
 
             // Create the parameter
-            var parameter = CreateParameter(command,
-                queryField.Parameter.Name,
-                value,
-                size,
-                classProperty,
-                dbField,
-                direction,
-                queryField.Parameter.DbType,
-                fallbackType);
+            var parameter = CreateParameterIf(queryField.Parameter.Name, value) ??
+                CreateParameter(command,
+                    queryField.Parameter.Name,
+                    value,
+                    size,
+                    classProperty,
+                    dbField,
+                    direction,
+                    queryField.Parameter.DbType,
+                    fallbackType);
             command.Parameters.Add(parameter);
 
             // Set the parameter

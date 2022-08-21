@@ -41,45 +41,61 @@ namespace RepoDb.Reflection
                 var dbField = dbFields?.FirstOrDefault(df =>
                     string.Equals(df.Name, paramProperty.GetMappedName(), StringComparison.OrdinalIgnoreCase));
                 var targetProperty = (entityProperty ?? paramProperty);
-                var valueType = targetProperty.PropertyInfo.PropertyType.GetUnderlyingType();
                 var valueExpression = (Expression)Expression.Property(entityExpression, paramProperty.PropertyInfo);
                 var parameterExpression = (Expression)null;
 
-                // Property Handler
-                InvokePropertyHandlerViaExpression(paramProperty, ref valueType, ref valueExpression);
-
-                // Create
-                if (valueType.IsEnum)
+                // Add the value itself
+                if (StaticType.IDbDataParameter.IsAssignableFrom(targetProperty.PropertyInfo.PropertyType))
                 {
-                    parameterExpression = GetPlainTypeToDbParametersForEnumCompiledFunction(commandParameterExpression,
-                        paramProperty,
-                        dbField,
-                        valueType,
-                        valueExpression);
+                    parameterExpression = valueExpression;
+
+                    // Set the name
+                    var dbParameterParameterNameSetMethod = StaticType.DbParameter.GetProperty("ParameterName").SetMethod;
+                    var parameterName = targetProperty.PropertyInfo.Name;
+                    var setParameterNameExpression = Expression.Call(parameterExpression, dbParameterParameterNameSetMethod,
+                        Expression.Constant(parameterName));
+                    callExpressions.AddIfNotNull(setParameterNameExpression);
                 }
                 else
                 {
-                    parameterExpression = GetPlainTypeToDbParametersForNonEnumCompiledFunction(commandParameterExpression,
-                        paramProperty,
-                        entityProperty,
-                        dbField,
-                        valueType,
-                        valueExpression);
-                }
+                    var valueType = targetProperty.PropertyInfo.PropertyType.GetUnderlyingType();
 
-                // Size
-                var size = GetSize(null, dbField);
-                if (size > 0)
-                {
-                    var sizeExpression = GetDbParameterSizeAssignmentExpression(parameterExpression, GetSize(null, dbField));
-                    callExpressions.AddIfNotNull(sizeExpression);
-                }
+                    // Property Handler
+                    InvokePropertyHandlerViaExpression(paramProperty, ref valueType, ref valueExpression);
 
-                // Type map attributes
-                var parameterPropertyValueSetterAttributesExpressions = GetParameterPropertyValueSetterAttributesAssignmentExpressions(
-                    parameterExpression,
-                    (entityProperty ?? paramProperty));
-                callExpressions.AddRangeIfNotNullOrNotEmpty(parameterPropertyValueSetterAttributesExpressions);
+                    // Create
+                    if (valueType.IsEnum)
+                    {
+                        parameterExpression = GetPlainTypeToDbParametersForEnumCompiledFunction(commandParameterExpression,
+                            paramProperty,
+                            dbField,
+                            valueType,
+                            valueExpression);
+                    }
+                    else
+                    {
+                        parameterExpression = GetPlainTypeToDbParametersForNonEnumCompiledFunction(commandParameterExpression,
+                            paramProperty,
+                            entityProperty,
+                            dbField,
+                            valueType,
+                            valueExpression);
+                    }
+
+                    // Size
+                    var size = GetSize(null, dbField);
+                    if (size > 0)
+                    {
+                        var sizeExpression = GetDbParameterSizeAssignmentExpression(parameterExpression, GetSize(null, dbField));
+                        callExpressions.AddIfNotNull(sizeExpression);
+                    }
+
+                    // Type map attributes
+                    var parameterPropertyValueSetterAttributesExpressions = GetParameterPropertyValueSetterAttributesAssignmentExpressions(
+                        parameterExpression,
+                        (entityProperty ?? paramProperty));
+                    callExpressions.AddRangeIfNotNullOrNotEmpty(parameterPropertyValueSetterAttributesExpressions);
+                }
 
                 // DbCommand.Parameters.Add
                 var parametersExpression = Expression.Property(commandParameterExpression, "Parameters");
