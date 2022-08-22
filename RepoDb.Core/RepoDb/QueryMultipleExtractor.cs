@@ -89,7 +89,6 @@ namespace RepoDb
         /// <param name="isMoveToNextResult">A flag to use whether the operation would call the <see cref="System.Data.IDataReader.NextResult()"/> method.</param>
         /// <returns>An enumerable of extracted data entity.</returns>
         public IEnumerable<TEntity> Extract<TEntity>(bool isMoveToNextResult = true)
-            where TEntity : class
         {
             var result = DataReader.ToEnumerable<TEntity>(reader).AsList();
             if (isMoveToNextResult)
@@ -106,11 +105,10 @@ namespace RepoDb
         /// <param name="isMoveToNextResult">A flag to use whether the operation would call the <see cref="System.Data.IDataReader.NextResult()"/> method.</param>
         /// <returns>An enumerable of extracted data entity.</returns>
         public async Task<IEnumerable<TEntity>> ExtractAsync<TEntity>(bool isMoveToNextResult = true)
-            where TEntity : class
         {
             var result = await DataReader.ToEnumerableAsync<TEntity>(reader, cancellationToken: CancellationToken)
                 .ToListAsync(CancellationToken);
-            
+
             if (isMoveToNextResult)
             {
                 await NextResultAsync();
@@ -146,7 +144,7 @@ namespace RepoDb
         {
             var result = await DataReader.ToEnumerableAsync(reader, cancellationToken: CancellationToken)
                 .ToListAsync(CancellationToken);
-            
+
             if (isMoveToNextResult)
             {
                 await NextResultAsync();
