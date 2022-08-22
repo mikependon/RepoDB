@@ -108,7 +108,7 @@ namespace RepoDb
         {
             var result = await DataReader.ToEnumerableAsync<TEntity>(reader, cancellationToken: CancellationToken)
                 .ToListAsync(CancellationToken);
-            
+
             if (isMoveToNextResult)
             {
                 await NextResultAsync();
@@ -144,7 +144,7 @@ namespace RepoDb
         {
             var result = await DataReader.ToEnumerableAsync(reader, cancellationToken: CancellationToken)
                 .ToListAsync(CancellationToken);
-            
+
             if (isMoveToNextResult)
             {
                 await NextResultAsync();

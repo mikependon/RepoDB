@@ -1525,9 +1525,10 @@ namespace RepoDb.IntegrationTests
                 using (var result = connection.ExecuteQueryMultiple("SELECT 1 * @Value;",
                     new { Value = new SqlParameter("_", 100) }))
                 {
-                    var value = result.Extract<int>();
+                    var value = result.Extract<int>().FirstOrDefault();
+
                     // Assert
-                    Assert.AreEqual(100, result);
+                    Assert.AreEqual(100, value);
                 };
             }
         }
@@ -1541,9 +1542,10 @@ namespace RepoDb.IntegrationTests
                 using (var result = connection.ExecuteQueryMultiple("SELECT 1 * @Value;",
                     new QueryField("Value", new SqlParameter("_", 100))))
                 {
-                    var value = result.Extract<int>();
+                    var value = result.Extract<int>().FirstOrDefault();
+
                     // Assert
-                    Assert.AreEqual(100, result);
+                    Assert.AreEqual(100, value);
                 };
             }
         }
@@ -1557,9 +1559,10 @@ namespace RepoDb.IntegrationTests
                 using (var result = connection.ExecuteQueryMultiple("SELECT 1 * @Value;",
                     new QueryField("Value", new SqlParameter("_", 100)).AsEnumerable()))
                 {
-                    var value = result.Extract<int>();
+                    var value = result.Extract<int>().FirstOrDefault();
+
                     // Assert
-                    Assert.AreEqual(100, result);
+                    Assert.AreEqual(100, value);
                 };
             }
         }
@@ -1573,9 +1576,10 @@ namespace RepoDb.IntegrationTests
                 using (var result = connection.ExecuteQueryMultiple("SELECT 1 * @Value;",
                     new QueryGroup(new QueryField("Value", new SqlParameter("_", 100)))))
                 {
-                    var value = result.Extract<int>();
+                    var value = result.Extract<int>().FirstOrDefault();
+
                     // Assert
-                    Assert.AreEqual(100, result);
+                    Assert.AreEqual(100, value);
                 };
             }
         }
@@ -1593,9 +1597,10 @@ namespace RepoDb.IntegrationTests
                 using (var result = connection.ExecuteQueryMultipleAsync("SELECT 1 * @Value;",
                     new { Value = new SqlParameter("_", 100) }).Result)
                 {
-                    var value = result.ExtractAsync<int>();
+                    var value = result.ExtractAsync<int>().Result.FirstOrDefault();
+
                     // Assert
-                    Assert.AreEqual(100, result);
+                    Assert.AreEqual(100, value);
                 };
             }
         }
@@ -1609,9 +1614,10 @@ namespace RepoDb.IntegrationTests
                 using (var result = connection.ExecuteQueryMultipleAsync("SELECT 1 * @Value;",
                     new QueryField("Value", new SqlParameter("_", 100))).Result)
                 {
-                    var value = result.Extract<int>();
+                    var value = result.ExtractAsync<int>().Result.FirstOrDefault();
+
                     // Assert
-                    Assert.AreEqual(100, result);
+                    Assert.AreEqual(100, value);
                 };
             }
         }
@@ -1625,9 +1631,10 @@ namespace RepoDb.IntegrationTests
                 using (var result = connection.ExecuteQueryMultipleAsync("SELECT 1 * @Value;",
                     new QueryField("Value", new SqlParameter("_", 100)).AsEnumerable()).Result)
                 {
-                    var value = result.Extract<int>();
+                    var value = result.ExtractAsync<int>().Result.FirstOrDefault();
+
                     // Assert
-                    Assert.AreEqual(100, result);
+                    Assert.AreEqual(100, value);
                 };
             }
         }
@@ -1641,9 +1648,10 @@ namespace RepoDb.IntegrationTests
                 using (var result = connection.ExecuteQueryMultipleAsync("SELECT 1 * @Value;",
                     new QueryGroup(new QueryField("Value", new SqlParameter("_", 100)))).Result)
                 {
-                    var value = result.Extract<int>();
+                    var value = result.ExtractAsync<int>().Result.FirstOrDefault();
+
                     // Assert
-                    Assert.AreEqual(100, result);
+                    Assert.AreEqual(100, value);
                 };
             }
         }
