@@ -1,4 +1,5 @@
-﻿using RepoDb.Extensions;
+﻿using RepoDb.Exceptions;
+using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Requests;
 using System;
@@ -76,9 +77,13 @@ namespace RepoDb
         {
             if (cache.TryGetValue(request, out var commandText) == false)
             {
-                var fields = GetActualFields(request.Connection,
+                var fields = GetTargetFields(request.Connection,
                     request.Name,
                     request.Fields,
+                    request.Transaction);
+                ValidateOrderFields(request.Connection,
+                    request.Name,
+                    request.OrderBy,
                     request.Transaction);
                 commandText = GetBatchQueryTextInternal(request, fields);
                 cache.TryAdd(request, commandText);
@@ -97,9 +102,14 @@ namespace RepoDb
         {
             if (cache.TryGetValue(request, out var commandText) == false)
             {
-                var fields = await GetActualFieldsAsync(request.Connection,
+                var fields = await GetTargetFieldsAsync(request.Connection,
                     request.Name,
                     request.Fields,
+                    request.Transaction,
+                    cancellationToken);
+                await ValidateOrderFieldsAsync(request.Connection,
+                    request.Name,
+                    request.OrderBy,
                     request.Transaction,
                     cancellationToken);
                 commandText = GetBatchQueryTextInternal(request, fields);
@@ -254,7 +264,7 @@ namespace RepoDb
         {
             if (cache.TryGetValue(request, out var commandText) == false)
             {
-                var fields = GetActualFields(request.Connection,
+                var fields = GetTargetFields(request.Connection,
                     request.Name,
                     request.Fields,
                     request.Transaction);
@@ -275,7 +285,7 @@ namespace RepoDb
         {
             if (cache.TryGetValue(request, out var commandText) == false)
             {
-                var fields = await GetActualFieldsAsync(request.Connection,
+                var fields = await GetTargetFieldsAsync(request.Connection,
                     request.Name,
                     request.Fields,
                     request.Transaction,
@@ -319,7 +329,7 @@ namespace RepoDb
         {
             if (cache.TryGetValue(request, out var commandText) == false)
             {
-                var fields = GetActualFields(request.Connection,
+                var fields = GetTargetFields(request.Connection,
                     request.Name,
                     request.Fields,
                     request.Transaction);
@@ -340,7 +350,7 @@ namespace RepoDb
         {
             if (cache.TryGetValue(request, out var commandText) == false)
             {
-                var fields = await GetActualFieldsAsync(request.Connection,
+                var fields = await GetTargetFieldsAsync(request.Connection,
                     request.Name,
                     request.Fields,
                     request.Transaction,
@@ -432,7 +442,7 @@ namespace RepoDb
         {
             if (cache.TryGetValue(request, out var commandText) == false)
             {
-                var fields = GetActualFields(request.Connection,
+                var fields = GetTargetFields(request.Connection,
                     request.Name,
                     request.Fields,
                     request.Transaction);
@@ -453,7 +463,7 @@ namespace RepoDb
         {
             if (cache.TryGetValue(request, out var commandText) == false)
             {
-                var fields = await GetActualFieldsAsync(request.Connection,
+                var fields = await GetTargetFieldsAsync(request.Connection,
                     request.Name,
                     request.Fields,
                     request.Transaction,
@@ -498,7 +508,7 @@ namespace RepoDb
         {
             if (cache.TryGetValue(request, out var commandText) == false)
             {
-                var fields = GetActualFields(request.Connection,
+                var fields = GetTargetFields(request.Connection,
                     request.Name,
                     request.Fields,
                     request.Transaction);
@@ -519,7 +529,7 @@ namespace RepoDb
         {
             if (cache.TryGetValue(request, out var commandText) == false)
             {
-                var fields = await GetActualFieldsAsync(request.Connection,
+                var fields = await GetTargetFieldsAsync(request.Connection,
                     request.Name,
                     request.Fields,
                     request.Transaction,
@@ -612,9 +622,13 @@ namespace RepoDb
         {
             if (cache.TryGetValue(request, out var commandText) == false)
             {
-                var fields = GetActualFields(request.Connection,
+                var fields = GetTargetFields(request.Connection,
                     request.Name,
                     request.Fields,
+                    request.Transaction);
+                ValidateOrderFields(request.Connection,
+                    request.Name,
+                    request.OrderBy,
                     request.Transaction);
                 commandText = GetQueryTextInternal(request, fields);
                 cache.TryAdd(request, commandText);
@@ -633,9 +647,14 @@ namespace RepoDb
         {
             if (cache.TryGetValue(request, out var commandText) == false)
             {
-                var fields = await GetActualFieldsAsync(request.Connection,
+                var fields = await GetTargetFieldsAsync(request.Connection,
                     request.Name,
                     request.Fields,
+                    request.Transaction,
+                    cancellationToken);
+                await ValidateOrderFieldsAsync(request.Connection,
+                    request.Name,
+                    request.OrderBy,
                     request.Transaction,
                     cancellationToken);
                 commandText = GetQueryTextInternal(request, fields);
@@ -676,9 +695,13 @@ namespace RepoDb
         {
             if (cache.TryGetValue(request, out var commandText) == false)
             {
-                var fields = GetActualFields(request.Connection,
+                var fields = GetTargetFields(request.Connection,
                     request.Name,
                     request.Fields,
+                    request.Transaction);
+                ValidateOrderFields(request.Connection,
+                    request.Name,
+                    request.OrderBy,
                     request.Transaction);
                 commandText = GetQueryAllTextInternal(request, fields);
                 cache.TryAdd(request, commandText);
@@ -697,9 +720,14 @@ namespace RepoDb
         {
             if (cache.TryGetValue(request, out var commandText) == false)
             {
-                var fields = await GetActualFieldsAsync(request.Connection,
+                var fields = await GetTargetFieldsAsync(request.Connection,
                     request.Name,
                     request.Fields,
+                    request.Transaction,
+                    cancellationToken);
+                await ValidateOrderFieldsAsync(request.Connection,
+                    request.Name,
+                    request.OrderBy,
                     request.Transaction,
                     cancellationToken);
                 commandText = GetQueryAllTextInternal(request, fields);
@@ -740,9 +768,13 @@ namespace RepoDb
         {
             if (cache.TryGetValue(request, out var commandText) == false)
             {
-                var fields = GetActualFields(request.Connection,
+                var fields = GetTargetFields(request.Connection,
                     request.Name,
                     request.Fields,
+                    request.Transaction);
+                ValidateOrderFields(request.Connection,
+                    request.Name,
+                    request.OrderBy,
                     request.Transaction);
                 commandText = GetQueryMultipleTextInternal<TEntity>(request, fields);
                 cache.TryAdd(request, commandText);
@@ -763,9 +795,14 @@ namespace RepoDb
         {
             if (cache.TryGetValue(request, out var commandText) == false)
             {
-                var fields = await GetActualFieldsAsync(request.Connection,
+                var fields = await GetTargetFieldsAsync(request.Connection,
                     request.Name,
                     request.Fields,
+                    request.Transaction,
+                    cancellationToken);
+                await ValidateOrderFieldsAsync(request.Connection,
+                    request.Name,
+                    request.OrderBy,
                     request.Transaction,
                     cancellationToken);
                 commandText = GetQueryMultipleTextInternal<TEntity>(request, fields);
@@ -876,7 +913,7 @@ namespace RepoDb
         {
             if (cache.TryGetValue(request, out var commandText) == false)
             {
-                var fields = GetActualFields(request.Connection,
+                var fields = GetTargetFields(request.Connection,
                     request.Name,
                     request.Fields,
                     request.Transaction);
@@ -897,7 +934,7 @@ namespace RepoDb
         {
             if (cache.TryGetValue(request, out var commandText) == false)
             {
-                var fields = await GetActualFieldsAsync(request.Connection,
+                var fields = await GetTargetFieldsAsync(request.Connection,
                     request.Name,
                     request.Fields,
                     request.Transaction,
@@ -942,7 +979,7 @@ namespace RepoDb
         {
             if (cache.TryGetValue(request, out var commandText) == false)
             {
-                var fields = GetActualFields(request.Connection,
+                var fields = GetTargetFields(request.Connection,
                     request.Name,
                     request.Fields,
                     request.Transaction);
@@ -963,7 +1000,7 @@ namespace RepoDb
         {
             if (cache.TryGetValue(request, out var commandText) == false)
             {
-                var fields = await GetActualFieldsAsync(request.Connection,
+                var fields = await GetTargetFieldsAsync(request.Connection,
                     request.Name,
                     request.Fields,
                     request.Transaction,
@@ -1007,6 +1044,68 @@ namespace RepoDb
             cache.Clear();
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="orderFields"></param>
+        /// <param name="transaction"></param>
+        private static void ValidateOrderFields(IDbConnection connection,
+            string tableName,
+            IEnumerable<OrderField> orderFields,
+            IDbTransaction transaction)
+        {
+            if (orderFields?.Any() == true)
+            {
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction);
+                ValidateOrderFieldsInternal(orderFields, dbFields, connection.GetDbSetting());
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="tableName"></param>
+        /// <param name="orderFields"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        private static async Task ValidateOrderFieldsAsync(IDbConnection connection,
+            string tableName,
+            IEnumerable<OrderField> orderFields,
+            IDbTransaction transaction,
+            CancellationToken cancellationToken = default)
+        {
+            if (orderFields?.Any() == true)
+            {
+                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
+                ValidateOrderFieldsInternal(orderFields, dbFields, connection.GetDbSetting());
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="orderFields"></param>
+        /// <param name="dbFields"></param>
+        /// <param name="dbSetting"></param>
+        private static void ValidateOrderFieldsInternal(IEnumerable<OrderField> orderFields,
+            IEnumerable<DbField> dbFields,
+            IDbSetting dbSetting)
+        {
+            var unmatchesOrderFields = dbFields?.Any() == true ?
+                orderFields
+                    .Where(of =>
+                        dbFields.FirstOrDefault(df =>
+                            string.Equals(df.Name.AsUnquoted(true, dbSetting), of.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) == null) : null;
+            if (unmatchesOrderFields?.Any() == true)
+            {
+                throw new MissingFieldsException($"The order fields '{unmatchesOrderFields.Select(of => of.Name).Join(", ")}' are not present from the actual table.");
+            }
+        }
+
+        /// <summary>
         ///
         /// </summary>
         /// <param name="connection"></param>
@@ -1014,7 +1113,7 @@ namespace RepoDb
         /// <param name="fields"></param>
         /// <param name="transaction"></param>
         /// <returns></returns>
-        private static IEnumerable<Field> GetActualFields(IDbConnection connection,
+        private static IEnumerable<Field> GetTargetFields(IDbConnection connection,
             string tableName,
             IEnumerable<Field> fields,
             IDbTransaction transaction)
@@ -1024,7 +1123,7 @@ namespace RepoDb
                 return null;
             }
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            return GetActualFieldsInternal(fields, dbFields, connection.GetDbSetting());
+            return GetTargetFieldsInternal(fields, dbFields, connection.GetDbSetting());
         }
 
         /// <summary>
@@ -1036,7 +1135,7 @@ namespace RepoDb
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private static async Task<IEnumerable<Field>> GetActualFieldsAsync(IDbConnection connection,
+        private static async Task<IEnumerable<Field>> GetTargetFieldsAsync(IDbConnection connection,
             string tableName,
             IEnumerable<Field> fields,
             IDbTransaction transaction,
@@ -1047,7 +1146,7 @@ namespace RepoDb
                 return null;
             }
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
-            return GetActualFieldsInternal(fields, dbFields, connection.GetDbSetting());
+            return GetTargetFieldsInternal(fields, dbFields, connection.GetDbSetting());
         }
 
         /// <summary>
@@ -1057,13 +1156,15 @@ namespace RepoDb
         /// <param name="dbFields"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        private static IEnumerable<Field> GetActualFieldsInternal(IEnumerable<Field> fields,
+        private static IEnumerable<Field> GetTargetFieldsInternal(IEnumerable<Field> fields,
             IEnumerable<DbField> dbFields,
             IDbSetting dbSetting)
         {
             return dbFields?.Any() == true ?
-                fields.Where(f => dbFields.FirstOrDefault(df =>
-                    string.Equals(df.Name.AsUnquoted(true, dbSetting), f.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null) :
+                fields
+                    .Where(f =>
+                        dbFields.FirstOrDefault(df =>
+                            string.Equals(df.Name.AsUnquoted(true, dbSetting), f.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null) :
                 fields;
         }
 

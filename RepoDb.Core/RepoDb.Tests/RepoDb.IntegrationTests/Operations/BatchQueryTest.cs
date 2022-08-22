@@ -1,8 +1,11 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Enumerations;
+using RepoDb.Exceptions;
+using RepoDb.Extensions;
 using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
+using System;
 using System.Linq;
 
 namespace RepoDb.IntegrationTests.Operations
@@ -769,6 +772,26 @@ namespace RepoDb.IntegrationTests.Operations
                 // Assert (10, 13)
                 Helper.AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
                 Helper.AssertPropertiesEquality(tables.ElementAt(13), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
+        public void ThrowExceptionOnSqlConnectionBatchQueryWithInvalidOrderFields()
+        {
+            // Setup
+            var orderBy = new OrderField("InvalidColumn", Order.Descending);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.BatchQuery<IdentityTable>(page: 0,
+                    rowsPerBatch: 10,
+                    orderBy: orderBy.AsEnumerable(),
+                    where: (object)null,
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null);
             }
         }
 
@@ -1773,6 +1796,27 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionOnSqlConnectionBatchQueryAsyncWithInvalidOrderFields()
+        {
+            // Setup
+            var orderBy = new OrderField("InvalidColumn", Order.Descending);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.BatchQueryAsync<IdentityTable>(page: 0,
+                    rowsPerBatch: 10,
+                    orderBy: orderBy.AsEnumerable(),
+                    where: (object)null,
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null).Result;
+            }
+        }
+
+
         #endregion
 
         #region BatchQueryAsync<TEntity>(Extra Fields)
@@ -2390,6 +2434,27 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
+        public void ThrowExceptionOnSqlConnectionBatchQueryViaTableNameWithInvalidOrderFields()
+        {
+            // Setup
+            var orderBy = new OrderField("InvalidColumn", Order.Descending);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.BatchQuery<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                    page: 0,
+                    rowsPerBatch: 10,
+                    orderBy: orderBy.AsEnumerable(),
+                    where: (object)null,
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null);
+            }
+        }
+
         #endregion
 
         #region BatchQueryAsync(TableName)
@@ -2754,6 +2819,27 @@ namespace RepoDb.IntegrationTests.Operations
                 // Assert (10, 13)
                 Helper.AssertMembersEquality(tables.ElementAt(10), result.ElementAt(0));
                 Helper.AssertMembersEquality(tables.ElementAt(13), result.ElementAt(3));
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionOnSqlConnectionBatchQueryAsyncViaTableNameWithInvalidOrderFields()
+        {
+            // Setup
+            var orderBy = new OrderField("InvalidColumn", Order.Descending);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.BatchQueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                    page: 0,
+                    rowsPerBatch: 10,
+                    orderBy: orderBy.AsEnumerable(),
+                    where: (object)null,
+                    commandTimeout: 0,
+                    transaction: null,
+                    trace: null,
+                    statementBuilder: null).Result;
             }
         }
 

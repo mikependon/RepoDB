@@ -14,8 +14,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestDirectionalQueryFieldHashCodeEquality()
         {
             // Prepare
-            var objA = new DirectionalQueryField("FieldName", "Value1", ParameterDirection.Output);
-            var objB = new DirectionalQueryField("FieldName", "Value2", ParameterDirection.Output);
+            var objA = new DirectionalQueryField("FieldName", Operation.Equal, "Value1", ParameterDirection.Output);
+            var objB = new DirectionalQueryField("FieldName", Operation.Equal, "Value2", ParameterDirection.Output);
 
             // Act
             var equal = (objA.GetHashCode() == objB.GetHashCode());
@@ -56,8 +56,8 @@ namespace RepoDb.UnitTests.Equalities
         public void TestDirectionalQueryFieldWithSizeHashCodeEquality()
         {
             // Prepare
-            var objA = new DirectionalQueryField("FieldName", Operation.Equal, "Value1", 100, ParameterDirection.Output);
-            var objB = new DirectionalQueryField("FieldName", Operation.NotEqual, "Value2", 100, ParameterDirection.Output);
+            var objA = new DirectionalQueryField("FieldName", Operation.Equal, "Value1", ParameterDirection.Output, 100);
+            var objB = new DirectionalQueryField("FieldName", Operation.NotEqual, "Value2", ParameterDirection.Output, 100);
 
             // Act
             var equal = (objA.GetHashCode() == objB.GetHashCode());

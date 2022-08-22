@@ -14,23 +14,65 @@ namespace RepoDb
 
         #region Constructors
 
+        #region NoValues
+
         /// <summary>
         /// Creates a new instance of <see cref="DirectionalQueryField"/> object.
         /// </summary>
         /// <param name="fieldName">The name of the field for the query expression.</param>
-        /// <param name="type">The type of the parameter object.</param>
         /// <param name="direction">The direction to be used for the parameter object.</param>
         public DirectionalQueryField(string fieldName,
-            Type type,
-            ParameterDirection direction)
+            ParameterDirection? direction)
             : this(fieldName,
                   Operation.Equal,
                   null,
+                  direction,
                   null,
-                  direction)
-        {
-            Type = type;
-        }
+                  null,
+                  false)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="DirectionalQueryField"/> object.
+        /// </summary>
+        /// <param name="fieldName">The name of the field for the query expression.</param>
+        /// <param name="direction">The direction to be used for the parameter object.</param>
+        /// <param name="size">The sizeof the parameter value.</param>
+        public DirectionalQueryField(string fieldName,
+            ParameterDirection? direction,
+            int? size)
+            : this(fieldName,
+                  Operation.Equal,
+                  null,
+                  direction,
+                  size,
+                  null,
+                  false)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="DirectionalQueryField"/> object.
+        /// </summary>
+        /// <param name="fieldName">The name of the field for the query expression.</param>
+        /// <param name="direction">The direction to be used for the parameter object.</param>
+        /// <param name="size">The sizeof the parameter value.</param>
+        /// <param name="dbType">The database type to be used for the query expression.</param>
+        public DirectionalQueryField(string fieldName,
+            ParameterDirection? direction,
+            int? size,
+            DbType? dbType)
+            : this(fieldName,
+                  Operation.Equal,
+                  null,
+                  direction,
+                  size,
+                  dbType,
+                  false)
+        { }
+
+        #endregion
+
+        #region WithValues
 
         /// <summary>
         /// Creates a new instance of <see cref="DirectionalQueryField"/> object.
@@ -40,12 +82,74 @@ namespace RepoDb
         /// <param name="direction">The direction to be used for the parameter object.</param>
         public DirectionalQueryField(string fieldName,
             object value,
-            ParameterDirection direction)
+            ParameterDirection? direction)
             : this(fieldName,
                   Operation.Equal,
                   value,
+                  direction,
                   null,
-                  direction)
+                  null,
+                  false)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="DirectionalQueryField"/> object.
+        /// </summary>
+        /// <param name="fieldName">The name of the field for the query expression.</param>
+        /// <param name="value">The value to be used for the query expression.</param>
+        /// <param name="direction">The direction to be used for the parameter object.</param>
+        /// <param name="size">The sizeof the parameter value.</param>
+        public DirectionalQueryField(string fieldName,
+            object value,
+            ParameterDirection? direction,
+            int? size)
+            : this(fieldName,
+                  Operation.Equal,
+                  value,
+                  direction,
+                  size,
+                  null,
+                  false)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="DirectionalQueryField"/> object.
+        /// </summary>
+        /// <param name="fieldName">The name of the field for the query expression.</param>
+        /// <param name="value">The value to be used for the query expression.</param>
+        /// <param name="direction">The direction to be used for the parameter object.</param>
+        /// <param name="size">The sizeof the parameter value.</param>
+        /// <param name="dbType">The database type to be used for the query expression.</param>
+        public DirectionalQueryField(string fieldName,
+            object value,
+            ParameterDirection? direction,
+            int? size,
+            DbType? dbType)
+            : this(fieldName,
+                  Operation.Equal,
+                  value,
+                  direction,
+                  size,
+                  dbType,
+                  false)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="DirectionalQueryField"/> object.
+        /// </summary>
+        /// <param name="fieldName">The name of the field for the query expression.</param>
+        /// <param name="operation">The operation to be used for the query expression.</param>
+        /// <param name="direction">The direction to be used for the parameter object.</param>
+        public DirectionalQueryField(string fieldName,
+            Operation operation,
+            ParameterDirection? direction)
+            : this(fieldName,
+                  operation,
+                  null,
+                  direction,
+                  null,
+                  null,
+                  false)
         { }
 
         /// <summary>
@@ -58,87 +162,14 @@ namespace RepoDb
         public DirectionalQueryField(string fieldName,
             Operation operation,
             object value,
-            ParameterDirection direction)
+            ParameterDirection? direction)
             : this(fieldName,
                   operation,
                   value,
+                  direction,
                   null,
-                  false,
-                  direction)
-        { }
-
-        /// <summary>
-        /// Creates a new instance of <see cref="DirectionalQueryField"/> object.
-        /// </summary>
-        /// <param name="field">The actual field for the query expression.</param>
-        /// <param name="value">The value to be used for the query expression.</param>
-        /// <param name="direction">The direction to be used for the parameter object.</param>
-        public DirectionalQueryField(Field field,
-            object value,
-            ParameterDirection direction)
-            : this(field,
-                  Operation.Equal,
-                  value,
                   null,
-                  false,
-                  direction)
-        { }
-
-        /// <summary>
-        /// Creates a new instance of <see cref="DirectionalQueryField"/> object.
-        /// </summary>
-        /// <param name="field">The actual field for the query expression.</param>
-        /// <param name="operation">The operation to be used for the query expression.</param>
-        /// <param name="value">The value to be used for the query expression.</param>
-        /// <param name="direction">The direction to be used for the parameter object.</param>
-        public DirectionalQueryField(Field field,
-            Operation operation,
-            object value,
-            ParameterDirection direction)
-            : this(field,
-                  operation,
-                  value,
-                  null,
-                  false,
-                  direction)
-        { }
-
-        /// <summary>
-        /// Creates a new instance of <see cref="DirectionalQueryField"/> object.
-        /// </summary>
-        /// <param name="fieldName">The name of the field for the query expression.</param>
-        /// <param name="type">The type of the parameter object.</param>
-        /// <param name="size">The sizeof the parameter value.</param>
-        /// <param name="direction">The direction to be used for the parameter object.</param>
-        public DirectionalQueryField(string fieldName,
-            Type type,
-            int? size,
-            ParameterDirection direction)
-            : this(fieldName,
-                  Operation.Equal,
-                  null,
-                  size,
-                  direction)
-        {
-            Type = type;
-        }
-
-        /// <summary>
-        /// Creates a new instance of <see cref="DirectionalQueryField"/> object.
-        /// </summary>
-        /// <param name="fieldName">The name of the field for the query expression.</param>
-        /// <param name="value">The value to be used for the query expression.</param>
-        /// <param name="size">The sizeof the parameter value.</param>
-        /// <param name="direction">The direction to be used for the parameter object.</param>
-        public DirectionalQueryField(string fieldName,
-            object value,
-            int? size,
-            ParameterDirection direction)
-            : this(fieldName,
-                  Operation.Equal,
-                  value,
-                  size,
-                  direction)
+                  false)
         { }
 
         /// <summary>
@@ -147,59 +178,20 @@ namespace RepoDb
         /// <param name="fieldName">The name of the field for the query expression.</param>
         /// <param name="operation">The operation to be used for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
-        /// <param name="size">The sizeof the parameter value.</param>
         /// <param name="direction">The direction to be used for the parameter object.</param>
+        /// <param name="size">The sizeof the parameter value.</param>
         public DirectionalQueryField(string fieldName,
             Operation operation,
             object value,
-            int? size,
-            ParameterDirection direction)
+            ParameterDirection? direction,
+            int? size)
             : this(fieldName,
                   operation,
                   value,
+                  direction,
                   size,
-                  false,
-                  direction)
-        { }
-
-        /// <summary>
-        /// Creates a new instance of <see cref="DirectionalQueryField"/> object.
-        /// </summary>
-        /// <param name="field">The actual field for the query expression.</param>
-        /// <param name="value">The value to be used for the query expression.</param>
-        /// <param name="size">The sizeof the parameter value.</param>
-        /// <param name="direction">The direction to be used for the parameter object.</param>
-        public DirectionalQueryField(Field field,
-            object value,
-            int? size,
-            ParameterDirection direction)
-            : this(field,
-                  Operation.Equal,
-                  value,
-                  size,
-                  false,
-                  direction)
-        { }
-
-        /// <summary>
-        /// Creates a new instance of <see cref="DirectionalQueryField"/> object.
-        /// </summary>
-        /// <param name="field">The actual field for the query expression.</param>
-        /// <param name="operation">The operation to be used for the query expression.</param>
-        /// <param name="value">The value to be used for the query expression.</param>
-        /// <param name="size">The sizeof the parameter value.</param>
-        /// <param name="direction">The direction to be used for the parameter object.</param>
-        public DirectionalQueryField(Field field,
-            Operation operation,
-            object value,
-            int? size,
-            ParameterDirection direction)
-            : this(field,
-                  operation,
-                  value,
-                  size,
-                  false,
-                  direction)
+                  null,
+                  false)
         { }
 
         /// <summary>
@@ -208,43 +200,48 @@ namespace RepoDb
         /// <param name="fieldName">The name of the field for the query expression.</param>
         /// <param name="operation">The operation to be used for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
-        /// <param name="size">The sizeof the parameter value.</param>
-        /// <param name="appendUnderscore">The value to identify whether the underscore prefix will be appended to the parameter name.</param>
         /// <param name="direction">The direction to be used for the parameter object.</param>
+        /// <param name="size">The sizeof the parameter value.</param>
+        /// <param name="dbType">The database type to be used for the query expression.</param>
+        public DirectionalQueryField(string fieldName,
+            Operation operation,
+            object value,
+            ParameterDirection? direction,
+            int? size,
+            DbType? dbType)
+            : this(fieldName,
+                  operation,
+                  value,
+                  direction,
+                  size,
+                  dbType,
+                  false)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="DirectionalQueryField"/> object.
+        /// </summary>
+        /// <param name="fieldName">The name of the field for the query expression.</param>
+        /// <param name="operation">The operation to be used for the query expression.</param>
+        /// <param name="value">The value to be used for the query expression.</param>
+        /// <param name="direction">The direction to be used for the parameter object.</param>
+        /// <param name="size">The sizeof the parameter value.</param>
+        /// <param name="dbType">The database type to be used for the query expression.</param>
+        /// <param name="prependUnderscore">The value to identify whether the underscore prefix will be appended to the parameter name.</param>
         internal DirectionalQueryField(string fieldName,
             Operation operation,
             object value,
+            ParameterDirection? direction,
             int? size,
-            bool appendUnderscore,
-            ParameterDirection direction)
-            : this(new Field(fieldName),
-                  operation,
-                  value,
-                  size,
-                  appendUnderscore,
-                  direction)
-        { }
-
-        /// <summary>
-        /// Creates a new instance of <see cref="DirectionalQueryField"/> object.
-        /// </summary>
-        /// <param name="field">The actual field for the query expression.</param>
-        /// <param name="operation">The operation to be used for the query expression.</param>
-        /// <param name="value">The value to be used for the query expression.</param>
-        /// <param name="size">The sizeof the parameter value.</param>
-        /// <param name="appendUnderscore">The value to identify whether the underscore prefix will be appended to the parameter name.</param>
-        /// <param name="direction">The direction to be used for the parameter object.</param>
-        internal DirectionalQueryField(Field field,
-            Operation operation,
-            object value,
-            int? size,
-            bool appendUnderscore,
-            ParameterDirection direction)
-            : base(field, operation, value, appendUnderscore)
+            DbType? dbType,
+            bool prependUnderscore = false)
+            : base(fieldName, operation, value, dbType, prependUnderscore)
         {
-            Size = size;
             Direction = direction;
+            Size = size;
         }
+
+        #endregion
 
         #endregion
 
@@ -253,17 +250,12 @@ namespace RepoDb
         /// <summary>
         /// Gets the the value of the parameter direction currently in used.
         /// </summary>
-        public ParameterDirection Direction { get; }
+        public ParameterDirection? Direction { get; }
 
         /// <summary>
         /// Gets the size of the parameter currently in used.
         /// </summary>
         public int? Size { get; }
-
-        /// <summary>
-        /// Gets the type of the parameter.
-        /// </summary>
-        public Type Type { get; }
 
         #endregion
 
@@ -287,12 +279,6 @@ namespace RepoDb
 
             // Add the parameter direction
             hashCode = HashCode.Combine(hashCode, Direction);
-
-            // Add the type
-            if (Type != null)
-            {
-                hashCode = HashCode.Combine(hashCode, Type);
-            }
 
             // Add the size
             if (Size.HasValue)

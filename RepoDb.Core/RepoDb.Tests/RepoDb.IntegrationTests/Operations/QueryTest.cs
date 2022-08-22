@@ -662,6 +662,99 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestSqlConnectionQueryWithTypeResultViaIDbDataParameter()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Query<IdentityTable>(new { Id = new SqlParameter("_", 1) },
+                    fields: Field.Parse<IdentityTable>(e => e.ColumnNVarChar));
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryWithTypeResultViaQueryFieldForIDbDataParameter()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Query<IdentityTable>(new QueryField("Id", new SqlParameter("_", 1)),
+                    fields: Field.Parse<IdentityTable>(e => e.ColumnNVarChar));
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryWithTypeResultViaQueryFieldsForIDbDataParameter()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Query<IdentityTable>(new QueryField("Id", new SqlParameter("_", 1)).AsEnumerable(),
+                    fields: Field.Parse<IdentityTable>(e => e.ColumnNVarChar));
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryWithTypeResultViaQueryGroupForIDbDataParameter()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.Query<IdentityTable>(new QueryGroup(new QueryField("Id", new SqlParameter("_", 1))),
+                    fields: Field.Parse<IdentityTable>(e => e.ColumnNVarChar));
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
+        public void ThrowExceptionOnSqlConnectionQueryWithInvalidOrderFields()
+        {
+            // Setup
+            var orderBy = new OrderField("InvalidColumn", Order.Descending);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.Query<IdentityTable>(what: null, orderBy: orderBy.AsEnumerable());
+            }
+        }
+
         #endregion
 
         #region Query<TEntity>(Extra Fields)
@@ -1837,6 +1930,99 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncWithTypeResultViaIDbDataParameter()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAsync<IdentityTable>(new { Id = new SqlParameter("_", 1) },
+                    fields: Field.Parse<IdentityTable>(e => e.ColumnNVarChar)).Result;
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncWithTypeResultViaQueryFieldForIDbDataParameter()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAsync<IdentityTable>(new QueryField("Id", new SqlParameter("_", 1)),
+                    fields: Field.Parse<IdentityTable>(e => e.ColumnNVarChar)).Result;
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncWithTypeResultViaQueryFieldsForIDbDataParameter()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAsync<IdentityTable>(new QueryField("Id", new SqlParameter("_", 1)).AsEnumerable(),
+                    fields: Field.Parse<IdentityTable>(e => e.ColumnNVarChar)).Result;
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+            }
+        }
+
+        [TestMethod]
+        public void TestSqlConnectionQueryAsyncWithTypeResultViaQueryGroupForIDbDataParameter()
+        {
+            // Setup
+            var tables = Helper.CreateIdentityTables(10);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                connection.InsertAll(tables);
+
+                // Act
+                var result = connection.QueryAsync<IdentityTable>(new QueryGroup(new QueryField("Id", new SqlParameter("_", 1))),
+                    fields: Field.Parse<IdentityTable>(e => e.ColumnNVarChar)).Result;
+
+                // Assert
+                Assert.AreEqual(1, result.Count());
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionOnSqlConnectionQueryAsyncWithInvalidOrderFields()
+        {
+            // Setup
+            var orderBy = new OrderField("InvalidColumn", Order.Descending);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.QueryAsync<IdentityTable>(what: null, orderBy: orderBy.AsEnumerable()).Result;
+            }
+        }
+
         #endregion
 
         #region QueryAsync<TEntity>(Extra Fields)
@@ -2923,6 +3109,21 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
+        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
+        public void ThrowExceptionOnSqlConnectionQueryViaTableNameWithInvalidOrderFields()
+        {
+            // Setup
+            var orderBy = new OrderField("InvalidColumn", Order.Descending);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.Query<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                    what: null,
+                    orderBy: orderBy.AsEnumerable());
+            }
+        }
+
         #endregion
 
         #region QueryAsync(TableName)
@@ -3467,6 +3668,21 @@ namespace RepoDb.IntegrationTests.Operations
                 // Act
                 connection.QueryAsync(ClassMappedNameCache.Get<NonKeyedTable>(),
                     1).Wait();
+            }
+        }
+
+        [TestMethod, ExpectedException(typeof(AggregateException))]
+        public void ThrowExceptionOnSqlConnectionQueryAsyncViaTableNameWithInvalidOrderFields()
+        {
+            // Setup
+            var orderBy = new OrderField("InvalidColumn", Order.Descending);
+
+            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            {
+                // Act
+                var result = connection.QueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                    what: null,
+                    orderBy: orderBy.AsEnumerable()).Result;
             }
         }
 

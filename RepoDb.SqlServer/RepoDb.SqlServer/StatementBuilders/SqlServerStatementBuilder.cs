@@ -69,7 +69,7 @@ namespace RepoDb.StatementBuilders
             // There should be fields
             if (fields?.Any() != true)
             {
-                throw new MissingFieldsException($"The list of queryable fields must not be null for '{tableName}'.");
+                throw new MissingFieldsException(fields.Select(f => f.Name));
             }
 
             // Validate order by
@@ -236,19 +236,32 @@ namespace RepoDb.StatementBuilders
                 identityField,
                 hints);
 
-            // Return
-            if (primaryField != null)
+            // Variables needed
+            var databaseType = "BIGINT";
+
+            // Check for the identity
+            if (identityField != null)
             {
-                var sql = builder
-                   .GetString()
-                   .Replace("VALUES", $"OUTPUT [INSERTED].{primaryField.Name.AsField(DbSetting)} VALUES");
-                return sql;
+                var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
+                if (dbType != null)
+                {
+                    databaseType = new DbTypeToSqlServerStringNameResolver().Resolve(dbType.Value);
+                }
             }
-            else
-            {
-                return builder
-                    .GetString();
-            }
+
+            // Set the return value
+            var result = identityField != null ?
+                string.Concat("CONVERT(", databaseType, ", SCOPE_IDENTITY())") :
+                    primaryField != null ? primaryField.Name.AsParameter(DbSetting) : "NULL";
+
+            builder
+                .Select()
+                .WriteText(result)
+                .As("[Result]")
+                .End();
+
+            // Return the query
+            return builder.GetString();
         }
 
         #endregion
@@ -278,7 +291,7 @@ namespace RepoDb.StatementBuilders
             var builder = queryBuilder ?? new QueryBuilder();
 
             // Call the base
-            base.CreateInsertAll(builder,
+            var commandText = base.CreateInsertAll(builder,
                 tableName,
                 fields,
                 batchSize,
@@ -286,27 +299,41 @@ namespace RepoDb.StatementBuilders
                 identityField,
                 hints);
 
-            // Return
-            if (primaryField != null)
-            {
-                var splitted = builder
-                    .GetString()
-                    .Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            // Variables needed
+            var databaseType = (string)null;
 
+            // Check for the identity
+            if (identityField != null)
+            {
+                var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
+                if (dbType != null)
+                {
+                    databaseType = new DbTypeToSqlServerStringNameResolver().Resolve(dbType.Value);
+                }
+            }
+
+            if (identityField != null)
+            {
+                // Variables needed
+                var commandTexts = new List<string>();
+                var splitted = commandText.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+
+                // Iterate the indexes
                 for (var index = 0; index < splitted.Length; index++)
                 {
                     var line = splitted[index].Trim();
-                    splitted[index] = line.Replace("VALUES",
-                        $"OUTPUT [INSERTED].{ primaryField.Name.AsField(DbSetting)}, {DbSetting.ParameterPrefix}__RepoDb_OrderColumn_{index} VALUES");
+                    var returnValue = string.IsNullOrEmpty(databaseType) ?
+                        "SELECT SCOPE_IDENTITY()" :
+                        $"SELECT CONVERT({databaseType}, SCOPE_IDENTITY()) AS [Id]";
+                    commandTexts.Add(string.Concat(line, " ; ", returnValue, $", {DbSetting.ParameterPrefix}__RepoDb_OrderColumn_{index} AS [OrderColumn] ;"));
                 }
 
-                return string.Concat(string.Join(" ; ", splitted), " ;");
+                // Set the command text
+                commandText = commandTexts.Join(" ");
             }
-            else
-            {
-                return builder
-                    .GetString();
-            }
+
+            // Return the query
+            return commandText;
         }
 
         #endregion
@@ -341,17 +368,16 @@ namespace RepoDb.StatementBuilders
             // Verify the fields
             if (fields?.Any() != true)
             {
-                throw new MissingFieldsException("The list of fields cannot be null or empty.");
+                throw new MissingFieldsException();
             }
 
             // Check the qualifiers
             if (qualifiers?.Any() == true)
             {
                 // Check if the qualifiers are present in the given fields
-                var unmatchesQualifiers = qualifiers
-                    .Where(field =>
-                        fields.FirstOrDefault(f =>
-                            string.Equals(field.Name, f.Name, StringComparison.OrdinalIgnoreCase)) == null);
+                var unmatchesQualifiers = qualifiers.Where(field =>
+                    fields.FirstOrDefault(f =>
+                        string.Equals(field.Name, f.Name, StringComparison.OrdinalIgnoreCase)) == null);
 
                 // Throw an error we found any unmatches
                 if (unmatchesQualifiers.Any() == true)
@@ -365,9 +391,7 @@ namespace RepoDb.StatementBuilders
                 if (primaryField != null)
                 {
                     // Make sure that primary is present in the list of fields before qualifying to become a qualifier
-                    var isPresent = fields
-                        .FirstOrDefault(f =>
-                            string.Equals(f.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase)) != null;
+                    var isPresent = fields.FirstOrDefault(f => string.Equals(f.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase)) != null;
 
                     // Throw if not present
                     if (isPresent == false)
@@ -388,12 +412,23 @@ namespace RepoDb.StatementBuilders
 
             // Get the insertable and updateable fields
             var insertableFields = fields
-                .Where(field =>
-                    !string.Equals(field.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase));
+                .Where(field => !string.Equals(field.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase));
             var updateableFields = fields
-                .Where(field =>
-                    !string.Equals(field.Name, primaryField?.Name, StringComparison.OrdinalIgnoreCase) &&
+                .Where(field => !string.Equals(field.Name, primaryField?.Name, StringComparison.OrdinalIgnoreCase) &&
                     !string.Equals(field.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase));
+
+            // Variables needed
+            var databaseType = "BIGINT";
+
+            // Check for the identity
+            if (identityField != null)
+            {
+                var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
+                if (dbType != null)
+                {
+                    databaseType = new DbTypeToSqlServerStringNameResolver().Resolve(dbType.Value);
+                }
+            }
 
             // Initialize the builder
             var builder = queryBuilder ?? new QueryBuilder();
@@ -441,10 +476,11 @@ namespace RepoDb.StatementBuilders
                 .FieldsAndAliasFieldsFrom(updateableFields, "T", "S", DbSetting);
 
             // Set the output
-            if (primaryField != null)
+            var outputField = identityField ?? primaryField;
+            if (outputField != null)
             {
                 builder
-                    .WriteText(string.Concat("OUTPUT [INSERTED].", primaryField.Name.AsField(DbSetting)))
+                    .WriteText(string.Concat("OUTPUT INSERTED.", outputField.Name.AsField(DbSetting)))
                     .As("[Result]");
             }
 
@@ -489,17 +525,16 @@ namespace RepoDb.StatementBuilders
             // Verify the fields
             if (fields?.Any() != true)
             {
-                throw new MissingFieldsException("The list of fields cannot be null or empty.");
+                throw new MissingFieldsException();
             }
 
             // Check the qualifiers
             if (qualifiers?.Any() == true)
             {
                 // Check if the qualifiers are present in the given fields
-                var unmatchesQualifiers = qualifiers
-                    .Where(field =>
-                        fields.FirstOrDefault(f =>
-                            string.Equals(field.Name, f.Name, StringComparison.OrdinalIgnoreCase)) == null);
+                var unmatchesQualifiers = qualifiers.Where(field =>
+                    fields.FirstOrDefault(f =>
+                        string.Equals(field.Name, f.Name, StringComparison.OrdinalIgnoreCase)) == null);
 
                 // Throw an error we found any unmatches
                 if (unmatchesQualifiers.Any() == true)
@@ -513,9 +548,7 @@ namespace RepoDb.StatementBuilders
                 if (primaryField != null)
                 {
                     // Make sure that primary is present in the list of fields before qualifying to become a qualifier
-                    var isPresent = fields
-                        .FirstOrDefault(f =>
-                            string.Equals(f.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase)) != null;
+                    var isPresent = fields.FirstOrDefault(f => string.Equals(f.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase)) != null;
 
                     // Throw if not present
                     if (isPresent == false)
@@ -536,13 +569,31 @@ namespace RepoDb.StatementBuilders
 
             // Get the insertable and updateable fields
             var insertableFields = fields
-                .Where(field =>
-                    !string.Equals(field.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase));
+                .Where(field => !string.Equals(field.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase));
             var updateableFields = fields
-                .Where(field =>
-                    !string.Equals(field.Name, primaryField?.Name, StringComparison.OrdinalIgnoreCase) &&
+                .Where(field => !string.Equals(field.Name, primaryField?.Name, StringComparison.OrdinalIgnoreCase) &&
                     !string.Equals(field.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase));
 
+            // Variables needed
+            var databaseType = (string)null;
+
+            // Check for the identity
+            if (identityField != null)
+            {
+                var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
+                if (dbType != null)
+                {
+                    databaseType = new DbTypeToSqlServerStringNameResolver().Resolve(dbType.Value);
+                }
+            }
+            else if (primaryField != null)
+            {
+                var dbType = new ClientTypeToDbTypeResolver().Resolve(primaryField.Type);
+                if (dbType != null)
+                {
+                    databaseType = new DbTypeToSqlServerStringNameResolver().Resolve(dbType.Value);
+                }
+            }
             // Initialize the builder
             var builder = queryBuilder ?? new QueryBuilder();
 
@@ -593,10 +644,11 @@ namespace RepoDb.StatementBuilders
                     .FieldsAndAliasFieldsFrom(updateableFields, "T", "S", DbSetting);
 
                 // Set the output
-                if (primaryField != null)
+                var outputField = identityField ?? primaryField;
+                if (outputField != null)
                 {
                     builder
-                        .WriteText(string.Concat("OUTPUT [INSERTED].", primaryField.Name.AsField(DbSetting)))
+                        .WriteText(string.Concat("OUTPUT INSERTED.", outputField.Name.AsField(DbSetting)))
                             .As("[Id],")
                         .WriteText($"{DbSetting.ParameterPrefix}__RepoDb_OrderColumn_{index}")
                             .As("[OrderColumn]");

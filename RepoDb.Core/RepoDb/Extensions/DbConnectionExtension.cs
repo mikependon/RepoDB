@@ -4,6 +4,7 @@ using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Reflection;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -20,19 +21,6 @@ namespace RepoDb
     /// </summary>
     public static partial class DbConnectionExtension
     {
-        #region SubClasses
-
-        /// <summary>
-        ///
-        /// </summary>
-        internal class CommandArrayParametersText
-        {
-            public string CommandText { get; set; }
-            public IList<CommandArrayParameter> CommandArrayParameters { get; } = new List<CommandArrayParameter>();
-        }
-
-        #endregion
-
         #region Other Methods
 
         /// <summary>
@@ -2294,7 +2282,7 @@ namespace RepoDb
             }
             else
             {
-                return new QueryGroup(new QueryField(dbField.AsField(), what));
+                return new QueryGroup(new QueryField(dbField.Name, what));
             }
         }
 
@@ -2320,7 +2308,7 @@ namespace RepoDb
             }
             else
             {
-                return new QueryGroup(new QueryField(field, what));
+                return new QueryGroup(new QueryField(field.Name, what));
             }
         }
 
@@ -2413,7 +2401,7 @@ namespace RepoDb
                 }
                 else
                 {
-                    return new QueryGroup(new QueryField(dbField.AsField(), entity));
+                    return new QueryGroup(new QueryField(dbField.Name, entity));
                 }
             }
             throw new KeyFieldNotFoundException($"No primary key and identity key found.");
@@ -2446,9 +2434,9 @@ namespace RepoDb
         {
             if (!dictionary.ContainsKey(field.Name))
             {
-                throw new MissingFieldsException($"The field '{field.Name}' is not found from the given dictionary object.");
+                throw new MissingFieldsException(new[] { field.Name });
             }
-            return ToQueryGroup(new QueryField(field, dictionary[field.Name]));
+            return ToQueryGroup(new QueryField(field.Name, dictionary[field.Name]));
         }
 
         /// <summary>
@@ -2581,7 +2569,7 @@ namespace RepoDb
 
                 if (property != null)
                 {
-                    queryFields.Add(new QueryField(field, property.PropertyInfo.GetValue(entity)));
+                    queryFields.Add(new QueryField(field.Name, property.PropertyInfo.GetValue(entity)));
                 }
             }
             return new QueryGroup(queryFields);
@@ -2598,7 +2586,7 @@ namespace RepoDb
         {
             if (qualifiers?.Any() != true)
             {
-                throw new MissingFieldsException("No qualifier fields found for the 'Upsert' operation.");
+                throw new MissingFieldsException();
             }
 
             var queryFields = new List<QueryField>();
@@ -2607,13 +2595,13 @@ namespace RepoDb
             {
                 if (dictionary.ContainsKey(field.Name))
                 {
-                    queryFields.Add(new QueryField(field, dictionary[field.Name]));
+                    queryFields.Add(new QueryField(field.Name, dictionary[field.Name]));
                 }
             }
 
             if (queryFields.Any() != true)
             {
-                throw new MissingFieldsException("No qualifier fields defined for the 'Upsert' operation. Please check the items defined at the dictionary object.");
+                throw new MissingFieldsException();
             }
 
             return new QueryGroup(queryFields);
@@ -2841,7 +2829,7 @@ namespace RepoDb
                 command.CommandText = commandArrayParametersText.CommandText;
 
                 // Array parameters
-                command.CreateParametersFromArray(commandArrayParametersText.CommandArrayParameters);
+                command.CreateParametersFromArray(commandArrayParametersText);
             }
 
             // Normal parameters
@@ -3074,8 +3062,11 @@ namespace RepoDb
             // Create
             var commandArrayParametersText = new CommandArrayParametersText
             {
-                CommandText = GetRawSqlText(commandText, queryField.Field.Name,
-                    commandArrayParameter.Values, dbSetting)
+                CommandText = GetRawSqlText(commandText,
+                    queryField.Field.Name,
+                    commandArrayParameter.Values,
+                    dbSetting),
+                DbType = queryField.Parameter.DbType
             };
 
             // CommandArrayParameters
@@ -3127,7 +3118,11 @@ namespace RepoDb
                 // Create
                 if (commandArrayParametersText == null)
                 {
-                    commandArrayParametersText = new CommandArrayParametersText();
+                    commandArrayParametersText = new CommandArrayParametersText()
+                    {
+                        // TODO: First element from the array?
+                        DbType = queryField.Parameter.DbType
+                    };
                 }
 
                 // CommandText
@@ -3173,11 +3168,15 @@ namespace RepoDb
         {
             var valueType = value?.GetType();
             var propertyHandler = valueType != null ? PropertyHandlerCache.Get<object>(valueType) : null;
-            if (value == null || propertyHandler != null || value is string || value is System.Collections.IEnumerable values == false)
+
+            if (value == null ||
+                propertyHandler != null ||
+                value is string ||
+                value is IEnumerable values == false)
             {
                 return null;
             }
-            
+
             // Return
             return new CommandArrayParameter(parameterName, values.WithType<object>());
         }
@@ -3192,7 +3191,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static string GetRawSqlText(string commandText,
             string parameterName,
-            System.Collections.IEnumerable values,
+            IEnumerable values,
             IDbSetting dbSetting)
         {
             if (commandText.IndexOf(parameterName, StringComparison.OrdinalIgnoreCase) < 0)

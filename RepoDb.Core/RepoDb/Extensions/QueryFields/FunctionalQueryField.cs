@@ -1,6 +1,7 @@
 ﻿using RepoDb.Enumerations;
 using RepoDb.Interfaces;
 using System;
+using System.Data;
 
 namespace RepoDb.Extensions.QueryFields
 {
@@ -25,43 +26,16 @@ namespace RepoDb.Extensions.QueryFields
         /// Creates a new instance of <see cref="FunctionalQueryField"/> object.
         /// </summary>
         /// <param name="fieldName">The name of the field for the query expression.</param>
-        /// <param name="value">The value to be used for the query expression.</param>
-        /// <param name="format">The properly constructed format of the target function to be used.</param>
-        public FunctionalQueryField(string fieldName,
-            object value,
-            string format)
-            : this(fieldName, Operation.Equal, value, format)
-        { }
-
-        /// <param name="field">The actual field for the query expression.</param>
-        /// <param name="value">The value to be used for the query expression.</param>
-        /// <param name="format">The properly constructed format of the target function to be used.</param>
-        public FunctionalQueryField(Field field,
-            object value,
-            string format)
-            : this(field, Operation.Equal, value, format)
-        { }
-
-        /// <param name="fieldName">The name of the field for the query expression.</param>
         /// <param name="operation">The operation to be used for the query expression.</param>
         /// <param name="value">The value to be used for the query expression.</param>
+        /// <param name="dbType">The database type to be used for the query expression.</param>
         /// <param name="format">The properly constructed format of the target function to be used.</param>
         public FunctionalQueryField(string fieldName,
             Operation operation,
             object value,
-            string format)
-            : this(new Field(fieldName), operation, value, format)
-        { }
-
-        /// <param name="field">The actual field for the query expression.</param>
-        /// <param name="operation">The operation to be used for the query expression.</param>
-        /// <param name="value">The value to be used for the query expression.</param>
-        /// <param name="format">The properly constructed format of the target function to be used.</param>
-        public FunctionalQueryField(Field field,
-            Operation operation,
-            object value,
-            string format)
-            : base(field, operation, value)
+            DbType? dbType,
+            string format = null)
+            : base(fieldName, operation, value, dbType)
         {
             Format = format;
         }

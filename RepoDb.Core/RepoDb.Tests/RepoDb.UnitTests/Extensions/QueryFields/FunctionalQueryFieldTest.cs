@@ -12,7 +12,7 @@ namespace RepoDb.UnitTests.Extensions.QueryFields
         public void TestFunctionalQueryFieldConstructor()
         {
             // Prepare
-            var functionalQueryField = new FunctionalQueryField("FieldName", Operation.NotEqual, "Value", "FUNC({0})");
+            var functionalQueryField = new FunctionalQueryField("FieldName", Operation.NotEqual, "Value", null, "FUNC({0})");
 
             // Assert
             Assert.AreEqual("FieldName", functionalQueryField.Field.Name);
@@ -25,7 +25,7 @@ namespace RepoDb.UnitTests.Extensions.QueryFields
         public void TestFunctionalQueryFieldGetString()
         {
             // Prepare
-            var functionalQueryField = new FunctionalQueryField("FieldName", Operation.Equal, "Value", "FUNC({0})");
+            var functionalQueryField = new FunctionalQueryField("FieldName", Operation.Equal, "Value", null, "FUNC({0})");
 
             // Act
             var text = functionalQueryField.GetString(0, new CustomDbSetting());
@@ -38,7 +38,7 @@ namespace RepoDb.UnitTests.Extensions.QueryFields
         public void TestFunctionalQueryFieldGetStringWithFirstIndex()
         {
             // Prepare
-            var functionalQueryField = new FunctionalQueryField("FieldName", Operation.Equal, "Value", "FUNC({0})");
+            var functionalQueryField = new FunctionalQueryField("FieldName", Operation.Equal, "Value", null, "FUNC({0})");
 
             // Act
             var text = functionalQueryField.GetString(0, new CustomDbSetting());
@@ -51,7 +51,7 @@ namespace RepoDb.UnitTests.Extensions.QueryFields
         public void TestFunctionalQueryFieldGetStringWithIndex()
         {
             // Prepare
-            var functionalQueryField = new FunctionalQueryField("FieldName", Operation.Equal, "Value", "FUNC({0})");
+            var functionalQueryField = new FunctionalQueryField("FieldName", Operation.Equal, "Value", null, "FUNC({0})");
 
             // Act
             var text = functionalQueryField.GetString(1, new CustomDbSetting());
@@ -64,7 +64,7 @@ namespace RepoDb.UnitTests.Extensions.QueryFields
         public void TestFunctionalQueryFieldGetStringWithMultipleFunctions()
         {
             // Prepare
-            var functionalQueryField = new FunctionalQueryField("FieldName", Operation.Equal, "Value", "FUNC1({0}) = @Value AND FUNC2({0})");
+            var functionalQueryField = new FunctionalQueryField("FieldName", Operation.Equal, "Value", null, "FUNC1({0}) = @Value AND FUNC2({0})");
 
             // Act
             var text = functionalQueryField.GetString(0, new CustomDbSetting());
