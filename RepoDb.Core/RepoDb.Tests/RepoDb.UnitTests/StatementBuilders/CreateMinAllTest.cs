@@ -27,13 +27,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var field = new Field("Value");
 
             // Act
-            var actual = statementBuilder.CreateMinAll(queryBuilder: queryBuilder,
-                field: field,
+            var actual = statementBuilder.CreateMinAll(field: field,
                 tableName: tableName,
                 hints: null);
             var expected = "SELECT MIN ([Value]) AS [MinValue] FROM [Table] ;";
@@ -47,14 +45,12 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var field = new Field("Value");
             var hints = "WITH (NOLOCK)";
 
             // Act
-            var actual = statementBuilder.CreateMinAll(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateMinAll(tableName: tableName,
                 field: field,
                 hints: hints);
             var expected = "SELECT MIN ([Value]) AS [MinValue] FROM [Table] WITH (NOLOCK) ;";
@@ -68,13 +64,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "[dbo].[Table]";
             var field = new Field("Value");
 
             // Act
-            var actual = statementBuilder.CreateMinAll(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateMinAll(tableName: tableName,
                 field: field,
                 hints: null);
             var expected = "SELECT MIN ([Value]) AS [MinValue] FROM [dbo].[Table] ;";
@@ -88,13 +82,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "dbo.Table";
             var field = new Field("Value");
 
             // Act
-            var actual = statementBuilder.CreateMinAll(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateMinAll(tableName: tableName,
                 field: field,
                 hints: null);
             var expected = "SELECT MIN ([Value]) AS [MinValue] FROM [dbo].[Table] ;";
@@ -108,13 +100,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = (string)null;
             var field = new Field("Value");
 
             // Act
-            statementBuilder.CreateMinAll(queryBuilder: queryBuilder,
-                tableName: tableName,
+            statementBuilder.CreateMinAll(tableName: tableName,
                 field: field,
                 hints: null);
         }
@@ -124,13 +114,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "";
             var field = new Field("Value");
 
             // Act
-            statementBuilder.CreateMinAll(queryBuilder: queryBuilder,
-                tableName: tableName,
+            statementBuilder.CreateMinAll(tableName: tableName,
                 field: field,
                 hints: null);
         }
@@ -140,13 +128,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = " ";
             var field = new Field("Value");
 
             // Act
-            statementBuilder.CreateMinAll(queryBuilder: queryBuilder,
-                tableName: tableName,
+            statementBuilder.CreateMinAll(tableName: tableName,
                 field: field,
                 hints: null);
         }
@@ -156,12 +142,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = " ";
 
             // Act
-            statementBuilder.CreateMinAll(queryBuilder: queryBuilder,
-                tableName: tableName,
+            statementBuilder.CreateMinAll(tableName: tableName,
                 field: null,
                 hints: null);
         }
@@ -171,13 +155,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<NonHintsSupportingBaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var field = new Field("Value");
 
             // Act
-            statementBuilder.CreateMinAll(queryBuilder: queryBuilder,
-                tableName: tableName,
+            statementBuilder.CreateMinAll(tableName: tableName,
                 field: field,
                 hints: "Hints");
         }

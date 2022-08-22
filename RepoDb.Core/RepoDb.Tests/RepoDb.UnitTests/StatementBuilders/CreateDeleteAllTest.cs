@@ -24,12 +24,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
 
             // Act
-            var actual = statementBuilder.CreateDeleteAll(queryBuilder: queryBuilder,
-                tableName: tableName);
+            var actual = statementBuilder.CreateDeleteAll(tableName: tableName);
             var expected = "DELETE FROM [Table] ;";
 
             // Assert
@@ -41,12 +39,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "[dbo].[Table]";
 
             // Act
-            var actual = statementBuilder.CreateDeleteAll(queryBuilder: queryBuilder,
-                tableName: tableName);
+            var actual = statementBuilder.CreateDeleteAll(tableName: tableName);
             var expected = "DELETE FROM [dbo].[Table] ;";
 
             // Assert
@@ -58,12 +54,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "dbo.Table";
 
             // Act
-            var actual = statementBuilder.CreateDeleteAll(queryBuilder: queryBuilder,
-                tableName: tableName);
+            var actual = statementBuilder.CreateDeleteAll(tableName: tableName);
             var expected = "DELETE FROM [dbo].[Table] ;";
 
             // Assert
@@ -75,12 +69,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
 
             // Act
-            var actual = statementBuilder.CreateDeleteAll(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateDeleteAll(tableName: tableName,
                 hints: "WITH (TABLOCK)");
             var expected = "DELETE FROM [Table] WITH (TABLOCK) ;";
 
@@ -93,12 +85,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = (string)null;
 
             // Act
-            statementBuilder.CreateDeleteAll(queryBuilder: queryBuilder,
-                tableName: tableName);
+            statementBuilder.CreateDeleteAll(tableName: tableName);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
@@ -106,12 +96,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "";
 
             // Act
-            statementBuilder.CreateDeleteAll(queryBuilder: queryBuilder,
-                tableName: tableName);
+            statementBuilder.CreateDeleteAll(tableName: tableName);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
@@ -119,12 +107,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = " ";
 
             // Act
-            statementBuilder.CreateDeleteAll(queryBuilder: queryBuilder,
-                tableName: tableName);
+            statementBuilder.CreateDeleteAll(tableName: tableName);
         }
     }
 }

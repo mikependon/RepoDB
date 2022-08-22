@@ -24,12 +24,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
 
             // Act
-            var actual = statementBuilder.CreateTruncate(queryBuilder: queryBuilder,
-                tableName: tableName);
+            var actual = statementBuilder.CreateTruncate(tableName: tableName);
             var expected = "TRUNCATE TABLE [Table] ;";
 
             // Assert
@@ -41,12 +39,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "[dbo].[Table]";
 
             // Act
-            var actual = statementBuilder.CreateTruncate(queryBuilder: queryBuilder,
-                tableName: tableName);
+            var actual = statementBuilder.CreateTruncate(tableName: tableName);
             var expected = "TRUNCATE TABLE [dbo].[Table] ;";
 
             // Assert
@@ -58,12 +54,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "dbo.Table";
 
             // Act
-            var actual = statementBuilder.CreateTruncate(queryBuilder: queryBuilder,
-                tableName: tableName);
+            var actual = statementBuilder.CreateTruncate(tableName: tableName);
             var expected = "TRUNCATE TABLE [dbo].[Table] ;";
 
             // Assert
@@ -75,12 +69,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = (string)null;
 
             // Act
-            statementBuilder.CreateTruncate(queryBuilder: queryBuilder,
-                tableName: tableName);
+            statementBuilder.CreateTruncate(tableName: tableName);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
@@ -88,12 +80,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "";
 
             // Act
-            statementBuilder.CreateTruncate(queryBuilder: queryBuilder,
-                tableName: tableName);
+            statementBuilder.CreateTruncate(tableName: tableName);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
@@ -101,12 +91,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = " ";
 
             // Act
-            statementBuilder.CreateTruncate(queryBuilder: queryBuilder,
-                tableName: tableName);
+            statementBuilder.CreateTruncate(tableName: tableName);
         }
     }
 }

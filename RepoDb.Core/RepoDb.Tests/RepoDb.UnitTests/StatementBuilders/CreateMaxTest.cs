@@ -27,13 +27,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var field = new Field("Value");
 
             // Act
-            var actual = statementBuilder.CreateMax(queryBuilder: queryBuilder,
-                field: field,
+            var actual = statementBuilder.CreateMax(field: field,
                 tableName: tableName,
                 hints: null);
             var expected = "SELECT MAX ([Value]) AS [MaxValue] FROM [Table] ;";
@@ -47,14 +45,12 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var field = new Field("Value");
             var where = new QueryGroup(new QueryField("Id", 1));
 
             // Act
-            var actual = statementBuilder.CreateMax(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateMax(tableName: tableName,
                 field: field,
                 where: where);
             var expected = $"" +
@@ -71,14 +67,12 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var field = new Field("Value");
             var hints = "WITH (NOLOCK)";
 
             // Act
-            var actual = statementBuilder.CreateMax(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateMax(tableName: tableName,
                 field: field,
                 hints: hints);
             var expected = "SELECT MAX ([Value]) AS [MaxValue] FROM [Table] WITH (NOLOCK) ;";
@@ -92,15 +86,13 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var field = new Field("Value");
             var where = new QueryGroup(new QueryField("Id", 1));
             var hints = "WITH (NOLOCK)";
 
             // Act
-            var actual = statementBuilder.CreateMax(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateMax(tableName: tableName,
                 field: field,
                 where: where,
                 hints: hints);
@@ -118,13 +110,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "[dbo].[Table]";
             var field = new Field("Value");
 
             // Act
-            var actual = statementBuilder.CreateMax(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateMax(tableName: tableName,
                 field: field,
                 hints: null);
             var expected = "SELECT MAX ([Value]) AS [MaxValue] FROM [dbo].[Table] ;";
@@ -138,13 +128,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "dbo.Table";
             var field = new Field("Value");
 
             // Act
-            var actual = statementBuilder.CreateMax(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateMax(tableName: tableName,
                 field: field,
                 hints: null);
             var expected = "SELECT MAX ([Value]) AS [MaxValue] FROM [dbo].[Table] ;";
@@ -158,13 +146,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = (string)null;
             var field = new Field("Value");
 
             // Act
-            statementBuilder.CreateMax(queryBuilder: queryBuilder,
-                tableName: tableName,
+            statementBuilder.CreateMax(tableName: tableName,
                 field: field,
                 hints: null);
         }
@@ -174,13 +160,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "";
             var field = new Field("Value");
 
             // Act
-            statementBuilder.CreateMax(queryBuilder: queryBuilder,
-                tableName: tableName,
+            statementBuilder.CreateMax(tableName: tableName,
                 field: field,
                 hints: null);
         }
@@ -190,13 +174,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = " ";
             var field = new Field("Value");
 
             // Act
-            statementBuilder.CreateMax(queryBuilder: queryBuilder,
-                tableName: tableName,
+            statementBuilder.CreateMax(tableName: tableName,
                 field: field,
                 hints: null);
         }
@@ -206,12 +188,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = " ";
 
             // Act
-            statementBuilder.CreateMax(queryBuilder: queryBuilder,
-                tableName: tableName,
+            statementBuilder.CreateMax(tableName: tableName,
                 field: null,
                 hints: null);
         }
@@ -221,13 +201,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<NonHintsSupportingBaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var field = new Field("Value");
 
             // Act
-            statementBuilder.CreateMax(queryBuilder: queryBuilder,
-                tableName: tableName,
+            statementBuilder.CreateMax(tableName: tableName,
                 field: field,
                 hints: "Hints");
         }

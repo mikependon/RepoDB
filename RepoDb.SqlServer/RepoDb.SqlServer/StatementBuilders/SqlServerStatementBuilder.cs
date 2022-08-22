@@ -42,7 +42,6 @@ namespace RepoDb.StatementBuilders
         /// <summary>
         /// Creates a SQL Statement for batch query operation.
         /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="fields">The list of fields to be queried.</param>
         /// <param name="page">The page of the batch.</param>
@@ -51,8 +50,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="where">The query expression.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for batch query operation.</returns>
-        public override string CreateBatchQuery(QueryBuilder queryBuilder,
-            string tableName,
+        public override string CreateBatchQuery(string tableName,
             IEnumerable<Field> fields,
             int page,
             int rowsPerBatch,
@@ -91,7 +89,7 @@ namespace RepoDb.StatementBuilders
             }
 
             // Initialize the builder
-            var builder = queryBuilder ?? new QueryBuilder();
+            var builder = new QueryBuilder();
 
             // Build the query
             builder.Clear()
@@ -132,13 +130,11 @@ namespace RepoDb.StatementBuilders
         /// <summary>
         /// Creates a SQL Statement for count operation.
         /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for count operation.</returns>
-        public override string CreateCount(QueryBuilder queryBuilder,
-            string tableName,
+        public override string CreateCount(string tableName,
             QueryGroup where = null,
             string hints = null)
         {
@@ -149,7 +145,7 @@ namespace RepoDb.StatementBuilders
             GuardHints(hints);
 
             // Initialize the builder
-            var builder = queryBuilder ?? new QueryBuilder();
+            var builder = new QueryBuilder();
 
             // Build the query
             builder.Clear()
@@ -173,12 +169,10 @@ namespace RepoDb.StatementBuilders
         /// <summary>
         /// Creates a SQL Statement for count-all operation.
         /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for count-all operation.</returns>
-        public override string CreateCountAll(QueryBuilder queryBuilder,
-            string tableName,
+        public override string CreateCountAll(string tableName,
             string hints = null)
         {
             // Ensure with guards
@@ -188,7 +182,7 @@ namespace RepoDb.StatementBuilders
             GuardHints(hints);
 
             // Initialize the builder
-            var builder = queryBuilder ?? new QueryBuilder();
+            var builder = new QueryBuilder();
 
             // Build the query
             builder.Clear()
@@ -211,30 +205,28 @@ namespace RepoDb.StatementBuilders
         /// <summary>
         /// Creates a SQL Statement for insert operation.
         /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="fields">The list of fields to be inserted.</param>
         /// <param name="primaryField">The primary field from the database.</param>
         /// <param name="identityField">The identity field from the database.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for insert operation.</returns>
-        public override string CreateInsert(QueryBuilder queryBuilder,
-            string tableName,
+        public override string CreateInsert(string tableName,
             IEnumerable<Field> fields = null,
             DbField primaryField = null,
             DbField identityField = null,
             string hints = null)
         {
             // Initialize the builder
-            var builder = queryBuilder ?? new QueryBuilder();
+            var builder = new QueryBuilder();
 
             // Call the base
-            base.CreateInsert(builder,
-                tableName,
-                fields,
-                primaryField,
-                identityField,
-                hints);
+            builder
+                .WriteText(base.CreateInsert(tableName,
+                    fields,
+                    primaryField,
+                    identityField,
+                    hints));
 
             // Variables needed
             var databaseType = "BIGINT";
@@ -271,7 +263,6 @@ namespace RepoDb.StatementBuilders
         /// <summary>
         /// Creates a SQL Statement for insert-all operation.
         /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="fields">The list of fields to be inserted.</param>
         /// <param name="batchSize">The batch size of the operation.</param>
@@ -279,20 +270,15 @@ namespace RepoDb.StatementBuilders
         /// <param name="identityField">The identity field from the database.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for insert operation.</returns>
-        public override string CreateInsertAll(QueryBuilder queryBuilder,
-            string tableName,
+        public override string CreateInsertAll(string tableName,
             IEnumerable<Field> fields = null,
             int batchSize = Constant.DefaultBatchOperationSize,
             DbField primaryField = null,
             DbField identityField = null,
             string hints = null)
         {
-            // Initialize the builder
-            var builder = queryBuilder ?? new QueryBuilder();
-
             // Call the base
-            var commandText = base.CreateInsertAll(builder,
-                tableName,
+            var commandText = base.CreateInsertAll(tableName,
                 fields,
                 batchSize,
                 primaryField,
@@ -343,7 +329,6 @@ namespace RepoDb.StatementBuilders
         /// <summary>
         /// Creates a SQL Statement for merge operation.
         /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="fields">The list of fields to be merged.</param>
         /// <param name="qualifiers">The list of the qualifier <see cref="Field"/> objects.</param>
@@ -351,8 +336,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="identityField">The identity field from the database.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for merge operation.</returns>
-        public override string CreateMerge(QueryBuilder queryBuilder,
-            string tableName,
+        public override string CreateMerge(string tableName,
             IEnumerable<Field> fields,
             IEnumerable<Field> qualifiers = null,
             DbField primaryField = null,
@@ -431,7 +415,7 @@ namespace RepoDb.StatementBuilders
             }
 
             // Initialize the builder
-            var builder = queryBuilder ?? new QueryBuilder();
+            var builder = new QueryBuilder();
 
             // Build the query
             builder.Clear()
@@ -498,7 +482,6 @@ namespace RepoDb.StatementBuilders
         /// <summary>
         /// Creates a SQL Statement for merge-all operation.
         /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="fields">The list of fields to be merged.</param>
         /// <param name="qualifiers">The list of the qualifier <see cref="Field"/> objects.</param>
@@ -507,8 +490,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="identityField">The identity field from the database.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for merge operation.</returns>
-        public override string CreateMergeAll(QueryBuilder queryBuilder,
-            string tableName,
+        public override string CreateMergeAll(string tableName,
             IEnumerable<Field> fields,
             IEnumerable<Field> qualifiers = null,
             int batchSize = Constant.DefaultBatchOperationSize,
@@ -595,7 +577,7 @@ namespace RepoDb.StatementBuilders
                 }
             }
             // Initialize the builder
-            var builder = queryBuilder ?? new QueryBuilder();
+            var builder = new QueryBuilder();
 
             // Build the query
             builder.Clear();
