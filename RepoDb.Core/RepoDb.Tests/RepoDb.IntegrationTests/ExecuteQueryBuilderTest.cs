@@ -51,7 +51,7 @@ namespace RepoDb.IntegrationTests
 
                 // Setup
                 var builder = connection.GetStatementBuilder();
-                var sql = builder.CreateQuery(null,
+                var sql = builder.CreateQuery(
                     ClassMappedNameCache.Get<IdentityTable>(),
                     fields: fields,
                     where: where);
@@ -85,7 +85,7 @@ namespace RepoDb.IntegrationTests
 
                 // Setup
                 var builder = connection.GetStatementBuilder();
-                var sql = builder.CreateQuery(null,
+                var sql = builder.CreateQuery(
                     ClassMappedNameCache.Get<IdentityTable>(),
                     fields: fields,
                     where: where);
@@ -123,7 +123,7 @@ namespace RepoDb.IntegrationTests
 
                 // Setup
                 var builder = connection.GetStatementBuilder();
-                var sql = builder.CreateQuery(null,
+                var sql = builder.CreateQuery(
                     ClassMappedNameCache.Get<IdentityTable>(),
                     fields: fields,
                     where: where);
@@ -157,7 +157,7 @@ namespace RepoDb.IntegrationTests
 
                 // Setup
                 var builder = connection.GetStatementBuilder();
-                var sql = builder.CreateQuery(null,
+                var sql = builder.CreateQuery(
                     ClassMappedNameCache.Get<IdentityTable>(),
                     fields: fields,
                     where: where);
@@ -199,7 +199,7 @@ namespace RepoDb.IntegrationTests
 
                 // Setup
                 var builder = connection.GetStatementBuilder();
-                var sql = builder.CreateQuery(null,
+                var sql = builder.CreateQuery(
                     ClassMappedNameCache.Get<IdentityTable>(),
                     fields: fields,
                     where: where);
@@ -232,7 +232,7 @@ namespace RepoDb.IntegrationTests
 
                 // Setup
                 var builder = connection.GetStatementBuilder();
-                var sql = builder.CreateQuery(null,
+                var sql = builder.CreateQuery(
                     ClassMappedNameCache.Get<IdentityTable>(),
                     fields: fields,
                     where: where);
@@ -265,7 +265,7 @@ namespace RepoDb.IntegrationTests
 
                 // Setup
                 var builder = connection.GetStatementBuilder();
-                var sql = builder.CreateQuery(null,
+                var sql = builder.CreateQuery(
                     ClassMappedNameCache.Get<IdentityTable>(),
                     fields: fields,
                     where: where);
@@ -291,7 +291,7 @@ namespace RepoDb.IntegrationTests
 
                 // Setup
                 var builder = connection.GetStatementBuilder();
-                var sql = builder.CreateQuery(null,
+                var sql = builder.CreateQuery(
                     ClassMappedNameCache.Get<IdentityTable>(),
                     fields: fields,
                     where: where);
@@ -317,7 +317,7 @@ namespace RepoDb.IntegrationTests
 
                 // Setup
                 var builder = connection.GetStatementBuilder();
-                var sql = builder.CreateQuery(null,
+                var sql = builder.CreateQuery(
                     ClassMappedNameCache.Get<IdentityTable>(),
                     fields: fields,
                     where: where);
@@ -343,7 +343,7 @@ namespace RepoDb.IntegrationTests
 
                 // Setup
                 var builder = connection.GetStatementBuilder();
-                var sql = builder.CreateQuery(null,
+                var sql = builder.CreateQuery(
                     ClassMappedNameCache.Get<IdentityTable>(),
                     fields: fields,
                     where: where);
@@ -373,7 +373,7 @@ namespace RepoDb.IntegrationTests
 
                 // Setup
                 var builder = connection.GetStatementBuilder();
-                var sql = builder.CreateQuery(null,
+                var sql = builder.CreateQuery(
                     ClassMappedNameCache.Get<IdentityTable>(),
                     fields: fields,
                     where: where);
@@ -406,7 +406,7 @@ namespace RepoDb.IntegrationTests
 
                 // Setup
                 var builder = connection.GetStatementBuilder();
-                var sql = builder.CreateQuery(null,
+                var sql = builder.CreateQuery(
                     ClassMappedNameCache.Get<IdentityTable>(),
                     fields: fields,
                     where: where);
@@ -439,7 +439,7 @@ namespace RepoDb.IntegrationTests
 
                 // Setup
                 var builder = connection.GetStatementBuilder();
-                var sql = builder.CreateQuery(null,
+                var sql = builder.CreateQuery(
                     ClassMappedNameCache.Get<IdentityTable>(),
                     fields: fields,
                     where: where);
@@ -465,7 +465,7 @@ namespace RepoDb.IntegrationTests
 
                 // Setup
                 var builder = connection.GetStatementBuilder();
-                var sql = builder.CreateQuery(null,
+                var sql = builder.CreateQuery(
                     ClassMappedNameCache.Get<IdentityTable>(),
                     fields: fields,
                     where: where);
@@ -491,7 +491,7 @@ namespace RepoDb.IntegrationTests
 
                 // Setup
                 var builder = connection.GetStatementBuilder();
-                var sql = builder.CreateQuery(null,
+                var sql = builder.CreateQuery(
                     ClassMappedNameCache.Get<IdentityTable>(),
                     fields: fields,
                     where: where);
@@ -520,7 +520,7 @@ namespace RepoDb.IntegrationTests
 
                 // Setup
                 var builder = connection.GetStatementBuilder();
-                var sql = builder.CreateQuery(null,
+                var sql = builder.CreateQuery(
                     ClassMappedNameCache.Get<IdentityTable>(),
                     fields: fields,
                     where: where);
@@ -552,7 +552,7 @@ namespace RepoDb.IntegrationTests
 
                 // Setup
                 var builder = connection.GetStatementBuilder();
-                var sql = builder.CreateAverage(null,
+                var sql = builder.CreateAverage(
                     ClassMappedNameCache.Get<IdentityTable>(),
                     field: Field.Parse<IdentityTable>(e => e.ColumnInt).First(),
                     where: where);
@@ -582,7 +582,7 @@ namespace RepoDb.IntegrationTests
 
                 // Setup
                 var builder = connection.GetStatementBuilder();
-                var sql = builder.CreateAverageAll(null,
+                var sql = builder.CreateAverageAll(
                     ClassMappedNameCache.Get<IdentityTable>(),
                     field: Field.Parse<IdentityTable>(e => e.ColumnInt).First());
 
@@ -613,7 +613,7 @@ namespace RepoDb.IntegrationTests
 
                 // Setup
                 var builder = connection.GetStatementBuilder();
-                var sql = builder.CreateBatchQuery(null,
+                var sql = builder.CreateBatchQuery(
                     ClassMappedNameCache.Get<IdentityTable>(),
                     fields: fields,
                     page: 2,
@@ -651,7 +651,7 @@ namespace RepoDb.IntegrationTests
 
                 // Setup
                 var builder = connection.GetStatementBuilder();
-                var sql = builder.CreateCount(null,
+                var sql = builder.CreateCount(
                     ClassMappedNameCache.Get<IdentityTable>(),
                     where: where);
 
@@ -680,7 +680,7 @@ namespace RepoDb.IntegrationTests
 
                 // Setup
                 var builder = connection.GetStatementBuilder();
-                var sql = builder.CreateCountAll(null,
+                var sql = builder.CreateCountAll(
                     ClassMappedNameCache.Get<IdentityTable>());
 
                 // Act
@@ -712,7 +712,7 @@ namespace RepoDb.IntegrationTests
 
                 // Setup
                 var builder = connection.GetStatementBuilder();
-                var sql = builder.CreateDelete(null,
+                var sql = builder.CreateDelete(
                     ClassMappedNameCache.Get<IdentityTable>(),
                     where: where);
 
@@ -745,7 +745,7 @@ namespace RepoDb.IntegrationTests
 
                 // Setup
                 var builder = connection.GetStatementBuilder();
-                var sql = builder.CreateDeleteAll(null,
+                var sql = builder.CreateDeleteAll(
                     ClassMappedNameCache.Get<IdentityTable>());
 
                 // Act
@@ -775,7 +775,7 @@ namespace RepoDb.IntegrationTests
                 // Setup
                 var where = new QueryGroup(new QueryField("Id", tables.Last().Id));
                 var builder = connection.GetStatementBuilder();
-                var sql = builder.CreateExists(null,
+                var sql = builder.CreateExists(
                     ClassMappedNameCache.Get<IdentityTable>(),
                     where: where);
 
@@ -803,7 +803,7 @@ namespace RepoDb.IntegrationTests
                 // Setup
                 var dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<IdentityTable>(), null);
                 var builder = connection.GetStatementBuilder();
-                var sql = builder.CreateInsert(null,
+                var sql = builder.CreateInsert(
                     ClassMappedNameCache.Get<IdentityTable>(),
                     fields: fields,
                     primaryField: dbFields.FirstOrDefault(e => e.IsPrimary),
@@ -841,7 +841,7 @@ namespace RepoDb.IntegrationTests
 
                 // Setup
                 var builder = connection.GetStatementBuilder();
-                var sql = builder.CreateMax(null,
+                var sql = builder.CreateMax(
                     ClassMappedNameCache.Get<IdentityTable>(),
                     field: Field.Parse<IdentityTable>(e => e.ColumnInt).First(),
                     where: where);
@@ -871,7 +871,7 @@ namespace RepoDb.IntegrationTests
 
                 // Setup
                 var builder = connection.GetStatementBuilder();
-                var sql = builder.CreateMaxAll(null,
+                var sql = builder.CreateMaxAll(
                     ClassMappedNameCache.Get<IdentityTable>(),
                     field: Field.Parse<IdentityTable>(e => e.ColumnInt).First());
 
@@ -905,7 +905,7 @@ namespace RepoDb.IntegrationTests
                 // Setup
                 var dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<IdentityTable>(), null);
                 var builder = connection.GetStatementBuilder();
-                var sql = builder.CreateMerge(null,
+                var sql = builder.CreateMerge(
                     ClassMappedNameCache.Get<IdentityTable>(),
                     fields: fields,
                     qualifiers: fields.Where(f => dbFields.FirstOrDefault(df => (df.IsPrimary || df.IsIdentity) && df.Name == f.Name) != null),
@@ -944,7 +944,7 @@ namespace RepoDb.IntegrationTests
 
                 // Setup
                 var builder = connection.GetStatementBuilder();
-                var sql = builder.CreateMin(null,
+                var sql = builder.CreateMin(
                     ClassMappedNameCache.Get<IdentityTable>(),
                     field: Field.Parse<IdentityTable>(e => e.ColumnInt).First(),
                     where: where);
@@ -974,7 +974,7 @@ namespace RepoDb.IntegrationTests
 
                 // Setup
                 var builder = connection.GetStatementBuilder();
-                var sql = builder.CreateMinAll(null,
+                var sql = builder.CreateMinAll(
                     ClassMappedNameCache.Get<IdentityTable>(),
                     field: Field.Parse<IdentityTable>(e => e.ColumnInt).First());
 
@@ -1005,7 +1005,7 @@ namespace RepoDb.IntegrationTests
 
                 // Setup
                 var builder = connection.GetStatementBuilder();
-                var sql = builder.CreateQuery(null,
+                var sql = builder.CreateQuery(
                     ClassMappedNameCache.Get<IdentityTable>(),
                     fields: fields,
                     where: where);
@@ -1042,7 +1042,7 @@ namespace RepoDb.IntegrationTests
 
                 // Setup
                 var builder = connection.GetStatementBuilder();
-                var sql = builder.CreateQuery(null,
+                var sql = builder.CreateQuery(
                     ClassMappedNameCache.Get<IdentityTable>(),
                     fields: fields,
                     where: where);
@@ -1077,7 +1077,7 @@ namespace RepoDb.IntegrationTests
 
                 // Setup
                 var builder = connection.GetStatementBuilder();
-                var sql = builder.CreateQueryAll(null,
+                var sql = builder.CreateQueryAll(
                     ClassMappedNameCache.Get<IdentityTable>(),
                     fields: fields);
 
@@ -1111,7 +1111,7 @@ namespace RepoDb.IntegrationTests
 
                 // Setup
                 var builder = connection.GetStatementBuilder();
-                var sql = builder.CreateSum(null,
+                var sql = builder.CreateSum(
                     ClassMappedNameCache.Get<IdentityTable>(),
                     field: Field.Parse<IdentityTable>(e => e.ColumnInt).First(),
                     where: where);
@@ -1141,7 +1141,7 @@ namespace RepoDb.IntegrationTests
 
                 // Setup
                 var builder = connection.GetStatementBuilder();
-                var sql = builder.CreateSumAll(null,
+                var sql = builder.CreateSumAll(
                     ClassMappedNameCache.Get<IdentityTable>(),
                     field: Field.Parse<IdentityTable>(e => e.ColumnInt).First());
 
@@ -1173,7 +1173,7 @@ namespace RepoDb.IntegrationTests
 
                 // Setup
                 var builder = connection.GetStatementBuilder();
-                var sql = builder.CreateTruncate(null,
+                var sql = builder.CreateTruncate(
                     ClassMappedNameCache.Get<IdentityTable>());
 
                 // Act
@@ -1209,7 +1209,7 @@ namespace RepoDb.IntegrationTests
                 // Setup
                 var dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<IdentityTable>(), null);
                 var builder = connection.GetStatementBuilder();
-                var sql = builder.CreateUpdate(null,
+                var sql = builder.CreateUpdate(
                     ClassMappedNameCache.Get<IdentityTable>(),
                     fields: fields,
                     where: where,

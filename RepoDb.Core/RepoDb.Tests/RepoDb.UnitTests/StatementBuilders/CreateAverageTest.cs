@@ -30,13 +30,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var field = new Field("Value");
 
             // Act
-            var actual = statementBuilder.CreateAverage(queryBuilder: queryBuilder,
-                field: field,
+            var actual = statementBuilder.CreateAverage(field: field,
                 tableName: tableName,
                 hints: null);
             var expected = "SELECT AVG ([Value]) AS [AverageValue] FROM [Table] ;";
@@ -50,14 +48,12 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var field = new Field("Value");
             var where = new QueryGroup(new QueryField("Id", 1));
 
             // Act
-            var actual = statementBuilder.CreateAverage(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateAverage(tableName: tableName,
                 field: field,
                 where: where);
             var expected = $"" +
@@ -74,14 +70,12 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var field = new Field("Value");
             var hints = "WITH (NOLOCK)";
 
             // Act
-            var actual = statementBuilder.CreateAverage(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateAverage(tableName: tableName,
                 field: field,
                 hints: hints);
             var expected = "SELECT AVG ([Value]) AS [AverageValue] FROM [Table] WITH (NOLOCK) ;";
@@ -95,15 +89,13 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var field = new Field("Value");
             var where = new QueryGroup(new QueryField("Id", 1));
             var hints = "WITH (NOLOCK)";
 
             // Act
-            var actual = statementBuilder.CreateAverage(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateAverage(tableName: tableName,
                 field: field,
                 where: where,
                 hints: hints);
@@ -121,13 +113,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "[dbo].[Table]";
             var field = new Field("Value");
 
             // Act
-            var actual = statementBuilder.CreateAverage(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateAverage(tableName: tableName,
                 field: field,
                 hints: null);
             var expected = "SELECT AVG ([Value]) AS [AverageValue] FROM [dbo].[Table] ;";
@@ -141,13 +131,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "dbo.Table";
             var field = new Field("Value");
 
             // Act
-            var actual = statementBuilder.CreateAverage(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateAverage(tableName: tableName,
                 field: field,
                 hints: null);
             var expected = "SELECT AVG ([Value]) AS [AverageValue] FROM [dbo].[Table] ;";
@@ -161,13 +149,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "dbo.Table";
             var field = new Field("Value", typeof(long));
 
             // Act
-            var actual = statementBuilder.CreateAverage(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateAverage(tableName: tableName,
                 field: field,
                 hints: null);
             var expected = "SELECT AVG ([Value]) AS [AverageValue] FROM [dbo].[Table] ;";
@@ -181,13 +167,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<DefinedBaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "dbo.Table";
             var field = new Field("Value", typeof(int));
 
             // Act
-            var actual = statementBuilder.CreateAverage(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateAverage(tableName: tableName,
                 field: field,
                 hints: null);
             var expected = "SELECT AVG (CONVERT([FLOAT], [Value])) AS [AverageValue] FROM [dbo].[Table] ;";
@@ -201,13 +185,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<DefinedBaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "dbo.Table";
             var field = new Field("Value", typeof(string));
 
             // Act
-            var actual = statementBuilder.CreateAverage(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateAverage(tableName: tableName,
                 field: field,
                 hints: null);
             var expected = "SELECT AVG (CONVERT([NVARCHAR], [Value])) AS [AverageValue] FROM [dbo].[Table] ;";
@@ -221,13 +203,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = (string)null;
             var field = new Field("Value");
 
             // Act
-            statementBuilder.CreateAverage(queryBuilder: queryBuilder,
-                tableName: tableName,
+            statementBuilder.CreateAverage(tableName: tableName,
                 field: field,
                 hints: null);
         }
@@ -237,13 +217,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "";
             var field = new Field("Value");
 
             // Act
-            statementBuilder.CreateAverage(queryBuilder: queryBuilder,
-                tableName: tableName,
+            statementBuilder.CreateAverage(tableName: tableName,
                 field: field,
                 hints: null);
         }
@@ -253,13 +231,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = " ";
             var field = new Field("Value");
 
             // Act
-            statementBuilder.CreateAverage(queryBuilder: queryBuilder,
-                tableName: tableName,
+            statementBuilder.CreateAverage(tableName: tableName,
                 field: field,
                 hints: null);
         }
@@ -269,12 +245,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = " ";
 
             // Act
-            statementBuilder.CreateAverage(queryBuilder: queryBuilder,
-                tableName: tableName,
+            statementBuilder.CreateAverage(tableName: tableName,
                 field: null,
                 hints: null);
         }
@@ -284,13 +258,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<NonHintsSupportingBaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var field = new Field("Value");
 
             // Act
-            statementBuilder.CreateAverage(queryBuilder: queryBuilder,
-                tableName: tableName,
+            statementBuilder.CreateAverage(tableName: tableName,
                 field: field,
                 hints: "Hints");
         }

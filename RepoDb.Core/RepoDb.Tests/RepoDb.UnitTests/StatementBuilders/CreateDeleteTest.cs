@@ -24,12 +24,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
 
             // Act
-            var actual = statementBuilder.CreateDelete(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateDelete(tableName: tableName,
                 where: null);
             var expected = "DELETE FROM [Table] ;";
 
@@ -42,12 +40,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
 
             // Act
-            var actual = statementBuilder.CreateDelete(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateDelete(tableName: tableName,
                 where: null);
             var expected = "DELETE FROM [Table] ;";
 
@@ -60,12 +56,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "[dbo].[Table]";
 
             // Act
-            var actual = statementBuilder.CreateDelete(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateDelete(tableName: tableName,
                 where: null);
             var expected = "DELETE FROM [dbo].[Table] ;";
 
@@ -79,12 +73,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "dbo.Table";
 
             // Act
-            var actual = statementBuilder.CreateDelete(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateDelete(tableName: tableName,
                 where: null);
             var expected = "DELETE FROM [dbo].[Table] ;";
 
@@ -97,12 +89,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
 
             // Act
-            var actual = statementBuilder.CreateDelete(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateDelete(tableName: tableName,
                 where: null,
                 hints: "WITH (TABLOCK)");
             var expected = "DELETE FROM [Table] WITH (TABLOCK) ;";
@@ -116,12 +106,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = (string)null;
 
             // Act
-            statementBuilder.CreateDelete(queryBuilder: queryBuilder,
-                tableName: tableName);
+            statementBuilder.CreateDelete(tableName: tableName);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
@@ -129,12 +117,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "";
 
             // Act
-            statementBuilder.CreateDelete(queryBuilder: queryBuilder,
-                tableName: tableName);
+            statementBuilder.CreateDelete(tableName: tableName);
         }
 
         [TestMethod, ExpectedException(typeof(NullReferenceException))]
@@ -142,12 +128,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = " ";
 
             // Act
-            statementBuilder.CreateDelete(queryBuilder: queryBuilder,
-                tableName: tableName);
+            statementBuilder.CreateDelete(tableName: tableName);
         }
     }
 }

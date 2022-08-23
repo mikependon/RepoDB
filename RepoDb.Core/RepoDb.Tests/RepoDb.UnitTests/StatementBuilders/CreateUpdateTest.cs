@@ -24,14 +24,12 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var where = (QueryGroup)null;
 
             // Act
-            var actual = statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateUpdate(tableName: tableName,
                 fields: fields,
                 where: where,
                 primaryField: null,
@@ -49,14 +47,12 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "[dbo].[Table]";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var where = (QueryGroup)null;
 
             // Act
-            var actual = statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateUpdate(tableName: tableName,
                 fields: fields,
                 where: where,
                 primaryField: null,
@@ -74,14 +70,12 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "dbo.Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var where = (QueryGroup)null;
 
             // Act
-            var actual = statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateUpdate(tableName: tableName,
                 fields: fields,
                 where: where,
                 primaryField: null,
@@ -99,7 +93,6 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var where = new QueryGroup(new QueryField("Field1", 1));
@@ -108,8 +101,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             where.IsForUpdate();
 
             // Act
-            var actual = statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateUpdate(tableName: tableName,
                 fields: fields,
                 where: where,
                 primaryField: null,
@@ -128,7 +120,6 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var where = new QueryGroup(new QueryField("Field1", 1));
@@ -138,8 +129,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             where.IsForUpdate();
 
             // Act
-            var actual = statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateUpdate(tableName: tableName,
                 fields: fields,
                 where: where,
                 primaryField: field,
@@ -158,7 +148,6 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var where = new QueryGroup(new QueryField("Field1", 1));
@@ -168,8 +157,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             where.IsForUpdate();
 
             // Act
-            var actual = statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateUpdate(tableName: tableName,
                 fields: fields,
                 where: where,
                 primaryField: null,
@@ -188,7 +176,6 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var where = new QueryGroup(new QueryField("Field1", 1));
@@ -198,8 +185,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             where.IsForUpdate();
 
             // Act
-            var actual = statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateUpdate(tableName: tableName,
                 fields: fields,
                 where: where,
                 primaryField: field,
@@ -218,7 +204,6 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var where = new QueryGroup(new QueryField("Id", 1));
@@ -228,8 +213,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             where.IsForUpdate();
 
             // Act
-            var actual = statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateUpdate(tableName: tableName,
                 fields: fields,
                 where: where,
                 primaryField: field,
@@ -248,7 +232,6 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var where = new QueryGroup(new QueryField("Id", 1));
@@ -258,8 +241,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             where.IsForUpdate();
 
             // Act
-            var actual = statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateUpdate(tableName: tableName,
                 fields: fields,
                 where: where,
                 primaryField: null,
@@ -278,7 +260,6 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var where = new QueryGroup(new QueryField("Id", 1));
@@ -288,8 +269,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             where.IsForUpdate();
 
             // Act
-            var actual = statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateUpdate(tableName: tableName,
                 fields: fields,
                 where: where,
                 primaryField: field,
@@ -308,7 +288,6 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var where = new QueryGroup(new QueryField("Id", 1));
@@ -318,8 +297,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             where.IsForUpdate();
 
             // Act
-            var actual = statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateUpdate(tableName: tableName,
                 fields: fields,
                 where: where,
                 primaryField: field,
@@ -338,7 +316,6 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var where = new QueryGroup(new QueryField("Id", 1));
@@ -348,8 +325,7 @@ namespace RepoDb.UnitTests.StatementBuilders
             where.IsForUpdate();
 
             // Act
-            var actual = statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateUpdate(tableName: tableName,
                 fields: fields,
                 where: where,
                 primaryField: null,
@@ -368,14 +344,12 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var where = (QueryGroup)null;
 
             // Act
-            var actual = statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateUpdate(tableName: tableName,
                 fields: fields,
                 where: where,
                 primaryField: null,
@@ -394,13 +368,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = (string)null;
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
-            statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
-                tableName: tableName,
+            statementBuilder.CreateUpdate(tableName: tableName,
                 fields: fields,
                 where: null,
                 primaryField: null,
@@ -412,13 +384,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
-            statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
-                tableName: tableName,
+            statementBuilder.CreateUpdate(tableName: tableName,
                 fields: fields,
                 where: null,
                 primaryField: null,
@@ -430,13 +400,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = " ";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
-            statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
-                tableName: tableName,
+            statementBuilder.CreateUpdate(tableName: tableName,
                 fields: fields,
                 where: null,
                 primaryField: null,
@@ -448,14 +416,12 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var primaryField = new DbField("Field1", false, false, false, typeof(int), null, null, null, null);
 
             // Act
-            statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
-                tableName: tableName,
+            statementBuilder.CreateUpdate(tableName: tableName,
                 fields: fields,
                 where: null,
                 primaryField: primaryField,
@@ -467,15 +433,13 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
             var identifyField = new DbField("Field2", false, false, false, typeof(int), null, null, null, null);
 
             // Act
-            statementBuilder.CreateUpdate(queryBuilder: queryBuilder,
-                tableName: tableName,
+            statementBuilder.CreateUpdate(tableName: tableName,
                 fields: fields,
                 where: null,
                 primaryField: null,
