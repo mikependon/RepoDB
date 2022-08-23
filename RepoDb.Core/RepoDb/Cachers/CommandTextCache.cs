@@ -31,8 +31,7 @@ namespace RepoDb
             if (cache.TryGetValue(request, out var commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                commandText = statementBuilder.CreateAverage(new QueryBuilder(),
-                    request.Name,
+                commandText = statementBuilder.CreateAverage(request.Name,
                     request.Field,
                     request.Where,
                     request.Hints);
@@ -55,8 +54,7 @@ namespace RepoDb
             if (cache.TryGetValue(request, out var commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                commandText = statementBuilder.CreateAverageAll(new QueryBuilder(),
-                    request.Name,
+                commandText = statementBuilder.CreateAverageAll(request.Name,
                     request.Field,
                     request.Hints);
                 cache.TryAdd(request, commandText);
@@ -128,8 +126,7 @@ namespace RepoDb
             IEnumerable<Field> fields)
         {
             var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-            return statementBuilder.CreateBatchQuery(new QueryBuilder(),
-                request.Name,
+            return statementBuilder.CreateBatchQuery(request.Name,
                 fields,
                 request.Page,
                 request.RowsPerBatch,
@@ -152,8 +149,7 @@ namespace RepoDb
             if (cache.TryGetValue(request, out var commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                commandText = statementBuilder.CreateCount(new QueryBuilder(),
-                    request.Name,
+                commandText = statementBuilder.CreateCount(request.Name,
                     request.Where,
                     request.Hints);
                 cache.TryAdd(request, commandText);
@@ -175,8 +171,7 @@ namespace RepoDb
             if (cache.TryGetValue(request, out var commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                commandText = statementBuilder.CreateCountAll(new QueryBuilder(),
-                    request.Name,
+                commandText = statementBuilder.CreateCountAll(request.Name,
                     request.Hints);
                 cache.TryAdd(request, commandText);
             }
@@ -197,8 +192,7 @@ namespace RepoDb
             if (cache.TryGetValue(request, out var commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                commandText = statementBuilder.CreateDelete(new QueryBuilder(),
-                    request.Name,
+                commandText = statementBuilder.CreateDelete(request.Name,
                     request.Where,
                     request.Hints);
                 cache.TryAdd(request, commandText);
@@ -220,8 +214,7 @@ namespace RepoDb
             if (cache.TryGetValue(request, out var commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                commandText = statementBuilder.CreateDeleteAll(new QueryBuilder(),
-                    request.Name,
+                commandText = statementBuilder.CreateDeleteAll(request.Name,
                     request.Hints);
                 cache.TryAdd(request, commandText);
             }
@@ -242,8 +235,7 @@ namespace RepoDb
             if (cache.TryGetValue(request, out var commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                commandText = statementBuilder.CreateExists(new QueryBuilder(),
-                    request.Name,
+                commandText = statementBuilder.CreateExists(request.Name,
                     request.Where,
                     request.Hints);
                 cache.TryAdd(request, commandText);
@@ -308,8 +300,7 @@ namespace RepoDb
             var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
             var primaryField = GetPrimaryField(request);
             var identityField = GetIdentityField(request);
-            return statementBuilder.CreateInsert(new QueryBuilder(),
-                request.Name,
+            return statementBuilder.CreateInsert(request.Name,
                 fields,
                 primaryField,
                 identityField,
@@ -373,8 +364,7 @@ namespace RepoDb
             var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
             var primaryField = GetPrimaryField(request);
             var identityField = GetIdentityField(request);
-            return statementBuilder.CreateInsertAll(new QueryBuilder(),
-                request.Name,
+            return statementBuilder.CreateInsertAll(request.Name,
                 fields,
                 request.BatchSize,
                 primaryField,
@@ -396,8 +386,7 @@ namespace RepoDb
             if (cache.TryGetValue(request, out var commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                commandText = statementBuilder.CreateMax(new QueryBuilder(),
-                    request.Name,
+                commandText = statementBuilder.CreateMax(request.Name,
                     request.Field,
                     request.Where,
                     request.Hints);
@@ -420,8 +409,7 @@ namespace RepoDb
             if (cache.TryGetValue(request, out var commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                commandText = statementBuilder.CreateMaxAll(new QueryBuilder(),
-                    request.Name,
+                commandText = statementBuilder.CreateMaxAll(request.Name,
                     request.Field,
                     request.Hints);
                 cache.TryAdd(request, commandText);
@@ -486,8 +474,7 @@ namespace RepoDb
             var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
             var primaryField = GetPrimaryField(request);
             var identityField = GetIdentityField(request);
-            return statementBuilder.CreateMerge(new QueryBuilder(),
-                request.Name,
+            return statementBuilder.CreateMerge(request.Name,
                 fields,
                 request.Qualifiers,
                 primaryField,
@@ -552,8 +539,7 @@ namespace RepoDb
             var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
             var primaryField = GetPrimaryField(request);
             var identityField = GetIdentityField(request);
-            return statementBuilder.CreateMergeAll(new QueryBuilder(),
-                request.Name,
+            return statementBuilder.CreateMergeAll(request.Name,
                 fields,
                 request.Qualifiers,
                 request.BatchSize,
@@ -576,8 +562,7 @@ namespace RepoDb
             if (cache.TryGetValue(request, out var commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                commandText = statementBuilder.CreateMin(new QueryBuilder(),
-                    request.Name,
+                commandText = statementBuilder.CreateMin(request.Name,
                     request.Field,
                     request.Where,
                     request.Hints);
@@ -600,8 +585,7 @@ namespace RepoDb
             if (cache.TryGetValue(request, out var commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                commandText = statementBuilder.CreateMinAll(new QueryBuilder(),
-                    request.Name,
+                commandText = statementBuilder.CreateMinAll(request.Name,
                     request.Field,
                     request.Hints);
                 cache.TryAdd(request, commandText);
@@ -673,8 +657,7 @@ namespace RepoDb
             IEnumerable<Field> fields)
         {
             var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-            return statementBuilder.CreateQuery(new QueryBuilder(),
-                request.Name,
+            return statementBuilder.CreateQuery(request.Name,
                 fields,
                 request.Where,
                 request.OrderBy,
@@ -746,8 +729,7 @@ namespace RepoDb
             IEnumerable<Field> fields)
         {
             var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-            return statementBuilder.CreateQueryAll(new QueryBuilder(),
-                request.Name,
+            return statementBuilder.CreateQueryAll(request.Name,
                 fields,
                 request.OrderBy,
                 request.Hints);
@@ -823,8 +805,7 @@ namespace RepoDb
             where TEntity : class
         {
             var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-            return statementBuilder.CreateQuery(new QueryBuilder(),
-                request.Name,
+            return statementBuilder.CreateQuery(request.Name,
                 fields,
                 request.Where,
                 request.OrderBy,
@@ -846,8 +827,7 @@ namespace RepoDb
             if (cache.TryGetValue(request, out var commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                commandText = statementBuilder.CreateSum(new QueryBuilder(),
-                    request.Name,
+                commandText = statementBuilder.CreateSum(request.Name,
                     request.Field,
                     request.Where,
                     request.Hints);
@@ -870,8 +850,7 @@ namespace RepoDb
             if (cache.TryGetValue(request, out var commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                commandText = statementBuilder.CreateSumAll(new QueryBuilder(),
-                    request.Name,
+                commandText = statementBuilder.CreateSumAll(request.Name,
                     request.Field,
                     request.Hints);
                 cache.TryAdd(request, commandText);
@@ -893,8 +872,7 @@ namespace RepoDb
             if (cache.TryGetValue(request, out var commandText) == false)
             {
                 var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-                commandText = statementBuilder.CreateTruncate(new QueryBuilder(),
-                    request.Name);
+                commandText = statementBuilder.CreateTruncate(request.Name);
                 cache.TryAdd(request, commandText);
             }
             return commandText;
@@ -957,8 +935,7 @@ namespace RepoDb
             var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
             var primaryField = GetPrimaryField(request);
             var identityField = GetIdentityField(request);
-            return statementBuilder.CreateUpdate(new QueryBuilder(),
-                request.Name,
+            return statementBuilder.CreateUpdate(request.Name,
                 fields,
                 request.Where,
                 primaryField,
@@ -1023,8 +1000,7 @@ namespace RepoDb
             var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
             var primaryField = GetPrimaryField(request);
             var identityField = GetIdentityField(request);
-            return statementBuilder.CreateUpdateAll(new QueryBuilder(),
-                request.Name,
+            return statementBuilder.CreateUpdateAll(request.Name,
                 fields,
                 request.Qualifiers,
                 request.BatchSize,

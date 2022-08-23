@@ -28,13 +28,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
-            var actual = statementBuilder.CreateInsertAll(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateInsertAll(tableName: tableName,
                 fields: fields,
                 batchSize: 1,
                 primaryField: null,
@@ -54,13 +52,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "[dbo].[Table]";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
-            var actual = statementBuilder.CreateInsertAll(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateInsertAll(tableName: tableName,
                 fields: fields,
                 batchSize: 1,
                 primaryField: null,
@@ -80,13 +76,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "dbo.Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
-            var actual = statementBuilder.CreateInsertAll(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateInsertAll(tableName: tableName,
                 fields: fields,
                 batchSize: 1,
                 primaryField: null,
@@ -106,14 +100,12 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var primaryField = new DbField("Field1", true, false, false, typeof(int), null, null, null, null);
 
             // Act
-            var actual = statementBuilder.CreateInsertAll(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateInsertAll(tableName: tableName,
                 fields: fields,
                 batchSize: 1,
                 primaryField: primaryField,
@@ -133,14 +125,12 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var identityField = new DbField("Field1", false, true, false, typeof(int), null, null, null, null);
 
             // Act
-            var actual = statementBuilder.CreateInsertAll(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateInsertAll(tableName: tableName,
                 fields: fields,
                 batchSize: 3,
                 primaryField: null,
@@ -168,13 +158,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
-            var actual = statementBuilder.CreateInsertAll(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateInsertAll(tableName: tableName,
                 fields: fields,
                 batchSize: 1,
                 primaryField: null,
@@ -195,14 +183,12 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var identityField = new DbField("Field1", false, true, false, typeof(int), null, null, null, null);
 
             // Act
-            var actual = statementBuilder.CreateInsertAll(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateInsertAll(tableName: tableName,
                 fields: fields,
                 batchSize: 3,
                 primaryField: null,
@@ -231,14 +217,12 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var primaryField = new DbField("Id", true, false, false, typeof(int), null, null, null, null);
 
             // Act
-            statementBuilder.CreateInsertAll(queryBuilder: queryBuilder,
-                tableName: tableName,
+            statementBuilder.CreateInsertAll(tableName: tableName,
                 fields: fields,
                 batchSize: 1,
                 primaryField: primaryField,
@@ -250,12 +234,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
 
             // Act
-            statementBuilder.CreateInsertAll(queryBuilder: queryBuilder,
-                tableName: tableName,
+            statementBuilder.CreateInsertAll(tableName: tableName,
                 fields: null,
                 batchSize: 1,
                 primaryField: null,
@@ -267,12 +249,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = (string)null;
 
             // Act
-            statementBuilder.CreateInsertAll(queryBuilder: queryBuilder,
-                tableName: tableName,
+            statementBuilder.CreateInsertAll(tableName: tableName,
                 fields: null,
                 batchSize: 1,
                 primaryField: null,
@@ -284,12 +264,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "";
 
             // Act
-            statementBuilder.CreateInsertAll(queryBuilder: queryBuilder,
-                tableName: tableName,
+            statementBuilder.CreateInsertAll(tableName: tableName,
                 fields: null,
                 batchSize: 1,
                 primaryField: null,
@@ -301,12 +279,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = " ";
 
             // Act
-            statementBuilder.CreateInsertAll(queryBuilder: queryBuilder,
-                tableName: tableName,
+            statementBuilder.CreateInsertAll(tableName: tableName,
                 fields: null,
                 batchSize: 1,
                 primaryField: null,
@@ -318,14 +294,12 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var primaryField = new DbField("Field1", false, false, false, typeof(int), null, null, null, null);
 
             // Act
-            statementBuilder.CreateInsertAll(queryBuilder: queryBuilder,
-                tableName: tableName,
+            statementBuilder.CreateInsertAll(tableName: tableName,
                 fields: fields,
                 batchSize: 1,
                 primaryField: primaryField,
@@ -337,15 +311,13 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
             var identifyField = new DbField("Field2", false, false, false, typeof(int), null, null, null, null);
 
             // Act
-            statementBuilder.CreateInsertAll(queryBuilder: queryBuilder,
-                tableName: tableName,
+            statementBuilder.CreateInsertAll(tableName: tableName,
                 fields: fields,
                 batchSize: 1,
                 primaryField: null,
@@ -357,15 +329,13 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<SingleStatementSupportBaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var qualifiers = Field.From("Field1");
             var identifyField = new DbField("Field1", false, true, false, typeof(int), null, null, null, null);
 
             // Act
-            statementBuilder.CreateInsertAll(queryBuilder: queryBuilder,
-                tableName: tableName,
+            statementBuilder.CreateInsertAll(tableName: tableName,
                 fields: fields,
                 batchSize: 10,
                 primaryField: null,

@@ -24,8 +24,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            var query = builder.CreateBatchQuery(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateBatchQuery("Table",
                 Field.From("Id", "Name"),
                 0,
                 10,
@@ -43,8 +42,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            var query = builder.CreateBatchQuery(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateBatchQuery("Table",
                 Field.From("Id", "Name"),
                 3,
                 10,
@@ -62,8 +60,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            builder.CreateBatchQuery(new QueryBuilder(),
-                "Table",
+            builder.CreateBatchQuery("Table",
                 null,
                 0,
                 10,
@@ -77,8 +74,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            builder.CreateBatchQuery(new QueryBuilder(),
-                "Table",
+            builder.CreateBatchQuery("Table",
                 Field.From("Id", "Name"),
                 0,
                 10,
@@ -92,8 +88,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            builder.CreateBatchQuery(new QueryBuilder(),
-                "Table",
+            builder.CreateBatchQuery("Table",
                 Field.From("Id", "Name"),
                 -1,
                 10,
@@ -107,8 +102,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            builder.CreateBatchQuery(new QueryBuilder(),
-                "Table",
+            builder.CreateBatchQuery("Table",
                 Field.From("Id", "Name"),
                 0,
                 -1,
@@ -122,8 +116,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            builder.CreateBatchQuery(new QueryBuilder(),
-                "Table",
+            builder.CreateBatchQuery("Table",
                 Field.From("Id", "Name"),
                 0,
                 -1,
@@ -143,8 +136,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            var query = builder.CreateCount(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateCount("Table",
                 null,
                 null);
             var expected = "SELECT COUNT (*) AS \"CountValue\" FROM \"Table\" ;";
@@ -160,8 +152,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            var query = builder.CreateCount(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateCount("Table",
                 QueryGroup.Parse(new { Id = 1 }),
                 null);
             var expected = "SELECT COUNT (*) AS \"CountValue\" FROM \"Table\" WHERE (\"Id\" = @Id) ;";
@@ -177,8 +168,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            builder.CreateCount(new QueryBuilder(),
-                "Table",
+            builder.CreateCount("Table",
                 QueryGroup.Parse(new { Id = 1 }),
                 "WhatEver");
         }
@@ -194,8 +184,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            var query = builder.CreateCountAll(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateCountAll("Table",
                 null);
             var expected = "SELECT COUNT (*) AS \"CountValue\" FROM \"Table\" ;";
 
@@ -210,8 +199,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            builder.CreateCountAll(new QueryBuilder(),
-                "Table",
+            builder.CreateCountAll("Table",
                 "WhatEver");
         }
 
@@ -226,8 +214,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            var query = builder.CreateExists(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateExists("Table",
                 QueryGroup.Parse(new { Id = 1 }));
             var expected = "SELECT 1 AS \"ExistsValue\" FROM \"Table\" WHERE (\"Id\" = @Id) LIMIT 1 ;";
 
@@ -246,8 +233,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            var query = builder.CreateInsert(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateInsert("Table",
                 Field.From("Id", "Name", "Address"),
                 null,
                 null);
@@ -264,8 +250,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            var query = builder.CreateInsert(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateInsert("Table",
                 Field.From("Id", "Name", "Address"),
                 new DbField("Id", true, false, false, typeof(int), null, null, null, null),
                 null);
@@ -282,8 +267,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            var query = builder.CreateInsert(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateInsert("Table",
                 Field.From("Id", "Name", "Address"),
                 null,
                 new DbField("Id", false, true, false, typeof(int), null, null, null, null));
@@ -300,8 +284,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            builder.CreateInsert(new QueryBuilder(),
-                "Table",
+            builder.CreateInsert("Table",
                 Field.From("Id", "Name", "Address"),
                 null,
                 new DbField("Id", false, true, false, typeof(int), null, null, null, null),
@@ -319,8 +302,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            var query = builder.CreateInsertAll(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateInsertAll("Table",
                 Field.From("Id", "Name", "Address"),
                 3,
                 null,
@@ -340,8 +322,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            var query = builder.CreateInsertAll(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateInsertAll("Table",
                 Field.From("Id", "Name", "Address"),
                 3,
                 new DbField("Id", true, false, false, typeof(int), null, null, null, null),
@@ -361,8 +342,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            var query = builder.CreateInsertAll(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateInsertAll("Table",
                 Field.From("Id", "Name", "Address"),
                 3,
                 null,
@@ -382,8 +362,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            builder.CreateInsertAll(new QueryBuilder(),
-                "Table",
+            builder.CreateInsertAll("Table",
                 Field.From("Id", "Name", "Address"),
                 3,
                 null,
@@ -402,8 +381,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            var query = builder.CreateMax(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateMax("Table",
                 new Field("Field", typeof(int)),
                 null,
                 null);
@@ -420,8 +398,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            var query = builder.CreateMax(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateMax("Table",
                 new Field("Field", typeof(int)),
                 QueryGroup.Parse(new { Id = 1 }),
                 null);
@@ -438,8 +415,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            builder.CreateMax(new QueryBuilder(),
-                "Table",
+            builder.CreateMax("Table",
                 new Field("Field", typeof(int)),
                 QueryGroup.Parse(new { Id = 1 }),
                 "WhatEver");
@@ -456,8 +432,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            var query = builder.CreateMaxAll(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateMaxAll("Table",
                 new Field("Field", typeof(int)),
                 null);
             var expected = "SELECT MAX (\"Field\") AS \"MaxValue\" FROM \"Table\" ;";
@@ -473,8 +448,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            builder.CreateMaxAll(new QueryBuilder(),
-                "Table",
+            builder.CreateMaxAll("Table",
                 new Field("Field", typeof(int)),
                 "WhatEver");
         }
@@ -490,8 +464,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            var query = builder.CreateMin(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateMin("Table",
                 new Field("Field", typeof(int)),
                 null,
                 null);
@@ -508,8 +481,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            var query = builder.CreateMin(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateMin("Table",
                 new Field("Field", typeof(int)),
                 QueryGroup.Parse(new { Id = 1 }),
                 null);
@@ -526,8 +498,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            builder.CreateMin(new QueryBuilder(),
-                "Table",
+            builder.CreateMin("Table",
                 new Field("Field", typeof(int)),
                 QueryGroup.Parse(new { Id = 1 }),
                 "WhatEver");
@@ -544,8 +515,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            var query = builder.CreateMinAll(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateMinAll("Table",
                 new Field("Field", typeof(int)),
                 null);
             var expected = "SELECT MIN (\"Field\") AS \"MinValue\" FROM \"Table\" ;";
@@ -561,8 +531,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            builder.CreateMinAll(new QueryBuilder(),
-                "Table",
+            builder.CreateMinAll("Table",
                 new Field("Field", typeof(int)),
                 "WhatEver");
         }
@@ -578,8 +547,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            var query = builder.CreateMerge(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateMerge("Table",
                 Field.From("Id", "Name", "Address"),
                 null,
                 new DbField("Id", true, false, false, typeof(int), null, null, null, null),
@@ -599,8 +567,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            var query = builder.CreateMerge(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateMerge("Table",
                 Field.From("Id", "Name", "Address"),
                 Field.From("Id"),
                 new DbField("Id", true, false, false, typeof(int), null, null, null, null),
@@ -620,8 +587,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            var query = builder.CreateMerge(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateMerge("Table",
                 Field.From("Id", "Name", "Address"),
                 null,
                 new DbField("Id", true, false, false, typeof(int), null, null, null, null),
@@ -639,8 +605,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            builder.CreateMerge(new QueryBuilder(),
-                "Table",
+            builder.CreateMerge("Table",
                 Field.From("Id", "Name", "Address"),
                 null,
                 null,
@@ -654,8 +619,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            builder.CreateMerge(new QueryBuilder(),
-                "Table",
+            builder.CreateMerge("Table",
                 Field.From("Id", "Name", "Address"),
                 null,
                 null,
@@ -669,8 +633,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            builder.CreateMerge(new QueryBuilder(),
-                "Table",
+            builder.CreateMerge("Table",
                 Field.From("Id", "Name", "Address"),
                 Field.From("Id", "Name"),
                 new DbField("Id", true, false, false, typeof(int), null, null, null, null),
@@ -689,8 +652,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            var query = builder.CreateMergeAll(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateMergeAll("Table",
                 Field.From("Id", "Name", "Address"),
                 null,
                 3,
@@ -711,8 +673,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            var query = builder.CreateMergeAll(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateMergeAll("Table",
                 Field.From("Id", "Name", "Address"),
                 Field.From("Id"),
                 3,
@@ -733,8 +694,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            var query = builder.CreateMergeAll(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateMergeAll("Table",
                 Field.From("Id", "Name", "Address"),
                 null,
                 3,
@@ -755,8 +715,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            builder.CreateMergeAll(new QueryBuilder(),
-                "Table",
+            builder.CreateMergeAll("Table",
                 Field.From("Id", "Name", "Address"),
                 null,
                 3,
@@ -771,8 +730,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            builder.CreateMergeAll(new QueryBuilder(),
-                "Table",
+            builder.CreateMergeAll("Table",
                 Field.From("Id", "Name", "Address"),
                 null,
                 3,
@@ -787,8 +745,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            builder.CreateMergeAll(new QueryBuilder(),
-                "Table",
+            builder.CreateMergeAll("Table",
                 Field.From("Id", "Name", "Address"),
                 Field.From("Id", "Name"),
                 3,
@@ -808,8 +765,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            var query = builder.CreateQuery(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateQuery("Table",
                 Field.From("Id", "Name", "Address"),
                 null,
                 null,
@@ -828,8 +784,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            var query = builder.CreateQuery(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateQuery("Table",
                 Field.From("Id", "Name", "Address"),
                 QueryGroup.Parse(new { Id = 1, Name = "Michael" }),
                 null,
@@ -848,8 +803,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            var query = builder.CreateQuery(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateQuery("Table",
                 Field.From("Id", "Name", "Address"),
                 null,
                 null,
@@ -868,8 +822,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            var query = builder.CreateQuery(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateQuery("Table",
                 Field.From("Id", "Name", "Address"),
                 null,
                 OrderField.Parse(new { Id = Order.Ascending }),
@@ -888,8 +841,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            var query = builder.CreateQuery(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateQuery("Table",
                 Field.From("Id", "Name", "Address"),
                 null,
                 OrderField.Parse(new { Id = Order.Ascending, Name = Order.Ascending }),
@@ -908,8 +860,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            var query = builder.CreateQuery(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateQuery("Table",
                 Field.From("Id", "Name", "Address"),
                 null,
                 OrderField.Parse(new { Id = Order.Descending }),
@@ -928,8 +879,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            var query = builder.CreateQuery(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateQuery("Table",
                 Field.From("Id", "Name", "Address"),
                 null,
                 OrderField.Parse(new { Id = Order.Descending, Name = Order.Descending }),
@@ -948,8 +898,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            var query = builder.CreateQuery(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateQuery("Table",
                 Field.From("Id", "Name", "Address"),
                 null,
                 OrderField.Parse(new { Id = Order.Ascending, Name = Order.Descending }),
@@ -968,8 +917,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            builder.CreateQuery(new QueryBuilder(),
-                "Table",
+            builder.CreateQuery("Table",
                 Field.From("Id", "Name", "Address"),
                 null,
                 null,
@@ -988,8 +936,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            var query = builder.CreateSum(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateSum("Table",
                 new Field("Field", typeof(int)),
                 null,
                 null);
@@ -1006,8 +953,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            var query = builder.CreateSum(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateSum("Table",
                 new Field("Field", typeof(int)),
                 QueryGroup.Parse(new { Id = 1 }),
                 null);
@@ -1024,8 +970,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            builder.CreateSum(new QueryBuilder(),
-                "Table",
+            builder.CreateSum("Table",
                 new Field("Field", typeof(int)),
                 QueryGroup.Parse(new { Id = 1 }),
                 "WhatEver");
@@ -1042,8 +987,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            var query = builder.CreateSumAll(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateSumAll("Table",
                 new Field("Field", typeof(int)),
                 null);
             var expected = "SELECT SUM (\"Field\") AS \"SumValue\" FROM \"Table\" ;";
@@ -1059,8 +1003,7 @@ namespace RepoDb.PostgreSql.UnitTests
             var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
 
             // Act
-            builder.CreateSumAll(new QueryBuilder(),
-                "Table",
+            builder.CreateSumAll("Table",
                 new Field("Field", typeof(int)),
                 "WhatEver");
         }

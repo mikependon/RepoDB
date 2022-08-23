@@ -15,8 +15,6 @@ namespace RepoDb.SQLite.System.UnitTests
             SQLiteBootstrap.Initialize();
         }
 
-        #region SDS
-
         #region CreateBatchQuery
 
         [TestMethod]
@@ -26,8 +24,7 @@ namespace RepoDb.SQLite.System.UnitTests
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
 
             // Act
-            var query = builder.CreateBatchQuery(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateBatchQuery("Table",
                 Field.From("Id", "Name"),
                 0,
                 10,
@@ -45,8 +42,7 @@ namespace RepoDb.SQLite.System.UnitTests
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
 
             // Act
-            var query = builder.CreateBatchQuery(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateBatchQuery("Table",
                 Field.From("Id", "Name"),
                 3,
                 10,
@@ -64,8 +60,7 @@ namespace RepoDb.SQLite.System.UnitTests
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
 
             // Act
-            builder.CreateBatchQuery(new QueryBuilder(),
-                "Table",
+            builder.CreateBatchQuery("Table",
                 null,
                 0,
                 10,
@@ -79,8 +74,7 @@ namespace RepoDb.SQLite.System.UnitTests
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
 
             // Act
-            builder.CreateBatchQuery(new QueryBuilder(),
-                "Table",
+            builder.CreateBatchQuery("Table",
                 Field.From("Id", "Name"),
                 0,
                 10,
@@ -94,8 +88,7 @@ namespace RepoDb.SQLite.System.UnitTests
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
 
             // Act
-            builder.CreateBatchQuery(new QueryBuilder(),
-                "Table",
+            builder.CreateBatchQuery("Table",
                 Field.From("Id", "Name"),
                 -1,
                 10,
@@ -109,8 +102,7 @@ namespace RepoDb.SQLite.System.UnitTests
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
 
             // Act
-            builder.CreateBatchQuery(new QueryBuilder(),
-                "Table",
+            builder.CreateBatchQuery("Table",
                 Field.From("Id", "Name"),
                 0,
                 -1,
@@ -124,8 +116,7 @@ namespace RepoDb.SQLite.System.UnitTests
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
 
             // Act
-            builder.CreateBatchQuery(new QueryBuilder(),
-                "Table",
+            builder.CreateBatchQuery("Table",
                 Field.From("Id", "Name"),
                 0,
                 -1,
@@ -145,8 +136,7 @@ namespace RepoDb.SQLite.System.UnitTests
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
 
             // Act
-            var query = builder.CreateExists(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateExists("Table",
                 QueryGroup.Parse(new { Id = 1 }));
             var expected = "SELECT 1 AS [ExistsValue] FROM [Table] WHERE ([Id] = @Id) LIMIT 1 ;";
 
@@ -165,8 +155,7 @@ namespace RepoDb.SQLite.System.UnitTests
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
 
             // Act
-            var query = builder.CreateInsert(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateInsert("Table",
                 Field.From("Id", "Name", "Address"),
                 null,
                 null);
@@ -183,8 +172,7 @@ namespace RepoDb.SQLite.System.UnitTests
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
 
             // Act
-            var query = builder.CreateInsert(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateInsert("Table",
                 Field.From("Id", "Name", "Address"),
                 new DbField("Id", true, false, false, typeof(int), null, null, null, null, false),
                 null);
@@ -201,8 +189,7 @@ namespace RepoDb.SQLite.System.UnitTests
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
 
             // Act
-            var query = builder.CreateInsert(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateInsert("Table",
                 Field.From("Id", "Name", "Address"),
                 null,
                 new DbField("Id", false, true, false, typeof(int), null, null, null, null, false));
@@ -219,8 +206,7 @@ namespace RepoDb.SQLite.System.UnitTests
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
 
             // Act
-            builder.CreateInsert(new QueryBuilder(),
-                "Table",
+            builder.CreateInsert("Table",
                 Field.From("Id", "Name", "Address"),
                 null,
                 new DbField("Id", false, true, false, typeof(int), null, null, null, null, false),
@@ -238,8 +224,7 @@ namespace RepoDb.SQLite.System.UnitTests
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
 
             // Act
-            var query = builder.CreateInsertAll(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateInsertAll("Table",
                 Field.From("Id", "Name", "Address"),
                 3,
                 null,
@@ -259,8 +244,7 @@ namespace RepoDb.SQLite.System.UnitTests
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
 
             // Act
-            var query = builder.CreateInsertAll(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateInsertAll("Table",
                 Field.From("Id", "Name", "Address"),
                 3,
                 new DbField("Id", true, false, false, typeof(int), null, null, null, null, false),
@@ -280,8 +264,7 @@ namespace RepoDb.SQLite.System.UnitTests
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
 
             // Act
-            var query = builder.CreateInsertAll(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateInsertAll("Table",
                 Field.From("Id", "Name", "Address"),
                 3,
                 null,
@@ -301,8 +284,7 @@ namespace RepoDb.SQLite.System.UnitTests
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
 
             // Act
-            builder.CreateInsertAll(new QueryBuilder(),
-                "Table",
+            builder.CreateInsertAll("Table",
                 Field.From("Id", "Name", "Address"),
                 3,
                 null,
@@ -578,8 +560,7 @@ namespace RepoDb.SQLite.System.UnitTests
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
 
             // Act
-            var query = builder.CreateQuery(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateQuery("Table",
                 Field.From("Id", "Name", "Address"),
                 null,
                 null,
@@ -598,8 +579,7 @@ namespace RepoDb.SQLite.System.UnitTests
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
 
             // Act
-            var query = builder.CreateQuery(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateQuery("Table",
                 Field.From("Id", "Name", "Address"),
                 QueryGroup.Parse(new { Id = 1, Name = "Michael" }),
                 null,
@@ -618,8 +598,7 @@ namespace RepoDb.SQLite.System.UnitTests
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
 
             // Act
-            var query = builder.CreateQuery(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateQuery("Table",
                 Field.From("Id", "Name", "Address"),
                 null,
                 null,
@@ -638,8 +617,7 @@ namespace RepoDb.SQLite.System.UnitTests
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
 
             // Act
-            var query = builder.CreateQuery(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateQuery("Table",
                 Field.From("Id", "Name", "Address"),
                 null,
                 OrderField.Parse(new { Id = Order.Ascending }),
@@ -658,8 +636,7 @@ namespace RepoDb.SQLite.System.UnitTests
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
 
             // Act
-            var query = builder.CreateQuery(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateQuery("Table",
                 Field.From("Id", "Name", "Address"),
                 null,
                 OrderField.Parse(new { Id = Order.Ascending, Name = Order.Ascending }),
@@ -678,8 +655,7 @@ namespace RepoDb.SQLite.System.UnitTests
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
 
             // Act
-            var query = builder.CreateQuery(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateQuery("Table",
                 Field.From("Id", "Name", "Address"),
                 null,
                 OrderField.Parse(new { Id = Order.Descending }),
@@ -698,8 +674,7 @@ namespace RepoDb.SQLite.System.UnitTests
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
 
             // Act
-            var query = builder.CreateQuery(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateQuery("Table",
                 Field.From("Id", "Name", "Address"),
                 null,
                 OrderField.Parse(new { Id = Order.Descending, Name = Order.Descending }),
@@ -718,8 +693,7 @@ namespace RepoDb.SQLite.System.UnitTests
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
 
             // Act
-            var query = builder.CreateQuery(new QueryBuilder(),
-                "Table",
+            var query = builder.CreateQuery("Table",
                 Field.From("Id", "Name", "Address"),
                 null,
                 OrderField.Parse(new { Id = Order.Ascending, Name = Order.Descending }),
@@ -738,8 +712,7 @@ namespace RepoDb.SQLite.System.UnitTests
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
 
             // Act
-            builder.CreateQuery(new QueryBuilder(),
-                "Table",
+            builder.CreateQuery("Table",
                 Field.From("Id", "Name", "Address"),
                 null,
                 null,
@@ -758,15 +731,12 @@ namespace RepoDb.SQLite.System.UnitTests
             var builder = StatementBuilderMapper.Get<SQLiteConnection>();
 
             // Act
-            var query = builder.CreateTruncate(new QueryBuilder(),
-                "Table");
+            var query = builder.CreateTruncate("Table");
             var expected = "DELETE FROM [Table] ; VACUUM ;";
 
             // Assert
             Assert.AreEqual(expected, query);
         }
-
-        #endregion
 
         #endregion
     }

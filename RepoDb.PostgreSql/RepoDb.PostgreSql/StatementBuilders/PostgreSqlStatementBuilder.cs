@@ -42,7 +42,6 @@ namespace RepoDb.StatementBuilders
         /// <summary>
         /// Creates a SQL Statement for batch query operation.
         /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="fields">The list of fields to be queried.</param>
         /// <param name="page">The page of the batch.</param>
@@ -51,8 +50,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="where">The query expression.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for batch query operation.</returns>
-        public override string CreateBatchQuery(QueryBuilder queryBuilder,
-            string tableName,
+        public override string CreateBatchQuery(string tableName,
             IEnumerable<Field> fields,
             int page,
             int rowsPerBatch,
@@ -94,7 +92,7 @@ namespace RepoDb.StatementBuilders
             var skip = (page * rowsPerBatch);
 
             // Initialize the builder
-            var builder = queryBuilder ?? new QueryBuilder();
+            var builder = new QueryBuilder();
 
             // Build the query
             builder.Clear()
@@ -118,13 +116,11 @@ namespace RepoDb.StatementBuilders
         /// <summary>
         /// Creates a SQL Statement for exists operation.
         /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="where">The query expression.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for exists operation.</returns>
-        public override string CreateExists(QueryBuilder queryBuilder,
-            string tableName,
+        public override string CreateExists(string tableName,
             QueryGroup where = null,
             string hints = null)
         {
@@ -135,7 +131,7 @@ namespace RepoDb.StatementBuilders
             GuardHints(hints);
 
             // Initialize the builder
-            var builder = queryBuilder ?? new QueryBuilder();
+            var builder = new QueryBuilder();
 
             // Build the query
             builder.Clear()
@@ -159,49 +155,58 @@ namespace RepoDb.StatementBuilders
         /// <summary>
         /// Creates a SQL Statement for insert operation.
         /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="fields">The list of fields to be inserted.</param>
         /// <param name="primaryField">The primary field from the database.</param>
         /// <param name="identityField">The identity field from the database.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for insert operation.</returns>
-        public override string CreateInsert(QueryBuilder queryBuilder,
-            string tableName,
+        public override string CreateInsert(string tableName,
             IEnumerable<Field> fields = null,
             DbField primaryField = null,
             DbField identityField = null,
             string hints = null)
         {
             // Initialize the builder
-            var builder = queryBuilder ?? new QueryBuilder();
+            var builder = new QueryBuilder();
 
             // Call the base
-            base.CreateInsert(builder,
-                tableName,
-                fields,
-                primaryField,
-                identityField,
-                hints);
+            builder.WriteText(
+                base.CreateInsert(tableName,
+                    fields,
+                    primaryField,
+                    identityField,
+                    hints));
 
-            // Return
-            if (primaryField != null)
+            // Variables needed
+            var databaseType = (string)null;
+
+            // Check for the identity
+            if (identityField != null)
             {
-                var sql = builder
-                   .GetString()
-                   .Trim();
-
-                sql = string.Concat(sql.Substring(0, sql.Length - 1),
-                    "RETURNING ", primaryField.Name.AsField(DbSetting), " AS ",
-                    "Result".AsQuoted(DbSetting), " ;");
-
-                return sql;
+                var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
+                if (dbType != null)
+                {
+                    databaseType = new DbTypeToPostgreSqlStringNameResolver().Resolve(dbType.Value);
+                }
             }
-            else
-            {
-                return builder
-                    .GetString();
-            }
+
+            // Set the return value
+            var result = identityField != null ?
+                string.IsNullOrEmpty(databaseType) ?
+                    identityField.Name.AsQuoted(DbSetting) :
+                        $"CAST({identityField.Name.AsQuoted(DbSetting)} AS {databaseType})" :
+                            primaryField != null ? primaryField.Name.AsQuoted(DbSetting) : "NULL";
+
+            // Get the string
+            var sql = builder.GetString().Trim();
+
+            // Append the result
+            sql = string.Concat(sql.Substring(0, sql.Length - 1),
+                "RETURNING ", result, " AS ", "Result".AsQuoted(DbSetting), " ;");
+
+            // Return the query
+            return sql;
         }
 
         #endregion
@@ -211,7 +216,6 @@ namespace RepoDb.StatementBuilders
         /// <summary>
         /// Creates a SQL Statement for insert-all operation.
         /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="fields">The list of fields to be inserted.</param>
         /// <param name="batchSize">The batch size of the operation.</param>
@@ -219,47 +223,58 @@ namespace RepoDb.StatementBuilders
         /// <param name="identityField">The identity field from the database.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for insert operation.</returns>
-        public override string CreateInsertAll(QueryBuilder queryBuilder,
-            string tableName,
+        public override string CreateInsertAll(string tableName,
             IEnumerable<Field> fields = null,
             int batchSize = 1,
             DbField primaryField = null,
             DbField identityField = null,
             string hints = null)
         {
-            // Initialize the builder
-            var builder = queryBuilder ?? new QueryBuilder();
-
             // Call the base
-            base.CreateInsertAll(builder,
-                tableName,
+            var commandText = base.CreateInsertAll(tableName,
                 fields,
                 batchSize,
                 primaryField,
                 identityField,
                 hints);
 
-            // Return
-            if (primaryField != null)
-            {
-                var splitted = builder
-                    .GetString()
-                    .Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            // Variables needed
+            var databaseType = "BIGINT";
 
-                for (var index = 0; index < splitted.Length; index++)
+            // Check for the identity
+            if (identityField != null)
+            {
+                var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
+                if (dbType != null)
                 {
-                    var line = splitted[index].Trim();
-                    splitted[index] = $"{line} RETURNING { primaryField.Name.AsField(DbSetting)} AS {"Id".AsQuoted(DbSetting)}, " +
-                        $"{DbSetting.ParameterPrefix}__RepoDb_OrderColumn_{index} AS {"OrderColumn".AsQuoted(DbSetting)}";
+                    databaseType = new DbTypeToPostgreSqlStringNameResolver().Resolve(dbType.Value);
                 }
+            }
 
-                return string.Concat(string.Join(" ; ", splitted), " ;");
-            }
-            else
+            // Variables needed
+            var commandTexts = new List<string>();
+            var splitted = commandText.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+
+            // Iterate the indexes
+            for (var index = 0; index < splitted.Length; index++)
             {
-                return builder
-                    .GetString();
+                var line = splitted[index].Trim();
+
+                // Set the return value
+                var returnValue = identityField != null ?
+                    string.IsNullOrEmpty(databaseType) ?
+                        identityField.Name.AsQuoted(DbSetting) :
+                        $"CAST({identityField.Name.AsQuoted(DbSetting)} AS {databaseType})" :
+                    primaryField != null ? primaryField.Name.AsQuoted(DbSetting) : "NULL";
+                commandTexts.Add(string.Concat(line, " RETURNING ", returnValue, " AS ", "Id".AsQuoted(DbSetting), ", ",
+                    $"{DbSetting.ParameterPrefix}__RepoDb_OrderColumn_{index} AS ", "OrderColumn".AsQuoted(DbSetting), " ;"));
             }
+
+            // Set the command text
+            commandText = commandTexts.Join(" ");
+
+            // Return the query
+            return commandText;
         }
 
         #endregion
@@ -269,7 +284,6 @@ namespace RepoDb.StatementBuilders
         /// <summary>
         /// Creates a SQL Statement for merge operation.
         /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="fields">The list of fields to be merged.</param>
         /// <param name="qualifiers">The list of the qualifier <see cref="Field"/> objects.</param>
@@ -277,8 +291,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="identityField">The identity field from the database.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for merge operation.</returns>
-        public override string CreateMerge(QueryBuilder queryBuilder,
-            string tableName,
+        public override string CreateMerge(string tableName,
             IEnumerable<Field> fields,
             IEnumerable<Field> qualifiers = null,
             DbField primaryField = null,
@@ -317,13 +330,12 @@ namespace RepoDb.StatementBuilders
             }
 
             // Initialize the builder
-            var builder = queryBuilder ?? new QueryBuilder();
+            var builder = new QueryBuilder();
 
             // Remove the qualifiers from the fields
             var updatableFields = fields
                 .Where(f =>
-                    qualifiers?.Any(qf =>
-                        string.Equals(qf.Name, f.Name, StringComparison.OrdinalIgnoreCase)) != true)
+                    qualifiers?.Any(qf => string.Equals(qf.Name, f.Name, StringComparison.OrdinalIgnoreCase)) != true)
                 .AsList();
 
             // Build the query
@@ -352,11 +364,28 @@ namespace RepoDb.StatementBuilders
                 .Set()
                 .FieldsAndParametersFrom(updatableFields, 0, DbSetting);
 
+            // Variables needed
+            var databaseType = (string)null;
+
+            // Check for the identity
+            if (identityField != null)
+            {
+                var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
+                if (dbType != null)
+                {
+                    databaseType = new DbTypeToPostgreSqlStringNameResolver().Resolve(dbType.Value);
+                }
+            }
+
             // Set the return value
-            if (primaryField != null)
+            var result = identityField == null ? primaryField.Name.AsParameter(DbSetting) :
+                string.IsNullOrEmpty(databaseType) ? identityField.Name.AsQuoted(DbSetting) :
+                $"CAST({identityField.Name.AsQuoted(DbSetting)} AS {databaseType})";
+
+            if (!string.IsNullOrEmpty(result))
             {
                 // Get the string
-                var sql = string.Concat("RETURNING ", primaryField.Name.AsQuoted(DbSetting), " AS ", "Result".AsQuoted(DbSetting));
+                var sql = string.Concat("RETURNING ", result, " AS ", "Result".AsQuoted(DbSetting));
 
                 // Set the result
                 builder
@@ -377,7 +406,6 @@ namespace RepoDb.StatementBuilders
         /// <summary>
         /// Creates a SQL Statement for merge-all operation.
         /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="fields">The list of fields to be merged.</param>
         /// <param name="qualifiers">The list of the qualifier <see cref="Field"/> objects.</param>
@@ -386,8 +414,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="identityField">The identity field from the database.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for merge operation.</returns>
-        public override string CreateMergeAll(QueryBuilder queryBuilder,
-            string tableName,
+        public override string CreateMergeAll(string tableName,
             IEnumerable<Field> fields,
             IEnumerable<Field> qualifiers,
             int batchSize = 10,
@@ -427,14 +454,31 @@ namespace RepoDb.StatementBuilders
             }
 
             // Initialize the builder
-            var builder = queryBuilder ?? new QueryBuilder();
+            var builder = new QueryBuilder();
 
             // Remove the qualifiers from the fields
             var updatableFields = fields
                 .Where(f =>
-                    qualifiers?.Any(qf =>
-                        string.Equals(qf.Name, f.Name, StringComparison.OrdinalIgnoreCase)) != true)
+                    qualifiers?.Any(qf => string.Equals(qf.Name, f.Name, StringComparison.OrdinalIgnoreCase)) != true)
                 .AsList();
+
+            // Variables needed
+            var databaseType = (string)null;
+
+            // Check for the identity
+            if (identityField != null)
+            {
+                var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
+                if (dbType != null)
+                {
+                    databaseType = new DbTypeToPostgreSqlStringNameResolver().Resolve(dbType.Value);
+                }
+            }
+
+            // Set the return value
+            var result = identityField == null ? primaryField.Name.AsParameter(DbSetting) :
+                string.IsNullOrEmpty(databaseType) ? identityField.Name.AsQuoted(DbSetting) :
+                $"CAST({identityField.Name.AsQuoted(DbSetting)} AS {databaseType})";
 
             // Clear the builder
             builder.Clear();
@@ -468,11 +512,10 @@ namespace RepoDb.StatementBuilders
                     .Set()
                     .FieldsAndParametersFrom(updatableFields, index, DbSetting);
 
-                // Set the return value
-                if (primaryField != null)
+                if (!string.IsNullOrEmpty(result))
                 {
                     // Get the string
-                    var sql = string.Concat("RETURNING ", primaryField.Name.AsQuoted(DbSetting), " AS ", "Id".AsQuoted(DbSetting), ", ",
+                    var sql = string.Concat("RETURNING ", result, " AS ", "Id".AsQuoted(DbSetting), ", ",
                         $"{DbSetting.ParameterPrefix}__RepoDb_OrderColumn_{index}", " AS ", "OrderColumn".AsQuoted(DbSetting));
 
                     // Set the result
@@ -495,7 +538,6 @@ namespace RepoDb.StatementBuilders
         /// <summary>
         /// Creates a SQL Statement for query operation.
         /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="fields">The list of fields.</param>
         /// <param name="where">The query expression.</param>
@@ -503,8 +545,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for query operation.</returns>
-        public override string CreateQuery(QueryBuilder queryBuilder,
-            string tableName,
+        public override string CreateQuery(string tableName,
             IEnumerable<Field> fields,
             QueryGroup where = null,
             IEnumerable<OrderField> orderBy = null,
@@ -524,7 +565,7 @@ namespace RepoDb.StatementBuilders
             }
 
             // Initialize the builder
-            var builder = queryBuilder ?? new QueryBuilder();
+            var builder = new QueryBuilder();
 
             // Build the query
             builder.Clear()
@@ -551,17 +592,15 @@ namespace RepoDb.StatementBuilders
         /// <summary>
         /// Creates a SQL Statement for truncate operation.
         /// </summary>
-        /// <param name="queryBuilder">The query builder to be used.</param>
         /// <param name="tableName">The name of the target table.</param>
         /// <returns>A sql statement for truncate operation.</returns>
-        public override string CreateTruncate(QueryBuilder queryBuilder,
-            string tableName)
+        public override string CreateTruncate(string tableName)
         {
             // Ensure with guards
             GuardTableName(tableName);
 
             // Initialize the builder
-            var builder = queryBuilder ?? new QueryBuilder();
+            var builder = new QueryBuilder();
 
             // Build the query
             builder.Clear()

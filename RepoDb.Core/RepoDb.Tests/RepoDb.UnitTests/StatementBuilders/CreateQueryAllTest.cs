@@ -29,13 +29,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
-            var actual = statementBuilder.CreateQueryAll(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateQueryAll(tableName: tableName,
                 fields: fields);
             var expected = "SELECT [Field1], [Field2], [Field3] FROM [Table] ;";
 
@@ -48,13 +46,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "[dbo].[Table]";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
-            var actual = statementBuilder.CreateQueryAll(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateQueryAll(tableName: tableName,
                 fields: fields);
             var expected = "SELECT [Field1], [Field2], [Field3] FROM [dbo].[Table] ;";
 
@@ -67,13 +63,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "dbo.Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
-            var actual = statementBuilder.CreateQueryAll(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateQueryAll(tableName: tableName,
                 fields: fields);
             var expected = "SELECT [Field1], [Field2], [Field3] FROM [dbo].[Table] ;";
 
@@ -86,14 +80,12 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var orderBy = OrderField.Parse(new { Field1 = Order.Ascending, Field2 = Order.Descending });
 
             // Act
-            var actual = statementBuilder.CreateQueryAll(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateQueryAll(tableName: tableName,
                 fields: fields,
                 orderBy: orderBy);
             var expected = $"" +
@@ -110,14 +102,12 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var hints = "WITH (NOLOCK)";
 
             // Act
-            var actual = statementBuilder.CreateQueryAll(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateQueryAll(tableName: tableName,
                 fields: fields,
                 hints: hints);
             var expected = "SELECT [Field1], [Field2], [Field3] FROM [Table] WITH (NOLOCK) ;";
@@ -131,15 +121,13 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
             var orderBy = OrderField.Parse(new { Field1 = Order.Ascending, Field2 = Order.Descending });
             var hints = "WITH (NOLOCK)";
 
             // Act
-            var actual = statementBuilder.CreateQueryAll(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateQueryAll(tableName: tableName,
                 fields: fields,
                 orderBy: orderBy,
                 hints: hints);
@@ -157,12 +145,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
 
             // Act
-            statementBuilder.CreateQueryAll(queryBuilder: queryBuilder,
-                tableName: tableName,
+            statementBuilder.CreateQueryAll(tableName: tableName,
                 fields: null);
         }
 
@@ -171,13 +157,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = (string)null;
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
-            statementBuilder.CreateQueryAll(queryBuilder: queryBuilder,
-                tableName: tableName,
+            statementBuilder.CreateQueryAll(tableName: tableName,
                 fields: fields);
         }
 
@@ -186,13 +170,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
-            statementBuilder.CreateQueryAll(queryBuilder: queryBuilder,
-                tableName: tableName,
+            statementBuilder.CreateQueryAll(tableName: tableName,
                 fields: fields);
         }
 
@@ -201,13 +183,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = " ";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
-            statementBuilder.CreateQueryAll(queryBuilder: queryBuilder,
-                tableName: tableName,
+            statementBuilder.CreateQueryAll(tableName: tableName,
                 fields: fields);
         }
 
@@ -216,13 +196,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<NonHintsSupportingBaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
 
             // Act
-            statementBuilder.CreateQueryAll(queryBuilder: queryBuilder,
-                tableName: tableName,
+            statementBuilder.CreateQueryAll(tableName: tableName,
                 fields: fields,
                 hints: "Hints");
         }

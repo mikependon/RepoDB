@@ -27,12 +27,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
 
             // Act
-            var actual = statementBuilder.CreateCountAll(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateCountAll(tableName: tableName,
                 hints: null);
             var expected = "SELECT COUNT (*) AS [CountValue] FROM [Table] ;";
 
@@ -45,13 +43,11 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
             var hints = "WITH (NOLOCK)";
 
             // Act
-            var actual = statementBuilder.CreateCountAll(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateCountAll(tableName: tableName,
                 hints: hints);
             var expected = "SELECT COUNT (*) AS [CountValue] FROM [Table] WITH (NOLOCK) ;";
 
@@ -64,12 +60,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "[dbo].[Table]";
 
             // Act
-            var actual = statementBuilder.CreateCountAll(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateCountAll(tableName: tableName,
                 hints: null);
             var expected = "SELECT COUNT (*) AS [CountValue] FROM [dbo].[Table] ;";
 
@@ -82,12 +76,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "dbo.Table";
 
             // Act
-            var actual = statementBuilder.CreateCountAll(queryBuilder: queryBuilder,
-                tableName: tableName,
+            var actual = statementBuilder.CreateCountAll(tableName: tableName,
                 hints: null);
             var expected = "SELECT COUNT (*) AS [CountValue] FROM [dbo].[Table] ;";
 
@@ -100,12 +92,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = (string)null;
 
             // Act
-            statementBuilder.CreateCountAll(queryBuilder: queryBuilder,
-                tableName: tableName,
+            statementBuilder.CreateCountAll(tableName: tableName,
                 hints: null);
         }
 
@@ -114,12 +104,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "";
 
             // Act
-            statementBuilder.CreateCountAll(queryBuilder: queryBuilder,
-                tableName: tableName,
+            statementBuilder.CreateCountAll(tableName: tableName,
                 hints: null);
         }
 
@@ -128,12 +116,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<BaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = " ";
 
             // Act
-            statementBuilder.CreateCountAll(queryBuilder: queryBuilder,
-                tableName: tableName,
+            statementBuilder.CreateCountAll(tableName: tableName,
                 hints: null);
         }
 
@@ -142,12 +128,10 @@ namespace RepoDb.UnitTests.StatementBuilders
         {
             // Setup
             var statementBuilder = StatementBuilderMapper.Get<NonHintsSupportingBaseStatementBuilderDbConnection>();
-            var queryBuilder = new QueryBuilder();
             var tableName = "Table";
 
             // Act
-            statementBuilder.CreateCountAll(queryBuilder: queryBuilder,
-                tableName: tableName,
+            statementBuilder.CreateCountAll(tableName: tableName,
                 hints: "Hints");
         }
     }
