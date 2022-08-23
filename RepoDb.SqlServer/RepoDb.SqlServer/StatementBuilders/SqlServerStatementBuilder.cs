@@ -67,7 +67,7 @@ namespace RepoDb.StatementBuilders
             // There should be fields
             if (fields?.Any() != true)
             {
-                throw new MissingFieldsException(fields.Select(f => f.Name));
+                throw new MissingFieldsException(fields?.Select(f => f.Name));
             }
 
             // Validate order by
