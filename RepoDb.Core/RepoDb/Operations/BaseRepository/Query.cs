@@ -21,7 +21,7 @@ namespace RepoDb
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
-        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
@@ -55,7 +55,7 @@ namespace RepoDb
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
-        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
@@ -88,7 +88,7 @@ namespace RepoDb
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
-        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
@@ -121,7 +121,7 @@ namespace RepoDb
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
-        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
@@ -154,7 +154,7 @@ namespace RepoDb
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
-        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
@@ -187,7 +187,7 @@ namespace RepoDb
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
-        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
@@ -219,7 +219,7 @@ namespace RepoDb
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
-        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
@@ -250,7 +250,7 @@ namespace RepoDb
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
-        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
@@ -280,7 +280,7 @@ namespace RepoDb
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
-        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
@@ -310,7 +310,7 @@ namespace RepoDb
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
-        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
@@ -340,7 +340,7 @@ namespace RepoDb
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
-        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
@@ -370,7 +370,7 @@ namespace RepoDb
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
-        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
@@ -405,7 +405,7 @@ namespace RepoDb
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
-        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
@@ -442,7 +442,7 @@ namespace RepoDb
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
-        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
@@ -478,7 +478,7 @@ namespace RepoDb
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
-        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
@@ -514,7 +514,7 @@ namespace RepoDb
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
-        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
@@ -550,7 +550,7 @@ namespace RepoDb
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
-        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
@@ -586,7 +586,7 @@ namespace RepoDb
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
-        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
@@ -621,7 +621,7 @@ namespace RepoDb
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
-        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
@@ -655,7 +655,7 @@ namespace RepoDb
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
-        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
@@ -688,7 +688,7 @@ namespace RepoDb
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
-        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
@@ -721,7 +721,7 @@ namespace RepoDb
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
-        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
@@ -754,7 +754,7 @@ namespace RepoDb
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
-        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
@@ -787,7 +787,7 @@ namespace RepoDb
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">
-        /// The key to the cache item.By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
         /// </param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
