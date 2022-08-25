@@ -34,11 +34,20 @@ namespace RepoDb
         /// <param name="orderBy1">The order definition of the fields to be used (at T1).</param>
         /// <param name="top1">The number of rows to be returned (at T1).</param>
         /// <param name="hints1">The table hints to be used (at T1).</param>
+        /// <param name="cacheKey1">
+        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy2">The order definition of the fields to be used (at T2).</param>
         /// <param name="top2">The number of rows to be returned (at T2).</param>
         /// <param name="hints2">The table hints to be used (at T2).</param>
+        /// <param name="cacheKey2">
+        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
@@ -48,11 +57,14 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
+            string cacheKey1 = null,
             int? top2 = 0,
             IEnumerable<OrderField> orderBy2 = null,
             string hints2 = null,
+            string cacheKey2 = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
+            ICache cache = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
             where T1 : class
@@ -64,11 +76,14 @@ namespace RepoDb
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
+                cacheKey1: cacheKey1,
                 top2: top2,
                 orderBy2: orderBy2,
                 hints2: hints2,
+                cacheKey2: cacheKey2,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder);
         }
@@ -83,71 +98,100 @@ namespace RepoDb
         /// <param name="orderBy1">The order definition of the fields to be used (at T1).</param>
         /// <param name="top1">The number of rows to be returned (at T1).</param>
         /// <param name="hints1">The table hints to be used (at T1).</param>
+        /// <param name="cacheKey1">
+        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="where2">The query expression to be used (at T2).</param>
         /// <param name="orderBy2">The order definition of the fields to be used (at T2).</param>
         /// <param name="top2">The number of rows to be returned (at T2).</param>
         /// <param name="hints2">The table hints to be used (at T2).</param>
+        /// <param name="cacheKey2">
+        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
         internal static Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultipleInternal<T1, T2>(this IDbConnection connection,
-        QueryGroup where1,
-        QueryGroup where2,
-        IEnumerable<OrderField> orderBy1 = null,
-        int? top1 = 0,
-        string hints1 = null,
-        int? top2 = 0,
-        IEnumerable<OrderField> orderBy2 = null,
-        string hints2 = null,
-        int? commandTimeout = null,
-        IDbTransaction transaction = null,
-        ITrace trace = null,
-        IStatementBuilder statementBuilder = null)
-        where T1 : class
-        where T2 : class
+            QueryGroup where1,
+            QueryGroup where2,
+            IEnumerable<OrderField> orderBy1 = null,
+            int? top1 = 0,
+            string hints1 = null,
+            string cacheKey1 = null,
+            int? top2 = 0,
+            IEnumerable<OrderField> orderBy2 = null,
+            string hints2 = null,
+            string cacheKey2 = null,
+            int? commandTimeout = null,
+            IDbTransaction transaction = null,
+            ICache cache = null,
+            ITrace trace = null,
+            IStatementBuilder statementBuilder = null)
+            where T1 : class
+            where T2 : class
         {
             // Variables
             var commandType = CommandType.Text;
+            var queryGroups = new List<QueryGroup>();
+            var maps = new List<QueryGroupTypeMap>();
+            var commandTexts = new List<string>();
+
+            // Items
+            var item1 = EnsureQueryMultipleCachedItem<T1>(cacheKey1,
+                cache,
+                where1,
+                queryGroups);
+
+            var item2 = EnsureQueryMultipleCachedItem<T2>(cacheKey2,
+                cache,
+                where2,
+                queryGroups);
 
             // Fix
-            QueryGroup.FixForQueryMultiple(new[] { where1, where2 });
+            QueryGroup.FixForQueryMultiple(queryGroups.ToArray());
 
-            // T1
-            var request1 = new QueryMultipleRequest(1,
-                typeof(T1),
-                connection,
-                transaction,
-                FieldCache.Get<T1>(),
-                where1,
-                orderBy1,
-                top1,
-                hints1,
-                statementBuilder);
-            var commandText1 = CommandTextCache.GetQueryMultipleText<T1>(request1);
+            // Item1 Request
+            if (item1 == null)
+            {
+                var request1 = new QueryMultipleRequest(1,
+                    typeof(T1),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T1>(),
+                    where1,
+                    orderBy1,
+                    top1,
+                    hints1,
+                    statementBuilder);
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T1>(request1));
+                maps.Add(where1.MapTo<T1>());
+            }
 
-            // T2
-            var request2 = new QueryMultipleRequest(2,
-                typeof(T2),
-                connection,
-                transaction,
-                FieldCache.Get<T2>(),
-                where2,
-                orderBy2,
-                top2,
-                hints2,
-                statementBuilder);
-            var commandText2 = CommandTextCache.GetQueryMultipleText<T2>(request2);
+            // Item2 Request
+            if (item2 == null)
+            {
+                var request2 = new QueryMultipleRequest(2,
+                    typeof(T2),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T2>(),
+                    where2,
+                    orderBy2,
+                    top2,
+                    hints2,
+                    statementBuilder);
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T2>(request2));
+                maps.Add(where2.MapTo<T2>());
+            }
 
             // Shared variables
-            var commandText = string.Join(" ", commandText1, commandText2);
-            var maps = new[]
-            {
-                where1.MapTo<T1>(),
-                where2.MapTo<T2>()
-            };
-            var param = QueryGroup.AsMappedObject(maps, false);
+            var commandText = string.Join(" ", commandTexts);
+            var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             var sessionId = Guid.Empty;
 
             // Before Execution
@@ -169,10 +213,10 @@ namespace RepoDb
             }
 
             // Before Execution Time
+            Tuple<IEnumerable<T1>, IEnumerable<T2>> result;
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = (Tuple<IEnumerable<T1>, IEnumerable<T2>>)null;
             using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
                 commandText: commandText,
                 param: param,
@@ -187,16 +231,22 @@ namespace RepoDb
                 var dbFields = (IEnumerable<DbField>)null;
 
                 // T1
-                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T1>(), transaction);
-                var item1 = DataReader.ToEnumerable<T1>(reader, dbFields, dbSetting)?.AsList();
+                if (item1 == null)
+                {
+                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T1>(), transaction);
+                    item1 = DataReader.ToEnumerable<T1>(reader, dbFields, dbSetting)?.AsList();
+                }
 
                 // T2
-                reader?.NextResult();
-                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T2>(), transaction);
-                var item2 = DataReader.ToEnumerable<T2>(reader, dbFields, dbSetting)?.AsList();
+                if (item2 == null)
+                {
+                    reader?.NextResult();
+                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T2>(), transaction);
+                    item2 = DataReader.ToEnumerable<T2>(reader, dbFields, dbSetting)?.AsList();
+                }
 
                 // Result
-                result = new Tuple<IEnumerable<T1>, IEnumerable<T2>>(item1, item2);
+                result = Tuple.Create(item1, item2);
             }
 
             // After Execution
@@ -224,14 +274,27 @@ namespace RepoDb
         /// <param name="orderBy1">The order definition of the fields to be used (at T1).</param>
         /// <param name="top1">The number of rows to be returned (at T1).</param>
         /// <param name="hints1">The table hints to be used (at T1).</param>
+        /// <param name="cacheKey1">
+        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy2">The order definition of the fields to be used (at T2).</param>
         /// <param name="top2">The number of rows to be returned (at T2).</param>
         /// <param name="hints2">The table hints to be used (at T2).</param>
+        /// <param name="cacheKey2">
+        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy3">The order definition of the fields to be used (at T3).</param>
         /// <param name="top3">The number of rows to be returned (at T3).</param>
         /// <param name="hints3">The table hints to be used (at T3).</param>
+        /// <param name="cacheKey3">
+        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
@@ -242,14 +305,18 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
+            string cacheKey1 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
+            string cacheKey2 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
+            string cacheKey3 = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
+            ICache cache = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
             where T1 : class
@@ -266,9 +333,11 @@ namespace RepoDb
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
+                cacheKey2: cacheKey2,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
+                cacheKey3: cacheKey3,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -288,14 +357,27 @@ namespace RepoDb
         /// <param name="orderBy1">The order definition of the fields to be used (at T1).</param>
         /// <param name="top1">The number of rows to be returned (at T1).</param>
         /// <param name="hints1">The table hints to be used (at T1).</param>
+        /// <param name="cacheKey1">
+        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy2">The order definition of the fields to be used (at T2).</param>
         /// <param name="top2">The number of rows to be returned (at T2).</param>
         /// <param name="hints2">The table hints to be used (at T2).</param>
+        /// <param name="cacheKey2">
+        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy3">The order definition of the fields to be used (at T3).</param>
         /// <param name="top3">The number of rows to be returned (at T3).</param>
         /// <param name="hints3">The table hints to be used (at T3).</param>
+        /// <param name="cacheKey3">
+        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
@@ -306,14 +388,18 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
+            string cacheKey1 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
+            string cacheKey2 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
+            string cacheKey3 = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
+            ICache cache = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
             where T1 : class
@@ -322,58 +408,83 @@ namespace RepoDb
         {
             // Variables
             var commandType = CommandType.Text;
+            var queryGroups = new List<QueryGroup>();
+            var maps = new List<QueryGroupTypeMap>();
+            var commandTexts = new List<string>();
+
+            // Items
+            var item1 = EnsureQueryMultipleCachedItem<T1>(cacheKey1,
+                cache,
+                where1,
+                queryGroups);
+
+            var item2 = EnsureQueryMultipleCachedItem<T2>(cacheKey2,
+                cache,
+                where2,
+                queryGroups);
+
+            var item3 = EnsureQueryMultipleCachedItem<T3>(cacheKey3,
+                cache,
+                where3,
+                queryGroups);
 
             // Fix
-            QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3 });
+            QueryGroup.FixForQueryMultiple(queryGroups.ToArray());
 
-            // T1
-            var request1 = new QueryMultipleRequest(1,
-                typeof(T1),
-                connection,
-                transaction,
-                FieldCache.Get<T1>(),
-                where1,
-                orderBy1,
-                top1,
-                hints1,
-                statementBuilder);
-            var commandText1 = CommandTextCache.GetQueryMultipleText<T1>(request1);
+            // Item1 Request
+            if (item1 == null)
+            {
+                var request1 = new QueryMultipleRequest(1,
+                    typeof(T1),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T1>(),
+                    where1,
+                    orderBy1,
+                    top1,
+                    hints1,
+                    statementBuilder);
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T1>(request1));
+                maps.Add(where1.MapTo<T1>());
+            }
 
-            // T2
-            var request2 = new QueryMultipleRequest(2,
-                typeof(T2),
-                connection,
-                transaction,
-                FieldCache.Get<T2>(),
-                where2,
-                orderBy2,
-                top2,
-                hints2,
-                statementBuilder);
-            var commandText2 = CommandTextCache.GetQueryMultipleText<T2>(request2);
+            // Item2 Request
+            if (item2 == null)
+            {
+                var request2 = new QueryMultipleRequest(2,
+                    typeof(T2),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T2>(),
+                    where2,
+                    orderBy2,
+                    top2,
+                    hints2,
+                    statementBuilder);
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T2>(request2));
+                maps.Add(where2.MapTo<T2>());
+            }
 
-            // T3
-            var request3 = new QueryMultipleRequest(3,
-                typeof(T3),
-                connection,
-                transaction,
-                FieldCache.Get<T3>(),
-                where3,
-                orderBy3,
-                top3,
-                hints3,
-                statementBuilder);
-            var commandText3 = CommandTextCache.GetQueryMultipleText<T3>(request3);
+            // Item3 Request
+            if (item3 == null)
+            {
+                var request3 = new QueryMultipleRequest(3,
+                    typeof(T3),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T3>(),
+                    where3,
+                    orderBy3,
+                    top3,
+                    hints3,
+                    statementBuilder);
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T2>(request3));
+                maps.Add(where3.MapTo<T3>());
+            }
 
             // Shared variables
-            var commandText = string.Join(" ", commandText1, commandText2, commandText3);
-            var maps = new[]
-            {
-                where1.MapTo<T1>(),
-                where2.MapTo<T2>(),
-                where3.MapTo<T3>()
-            };
-            var param = QueryGroup.AsMappedObject(maps, false);
+            var commandText = string.Join(" ", commandTexts);
+            var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             var sessionId = Guid.Empty;
 
             // Before Execution
@@ -395,10 +506,10 @@ namespace RepoDb
             }
 
             // Before Execution Time
+            Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> result;
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = (Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>)null;
             using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
                 commandText: commandText,
                 param: param,
@@ -413,21 +524,30 @@ namespace RepoDb
                 var dbFields = (IEnumerable<DbField>)null;
 
                 // T1
-                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T1>(), transaction);
-                var item1 = DataReader.ToEnumerable<T1>(reader, dbFields, dbSetting)?.AsList();
+                if (item1 == null)
+                {
+                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T1>(), transaction);
+                    item1 = DataReader.ToEnumerable<T1>(reader, dbFields, dbSetting)?.AsList();
+                }
 
                 // T2
-                reader?.NextResult();
-                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T2>(), transaction);
-                var item2 = DataReader.ToEnumerable<T2>(reader, dbFields, dbSetting)?.AsList();
+                if (item2 == null)
+                {
+                    reader?.NextResult();
+                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T2>(), transaction);
+                    item2 = DataReader.ToEnumerable<T2>(reader, dbFields, dbSetting)?.AsList();
+                }
 
                 // T3
-                reader?.NextResult();
-                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T3>(), transaction);
-                var item3 = DataReader.ToEnumerable<T3>(reader, dbFields, dbSetting)?.AsList();
+                if (item3 == null)
+                {
+                    reader?.NextResult();
+                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T3>(), transaction);
+                    item3 = DataReader.ToEnumerable<T3>(reader, dbFields, dbSetting)?.AsList();
+                }
 
                 // Result
-                result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>(item1, item2, item3);
+                result = Tuple.Create(item1, item2, item3);
             }
 
             // After Execution
@@ -457,17 +577,34 @@ namespace RepoDb
         /// <param name="orderBy1">The order definition of the fields to be used (at T1).</param>
         /// <param name="top1">The number of rows to be returned (at T1).</param>
         /// <param name="hints1">The table hints to be used (at T1).</param>
+        /// <param name="cacheKey1">
+        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy2">The order definition of the fields to be used (at T2).</param>
         /// <param name="top2">The number of rows to be returned (at T2).</param>
         /// <param name="hints2">The table hints to be used (at T2).</param>
+        /// <param name="cacheKey2">
+        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy3">The order definition of the fields to be used (at T3).</param>
         /// <param name="top3">The number of rows to be returned (at T3).</param>
         /// <param name="hints3">The table hints to be used (at T3).</param>
+        /// <param name="cacheKey3">
+        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy4">The order definition of the fields to be used (at T4).</param>
         /// <param name="top4">The number of rows to be returned (at T4).</param>
         /// <param name="hints4">The table hints to be used (at T4).</param>
+        /// <param name="cacheKey4">
+        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
@@ -480,17 +617,22 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
+            string cacheKey1 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
+            string cacheKey2 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
+            string cacheKey3 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
+            string cacheKey4 = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
+            ICache cache = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
             where T1 : class
@@ -509,12 +651,15 @@ namespace RepoDb
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
+                cacheKey2: cacheKey2,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
+                cacheKey3: cacheKey3,
                 orderBy4: orderBy4,
                 top4: top4,
                 hints4: hints4,
+                cacheKey4: cacheKey4,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -536,17 +681,34 @@ namespace RepoDb
         /// <param name="orderBy1">The order definition of the fields to be used (at T1).</param>
         /// <param name="top1">The number of rows to be returned (at T1).</param>
         /// <param name="hints1">The table hints to be used (at T1).</param>
+        /// <param name="cacheKey1">
+        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy2">The order definition of the fields to be used (at T2).</param>
         /// <param name="top2">The number of rows to be returned (at T2).</param>
         /// <param name="hints2">The table hints to be used (at T2).</param>
+        /// <param name="cacheKey2">
+        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy3">The order definition of the fields to be used (at T3).</param>
         /// <param name="top3">The number of rows to be returned (at T3).</param>
         /// <param name="hints3">The table hints to be used (at T3).</param>
+        /// <param name="cacheKey3">
+        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy4">The order definition of the fields to be used (at T4).</param>
         /// <param name="top4">The number of rows to be returned (at T4).</param>
         /// <param name="hints4">The table hints to be used (at T4).</param>
+        /// <param name="cacheKey4">
+        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
@@ -559,17 +721,22 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
+            string cacheKey1 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
+            string cacheKey2 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
+            string cacheKey3 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
+            string cacheKey4 = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
+            ICache cache = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
             where T1 : class
@@ -579,72 +746,105 @@ namespace RepoDb
         {
             // Variables
             var commandType = CommandType.Text;
+            var queryGroups = new List<QueryGroup>();
+            var maps = new List<QueryGroupTypeMap>();
+            var commandTexts = new List<string>();
+
+            // Items
+            var item1 = EnsureQueryMultipleCachedItem<T1>(cacheKey1,
+                cache,
+                where1,
+                queryGroups);
+
+            var item2 = EnsureQueryMultipleCachedItem<T2>(cacheKey2,
+                cache,
+                where2,
+                queryGroups);
+
+            var item3 = EnsureQueryMultipleCachedItem<T3>(cacheKey3,
+                cache,
+                where3,
+                queryGroups);
+
+            var item4 = EnsureQueryMultipleCachedItem<T4>(cacheKey4,
+                cache,
+                where4,
+                queryGroups);
 
             // Fix
-            QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3, where4 });
+            QueryGroup.FixForQueryMultiple(queryGroups.ToArray());
 
-            // T1
-            var request1 = new QueryMultipleRequest(1,
-                typeof(T1),
-                connection,
-                transaction,
-                FieldCache.Get<T1>(),
-                where1,
-                orderBy1,
-                top1,
-                hints1,
-                statementBuilder);
-            var commandText1 = CommandTextCache.GetQueryMultipleText<T1>(request1);
+            // Item1 Request
+            if (item1 == null)
+            {
+                var request1 = new QueryMultipleRequest(1,
+                    typeof(T1),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T1>(),
+                    where1,
+                    orderBy1,
+                    top1,
+                    hints1,
+                    statementBuilder);
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T1>(request1));
+                maps.Add(where1.MapTo<T1>());
+            }
 
-            // T2
-            var request2 = new QueryMultipleRequest(2,
-                typeof(T2),
-                connection,
-                transaction,
-                FieldCache.Get<T2>(),
-                where2,
-                orderBy2,
-                top2,
-                hints2,
-                statementBuilder);
-            var commandText2 = CommandTextCache.GetQueryMultipleText<T2>(request2);
+            // Item2 Request
+            if (item2 == null)
+            {
+                var request2 = new QueryMultipleRequest(2,
+                    typeof(T2),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T2>(),
+                    where2,
+                    orderBy2,
+                    top2,
+                    hints2,
+                    statementBuilder);
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T2>(request2));
+                maps.Add(where2.MapTo<T2>());
+            }
 
-            // T3
-            var request3 = new QueryMultipleRequest(3,
-                typeof(T3),
-                connection,
-                transaction,
-                FieldCache.Get<T3>(),
-                where3,
-                orderBy3,
-                top3,
-                hints3,
-                statementBuilder);
-            var commandText3 = CommandTextCache.GetQueryMultipleText<T3>(request3);
+            // Item3 Request
+            if (item3 == null)
+            {
+                var request3 = new QueryMultipleRequest(3,
+                    typeof(T3),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T3>(),
+                    where3,
+                    orderBy3,
+                    top3,
+                    hints3,
+                    statementBuilder);
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T2>(request3));
+                maps.Add(where3.MapTo<T3>());
+            }
 
-            // T4
-            var request4 = new QueryMultipleRequest(4,
-                typeof(T4),
-                connection,
-                transaction,
-                FieldCache.Get<T4>(),
-                where4,
-                orderBy4,
-                top4,
-                hints4,
-                statementBuilder);
-            var commandText4 = CommandTextCache.GetQueryMultipleText<T4>(request4);
+            // Item4 Request
+            if (item4 == null)
+            {
+                var request4 = new QueryMultipleRequest(4,
+                    typeof(T4),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T4>(),
+                    where4,
+                    orderBy4,
+                    top4,
+                    hints4,
+                    statementBuilder);
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T2>(request4));
+                maps.Add(where4.MapTo<T4>());
+            }
 
             // Shared variables
-            var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4);
-            var maps = new[]
-            {
-                where1.MapTo<T1>(),
-                where2.MapTo<T2>(),
-                where3.MapTo<T3>(),
-                where4.MapTo<T4>()
-            };
-            var param = QueryGroup.AsMappedObject(maps, false);
+            var commandText = string.Join(" ", commandTexts);
+            var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             var sessionId = Guid.Empty;
 
             // Before Execution
@@ -666,10 +866,10 @@ namespace RepoDb
             }
 
             // Before Execution Time
+            Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>> result;
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = (Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>)null;
             using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
                 commandText: commandText,
                 param: param,
@@ -684,26 +884,38 @@ namespace RepoDb
                 var dbFields = (IEnumerable<DbField>)null;
 
                 // T1
-                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T1>(), transaction);
-                var item1 = DataReader.ToEnumerable<T1>(reader, dbFields, dbSetting)?.AsList();
+                if (item1 == null)
+                {
+                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T1>(), transaction);
+                    item1 = DataReader.ToEnumerable<T1>(reader, dbFields, dbSetting)?.AsList();
+                }
 
                 // T2
-                reader?.NextResult();
-                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T2>(), transaction);
-                var item2 = DataReader.ToEnumerable<T2>(reader, dbFields, dbSetting)?.AsList();
+                if (item2 == null)
+                {
+                    reader?.NextResult();
+                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T2>(), transaction);
+                    item2 = DataReader.ToEnumerable<T2>(reader, dbFields, dbSetting)?.AsList();
+                }
 
                 // T3
-                reader?.NextResult();
-                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T3>(), transaction);
-                var item3 = DataReader.ToEnumerable<T3>(reader, dbFields, dbSetting)?.AsList();
+                if (item3 == null)
+                {
+                    reader?.NextResult();
+                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T3>(), transaction);
+                    item3 = DataReader.ToEnumerable<T3>(reader, dbFields, dbSetting)?.AsList();
+                }
 
                 // T4
-                reader?.NextResult();
-                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T4>(), transaction);
-                var item4 = DataReader.ToEnumerable<T4>(reader, dbFields, dbSetting)?.AsList();
+                if (item4 == null)
+                {
+                    reader?.NextResult();
+                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T4>(), transaction);
+                    item4 = DataReader.ToEnumerable<T4>(reader, dbFields, dbSetting)?.AsList();
+                }
 
                 // Result
-                result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>(item1, item2, item3, item4);
+                result = Tuple.Create(item1, item2, item3, item4);
             }
 
             // After Execution
@@ -735,20 +947,41 @@ namespace RepoDb
         /// <param name="orderBy1">The order definition of the fields to be used (at T1).</param>
         /// <param name="top1">The number of rows to be returned (at T1).</param>
         /// <param name="hints1">The table hints to be used (at T1).</param>
+        /// <param name="cacheKey1">
+        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy2">The order definition of the fields to be used (at T2).</param>
         /// <param name="top2">The number of rows to be returned (at T2).</param>
         /// <param name="hints2">The table hints to be used (at T2).</param>
+        /// <param name="cacheKey2">
+        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy3">The order definition of the fields to be used (at T3).</param>
         /// <param name="top3">The number of rows to be returned (at T3).</param>
         /// <param name="hints3">The table hints to be used (at T3).</param>
+        /// <param name="cacheKey3">
+        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy4">The order definition of the fields to be used (at T4).</param>
         /// <param name="top4">The number of rows to be returned (at T4).</param>
         /// <param name="hints4">The table hints to be used (at T4).</param>
+        /// <param name="cacheKey4">
+        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy5">The order definition of the fields to be used (at T5).</param>
         /// <param name="top5">The number of rows to be returned (at T5).</param>
         /// <param name="hints5">The table hints to be used (at T5).</param>
+        /// <param name="cacheKey5">
+        /// The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
@@ -762,20 +995,26 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
+            string cacheKey1 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
+            string cacheKey2 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
+            string cacheKey3 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
+            string cacheKey4 = null,
             IEnumerable<OrderField> orderBy5 = null,
             int? top5 = 0,
             string hints5 = null,
+            string cacheKey5 = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
+            ICache cache = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
             where T1 : class
@@ -796,15 +1035,19 @@ namespace RepoDb
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
+                cacheKey2: cacheKey2,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
+                cacheKey3: cacheKey3,
                 orderBy4: orderBy4,
                 top4: top4,
                 hints4: hints4,
+                cacheKey4: cacheKey4,
                 orderBy5: orderBy5,
                 top5: top5,
                 hints5: hints5,
+                cacheKey5: cacheKey5,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -828,20 +1071,41 @@ namespace RepoDb
         /// <param name="orderBy1">The order definition of the fields to be used (at T1).</param>
         /// <param name="top1">The number of rows to be returned (at T1).</param>
         /// <param name="hints1">The table hints to be used (at T1).</param>
+        /// <param name="cacheKey1">
+        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy2">The order definition of the fields to be used (at T2).</param>
         /// <param name="top2">The number of rows to be returned (at T2).</param>
         /// <param name="hints2">The table hints to be used (at T2).</param>
+        /// <param name="cacheKey2">
+        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy3">The order definition of the fields to be used (at T3).</param>
         /// <param name="top3">The number of rows to be returned (at T3).</param>
         /// <param name="hints3">The table hints to be used (at T3).</param>
+        /// <param name="cacheKey3">
+        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy4">The order definition of the fields to be used (at T4).</param>
         /// <param name="top4">The number of rows to be returned (at T4).</param>
         /// <param name="hints4">The table hints to be used (at T4).</param>
+        /// <param name="cacheKey4">
+        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy5">The order definition of the fields to be used (at T5).</param>
         /// <param name="top5">The number of rows to be returned (at T5).</param>
         /// <param name="hints5">The table hints to be used (at T5).</param>
+        /// <param name="cacheKey5">
+        /// The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
@@ -855,20 +1119,26 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
+            string cacheKey1 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
+            string cacheKey2 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
+            string cacheKey3 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
+            string cacheKey4 = null,
             IEnumerable<OrderField> orderBy5 = null,
             int? top5 = 0,
             string hints5 = null,
+            string cacheKey5 = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
+            ICache cache = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
             where T1 : class
@@ -879,86 +1149,127 @@ namespace RepoDb
         {
             // Variables
             var commandType = CommandType.Text;
+            var queryGroups = new List<QueryGroup>();
+            var maps = new List<QueryGroupTypeMap>();
+            var commandTexts = new List<string>();
+
+            // Items
+            var item1 = EnsureQueryMultipleCachedItem<T1>(cacheKey1,
+                cache,
+                where1,
+                queryGroups);
+
+            var item2 = EnsureQueryMultipleCachedItem<T2>(cacheKey2,
+                cache,
+                where2,
+                queryGroups);
+
+            var item3 = EnsureQueryMultipleCachedItem<T3>(cacheKey3,
+                cache,
+                where3,
+                queryGroups);
+
+            var item4 = EnsureQueryMultipleCachedItem<T4>(cacheKey4,
+                cache,
+                where4,
+                queryGroups);
+
+            var item5 = EnsureQueryMultipleCachedItem<T5>(cacheKey5,
+                cache,
+                where5,
+                queryGroups);
 
             // Fix
-            QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3, where4, where5 });
+            QueryGroup.FixForQueryMultiple(queryGroups.ToArray());
 
-            // T1
-            var request1 = new QueryMultipleRequest(1,
-                typeof(T1),
-                connection,
-                transaction,
-                FieldCache.Get<T1>(),
-                where1,
-                orderBy1,
-                top1,
-                hints1,
-                statementBuilder);
-            var commandText1 = CommandTextCache.GetQueryMultipleText<T1>(request1);
+            // Item1 Request
+            if (item1 == null)
+            {
+                var request1 = new QueryMultipleRequest(1,
+                    typeof(T1),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T1>(),
+                    where1,
+                    orderBy1,
+                    top1,
+                    hints1,
+                    statementBuilder);
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T1>(request1));
+                maps.Add(where1.MapTo<T1>());
+            }
 
-            // T2
-            var request2 = new QueryMultipleRequest(2,
-                typeof(T2),
-                connection,
-                transaction,
-                FieldCache.Get<T2>(),
-                where2,
-                orderBy2,
-                top2,
-                hints2,
-                statementBuilder);
-            var commandText2 = CommandTextCache.GetQueryMultipleText<T2>(request2);
+            // Item2 Request
+            if (item2 == null)
+            {
+                var request2 = new QueryMultipleRequest(2,
+                    typeof(T2),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T2>(),
+                    where2,
+                    orderBy2,
+                    top2,
+                    hints2,
+                    statementBuilder);
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T2>(request2));
+                maps.Add(where2.MapTo<T2>());
+            }
 
-            // T3
-            var request3 = new QueryMultipleRequest(3,
-                typeof(T3),
-                connection,
-                transaction,
-                FieldCache.Get<T3>(),
-                where3,
-                orderBy3,
-                top3,
-                hints3,
-                statementBuilder);
-            var commandText3 = CommandTextCache.GetQueryMultipleText<T3>(request3);
+            // Item3 Request
+            if (item3 == null)
+            {
+                var request3 = new QueryMultipleRequest(3,
+                    typeof(T3),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T3>(),
+                    where3,
+                    orderBy3,
+                    top3,
+                    hints3,
+                    statementBuilder);
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T2>(request3));
+                maps.Add(where3.MapTo<T3>());
+            }
 
-            // T4
-            var request4 = new QueryMultipleRequest(4,
-                typeof(T4),
-                connection,
-                transaction,
-                FieldCache.Get<T4>(),
-                where4,
-                orderBy4,
-                top4,
-                hints4,
-                statementBuilder);
-            var commandText4 = CommandTextCache.GetQueryMultipleText<T4>(request4);
+            // Item4 Request
+            if (item4 == null)
+            {
+                var request4 = new QueryMultipleRequest(4,
+                    typeof(T4),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T4>(),
+                    where4,
+                    orderBy4,
+                    top4,
+                    hints4,
+                    statementBuilder);
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T2>(request4));
+                maps.Add(where4.MapTo<T4>());
+            }
 
-            // T5
-            var request5 = new QueryMultipleRequest(5,
-                typeof(T5),
-                connection,
-                transaction,
-                FieldCache.Get<T5>(),
-                where5,
-                orderBy5,
-                top5,
-                hints5,
-                statementBuilder);
-            var commandText5 = CommandTextCache.GetQueryMultipleText<T5>(request5);
+            // Item5 Request
+            if (item5 == null)
+            {
+                var request5 = new QueryMultipleRequest(5,
+                    typeof(T5),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T5>(),
+                    where5,
+                    orderBy5,
+                    top5,
+                    hints5,
+                    statementBuilder);
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T2>(request5));
+                maps.Add(where5.MapTo<T5>());
+            }
 
             // Shared variables
-            var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5);
-            var maps = new[]
-            {
-                where1.MapTo<T1>(),
-                where2.MapTo<T2>(),
-                where3.MapTo<T3>(),
-                where4.MapTo<T4>(),
-                where5.MapTo<T5>()
-            };
-            var param = QueryGroup.AsMappedObject(maps, false);
+            var commandText = string.Join(" ", commandTexts);
+            var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             var sessionId = Guid.Empty;
 
             // Before Execution
@@ -980,10 +1291,10 @@ namespace RepoDb
             }
 
             // Before Execution Time
+            Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>> result;
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = (Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>)null;
             using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
                 commandText: commandText,
                 param: param,
@@ -998,31 +1309,46 @@ namespace RepoDb
                 var dbFields = (IEnumerable<DbField>)null;
 
                 // T1
-                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T1>(), transaction);
-                var item1 = DataReader.ToEnumerable<T1>(reader, dbFields, dbSetting)?.AsList();
+                if (item1 == null)
+                {
+                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T1>(), transaction);
+                    item1 = DataReader.ToEnumerable<T1>(reader, dbFields, dbSetting)?.AsList();
+                }
 
                 // T2
-                reader?.NextResult();
-                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T2>(), transaction);
-                var item2 = DataReader.ToEnumerable<T2>(reader, dbFields, dbSetting)?.AsList();
+                if (item2 == null)
+                {
+                    reader?.NextResult();
+                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T2>(), transaction);
+                    item2 = DataReader.ToEnumerable<T2>(reader, dbFields, dbSetting)?.AsList();
+                }
 
                 // T3
-                reader?.NextResult();
-                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T3>(), transaction);
-                var item3 = DataReader.ToEnumerable<T3>(reader, dbFields, dbSetting)?.AsList();
+                if (item3 == null)
+                {
+                    reader?.NextResult();
+                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T3>(), transaction);
+                    item3 = DataReader.ToEnumerable<T3>(reader, dbFields, dbSetting)?.AsList();
+                }
 
                 // T4
-                reader?.NextResult();
-                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T4>(), transaction);
-                var item4 = DataReader.ToEnumerable<T4>(reader, dbFields, dbSetting)?.AsList();
+                if (item4 == null)
+                {
+                    reader?.NextResult();
+                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T4>(), transaction);
+                    item4 = DataReader.ToEnumerable<T4>(reader, dbFields, dbSetting)?.AsList();
+                }
 
                 // T5
-                reader?.NextResult();
-                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T5>(), transaction);
-                var item5 = DataReader.ToEnumerable<T5>(reader, dbFields, dbSetting)?.AsList();
+                if (item5 == null)
+                {
+                    reader?.NextResult();
+                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T5>(), transaction);
+                    item5 = DataReader.ToEnumerable<T5>(reader, dbFields, dbSetting)?.AsList();
+                }
 
                 // Result
-                result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>(item1, item2, item3, item4, item5);
+                result = Tuple.Create(item1, item2, item3, item4, item5);
             }
 
             // After Execution
@@ -1056,23 +1382,48 @@ namespace RepoDb
         /// <param name="orderBy1">The order definition of the fields to be used (at T1).</param>
         /// <param name="top1">The number of rows to be returned (at T1).</param>
         /// <param name="hints1">The table hints to be used (at T1).</param>
+        /// <param name="cacheKey1">
+        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy2">The order definition of the fields to be used (at T2).</param>
         /// <param name="top2">The number of rows to be returned (at T2).</param>
         /// <param name="hints2">The table hints to be used (at T2).</param>
+        /// <param name="cacheKey2">
+        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy3">The order definition of the fields to be used (at T3).</param>
         /// <param name="top3">The number of rows to be returned (at T3).</param>
         /// <param name="hints3">The table hints to be used (at T3).</param>
+        /// <param name="cacheKey3">
+        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy4">The order definition of the fields to be used (at T4).</param>
         /// <param name="top4">The number of rows to be returned (at T4).</param>
         /// <param name="hints4">The table hints to be used (at T4).</param>
+        /// <param name="cacheKey4">
+        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy5">The order definition of the fields to be used (at T5).</param>
         /// <param name="top5">The number of rows to be returned (at T5).</param>
         /// <param name="hints5">The table hints to be used (at T5).</param>
+        /// <param name="cacheKey5">
+        /// The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy6">The order definition of the fields to be used (at T6).</param>
         /// <param name="top6">The number of rows to be returned (at T6).</param>
         /// <param name="hints6">The table hints to be used (at T6).</param>
+        /// <param name="cacheKey6">
+        /// The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
@@ -1087,23 +1438,30 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
+            string cacheKey1 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
+            string cacheKey2 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
+            string cacheKey3 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
+            string cacheKey4 = null,
             IEnumerable<OrderField> orderBy5 = null,
             int? top5 = 0,
             string hints5 = null,
+            string cacheKey5 = null,
             IEnumerable<OrderField> orderBy6 = null,
             int? top6 = 0,
             string hints6 = null,
+            string cacheKey6 = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
+            ICache cache = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
             where T1 : class
@@ -1126,18 +1484,23 @@ namespace RepoDb
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
+                cacheKey2: cacheKey2,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
+                cacheKey3: cacheKey3,
                 orderBy4: orderBy4,
                 top4: top4,
                 hints4: hints4,
+                cacheKey4: cacheKey4,
                 orderBy5: orderBy5,
                 top5: top5,
                 hints5: hints5,
+                cacheKey5: cacheKey5,
                 orderBy6: orderBy6,
                 top6: top6,
                 hints6: hints6,
+                cacheKey6: cacheKey6,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -1163,23 +1526,48 @@ namespace RepoDb
         /// <param name="orderBy1">The order definition of the fields to be used (at T1).</param>
         /// <param name="top1">The number of rows to be returned (at T1).</param>
         /// <param name="hints1">The table hints to be used (at T1).</param>
+        /// <param name="cacheKey1">
+        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy2">The order definition of the fields to be used (at T2).</param>
         /// <param name="top2">The number of rows to be returned (at T2).</param>
         /// <param name="hints2">The table hints to be used (at T2).</param>
+        /// <param name="cacheKey2">
+        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy3">The order definition of the fields to be used (at T3).</param>
         /// <param name="top3">The number of rows to be returned (at T3).</param>
         /// <param name="hints3">The table hints to be used (at T3).</param>
+        /// <param name="cacheKey3">
+        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy4">The order definition of the fields to be used (at T4).</param>
         /// <param name="top4">The number of rows to be returned (at T4).</param>
         /// <param name="hints4">The table hints to be used (at T4).</param>
+        /// <param name="cacheKey4">
+        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy5">The order definition of the fields to be used (at T5).</param>
         /// <param name="top5">The number of rows to be returned (at T5).</param>
         /// <param name="hints5">The table hints to be used (at T5).</param>
+        /// <param name="cacheKey5">
+        /// The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy6">The order definition of the fields to be used (at T6).</param>
         /// <param name="top6">The number of rows to be returned (at T6).</param>
         /// <param name="hints6">The table hints to be used (at T6).</param>
+        /// <param name="cacheKey6">
+        /// The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
@@ -1194,23 +1582,30 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
+            string cacheKey1 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
+            string cacheKey2 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
+            string cacheKey3 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
+            string cacheKey4 = null,
             IEnumerable<OrderField> orderBy5 = null,
             int? top5 = 0,
             string hints5 = null,
+            string cacheKey5 = null,
             IEnumerable<OrderField> orderBy6 = null,
             int? top6 = 0,
             string hints6 = null,
+            string cacheKey6 = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
+            ICache cache = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
             where T1 : class
@@ -1222,100 +1617,149 @@ namespace RepoDb
         {
             // Variables
             var commandType = CommandType.Text;
+            var queryGroups = new List<QueryGroup>();
+            var maps = new List<QueryGroupTypeMap>();
+            var commandTexts = new List<string>();
+
+            // Items
+            var item1 = EnsureQueryMultipleCachedItem<T1>(cacheKey1,
+                cache,
+                where1,
+                queryGroups);
+
+            var item2 = EnsureQueryMultipleCachedItem<T2>(cacheKey2,
+                cache,
+                where2,
+                queryGroups);
+
+            var item3 = EnsureQueryMultipleCachedItem<T3>(cacheKey3,
+                cache,
+                where3,
+                queryGroups);
+
+            var item4 = EnsureQueryMultipleCachedItem<T4>(cacheKey4,
+                cache,
+                where4,
+                queryGroups);
+
+            var item5 = EnsureQueryMultipleCachedItem<T5>(cacheKey5,
+                cache,
+                where5,
+                queryGroups);
+
+            var item6 = EnsureQueryMultipleCachedItem<T6>(cacheKey6,
+                cache,
+                where6,
+                queryGroups);
 
             // Fix
-            QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3, where4, where5, where6 });
+            QueryGroup.FixForQueryMultiple(queryGroups.ToArray());
 
-            // T1
-            var request1 = new QueryMultipleRequest(1,
-                typeof(T1),
-                connection,
-                transaction,
-                FieldCache.Get<T1>(),
-                where1,
-                orderBy1,
-                top1,
-                hints1,
-                statementBuilder);
-            var commandText1 = CommandTextCache.GetQueryMultipleText<T1>(request1);
+            // Item1 Request
+            if (item1 == null)
+            {
+                var request1 = new QueryMultipleRequest(1,
+                    typeof(T1),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T1>(),
+                    where1,
+                    orderBy1,
+                    top1,
+                    hints1,
+                    statementBuilder);
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T1>(request1));
+                maps.Add(where1.MapTo<T1>());
+            }
 
-            // T2
-            var request2 = new QueryMultipleRequest(2,
-                typeof(T2),
-                connection,
-                transaction,
-                FieldCache.Get<T2>(),
-                where2,
-                orderBy2,
-                top2,
-                hints2,
-                statementBuilder);
-            var commandText2 = CommandTextCache.GetQueryMultipleText<T2>(request2);
+            // Item2 Request
+            if (item2 == null)
+            {
+                var request2 = new QueryMultipleRequest(2,
+                    typeof(T2),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T2>(),
+                    where2,
+                    orderBy2,
+                    top2,
+                    hints2,
+                    statementBuilder);
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T2>(request2));
+                maps.Add(where2.MapTo<T2>());
+            }
 
-            // T3
-            var request3 = new QueryMultipleRequest(3,
-                typeof(T3),
-                connection,
-                transaction,
-                FieldCache.Get<T3>(),
-                where3,
-                orderBy3,
-                top3,
-                hints3,
-                statementBuilder);
-            var commandText3 = CommandTextCache.GetQueryMultipleText<T3>(request3);
+            // Item3 Request
+            if (item3 == null)
+            {
+                var request3 = new QueryMultipleRequest(3,
+                    typeof(T3),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T3>(),
+                    where3,
+                    orderBy3,
+                    top3,
+                    hints3,
+                    statementBuilder);
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T2>(request3));
+                maps.Add(where3.MapTo<T3>());
+            }
 
-            // T4
-            var request4 = new QueryMultipleRequest(4,
-                typeof(T4),
-                connection,
-                transaction,
-                FieldCache.Get<T4>(),
-                where4,
-                orderBy4,
-                top4,
-                hints4,
-                statementBuilder);
-            var commandText4 = CommandTextCache.GetQueryMultipleText<T4>(request4);
+            // Item4 Request
+            if (item4 == null)
+            {
+                var request4 = new QueryMultipleRequest(4,
+                    typeof(T4),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T4>(),
+                    where4,
+                    orderBy4,
+                    top4,
+                    hints4,
+                    statementBuilder);
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T2>(request4));
+                maps.Add(where4.MapTo<T4>());
+            }
 
-            // T5
-            var request5 = new QueryMultipleRequest(5,
-                typeof(T5),
-                connection,
-                transaction,
-                FieldCache.Get<T5>(),
-                where5,
-                orderBy5,
-                top5,
-                hints5,
-                statementBuilder);
-            var commandText5 = CommandTextCache.GetQueryMultipleText<T5>(request5);
+            // Item5 Request
+            if (item5 == null)
+            {
+                var request5 = new QueryMultipleRequest(5,
+                    typeof(T5),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T5>(),
+                    where5,
+                    orderBy5,
+                    top5,
+                    hints5,
+                    statementBuilder);
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T2>(request5));
+                maps.Add(where5.MapTo<T5>());
+            }
 
-            // T6
-            var request6 = new QueryMultipleRequest(6,
-                typeof(T6),
-                connection,
-                transaction,
-                FieldCache.Get<T6>(),
-                where6,
-                orderBy6,
-                top6,
-                hints6,
-                statementBuilder);
-            var commandText6 = CommandTextCache.GetQueryMultipleText<T6>(request6);
+            // Item6 Request
+            if (item6 == null)
+            {
+                var request6 = new QueryMultipleRequest(6,
+                    typeof(T6),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T6>(),
+                    where6,
+                    orderBy6,
+                    top6,
+                    hints6,
+                    statementBuilder);
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T2>(request6));
+                maps.Add(where6.MapTo<T6>());
+            }
 
             // Shared variables
-            var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5, commandText6);
-            var maps = new[]
-            {
-                where1.MapTo<T1>(),
-                where2.MapTo<T2>(),
-                where3.MapTo<T3>(),
-                where4.MapTo<T4>(),
-                where5.MapTo<T5>(),
-                where6.MapTo<T6>()
-            };
-            var param = QueryGroup.AsMappedObject(maps, false);
+            var commandText = string.Join(" ", commandTexts);
+            var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             var sessionId = Guid.Empty;
 
             // Before Execution
@@ -1337,10 +1781,10 @@ namespace RepoDb
             }
 
             // Before Execution Time
+            Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>> result;
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = (Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>)null;
             using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
                 commandText: commandText,
                 param: param,
@@ -1355,37 +1799,54 @@ namespace RepoDb
                 var dbFields = (IEnumerable<DbField>)null;
 
                 // T1
-                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T1>(), transaction);
-                var item1 = DataReader.ToEnumerable<T1>(reader, dbFields, dbSetting)?.AsList();
+                if (item1 == null)
+                {
+                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T1>(), transaction);
+                    item1 = DataReader.ToEnumerable<T1>(reader, dbFields, dbSetting)?.AsList();
+                }
 
                 // T2
-                reader?.NextResult();
-                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T2>(), transaction);
-                var item2 = DataReader.ToEnumerable<T2>(reader, dbFields, dbSetting)?.AsList();
+                if (item2 == null)
+                {
+                    reader?.NextResult();
+                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T2>(), transaction);
+                    item2 = DataReader.ToEnumerable<T2>(reader, dbFields, dbSetting)?.AsList();
+                }
 
                 // T3
-                reader?.NextResult();
-                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T3>(), transaction);
-                var item3 = DataReader.ToEnumerable<T3>(reader, dbFields, dbSetting)?.AsList();
+                if (item3 == null)
+                {
+                    reader?.NextResult();
+                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T3>(), transaction);
+                    item3 = DataReader.ToEnumerable<T3>(reader, dbFields, dbSetting)?.AsList();
+                }
 
                 // T4
-                reader?.NextResult();
-                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T4>(), transaction);
-                var item4 = DataReader.ToEnumerable<T4>(reader, dbFields, dbSetting)?.AsList();
+                if (item4 == null)
+                {
+                    reader?.NextResult();
+                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T4>(), transaction);
+                    item4 = DataReader.ToEnumerable<T4>(reader, dbFields, dbSetting)?.AsList();
+                }
 
                 // T5
-                reader?.NextResult();
-                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T5>(), transaction);
-                var item5 = DataReader.ToEnumerable<T5>(reader, dbFields, dbSetting)?.AsList();
+                if (item5 == null)
+                {
+                    reader?.NextResult();
+                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T5>(), transaction);
+                    item5 = DataReader.ToEnumerable<T5>(reader, dbFields, dbSetting)?.AsList();
+                }
 
                 // T6
-                reader?.NextResult();
-                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T6>(), transaction);
-                var item6 = DataReader.ToEnumerable<T6>(reader, dbFields, dbSetting)?.AsList();
+                if (item6 == null)
+                {
+                    reader?.NextResult();
+                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T6>(), transaction);
+                    item6 = DataReader.ToEnumerable<T6>(reader, dbFields, dbSetting)?.AsList();
+                }
 
                 // Result
-                result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>(
-                    item1, item2, item3, item4, item5, item6);
+                result = Tuple.Create(item1, item2, item3, item4, item5, item6);
             }
 
             // After Execution
@@ -1421,26 +1882,55 @@ namespace RepoDb
         /// <param name="orderBy1">The order definition of the fields to be used (at T1).</param>
         /// <param name="top1">The number of rows to be returned (at T1).</param>
         /// <param name="hints1">The table hints to be used (at T1).</param>
+        /// <param name="cacheKey1">
+        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy2">The order definition of the fields to be used (at T2).</param>
         /// <param name="top2">The number of rows to be returned (at T2).</param>
         /// <param name="hints2">The table hints to be used (at T2).</param>
+        /// <param name="cacheKey2">
+        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy3">The order definition of the fields to be used (at T3).</param>
         /// <param name="top3">The number of rows to be returned (at T3).</param>
         /// <param name="hints3">The table hints to be used (at T3).</param>
+        /// <param name="cacheKey3">
+        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy4">The order definition of the fields to be used (at T4).</param>
         /// <param name="top4">The number of rows to be returned (at T4).</param>
         /// <param name="hints4">The table hints to be used (at T4).</param>
+        /// <param name="cacheKey4">
+        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy5">The order definition of the fields to be used (at T5).</param>
         /// <param name="top5">The number of rows to be returned (at T5).</param>
         /// <param name="hints5">The table hints to be used (at T5).</param>
+        /// <param name="cacheKey5">
+        /// The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy6">The order definition of the fields to be used (at T6).</param>
         /// <param name="top6">The number of rows to be returned (at T6).</param>
         /// <param name="hints6">The table hints to be used (at T6).</param>
+        /// <param name="cacheKey6">
+        /// The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy7">The order definition of the fields to be used (at T7).</param>
         /// <param name="top7">The number of rows to be returned (at T7).</param>
         /// <param name="hints7">The table hints to be used (at T7).</param>
+        /// <param name="cacheKey7">
+        /// The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
@@ -1456,26 +1946,34 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
+            string cacheKey1 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
+            string cacheKey2 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
+            string cacheKey3 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
+            string cacheKey4 = null,
             IEnumerable<OrderField> orderBy5 = null,
             int? top5 = 0,
             string hints5 = null,
+            string cacheKey5 = null,
             IEnumerable<OrderField> orderBy6 = null,
             int? top6 = 0,
             string hints6 = null,
+            string cacheKey6 = null,
             IEnumerable<OrderField> orderBy7 = null,
             int? top7 = 0,
             string hints7 = null,
+            string cacheKey7 = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
+            ICache cache = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
             where T1 : class
@@ -1500,21 +1998,27 @@ namespace RepoDb
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
+                cacheKey2: cacheKey2,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
+                cacheKey3: cacheKey3,
                 orderBy4: orderBy4,
                 top4: top4,
                 hints4: hints4,
+                cacheKey4: cacheKey4,
                 orderBy5: orderBy5,
                 top5: top5,
                 hints5: hints5,
+                cacheKey5: cacheKey5,
                 orderBy6: orderBy6,
                 top6: top6,
                 hints6: hints6,
+                cacheKey6: cacheKey6,
                 orderBy7: orderBy7,
                 top7: top7,
                 hints7: hints7,
+                cacheKey7: cacheKey7,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -1542,26 +2046,55 @@ namespace RepoDb
         /// <param name="orderBy1">The order definition of the fields to be used (at T1).</param>
         /// <param name="top1">The number of rows to be returned (at T1).</param>
         /// <param name="hints1">The table hints to be used (at T1).</param>
+        /// <param name="cacheKey1">
+        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy2">The order definition of the fields to be used (at T2).</param>
         /// <param name="top2">The number of rows to be returned (at T2).</param>
         /// <param name="hints2">The table hints to be used (at T2).</param>
+        /// <param name="cacheKey2">
+        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy3">The order definition of the fields to be used (at T3).</param>
         /// <param name="top3">The number of rows to be returned (at T3).</param>
         /// <param name="hints3">The table hints to be used (at T3).</param>
+        /// <param name="cacheKey3">
+        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy4">The order definition of the fields to be used (at T4).</param>
         /// <param name="top4">The number of rows to be returned (at T4).</param>
         /// <param name="hints4">The table hints to be used (at T4).</param>
+        /// <param name="cacheKey4">
+        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy5">The order definition of the fields to be used (at T5).</param>
         /// <param name="top5">The number of rows to be returned (at T5).</param>
         /// <param name="hints5">The table hints to be used (at T5).</param>
+        /// <param name="cacheKey5">
+        /// The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy6">The order definition of the fields to be used (at T6).</param>
         /// <param name="top6">The number of rows to be returned (at T6).</param>
         /// <param name="hints6">The table hints to be used (at T6).</param>
+        /// <param name="cacheKey6">
+        /// The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy7">The order definition of the fields to be used (at T7).</param>
         /// <param name="top7">The number of rows to be returned (at T7).</param>
         /// <param name="hints7">The table hints to be used (at T7).</param>
+        /// <param name="cacheKey7">
+        /// The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
@@ -1577,26 +2110,34 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
+            string cacheKey1 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
+            string cacheKey2 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
+            string cacheKey3 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
+            string cacheKey4 = null,
             IEnumerable<OrderField> orderBy5 = null,
             int? top5 = 0,
             string hints5 = null,
+            string cacheKey5 = null,
             IEnumerable<OrderField> orderBy6 = null,
             int? top6 = 0,
             string hints6 = null,
+            string cacheKey6 = null,
             IEnumerable<OrderField> orderBy7 = null,
             int? top7 = 0,
             string hints7 = null,
+            string cacheKey7 = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
+            ICache cache = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
             where T1 : class
@@ -1609,114 +2150,171 @@ namespace RepoDb
         {
             // Variables
             var commandType = CommandType.Text;
+            var queryGroups = new List<QueryGroup>();
+            var maps = new List<QueryGroupTypeMap>();
+            var commandTexts = new List<string>();
+
+            // Items
+            var item1 = EnsureQueryMultipleCachedItem<T1>(cacheKey1,
+                cache,
+                where1,
+                queryGroups);
+
+            var item2 = EnsureQueryMultipleCachedItem<T2>(cacheKey2,
+                cache,
+                where2,
+                queryGroups);
+
+            var item3 = EnsureQueryMultipleCachedItem<T3>(cacheKey3,
+                cache,
+                where3,
+                queryGroups);
+
+            var item4 = EnsureQueryMultipleCachedItem<T4>(cacheKey4,
+                cache,
+                where4,
+                queryGroups);
+
+            var item5 = EnsureQueryMultipleCachedItem<T5>(cacheKey5,
+                cache,
+                where5,
+                queryGroups);
+
+            var item6 = EnsureQueryMultipleCachedItem<T6>(cacheKey6,
+                cache,
+                where6,
+                queryGroups);
+
+            var item7 = EnsureQueryMultipleCachedItem<T7>(cacheKey7,
+                cache,
+                where7,
+                queryGroups);
 
             // Fix
-            QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3, where4, where5, where6, where7 });
+            QueryGroup.FixForQueryMultiple(queryGroups.ToArray());
 
-            // T1
-            var request1 = new QueryMultipleRequest(1,
-                typeof(T1),
-                connection,
-                transaction,
-                FieldCache.Get<T1>(),
-                where1,
-                orderBy1,
-                top1,
-                hints1,
-                statementBuilder);
-            var commandText1 = CommandTextCache.GetQueryMultipleText<T1>(request1);
+            // Item1 Request
+            if (item1 == null)
+            {
+                var request1 = new QueryMultipleRequest(1,
+                    typeof(T1),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T1>(),
+                    where1,
+                    orderBy1,
+                    top1,
+                    hints1,
+                    statementBuilder);
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T1>(request1));
+                maps.Add(where1.MapTo<T1>());
+            }
 
-            // T2
-            var request2 = new QueryMultipleRequest(2,
-                typeof(T2),
-                connection,
-                transaction,
-                FieldCache.Get<T2>(),
-                where2,
-                orderBy2,
-                top2,
-                hints2,
-                statementBuilder);
-            var commandText2 = CommandTextCache.GetQueryMultipleText<T2>(request2);
+            // Item2 Request
+            if (item2 == null)
+            {
+                var request2 = new QueryMultipleRequest(2,
+                    typeof(T2),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T2>(),
+                    where2,
+                    orderBy2,
+                    top2,
+                    hints2,
+                    statementBuilder);
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T2>(request2));
+                maps.Add(where2.MapTo<T2>());
+            }
 
-            // T3
-            var request3 = new QueryMultipleRequest(3,
-                typeof(T3),
-                connection,
-                transaction,
-                FieldCache.Get<T3>(),
-                where3,
-                orderBy3,
-                top3,
-                hints3,
-                statementBuilder);
-            var commandText3 = CommandTextCache.GetQueryMultipleText<T3>(request3);
+            // Item3 Request
+            if (item3 == null)
+            {
+                var request3 = new QueryMultipleRequest(3,
+                    typeof(T3),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T3>(),
+                    where3,
+                    orderBy3,
+                    top3,
+                    hints3,
+                    statementBuilder);
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T2>(request3));
+                maps.Add(where3.MapTo<T3>());
+            }
 
-            // T4
-            var request4 = new QueryMultipleRequest(4,
-                typeof(T4),
-                connection,
-                transaction,
-                FieldCache.Get<T4>(),
-                where4,
-                orderBy4,
-                top4,
-                hints4,
-                statementBuilder);
-            var commandText4 = CommandTextCache.GetQueryMultipleText<T4>(request4);
+            // Item4 Request
+            if (item4 == null)
+            {
+                var request4 = new QueryMultipleRequest(4,
+                    typeof(T4),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T4>(),
+                    where4,
+                    orderBy4,
+                    top4,
+                    hints4,
+                    statementBuilder);
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T2>(request4));
+                maps.Add(where4.MapTo<T4>());
+            }
 
-            // T5
-            var request5 = new QueryMultipleRequest(5,
-                typeof(T5),
-                connection,
-                transaction,
-                FieldCache.Get<T5>(),
-                where5,
-                orderBy5,
-                top5,
-                hints5,
-                statementBuilder);
-            var commandText5 = CommandTextCache.GetQueryMultipleText<T5>(request5);
+            // Item5 Request
+            if (item5 == null)
+            {
+                var request5 = new QueryMultipleRequest(5,
+                    typeof(T5),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T5>(),
+                    where5,
+                    orderBy5,
+                    top5,
+                    hints5,
+                    statementBuilder);
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T2>(request5));
+                maps.Add(where5.MapTo<T5>());
+            }
 
-            // T6
-            var request6 = new QueryMultipleRequest(6,
-                typeof(T6),
-                connection,
-                transaction,
-                FieldCache.Get<T6>(),
-                where6,
-                orderBy6,
-                top6,
-                hints6,
-                statementBuilder);
-            var commandText6 = CommandTextCache.GetQueryMultipleText<T6>(request6);
+            // Item6 Request
+            if (item6 == null)
+            {
+                var request6 = new QueryMultipleRequest(6,
+                    typeof(T6),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T6>(),
+                    where6,
+                    orderBy6,
+                    top6,
+                    hints6,
+                    statementBuilder);
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T2>(request6));
+                maps.Add(where6.MapTo<T6>());
+            }
 
-            // T7
-            var request7 = new QueryMultipleRequest(7,
-                typeof(T7),
-                connection,
-                transaction,
-                FieldCache.Get<T7>(),
-                where7,
-                orderBy7,
-                top7,
-                hints7,
-                statementBuilder);
-            var commandText7 = CommandTextCache.GetQueryMultipleText<T7>(request7);
+            // Item7 Request
+            if (item7 == null)
+            {
+                var request7 = new QueryMultipleRequest(7,
+                    typeof(T7),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T7>(),
+                    where7,
+                    orderBy7,
+                    top7,
+                    hints7,
+                    statementBuilder);
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T2>(request7));
+                maps.Add(where7.MapTo<T7>());
+            }
 
             // Shared variables
-            var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5, commandText6, commandText7);
-            var maps = new[]
-            {
-                where1.MapTo<T1>(),
-                where2.MapTo<T2>(),
-                where3.MapTo<T3>(),
-                where4.MapTo<T4>(),
-                where5.MapTo<T5>(),
-                where6.MapTo<T6>(),
-                where7.MapTo<T7>()
-            };
-            var param = QueryGroup.AsMappedObject(maps, false);
+            var commandText = string.Join(" ", commandTexts);
+            var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             var sessionId = Guid.Empty;
 
             // Before Execution
@@ -1738,10 +2336,10 @@ namespace RepoDb
             }
 
             // Before Execution Time
+            Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>> result;
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = (Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>)null;
             using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
                 commandText: commandText,
                 param: param,
@@ -1756,42 +2354,62 @@ namespace RepoDb
                 var dbFields = (IEnumerable<DbField>)null;
 
                 // T1
-                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T1>(), transaction);
-                var item1 = DataReader.ToEnumerable<T1>(reader, dbFields, dbSetting)?.AsList();
+                if (item1 == null)
+                {
+                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T1>(), transaction);
+                    item1 = DataReader.ToEnumerable<T1>(reader, dbFields, dbSetting)?.AsList();
+                }
 
                 // T2
-                reader?.NextResult();
-                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T2>(), transaction);
-                var item2 = DataReader.ToEnumerable<T2>(reader, dbFields, dbSetting)?.AsList();
+                if (item2 == null)
+                {
+                    reader?.NextResult();
+                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T2>(), transaction);
+                    item2 = DataReader.ToEnumerable<T2>(reader, dbFields, dbSetting)?.AsList();
+                }
 
                 // T3
-                reader?.NextResult();
-                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T3>(), transaction);
-                var item3 = DataReader.ToEnumerable<T3>(reader, dbFields, dbSetting)?.AsList();
+                if (item3 == null)
+                {
+                    reader?.NextResult();
+                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T3>(), transaction);
+                    item3 = DataReader.ToEnumerable<T3>(reader, dbFields, dbSetting)?.AsList();
+                }
 
                 // T4
-                reader?.NextResult();
-                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T4>(), transaction);
-                var item4 = DataReader.ToEnumerable<T4>(reader, dbFields, dbSetting)?.AsList();
+                if (item4 == null)
+                {
+                    reader?.NextResult();
+                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T4>(), transaction);
+                    item4 = DataReader.ToEnumerable<T4>(reader, dbFields, dbSetting)?.AsList();
+                }
 
                 // T5
-                reader?.NextResult();
-                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T5>(), transaction);
-                var item5 = DataReader.ToEnumerable<T5>(reader, dbFields, dbSetting)?.AsList();
+                if (item5 == null)
+                {
+                    reader?.NextResult();
+                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T5>(), transaction);
+                    item5 = DataReader.ToEnumerable<T5>(reader, dbFields, dbSetting)?.AsList();
+                }
 
                 // T6
-                reader?.NextResult();
-                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T6>(), transaction);
-                var item6 = DataReader.ToEnumerable<T6>(reader, dbFields, dbSetting)?.AsList();
+                if (item6 == null)
+                {
+                    reader?.NextResult();
+                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T6>(), transaction);
+                    item6 = DataReader.ToEnumerable<T6>(reader, dbFields, dbSetting)?.AsList();
+                }
 
-                // Extract the seventh result
-                reader?.NextResult();
-                dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T7>(), transaction);
-                var item7 = DataReader.ToEnumerable<T7>(reader, dbFields, dbSetting)?.AsList();
+                // T7
+                if (item7 == null)
+                {
+                    reader?.NextResult();
+                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T7>(), transaction);
+                    item7 = DataReader.ToEnumerable<T7>(reader, dbFields, dbSetting)?.AsList();
+                }
 
                 // Result
-                result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>(
-                    item1, item2, item3, item4, item5, item6, item7);
+                result = Tuple.Create(item1, item2, item3, item4, item5, item6, item7);
             }
 
             // After Execution
@@ -1821,11 +2439,20 @@ namespace RepoDb
         /// <param name="orderBy1">The order definition of the fields to be used (at T1).</param>
         /// <param name="top1">The number of rows to be returned (at T1).</param>
         /// <param name="hints1">The table hints to be used (at T1).</param>
+        /// <param name="cacheKey1">
+        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy2">The order definition of the fields to be used (at T2).</param>
         /// <param name="top2">The number of rows to be returned (at T2).</param>
         /// <param name="hints2">The table hints to be used (at T2).</param>
+        /// <param name="cacheKey2">
+        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
@@ -1836,11 +2463,14 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
+            string cacheKey1 = null,
             int? top2 = 0,
             IEnumerable<OrderField> orderBy2 = null,
             string hints2 = null,
+            string cacheKey2 = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
+            ICache cache = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
@@ -1853,11 +2483,14 @@ namespace RepoDb
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
+                cacheKey1: cacheKey1,
                 top2: top2,
                 orderBy2: orderBy2,
                 hints2: hints2,
+                cacheKey2: cacheKey2,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
@@ -1873,12 +2506,21 @@ namespace RepoDb
         /// <param name="orderBy1">The order definition of the fields to be used (at T1).</param>
         /// <param name="top1">The number of rows to be returned (at T1).</param>
         /// <param name="hints1">The table hints to be used (at T1).</param>
+        /// <param name="cacheKey1">
+        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="where2">The query expression to be used (at T2).</param>
         /// <param name="orderBy2">The order definition of the fields to be used (at T2).</param>
         /// <param name="top2">The number of rows to be returned (at T2).</param>
         /// <param name="hints2">The table hints to be used (at T2).</param>
+        /// <param name="cacheKey2">
+        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
@@ -1889,11 +2531,14 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
+            string cacheKey1 = null,
             int? top2 = 0,
             IEnumerable<OrderField> orderBy2 = null,
             string hints2 = null,
+            string cacheKey2 = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
+            ICache cache = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
@@ -1902,44 +2547,61 @@ namespace RepoDb
         {
             // Variables
             var commandType = CommandType.Text;
+            var queryGroups = new List<QueryGroup>();
+            var maps = new List<QueryGroupTypeMap>();
+            var commandTexts = new List<string>();
+
+            // Items
+            var item1 = EnsureQueryMultipleCachedItem<T1>(cacheKey1,
+                cache,
+                where1,
+                queryGroups);
+
+            var item2 = EnsureQueryMultipleCachedItem<T2>(cacheKey2,
+                cache,
+                where2,
+                queryGroups);
 
             // Fix
-            QueryGroup.FixForQueryMultiple(new[] { where1, where2 });
+            QueryGroup.FixForQueryMultiple(queryGroups.ToArray());
 
-            // T1
-            var request1 = new QueryMultipleRequest(1,
-                typeof(T1),
-                connection,
-                transaction,
-                FieldCache.Get<T1>(),
-                where1,
-                orderBy1,
-                top1,
-                hints1,
-                statementBuilder);
-            var commandText1 = await CommandTextCache.GetQueryMultipleTextAsync<T1>(request1, cancellationToken);
+            // Item1 Request
+            if (item1 == null)
+            {
+                var request1 = new QueryMultipleRequest(1,
+                    typeof(T1),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T1>(),
+                    where1,
+                    orderBy1,
+                    top1,
+                    hints1,
+                    statementBuilder);
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T1>(request1, cancellationToken));
+                maps.Add(where1.MapTo<T1>());
+            }
 
-            // T2
-            var request2 = new QueryMultipleRequest(2,
-                typeof(T2),
-                connection,
-                transaction,
-                FieldCache.Get<T2>(),
-                where2,
-                orderBy2,
-                top2,
-                hints2,
-                statementBuilder);
-            var commandText2 = await CommandTextCache.GetQueryMultipleTextAsync<T2>(request2, cancellationToken);
+            // Item2 Request
+            if (item2 == null)
+            {
+                var request2 = new QueryMultipleRequest(2,
+                    typeof(T2),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T2>(),
+                    where2,
+                    orderBy2,
+                    top2,
+                    hints2,
+                    statementBuilder);
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T2>(request2, cancellationToken));
+                maps.Add(where2.MapTo<T2>());
+            }
 
             // Shared variables
-            var commandText = string.Join(" ", commandText1, commandText2);
-            var maps = new[]
-            {
-                where1.MapTo<T1>(),
-                where2.MapTo<T2>()
-            };
-            var param = QueryGroup.AsMappedObject(maps, false);
+            var commandText = string.Join(" ", commandTexts);
+            var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             var sessionId = Guid.Empty;
 
             // Before Execution
@@ -1961,11 +2623,11 @@ namespace RepoDb
             }
 
             // Before Execution Time
+            Tuple<IEnumerable<T1>, IEnumerable<T2>> result;
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = (Tuple<IEnumerable<T1>, IEnumerable<T2>>)null;
-            using (var reader = (DbDataReader)await ExecuteReaderAsyncInternal(connection: connection,
+            using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -1974,22 +2636,28 @@ namespace RepoDb
                 cancellationToken: cancellationToken,
                 entityType: null,
                 dbFields: null,
-                skipCommandArrayParametersCheck: true))
+                skipCommandArrayParametersCheck: true)))
             {
                 var dbSetting = connection.GetDbSetting();
                 var dbFields = (IEnumerable<DbField>)null;
 
                 // T1
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T1>(), transaction, true, cancellationToken);
-                var item1 = await DataReader.ToEnumerableAsync<T1>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                if (item1 == null)
+                {
+                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T1>(), transaction, true, cancellationToken);
+                    item1 = await DataReader.ToEnumerableAsync<T1>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                }
 
                 // T2
-                await reader.NextResultAsync(cancellationToken);
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T2>(), transaction, true, cancellationToken);
-                var item2 = await DataReader.ToEnumerableAsync<T2>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                if (item2 == null)
+                {
+                    await reader.NextResultAsync(cancellationToken);
+                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T2>(), transaction, true, cancellationToken);
+                    item2 = await DataReader.ToEnumerableAsync<T2>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                }
 
                 // Result
-                result = new Tuple<IEnumerable<T1>, IEnumerable<T2>>(item1, item2);
+                result = Tuple.Create(item1, item2);
             }
 
             // After Execution
@@ -2017,14 +2685,27 @@ namespace RepoDb
         /// <param name="orderBy1">The order definition of the fields to be used (at T1).</param>
         /// <param name="top1">The number of rows to be returned (at T1).</param>
         /// <param name="hints1">The table hints to be used (at T1).</param>
+        /// <param name="cacheKey1">
+        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy2">The order definition of the fields to be used (at T2).</param>
         /// <param name="top2">The number of rows to be returned (at T2).</param>
         /// <param name="hints2">The table hints to be used (at T2).</param>
+        /// <param name="cacheKey2">
+        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy3">The order definition of the fields to be used (at T3).</param>
         /// <param name="top3">The number of rows to be returned (at T3).</param>
         /// <param name="hints3">The table hints to be used (at T3).</param>
+        /// <param name="cacheKey3">
+        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
@@ -2036,14 +2717,18 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
+            string cacheKey1 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
+            string cacheKey2 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
+            string cacheKey3 = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
+            ICache cache = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
@@ -2061,9 +2746,11 @@ namespace RepoDb
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
+                cacheKey2: cacheKey2,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
+                cacheKey3: cacheKey3,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -2084,14 +2771,27 @@ namespace RepoDb
         /// <param name="orderBy1">The order definition of the fields to be used (at T1).</param>
         /// <param name="top1">The number of rows to be returned (at T1).</param>
         /// <param name="hints1">The table hints to be used (at T1).</param>
+        /// <param name="cacheKey1">
+        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy2">The order definition of the fields to be used (at T2).</param>
         /// <param name="top2">The number of rows to be returned (at T2).</param>
         /// <param name="hints2">The table hints to be used (at T2).</param>
+        /// <param name="cacheKey2">
+        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy3">The order definition of the fields to be used (at T3).</param>
         /// <param name="top3">The number of rows to be returned (at T3).</param>
         /// <param name="hints3">The table hints to be used (at T3).</param>
+        /// <param name="cacheKey3">
+        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
@@ -2103,14 +2803,18 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
+            string cacheKey1 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
+            string cacheKey2 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
+            string cacheKey3 = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
+            ICache cache = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
@@ -2120,58 +2824,83 @@ namespace RepoDb
         {
             // Variables
             var commandType = CommandType.Text;
+            var queryGroups = new List<QueryGroup>();
+            var maps = new List<QueryGroupTypeMap>();
+            var commandTexts = new List<string>();
+
+            // Items
+            var item1 = EnsureQueryMultipleCachedItem<T1>(cacheKey1,
+                cache,
+                where1,
+                queryGroups);
+
+            var item2 = EnsureQueryMultipleCachedItem<T2>(cacheKey2,
+                cache,
+                where2,
+                queryGroups);
+
+            var item3 = EnsureQueryMultipleCachedItem<T3>(cacheKey3,
+                cache,
+                where3,
+                queryGroups);
 
             // Fix
-            QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3 });
+            QueryGroup.FixForQueryMultiple(queryGroups.ToArray());
 
-            // T1
-            var request1 = new QueryMultipleRequest(1,
-                typeof(T1),
-                connection,
-                transaction,
-                FieldCache.Get<T1>(),
-                where1,
-                orderBy1,
-                top1,
-                hints1,
-                statementBuilder);
-            var commandText1 = await CommandTextCache.GetQueryMultipleTextAsync<T1>(request1, cancellationToken);
+            // Item1 Request
+            if (item1 == null)
+            {
+                var request1 = new QueryMultipleRequest(1,
+                    typeof(T1),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T1>(),
+                    where1,
+                    orderBy1,
+                    top1,
+                    hints1,
+                    statementBuilder);
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T1>(request1, cancellationToken));
+                maps.Add(where1.MapTo<T1>());
+            }
 
-            // T2
-            var request2 = new QueryMultipleRequest(2,
-                typeof(T2),
-                connection,
-                transaction,
-                FieldCache.Get<T2>(),
-                where2,
-                orderBy2,
-                top2,
-                hints2,
-                statementBuilder);
-            var commandText2 = await CommandTextCache.GetQueryMultipleTextAsync<T2>(request2, cancellationToken);
+            // Item2 Request
+            if (item2 == null)
+            {
+                var request2 = new QueryMultipleRequest(2,
+                    typeof(T2),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T2>(),
+                    where2,
+                    orderBy2,
+                    top2,
+                    hints2,
+                    statementBuilder);
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T2>(request2, cancellationToken));
+                maps.Add(where2.MapTo<T2>());
+            }
 
-            // T3
-            var request3 = new QueryMultipleRequest(3,
-                typeof(T3),
-                connection,
-                transaction,
-                FieldCache.Get<T3>(),
-                where3,
-                orderBy3,
-                top3,
-                hints3,
-                statementBuilder);
-            var commandText3 = await CommandTextCache.GetQueryMultipleTextAsync<T3>(request3, cancellationToken);
+            // Item3 Request
+            if (item3 == null)
+            {
+                var request3 = new QueryMultipleRequest(3,
+                    typeof(T3),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T3>(),
+                    where3,
+                    orderBy3,
+                    top3,
+                    hints3,
+                    statementBuilder);
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T3>(request3, cancellationToken));
+                maps.Add(where3.MapTo<T3>());
+            }
 
             // Shared variables
-            var commandText = string.Join(" ", commandText1, commandText2, commandText3);
-            var maps = new[]
-            {
-                where1.MapTo<T1>(),
-                where2.MapTo<T2>(),
-                where3.MapTo<T3>()
-            };
-            var param = QueryGroup.AsMappedObject(maps, false);
+            var commandText = string.Join(" ", commandTexts);
+            var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             var sessionId = Guid.Empty;
 
             // Before Execution
@@ -2193,11 +2922,11 @@ namespace RepoDb
             }
 
             // Before Execution Time
+            Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> result;
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = (Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>)null;
-            using (var reader = (DbDataReader)await ExecuteReaderAsyncInternal(connection: connection,
+            using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -2206,27 +2935,36 @@ namespace RepoDb
                 cancellationToken: cancellationToken,
                 entityType: null,
                 dbFields: null,
-                skipCommandArrayParametersCheck: true))
+                skipCommandArrayParametersCheck: true)))
             {
                 var dbSetting = connection.GetDbSetting();
                 var dbFields = (IEnumerable<DbField>)null;
 
                 // T1
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T1>(), transaction, true, cancellationToken);
-                var item1 = await DataReader.ToEnumerableAsync<T1>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                if (item1 == null)
+                {
+                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T1>(), transaction, true, cancellationToken);
+                    item1 = await DataReader.ToEnumerableAsync<T1>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                }
 
                 // T2
-                await reader.NextResultAsync(cancellationToken);
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T2>(), transaction, true, cancellationToken);
-                var item2 = await DataReader.ToEnumerableAsync<T2>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                if (item2 == null)
+                {
+                    await reader.NextResultAsync(cancellationToken);
+                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T2>(), transaction, true, cancellationToken);
+                    item2 = await DataReader.ToEnumerableAsync<T2>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                }
 
                 // T3
-                await reader.NextResultAsync(cancellationToken);
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T3>(), transaction, true, cancellationToken);
-                var item3 = await DataReader.ToEnumerableAsync<T3>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                if (item3 == null)
+                {
+                    await reader.NextResultAsync(cancellationToken);
+                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T3>(), transaction, true, cancellationToken);
+                    item3 = await DataReader.ToEnumerableAsync<T3>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                }
 
                 // Result
-                result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>(item1, item2, item3);
+                result = Tuple.Create(item1, item2, item3);
             }
 
             // After Execution
@@ -2256,17 +2994,34 @@ namespace RepoDb
         /// <param name="orderBy1">The order definition of the fields to be used (at T1).</param>
         /// <param name="top1">The number of rows to be returned (at T1).</param>
         /// <param name="hints1">The table hints to be used (at T1).</param>
+        /// <param name="cacheKey1">
+        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy2">The order definition of the fields to be used (at T2).</param>
         /// <param name="top2">The number of rows to be returned (at T2).</param>
         /// <param name="hints2">The table hints to be used (at T2).</param>
+        /// <param name="cacheKey2">
+        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy3">The order definition of the fields to be used (at T3).</param>
         /// <param name="top3">The number of rows to be returned (at T3).</param>
         /// <param name="hints3">The table hints to be used (at T3).</param>
+        /// <param name="cacheKey3">
+        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy4">The order definition of the fields to be used (at T4).</param>
         /// <param name="top4">The number of rows to be returned (at T4).</param>
         /// <param name="hints4">The table hints to be used (at T4).</param>
+        /// <param name="cacheKey4">
+        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
@@ -2280,17 +3035,22 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
+            string cacheKey1 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
+            string cacheKey2 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
+            string cacheKey3 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
+            string cacheKey4 = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
+            ICache cache = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
@@ -2310,12 +3070,15 @@ namespace RepoDb
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
+                cacheKey2: cacheKey2,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
+                cacheKey3: cacheKey3,
                 orderBy4: orderBy4,
                 top4: top4,
                 hints4: hints4,
+                cacheKey4: cacheKey4,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -2338,17 +3101,34 @@ namespace RepoDb
         /// <param name="orderBy1">The order definition of the fields to be used (at T1).</param>
         /// <param name="top1">The number of rows to be returned (at T1).</param>
         /// <param name="hints1">The table hints to be used (at T1).</param>
+        /// <param name="cacheKey1">
+        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy2">The order definition of the fields to be used (at T2).</param>
         /// <param name="top2">The number of rows to be returned (at T2).</param>
         /// <param name="hints2">The table hints to be used (at T2).</param>
+        /// <param name="cacheKey2">
+        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy3">The order definition of the fields to be used (at T3).</param>
         /// <param name="top3">The number of rows to be returned (at T3).</param>
         /// <param name="hints3">The table hints to be used (at T3).</param>
+        /// <param name="cacheKey3">
+        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy4">The order definition of the fields to be used (at T4).</param>
         /// <param name="top4">The number of rows to be returned (at T4).</param>
         /// <param name="hints4">The table hints to be used (at T4).</param>
+        /// <param name="cacheKey4">
+        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
@@ -2362,17 +3142,22 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
+            string cacheKey1 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
+            string cacheKey2 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
+            string cacheKey3 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
+            string cacheKey4 = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
+            ICache cache = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
@@ -2383,72 +3168,105 @@ namespace RepoDb
         {
             // Variables
             var commandType = CommandType.Text;
+            var queryGroups = new List<QueryGroup>();
+            var maps = new List<QueryGroupTypeMap>();
+            var commandTexts = new List<string>();
+
+            // Items
+            var item1 = EnsureQueryMultipleCachedItem<T1>(cacheKey1,
+                cache,
+                where1,
+                queryGroups);
+
+            var item2 = EnsureQueryMultipleCachedItem<T2>(cacheKey2,
+                cache,
+                where2,
+                queryGroups);
+
+            var item3 = EnsureQueryMultipleCachedItem<T3>(cacheKey3,
+                cache,
+                where3,
+                queryGroups);
+
+            var item4 = EnsureQueryMultipleCachedItem<T4>(cacheKey4,
+                cache,
+                where4,
+                queryGroups);
 
             // Fix
-            QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3, where4 });
+            QueryGroup.FixForQueryMultiple(queryGroups.ToArray());
 
-            // T1
-            var request1 = new QueryMultipleRequest(1,
-                typeof(T1),
-                connection,
-                transaction,
-                FieldCache.Get<T1>(),
-                where1,
-                orderBy1,
-                top1,
-                hints1,
-                statementBuilder);
-            var commandText1 = await CommandTextCache.GetQueryMultipleTextAsync<T1>(request1, cancellationToken);
+            // Item1 Request
+            if (item1 == null)
+            {
+                var request1 = new QueryMultipleRequest(1,
+                    typeof(T1),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T1>(),
+                    where1,
+                    orderBy1,
+                    top1,
+                    hints1,
+                    statementBuilder);
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T1>(request1, cancellationToken));
+                maps.Add(where1.MapTo<T1>());
+            }
 
-            // T2
-            var request2 = new QueryMultipleRequest(2,
-                typeof(T2),
-                connection,
-                transaction,
-                FieldCache.Get<T2>(),
-                where2,
-                orderBy2,
-                top2,
-                hints2,
-                statementBuilder);
-            var commandText2 = await CommandTextCache.GetQueryMultipleTextAsync<T2>(request2, cancellationToken);
+            // Item2 Request
+            if (item2 == null)
+            {
+                var request2 = new QueryMultipleRequest(2,
+                    typeof(T2),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T2>(),
+                    where2,
+                    orderBy2,
+                    top2,
+                    hints2,
+                    statementBuilder);
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T2>(request2, cancellationToken));
+                maps.Add(where2.MapTo<T2>());
+            }
 
-            // T3
-            var request3 = new QueryMultipleRequest(3,
-                typeof(T3),
-                connection,
-                transaction,
-                FieldCache.Get<T3>(),
-                where3,
-                orderBy3,
-                top3,
-                hints3,
-                statementBuilder);
-            var commandText3 = await CommandTextCache.GetQueryMultipleTextAsync<T3>(request3, cancellationToken);
+            // Item3 Request
+            if (item3 == null)
+            {
+                var request3 = new QueryMultipleRequest(3,
+                    typeof(T3),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T3>(),
+                    where3,
+                    orderBy3,
+                    top3,
+                    hints3,
+                    statementBuilder);
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T3>(request3, cancellationToken));
+                maps.Add(where3.MapTo<T3>());
+            }
 
-            // T4
-            var request4 = new QueryMultipleRequest(4,
-                typeof(T4),
-                connection,
-                transaction,
-                FieldCache.Get<T4>(),
-                where4,
-                orderBy4,
-                top4,
-                hints4,
-                statementBuilder);
-            var commandText4 = await CommandTextCache.GetQueryMultipleTextAsync<T4>(request4, cancellationToken);
+            // Item4 Request
+            if (item4 == null)
+            {
+                var request4 = new QueryMultipleRequest(4,
+                    typeof(T4),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T4>(),
+                    where4,
+                    orderBy4,
+                    top4,
+                    hints4,
+                    statementBuilder);
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T4>(request4, cancellationToken));
+                maps.Add(where4.MapTo<T4>());
+            }
 
             // Shared variables
-            var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4);
-            var maps = new[]
-            {
-                where1.MapTo<T1>(),
-                where2.MapTo<T2>(),
-                where3.MapTo<T3>(),
-                where4.MapTo<T4>()
-            };
-            var param = QueryGroup.AsMappedObject(maps, false);
+            var commandText = string.Join(" ", commandTexts);
+            var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             var sessionId = Guid.Empty;
 
             // Before Execution
@@ -2470,11 +3288,11 @@ namespace RepoDb
             }
 
             // Before Execution Time
+            Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>> result;
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = (Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>)null;
-            using (var reader = (DbDataReader)await ExecuteReaderAsyncInternal(connection: connection,
+            using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -2483,32 +3301,44 @@ namespace RepoDb
                 cancellationToken: cancellationToken,
                 entityType: null,
                 dbFields: null,
-                skipCommandArrayParametersCheck: true))
+                skipCommandArrayParametersCheck: true)))
             {
                 var dbSetting = connection.GetDbSetting();
                 var dbFields = (IEnumerable<DbField>)null;
 
                 // T1
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T1>(), transaction, true, cancellationToken);
-                var item1 = await DataReader.ToEnumerableAsync<T1>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                if (item1 == null)
+                {
+                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T1>(), transaction, true, cancellationToken);
+                    item1 = await DataReader.ToEnumerableAsync<T1>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                }
 
                 // T2
-                await reader.NextResultAsync(cancellationToken);
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T2>(), transaction, true, cancellationToken);
-                var item2 = await DataReader.ToEnumerableAsync<T2>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                if (item2 == null)
+                {
+                    await reader.NextResultAsync(cancellationToken);
+                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T2>(), transaction, true, cancellationToken);
+                    item2 = await DataReader.ToEnumerableAsync<T2>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                }
 
                 // T3
-                await reader.NextResultAsync(cancellationToken);
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T3>(), transaction, true, cancellationToken);
-                var item3 = await DataReader.ToEnumerableAsync<T3>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                if (item3 == null)
+                {
+                    await reader.NextResultAsync(cancellationToken);
+                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T3>(), transaction, true, cancellationToken);
+                    item3 = await DataReader.ToEnumerableAsync<T3>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                }
 
                 // T4
-                await reader.NextResultAsync(cancellationToken);
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T4>(), transaction, true, cancellationToken);
-                var item4 = await DataReader.ToEnumerableAsync<T4>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                if (item4 == null)
+                {
+                    await reader.NextResultAsync(cancellationToken);
+                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T4>(), transaction, true, cancellationToken);
+                    item4 = await DataReader.ToEnumerableAsync<T4>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                }
 
                 // Result
-                result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>(item1, item2, item3, item4);
+                result = Tuple.Create(item1, item2, item3, item4);
             }
 
             // After Execution
@@ -2540,20 +3370,41 @@ namespace RepoDb
         /// <param name="orderBy1">The order definition of the fields to be used (at T1).</param>
         /// <param name="top1">The number of rows to be returned (at T1).</param>
         /// <param name="hints1">The table hints to be used (at T1).</param>
+        /// <param name="cacheKey1">
+        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy2">The order definition of the fields to be used (at T2).</param>
         /// <param name="top2">The number of rows to be returned (at T2).</param>
         /// <param name="hints2">The table hints to be used (at T2).</param>
+        /// <param name="cacheKey2">
+        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy3">The order definition of the fields to be used (at T3).</param>
         /// <param name="top3">The number of rows to be returned (at T3).</param>
         /// <param name="hints3">The table hints to be used (at T3).</param>
+        /// <param name="cacheKey3">
+        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy4">The order definition of the fields to be used (at T4).</param>
         /// <param name="top4">The number of rows to be returned (at T4).</param>
         /// <param name="hints4">The table hints to be used (at T4).</param>
+        /// <param name="cacheKey4">
+        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy5">The order definition of the fields to be used (at T5).</param>
         /// <param name="top5">The number of rows to be returned (at T5).</param>
         /// <param name="hints5">The table hints to be used (at T5).</param>
+        /// <param name="cacheKey5">
+        /// The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
@@ -2568,20 +3419,26 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
+            string cacheKey1 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
+            string cacheKey2 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
+            string cacheKey3 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
+            string cacheKey4 = null,
             IEnumerable<OrderField> orderBy5 = null,
             int? top5 = 0,
             string hints5 = null,
+            string cacheKey5 = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
+            ICache cache = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
@@ -2603,15 +3460,19 @@ namespace RepoDb
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
+                cacheKey2: cacheKey2,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
+                cacheKey3: cacheKey3,
                 orderBy4: orderBy4,
                 top4: top4,
                 hints4: hints4,
+                cacheKey4: cacheKey4,
                 orderBy5: orderBy5,
                 top5: top5,
                 hints5: hints5,
+                cacheKey5: cacheKey5,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -2636,20 +3497,41 @@ namespace RepoDb
         /// <param name="orderBy1">The order definition of the fields to be used (at T1).</param>
         /// <param name="top1">The number of rows to be returned (at T1).</param>
         /// <param name="hints1">The table hints to be used (at T1).</param>
+        /// <param name="cacheKey1">
+        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy2">The order definition of the fields to be used (at T2).</param>
         /// <param name="top2">The number of rows to be returned (at T2).</param>
         /// <param name="hints2">The table hints to be used (at T2).</param>
+        /// <param name="cacheKey2">
+        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy3">The order definition of the fields to be used (at T3).</param>
         /// <param name="top3">The number of rows to be returned (at T3).</param>
         /// <param name="hints3">The table hints to be used (at T3).</param>
+        /// <param name="cacheKey3">
+        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy4">The order definition of the fields to be used (at T4).</param>
         /// <param name="top4">The number of rows to be returned (at T4).</param>
         /// <param name="hints4">The table hints to be used (at T4).</param>
+        /// <param name="cacheKey4">
+        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy5">The order definition of the fields to be used (at T5).</param>
         /// <param name="top5">The number of rows to be returned (at T5).</param>
         /// <param name="hints5">The table hints to be used (at T5).</param>
+        /// <param name="cacheKey5">
+        /// The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
@@ -2664,20 +3546,26 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
+            string cacheKey1 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
+            string cacheKey2 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
+            string cacheKey3 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
+            string cacheKey4 = null,
             IEnumerable<OrderField> orderBy5 = null,
             int? top5 = 0,
             string hints5 = null,
+            string cacheKey5 = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
+            ICache cache = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
@@ -2689,86 +3577,127 @@ namespace RepoDb
         {
             // Variables
             var commandType = CommandType.Text;
+            var queryGroups = new List<QueryGroup>();
+            var maps = new List<QueryGroupTypeMap>();
+            var commandTexts = new List<string>();
+
+            // Items
+            var item1 = EnsureQueryMultipleCachedItem<T1>(cacheKey1,
+                cache,
+                where1,
+                queryGroups);
+
+            var item2 = EnsureQueryMultipleCachedItem<T2>(cacheKey2,
+                cache,
+                where2,
+                queryGroups);
+
+            var item3 = EnsureQueryMultipleCachedItem<T3>(cacheKey3,
+                cache,
+                where3,
+                queryGroups);
+
+            var item4 = EnsureQueryMultipleCachedItem<T4>(cacheKey4,
+                cache,
+                where4,
+                queryGroups);
+
+            var item5 = EnsureQueryMultipleCachedItem<T5>(cacheKey5,
+                cache,
+                where5,
+                queryGroups);
 
             // Fix
-            QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3, where4, where5 });
+            QueryGroup.FixForQueryMultiple(queryGroups.ToArray());
 
-            // T1
-            var request1 = new QueryMultipleRequest(1,
-                typeof(T1),
-                connection,
-                transaction,
-                FieldCache.Get<T1>(),
-                where1,
-                orderBy1,
-                top1,
-                hints1,
-                statementBuilder);
-            var commandText1 = await CommandTextCache.GetQueryMultipleTextAsync<T1>(request1, cancellationToken);
+            // Item1 Request
+            if (item1 == null)
+            {
+                var request1 = new QueryMultipleRequest(1,
+                    typeof(T1),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T1>(),
+                    where1,
+                    orderBy1,
+                    top1,
+                    hints1,
+                    statementBuilder);
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T1>(request1, cancellationToken));
+                maps.Add(where1.MapTo<T1>());
+            }
 
-            // T2
-            var request2 = new QueryMultipleRequest(2,
-                typeof(T2),
-                connection,
-                transaction,
-                FieldCache.Get<T2>(),
-                where2,
-                orderBy2,
-                top2,
-                hints2,
-                statementBuilder);
-            var commandText2 = await CommandTextCache.GetQueryMultipleTextAsync<T2>(request2, cancellationToken);
+            // Item2 Request
+            if (item2 == null)
+            {
+                var request2 = new QueryMultipleRequest(2,
+                    typeof(T2),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T2>(),
+                    where2,
+                    orderBy2,
+                    top2,
+                    hints2,
+                    statementBuilder);
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T2>(request2, cancellationToken));
+                maps.Add(where2.MapTo<T2>());
+            }
 
-            // T3
-            var request3 = new QueryMultipleRequest(3,
-                typeof(T3),
-                connection,
-                transaction,
-                FieldCache.Get<T3>(),
-                where3,
-                orderBy3,
-                top3,
-                hints3,
-                statementBuilder);
-            var commandText3 = await CommandTextCache.GetQueryMultipleTextAsync<T3>(request3, cancellationToken);
+            // Item3 Request
+            if (item3 == null)
+            {
+                var request3 = new QueryMultipleRequest(3,
+                    typeof(T3),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T3>(),
+                    where3,
+                    orderBy3,
+                    top3,
+                    hints3,
+                    statementBuilder);
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T3>(request3, cancellationToken));
+                maps.Add(where3.MapTo<T3>());
+            }
 
-            // T4
-            var request4 = new QueryMultipleRequest(4,
-                typeof(T4),
-                connection,
-                transaction,
-                FieldCache.Get<T4>(),
-                where4,
-                orderBy4,
-                top4,
-                hints4,
-                statementBuilder);
-            var commandText4 = await CommandTextCache.GetQueryMultipleTextAsync<T4>(request4, cancellationToken);
+            // Item4 Request
+            if (item4 == null)
+            {
+                var request4 = new QueryMultipleRequest(4,
+                    typeof(T4),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T4>(),
+                    where4,
+                    orderBy4,
+                    top4,
+                    hints4,
+                    statementBuilder);
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T4>(request4, cancellationToken));
+                maps.Add(where4.MapTo<T4>());
+            }
 
-            // T5
-            var request5 = new QueryMultipleRequest(5,
-                typeof(T5),
-                connection,
-                transaction,
-                FieldCache.Get<T5>(),
-                where5,
-                orderBy5,
-                top5,
-                hints5,
-                statementBuilder);
-            var commandText5 = await CommandTextCache.GetQueryMultipleTextAsync<T5>(request5, cancellationToken);
+            // Item5 Request
+            if (item5 == null)
+            {
+                var request5 = new QueryMultipleRequest(5,
+                    typeof(T5),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T5>(),
+                    where5,
+                    orderBy5,
+                    top5,
+                    hints5,
+                    statementBuilder);
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T5>(request5, cancellationToken));
+                maps.Add(where5.MapTo<T5>());
+            }
 
             // Shared variables
-            var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5);
-            var maps = new[]
-            {
-                where1.MapTo<T1>(),
-                where2.MapTo<T2>(),
-                where3.MapTo<T3>(),
-                where4.MapTo<T4>(),
-                where5.MapTo<T5>()
-            };
-            var param = QueryGroup.AsMappedObject(maps, false);
+            var commandText = string.Join(" ", commandTexts);
+            var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             var sessionId = Guid.Empty;
 
             // Before Execution
@@ -2790,11 +3719,11 @@ namespace RepoDb
             }
 
             // Before Execution Time
+            Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>> result;
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = (Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>)null;
-            using (var reader = (DbDataReader)await ExecuteReaderAsyncInternal(connection: connection,
+            using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -2803,37 +3732,52 @@ namespace RepoDb
                 cancellationToken: cancellationToken,
                 entityType: null,
                 dbFields: null,
-                skipCommandArrayParametersCheck: true))
+                skipCommandArrayParametersCheck: true)))
             {
                 var dbSetting = connection.GetDbSetting();
                 var dbFields = (IEnumerable<DbField>)null;
 
                 // T1
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T1>(), transaction, true, cancellationToken);
-                var item1 = await DataReader.ToEnumerableAsync<T1>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                if (item1 == null)
+                {
+                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T1>(), transaction, true, cancellationToken);
+                    item1 = await DataReader.ToEnumerableAsync<T1>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                }
 
                 // T2
-                await reader.NextResultAsync(cancellationToken);
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T2>(), transaction, true, cancellationToken);
-                var item2 = await DataReader.ToEnumerableAsync<T2>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                if (item2 == null)
+                {
+                    await reader.NextResultAsync(cancellationToken);
+                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T2>(), transaction, true, cancellationToken);
+                    item2 = await DataReader.ToEnumerableAsync<T2>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                }
 
                 // T3
-                await reader.NextResultAsync(cancellationToken);
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T3>(), transaction, true, cancellationToken);
-                var item3 = await DataReader.ToEnumerableAsync<T3>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                if (item3 == null)
+                {
+                    await reader.NextResultAsync(cancellationToken);
+                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T3>(), transaction, true, cancellationToken);
+                    item3 = await DataReader.ToEnumerableAsync<T3>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                }
 
                 // T4
-                await reader.NextResultAsync(cancellationToken);
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T4>(), transaction, true, cancellationToken);
-                var item4 = await DataReader.ToEnumerableAsync<T4>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                if (item4 == null)
+                {
+                    await reader.NextResultAsync(cancellationToken);
+                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T4>(), transaction, true, cancellationToken);
+                    item4 = await DataReader.ToEnumerableAsync<T4>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                }
 
                 // T5
-                await reader.NextResultAsync(cancellationToken);
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T5>(), transaction, true, cancellationToken);
-                var item5 = await DataReader.ToEnumerableAsync<T5>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                if (item5 == null)
+                {
+                    await reader.NextResultAsync(cancellationToken);
+                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T5>(), transaction, true, cancellationToken);
+                    item5 = await DataReader.ToEnumerableAsync<T5>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                }
 
                 // Result
-                result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>(item1, item2, item3, item4, item5);
+                result = Tuple.Create(item1, item2, item3, item4, item5);
             }
 
             // After Execution
@@ -2867,23 +3811,48 @@ namespace RepoDb
         /// <param name="orderBy1">The order definition of the fields to be used (at T1).</param>
         /// <param name="top1">The number of rows to be returned (at T1).</param>
         /// <param name="hints1">The table hints to be used (at T1).</param>
+        /// <param name="cacheKey1">
+        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy2">The order definition of the fields to be used (at T2).</param>
         /// <param name="top2">The number of rows to be returned (at T2).</param>
         /// <param name="hints2">The table hints to be used (at T2).</param>
+        /// <param name="cacheKey2">
+        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy3">The order definition of the fields to be used (at T3).</param>
         /// <param name="top3">The number of rows to be returned (at T3).</param>
         /// <param name="hints3">The table hints to be used (at T3).</param>
+        /// <param name="cacheKey3">
+        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy4">The order definition of the fields to be used (at T4).</param>
         /// <param name="top4">The number of rows to be returned (at T4).</param>
         /// <param name="hints4">The table hints to be used (at T4).</param>
+        /// <param name="cacheKey4">
+        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy5">The order definition of the fields to be used (at T5).</param>
         /// <param name="top5">The number of rows to be returned (at T5).</param>
         /// <param name="hints5">The table hints to be used (at T5).</param>
+        /// <param name="cacheKey5">
+        /// The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy6">The order definition of the fields to be used (at T6).</param>
         /// <param name="top6">The number of rows to be returned (at T6).</param>
         /// <param name="hints6">The table hints to be used (at T6).</param>
+        /// <param name="cacheKey6">
+        /// The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
@@ -2899,23 +3868,30 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
+            string cacheKey1 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
+            string cacheKey2 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
+            string cacheKey3 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
+            string cacheKey4 = null,
             IEnumerable<OrderField> orderBy5 = null,
             int? top5 = 0,
             string hints5 = null,
+            string cacheKey5 = null,
             IEnumerable<OrderField> orderBy6 = null,
             int? top6 = 0,
             string hints6 = null,
+            string cacheKey6 = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
+            ICache cache = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
@@ -2939,18 +3915,23 @@ namespace RepoDb
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
+                cacheKey2: cacheKey2,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
+                cacheKey3: cacheKey3,
                 orderBy4: orderBy4,
                 top4: top4,
                 hints4: hints4,
+                cacheKey4: cacheKey4,
                 orderBy5: orderBy5,
                 top5: top5,
                 hints5: hints5,
+                cacheKey5: cacheKey5,
                 orderBy6: orderBy6,
                 top6: top6,
                 hints6: hints6,
+                cacheKey6: cacheKey6,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -2977,23 +3958,48 @@ namespace RepoDb
         /// <param name="orderBy1">The order definition of the fields to be used (at T1).</param>
         /// <param name="top1">The number of rows to be returned (at T1).</param>
         /// <param name="hints1">The table hints to be used (at T1).</param>
+        /// <param name="cacheKey1">
+        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy2">The order definition of the fields to be used (at T2).</param>
         /// <param name="top2">The number of rows to be returned (at T2).</param>
         /// <param name="hints2">The table hints to be used (at T2).</param>
+        /// <param name="cacheKey2">
+        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy3">The order definition of the fields to be used (at T3).</param>
         /// <param name="top3">The number of rows to be returned (at T3).</param>
         /// <param name="hints3">The table hints to be used (at T3).</param>
+        /// <param name="cacheKey3">
+        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy4">The order definition of the fields to be used (at T4).</param>
         /// <param name="top4">The number of rows to be returned (at T4).</param>
         /// <param name="hints4">The table hints to be used (at T4).</param>
+        /// <param name="cacheKey4">
+        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy5">The order definition of the fields to be used (at T5).</param>
         /// <param name="top5">The number of rows to be returned (at T5).</param>
         /// <param name="hints5">The table hints to be used (at T5).</param>
+        /// <param name="cacheKey5">
+        /// The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy6">The order definition of the fields to be used (at T6).</param>
         /// <param name="top6">The number of rows to be returned (at T6).</param>
         /// <param name="hints6">The table hints to be used (at T6).</param>
+        /// <param name="cacheKey6">
+        /// The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
@@ -3009,23 +4015,30 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
+            string cacheKey1 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
+            string cacheKey2 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
+            string cacheKey3 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
+            string cacheKey4 = null,
             IEnumerable<OrderField> orderBy5 = null,
             int? top5 = 0,
             string hints5 = null,
+            string cacheKey5 = null,
             IEnumerable<OrderField> orderBy6 = null,
             int? top6 = 0,
             string hints6 = null,
+            string cacheKey6 = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
+            ICache cache = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
@@ -3038,100 +4051,149 @@ namespace RepoDb
         {
             // Variables
             var commandType = CommandType.Text;
+            var queryGroups = new List<QueryGroup>();
+            var maps = new List<QueryGroupTypeMap>();
+            var commandTexts = new List<string>();
+
+            // Items
+            var item1 = EnsureQueryMultipleCachedItem<T1>(cacheKey1,
+                cache,
+                where1,
+                queryGroups);
+
+            var item2 = EnsureQueryMultipleCachedItem<T2>(cacheKey2,
+                cache,
+                where2,
+                queryGroups);
+
+            var item3 = EnsureQueryMultipleCachedItem<T3>(cacheKey3,
+                cache,
+                where3,
+                queryGroups);
+
+            var item4 = EnsureQueryMultipleCachedItem<T4>(cacheKey4,
+                cache,
+                where4,
+                queryGroups);
+
+            var item5 = EnsureQueryMultipleCachedItem<T5>(cacheKey5,
+                cache,
+                where5,
+                queryGroups);
+
+            var item6 = EnsureQueryMultipleCachedItem<T6>(cacheKey6,
+                cache,
+                where6,
+                queryGroups);
 
             // Fix
-            QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3, where4, where5, where6 });
+            QueryGroup.FixForQueryMultiple(queryGroups.ToArray());
 
-            // T1
-            var request1 = new QueryMultipleRequest(1,
-                typeof(T1),
-                connection,
-                transaction,
-                FieldCache.Get<T1>(),
-                where1,
-                orderBy1,
-                top1,
-                hints1,
-                statementBuilder);
-            var commandText1 = await CommandTextCache.GetQueryMultipleTextAsync<T1>(request1, cancellationToken);
+            // Item1 Request
+            if (item1 == null)
+            {
+                var request1 = new QueryMultipleRequest(1,
+                    typeof(T1),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T1>(),
+                    where1,
+                    orderBy1,
+                    top1,
+                    hints1,
+                    statementBuilder);
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T1>(request1, cancellationToken));
+                maps.Add(where1.MapTo<T1>());
+            }
 
-            // T2
-            var request2 = new QueryMultipleRequest(2,
-                typeof(T2),
-                connection,
-                transaction,
-                FieldCache.Get<T2>(),
-                where2,
-                orderBy2,
-                top2,
-                hints2,
-                statementBuilder);
-            var commandText2 = await CommandTextCache.GetQueryMultipleTextAsync<T2>(request2, cancellationToken);
+            // Item2 Request
+            if (item2 == null)
+            {
+                var request2 = new QueryMultipleRequest(2,
+                    typeof(T2),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T2>(),
+                    where2,
+                    orderBy2,
+                    top2,
+                    hints2,
+                    statementBuilder);
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T2>(request2, cancellationToken));
+                maps.Add(where2.MapTo<T2>());
+            }
 
-            // T3
-            var request3 = new QueryMultipleRequest(3,
-                typeof(T3),
-                connection,
-                transaction,
-                FieldCache.Get<T3>(),
-                where3,
-                orderBy3,
-                top3,
-                hints3,
-                statementBuilder);
-            var commandText3 = await CommandTextCache.GetQueryMultipleTextAsync<T3>(request3, cancellationToken);
+            // Item3 Request
+            if (item3 == null)
+            {
+                var request3 = new QueryMultipleRequest(3,
+                    typeof(T3),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T3>(),
+                    where3,
+                    orderBy3,
+                    top3,
+                    hints3,
+                    statementBuilder);
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T3>(request3, cancellationToken));
+                maps.Add(where3.MapTo<T3>());
+            }
 
-            // T4
-            var request4 = new QueryMultipleRequest(4,
-                typeof(T4),
-                connection,
-                transaction,
-                FieldCache.Get<T4>(),
-                where4,
-                orderBy4,
-                top4,
-                hints4,
-                statementBuilder);
-            var commandText4 = await CommandTextCache.GetQueryMultipleTextAsync<T4>(request4, cancellationToken);
+            // Item4 Request
+            if (item4 == null)
+            {
+                var request4 = new QueryMultipleRequest(4,
+                    typeof(T4),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T4>(),
+                    where4,
+                    orderBy4,
+                    top4,
+                    hints4,
+                    statementBuilder);
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T4>(request4, cancellationToken));
+                maps.Add(where4.MapTo<T4>());
+            }
 
-            // T5
-            var request5 = new QueryMultipleRequest(5,
-                typeof(T5),
-                connection,
-                transaction,
-                FieldCache.Get<T5>(),
-                where5,
-                orderBy5,
-                top5,
-                hints5,
-                statementBuilder);
-            var commandText5 = await CommandTextCache.GetQueryMultipleTextAsync<T5>(request5, cancellationToken);
+            // Item5 Request
+            if (item5 == null)
+            {
+                var request5 = new QueryMultipleRequest(5,
+                    typeof(T5),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T5>(),
+                    where5,
+                    orderBy5,
+                    top5,
+                    hints5,
+                    statementBuilder);
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T5>(request5, cancellationToken));
+                maps.Add(where5.MapTo<T5>());
+            }
 
-            // T6
-            var request6 = new QueryMultipleRequest(6,
-                typeof(T6),
-                connection,
-                transaction,
-                FieldCache.Get<T6>(),
-                where6,
-                orderBy6,
-                top6,
-                hints6,
-                statementBuilder);
-            var commandText6 = await CommandTextCache.GetQueryMultipleTextAsync<T6>(request6, cancellationToken);
+            // Item6 Request
+            if (item6 == null)
+            {
+                var request6 = new QueryMultipleRequest(6,
+                    typeof(T6),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T6>(),
+                    where6,
+                    orderBy6,
+                    top6,
+                    hints6,
+                    statementBuilder);
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T6>(request6, cancellationToken));
+                maps.Add(where6.MapTo<T6>());
+            }
 
             // Shared variables
-            var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5, commandText6);
-            var maps = new[]
-            {
-                where1.MapTo<T1>(),
-                where2.MapTo<T2>(),
-                where3.MapTo<T3>(),
-                where4.MapTo<T4>(),
-                where5.MapTo<T5>(),
-                where6.MapTo<T6>()
-            };
-            var param = QueryGroup.AsMappedObject(maps, false);
+            var commandText = string.Join(" ", commandTexts);
+            var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             var sessionId = Guid.Empty;
 
             // Before Execution
@@ -3153,11 +4215,11 @@ namespace RepoDb
             }
 
             // Before Execution Time
+            Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>> result;
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = (Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>)null;
-            using (var reader = (DbDataReader)await ExecuteReaderAsyncInternal(connection: connection,
+            using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -3166,43 +4228,60 @@ namespace RepoDb
                 cancellationToken: cancellationToken,
                 entityType: null,
                 dbFields: null,
-                skipCommandArrayParametersCheck: true))
+                skipCommandArrayParametersCheck: true)))
             {
                 var dbSetting = connection.GetDbSetting();
                 var dbFields = (IEnumerable<DbField>)null;
 
                 // T1
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T1>(), transaction, true, cancellationToken);
-                var item1 = await DataReader.ToEnumerableAsync<T1>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                if (item1 == null)
+                {
+                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T1>(), transaction, true, cancellationToken);
+                    item1 = await DataReader.ToEnumerableAsync<T1>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                }
 
                 // T2
-                await reader.NextResultAsync(cancellationToken);
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T2>(), transaction, true, cancellationToken);
-                var item2 = await DataReader.ToEnumerableAsync<T2>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                if (item2 == null)
+                {
+                    await reader.NextResultAsync(cancellationToken);
+                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T2>(), transaction, true, cancellationToken);
+                    item2 = await DataReader.ToEnumerableAsync<T2>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                }
 
                 // T3
-                await reader.NextResultAsync(cancellationToken);
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T3>(), transaction, true, cancellationToken);
-                var item3 = await DataReader.ToEnumerableAsync<T3>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                if (item3 == null)
+                {
+                    await reader.NextResultAsync(cancellationToken);
+                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T3>(), transaction, true, cancellationToken);
+                    item3 = await DataReader.ToEnumerableAsync<T3>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                }
 
                 // T4
-                await reader.NextResultAsync(cancellationToken);
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T4>(), transaction, true, cancellationToken);
-                var item4 = await DataReader.ToEnumerableAsync<T4>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                if (item4 == null)
+                {
+                    await reader.NextResultAsync(cancellationToken);
+                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T4>(), transaction, true, cancellationToken);
+                    item4 = await DataReader.ToEnumerableAsync<T4>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                }
 
                 // T5
-                await reader.NextResultAsync(cancellationToken);
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T5>(), transaction, true, cancellationToken);
-                var item5 = await DataReader.ToEnumerableAsync<T5>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                if (item5 == null)
+                {
+                    await reader.NextResultAsync(cancellationToken);
+                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T5>(), transaction, true, cancellationToken);
+                    item5 = await DataReader.ToEnumerableAsync<T5>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                }
 
                 // T6
-                await reader.NextResultAsync(cancellationToken);
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T6>(), transaction, true, cancellationToken);
-                var item6 = await DataReader.ToEnumerableAsync<T6>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                if (item6 == null)
+                {
+                    await reader.NextResultAsync(cancellationToken);
+                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T6>(), transaction, true, cancellationToken);
+                    item6 = await DataReader.ToEnumerableAsync<T6>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                }
 
                 // Result
-                result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>(
-                    item1, item2, item3, item4, item5, item6);
+                result = Tuple.Create(item1, item2, item3, item4, item5, item6);
             }
 
             // After Execution
@@ -3238,26 +4317,55 @@ namespace RepoDb
         /// <param name="orderBy1">The order definition of the fields to be used (at T1).</param>
         /// <param name="top1">The number of rows to be returned (at T1).</param>
         /// <param name="hints1">The table hints to be used (at T1).</param>
+        /// <param name="cacheKey1">
+        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy2">The order definition of the fields to be used (at T2).</param>
         /// <param name="top2">The number of rows to be returned (at T2).</param>
         /// <param name="hints2">The table hints to be used (at T2).</param>
+        /// <param name="cacheKey2">
+        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy3">The order definition of the fields to be used (at T3).</param>
         /// <param name="top3">The number of rows to be returned (at T3).</param>
         /// <param name="hints3">The table hints to be used (at T3).</param>
+        /// <param name="cacheKey3">
+        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy4">The order definition of the fields to be used (at T4).</param>
         /// <param name="top4">The number of rows to be returned (at T4).</param>
         /// <param name="hints4">The table hints to be used (at T4).</param>
+        /// <param name="cacheKey4">
+        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy5">The order definition of the fields to be used (at T5).</param>
         /// <param name="top5">The number of rows to be returned (at T5).</param>
         /// <param name="hints5">The table hints to be used (at T5).</param>
+        /// <param name="cacheKey5">
+        /// The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy6">The order definition of the fields to be used (at T6).</param>
         /// <param name="top6">The number of rows to be returned (at T6).</param>
         /// <param name="hints6">The table hints to be used (at T6).</param>
+        /// <param name="cacheKey6">
+        /// The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy7">The order definition of the fields to be used (at T7).</param>
         /// <param name="top7">The number of rows to be returned (at T7).</param>
         /// <param name="hints7">The table hints to be used (at T7).</param>
+        /// <param name="cacheKey7">
+        /// The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
@@ -3274,26 +4382,34 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
+            string cacheKey1 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
+            string cacheKey2 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
+            string cacheKey3 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
+            string cacheKey4 = null,
             IEnumerable<OrderField> orderBy5 = null,
             int? top5 = 0,
             string hints5 = null,
+            string cacheKey5 = null,
             IEnumerable<OrderField> orderBy6 = null,
             int? top6 = 0,
             string hints6 = null,
+            string cacheKey6 = null,
             IEnumerable<OrderField> orderBy7 = null,
             int? top7 = 0,
             string hints7 = null,
+            string cacheKey7 = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
+            ICache cache = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
@@ -3319,21 +4435,27 @@ namespace RepoDb
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
+                cacheKey2: cacheKey2,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
+                cacheKey3: cacheKey3,
                 orderBy4: orderBy4,
                 top4: top4,
                 hints4: hints4,
+                cacheKey4: cacheKey4,
                 orderBy5: orderBy5,
                 top5: top5,
                 hints5: hints5,
+                cacheKey5: cacheKey5,
                 orderBy6: orderBy6,
                 top6: top6,
                 hints6: hints6,
+                cacheKey6: cacheKey6,
                 orderBy7: orderBy7,
                 top7: top7,
                 hints7: hints7,
+                cacheKey7: cacheKey7,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 trace: trace,
@@ -3362,26 +4484,55 @@ namespace RepoDb
         /// <param name="orderBy1">The order definition of the fields to be used (at T1).</param>
         /// <param name="top1">The number of rows to be returned (at T1).</param>
         /// <param name="hints1">The table hints to be used (at T1).</param>
+        /// <param name="cacheKey1">
+        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy2">The order definition of the fields to be used (at T2).</param>
         /// <param name="top2">The number of rows to be returned (at T2).</param>
         /// <param name="hints2">The table hints to be used (at T2).</param>
+        /// <param name="cacheKey2">
+        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy3">The order definition of the fields to be used (at T3).</param>
         /// <param name="top3">The number of rows to be returned (at T3).</param>
         /// <param name="hints3">The table hints to be used (at T3).</param>
+        /// <param name="cacheKey3">
+        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy4">The order definition of the fields to be used (at T4).</param>
         /// <param name="top4">The number of rows to be returned (at T4).</param>
         /// <param name="hints4">The table hints to be used (at T4).</param>
+        /// <param name="cacheKey4">
+        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy5">The order definition of the fields to be used (at T5).</param>
         /// <param name="top5">The number of rows to be returned (at T5).</param>
         /// <param name="hints5">The table hints to be used (at T5).</param>
+        /// <param name="cacheKey5">
+        /// The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy6">The order definition of the fields to be used (at T6).</param>
         /// <param name="top6">The number of rows to be returned (at T6).</param>
         /// <param name="hints6">The table hints to be used (at T6).</param>
+        /// <param name="cacheKey6">
+        /// The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="orderBy7">The order definition of the fields to be used (at T7).</param>
         /// <param name="top7">The number of rows to be returned (at T7).</param>
         /// <param name="hints7">The table hints to be used (at T7).</param>
+        /// <param name="cacheKey7">
+        /// The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
@@ -3398,26 +4549,34 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
+            string cacheKey1 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
+            string cacheKey2 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
+            string cacheKey3 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
+            string cacheKey4 = null,
             IEnumerable<OrderField> orderBy5 = null,
             int? top5 = 0,
             string hints5 = null,
+            string cacheKey5 = null,
             IEnumerable<OrderField> orderBy6 = null,
             int? top6 = 0,
             string hints6 = null,
+            string cacheKey6 = null,
             IEnumerable<OrderField> orderBy7 = null,
             int? top7 = 0,
             string hints7 = null,
+            string cacheKey7 = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
+            ICache cache = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
             CancellationToken cancellationToken = default)
@@ -3431,114 +4590,171 @@ namespace RepoDb
         {
             // Variables
             var commandType = CommandType.Text;
+            var queryGroups = new List<QueryGroup>();
+            var maps = new List<QueryGroupTypeMap>();
+            var commandTexts = new List<string>();
+
+            // Items
+            var item1 = EnsureQueryMultipleCachedItem<T1>(cacheKey1,
+                cache,
+                where1,
+                queryGroups);
+
+            var item2 = EnsureQueryMultipleCachedItem<T2>(cacheKey2,
+                cache,
+                where2,
+                queryGroups);
+
+            var item3 = EnsureQueryMultipleCachedItem<T3>(cacheKey3,
+                cache,
+                where3,
+                queryGroups);
+
+            var item4 = EnsureQueryMultipleCachedItem<T4>(cacheKey4,
+                cache,
+                where4,
+                queryGroups);
+
+            var item5 = EnsureQueryMultipleCachedItem<T5>(cacheKey5,
+                cache,
+                where5,
+                queryGroups);
+
+            var item6 = EnsureQueryMultipleCachedItem<T6>(cacheKey6,
+                cache,
+                where6,
+                queryGroups);
+
+            var item7 = EnsureQueryMultipleCachedItem<T7>(cacheKey7,
+                cache,
+                where7,
+                queryGroups);
 
             // Fix
-            QueryGroup.FixForQueryMultiple(new[] { where1, where2, where3, where4, where5, where6, where7 });
+            QueryGroup.FixForQueryMultiple(queryGroups.ToArray());
 
-            // T1
-            var request1 = new QueryMultipleRequest(1,
-                typeof(T1),
-                connection,
-                transaction,
-                FieldCache.Get<T1>(),
-                where1,
-                orderBy1,
-                top1,
-                hints1,
-                statementBuilder);
-            var commandText1 = await CommandTextCache.GetQueryMultipleTextAsync<T1>(request1, cancellationToken);
+            // Item1 Request
+            if (item1 == null)
+            {
+                var request1 = new QueryMultipleRequest(1,
+                    typeof(T1),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T1>(),
+                    where1,
+                    orderBy1,
+                    top1,
+                    hints1,
+                    statementBuilder);
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T1>(request1, cancellationToken));
+                maps.Add(where1.MapTo<T1>());
+            }
 
-            // T2
-            var request2 = new QueryMultipleRequest(2,
-                typeof(T2),
-                connection,
-                transaction,
-                FieldCache.Get<T2>(),
-                where2,
-                orderBy2,
-                top2,
-                hints2,
-                statementBuilder);
-            var commandText2 = await CommandTextCache.GetQueryMultipleTextAsync<T2>(request2, cancellationToken);
+            // Item2 Request
+            if (item2 == null)
+            {
+                var request2 = new QueryMultipleRequest(2,
+                    typeof(T2),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T2>(),
+                    where2,
+                    orderBy2,
+                    top2,
+                    hints2,
+                    statementBuilder);
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T2>(request2, cancellationToken));
+                maps.Add(where2.MapTo<T2>());
+            }
 
-            // T3
-            var request3 = new QueryMultipleRequest(3,
-                typeof(T3),
-                connection,
-                transaction,
-                FieldCache.Get<T3>(),
-                where3,
-                orderBy3,
-                top3,
-                hints3,
-                statementBuilder);
-            var commandText3 = await CommandTextCache.GetQueryMultipleTextAsync<T3>(request3, cancellationToken);
+            // Item3 Request
+            if (item3 == null)
+            {
+                var request3 = new QueryMultipleRequest(3,
+                    typeof(T3),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T3>(),
+                    where3,
+                    orderBy3,
+                    top3,
+                    hints3,
+                    statementBuilder);
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T3>(request3, cancellationToken));
+                maps.Add(where3.MapTo<T3>());
+            }
 
-            // T4
-            var request4 = new QueryMultipleRequest(4,
-                typeof(T4),
-                connection,
-                transaction,
-                FieldCache.Get<T4>(),
-                where4,
-                orderBy4,
-                top4,
-                hints4,
-                statementBuilder);
-            var commandText4 = await CommandTextCache.GetQueryMultipleTextAsync<T4>(request4, cancellationToken);
+            // Item4 Request
+            if (item4 == null)
+            {
+                var request4 = new QueryMultipleRequest(4,
+                    typeof(T4),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T4>(),
+                    where4,
+                    orderBy4,
+                    top4,
+                    hints4,
+                    statementBuilder);
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T4>(request4, cancellationToken));
+                maps.Add(where4.MapTo<T4>());
+            }
 
-            // T5
-            var request5 = new QueryMultipleRequest(5,
-                typeof(T5),
-                connection,
-                transaction,
-                FieldCache.Get<T5>(),
-                where5,
-                orderBy5,
-                top5,
-                hints5,
-                statementBuilder);
-            var commandText5 = await CommandTextCache.GetQueryMultipleTextAsync<T5>(request5, cancellationToken);
+            // Item5 Request
+            if (item5 == null)
+            {
+                var request5 = new QueryMultipleRequest(5,
+                    typeof(T5),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T5>(),
+                    where5,
+                    orderBy5,
+                    top5,
+                    hints5,
+                    statementBuilder);
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T5>(request5, cancellationToken));
+                maps.Add(where5.MapTo<T5>());
+            }
 
-            // T6
-            var request6 = new QueryMultipleRequest(6,
-                typeof(T6),
-                connection,
-                transaction,
-                FieldCache.Get<T6>(),
-                where6,
-                orderBy6,
-                top6,
-                hints6,
-                statementBuilder);
-            var commandText6 = await CommandTextCache.GetQueryMultipleTextAsync<T6>(request6, cancellationToken);
+            // Item6 Request
+            if (item6 == null)
+            {
+                var request6 = new QueryMultipleRequest(6,
+                    typeof(T6),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T6>(),
+                    where6,
+                    orderBy6,
+                    top6,
+                    hints6,
+                    statementBuilder);
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T6>(request6, cancellationToken));
+                maps.Add(where6.MapTo<T6>());
+            }
 
-            // T7
-            var request7 = new QueryMultipleRequest(7,
-                typeof(T7),
-                connection,
-                transaction,
-                FieldCache.Get<T7>(),
-                where7,
-                orderBy7,
-                top7,
-                hints7,
-                statementBuilder);
-            var commandText7 = await CommandTextCache.GetQueryMultipleTextAsync<T7>(request7, cancellationToken);
+            // Item7 Request
+            if (item7 == null)
+            {
+                var request7 = new QueryMultipleRequest(7,
+                    typeof(T7),
+                    connection,
+                    transaction,
+                    FieldCache.Get<T7>(),
+                    where7,
+                    orderBy7,
+                    top7,
+                    hints7,
+                    statementBuilder);
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T7>(request7, cancellationToken));
+                maps.Add(where7.MapTo<T7>());
+            }
 
             // Shared variables
-            var commandText = string.Join(" ", commandText1, commandText2, commandText3, commandText4, commandText5, commandText6, commandText7);
-            var maps = new[]
-            {
-                where1.MapTo<T1>(),
-                where2.MapTo<T2>(),
-                where3.MapTo<T3>(),
-                where4.MapTo<T4>(),
-                where5.MapTo<T5>(),
-                where6.MapTo<T6>(),
-                where7.MapTo<T7>()
-            };
-            var param = QueryGroup.AsMappedObject(maps, false);
+            var commandText = string.Join(" ", commandTexts);
+            var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             var sessionId = Guid.Empty;
 
             // Before Execution
@@ -3560,11 +4776,11 @@ namespace RepoDb
             }
 
             // Before Execution Time
+            Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>> result;
             var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
-            var result = (Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>)null;
-            using (var reader = (DbDataReader)await ExecuteReaderAsyncInternal(connection: connection,
+            using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
@@ -3573,48 +4789,68 @@ namespace RepoDb
                 cancellationToken: cancellationToken,
                 entityType: null,
                 dbFields: null,
-                skipCommandArrayParametersCheck: true))
+                skipCommandArrayParametersCheck: true)))
             {
                 var dbSetting = connection.GetDbSetting();
                 var dbFields = (IEnumerable<DbField>)null;
 
                 // T1
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T1>(), transaction, true, cancellationToken);
-                var item1 = await DataReader.ToEnumerableAsync<T1>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                if (item1 == null)
+                {
+                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T1>(), transaction, true, cancellationToken);
+                    item1 = await DataReader.ToEnumerableAsync<T1>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                }
 
                 // T2
-                await reader.NextResultAsync(cancellationToken);
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T2>(), transaction, true, cancellationToken);
-                var item2 = await DataReader.ToEnumerableAsync<T2>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                if (item2 == null)
+                {
+                    await reader.NextResultAsync(cancellationToken);
+                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T2>(), transaction, true, cancellationToken);
+                    item2 = await DataReader.ToEnumerableAsync<T2>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                }
 
                 // T3
-                await reader.NextResultAsync(cancellationToken);
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T3>(), transaction, true, cancellationToken);
-                var item3 = await DataReader.ToEnumerableAsync<T3>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                if (item3 == null)
+                {
+                    await reader.NextResultAsync(cancellationToken);
+                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T3>(), transaction, true, cancellationToken);
+                    item3 = await DataReader.ToEnumerableAsync<T3>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                }
 
                 // T4
-                await reader.NextResultAsync(cancellationToken);
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T4>(), transaction, true, cancellationToken);
-                var item4 = await DataReader.ToEnumerableAsync<T4>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                if (item4 == null)
+                {
+                    await reader.NextResultAsync(cancellationToken);
+                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T4>(), transaction, true, cancellationToken);
+                    item4 = await DataReader.ToEnumerableAsync<T4>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                }
 
                 // T5
-                await reader.NextResultAsync(cancellationToken);
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T5>(), transaction, true, cancellationToken);
-                var item5 = await DataReader.ToEnumerableAsync<T5>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                if (item5 == null)
+                {
+                    await reader.NextResultAsync(cancellationToken);
+                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T5>(), transaction, true, cancellationToken);
+                    item5 = await DataReader.ToEnumerableAsync<T5>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                }
 
                 // T6
-                await reader.NextResultAsync(cancellationToken);
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T6>(), transaction, true, cancellationToken);
-                var item6 = await DataReader.ToEnumerableAsync<T6>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                if (item6 == null)
+                {
+                    await reader.NextResultAsync(cancellationToken);
+                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T6>(), transaction, true, cancellationToken);
+                    item6 = await DataReader.ToEnumerableAsync<T6>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                }
 
                 // T7
-                await reader.NextResultAsync(cancellationToken);
-                dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T7>(), transaction, true, cancellationToken);
-                var item7 = await DataReader.ToEnumerableAsync<T7>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                if (item7 == null)
+                {
+                    await reader.NextResultAsync(cancellationToken);
+                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T7>(), transaction, true, cancellationToken);
+                    item7 = await DataReader.ToEnumerableAsync<T7>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+                }
 
                 // Result
-                result = new Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>(
-                    item1, item2, item3, item4, item5, item6, item7);
+                result = Tuple.Create(item1, item2, item3, item4, item5, item6, item7);
             }
 
             // After Execution
@@ -3626,6 +4862,35 @@ namespace RepoDb
         }
 
         #endregion
+
+        #endregion
+
+        #region Helpers
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="cacheKey"></param>
+        /// <param name="cache"></param>
+        /// <param name="where"></param>
+        /// <param name="queryGroups"></param>
+        /// <returns></returns>
+        private static IEnumerable<T> EnsureQueryMultipleCachedItem<T>(string cacheKey,
+            ICache cache,
+            QueryGroup where,
+            List<QueryGroup> queryGroups)
+            where T : class
+        {
+            var item = cache?.Get<IEnumerable<T>>(cacheKey, false)?.Value;
+
+            if (item == null)
+            {
+                queryGroups.Add(where);
+            }
+
+            return item;
+        }
 
         #endregion
     }
