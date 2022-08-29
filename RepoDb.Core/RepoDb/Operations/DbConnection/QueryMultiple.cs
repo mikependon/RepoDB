@@ -590,6 +590,7 @@ namespace RepoDb
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
+                cacheKey1: cacheKey1,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
@@ -600,6 +601,7 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder);
         }
@@ -684,6 +686,7 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder);
         }
@@ -757,6 +760,7 @@ namespace RepoDb
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
+                cacheKey1: cacheKey1,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
@@ -767,6 +771,7 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder);
         }
@@ -840,6 +845,7 @@ namespace RepoDb
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
+                cacheKey1: cacheKey1,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
@@ -850,6 +856,7 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder);
         }
@@ -923,6 +930,7 @@ namespace RepoDb
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
+                cacheKey1: cacheKey1,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
@@ -933,6 +941,7 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder);
         }
@@ -1241,6 +1250,7 @@ namespace RepoDb
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
+                cacheKey1: cacheKey1,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
@@ -1255,6 +1265,7 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder);
         }
@@ -1345,6 +1356,7 @@ namespace RepoDb
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
+                cacheKey1: cacheKey1,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
@@ -1359,6 +1371,7 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder);
         }
@@ -1449,6 +1462,7 @@ namespace RepoDb
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
+                cacheKey1: cacheKey1,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
@@ -1463,6 +1477,7 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder);
         }
@@ -1553,6 +1568,7 @@ namespace RepoDb
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
+                cacheKey1: cacheKey1,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
@@ -1567,6 +1583,7 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder);
         }
@@ -1672,6 +1689,7 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder);
         }
@@ -2042,6 +2060,7 @@ namespace RepoDb
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
+                cacheKey1: cacheKey1,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
@@ -2060,6 +2079,7 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder);
         }
@@ -2185,6 +2205,7 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder);
         }
@@ -2291,6 +2312,7 @@ namespace RepoDb
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
+                cacheKey1: cacheKey1,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
@@ -2309,6 +2331,7 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder);
         }
@@ -2415,6 +2438,7 @@ namespace RepoDb
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
+                cacheKey1: cacheKey1,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
@@ -2433,6 +2457,7 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder);
         }
@@ -2539,6 +2564,7 @@ namespace RepoDb
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
+                cacheKey1: cacheKey1,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
@@ -2557,6 +2583,7 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder);
         }
@@ -2988,6 +3015,7 @@ namespace RepoDb
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
+                cacheKey1: cacheKey1,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
@@ -3010,6 +3038,7 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder);
         }
@@ -3155,6 +3184,7 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder);
         }
@@ -3277,6 +3307,7 @@ namespace RepoDb
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
+                cacheKey1: cacheKey1,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
@@ -3299,6 +3330,7 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder);
         }
@@ -3421,6 +3453,7 @@ namespace RepoDb
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
+                cacheKey1: cacheKey1,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
@@ -3443,6 +3476,7 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder);
         }
@@ -3565,6 +3599,7 @@ namespace RepoDb
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
+                cacheKey1: cacheKey1,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
@@ -3587,6 +3622,7 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder);
         }
@@ -4079,6 +4115,7 @@ namespace RepoDb
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
+                cacheKey1: cacheKey1,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
@@ -4105,6 +4142,7 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder);
         }
@@ -4270,6 +4308,7 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder);
         }
@@ -4408,6 +4447,7 @@ namespace RepoDb
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
+                cacheKey1: cacheKey1,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
@@ -4434,6 +4474,7 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder);
         }
@@ -4572,6 +4613,7 @@ namespace RepoDb
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
+                cacheKey1: cacheKey1,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
@@ -4598,6 +4640,7 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder);
         }
@@ -4736,6 +4779,7 @@ namespace RepoDb
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
+                cacheKey1: cacheKey1,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
@@ -4762,6 +4806,7 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder);
         }
@@ -5756,6 +5801,7 @@ namespace RepoDb
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
+                cacheKey1: cacheKey1,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
@@ -5766,6 +5812,7 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
@@ -5853,6 +5900,7 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
@@ -5929,6 +5977,7 @@ namespace RepoDb
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
+                cacheKey1: cacheKey1,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
@@ -5939,6 +5988,7 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
@@ -6015,6 +6065,7 @@ namespace RepoDb
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
+                cacheKey1: cacheKey1,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
@@ -6025,6 +6076,7 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
@@ -6101,6 +6153,7 @@ namespace RepoDb
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
+                cacheKey1: cacheKey1,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
@@ -6111,6 +6164,7 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
@@ -6425,6 +6479,7 @@ namespace RepoDb
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
+                cacheKey1: cacheKey1,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
@@ -6439,6 +6494,7 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
@@ -6532,6 +6588,7 @@ namespace RepoDb
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
+                cacheKey1: cacheKey1,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
@@ -6546,6 +6603,7 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
@@ -6639,6 +6697,7 @@ namespace RepoDb
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
+                cacheKey1: cacheKey1,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
@@ -6653,6 +6712,7 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
@@ -6746,6 +6806,7 @@ namespace RepoDb
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
+                cacheKey1: cacheKey1,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
@@ -6760,6 +6821,7 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
@@ -6868,6 +6930,7 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
@@ -7244,6 +7307,7 @@ namespace RepoDb
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
+                cacheKey1: cacheKey1,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
@@ -7262,6 +7326,7 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
@@ -7390,6 +7455,7 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
@@ -7499,6 +7565,7 @@ namespace RepoDb
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
+                cacheKey1: cacheKey1,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
@@ -7517,6 +7584,7 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
@@ -7626,6 +7694,7 @@ namespace RepoDb
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
+                cacheKey1: cacheKey1,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
@@ -7644,6 +7713,7 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
@@ -7753,6 +7823,7 @@ namespace RepoDb
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
+                cacheKey1: cacheKey1,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
@@ -7771,6 +7842,7 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
@@ -8208,6 +8280,7 @@ namespace RepoDb
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
+                cacheKey1: cacheKey1,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
@@ -8230,6 +8303,7 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
@@ -8351,10 +8425,11 @@ namespace RepoDb
                 where3: ToQueryGroup(where3),
                 where4: ToQueryGroup(where4),
                 where5: ToQueryGroup(where5),
-                where6: ToQueryGroup(where5),
+                where6: ToQueryGroup(where6),
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
+                cacheKey1: cacheKey1,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
@@ -8377,6 +8452,7 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
@@ -8525,6 +8601,7 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
@@ -8650,6 +8727,7 @@ namespace RepoDb
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
+                cacheKey1: cacheKey1,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
@@ -8672,6 +8750,7 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
@@ -8797,6 +8876,7 @@ namespace RepoDb
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
+                cacheKey1: cacheKey1,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
@@ -8819,6 +8899,7 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
@@ -9317,6 +9398,7 @@ namespace RepoDb
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
+                cacheKey1: cacheKey1,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
@@ -9343,6 +9425,7 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
@@ -9511,6 +9594,7 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
@@ -9652,6 +9736,7 @@ namespace RepoDb
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
+                cacheKey1: cacheKey1,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
@@ -9678,6 +9763,7 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
@@ -9819,6 +9905,7 @@ namespace RepoDb
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
+                cacheKey1: cacheKey1,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
@@ -9845,6 +9932,7 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
@@ -9986,6 +10074,7 @@ namespace RepoDb
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
+                cacheKey1: cacheKey1,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
@@ -10012,6 +10101,7 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: cache,
                 trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
