@@ -26,10 +26,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="cacheKey">
-        /// The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
+        /// <param name="cacheKey">The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -73,10 +70,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="cacheKey">
-        /// The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
+        /// <param name="cacheKey">The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -120,10 +114,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="cacheKey">
-        /// The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
+        /// <param name="cacheKey">The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -177,10 +168,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="cacheKey">
-        /// The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
+        /// <param name="cacheKey">The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -227,10 +215,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="cacheKey">
-        /// The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
+        /// <param name="cacheKey">The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -277,10 +262,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="cacheKey">
-        /// The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
+        /// <param name="cacheKey">The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -336,10 +318,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="cacheKey">
-        /// The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
+        /// <param name="cacheKey">The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -382,10 +361,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="cacheKey">
-        /// The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
+        /// <param name="cacheKey">The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -432,10 +408,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="cacheKey">
-        /// The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
+        /// <param name="cacheKey">The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -481,10 +454,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="cacheKey">
-        /// The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
+        /// <param name="cacheKey">The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -535,10 +505,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="cacheKey">
-        /// The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
+        /// <param name="cacheKey">The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
@@ -644,10 +611,7 @@ namespace RepoDb
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="cacheKey">
-        /// The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
+        /// <param name="cacheKey">The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
