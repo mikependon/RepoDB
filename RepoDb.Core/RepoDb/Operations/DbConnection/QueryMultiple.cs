@@ -31,21 +31,18 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="what1">The dynamic expression or the key value to be used (for T1).</param>
         /// <param name="what2">The dynamic expression or the key value to be used (for T2).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -54,14 +51,17 @@ namespace RepoDb
         public static Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<T1, T2>(this IDbConnection connection,
             object what1,
             object what2,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
             int? top2 = 0,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             string hints2 = null,
             string cacheKey2 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -73,14 +73,17 @@ namespace RepoDb
             return QueryMultipleInternal<T1, T2>(connection: connection,
                 where1: WhatToQueryGroup(typeof(T1), connection, what1, transaction),
                 where2: WhatToQueryGroup(typeof(T2), connection, what2, transaction),
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
                 top2: top2,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -96,21 +99,18 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="where1">The query expression to be used (for T1).</param>
         /// <param name="where2">The query expression to be used (for T2).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -119,14 +119,17 @@ namespace RepoDb
         public static Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<T1, T2>(this IDbConnection connection,
             Expression<Func<T1, bool>> where1,
             Expression<Func<T2, bool>> where2,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
             int? top2 = 0,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             string hints2 = null,
             string cacheKey2 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -138,14 +141,17 @@ namespace RepoDb
             return QueryMultipleInternal<T1, T2>(connection: connection,
                 where1: ToQueryGroup(where1),
                 where2: ToQueryGroup(where2),
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
                 top2: top2,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -161,21 +167,18 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="where1">The query expression to be used (for T1).</param>
         /// <param name="where2">The query expression to be used (for T2).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -184,14 +187,17 @@ namespace RepoDb
         public static Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<T1, T2>(this IDbConnection connection,
             QueryField where1,
             QueryField where2,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
             int? top2 = 0,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             string hints2 = null,
             string cacheKey2 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -203,14 +209,17 @@ namespace RepoDb
             return QueryMultipleInternal<T1, T2>(connection: connection,
                 where1: ToQueryGroup(where1),
                 where2: ToQueryGroup(where2),
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
                 top2: top2,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -226,21 +235,18 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="where1">The query expression to be used (for T1).</param>
         /// <param name="where2">The query expression to be used (for T2).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -249,14 +255,17 @@ namespace RepoDb
         public static Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<T1, T2>(this IDbConnection connection,
             IEnumerable<QueryField> where1,
             IEnumerable<QueryField> where2,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
             int? top2 = 0,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             string hints2 = null,
             string cacheKey2 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -268,14 +277,17 @@ namespace RepoDb
             return QueryMultipleInternal<T1, T2>(connection: connection,
                 where1: ToQueryGroup(where1),
                 where2: ToQueryGroup(where2),
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
                 top2: top2,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -291,21 +303,18 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="where1">The query expression to be used (for T1).</param>
         /// <param name="where2">The query expression to be used (for T2).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -314,14 +323,17 @@ namespace RepoDb
         public static Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<T1, T2>(this IDbConnection connection,
             QueryGroup where1,
             QueryGroup where2,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
             int? top2 = 0,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             string hints2 = null,
             string cacheKey2 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -333,14 +345,17 @@ namespace RepoDb
             return QueryMultipleInternal<T1, T2>(connection: connection,
                 where1: where1,
                 where2: where2,
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
                 top2: top2,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -355,22 +370,19 @@ namespace RepoDb
         /// <typeparam name="T2">The second target type.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="where1">The query expression to be used (for T1).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="where2">The query expression to be used (for T2).</param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -379,14 +391,17 @@ namespace RepoDb
         internal static Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultipleInternal<T1, T2>(this IDbConnection connection,
             QueryGroup where1,
             QueryGroup where2,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
             int? top2 = 0,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             string hints2 = null,
             string cacheKey2 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -402,12 +417,12 @@ namespace RepoDb
             var commandTexts = new List<string>();
 
             // Items
-            var item1 = EnsureQueryMultipleCachedItem<T1>(cacheKey1,
+            var item1 = QueryMultipleInternal<T1>(cacheKey1,
                 cache,
                 where1,
                 queryGroups);
 
-            var item2 = EnsureQueryMultipleCachedItem<T2>(cacheKey2,
+            var item2 = QueryMultipleInternal<T2>(cacheKey2,
                 cache,
                 where2,
                 queryGroups);
@@ -422,7 +437,7 @@ namespace RepoDb
                     typeof(T1),
                     connection,
                     transaction,
-                    FieldCache.Get<T1>(),
+                    fields1 ?? FieldCache.Get<T1>(),
                     where1,
                     orderBy1,
                     top1,
@@ -439,7 +454,7 @@ namespace RepoDb
                     typeof(T2),
                     connection,
                     transaction,
-                    FieldCache.Get<T2>(),
+                    fields2 ?? FieldCache.Get<T2>(),
                     where2,
                     orderBy2,
                     top2,
@@ -488,22 +503,28 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true))
             {
                 var dbSetting = connection.GetDbSetting();
-                var dbFields = (IEnumerable<DbField>)null;
 
                 // T1
-                if (item1 == null)
-                {
-                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T1>(), transaction);
-                    item1 = DataReader.ToEnumerable<T1>(reader, dbFields, dbSetting)?.AsList();
-                }
+                item1 = QueryMultipleInternal<T1>(connection,
+                    reader,
+                    item1,
+                    cacheKey1,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    false);
 
                 // T2
-                if (item2 == null)
-                {
-                    reader?.NextResult();
-                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T2>(), transaction);
-                    item2 = DataReader.ToEnumerable<T2>(reader, dbFields, dbSetting)?.AsList();
-                }
+                item2 = QueryMultipleInternal<T2>(connection,
+                    reader,
+                    item2,
+                    cacheKey2,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    true);
 
                 // Result
                 result = Tuple.Create(item1, item2);
@@ -531,28 +552,23 @@ namespace RepoDb
         /// <param name="what1">The query expression or the key value to be used (for T1).</param>
         /// <param name="what2">The query expression or the key value to be used (for T2).</param>
         /// <param name="what3">The query expression or the key value to be used (for T3).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -562,18 +578,22 @@ namespace RepoDb
             object what1,
             object what2,
             object what3,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -587,18 +607,22 @@ namespace RepoDb
                 where1: WhatToQueryGroup(what1),
                 where2: WhatToQueryGroup(what2),
                 where3: WhatToQueryGroup(what3),
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                fields3: fields3,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
                 cacheKey3: cacheKey3,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -616,28 +640,23 @@ namespace RepoDb
         /// <param name="where1">The query expression to be used (for T1).</param>
         /// <param name="where2">The query expression to be used (for T2).</param>
         /// <param name="where3">The query expression to be used (for T3).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -647,18 +666,22 @@ namespace RepoDb
             Expression<Func<T1, bool>> where1,
             Expression<Func<T2, bool>> where2,
             Expression<Func<T3, bool>> where3,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -672,18 +695,22 @@ namespace RepoDb
                 where1: ToQueryGroup(where1),
                 where2: ToQueryGroup(where2),
                 where3: ToQueryGroup(where3),
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                fields3: fields3,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
                 cacheKey3: cacheKey3,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -701,28 +728,23 @@ namespace RepoDb
         /// <param name="where1">The query expression to be used (for T1).</param>
         /// <param name="where2">The query expression to be used (for T2).</param>
         /// <param name="where3">The query expression to be used (for T3).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -732,18 +754,22 @@ namespace RepoDb
             QueryField where1,
             QueryField where2,
             QueryField where3,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -757,18 +783,22 @@ namespace RepoDb
                 where1: ToQueryGroup(where1),
                 where2: ToQueryGroup(where2),
                 where3: ToQueryGroup(where3),
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                fields3: fields3,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
                 cacheKey3: cacheKey3,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -786,28 +816,23 @@ namespace RepoDb
         /// <param name="where1">The query expression to be used (for T1).</param>
         /// <param name="where2">The query expression to be used (for T2).</param>
         /// <param name="where3">The query expression to be used (for T3).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -817,18 +842,22 @@ namespace RepoDb
             IEnumerable<QueryField> where1,
             IEnumerable<QueryField> where2,
             IEnumerable<QueryField> where3,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -842,18 +871,22 @@ namespace RepoDb
                 where1: ToQueryGroup(where1),
                 where2: ToQueryGroup(where2),
                 where3: ToQueryGroup(where3),
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                fields3: fields3,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
                 cacheKey3: cacheKey3,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -871,28 +904,23 @@ namespace RepoDb
         /// <param name="where1">The query expression to be used (for T1).</param>
         /// <param name="where2">The query expression to be used (for T2).</param>
         /// <param name="where3">The query expression to be used (for T3).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -902,18 +930,22 @@ namespace RepoDb
             QueryGroup where1,
             QueryGroup where2,
             QueryGroup where3,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -927,18 +959,22 @@ namespace RepoDb
                 where1: where1,
                 where2: where2,
                 where3: where3,
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                fields3: fields3,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
                 cacheKey3: cacheKey3,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -956,28 +992,23 @@ namespace RepoDb
         /// <param name="where1">The query expression to be used (for T1).</param>
         /// <param name="where2">The query expression to be used (for T2).</param>
         /// <param name="where3">The query expression to be used (for T3).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -987,18 +1018,22 @@ namespace RepoDb
             QueryGroup where1,
             QueryGroup where2,
             QueryGroup where3,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -1015,17 +1050,17 @@ namespace RepoDb
             var commandTexts = new List<string>();
 
             // Items
-            var item1 = EnsureQueryMultipleCachedItem<T1>(cacheKey1,
+            var item1 = QueryMultipleInternal<T1>(cacheKey1,
                 cache,
                 where1,
                 queryGroups);
 
-            var item2 = EnsureQueryMultipleCachedItem<T2>(cacheKey2,
+            var item2 = QueryMultipleInternal<T2>(cacheKey2,
                 cache,
                 where2,
                 queryGroups);
 
-            var item3 = EnsureQueryMultipleCachedItem<T3>(cacheKey3,
+            var item3 = QueryMultipleInternal<T3>(cacheKey3,
                 cache,
                 where3,
                 queryGroups);
@@ -1040,7 +1075,7 @@ namespace RepoDb
                     typeof(T1),
                     connection,
                     transaction,
-                    FieldCache.Get<T1>(),
+                    fields1 ?? FieldCache.Get<T1>(),
                     where1,
                     orderBy1,
                     top1,
@@ -1057,7 +1092,7 @@ namespace RepoDb
                     typeof(T2),
                     connection,
                     transaction,
-                    FieldCache.Get<T2>(),
+                    fields2 ?? FieldCache.Get<T2>(),
                     where2,
                     orderBy2,
                     top2,
@@ -1074,7 +1109,7 @@ namespace RepoDb
                     typeof(T3),
                     connection,
                     transaction,
-                    FieldCache.Get<T3>(),
+                    fields3 ?? FieldCache.Get<T3>(),
                     where3,
                     orderBy3,
                     top3,
@@ -1123,30 +1158,40 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true))
             {
                 var dbSetting = connection.GetDbSetting();
-                var dbFields = (IEnumerable<DbField>)null;
 
                 // T1
-                if (item1 == null)
-                {
-                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T1>(), transaction);
-                    item1 = DataReader.ToEnumerable<T1>(reader, dbFields, dbSetting)?.AsList();
-                }
+                item1 = QueryMultipleInternal<T1>(connection,
+                    reader,
+                    item1,
+                    cacheKey1,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    false);
 
                 // T2
-                if (item2 == null)
-                {
-                    reader?.NextResult();
-                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T2>(), transaction);
-                    item2 = DataReader.ToEnumerable<T2>(reader, dbFields, dbSetting)?.AsList();
-                }
+                item2 = QueryMultipleInternal<T2>(connection,
+                    reader,
+                    item2,
+                    cacheKey2,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    true);
 
                 // T3
-                if (item3 == null)
-                {
-                    reader?.NextResult();
-                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T3>(), transaction);
-                    item3 = DataReader.ToEnumerable<T3>(reader, dbFields, dbSetting)?.AsList();
-                }
+                item3 = QueryMultipleInternal<T3>(connection,
+                    reader,
+                    item3,
+                    cacheKey3,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    true);
+
 
                 // Result
                 result = Tuple.Create(item1, item2, item3);
@@ -1176,35 +1221,28 @@ namespace RepoDb
         /// <param name="what2">The query expression or the key value to be used (for T2).</param>
         /// <param name="what3">The query expression or the key value to be used (for T3).</param>
         /// <param name="what4">The query expression or the key value to be used (for T4).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields4">The mapping list of <see cref="Field"/> objects to be used (for T4).</param>
+		/// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
-        /// <param name="cacheKey4">
-        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -1216,22 +1254,27 @@ namespace RepoDb
             object what2,
             object what3,
             object what4,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            IEnumerable<Field> fields4 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -1247,22 +1290,27 @@ namespace RepoDb
                 where2: WhatToQueryGroup(what2),
                 where3: WhatToQueryGroup(what3),
                 where4: WhatToQueryGroup(what4),
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                fields3: fields3,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
                 cacheKey3: cacheKey3,
+                fields4: fields4,
                 orderBy4: orderBy4,
                 top4: top4,
                 hints4: hints4,
                 cacheKey4: cacheKey4,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -1282,35 +1330,28 @@ namespace RepoDb
         /// <param name="where2">The query expression to be used (for T2).</param>
         /// <param name="where3">The query expression to be used (for T3).</param>
         /// <param name="where4">The query expression to be used (for T4).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields4">The mapping list of <see cref="Field"/> objects to be used (for T4).</param>
+		/// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
-        /// <param name="cacheKey4">
-        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -1322,22 +1363,27 @@ namespace RepoDb
             Expression<Func<T2, bool>> where2,
             Expression<Func<T3, bool>> where3,
             Expression<Func<T4, bool>> where4,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            IEnumerable<Field> fields4 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -1353,22 +1399,27 @@ namespace RepoDb
                 where2: ToQueryGroup(where2),
                 where3: ToQueryGroup(where3),
                 where4: ToQueryGroup(where4),
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                fields3: fields3,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
                 cacheKey3: cacheKey3,
+                fields4: fields4,
                 orderBy4: orderBy4,
                 top4: top4,
                 hints4: hints4,
                 cacheKey4: cacheKey4,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -1388,35 +1439,28 @@ namespace RepoDb
         /// <param name="where2">The query expression to be used (for T2).</param>
         /// <param name="where3">The query expression to be used (for T3).</param>
         /// <param name="where4">The query expression to be used (for T4).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields4">The mapping list of <see cref="Field"/> objects to be used (for T4).</param>
+		/// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
-        /// <param name="cacheKey4">
-        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -1428,22 +1472,27 @@ namespace RepoDb
             QueryField where2,
             QueryField where3,
             QueryField where4,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            IEnumerable<Field> fields4 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -1459,22 +1508,27 @@ namespace RepoDb
                 where2: ToQueryGroup(where2),
                 where3: ToQueryGroup(where3),
                 where4: ToQueryGroup(where4),
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                fields3: fields3,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
                 cacheKey3: cacheKey3,
+                fields4: fields4,
                 orderBy4: orderBy4,
                 top4: top4,
                 hints4: hints4,
                 cacheKey4: cacheKey4,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -1494,35 +1548,28 @@ namespace RepoDb
         /// <param name="where2">The query expression to be used (for T2).</param>
         /// <param name="where3">The query expression to be used (for T3).</param>
         /// <param name="where4">The query expression to be used (for T4).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields4">The mapping list of <see cref="Field"/> objects to be used (for T4).</param>
+		/// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
-        /// <param name="cacheKey4">
-        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -1534,22 +1581,27 @@ namespace RepoDb
             IEnumerable<QueryField> where2,
             IEnumerable<QueryField> where3,
             IEnumerable<QueryField> where4,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            IEnumerable<Field> fields4 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -1565,22 +1617,27 @@ namespace RepoDb
                 where2: ToQueryGroup(where2),
                 where3: ToQueryGroup(where3),
                 where4: ToQueryGroup(where4),
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                fields3: fields3,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
                 cacheKey3: cacheKey3,
+                fields4: fields4,
                 orderBy4: orderBy4,
                 top4: top4,
                 hints4: hints4,
                 cacheKey4: cacheKey4,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -1600,35 +1657,28 @@ namespace RepoDb
         /// <param name="where2">The query expression to be used (for T2).</param>
         /// <param name="where3">The query expression to be used (for T3).</param>
         /// <param name="where4">The query expression to be used (for T4).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields4">The mapping list of <see cref="Field"/> objects to be used (for T4).</param>
+		/// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
-        /// <param name="cacheKey4">
-        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -1640,22 +1690,27 @@ namespace RepoDb
             QueryGroup where2,
             QueryGroup where3,
             QueryGroup where4,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            IEnumerable<Field> fields4 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -1671,22 +1726,27 @@ namespace RepoDb
                 where2: where2,
                 where3: where3,
                 where4: where4,
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                fields3: fields3,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
                 cacheKey3: cacheKey3,
+                fields4: fields4,
                 orderBy4: orderBy4,
                 top4: top4,
                 hints4: hints4,
                 cacheKey4: cacheKey4,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -1706,35 +1766,28 @@ namespace RepoDb
         /// <param name="where2">The query expression to be used (for T2).</param>
         /// <param name="where3">The query expression to be used (for T3).</param>
         /// <param name="where4">The query expression to be used (for T4).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields4">The mapping list of <see cref="Field"/> objects to be used (for T4).</param>
+		/// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
-        /// <param name="cacheKey4">
-        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -1746,22 +1799,27 @@ namespace RepoDb
             QueryGroup where2,
             QueryGroup where3,
             QueryGroup where4,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            IEnumerable<Field> fields4 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -1779,22 +1837,22 @@ namespace RepoDb
             var commandTexts = new List<string>();
 
             // Items
-            var item1 = EnsureQueryMultipleCachedItem<T1>(cacheKey1,
+            var item1 = QueryMultipleInternal<T1>(cacheKey1,
                 cache,
                 where1,
                 queryGroups);
 
-            var item2 = EnsureQueryMultipleCachedItem<T2>(cacheKey2,
+            var item2 = QueryMultipleInternal<T2>(cacheKey2,
                 cache,
                 where2,
                 queryGroups);
 
-            var item3 = EnsureQueryMultipleCachedItem<T3>(cacheKey3,
+            var item3 = QueryMultipleInternal<T3>(cacheKey3,
                 cache,
                 where3,
                 queryGroups);
 
-            var item4 = EnsureQueryMultipleCachedItem<T4>(cacheKey4,
+            var item4 = QueryMultipleInternal<T4>(cacheKey4,
                 cache,
                 where4,
                 queryGroups);
@@ -1809,7 +1867,7 @@ namespace RepoDb
                     typeof(T1),
                     connection,
                     transaction,
-                    FieldCache.Get<T1>(),
+                    fields1 ?? FieldCache.Get<T1>(),
                     where1,
                     orderBy1,
                     top1,
@@ -1826,7 +1884,7 @@ namespace RepoDb
                     typeof(T2),
                     connection,
                     transaction,
-                    FieldCache.Get<T2>(),
+                    fields2 ?? FieldCache.Get<T2>(),
                     where2,
                     orderBy2,
                     top2,
@@ -1843,7 +1901,7 @@ namespace RepoDb
                     typeof(T3),
                     connection,
                     transaction,
-                    FieldCache.Get<T3>(),
+                    fields3 ?? FieldCache.Get<T3>(),
                     where3,
                     orderBy3,
                     top3,
@@ -1860,7 +1918,7 @@ namespace RepoDb
                     typeof(T4),
                     connection,
                     transaction,
-                    FieldCache.Get<T4>(),
+                    fields4 ?? FieldCache.Get<T4>(),
                     where4,
                     orderBy4,
                     top4,
@@ -1909,38 +1967,51 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true))
             {
                 var dbSetting = connection.GetDbSetting();
-                var dbFields = (IEnumerable<DbField>)null;
 
                 // T1
-                if (item1 == null)
-                {
-                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T1>(), transaction);
-                    item1 = DataReader.ToEnumerable<T1>(reader, dbFields, dbSetting)?.AsList();
-                }
+                item1 = QueryMultipleInternal<T1>(connection,
+                    reader,
+                    item1,
+                    cacheKey1,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    false);
 
                 // T2
-                if (item2 == null)
-                {
-                    reader?.NextResult();
-                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T2>(), transaction);
-                    item2 = DataReader.ToEnumerable<T2>(reader, dbFields, dbSetting)?.AsList();
-                }
+                item2 = QueryMultipleInternal<T2>(connection,
+                    reader,
+                    item2,
+                    cacheKey2,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    true);
 
                 // T3
-                if (item3 == null)
-                {
-                    reader?.NextResult();
-                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T3>(), transaction);
-                    item3 = DataReader.ToEnumerable<T3>(reader, dbFields, dbSetting)?.AsList();
-                }
+                item3 = QueryMultipleInternal<T3>(connection,
+                    reader,
+                    item3,
+                    cacheKey3,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    true);
+
 
                 // T4
-                if (item4 == null)
-                {
-                    reader?.NextResult();
-                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T4>(), transaction);
-                    item4 = DataReader.ToEnumerable<T4>(reader, dbFields, dbSetting)?.AsList();
-                }
+                item4 = QueryMultipleInternal<T4>(connection,
+                    reader,
+                    item4,
+                    cacheKey4,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    true);
 
                 // Result
                 result = Tuple.Create(item1, item2, item3, item4);
@@ -1972,42 +2043,33 @@ namespace RepoDb
         /// <param name="what3">The query expression or the key value to be used (for T3).</param>
         /// <param name="what4">The query expression or the key value to be used (for T4).</param>
         /// <param name="what5">The query expression or the key value to be used (for T5).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields4">The mapping list of <see cref="Field"/> objects to be used (for T4).</param>
+		/// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
-        /// <param name="cacheKey4">
-        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
+        /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields5">The mapping list of <see cref="Field"/> objects to be used (for T5).</param>
+		/// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
-        /// <param name="cacheKey5">
-        /// The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -2020,26 +2082,32 @@ namespace RepoDb
             object what3,
             object what4,
             object what5,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            IEnumerable<Field> fields4 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
+            IEnumerable<Field> fields5 = null,
             IEnumerable<OrderField> orderBy5 = null,
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -2057,26 +2125,32 @@ namespace RepoDb
                 where3: WhatToQueryGroup(what3),
                 where4: WhatToQueryGroup(what4),
                 where5: WhatToQueryGroup(what5),
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                fields3: fields3,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
                 cacheKey3: cacheKey3,
+                fields4: fields4,
                 orderBy4: orderBy4,
                 top4: top4,
                 hints4: hints4,
                 cacheKey4: cacheKey4,
+                fields5: fields5,
                 orderBy5: orderBy5,
                 top5: top5,
                 hints5: hints5,
                 cacheKey5: cacheKey5,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -2098,42 +2172,33 @@ namespace RepoDb
         /// <param name="where3">The query expression to be used (for T3).</param>
         /// <param name="where4">The query expression to be used (for T4).</param>
         /// <param name="where5">The query expression to be used (for T5).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields4">The mapping list of <see cref="Field"/> objects to be used (for T4).</param>
+		/// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
-        /// <param name="cacheKey4">
-        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
+        /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields5">The mapping list of <see cref="Field"/> objects to be used (for T5).</param>
+		/// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
-        /// <param name="cacheKey5">
-        /// The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -2146,26 +2211,32 @@ namespace RepoDb
             Expression<Func<T3, bool>> where3,
             Expression<Func<T4, bool>> where4,
             Expression<Func<T5, bool>> where5,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            IEnumerable<Field> fields4 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
+            IEnumerable<Field> fields5 = null,
             IEnumerable<OrderField> orderBy5 = null,
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -2183,26 +2254,32 @@ namespace RepoDb
                 where3: ToQueryGroup(where3),
                 where4: ToQueryGroup(where4),
                 where5: ToQueryGroup(where5),
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                fields3: fields3,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
                 cacheKey3: cacheKey3,
+                fields4: fields4,
                 orderBy4: orderBy4,
                 top4: top4,
                 hints4: hints4,
                 cacheKey4: cacheKey4,
+                fields5: fields5,
                 orderBy5: orderBy5,
                 top5: top5,
                 hints5: hints5,
                 cacheKey5: cacheKey5,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -2224,42 +2301,33 @@ namespace RepoDb
         /// <param name="where3">The query expression to be used (for T3).</param>
         /// <param name="where4">The query expression to be used (for T4).</param>
         /// <param name="where5">The query expression to be used (for T5).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields4">The mapping list of <see cref="Field"/> objects to be used (for T4).</param>
+		/// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
-        /// <param name="cacheKey4">
-        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
+        /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields5">The mapping list of <see cref="Field"/> objects to be used (for T5).</param>
+		/// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
-        /// <param name="cacheKey5">
-        /// The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -2272,26 +2340,32 @@ namespace RepoDb
             QueryField where3,
             QueryField where4,
             QueryField where5,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            IEnumerable<Field> fields4 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
+            IEnumerable<Field> fields5 = null,
             IEnumerable<OrderField> orderBy5 = null,
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -2309,26 +2383,32 @@ namespace RepoDb
                 where3: ToQueryGroup(where3),
                 where4: ToQueryGroup(where4),
                 where5: ToQueryGroup(where5),
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                fields3: fields3,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
                 cacheKey3: cacheKey3,
+                fields4: fields4,
                 orderBy4: orderBy4,
                 top4: top4,
                 hints4: hints4,
                 cacheKey4: cacheKey4,
+                fields5: fields5,
                 orderBy5: orderBy5,
                 top5: top5,
                 hints5: hints5,
                 cacheKey5: cacheKey5,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -2350,42 +2430,33 @@ namespace RepoDb
         /// <param name="where3">The query expression to be used (for T3).</param>
         /// <param name="where4">The query expression to be used (for T4).</param>
         /// <param name="where5">The query expression to be used (for T5).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields4">The mapping list of <see cref="Field"/> objects to be used (for T4).</param>
+		/// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
-        /// <param name="cacheKey4">
-        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
+        /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields5">The mapping list of <see cref="Field"/> objects to be used (for T5).</param>
+		/// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
-        /// <param name="cacheKey5">
-        /// The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -2398,26 +2469,32 @@ namespace RepoDb
             IEnumerable<QueryField> where3,
             IEnumerable<QueryField> where4,
             IEnumerable<QueryField> where5,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            IEnumerable<Field> fields4 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
+            IEnumerable<Field> fields5 = null,
             IEnumerable<OrderField> orderBy5 = null,
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -2435,26 +2512,32 @@ namespace RepoDb
                 where3: ToQueryGroup(where3),
                 where4: ToQueryGroup(where4),
                 where5: ToQueryGroup(where5),
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                fields3: fields3,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
                 cacheKey3: cacheKey3,
+                fields4: fields4,
                 orderBy4: orderBy4,
                 top4: top4,
                 hints4: hints4,
                 cacheKey4: cacheKey4,
+                fields5: fields5,
                 orderBy5: orderBy5,
                 top5: top5,
                 hints5: hints5,
                 cacheKey5: cacheKey5,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -2476,42 +2559,33 @@ namespace RepoDb
         /// <param name="where3">The query expression to be used (for T3).</param>
         /// <param name="where4">The query expression to be used (for T4).</param>
         /// <param name="where5">The query expression to be used (for T5).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields4">The mapping list of <see cref="Field"/> objects to be used (for T4).</param>
+		/// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
-        /// <param name="cacheKey4">
-        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
+        /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields5">The mapping list of <see cref="Field"/> objects to be used (for T5).</param>
+		/// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
-        /// <param name="cacheKey5">
-        /// The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -2524,26 +2598,32 @@ namespace RepoDb
             QueryGroup where3,
             QueryGroup where4,
             QueryGroup where5,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            IEnumerable<Field> fields4 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
+            IEnumerable<Field> fields5 = null,
             IEnumerable<OrderField> orderBy5 = null,
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -2561,26 +2641,32 @@ namespace RepoDb
                 where3: where3,
                 where4: where4,
                 where5: where5,
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                fields3: fields3,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
                 cacheKey3: cacheKey3,
+                fields4: fields4,
                 orderBy4: orderBy4,
                 top4: top4,
                 hints4: hints4,
                 cacheKey4: cacheKey4,
+                fields5: fields5,
                 orderBy5: orderBy5,
                 top5: top5,
                 hints5: hints5,
                 cacheKey5: cacheKey5,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -2602,42 +2688,33 @@ namespace RepoDb
         /// <param name="where3">The query expression to be used (for T3).</param>
         /// <param name="where4">The query expression to be used (for T4).</param>
         /// <param name="where5">The query expression to be used (for T5).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields4">The mapping list of <see cref="Field"/> objects to be used (for T4).</param>
+		/// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
-        /// <param name="cacheKey4">
-        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
+        /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields5">The mapping list of <see cref="Field"/> objects to be used (for T5).</param>
+		/// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
-        /// <param name="cacheKey5">
-        /// The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -2650,26 +2727,32 @@ namespace RepoDb
             QueryGroup where3,
             QueryGroup where4,
             QueryGroup where5,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            IEnumerable<Field> fields4 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
+            IEnumerable<Field> fields5 = null,
             IEnumerable<OrderField> orderBy5 = null,
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -2688,27 +2771,27 @@ namespace RepoDb
             var commandTexts = new List<string>();
 
             // Items
-            var item1 = EnsureQueryMultipleCachedItem<T1>(cacheKey1,
+            var item1 = QueryMultipleInternal<T1>(cacheKey1,
                 cache,
                 where1,
                 queryGroups);
 
-            var item2 = EnsureQueryMultipleCachedItem<T2>(cacheKey2,
+            var item2 = QueryMultipleInternal<T2>(cacheKey2,
                 cache,
                 where2,
                 queryGroups);
 
-            var item3 = EnsureQueryMultipleCachedItem<T3>(cacheKey3,
+            var item3 = QueryMultipleInternal<T3>(cacheKey3,
                 cache,
                 where3,
                 queryGroups);
 
-            var item4 = EnsureQueryMultipleCachedItem<T4>(cacheKey4,
+            var item4 = QueryMultipleInternal<T4>(cacheKey4,
                 cache,
                 where4,
                 queryGroups);
 
-            var item5 = EnsureQueryMultipleCachedItem<T5>(cacheKey5,
+            var item5 = QueryMultipleInternal<T5>(cacheKey5,
                 cache,
                 where5,
                 queryGroups);
@@ -2723,7 +2806,7 @@ namespace RepoDb
                     typeof(T1),
                     connection,
                     transaction,
-                    FieldCache.Get<T1>(),
+                    fields1 ?? FieldCache.Get<T1>(),
                     where1,
                     orderBy1,
                     top1,
@@ -2740,7 +2823,7 @@ namespace RepoDb
                     typeof(T2),
                     connection,
                     transaction,
-                    FieldCache.Get<T2>(),
+                    fields2 ?? FieldCache.Get<T2>(),
                     where2,
                     orderBy2,
                     top2,
@@ -2757,7 +2840,7 @@ namespace RepoDb
                     typeof(T3),
                     connection,
                     transaction,
-                    FieldCache.Get<T3>(),
+                    fields3 ?? FieldCache.Get<T3>(),
                     where3,
                     orderBy3,
                     top3,
@@ -2774,7 +2857,7 @@ namespace RepoDb
                     typeof(T4),
                     connection,
                     transaction,
-                    FieldCache.Get<T4>(),
+                    fields4 ?? FieldCache.Get<T4>(),
                     where4,
                     orderBy4,
                     top4,
@@ -2791,7 +2874,7 @@ namespace RepoDb
                     typeof(T5),
                     connection,
                     transaction,
-                    FieldCache.Get<T5>(),
+                    fields5 ?? FieldCache.Get<T5>(),
                     where5,
                     orderBy5,
                     top5,
@@ -2840,46 +2923,62 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true))
             {
                 var dbSetting = connection.GetDbSetting();
-                var dbFields = (IEnumerable<DbField>)null;
 
                 // T1
-                if (item1 == null)
-                {
-                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T1>(), transaction);
-                    item1 = DataReader.ToEnumerable<T1>(reader, dbFields, dbSetting)?.AsList();
-                }
+                item1 = QueryMultipleInternal<T1>(connection,
+                    reader,
+                    item1,
+                    cacheKey1,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    false);
 
                 // T2
-                if (item2 == null)
-                {
-                    reader?.NextResult();
-                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T2>(), transaction);
-                    item2 = DataReader.ToEnumerable<T2>(reader, dbFields, dbSetting)?.AsList();
-                }
+                item2 = QueryMultipleInternal<T2>(connection,
+                    reader,
+                    item2,
+                    cacheKey2,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    true);
 
                 // T3
-                if (item3 == null)
-                {
-                    reader?.NextResult();
-                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T3>(), transaction);
-                    item3 = DataReader.ToEnumerable<T3>(reader, dbFields, dbSetting)?.AsList();
-                }
+                item3 = QueryMultipleInternal<T3>(connection,
+                    reader,
+                    item3,
+                    cacheKey3,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    true);
+
 
                 // T4
-                if (item4 == null)
-                {
-                    reader?.NextResult();
-                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T4>(), transaction);
-                    item4 = DataReader.ToEnumerable<T4>(reader, dbFields, dbSetting)?.AsList();
-                }
+                item4 = QueryMultipleInternal<T4>(connection,
+                    reader,
+                    item4,
+                    cacheKey4,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    true);
 
                 // T5
-                if (item5 == null)
-                {
-                    reader?.NextResult();
-                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T5>(), transaction);
-                    item5 = DataReader.ToEnumerable<T5>(reader, dbFields, dbSetting)?.AsList();
-                }
+                item5 = QueryMultipleInternal<T5>(connection,
+                    reader,
+                    item5,
+                    cacheKey5,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    true);
 
                 // Result
                 result = Tuple.Create(item1, item2, item3, item4, item5);
@@ -2913,49 +3012,38 @@ namespace RepoDb
         /// <param name="what4">The query expression or the key value to be used (for T4).</param>
         /// <param name="what5">The query expression or the key value to be used (for T5).</param>
         /// <param name="what6">The query expression or the key value to be used (for T6).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields4">The mapping list of <see cref="Field"/> objects to be used (for T4).</param>
+		/// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
-        /// <param name="cacheKey4">
-        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
+        /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields5">The mapping list of <see cref="Field"/> objects to be used (for T5).</param>
+		/// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
-        /// <param name="cacheKey5">
-        /// The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy6">The order definition of the fields to be used (for T6).</param>
+        /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields6">The mapping list of <see cref="Field"/> objects to be used (for T6).</param>
+		/// <param name="orderBy6">The order definition of the fields to be used (for T6).</param>
         /// <param name="top6">The number of rows to be returned (for T6).</param>
         /// <param name="hints6">The table hints to be used (for T6).</param>
-        /// <param name="cacheKey6">
-        /// The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -2969,30 +3057,37 @@ namespace RepoDb
             object what4,
             object what5,
             object what6,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            IEnumerable<Field> fields4 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
+            IEnumerable<Field> fields5 = null,
             IEnumerable<OrderField> orderBy5 = null,
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
+            IEnumerable<Field> fields6 = null,
             IEnumerable<OrderField> orderBy6 = null,
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -3012,30 +3107,37 @@ namespace RepoDb
                 where4: WhatToQueryGroup(what4),
                 where5: WhatToQueryGroup(what5),
                 where6: WhatToQueryGroup(what6),
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                fields3: fields3,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
                 cacheKey3: cacheKey3,
+                fields4: fields4,
                 orderBy4: orderBy4,
                 top4: top4,
                 hints4: hints4,
                 cacheKey4: cacheKey4,
+                fields5: fields5,
                 orderBy5: orderBy5,
                 top5: top5,
                 hints5: hints5,
                 cacheKey5: cacheKey5,
+                fields6: fields6,
                 orderBy6: orderBy6,
                 top6: top6,
                 hints6: hints6,
                 cacheKey6: cacheKey6,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -3059,49 +3161,38 @@ namespace RepoDb
         /// <param name="where4">The query expression to be used (for T4).</param>
         /// <param name="where5">The query expression to be used (for T5).</param>
         /// <param name="where6">The query expression to be used (for T6).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields4">The mapping list of <see cref="Field"/> objects to be used (for T4).</param>
+		/// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
-        /// <param name="cacheKey4">
-        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
+        /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields5">The mapping list of <see cref="Field"/> objects to be used (for T5).</param>
+		/// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
-        /// <param name="cacheKey5">
-        /// The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy6">The order definition of the fields to be used (for T6).</param>
+        /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields6">The mapping list of <see cref="Field"/> objects to be used (for T6).</param>
+		/// <param name="orderBy6">The order definition of the fields to be used (for T6).</param>
         /// <param name="top6">The number of rows to be returned (for T6).</param>
         /// <param name="hints6">The table hints to be used (for T6).</param>
-        /// <param name="cacheKey6">
-        /// The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -3115,30 +3206,37 @@ namespace RepoDb
             Expression<Func<T4, bool>> where4,
             Expression<Func<T5, bool>> where5,
             Expression<Func<T6, bool>> where6,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            IEnumerable<Field> fields4 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
+            IEnumerable<Field> fields5 = null,
             IEnumerable<OrderField> orderBy5 = null,
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
+            IEnumerable<Field> fields6 = null,
             IEnumerable<OrderField> orderBy6 = null,
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -3158,30 +3256,37 @@ namespace RepoDb
                 where4: ToQueryGroup(where4),
                 where5: ToQueryGroup(where5),
                 where6: ToQueryGroup(where6),
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                fields3: fields3,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
                 cacheKey3: cacheKey3,
+                fields4: fields4,
                 orderBy4: orderBy4,
                 top4: top4,
                 hints4: hints4,
                 cacheKey4: cacheKey4,
+                fields5: fields5,
                 orderBy5: orderBy5,
                 top5: top5,
                 hints5: hints5,
                 cacheKey5: cacheKey5,
+                fields6: fields6,
                 orderBy6: orderBy6,
                 top6: top6,
                 hints6: hints6,
                 cacheKey6: cacheKey6,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -3205,49 +3310,38 @@ namespace RepoDb
         /// <param name="where4">The query expression to be used (for T4).</param>
         /// <param name="where5">The query expression to be used (for T5).</param>
         /// <param name="where6">The query expression to be used (for T6).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields4">The mapping list of <see cref="Field"/> objects to be used (for T4).</param>
+		/// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
-        /// <param name="cacheKey4">
-        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
+        /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields5">The mapping list of <see cref="Field"/> objects to be used (for T5).</param>
+		/// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
-        /// <param name="cacheKey5">
-        /// The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy6">The order definition of the fields to be used (for T6).</param>
+        /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields6">The mapping list of <see cref="Field"/> objects to be used (for T6).</param>
+		/// <param name="orderBy6">The order definition of the fields to be used (for T6).</param>
         /// <param name="top6">The number of rows to be returned (for T6).</param>
         /// <param name="hints6">The table hints to be used (for T6).</param>
-        /// <param name="cacheKey6">
-        /// The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -3261,30 +3355,37 @@ namespace RepoDb
             QueryField where4,
             QueryField where5,
             QueryField where6,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            IEnumerable<Field> fields4 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
+            IEnumerable<Field> fields5 = null,
             IEnumerable<OrderField> orderBy5 = null,
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
+            IEnumerable<Field> fields6 = null,
             IEnumerable<OrderField> orderBy6 = null,
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -3304,30 +3405,37 @@ namespace RepoDb
                 where4: ToQueryGroup(where4),
                 where5: ToQueryGroup(where5),
                 where6: ToQueryGroup(where6),
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                fields3: fields3,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
                 cacheKey3: cacheKey3,
+                fields4: fields4,
                 orderBy4: orderBy4,
                 top4: top4,
                 hints4: hints4,
                 cacheKey4: cacheKey4,
+                fields5: fields5,
                 orderBy5: orderBy5,
                 top5: top5,
                 hints5: hints5,
                 cacheKey5: cacheKey5,
+                fields6: fields6,
                 orderBy6: orderBy6,
                 top6: top6,
                 hints6: hints6,
                 cacheKey6: cacheKey6,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -3351,49 +3459,38 @@ namespace RepoDb
         /// <param name="where4">The query expression to be used (for T4).</param>
         /// <param name="where5">The query expression to be used (for T5).</param>
         /// <param name="where6">The query expression to be used (for T6).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields4">The mapping list of <see cref="Field"/> objects to be used (for T4).</param>
+		/// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
-        /// <param name="cacheKey4">
-        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
+        /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields5">The mapping list of <see cref="Field"/> objects to be used (for T5).</param>
+		/// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
-        /// <param name="cacheKey5">
-        /// The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy6">The order definition of the fields to be used (for T6).</param>
+        /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields6">The mapping list of <see cref="Field"/> objects to be used (for T6).</param>
+		/// <param name="orderBy6">The order definition of the fields to be used (for T6).</param>
         /// <param name="top6">The number of rows to be returned (for T6).</param>
         /// <param name="hints6">The table hints to be used (for T6).</param>
-        /// <param name="cacheKey6">
-        /// The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -3407,30 +3504,37 @@ namespace RepoDb
             IEnumerable<QueryField> where4,
             IEnumerable<QueryField> where5,
             IEnumerable<QueryField> where6,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            IEnumerable<Field> fields4 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
+            IEnumerable<Field> fields5 = null,
             IEnumerable<OrderField> orderBy5 = null,
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
+            IEnumerable<Field> fields6 = null,
             IEnumerable<OrderField> orderBy6 = null,
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -3450,30 +3554,37 @@ namespace RepoDb
                 where4: ToQueryGroup(where4),
                 where5: ToQueryGroup(where5),
                 where6: ToQueryGroup(where6),
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                fields3: fields3,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
                 cacheKey3: cacheKey3,
+                fields4: fields4,
                 orderBy4: orderBy4,
                 top4: top4,
                 hints4: hints4,
                 cacheKey4: cacheKey4,
+                fields5: fields5,
                 orderBy5: orderBy5,
                 top5: top5,
                 hints5: hints5,
                 cacheKey5: cacheKey5,
+                fields6: fields6,
                 orderBy6: orderBy6,
                 top6: top6,
                 hints6: hints6,
                 cacheKey6: cacheKey6,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -3497,49 +3608,38 @@ namespace RepoDb
         /// <param name="where4">The query expression to be used (for T4).</param>
         /// <param name="where5">The query expression to be used (for T5).</param>
         /// <param name="where6">The query expression to be used (for T6).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields4">The mapping list of <see cref="Field"/> objects to be used (for T4).</param>
+		/// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
-        /// <param name="cacheKey4">
-        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
+        /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields5">The mapping list of <see cref="Field"/> objects to be used (for T5).</param>
+		/// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
-        /// <param name="cacheKey5">
-        /// The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy6">The order definition of the fields to be used (for T6).</param>
+        /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields6">The mapping list of <see cref="Field"/> objects to be used (for T6).</param>
+		/// <param name="orderBy6">The order definition of the fields to be used (for T6).</param>
         /// <param name="top6">The number of rows to be returned (for T6).</param>
         /// <param name="hints6">The table hints to be used (for T6).</param>
-        /// <param name="cacheKey6">
-        /// The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -3553,30 +3653,37 @@ namespace RepoDb
             QueryGroup where4,
             QueryGroup where5,
             QueryGroup where6,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            IEnumerable<Field> fields4 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
+            IEnumerable<Field> fields5 = null,
             IEnumerable<OrderField> orderBy5 = null,
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
+            IEnumerable<Field> fields6 = null,
             IEnumerable<OrderField> orderBy6 = null,
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -3596,30 +3703,37 @@ namespace RepoDb
                 where4: where4,
                 where5: where5,
                 where6: where6,
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                fields3: fields3,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
                 cacheKey3: cacheKey3,
+                fields4: fields4,
                 orderBy4: orderBy4,
                 top4: top4,
                 hints4: hints4,
                 cacheKey4: cacheKey4,
+                fields5: fields5,
                 orderBy5: orderBy5,
                 top5: top5,
                 hints5: hints5,
                 cacheKey5: cacheKey5,
+                fields6: fields6,
                 orderBy6: orderBy6,
                 top6: top6,
                 hints6: hints6,
                 cacheKey6: cacheKey6,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -3643,49 +3757,38 @@ namespace RepoDb
         /// <param name="where4">The query expression to be used (for T4).</param>
         /// <param name="where5">The query expression to be used (for T5).</param>
         /// <param name="where6">The query expression to be used (for T6).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields4">The mapping list of <see cref="Field"/> objects to be used (for T4).</param>
+		/// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
-        /// <param name="cacheKey4">
-        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
+        /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields5">The mapping list of <see cref="Field"/> objects to be used (for T5).</param>
+		/// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
-        /// <param name="cacheKey5">
-        /// The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy6">The order definition of the fields to be used (for T6).</param>
+        /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields6">The mapping list of <see cref="Field"/> objects to be used (for T6).</param>
+		/// <param name="orderBy6">The order definition of the fields to be used (for T6).</param>
         /// <param name="top6">The number of rows to be returned (for T6).</param>
         /// <param name="hints6">The table hints to be used (for T6).</param>
-        /// <param name="cacheKey6">
-        /// The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -3699,30 +3802,37 @@ namespace RepoDb
             QueryGroup where4,
             QueryGroup where5,
             QueryGroup where6,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            IEnumerable<Field> fields4 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
+            IEnumerable<Field> fields5 = null,
             IEnumerable<OrderField> orderBy5 = null,
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
+            IEnumerable<Field> fields6 = null,
             IEnumerable<OrderField> orderBy6 = null,
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -3742,32 +3852,32 @@ namespace RepoDb
             var commandTexts = new List<string>();
 
             // Items
-            var item1 = EnsureQueryMultipleCachedItem<T1>(cacheKey1,
+            var item1 = QueryMultipleInternal<T1>(cacheKey1,
                 cache,
                 where1,
                 queryGroups);
 
-            var item2 = EnsureQueryMultipleCachedItem<T2>(cacheKey2,
+            var item2 = QueryMultipleInternal<T2>(cacheKey2,
                 cache,
                 where2,
                 queryGroups);
 
-            var item3 = EnsureQueryMultipleCachedItem<T3>(cacheKey3,
+            var item3 = QueryMultipleInternal<T3>(cacheKey3,
                 cache,
                 where3,
                 queryGroups);
 
-            var item4 = EnsureQueryMultipleCachedItem<T4>(cacheKey4,
+            var item4 = QueryMultipleInternal<T4>(cacheKey4,
                 cache,
                 where4,
                 queryGroups);
 
-            var item5 = EnsureQueryMultipleCachedItem<T5>(cacheKey5,
+            var item5 = QueryMultipleInternal<T5>(cacheKey5,
                 cache,
                 where5,
                 queryGroups);
 
-            var item6 = EnsureQueryMultipleCachedItem<T6>(cacheKey6,
+            var item6 = QueryMultipleInternal<T6>(cacheKey6,
                 cache,
                 where6,
                 queryGroups);
@@ -3782,7 +3892,7 @@ namespace RepoDb
                     typeof(T1),
                     connection,
                     transaction,
-                    FieldCache.Get<T1>(),
+                    fields1 ?? FieldCache.Get<T1>(),
                     where1,
                     orderBy1,
                     top1,
@@ -3799,7 +3909,7 @@ namespace RepoDb
                     typeof(T2),
                     connection,
                     transaction,
-                    FieldCache.Get<T2>(),
+                    fields2 ?? FieldCache.Get<T2>(),
                     where2,
                     orderBy2,
                     top2,
@@ -3816,7 +3926,7 @@ namespace RepoDb
                     typeof(T3),
                     connection,
                     transaction,
-                    FieldCache.Get<T3>(),
+                    fields3 ?? FieldCache.Get<T3>(),
                     where3,
                     orderBy3,
                     top3,
@@ -3833,7 +3943,7 @@ namespace RepoDb
                     typeof(T4),
                     connection,
                     transaction,
-                    FieldCache.Get<T4>(),
+                    fields4 ?? FieldCache.Get<T4>(),
                     where4,
                     orderBy4,
                     top4,
@@ -3850,7 +3960,7 @@ namespace RepoDb
                     typeof(T5),
                     connection,
                     transaction,
-                    FieldCache.Get<T5>(),
+                    fields5 ?? FieldCache.Get<T5>(),
                     where5,
                     orderBy5,
                     top5,
@@ -3867,7 +3977,7 @@ namespace RepoDb
                     typeof(T6),
                     connection,
                     transaction,
-                    FieldCache.Get<T6>(),
+                    fields6 ?? FieldCache.Get<T6>(),
                     where6,
                     orderBy6,
                     top6,
@@ -3916,54 +4026,73 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true))
             {
                 var dbSetting = connection.GetDbSetting();
-                var dbFields = (IEnumerable<DbField>)null;
 
                 // T1
-                if (item1 == null)
-                {
-                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T1>(), transaction);
-                    item1 = DataReader.ToEnumerable<T1>(reader, dbFields, dbSetting)?.AsList();
-                }
+                item1 = QueryMultipleInternal<T1>(connection,
+                    reader,
+                    item1,
+                    cacheKey1,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    false);
 
                 // T2
-                if (item2 == null)
-                {
-                    reader?.NextResult();
-                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T2>(), transaction);
-                    item2 = DataReader.ToEnumerable<T2>(reader, dbFields, dbSetting)?.AsList();
-                }
+                item2 = QueryMultipleInternal<T2>(connection,
+                    reader,
+                    item2,
+                    cacheKey2,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    true);
 
                 // T3
-                if (item3 == null)
-                {
-                    reader?.NextResult();
-                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T3>(), transaction);
-                    item3 = DataReader.ToEnumerable<T3>(reader, dbFields, dbSetting)?.AsList();
-                }
+                item3 = QueryMultipleInternal<T3>(connection,
+                    reader,
+                    item3,
+                    cacheKey3,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    true);
+
 
                 // T4
-                if (item4 == null)
-                {
-                    reader?.NextResult();
-                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T4>(), transaction);
-                    item4 = DataReader.ToEnumerable<T4>(reader, dbFields, dbSetting)?.AsList();
-                }
+                item4 = QueryMultipleInternal<T4>(connection,
+                    reader,
+                    item4,
+                    cacheKey4,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    true);
 
                 // T5
-                if (item5 == null)
-                {
-                    reader?.NextResult();
-                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T5>(), transaction);
-                    item5 = DataReader.ToEnumerable<T5>(reader, dbFields, dbSetting)?.AsList();
-                }
+                item5 = QueryMultipleInternal<T5>(connection,
+                    reader,
+                    item5,
+                    cacheKey5,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    true);
 
                 // T6
-                if (item6 == null)
-                {
-                    reader?.NextResult();
-                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T6>(), transaction);
-                    item6 = DataReader.ToEnumerable<T6>(reader, dbFields, dbSetting)?.AsList();
-                }
+                item6 = QueryMultipleInternal<T6>(connection,
+                    reader,
+                    item6,
+                    cacheKey6,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    true);
 
                 // Result
                 result = Tuple.Create(item1, item2, item3, item4, item5, item6);
@@ -3999,56 +4128,43 @@ namespace RepoDb
         /// <param name="what5">The query expression or the key value to be used (for T5).</param>
         /// <param name="what6">The query expression or the key value to be used (for T6).</param>
         /// <param name="what7">The query expression or the key value to be used (for T7).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields4">The mapping list of <see cref="Field"/> objects to be used (for T4).</param>
+		/// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
-        /// <param name="cacheKey4">
-        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
+        /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields5">The mapping list of <see cref="Field"/> objects to be used (for T5).</param>
+		/// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
-        /// <param name="cacheKey5">
-        /// The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy6">The order definition of the fields to be used (for T6).</param>
+        /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields6">The mapping list of <see cref="Field"/> objects to be used (for T6).</param>
+		/// <param name="orderBy6">The order definition of the fields to be used (for T6).</param>
         /// <param name="top6">The number of rows to be returned (for T6).</param>
         /// <param name="hints6">The table hints to be used (for T6).</param>
-        /// <param name="cacheKey6">
-        /// The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy7">The order definition of the fields to be used (for T7).</param>
+        /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields7">The mapping list of <see cref="Field"/> objects to be used (for T7).</param>
+		/// <param name="orderBy7">The order definition of the fields to be used (for T7).</param>
         /// <param name="top7">The number of rows to be returned (for T7).</param>
         /// <param name="hints7">The table hints to be used (for T7).</param>
-        /// <param name="cacheKey7">
-        /// The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -4063,34 +4179,42 @@ namespace RepoDb
             object what5,
             object what6,
             object what7,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            IEnumerable<Field> fields4 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
+            IEnumerable<Field> fields5 = null,
             IEnumerable<OrderField> orderBy5 = null,
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
+            IEnumerable<Field> fields6 = null,
             IEnumerable<OrderField> orderBy6 = null,
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
+            IEnumerable<Field> fields7 = null,
             IEnumerable<OrderField> orderBy7 = null,
             int? top7 = 0,
             string hints7 = null,
             string cacheKey7 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -4112,34 +4236,42 @@ namespace RepoDb
                 where5: WhatToQueryGroup(what5),
                 where6: WhatToQueryGroup(what6),
                 where7: WhatToQueryGroup(what7),
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                fields3: fields3,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
                 cacheKey3: cacheKey3,
+                fields4: fields4,
                 orderBy4: orderBy4,
                 top4: top4,
                 hints4: hints4,
                 cacheKey4: cacheKey4,
+                fields5: fields5,
                 orderBy5: orderBy5,
                 top5: top5,
                 hints5: hints5,
                 cacheKey5: cacheKey5,
+                fields6: fields6,
                 orderBy6: orderBy6,
                 top6: top6,
                 hints6: hints6,
                 cacheKey6: cacheKey6,
+                fields7: fields7,
                 orderBy7: orderBy7,
                 top7: top7,
                 hints7: hints7,
                 cacheKey7: cacheKey7,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -4165,56 +4297,43 @@ namespace RepoDb
         /// <param name="where5">The query expression to be used (for T5).</param>
         /// <param name="where6">The query expression to be used (for T6).</param>
         /// <param name="where7">The query expression to be used (for T7).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields4">The mapping list of <see cref="Field"/> objects to be used (for T4).</param>
+		/// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
-        /// <param name="cacheKey4">
-        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
+        /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields5">The mapping list of <see cref="Field"/> objects to be used (for T5).</param>
+		/// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
-        /// <param name="cacheKey5">
-        /// The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy6">The order definition of the fields to be used (for T6).</param>
+        /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields6">The mapping list of <see cref="Field"/> objects to be used (for T6).</param>
+		/// <param name="orderBy6">The order definition of the fields to be used (for T6).</param>
         /// <param name="top6">The number of rows to be returned (for T6).</param>
         /// <param name="hints6">The table hints to be used (for T6).</param>
-        /// <param name="cacheKey6">
-        /// The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy7">The order definition of the fields to be used (for T7).</param>
+        /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields7">The mapping list of <see cref="Field"/> objects to be used (for T7).</param>
+		/// <param name="orderBy7">The order definition of the fields to be used (for T7).</param>
         /// <param name="top7">The number of rows to be returned (for T7).</param>
         /// <param name="hints7">The table hints to be used (for T7).</param>
-        /// <param name="cacheKey7">
-        /// The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -4229,34 +4348,42 @@ namespace RepoDb
             Expression<Func<T5, bool>> where5,
             Expression<Func<T6, bool>> where6,
             Expression<Func<T7, bool>> where7,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            IEnumerable<Field> fields4 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
+            IEnumerable<Field> fields5 = null,
             IEnumerable<OrderField> orderBy5 = null,
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
+            IEnumerable<Field> fields6 = null,
             IEnumerable<OrderField> orderBy6 = null,
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
+            IEnumerable<Field> fields7 = null,
             IEnumerable<OrderField> orderBy7 = null,
             int? top7 = 0,
             string hints7 = null,
             string cacheKey7 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -4278,34 +4405,42 @@ namespace RepoDb
                 where5: ToQueryGroup(where5),
                 where6: ToQueryGroup(where6),
                 where7: ToQueryGroup(where7),
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                fields3: fields3,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
                 cacheKey3: cacheKey3,
+                fields4: fields4,
                 orderBy4: orderBy4,
                 top4: top4,
                 hints4: hints4,
                 cacheKey4: cacheKey4,
+                fields5: fields5,
                 orderBy5: orderBy5,
                 top5: top5,
                 hints5: hints5,
                 cacheKey5: cacheKey5,
+                fields6: fields6,
                 orderBy6: orderBy6,
                 top6: top6,
                 hints6: hints6,
                 cacheKey6: cacheKey6,
+                fields7: fields7,
                 orderBy7: orderBy7,
                 top7: top7,
                 hints7: hints7,
                 cacheKey7: cacheKey7,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -4331,56 +4466,43 @@ namespace RepoDb
         /// <param name="where5">The query expression to be used (for T5).</param>
         /// <param name="where6">The query expression to be used (for T6).</param>
         /// <param name="where7">The query expression to be used (for T7).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields4">The mapping list of <see cref="Field"/> objects to be used (for T4).</param>
+		/// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
-        /// <param name="cacheKey4">
-        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
+        /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields5">The mapping list of <see cref="Field"/> objects to be used (for T5).</param>
+		/// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
-        /// <param name="cacheKey5">
-        /// The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy6">The order definition of the fields to be used (for T6).</param>
+        /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields6">The mapping list of <see cref="Field"/> objects to be used (for T6).</param>
+		/// <param name="orderBy6">The order definition of the fields to be used (for T6).</param>
         /// <param name="top6">The number of rows to be returned (for T6).</param>
         /// <param name="hints6">The table hints to be used (for T6).</param>
-        /// <param name="cacheKey6">
-        /// The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy7">The order definition of the fields to be used (for T7).</param>
+        /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields7">The mapping list of <see cref="Field"/> objects to be used (for T7).</param>
+		/// <param name="orderBy7">The order definition of the fields to be used (for T7).</param>
         /// <param name="top7">The number of rows to be returned (for T7).</param>
         /// <param name="hints7">The table hints to be used (for T7).</param>
-        /// <param name="cacheKey7">
-        /// The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -4395,34 +4517,42 @@ namespace RepoDb
             QueryField where5,
             QueryField where6,
             QueryField where7,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            IEnumerable<Field> fields4 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
+            IEnumerable<Field> fields5 = null,
             IEnumerable<OrderField> orderBy5 = null,
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
+            IEnumerable<Field> fields6 = null,
             IEnumerable<OrderField> orderBy6 = null,
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
+            IEnumerable<Field> fields7 = null,
             IEnumerable<OrderField> orderBy7 = null,
             int? top7 = 0,
             string hints7 = null,
             string cacheKey7 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -4444,34 +4574,42 @@ namespace RepoDb
                 where5: ToQueryGroup(where5),
                 where6: ToQueryGroup(where6),
                 where7: ToQueryGroup(where7),
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                fields3: fields3,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
                 cacheKey3: cacheKey3,
+                fields4: fields4,
                 orderBy4: orderBy4,
                 top4: top4,
                 hints4: hints4,
                 cacheKey4: cacheKey4,
+                fields5: fields5,
                 orderBy5: orderBy5,
                 top5: top5,
                 hints5: hints5,
                 cacheKey5: cacheKey5,
+                fields6: fields6,
                 orderBy6: orderBy6,
                 top6: top6,
                 hints6: hints6,
                 cacheKey6: cacheKey6,
+                fields7: fields7,
                 orderBy7: orderBy7,
                 top7: top7,
                 hints7: hints7,
                 cacheKey7: cacheKey7,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -4497,56 +4635,43 @@ namespace RepoDb
         /// <param name="where5">The query expression to be used (for T5).</param>
         /// <param name="where6">The query expression to be used (for T6).</param>
         /// <param name="where7">The query expression to be used (for T7).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields4">The mapping list of <see cref="Field"/> objects to be used (for T4).</param>
+		/// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
-        /// <param name="cacheKey4">
-        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
+        /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields5">The mapping list of <see cref="Field"/> objects to be used (for T5).</param>
+		/// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
-        /// <param name="cacheKey5">
-        /// The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy6">The order definition of the fields to be used (for T6).</param>
+        /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields6">The mapping list of <see cref="Field"/> objects to be used (for T6).</param>
+		/// <param name="orderBy6">The order definition of the fields to be used (for T6).</param>
         /// <param name="top6">The number of rows to be returned (for T6).</param>
         /// <param name="hints6">The table hints to be used (for T6).</param>
-        /// <param name="cacheKey6">
-        /// The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy7">The order definition of the fields to be used (for T7).</param>
+        /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields7">The mapping list of <see cref="Field"/> objects to be used (for T7).</param>
+		/// <param name="orderBy7">The order definition of the fields to be used (for T7).</param>
         /// <param name="top7">The number of rows to be returned (for T7).</param>
         /// <param name="hints7">The table hints to be used (for T7).</param>
-        /// <param name="cacheKey7">
-        /// The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -4561,34 +4686,42 @@ namespace RepoDb
             IEnumerable<QueryField> where5,
             IEnumerable<QueryField> where6,
             IEnumerable<QueryField> where7,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            IEnumerable<Field> fields4 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
+            IEnumerable<Field> fields5 = null,
             IEnumerable<OrderField> orderBy5 = null,
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
+            IEnumerable<Field> fields6 = null,
             IEnumerable<OrderField> orderBy6 = null,
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
+            IEnumerable<Field> fields7 = null,
             IEnumerable<OrderField> orderBy7 = null,
             int? top7 = 0,
             string hints7 = null,
             string cacheKey7 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -4610,34 +4743,42 @@ namespace RepoDb
                 where5: ToQueryGroup(where5),
                 where6: ToQueryGroup(where6),
                 where7: ToQueryGroup(where7),
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                fields3: fields3,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
                 cacheKey3: cacheKey3,
+                fields4: fields4,
                 orderBy4: orderBy4,
                 top4: top4,
                 hints4: hints4,
                 cacheKey4: cacheKey4,
+                fields5: fields5,
                 orderBy5: orderBy5,
                 top5: top5,
                 hints5: hints5,
                 cacheKey5: cacheKey5,
+                fields6: fields6,
                 orderBy6: orderBy6,
                 top6: top6,
                 hints6: hints6,
                 cacheKey6: cacheKey6,
+                fields7: fields7,
                 orderBy7: orderBy7,
                 top7: top7,
                 hints7: hints7,
                 cacheKey7: cacheKey7,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -4663,56 +4804,43 @@ namespace RepoDb
         /// <param name="where5">The query expression to be used (for T5).</param>
         /// <param name="where6">The query expression to be used (for T6).</param>
         /// <param name="where7">The query expression to be used (for T7).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields4">The mapping list of <see cref="Field"/> objects to be used (for T4).</param>
+		/// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
-        /// <param name="cacheKey4">
-        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
+        /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields5">The mapping list of <see cref="Field"/> objects to be used (for T5).</param>
+		/// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
-        /// <param name="cacheKey5">
-        /// The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy6">The order definition of the fields to be used (for T6).</param>
+        /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields6">The mapping list of <see cref="Field"/> objects to be used (for T6).</param>
+		/// <param name="orderBy6">The order definition of the fields to be used (for T6).</param>
         /// <param name="top6">The number of rows to be returned (for T6).</param>
         /// <param name="hints6">The table hints to be used (for T6).</param>
-        /// <param name="cacheKey6">
-        /// The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy7">The order definition of the fields to be used (for T7).</param>
+        /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields7">The mapping list of <see cref="Field"/> objects to be used (for T7).</param>
+		/// <param name="orderBy7">The order definition of the fields to be used (for T7).</param>
         /// <param name="top7">The number of rows to be returned (for T7).</param>
         /// <param name="hints7">The table hints to be used (for T7).</param>
-        /// <param name="cacheKey7">
-        /// The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -4727,34 +4855,42 @@ namespace RepoDb
             QueryGroup where5,
             QueryGroup where6,
             QueryGroup where7,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            IEnumerable<Field> fields4 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
+            IEnumerable<Field> fields5 = null,
             IEnumerable<OrderField> orderBy5 = null,
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
+            IEnumerable<Field> fields6 = null,
             IEnumerable<OrderField> orderBy6 = null,
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
+            IEnumerable<Field> fields7 = null,
             IEnumerable<OrderField> orderBy7 = null,
             int? top7 = 0,
             string hints7 = null,
             string cacheKey7 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -4776,34 +4912,42 @@ namespace RepoDb
                 where5: where5,
                 where6: where6,
                 where7: where7,
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                fields3: fields3,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
                 cacheKey3: cacheKey3,
+                fields4: fields4,
                 orderBy4: orderBy4,
                 top4: top4,
                 hints4: hints4,
                 cacheKey4: cacheKey4,
+                fields5: fields5,
                 orderBy5: orderBy5,
                 top5: top5,
                 hints5: hints5,
                 cacheKey5: cacheKey5,
+                fields6: fields6,
                 orderBy6: orderBy6,
                 top6: top6,
                 hints6: hints6,
                 cacheKey6: cacheKey6,
+                fields7: fields7,
                 orderBy7: orderBy7,
                 top7: top7,
                 hints7: hints7,
                 cacheKey7: cacheKey7,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -4829,56 +4973,43 @@ namespace RepoDb
         /// <param name="where5">The query expression to be used (for T5).</param>
         /// <param name="where6">The query expression to be used (for T6).</param>
         /// <param name="where7">The query expression to be used (for T7).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields4">The mapping list of <see cref="Field"/> objects to be used (for T4).</param>
+		/// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
-        /// <param name="cacheKey4">
-        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
+        /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields5">The mapping list of <see cref="Field"/> objects to be used (for T5).</param>
+		/// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
-        /// <param name="cacheKey5">
-        /// The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy6">The order definition of the fields to be used (for T6).</param>
+        /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields6">The mapping list of <see cref="Field"/> objects to be used (for T6).</param>
+		/// <param name="orderBy6">The order definition of the fields to be used (for T6).</param>
         /// <param name="top6">The number of rows to be returned (for T6).</param>
         /// <param name="hints6">The table hints to be used (for T6).</param>
-        /// <param name="cacheKey6">
-        /// The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy7">The order definition of the fields to be used (for T7).</param>
+        /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields7">The mapping list of <see cref="Field"/> objects to be used (for T7).</param>
+		/// <param name="orderBy7">The order definition of the fields to be used (for T7).</param>
         /// <param name="top7">The number of rows to be returned (for T7).</param>
         /// <param name="hints7">The table hints to be used (for T7).</param>
-        /// <param name="cacheKey7">
-        /// The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -4893,34 +5024,42 @@ namespace RepoDb
             QueryGroup where5,
             QueryGroup where6,
             QueryGroup where7,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            IEnumerable<Field> fields4 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
+            IEnumerable<Field> fields5 = null,
             IEnumerable<OrderField> orderBy5 = null,
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
+            IEnumerable<Field> fields6 = null,
             IEnumerable<OrderField> orderBy6 = null,
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
+            IEnumerable<Field> fields7 = null,
             IEnumerable<OrderField> orderBy7 = null,
             int? top7 = 0,
             string hints7 = null,
             string cacheKey7 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -4941,37 +5080,37 @@ namespace RepoDb
             var commandTexts = new List<string>();
 
             // Items
-            var item1 = EnsureQueryMultipleCachedItem<T1>(cacheKey1,
+            var item1 = QueryMultipleInternal<T1>(cacheKey1,
                 cache,
                 where1,
                 queryGroups);
 
-            var item2 = EnsureQueryMultipleCachedItem<T2>(cacheKey2,
+            var item2 = QueryMultipleInternal<T2>(cacheKey2,
                 cache,
                 where2,
                 queryGroups);
 
-            var item3 = EnsureQueryMultipleCachedItem<T3>(cacheKey3,
+            var item3 = QueryMultipleInternal<T3>(cacheKey3,
                 cache,
                 where3,
                 queryGroups);
 
-            var item4 = EnsureQueryMultipleCachedItem<T4>(cacheKey4,
+            var item4 = QueryMultipleInternal<T4>(cacheKey4,
                 cache,
                 where4,
                 queryGroups);
 
-            var item5 = EnsureQueryMultipleCachedItem<T5>(cacheKey5,
+            var item5 = QueryMultipleInternal<T5>(cacheKey5,
                 cache,
                 where5,
                 queryGroups);
 
-            var item6 = EnsureQueryMultipleCachedItem<T6>(cacheKey6,
+            var item6 = QueryMultipleInternal<T6>(cacheKey6,
                 cache,
                 where6,
                 queryGroups);
 
-            var item7 = EnsureQueryMultipleCachedItem<T7>(cacheKey7,
+            var item7 = QueryMultipleInternal<T7>(cacheKey7,
                 cache,
                 where7,
                 queryGroups);
@@ -4986,7 +5125,7 @@ namespace RepoDb
                     typeof(T1),
                     connection,
                     transaction,
-                    FieldCache.Get<T1>(),
+                    fields1 ?? FieldCache.Get<T1>(),
                     where1,
                     orderBy1,
                     top1,
@@ -5003,7 +5142,7 @@ namespace RepoDb
                     typeof(T2),
                     connection,
                     transaction,
-                    FieldCache.Get<T2>(),
+                    fields2 ?? FieldCache.Get<T2>(),
                     where2,
                     orderBy2,
                     top2,
@@ -5020,7 +5159,7 @@ namespace RepoDb
                     typeof(T3),
                     connection,
                     transaction,
-                    FieldCache.Get<T3>(),
+                    fields3 ?? FieldCache.Get<T3>(),
                     where3,
                     orderBy3,
                     top3,
@@ -5037,7 +5176,7 @@ namespace RepoDb
                     typeof(T4),
                     connection,
                     transaction,
-                    FieldCache.Get<T4>(),
+                    fields4 ?? FieldCache.Get<T4>(),
                     where4,
                     orderBy4,
                     top4,
@@ -5054,7 +5193,7 @@ namespace RepoDb
                     typeof(T5),
                     connection,
                     transaction,
-                    FieldCache.Get<T5>(),
+                    fields5 ?? FieldCache.Get<T5>(),
                     where5,
                     orderBy5,
                     top5,
@@ -5071,7 +5210,7 @@ namespace RepoDb
                     typeof(T6),
                     connection,
                     transaction,
-                    FieldCache.Get<T6>(),
+                    fields6 ?? FieldCache.Get<T6>(),
                     where6,
                     orderBy6,
                     top6,
@@ -5088,7 +5227,7 @@ namespace RepoDb
                     typeof(T7),
                     connection,
                     transaction,
-                    FieldCache.Get<T7>(),
+                    fields7 ?? FieldCache.Get<T7>(),
                     where7,
                     orderBy7,
                     top7,
@@ -5137,62 +5276,84 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true))
             {
                 var dbSetting = connection.GetDbSetting();
-                var dbFields = (IEnumerable<DbField>)null;
 
                 // T1
-                if (item1 == null)
-                {
-                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T1>(), transaction);
-                    item1 = DataReader.ToEnumerable<T1>(reader, dbFields, dbSetting)?.AsList();
-                }
+                item1 = QueryMultipleInternal<T1>(connection,
+                    reader,
+                    item1,
+                    cacheKey1,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    false);
 
                 // T2
-                if (item2 == null)
-                {
-                    reader?.NextResult();
-                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T2>(), transaction);
-                    item2 = DataReader.ToEnumerable<T2>(reader, dbFields, dbSetting)?.AsList();
-                }
+                item2 = QueryMultipleInternal<T2>(connection,
+                    reader,
+                    item2,
+                    cacheKey2,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    true);
 
                 // T3
-                if (item3 == null)
-                {
-                    reader?.NextResult();
-                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T3>(), transaction);
-                    item3 = DataReader.ToEnumerable<T3>(reader, dbFields, dbSetting)?.AsList();
-                }
+                item3 = QueryMultipleInternal<T3>(connection,
+                    reader,
+                    item3,
+                    cacheKey3,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    true);
+
 
                 // T4
-                if (item4 == null)
-                {
-                    reader?.NextResult();
-                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T4>(), transaction);
-                    item4 = DataReader.ToEnumerable<T4>(reader, dbFields, dbSetting)?.AsList();
-                }
+                item4 = QueryMultipleInternal<T4>(connection,
+                    reader,
+                    item4,
+                    cacheKey4,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    true);
 
                 // T5
-                if (item5 == null)
-                {
-                    reader?.NextResult();
-                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T5>(), transaction);
-                    item5 = DataReader.ToEnumerable<T5>(reader, dbFields, dbSetting)?.AsList();
-                }
+                item5 = QueryMultipleInternal<T5>(connection,
+                    reader,
+                    item5,
+                    cacheKey5,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    true);
 
                 // T6
-                if (item6 == null)
-                {
-                    reader?.NextResult();
-                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T6>(), transaction);
-                    item6 = DataReader.ToEnumerable<T6>(reader, dbFields, dbSetting)?.AsList();
-                }
+                item6 = QueryMultipleInternal<T6>(connection,
+                    reader,
+                    item6,
+                    cacheKey6,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    true);
 
                 // T7
-                if (item7 == null)
-                {
-                    reader?.NextResult();
-                    dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T7>(), transaction);
-                    item7 = DataReader.ToEnumerable<T7>(reader, dbFields, dbSetting)?.AsList();
-                }
+                item7 = QueryMultipleInternal<T7>(connection,
+                    reader,
+                    item7,
+                    cacheKey7,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    true);
 
                 // Result
                 result = Tuple.Create(item1, item2, item3, item4, item5, item6, item7);
@@ -5222,21 +5383,18 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="what1">The query expression or the key value to be used (for T1).</param>
         /// <param name="what2">The query expression or the key value to be used (for T2).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -5246,14 +5404,17 @@ namespace RepoDb
         public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<T1, T2>(this IDbConnection connection,
             object what1,
             object what2,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
             int? top2 = 0,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             string hints2 = null,
             string cacheKey2 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -5266,14 +5427,17 @@ namespace RepoDb
             return QueryMultipleAsyncInternal<T1, T2>(connection: connection,
                 where1: WhatToQueryGroup(what1),
                 where2: WhatToQueryGroup(what2),
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
                 top2: top2,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -5290,21 +5454,18 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="where1">The query expression to be used (for T1).</param>
         /// <param name="where2">The query expression to be used (for T2).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -5314,14 +5475,17 @@ namespace RepoDb
         public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<T1, T2>(this IDbConnection connection,
             Expression<Func<T1, bool>> where1,
             Expression<Func<T2, bool>> where2,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
             int? top2 = 0,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             string hints2 = null,
             string cacheKey2 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -5334,14 +5498,17 @@ namespace RepoDb
             return QueryMultipleAsyncInternal<T1, T2>(connection: connection,
                 where1: ToQueryGroup(where1),
                 where2: ToQueryGroup(where2),
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
                 top2: top2,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -5358,21 +5525,18 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="where1">The query expression to be used (for T1).</param>
         /// <param name="where2">The query expression to be used (for T2).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -5382,14 +5546,17 @@ namespace RepoDb
         public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<T1, T2>(this IDbConnection connection,
             QueryField where1,
             QueryField where2,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
             int? top2 = 0,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             string hints2 = null,
             string cacheKey2 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -5402,14 +5569,17 @@ namespace RepoDb
             return QueryMultipleAsyncInternal<T1, T2>(connection: connection,
                 where1: ToQueryGroup(where1),
                 where2: ToQueryGroup(where2),
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
                 top2: top2,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -5426,21 +5596,18 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="where1">The query expression to be used (for T1).</param>
         /// <param name="where2">The query expression to be used (for T2).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -5450,14 +5617,17 @@ namespace RepoDb
         public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<T1, T2>(this IDbConnection connection,
             IEnumerable<QueryField> where1,
             IEnumerable<QueryField> where2,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
             int? top2 = 0,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             string hints2 = null,
             string cacheKey2 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -5470,14 +5640,17 @@ namespace RepoDb
             return QueryMultipleAsyncInternal<T1, T2>(connection: connection,
                 where1: ToQueryGroup(where1),
                 where2: ToQueryGroup(where2),
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
                 top2: top2,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -5494,21 +5667,18 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="where1">The query expression to be used (for T1).</param>
         /// <param name="where2">The query expression to be used (for T2).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -5518,14 +5688,17 @@ namespace RepoDb
         public static Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<T1, T2>(this IDbConnection connection,
             QueryGroup where1,
             QueryGroup where2,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
             int? top2 = 0,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             string hints2 = null,
             string cacheKey2 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -5538,14 +5711,17 @@ namespace RepoDb
             return QueryMultipleAsyncInternal<T1, T2>(connection: connection,
                 where1: where1,
                 where2: where2,
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
                 top2: top2,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -5561,22 +5737,19 @@ namespace RepoDb
         /// <typeparam name="T2">The second target type.</typeparam>
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="where1">The query expression to be used (for T1).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="where2">The query expression to be used (for T2).</param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -5586,14 +5759,17 @@ namespace RepoDb
         internal static async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsyncInternal<T1, T2>(this IDbConnection connection,
             QueryGroup where1,
             QueryGroup where2,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
             int? top2 = 0,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             string hints2 = null,
             string cacheKey2 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -5610,12 +5786,12 @@ namespace RepoDb
             var commandTexts = new List<string>();
 
             // Items
-            var item1 = EnsureQueryMultipleCachedItem<T1>(cacheKey1,
+            var item1 = QueryMultipleInternal<T1>(cacheKey1,
                 cache,
                 where1,
                 queryGroups);
 
-            var item2 = EnsureQueryMultipleCachedItem<T2>(cacheKey2,
+            var item2 = QueryMultipleInternal<T2>(cacheKey2,
                 cache,
                 where2,
                 queryGroups);
@@ -5630,7 +5806,7 @@ namespace RepoDb
                     typeof(T1),
                     connection,
                     transaction,
-                    FieldCache.Get<T1>(),
+                    fields1 ?? FieldCache.Get<T1>(),
                     where1,
                     orderBy1,
                     top1,
@@ -5647,7 +5823,7 @@ namespace RepoDb
                     typeof(T2),
                     connection,
                     transaction,
-                    FieldCache.Get<T2>(),
+                    fields2 ?? FieldCache.Get<T2>(),
                     where2,
                     orderBy2,
                     top2,
@@ -5697,22 +5873,30 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true)))
             {
                 var dbSetting = connection.GetDbSetting();
-                var dbFields = (IEnumerable<DbField>)null;
 
                 // T1
-                if (item1 == null)
-                {
-                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T1>(), transaction, true, cancellationToken);
-                    item1 = await DataReader.ToEnumerableAsync<T1>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
-                }
+                item1 = await QueryMultipleAsyncInternal<T1>(connection,
+                    reader,
+                    item1,
+                    cacheKey1,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    false,
+                    cancellationToken);
 
                 // T2
-                if (item2 == null)
-                {
-                    await reader.NextResultAsync(cancellationToken);
-                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T2>(), transaction, true, cancellationToken);
-                    item2 = await DataReader.ToEnumerableAsync<T2>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
-                }
+                item2 = await QueryMultipleAsyncInternal<T2>(connection,
+                    reader,
+                    item2,
+                    cacheKey2,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    true,
+                    cancellationToken);
 
                 // Result
                 result = Tuple.Create(item1, item2);
@@ -5740,28 +5924,23 @@ namespace RepoDb
         /// <param name="what1">The query expression or the key value to be used (for T1).</param>
         /// <param name="what2">The query expression or the key value to be used (for T2).</param>
         /// <param name="what3">The query expression or the key value to be used (for T3).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -5772,18 +5951,22 @@ namespace RepoDb
             object what1,
             object what2,
             object what3,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -5798,18 +5981,22 @@ namespace RepoDb
                 where1: WhatToQueryGroup(what1),
                 where2: WhatToQueryGroup(what2),
                 where3: WhatToQueryGroup(what3),
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                fields3: fields3,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
                 cacheKey3: cacheKey3,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -5828,28 +6015,23 @@ namespace RepoDb
         /// <param name="where1">The query expression to be used (for T1).</param>
         /// <param name="where2">The query expression to be used (for T2).</param>
         /// <param name="where3">The query expression to be used (for T3).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -5860,18 +6042,22 @@ namespace RepoDb
             Expression<Func<T1, bool>> where1,
             Expression<Func<T2, bool>> where2,
             Expression<Func<T3, bool>> where3,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -5886,18 +6072,22 @@ namespace RepoDb
                 where1: ToQueryGroup(where1),
                 where2: ToQueryGroup(where2),
                 where3: ToQueryGroup(where3),
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                fields3: fields3,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
                 cacheKey3: cacheKey3,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -5916,28 +6106,23 @@ namespace RepoDb
         /// <param name="where1">The query expression to be used (for T1).</param>
         /// <param name="where2">The query expression to be used (for T2).</param>
         /// <param name="where3">The query expression to be used (for T3).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -5948,18 +6133,22 @@ namespace RepoDb
             QueryField where1,
             QueryField where2,
             QueryField where3,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -5974,18 +6163,22 @@ namespace RepoDb
                 where1: ToQueryGroup(where1),
                 where2: ToQueryGroup(where2),
                 where3: ToQueryGroup(where3),
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                fields3: fields3,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
                 cacheKey3: cacheKey3,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -6004,28 +6197,23 @@ namespace RepoDb
         /// <param name="where1">The query expression to be used (for T1).</param>
         /// <param name="where2">The query expression to be used (for T2).</param>
         /// <param name="where3">The query expression to be used (for T3).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -6036,18 +6224,22 @@ namespace RepoDb
             IEnumerable<QueryField> where1,
             IEnumerable<QueryField> where2,
             IEnumerable<QueryField> where3,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -6062,18 +6254,22 @@ namespace RepoDb
                 where1: ToQueryGroup(where1),
                 where2: ToQueryGroup(where2),
                 where3: ToQueryGroup(where3),
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                fields3: fields3,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
                 cacheKey3: cacheKey3,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -6092,28 +6288,23 @@ namespace RepoDb
         /// <param name="where1">The query expression to be used (for T1).</param>
         /// <param name="where2">The query expression to be used (for T2).</param>
         /// <param name="where3">The query expression to be used (for T3).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -6124,18 +6315,22 @@ namespace RepoDb
             QueryGroup where1,
             QueryGroup where2,
             QueryGroup where3,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -6150,18 +6345,22 @@ namespace RepoDb
                 where1: where1,
                 where2: where2,
                 where3: where3,
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                fields3: fields3,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
                 cacheKey3: cacheKey3,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -6180,28 +6379,23 @@ namespace RepoDb
         /// <param name="where1">The query expression to be used (for T1).</param>
         /// <param name="where2">The query expression to be used (for T2).</param>
         /// <param name="where3">The query expression to be used (for T3).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -6212,18 +6406,22 @@ namespace RepoDb
             QueryGroup where1,
             QueryGroup where2,
             QueryGroup where3,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -6241,17 +6439,17 @@ namespace RepoDb
             var commandTexts = new List<string>();
 
             // Items
-            var item1 = EnsureQueryMultipleCachedItem<T1>(cacheKey1,
+            var item1 = QueryMultipleInternal<T1>(cacheKey1,
                 cache,
                 where1,
                 queryGroups);
 
-            var item2 = EnsureQueryMultipleCachedItem<T2>(cacheKey2,
+            var item2 = QueryMultipleInternal<T2>(cacheKey2,
                 cache,
                 where2,
                 queryGroups);
 
-            var item3 = EnsureQueryMultipleCachedItem<T3>(cacheKey3,
+            var item3 = QueryMultipleInternal<T3>(cacheKey3,
                 cache,
                 where3,
                 queryGroups);
@@ -6266,7 +6464,7 @@ namespace RepoDb
                     typeof(T1),
                     connection,
                     transaction,
-                    FieldCache.Get<T1>(),
+                    fields1 ?? FieldCache.Get<T1>(),
                     where1,
                     orderBy1,
                     top1,
@@ -6283,7 +6481,7 @@ namespace RepoDb
                     typeof(T2),
                     connection,
                     transaction,
-                    FieldCache.Get<T2>(),
+                    fields2 ?? FieldCache.Get<T2>(),
                     where2,
                     orderBy2,
                     top2,
@@ -6300,7 +6498,7 @@ namespace RepoDb
                     typeof(T3),
                     connection,
                     transaction,
-                    FieldCache.Get<T3>(),
+                    fields3 ?? FieldCache.Get<T3>(),
                     where3,
                     orderBy3,
                     top3,
@@ -6350,30 +6548,42 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true)))
             {
                 var dbSetting = connection.GetDbSetting();
-                var dbFields = (IEnumerable<DbField>)null;
 
                 // T1
-                if (item1 == null)
-                {
-                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T1>(), transaction, true, cancellationToken);
-                    item1 = await DataReader.ToEnumerableAsync<T1>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
-                }
+                item1 = await QueryMultipleAsyncInternal<T1>(connection,
+                    reader,
+                    item1,
+                    cacheKey1,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    false,
+                    cancellationToken);
 
                 // T2
-                if (item2 == null)
-                {
-                    await reader.NextResultAsync(cancellationToken);
-                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T2>(), transaction, true, cancellationToken);
-                    item2 = await DataReader.ToEnumerableAsync<T2>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
-                }
+                item2 = await QueryMultipleAsyncInternal<T2>(connection,
+                    reader,
+                    item2,
+                    cacheKey2,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    true,
+                    cancellationToken);
 
                 // T3
-                if (item3 == null)
-                {
-                    await reader.NextResultAsync(cancellationToken);
-                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T3>(), transaction, true, cancellationToken);
-                    item3 = await DataReader.ToEnumerableAsync<T3>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
-                }
+                item3 = await QueryMultipleAsyncInternal<T3>(connection,
+                    reader,
+                    item3,
+                    cacheKey3,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    true,
+                    cancellationToken);
 
                 // Result
                 result = Tuple.Create(item1, item2, item3);
@@ -6403,35 +6613,28 @@ namespace RepoDb
         /// <param name="what2">The query expression or the key value to be used (for T2).</param>
         /// <param name="what3">The query expression or the key value to be used (for T3).</param>
         /// <param name="what4">The query expression or the key value to be used (for T4).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields4">The mapping list of <see cref="Field"/> objects to be used (for T4).</param>
+		/// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
-        /// <param name="cacheKey4">
-        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -6444,22 +6647,27 @@ namespace RepoDb
             object what2,
             object what3,
             object what4,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            IEnumerable<Field> fields4 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -6476,22 +6684,27 @@ namespace RepoDb
                 where2: WhatToQueryGroup(what2),
                 where3: WhatToQueryGroup(what3),
                 where4: WhatToQueryGroup(what4),
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                fields3: fields3,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
                 cacheKey3: cacheKey3,
+                fields4: fields4,
                 orderBy4: orderBy4,
                 top4: top4,
                 hints4: hints4,
                 cacheKey4: cacheKey4,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -6512,35 +6725,28 @@ namespace RepoDb
         /// <param name="where2">The query expression to be used (for T2).</param>
         /// <param name="where3">The query expression to be used (for T3).</param>
         /// <param name="where4">The query expression to be used (for T4).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields4">The mapping list of <see cref="Field"/> objects to be used (for T4).</param>
+		/// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
-        /// <param name="cacheKey4">
-        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -6553,22 +6759,27 @@ namespace RepoDb
             Expression<Func<T2, bool>> where2,
             Expression<Func<T3, bool>> where3,
             Expression<Func<T4, bool>> where4,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            IEnumerable<Field> fields4 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -6585,22 +6796,27 @@ namespace RepoDb
                 where2: ToQueryGroup(where2),
                 where3: ToQueryGroup(where3),
                 where4: ToQueryGroup(where4),
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                fields3: fields3,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
                 cacheKey3: cacheKey3,
+                fields4: fields4,
                 orderBy4: orderBy4,
                 top4: top4,
                 hints4: hints4,
                 cacheKey4: cacheKey4,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -6621,35 +6837,28 @@ namespace RepoDb
         /// <param name="where2">The query expression to be used (for T2).</param>
         /// <param name="where3">The query expression to be used (for T3).</param>
         /// <param name="where4">The query expression to be used (for T4).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields4">The mapping list of <see cref="Field"/> objects to be used (for T4).</param>
+		/// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
-        /// <param name="cacheKey4">
-        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -6662,22 +6871,27 @@ namespace RepoDb
             QueryField where2,
             QueryField where3,
             QueryField where4,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            IEnumerable<Field> fields4 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -6694,22 +6908,27 @@ namespace RepoDb
                 where2: ToQueryGroup(where2),
                 where3: ToQueryGroup(where3),
                 where4: ToQueryGroup(where4),
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                fields3: fields3,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
                 cacheKey3: cacheKey3,
+                fields4: fields4,
                 orderBy4: orderBy4,
                 top4: top4,
                 hints4: hints4,
                 cacheKey4: cacheKey4,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -6730,35 +6949,28 @@ namespace RepoDb
         /// <param name="where2">The query expression to be used (for T2).</param>
         /// <param name="where3">The query expression to be used (for T3).</param>
         /// <param name="where4">The query expression to be used (for T4).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields4">The mapping list of <see cref="Field"/> objects to be used (for T4).</param>
+		/// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
-        /// <param name="cacheKey4">
-        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -6771,22 +6983,27 @@ namespace RepoDb
             IEnumerable<QueryField> where2,
             IEnumerable<QueryField> where3,
             IEnumerable<QueryField> where4,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            IEnumerable<Field> fields4 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -6803,22 +7020,27 @@ namespace RepoDb
                 where2: ToQueryGroup(where2),
                 where3: ToQueryGroup(where3),
                 where4: ToQueryGroup(where4),
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                fields3: fields3,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
                 cacheKey3: cacheKey3,
+                fields4: fields4,
                 orderBy4: orderBy4,
                 top4: top4,
                 hints4: hints4,
                 cacheKey4: cacheKey4,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -6839,35 +7061,28 @@ namespace RepoDb
         /// <param name="where2">The query expression to be used (for T2).</param>
         /// <param name="where3">The query expression to be used (for T3).</param>
         /// <param name="where4">The query expression to be used (for T4).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields4">The mapping list of <see cref="Field"/> objects to be used (for T4).</param>
+		/// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
-        /// <param name="cacheKey4">
-        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -6880,22 +7095,27 @@ namespace RepoDb
             QueryGroup where2,
             QueryGroup where3,
             QueryGroup where4,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            IEnumerable<Field> fields4 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -6912,22 +7132,27 @@ namespace RepoDb
                 where2: where2,
                 where3: where3,
                 where4: where4,
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                fields3: fields3,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
                 cacheKey3: cacheKey3,
+                fields4: fields4,
                 orderBy4: orderBy4,
                 top4: top4,
                 hints4: hints4,
                 cacheKey4: cacheKey4,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -6948,35 +7173,28 @@ namespace RepoDb
         /// <param name="where2">The query expression to be used (for T2).</param>
         /// <param name="where3">The query expression to be used (for T3).</param>
         /// <param name="where4">The query expression to be used (for T4).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields4">The mapping list of <see cref="Field"/> objects to be used (for T4).</param>
+		/// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
-        /// <param name="cacheKey4">
-        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -6989,22 +7207,27 @@ namespace RepoDb
             QueryGroup where2,
             QueryGroup where3,
             QueryGroup where4,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            IEnumerable<Field> fields4 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -7023,22 +7246,22 @@ namespace RepoDb
             var commandTexts = new List<string>();
 
             // Items
-            var item1 = EnsureQueryMultipleCachedItem<T1>(cacheKey1,
+            var item1 = QueryMultipleInternal<T1>(cacheKey1,
                 cache,
                 where1,
                 queryGroups);
 
-            var item2 = EnsureQueryMultipleCachedItem<T2>(cacheKey2,
+            var item2 = QueryMultipleInternal<T2>(cacheKey2,
                 cache,
                 where2,
                 queryGroups);
 
-            var item3 = EnsureQueryMultipleCachedItem<T3>(cacheKey3,
+            var item3 = QueryMultipleInternal<T3>(cacheKey3,
                 cache,
                 where3,
                 queryGroups);
 
-            var item4 = EnsureQueryMultipleCachedItem<T4>(cacheKey4,
+            var item4 = QueryMultipleInternal<T4>(cacheKey4,
                 cache,
                 where4,
                 queryGroups);
@@ -7053,7 +7276,7 @@ namespace RepoDb
                     typeof(T1),
                     connection,
                     transaction,
-                    FieldCache.Get<T1>(),
+                    fields1 ?? FieldCache.Get<T1>(),
                     where1,
                     orderBy1,
                     top1,
@@ -7070,7 +7293,7 @@ namespace RepoDb
                     typeof(T2),
                     connection,
                     transaction,
-                    FieldCache.Get<T2>(),
+                    fields2 ?? FieldCache.Get<T2>(),
                     where2,
                     orderBy2,
                     top2,
@@ -7087,7 +7310,7 @@ namespace RepoDb
                     typeof(T3),
                     connection,
                     transaction,
-                    FieldCache.Get<T3>(),
+                    fields3 ?? FieldCache.Get<T3>(),
                     where3,
                     orderBy3,
                     top3,
@@ -7104,7 +7327,7 @@ namespace RepoDb
                     typeof(T4),
                     connection,
                     transaction,
-                    FieldCache.Get<T4>(),
+                    fields4 ?? FieldCache.Get<T4>(),
                     where4,
                     orderBy4,
                     top4,
@@ -7154,38 +7377,54 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true)))
             {
                 var dbSetting = connection.GetDbSetting();
-                var dbFields = (IEnumerable<DbField>)null;
 
                 // T1
-                if (item1 == null)
-                {
-                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T1>(), transaction, true, cancellationToken);
-                    item1 = await DataReader.ToEnumerableAsync<T1>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
-                }
+                item1 = await QueryMultipleAsyncInternal<T1>(connection,
+                    reader,
+                    item1,
+                    cacheKey1,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    false,
+                    cancellationToken);
 
                 // T2
-                if (item2 == null)
-                {
-                    await reader.NextResultAsync(cancellationToken);
-                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T2>(), transaction, true, cancellationToken);
-                    item2 = await DataReader.ToEnumerableAsync<T2>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
-                }
+                item2 = await QueryMultipleAsyncInternal<T2>(connection,
+                    reader,
+                    item2,
+                    cacheKey2,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    true,
+                    cancellationToken);
 
                 // T3
-                if (item3 == null)
-                {
-                    await reader.NextResultAsync(cancellationToken);
-                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T3>(), transaction, true, cancellationToken);
-                    item3 = await DataReader.ToEnumerableAsync<T3>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
-                }
+                item3 = await QueryMultipleAsyncInternal<T3>(connection,
+                    reader,
+                    item3,
+                    cacheKey3,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    true,
+                    cancellationToken);
 
                 // T4
-                if (item4 == null)
-                {
-                    await reader.NextResultAsync(cancellationToken);
-                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T4>(), transaction, true, cancellationToken);
-                    item4 = await DataReader.ToEnumerableAsync<T4>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
-                }
+                item4 = await QueryMultipleAsyncInternal<T4>(connection,
+                    reader,
+                    item4,
+                    cacheKey4,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    true,
+                    cancellationToken);
 
                 // Result
                 result = Tuple.Create(item1, item2, item3, item4);
@@ -7217,42 +7456,33 @@ namespace RepoDb
         /// <param name="what3">The query expression or the key value to be used (for T3).</param>
         /// <param name="what4">The query expression or the key value to be used (for T4).</param>
         /// <param name="what5">The query expression or the key value to be used (for T5).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields4">The mapping list of <see cref="Field"/> objects to be used (for T4).</param>
+		/// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
-        /// <param name="cacheKey4">
-        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
+        /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields5">The mapping list of <see cref="Field"/> objects to be used (for T5).</param>
+		/// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
-        /// <param name="cacheKey5">
-        /// The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -7266,26 +7496,32 @@ namespace RepoDb
             object what3,
             object what4,
             object what5,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            IEnumerable<Field> fields4 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
+            IEnumerable<Field> fields5 = null,
             IEnumerable<OrderField> orderBy5 = null,
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -7304,26 +7540,32 @@ namespace RepoDb
                 where3: WhatToQueryGroup(what3),
                 where4: WhatToQueryGroup(what4),
                 where5: WhatToQueryGroup(what5),
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                fields3: fields3,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
                 cacheKey3: cacheKey3,
+                fields4: fields4,
                 orderBy4: orderBy4,
                 top4: top4,
                 hints4: hints4,
                 cacheKey4: cacheKey4,
+                fields5: fields5,
                 orderBy5: orderBy5,
                 top5: top5,
                 hints5: hints5,
                 cacheKey5: cacheKey5,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -7346,42 +7588,33 @@ namespace RepoDb
         /// <param name="where3">The query expression to be used (for T3).</param>
         /// <param name="where4">The query expression to be used (for T4).</param>
         /// <param name="where5">The query expression to be used (for T5).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields4">The mapping list of <see cref="Field"/> objects to be used (for T4).</param>
+		/// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
-        /// <param name="cacheKey4">
-        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
+        /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields5">The mapping list of <see cref="Field"/> objects to be used (for T5).</param>
+		/// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
-        /// <param name="cacheKey5">
-        /// The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -7395,26 +7628,32 @@ namespace RepoDb
             Expression<Func<T3, bool>> where3,
             Expression<Func<T4, bool>> where4,
             Expression<Func<T5, bool>> where5,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            IEnumerable<Field> fields4 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
+            IEnumerable<Field> fields5 = null,
             IEnumerable<OrderField> orderBy5 = null,
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -7433,26 +7672,32 @@ namespace RepoDb
                 where3: ToQueryGroup(where3),
                 where4: ToQueryGroup(where4),
                 where5: ToQueryGroup(where5),
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                fields3: fields3,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
                 cacheKey3: cacheKey3,
+                fields4: fields4,
                 orderBy4: orderBy4,
                 top4: top4,
                 hints4: hints4,
                 cacheKey4: cacheKey4,
+                fields5: fields5,
                 orderBy5: orderBy5,
                 top5: top5,
                 hints5: hints5,
                 cacheKey5: cacheKey5,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -7475,42 +7720,33 @@ namespace RepoDb
         /// <param name="where3">The query expression to be used (for T3).</param>
         /// <param name="where4">The query expression to be used (for T4).</param>
         /// <param name="where5">The query expression to be used (for T5).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields4">The mapping list of <see cref="Field"/> objects to be used (for T4).</param>
+		/// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
-        /// <param name="cacheKey4">
-        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
+        /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields5">The mapping list of <see cref="Field"/> objects to be used (for T5).</param>
+		/// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
-        /// <param name="cacheKey5">
-        /// The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -7524,26 +7760,32 @@ namespace RepoDb
             QueryField where3,
             QueryField where4,
             QueryField where5,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            IEnumerable<Field> fields4 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
+            IEnumerable<Field> fields5 = null,
             IEnumerable<OrderField> orderBy5 = null,
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -7562,26 +7804,32 @@ namespace RepoDb
                 where3: ToQueryGroup(where3),
                 where4: ToQueryGroup(where4),
                 where5: ToQueryGroup(where5),
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                fields3: fields3,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
                 cacheKey3: cacheKey3,
+                fields4: fields4,
                 orderBy4: orderBy4,
                 top4: top4,
                 hints4: hints4,
                 cacheKey4: cacheKey4,
+                fields5: fields5,
                 orderBy5: orderBy5,
                 top5: top5,
                 hints5: hints5,
                 cacheKey5: cacheKey5,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -7604,42 +7852,33 @@ namespace RepoDb
         /// <param name="where3">The query expression to be used (for T3).</param>
         /// <param name="where4">The query expression to be used (for T4).</param>
         /// <param name="where5">The query expression to be used (for T5).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields4">The mapping list of <see cref="Field"/> objects to be used (for T4).</param>
+		/// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
-        /// <param name="cacheKey4">
-        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
+        /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields5">The mapping list of <see cref="Field"/> objects to be used (for T5).</param>
+		/// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
-        /// <param name="cacheKey5">
-        /// The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -7653,26 +7892,32 @@ namespace RepoDb
             IEnumerable<QueryField> where3,
             IEnumerable<QueryField> where4,
             IEnumerable<QueryField> where5,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            IEnumerable<Field> fields4 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
+            IEnumerable<Field> fields5 = null,
             IEnumerable<OrderField> orderBy5 = null,
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -7691,26 +7936,32 @@ namespace RepoDb
                 where3: ToQueryGroup(where3),
                 where4: ToQueryGroup(where4),
                 where5: ToQueryGroup(where5),
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                fields3: fields3,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
                 cacheKey3: cacheKey3,
+                fields4: fields4,
                 orderBy4: orderBy4,
                 top4: top4,
                 hints4: hints4,
                 cacheKey4: cacheKey4,
+                fields5: fields5,
                 orderBy5: orderBy5,
                 top5: top5,
                 hints5: hints5,
                 cacheKey5: cacheKey5,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -7733,42 +7984,33 @@ namespace RepoDb
         /// <param name="where3">The query expression to be used (for T3).</param>
         /// <param name="where4">The query expression to be used (for T4).</param>
         /// <param name="where5">The query expression to be used (for T5).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields4">The mapping list of <see cref="Field"/> objects to be used (for T4).</param>
+		/// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
-        /// <param name="cacheKey4">
-        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
+        /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields5">The mapping list of <see cref="Field"/> objects to be used (for T5).</param>
+		/// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
-        /// <param name="cacheKey5">
-        /// The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -7782,26 +8024,32 @@ namespace RepoDb
             QueryGroup where3,
             QueryGroup where4,
             QueryGroup where5,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            IEnumerable<Field> fields4 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
+            IEnumerable<Field> fields5 = null,
             IEnumerable<OrderField> orderBy5 = null,
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -7820,26 +8068,32 @@ namespace RepoDb
                 where3: ToQueryGroup(where3),
                 where4: ToQueryGroup(where4),
                 where5: ToQueryGroup(where5),
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                fields3: fields3,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
                 cacheKey3: cacheKey3,
+                fields4: fields4,
                 orderBy4: orderBy4,
                 top4: top4,
                 hints4: hints4,
                 cacheKey4: cacheKey4,
+                fields5: fields5,
                 orderBy5: orderBy5,
                 top5: top5,
                 hints5: hints5,
                 cacheKey5: cacheKey5,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -7862,42 +8116,33 @@ namespace RepoDb
         /// <param name="where3">The query expression to be used (for T3).</param>
         /// <param name="where4">The query expression to be used (for T4).</param>
         /// <param name="where5">The query expression to be used (for T5).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields4">The mapping list of <see cref="Field"/> objects to be used (for T4).</param>
+		/// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
-        /// <param name="cacheKey4">
-        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
+        /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields5">The mapping list of <see cref="Field"/> objects to be used (for T5).</param>
+		/// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
-        /// <param name="cacheKey5">
-        /// The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -7911,26 +8156,32 @@ namespace RepoDb
             QueryGroup where3,
             QueryGroup where4,
             QueryGroup where5,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            IEnumerable<Field> fields4 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
+            IEnumerable<Field> fields5 = null,
             IEnumerable<OrderField> orderBy5 = null,
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -7950,27 +8201,27 @@ namespace RepoDb
             var commandTexts = new List<string>();
 
             // Items
-            var item1 = EnsureQueryMultipleCachedItem<T1>(cacheKey1,
+            var item1 = QueryMultipleInternal<T1>(cacheKey1,
                 cache,
                 where1,
                 queryGroups);
 
-            var item2 = EnsureQueryMultipleCachedItem<T2>(cacheKey2,
+            var item2 = QueryMultipleInternal<T2>(cacheKey2,
                 cache,
                 where2,
                 queryGroups);
 
-            var item3 = EnsureQueryMultipleCachedItem<T3>(cacheKey3,
+            var item3 = QueryMultipleInternal<T3>(cacheKey3,
                 cache,
                 where3,
                 queryGroups);
 
-            var item4 = EnsureQueryMultipleCachedItem<T4>(cacheKey4,
+            var item4 = QueryMultipleInternal<T4>(cacheKey4,
                 cache,
                 where4,
                 queryGroups);
 
-            var item5 = EnsureQueryMultipleCachedItem<T5>(cacheKey5,
+            var item5 = QueryMultipleInternal<T5>(cacheKey5,
                 cache,
                 where5,
                 queryGroups);
@@ -7985,7 +8236,7 @@ namespace RepoDb
                     typeof(T1),
                     connection,
                     transaction,
-                    FieldCache.Get<T1>(),
+                    fields1 ?? FieldCache.Get<T1>(),
                     where1,
                     orderBy1,
                     top1,
@@ -8002,7 +8253,7 @@ namespace RepoDb
                     typeof(T2),
                     connection,
                     transaction,
-                    FieldCache.Get<T2>(),
+                    fields2 ?? FieldCache.Get<T2>(),
                     where2,
                     orderBy2,
                     top2,
@@ -8019,7 +8270,7 @@ namespace RepoDb
                     typeof(T3),
                     connection,
                     transaction,
-                    FieldCache.Get<T3>(),
+                    fields3 ?? FieldCache.Get<T3>(),
                     where3,
                     orderBy3,
                     top3,
@@ -8036,7 +8287,7 @@ namespace RepoDb
                     typeof(T4),
                     connection,
                     transaction,
-                    FieldCache.Get<T4>(),
+                    fields4 ?? FieldCache.Get<T4>(),
                     where4,
                     orderBy4,
                     top4,
@@ -8053,7 +8304,7 @@ namespace RepoDb
                     typeof(T5),
                     connection,
                     transaction,
-                    FieldCache.Get<T5>(),
+                    fields5 ?? FieldCache.Get<T5>(),
                     where5,
                     orderBy5,
                     top5,
@@ -8103,46 +8354,66 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true)))
             {
                 var dbSetting = connection.GetDbSetting();
-                var dbFields = (IEnumerable<DbField>)null;
 
                 // T1
-                if (item1 == null)
-                {
-                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T1>(), transaction, true, cancellationToken);
-                    item1 = await DataReader.ToEnumerableAsync<T1>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
-                }
+                item1 = await QueryMultipleAsyncInternal<T1>(connection,
+                    reader,
+                    item1,
+                    cacheKey1,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    false,
+                    cancellationToken);
 
                 // T2
-                if (item2 == null)
-                {
-                    await reader.NextResultAsync(cancellationToken);
-                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T2>(), transaction, true, cancellationToken);
-                    item2 = await DataReader.ToEnumerableAsync<T2>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
-                }
+                item2 = await QueryMultipleAsyncInternal<T2>(connection,
+                    reader,
+                    item2,
+                    cacheKey2,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    true,
+                    cancellationToken);
 
                 // T3
-                if (item3 == null)
-                {
-                    await reader.NextResultAsync(cancellationToken);
-                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T3>(), transaction, true, cancellationToken);
-                    item3 = await DataReader.ToEnumerableAsync<T3>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
-                }
+                item3 = await QueryMultipleAsyncInternal<T3>(connection,
+                    reader,
+                    item3,
+                    cacheKey3,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    true,
+                    cancellationToken);
 
                 // T4
-                if (item4 == null)
-                {
-                    await reader.NextResultAsync(cancellationToken);
-                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T4>(), transaction, true, cancellationToken);
-                    item4 = await DataReader.ToEnumerableAsync<T4>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
-                }
+                item4 = await QueryMultipleAsyncInternal<T4>(connection,
+                    reader,
+                    item4,
+                    cacheKey4,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    true,
+                    cancellationToken);
 
                 // T5
-                if (item5 == null)
-                {
-                    await reader.NextResultAsync(cancellationToken);
-                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T5>(), transaction, true, cancellationToken);
-                    item5 = await DataReader.ToEnumerableAsync<T5>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
-                }
+                item5 = await QueryMultipleAsyncInternal<T5>(connection,
+                    reader,
+                    item5,
+                    cacheKey5,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    true,
+                    cancellationToken);
 
                 // Result
                 result = Tuple.Create(item1, item2, item3, item4, item5);
@@ -8176,49 +8447,38 @@ namespace RepoDb
         /// <param name="what4">The query expression or the key value to be used (for T4).</param>
         /// <param name="what5">The query expression or the key value to be used (for T5).</param>
         /// <param name="what6">The query expression or the key value to be used (for T6).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields4">The mapping list of <see cref="Field"/> objects to be used (for T4).</param>
+		/// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
-        /// <param name="cacheKey4">
-        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
+        /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields5">The mapping list of <see cref="Field"/> objects to be used (for T5).</param>
+		/// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
-        /// <param name="cacheKey5">
-        /// The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy6">The order definition of the fields to be used (for T6).</param>
+        /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields6">The mapping list of <see cref="Field"/> objects to be used (for T6).</param>
+		/// <param name="orderBy6">The order definition of the fields to be used (for T6).</param>
         /// <param name="top6">The number of rows to be returned (for T6).</param>
         /// <param name="hints6">The table hints to be used (for T6).</param>
-        /// <param name="cacheKey6">
-        /// The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -8233,30 +8493,37 @@ namespace RepoDb
             object what4,
             object what5,
             object what6,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            IEnumerable<Field> fields4 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
+            IEnumerable<Field> fields5 = null,
             IEnumerable<OrderField> orderBy5 = null,
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
+            IEnumerable<Field> fields6 = null,
             IEnumerable<OrderField> orderBy6 = null,
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -8277,30 +8544,37 @@ namespace RepoDb
                 where4: WhatToQueryGroup(what4),
                 where5: WhatToQueryGroup(what5),
                 where6: WhatToQueryGroup(what6),
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                fields3: fields3,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
                 cacheKey3: cacheKey3,
+                fields4: fields4,
                 orderBy4: orderBy4,
                 top4: top4,
                 hints4: hints4,
                 cacheKey4: cacheKey4,
+                fields5: fields5,
                 orderBy5: orderBy5,
                 top5: top5,
                 hints5: hints5,
                 cacheKey5: cacheKey5,
+                fields6: fields6,
                 orderBy6: orderBy6,
                 top6: top6,
                 hints6: hints6,
                 cacheKey6: cacheKey6,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -8325,49 +8599,38 @@ namespace RepoDb
         /// <param name="where4">The query expression to be used (for T4).</param>
         /// <param name="where5">The query expression to be used (for T5).</param>
         /// <param name="where6">The query expression to be used (for T6).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields4">The mapping list of <see cref="Field"/> objects to be used (for T4).</param>
+		/// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
-        /// <param name="cacheKey4">
-        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
+        /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields5">The mapping list of <see cref="Field"/> objects to be used (for T5).</param>
+		/// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
-        /// <param name="cacheKey5">
-        /// The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy6">The order definition of the fields to be used (for T6).</param>
+        /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields6">The mapping list of <see cref="Field"/> objects to be used (for T6).</param>
+		/// <param name="orderBy6">The order definition of the fields to be used (for T6).</param>
         /// <param name="top6">The number of rows to be returned (for T6).</param>
         /// <param name="hints6">The table hints to be used (for T6).</param>
-        /// <param name="cacheKey6">
-        /// The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -8382,30 +8645,37 @@ namespace RepoDb
             Expression<Func<T4, bool>> where4,
             Expression<Func<T5, bool>> where5,
             Expression<Func<T6, bool>> where6,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            IEnumerable<Field> fields4 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
+            IEnumerable<Field> fields5 = null,
             IEnumerable<OrderField> orderBy5 = null,
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
+            IEnumerable<Field> fields6 = null,
             IEnumerable<OrderField> orderBy6 = null,
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -8426,30 +8696,37 @@ namespace RepoDb
                 where4: ToQueryGroup(where4),
                 where5: ToQueryGroup(where5),
                 where6: ToQueryGroup(where6),
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                fields3: fields3,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
                 cacheKey3: cacheKey3,
+                fields4: fields4,
                 orderBy4: orderBy4,
                 top4: top4,
                 hints4: hints4,
                 cacheKey4: cacheKey4,
+                fields5: fields5,
                 orderBy5: orderBy5,
                 top5: top5,
                 hints5: hints5,
                 cacheKey5: cacheKey5,
+                fields6: fields6,
                 orderBy6: orderBy6,
                 top6: top6,
                 hints6: hints6,
                 cacheKey6: cacheKey6,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -8474,49 +8751,38 @@ namespace RepoDb
         /// <param name="where4">The query expression to be used (for T4).</param>
         /// <param name="where5">The query expression to be used (for T5).</param>
         /// <param name="where6">The query expression to be used (for T6).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields4">The mapping list of <see cref="Field"/> objects to be used (for T4).</param>
+		/// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
-        /// <param name="cacheKey4">
-        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
+        /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields5">The mapping list of <see cref="Field"/> objects to be used (for T5).</param>
+		/// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
-        /// <param name="cacheKey5">
-        /// The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy6">The order definition of the fields to be used (for T6).</param>
+        /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields6">The mapping list of <see cref="Field"/> objects to be used (for T6).</param>
+		/// <param name="orderBy6">The order definition of the fields to be used (for T6).</param>
         /// <param name="top6">The number of rows to be returned (for T6).</param>
         /// <param name="hints6">The table hints to be used (for T6).</param>
-        /// <param name="cacheKey6">
-        /// The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -8531,30 +8797,37 @@ namespace RepoDb
             QueryField where4,
             QueryField where5,
             QueryField where6,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            IEnumerable<Field> fields4 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
+            IEnumerable<Field> fields5 = null,
             IEnumerable<OrderField> orderBy5 = null,
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
+            IEnumerable<Field> fields6 = null,
             IEnumerable<OrderField> orderBy6 = null,
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -8575,30 +8848,37 @@ namespace RepoDb
                 where4: ToQueryGroup(where4),
                 where5: ToQueryGroup(where5),
                 where6: ToQueryGroup(where6),
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                fields3: fields3,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
                 cacheKey3: cacheKey3,
+                fields4: fields4,
                 orderBy4: orderBy4,
                 top4: top4,
                 hints4: hints4,
                 cacheKey4: cacheKey4,
+                fields5: fields5,
                 orderBy5: orderBy5,
                 top5: top5,
                 hints5: hints5,
                 cacheKey5: cacheKey5,
+                fields6: fields6,
                 orderBy6: orderBy6,
                 top6: top6,
                 hints6: hints6,
                 cacheKey6: cacheKey6,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -8623,49 +8903,38 @@ namespace RepoDb
         /// <param name="where4">The query expression to be used (for T4).</param>
         /// <param name="where5">The query expression to be used (for T5).</param>
         /// <param name="where6">The query expression to be used (for T6).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields4">The mapping list of <see cref="Field"/> objects to be used (for T4).</param>
+		/// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
-        /// <param name="cacheKey4">
-        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
+        /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields5">The mapping list of <see cref="Field"/> objects to be used (for T5).</param>
+		/// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
-        /// <param name="cacheKey5">
-        /// The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy6">The order definition of the fields to be used (for T6).</param>
+        /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields6">The mapping list of <see cref="Field"/> objects to be used (for T6).</param>
+		/// <param name="orderBy6">The order definition of the fields to be used (for T6).</param>
         /// <param name="top6">The number of rows to be returned (for T6).</param>
         /// <param name="hints6">The table hints to be used (for T6).</param>
-        /// <param name="cacheKey6">
-        /// The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -8680,30 +8949,37 @@ namespace RepoDb
             IEnumerable<QueryField> where4,
             IEnumerable<QueryField> where5,
             IEnumerable<QueryField> where6,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            IEnumerable<Field> fields4 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
+            IEnumerable<Field> fields5 = null,
             IEnumerable<OrderField> orderBy5 = null,
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
+            IEnumerable<Field> fields6 = null,
             IEnumerable<OrderField> orderBy6 = null,
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -8724,30 +9000,37 @@ namespace RepoDb
                 where4: ToQueryGroup(where4),
                 where5: ToQueryGroup(where5),
                 where6: ToQueryGroup(where6),
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                fields3: fields3,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
                 cacheKey3: cacheKey3,
+                fields4: fields4,
                 orderBy4: orderBy4,
                 top4: top4,
                 hints4: hints4,
                 cacheKey4: cacheKey4,
+                fields5: fields5,
                 orderBy5: orderBy5,
                 top5: top5,
                 hints5: hints5,
                 cacheKey5: cacheKey5,
+                fields6: fields6,
                 orderBy6: orderBy6,
                 top6: top6,
                 hints6: hints6,
                 cacheKey6: cacheKey6,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -8772,49 +9055,38 @@ namespace RepoDb
         /// <param name="where4">The query expression to be used (for T4).</param>
         /// <param name="where5">The query expression to be used (for T5).</param>
         /// <param name="where6">The query expression to be used (for T6).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields4">The mapping list of <see cref="Field"/> objects to be used (for T4).</param>
+		/// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
-        /// <param name="cacheKey4">
-        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
+        /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields5">The mapping list of <see cref="Field"/> objects to be used (for T5).</param>
+		/// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
-        /// <param name="cacheKey5">
-        /// The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy6">The order definition of the fields to be used (for T6).</param>
+        /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields6">The mapping list of <see cref="Field"/> objects to be used (for T6).</param>
+		/// <param name="orderBy6">The order definition of the fields to be used (for T6).</param>
         /// <param name="top6">The number of rows to be returned (for T6).</param>
         /// <param name="hints6">The table hints to be used (for T6).</param>
-        /// <param name="cacheKey6">
-        /// The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -8829,30 +9101,37 @@ namespace RepoDb
             QueryGroup where4,
             QueryGroup where5,
             QueryGroup where6,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            IEnumerable<Field> fields4 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
+            IEnumerable<Field> fields5 = null,
             IEnumerable<OrderField> orderBy5 = null,
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
+            IEnumerable<Field> fields6 = null,
             IEnumerable<OrderField> orderBy6 = null,
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -8873,30 +9152,37 @@ namespace RepoDb
                 where4: where4,
                 where5: where5,
                 where6: where6,
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                fields3: fields3,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
                 cacheKey3: cacheKey3,
+                fields4: fields4,
                 orderBy4: orderBy4,
                 top4: top4,
                 hints4: hints4,
                 cacheKey4: cacheKey4,
+                fields5: fields5,
                 orderBy5: orderBy5,
                 top5: top5,
                 hints5: hints5,
                 cacheKey5: cacheKey5,
+                fields6: fields6,
                 orderBy6: orderBy6,
                 top6: top6,
                 hints6: hints6,
                 cacheKey6: cacheKey6,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -8921,49 +9207,38 @@ namespace RepoDb
         /// <param name="where4">The query expression to be used (for T4).</param>
         /// <param name="where5">The query expression to be used (for T5).</param>
         /// <param name="where6">The query expression to be used (for T6).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields4">The mapping list of <see cref="Field"/> objects to be used (for T4).</param>
+		/// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
-        /// <param name="cacheKey4">
-        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
+        /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields5">The mapping list of <see cref="Field"/> objects to be used (for T5).</param>
+		/// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
-        /// <param name="cacheKey5">
-        /// The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy6">The order definition of the fields to be used (for T6).</param>
+        /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields6">The mapping list of <see cref="Field"/> objects to be used (for T6).</param>
+		/// <param name="orderBy6">The order definition of the fields to be used (for T6).</param>
         /// <param name="top6">The number of rows to be returned (for T6).</param>
         /// <param name="hints6">The table hints to be used (for T6).</param>
-        /// <param name="cacheKey6">
-        /// The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -8978,30 +9253,37 @@ namespace RepoDb
             QueryGroup where4,
             QueryGroup where5,
             QueryGroup where6,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            IEnumerable<Field> fields4 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
+            IEnumerable<Field> fields5 = null,
             IEnumerable<OrderField> orderBy5 = null,
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
+            IEnumerable<Field> fields6 = null,
             IEnumerable<OrderField> orderBy6 = null,
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -9022,32 +9304,32 @@ namespace RepoDb
             var commandTexts = new List<string>();
 
             // Items
-            var item1 = EnsureQueryMultipleCachedItem<T1>(cacheKey1,
+            var item1 = QueryMultipleInternal<T1>(cacheKey1,
                 cache,
                 where1,
                 queryGroups);
 
-            var item2 = EnsureQueryMultipleCachedItem<T2>(cacheKey2,
+            var item2 = QueryMultipleInternal<T2>(cacheKey2,
                 cache,
                 where2,
                 queryGroups);
 
-            var item3 = EnsureQueryMultipleCachedItem<T3>(cacheKey3,
+            var item3 = QueryMultipleInternal<T3>(cacheKey3,
                 cache,
                 where3,
                 queryGroups);
 
-            var item4 = EnsureQueryMultipleCachedItem<T4>(cacheKey4,
+            var item4 = QueryMultipleInternal<T4>(cacheKey4,
                 cache,
                 where4,
                 queryGroups);
 
-            var item5 = EnsureQueryMultipleCachedItem<T5>(cacheKey5,
+            var item5 = QueryMultipleInternal<T5>(cacheKey5,
                 cache,
                 where5,
                 queryGroups);
 
-            var item6 = EnsureQueryMultipleCachedItem<T6>(cacheKey6,
+            var item6 = QueryMultipleInternal<T6>(cacheKey6,
                 cache,
                 where6,
                 queryGroups);
@@ -9062,7 +9344,7 @@ namespace RepoDb
                     typeof(T1),
                     connection,
                     transaction,
-                    FieldCache.Get<T1>(),
+                    fields1 ?? FieldCache.Get<T1>(),
                     where1,
                     orderBy1,
                     top1,
@@ -9079,7 +9361,7 @@ namespace RepoDb
                     typeof(T2),
                     connection,
                     transaction,
-                    FieldCache.Get<T2>(),
+                    fields2 ?? FieldCache.Get<T2>(),
                     where2,
                     orderBy2,
                     top2,
@@ -9096,7 +9378,7 @@ namespace RepoDb
                     typeof(T3),
                     connection,
                     transaction,
-                    FieldCache.Get<T3>(),
+                    fields3 ?? FieldCache.Get<T3>(),
                     where3,
                     orderBy3,
                     top3,
@@ -9113,7 +9395,7 @@ namespace RepoDb
                     typeof(T4),
                     connection,
                     transaction,
-                    FieldCache.Get<T4>(),
+                    fields4 ?? FieldCache.Get<T4>(),
                     where4,
                     orderBy4,
                     top4,
@@ -9130,7 +9412,7 @@ namespace RepoDb
                     typeof(T5),
                     connection,
                     transaction,
-                    FieldCache.Get<T5>(),
+                    fields5 ?? FieldCache.Get<T5>(),
                     where5,
                     orderBy5,
                     top5,
@@ -9147,7 +9429,7 @@ namespace RepoDb
                     typeof(T6),
                     connection,
                     transaction,
-                    FieldCache.Get<T6>(),
+                    fields6 ?? FieldCache.Get<T6>(),
                     where6,
                     orderBy6,
                     top6,
@@ -9197,54 +9479,78 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true)))
             {
                 var dbSetting = connection.GetDbSetting();
-                var dbFields = (IEnumerable<DbField>)null;
 
                 // T1
-                if (item1 == null)
-                {
-                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T1>(), transaction, true, cancellationToken);
-                    item1 = await DataReader.ToEnumerableAsync<T1>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
-                }
+                item1 = await QueryMultipleAsyncInternal<T1>(connection,
+                    reader,
+                    item1,
+                    cacheKey1,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    false,
+                    cancellationToken);
 
                 // T2
-                if (item2 == null)
-                {
-                    await reader.NextResultAsync(cancellationToken);
-                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T2>(), transaction, true, cancellationToken);
-                    item2 = await DataReader.ToEnumerableAsync<T2>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
-                }
+                item2 = await QueryMultipleAsyncInternal<T2>(connection,
+                    reader,
+                    item2,
+                    cacheKey2,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    true,
+                    cancellationToken);
 
                 // T3
-                if (item3 == null)
-                {
-                    await reader.NextResultAsync(cancellationToken);
-                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T3>(), transaction, true, cancellationToken);
-                    item3 = await DataReader.ToEnumerableAsync<T3>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
-                }
+                item3 = await QueryMultipleAsyncInternal<T3>(connection,
+                    reader,
+                    item3,
+                    cacheKey3,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    true,
+                    cancellationToken);
 
                 // T4
-                if (item4 == null)
-                {
-                    await reader.NextResultAsync(cancellationToken);
-                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T4>(), transaction, true, cancellationToken);
-                    item4 = await DataReader.ToEnumerableAsync<T4>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
-                }
+                item4 = await QueryMultipleAsyncInternal<T4>(connection,
+                    reader,
+                    item4,
+                    cacheKey4,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    true,
+                    cancellationToken);
 
                 // T5
-                if (item5 == null)
-                {
-                    await reader.NextResultAsync(cancellationToken);
-                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T5>(), transaction, true, cancellationToken);
-                    item5 = await DataReader.ToEnumerableAsync<T5>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
-                }
+                item5 = await QueryMultipleAsyncInternal<T5>(connection,
+                    reader,
+                    item5,
+                    cacheKey5,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    true,
+                    cancellationToken);
 
                 // T6
-                if (item6 == null)
-                {
-                    await reader.NextResultAsync(cancellationToken);
-                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T6>(), transaction, true, cancellationToken);
-                    item6 = await DataReader.ToEnumerableAsync<T6>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
-                }
+                item6 = await QueryMultipleAsyncInternal<T6>(connection,
+                    reader,
+                    item6,
+                    cacheKey6,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    true,
+                    cancellationToken);
 
                 // Result
                 result = Tuple.Create(item1, item2, item3, item4, item5, item6);
@@ -9280,56 +9586,43 @@ namespace RepoDb
         /// <param name="what5">The query expression or the key value to be used (for T5).</param>
         /// <param name="what6">The query expression or the key value to be used (for T6).</param>
         /// <param name="what7">The query expression or the key value to be used (for T7).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields4">The mapping list of <see cref="Field"/> objects to be used (for T4).</param>
+		/// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
-        /// <param name="cacheKey4">
-        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
+        /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields5">The mapping list of <see cref="Field"/> objects to be used (for T5).</param>
+		/// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
-        /// <param name="cacheKey5">
-        /// The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy6">The order definition of the fields to be used (for T6).</param>
+        /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields6">The mapping list of <see cref="Field"/> objects to be used (for T6).</param>
+		/// <param name="orderBy6">The order definition of the fields to be used (for T6).</param>
         /// <param name="top6">The number of rows to be returned (for T6).</param>
         /// <param name="hints6">The table hints to be used (for T6).</param>
-        /// <param name="cacheKey6">
-        /// The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy7">The order definition of the fields to be used (for T7).</param>
+        /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields7">The mapping list of <see cref="Field"/> objects to be used (for T7).</param>
+		/// <param name="orderBy7">The order definition of the fields to be used (for T7).</param>
         /// <param name="top7">The number of rows to be returned (for T7).</param>
         /// <param name="hints7">The table hints to be used (for T7).</param>
-        /// <param name="cacheKey7">
-        /// The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -9345,34 +9638,42 @@ namespace RepoDb
             object what5,
             object what6,
             object what7,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            IEnumerable<Field> fields4 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
+            IEnumerable<Field> fields5 = null,
             IEnumerable<OrderField> orderBy5 = null,
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
+            IEnumerable<Field> fields6 = null,
             IEnumerable<OrderField> orderBy6 = null,
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
+            IEnumerable<Field> fields7 = null,
             IEnumerable<OrderField> orderBy7 = null,
             int? top7 = 0,
             string hints7 = null,
             string cacheKey7 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -9395,34 +9696,42 @@ namespace RepoDb
                 where5: WhatToQueryGroup(what5),
                 where6: WhatToQueryGroup(what6),
                 where7: WhatToQueryGroup(what7),
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                fields3: fields3,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
                 cacheKey3: cacheKey3,
+                fields4: fields4,
                 orderBy4: orderBy4,
                 top4: top4,
                 hints4: hints4,
                 cacheKey4: cacheKey4,
+                fields5: fields5,
                 orderBy5: orderBy5,
                 top5: top5,
                 hints5: hints5,
                 cacheKey5: cacheKey5,
+                fields6: fields6,
                 orderBy6: orderBy6,
                 top6: top6,
                 hints6: hints6,
                 cacheKey6: cacheKey6,
+                fields7: fields7,
                 orderBy7: orderBy7,
                 top7: top7,
                 hints7: hints7,
                 cacheKey7: cacheKey7,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -9449,56 +9758,43 @@ namespace RepoDb
         /// <param name="where5">The query expression to be used (for T5).</param>
         /// <param name="where6">The query expression to be used (for T6).</param>
         /// <param name="where7">The query expression to be used (for T7).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields4">The mapping list of <see cref="Field"/> objects to be used (for T4).</param>
+		/// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
-        /// <param name="cacheKey4">
-        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
+        /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields5">The mapping list of <see cref="Field"/> objects to be used (for T5).</param>
+		/// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
-        /// <param name="cacheKey5">
-        /// The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy6">The order definition of the fields to be used (for T6).</param>
+        /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields6">The mapping list of <see cref="Field"/> objects to be used (for T6).</param>
+		/// <param name="orderBy6">The order definition of the fields to be used (for T6).</param>
         /// <param name="top6">The number of rows to be returned (for T6).</param>
         /// <param name="hints6">The table hints to be used (for T6).</param>
-        /// <param name="cacheKey6">
-        /// The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy7">The order definition of the fields to be used (for T7).</param>
+        /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields7">The mapping list of <see cref="Field"/> objects to be used (for T7).</param>
+		/// <param name="orderBy7">The order definition of the fields to be used (for T7).</param>
         /// <param name="top7">The number of rows to be returned (for T7).</param>
         /// <param name="hints7">The table hints to be used (for T7).</param>
-        /// <param name="cacheKey7">
-        /// The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -9514,34 +9810,42 @@ namespace RepoDb
             Expression<Func<T5, bool>> where5,
             Expression<Func<T6, bool>> where6,
             Expression<Func<T7, bool>> where7,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            IEnumerable<Field> fields4 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
+            IEnumerable<Field> fields5 = null,
             IEnumerable<OrderField> orderBy5 = null,
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
+            IEnumerable<Field> fields6 = null,
             IEnumerable<OrderField> orderBy6 = null,
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
+            IEnumerable<Field> fields7 = null,
             IEnumerable<OrderField> orderBy7 = null,
             int? top7 = 0,
             string hints7 = null,
             string cacheKey7 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -9564,34 +9868,42 @@ namespace RepoDb
                 where5: ToQueryGroup(where5),
                 where6: ToQueryGroup(where6),
                 where7: ToQueryGroup(where7),
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                fields3: fields3,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
                 cacheKey3: cacheKey3,
+                fields4: fields4,
                 orderBy4: orderBy4,
                 top4: top4,
                 hints4: hints4,
                 cacheKey4: cacheKey4,
+                fields5: fields5,
                 orderBy5: orderBy5,
                 top5: top5,
                 hints5: hints5,
                 cacheKey5: cacheKey5,
+                fields6: fields6,
                 orderBy6: orderBy6,
                 top6: top6,
                 hints6: hints6,
                 cacheKey6: cacheKey6,
+                fields7: fields7,
                 orderBy7: orderBy7,
                 top7: top7,
                 hints7: hints7,
                 cacheKey7: cacheKey7,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -9618,56 +9930,43 @@ namespace RepoDb
         /// <param name="where5">The query expression to be used (for T5).</param>
         /// <param name="where6">The query expression to be used (for T6).</param>
         /// <param name="where7">The query expression to be used (for T7).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields4">The mapping list of <see cref="Field"/> objects to be used (for T4).</param>
+		/// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
-        /// <param name="cacheKey4">
-        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
+        /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields5">The mapping list of <see cref="Field"/> objects to be used (for T5).</param>
+		/// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
-        /// <param name="cacheKey5">
-        /// The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy6">The order definition of the fields to be used (for T6).</param>
+        /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields6">The mapping list of <see cref="Field"/> objects to be used (for T6).</param>
+		/// <param name="orderBy6">The order definition of the fields to be used (for T6).</param>
         /// <param name="top6">The number of rows to be returned (for T6).</param>
         /// <param name="hints6">The table hints to be used (for T6).</param>
-        /// <param name="cacheKey6">
-        /// The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy7">The order definition of the fields to be used (for T7).</param>
+        /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields7">The mapping list of <see cref="Field"/> objects to be used (for T7).</param>
+		/// <param name="orderBy7">The order definition of the fields to be used (for T7).</param>
         /// <param name="top7">The number of rows to be returned (for T7).</param>
         /// <param name="hints7">The table hints to be used (for T7).</param>
-        /// <param name="cacheKey7">
-        /// The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -9683,34 +9982,42 @@ namespace RepoDb
             QueryField where5,
             QueryField where6,
             QueryField where7,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            IEnumerable<Field> fields4 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
+            IEnumerable<Field> fields5 = null,
             IEnumerable<OrderField> orderBy5 = null,
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
+            IEnumerable<Field> fields6 = null,
             IEnumerable<OrderField> orderBy6 = null,
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
+            IEnumerable<Field> fields7 = null,
             IEnumerable<OrderField> orderBy7 = null,
             int? top7 = 0,
             string hints7 = null,
             string cacheKey7 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -9733,34 +10040,42 @@ namespace RepoDb
                 where5: ToQueryGroup(where5),
                 where6: ToQueryGroup(where6),
                 where7: ToQueryGroup(where7),
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                fields3: fields3,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
                 cacheKey3: cacheKey3,
+                fields4: fields4,
                 orderBy4: orderBy4,
                 top4: top4,
                 hints4: hints4,
                 cacheKey4: cacheKey4,
+                fields5: fields5,
                 orderBy5: orderBy5,
                 top5: top5,
                 hints5: hints5,
                 cacheKey5: cacheKey5,
+                fields6: fields6,
                 orderBy6: orderBy6,
                 top6: top6,
                 hints6: hints6,
                 cacheKey6: cacheKey6,
+                fields7: fields7,
                 orderBy7: orderBy7,
                 top7: top7,
                 hints7: hints7,
                 cacheKey7: cacheKey7,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -9787,56 +10102,43 @@ namespace RepoDb
         /// <param name="where5">The query expression to be used (for T5).</param>
         /// <param name="where6">The query expression to be used (for T6).</param>
         /// <param name="where7">The query expression to be used (for T7).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields4">The mapping list of <see cref="Field"/> objects to be used (for T4).</param>
+		/// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
-        /// <param name="cacheKey4">
-        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
+        /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields5">The mapping list of <see cref="Field"/> objects to be used (for T5).</param>
+		/// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
-        /// <param name="cacheKey5">
-        /// The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy6">The order definition of the fields to be used (for T6).</param>
+        /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields6">The mapping list of <see cref="Field"/> objects to be used (for T6).</param>
+		/// <param name="orderBy6">The order definition of the fields to be used (for T6).</param>
         /// <param name="top6">The number of rows to be returned (for T6).</param>
         /// <param name="hints6">The table hints to be used (for T6).</param>
-        /// <param name="cacheKey6">
-        /// The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy7">The order definition of the fields to be used (for T7).</param>
+        /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields7">The mapping list of <see cref="Field"/> objects to be used (for T7).</param>
+		/// <param name="orderBy7">The order definition of the fields to be used (for T7).</param>
         /// <param name="top7">The number of rows to be returned (for T7).</param>
         /// <param name="hints7">The table hints to be used (for T7).</param>
-        /// <param name="cacheKey7">
-        /// The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -9852,34 +10154,42 @@ namespace RepoDb
             IEnumerable<QueryField> where5,
             IEnumerable<QueryField> where6,
             IEnumerable<QueryField> where7,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            IEnumerable<Field> fields4 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
+            IEnumerable<Field> fields5 = null,
             IEnumerable<OrderField> orderBy5 = null,
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
+            IEnumerable<Field> fields6 = null,
             IEnumerable<OrderField> orderBy6 = null,
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
+            IEnumerable<Field> fields7 = null,
             IEnumerable<OrderField> orderBy7 = null,
             int? top7 = 0,
             string hints7 = null,
             string cacheKey7 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -9902,34 +10212,42 @@ namespace RepoDb
                 where5: ToQueryGroup(where5),
                 where6: ToQueryGroup(where6),
                 where7: ToQueryGroup(where7),
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                fields3: fields3,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
                 cacheKey3: cacheKey3,
+                fields4: fields4,
                 orderBy4: orderBy4,
                 top4: top4,
                 hints4: hints4,
                 cacheKey4: cacheKey4,
+                fields5: fields5,
                 orderBy5: orderBy5,
                 top5: top5,
                 hints5: hints5,
                 cacheKey5: cacheKey5,
+                fields6: fields6,
                 orderBy6: orderBy6,
                 top6: top6,
                 hints6: hints6,
                 cacheKey6: cacheKey6,
+                fields7: fields7,
                 orderBy7: orderBy7,
                 top7: top7,
                 hints7: hints7,
                 cacheKey7: cacheKey7,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -9956,56 +10274,43 @@ namespace RepoDb
         /// <param name="where5">The query expression to be used (for T5).</param>
         /// <param name="where6">The query expression to be used (for T6).</param>
         /// <param name="where7">The query expression to be used (for T7).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields4">The mapping list of <see cref="Field"/> objects to be used (for T4).</param>
+		/// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
-        /// <param name="cacheKey4">
-        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
+        /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields5">The mapping list of <see cref="Field"/> objects to be used (for T5).</param>
+		/// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
-        /// <param name="cacheKey5">
-        /// The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy6">The order definition of the fields to be used (for T6).</param>
+        /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields6">The mapping list of <see cref="Field"/> objects to be used (for T6).</param>
+		/// <param name="orderBy6">The order definition of the fields to be used (for T6).</param>
         /// <param name="top6">The number of rows to be returned (for T6).</param>
         /// <param name="hints6">The table hints to be used (for T6).</param>
-        /// <param name="cacheKey6">
-        /// The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy7">The order definition of the fields to be used (for T7).</param>
+        /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields7">The mapping list of <see cref="Field"/> objects to be used (for T7).</param>
+		/// <param name="orderBy7">The order definition of the fields to be used (for T7).</param>
         /// <param name="top7">The number of rows to be returned (for T7).</param>
         /// <param name="hints7">The table hints to be used (for T7).</param>
-        /// <param name="cacheKey7">
-        /// The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -10021,34 +10326,42 @@ namespace RepoDb
             QueryGroup where5,
             QueryGroup where6,
             QueryGroup where7,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            IEnumerable<Field> fields4 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
+            IEnumerable<Field> fields5 = null,
             IEnumerable<OrderField> orderBy5 = null,
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
+            IEnumerable<Field> fields6 = null,
             IEnumerable<OrderField> orderBy6 = null,
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
+            IEnumerable<Field> fields7 = null,
             IEnumerable<OrderField> orderBy7 = null,
             int? top7 = 0,
             string hints7 = null,
             string cacheKey7 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -10071,34 +10384,42 @@ namespace RepoDb
                 where5: where5,
                 where6: where6,
                 where7: where7,
+                fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
                 hints1: hints1,
                 cacheKey1: cacheKey1,
+                fields2: fields2,
                 orderBy2: orderBy2,
                 top2: top2,
                 hints2: hints2,
                 cacheKey2: cacheKey2,
+                fields3: fields3,
                 orderBy3: orderBy3,
                 top3: top3,
                 hints3: hints3,
                 cacheKey3: cacheKey3,
+                fields4: fields4,
                 orderBy4: orderBy4,
                 top4: top4,
                 hints4: hints4,
                 cacheKey4: cacheKey4,
+                fields5: fields5,
                 orderBy5: orderBy5,
                 top5: top5,
                 hints5: hints5,
                 cacheKey5: cacheKey5,
+                fields6: fields6,
                 orderBy6: orderBy6,
                 top6: top6,
                 hints6: hints6,
                 cacheKey6: cacheKey6,
+                fields7: fields7,
                 orderBy7: orderBy7,
                 top7: top7,
                 hints7: hints7,
                 cacheKey7: cacheKey7,
+                cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
@@ -10125,56 +10446,43 @@ namespace RepoDb
         /// <param name="where5">The query expression to be used (for T5).</param>
         /// <param name="where6">The query expression to be used (for T6).</param>
         /// <param name="where7">The query expression to be used (for T7).</param>
-        /// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
+        /// <param name="fields1">The mapping list of <see cref="Field"/> objects to be used (for T1).</param>
+		/// <param name="orderBy1">The order definition of the fields to be used (for T1).</param>
         /// <param name="top1">The number of rows to be returned (for T1).</param>
         /// <param name="hints1">The table hints to be used (for T1).</param>
-        /// <param name="cacheKey1">
-        /// The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
+        /// <param name="cacheKey1">The key to the cache item 1. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields2">The mapping list of <see cref="Field"/> objects to be used (for T2).</param>
+		/// <param name="orderBy2">The order definition of the fields to be used (for T2).</param>
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
-        /// <param name="cacheKey2">
-        /// The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
+        /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields3">The mapping list of <see cref="Field"/> objects to be used (for T3).</param>
+		/// <param name="orderBy3">The order definition of the fields to be used (for T3).</param>
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
-        /// <param name="cacheKey3">
-        /// The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
+        /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields4">The mapping list of <see cref="Field"/> objects to be used (for T4).</param>
+		/// <param name="orderBy4">The order definition of the fields to be used (for T4).</param>
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
-        /// <param name="cacheKey4">
-        /// The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
+        /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields5">The mapping list of <see cref="Field"/> objects to be used (for T5).</param>
+		/// <param name="orderBy5">The order definition of the fields to be used (for T5).</param>
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
-        /// <param name="cacheKey5">
-        /// The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy6">The order definition of the fields to be used (for T6).</param>
+        /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields6">The mapping list of <see cref="Field"/> objects to be used (for T6).</param>
+		/// <param name="orderBy6">The order definition of the fields to be used (for T6).</param>
         /// <param name="top6">The number of rows to be returned (for T6).</param>
         /// <param name="hints6">The table hints to be used (for T6).</param>
-        /// <param name="cacheKey6">
-        /// The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="orderBy7">The order definition of the fields to be used (for T7).</param>
+        /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="fields7">The mapping list of <see cref="Field"/> objects to be used (for T7).</param>
+		/// <param name="orderBy7">The order definition of the fields to be used (for T7).</param>
         /// <param name="top7">The number of rows to be returned (for T7).</param>
         /// <param name="hints7">The table hints to be used (for T7).</param>
-        /// <param name="cacheKey7">
-        /// The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
-        /// This will only work if the 'cache' argument is set.
-        /// </param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -10190,34 +10498,42 @@ namespace RepoDb
             QueryGroup where5,
             QueryGroup where6,
             QueryGroup where7,
+            IEnumerable<Field> fields1 = null,
             IEnumerable<OrderField> orderBy1 = null,
             int? top1 = 0,
             string hints1 = null,
             string cacheKey1 = null,
+            IEnumerable<Field> fields2 = null,
             IEnumerable<OrderField> orderBy2 = null,
             int? top2 = 0,
             string hints2 = null,
             string cacheKey2 = null,
+            IEnumerable<Field> fields3 = null,
             IEnumerable<OrderField> orderBy3 = null,
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
+            IEnumerable<Field> fields4 = null,
             IEnumerable<OrderField> orderBy4 = null,
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
+            IEnumerable<Field> fields5 = null,
             IEnumerable<OrderField> orderBy5 = null,
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
+            IEnumerable<Field> fields6 = null,
             IEnumerable<OrderField> orderBy6 = null,
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
+            IEnumerable<Field> fields7 = null,
             IEnumerable<OrderField> orderBy7 = null,
             int? top7 = 0,
             string hints7 = null,
             string cacheKey7 = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
@@ -10239,37 +10555,37 @@ namespace RepoDb
             var commandTexts = new List<string>();
 
             // Items
-            var item1 = EnsureQueryMultipleCachedItem<T1>(cacheKey1,
+            var item1 = QueryMultipleInternal<T1>(cacheKey1,
                 cache,
                 where1,
                 queryGroups);
 
-            var item2 = EnsureQueryMultipleCachedItem<T2>(cacheKey2,
+            var item2 = QueryMultipleInternal<T2>(cacheKey2,
                 cache,
                 where2,
                 queryGroups);
 
-            var item3 = EnsureQueryMultipleCachedItem<T3>(cacheKey3,
+            var item3 = QueryMultipleInternal<T3>(cacheKey3,
                 cache,
                 where3,
                 queryGroups);
 
-            var item4 = EnsureQueryMultipleCachedItem<T4>(cacheKey4,
+            var item4 = QueryMultipleInternal<T4>(cacheKey4,
                 cache,
                 where4,
                 queryGroups);
 
-            var item5 = EnsureQueryMultipleCachedItem<T5>(cacheKey5,
+            var item5 = QueryMultipleInternal<T5>(cacheKey5,
                 cache,
                 where5,
                 queryGroups);
 
-            var item6 = EnsureQueryMultipleCachedItem<T6>(cacheKey6,
+            var item6 = QueryMultipleInternal<T6>(cacheKey6,
                 cache,
                 where6,
                 queryGroups);
 
-            var item7 = EnsureQueryMultipleCachedItem<T7>(cacheKey7,
+            var item7 = QueryMultipleInternal<T7>(cacheKey7,
                 cache,
                 where7,
                 queryGroups);
@@ -10284,7 +10600,7 @@ namespace RepoDb
                     typeof(T1),
                     connection,
                     transaction,
-                    FieldCache.Get<T1>(),
+                    fields1 ?? FieldCache.Get<T1>(),
                     where1,
                     orderBy1,
                     top1,
@@ -10301,7 +10617,7 @@ namespace RepoDb
                     typeof(T2),
                     connection,
                     transaction,
-                    FieldCache.Get<T2>(),
+                    fields2 ?? FieldCache.Get<T2>(),
                     where2,
                     orderBy2,
                     top2,
@@ -10318,7 +10634,7 @@ namespace RepoDb
                     typeof(T3),
                     connection,
                     transaction,
-                    FieldCache.Get<T3>(),
+                    fields3 ?? FieldCache.Get<T3>(),
                     where3,
                     orderBy3,
                     top3,
@@ -10335,7 +10651,7 @@ namespace RepoDb
                     typeof(T4),
                     connection,
                     transaction,
-                    FieldCache.Get<T4>(),
+                    fields4 ?? FieldCache.Get<T4>(),
                     where4,
                     orderBy4,
                     top4,
@@ -10352,7 +10668,7 @@ namespace RepoDb
                     typeof(T5),
                     connection,
                     transaction,
-                    FieldCache.Get<T5>(),
+                    fields5 ?? FieldCache.Get<T5>(),
                     where5,
                     orderBy5,
                     top5,
@@ -10369,7 +10685,7 @@ namespace RepoDb
                     typeof(T6),
                     connection,
                     transaction,
-                    FieldCache.Get<T6>(),
+                    fields6 ?? FieldCache.Get<T6>(),
                     where6,
                     orderBy6,
                     top6,
@@ -10386,7 +10702,7 @@ namespace RepoDb
                     typeof(T7),
                     connection,
                     transaction,
-                    FieldCache.Get<T7>(),
+                    fields7 ?? FieldCache.Get<T7>(),
                     where7,
                     orderBy7,
                     top7,
@@ -10436,62 +10752,90 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true)))
             {
                 var dbSetting = connection.GetDbSetting();
-                var dbFields = (IEnumerable<DbField>)null;
 
                 // T1
-                if (item1 == null)
-                {
-                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T1>(), transaction, true, cancellationToken);
-                    item1 = await DataReader.ToEnumerableAsync<T1>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
-                }
+                item1 = await QueryMultipleAsyncInternal<T1>(connection,
+                    reader,
+                    item1,
+                    cacheKey1,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    false,
+                    cancellationToken);
 
                 // T2
-                if (item2 == null)
-                {
-                    await reader.NextResultAsync(cancellationToken);
-                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T2>(), transaction, true, cancellationToken);
-                    item2 = await DataReader.ToEnumerableAsync<T2>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
-                }
+                item2 = await QueryMultipleAsyncInternal<T2>(connection,
+                    reader,
+                    item2,
+                    cacheKey2,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    true,
+                    cancellationToken);
 
                 // T3
-                if (item3 == null)
-                {
-                    await reader.NextResultAsync(cancellationToken);
-                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T3>(), transaction, true, cancellationToken);
-                    item3 = await DataReader.ToEnumerableAsync<T3>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
-                }
+                item3 = await QueryMultipleAsyncInternal<T3>(connection,
+                    reader,
+                    item3,
+                    cacheKey3,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    true,
+                    cancellationToken);
 
                 // T4
-                if (item4 == null)
-                {
-                    await reader.NextResultAsync(cancellationToken);
-                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T4>(), transaction, true, cancellationToken);
-                    item4 = await DataReader.ToEnumerableAsync<T4>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
-                }
+                item4 = await QueryMultipleAsyncInternal<T4>(connection,
+                    reader,
+                    item4,
+                    cacheKey4,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    true,
+                    cancellationToken);
 
                 // T5
-                if (item5 == null)
-                {
-                    await reader.NextResultAsync(cancellationToken);
-                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T5>(), transaction, true, cancellationToken);
-                    item5 = await DataReader.ToEnumerableAsync<T5>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
-                }
+                item5 = await QueryMultipleAsyncInternal<T5>(connection,
+                    reader,
+                    item5,
+                    cacheKey5,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    true,
+                    cancellationToken);
 
                 // T6
-                if (item6 == null)
-                {
-                    await reader.NextResultAsync(cancellationToken);
-                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T6>(), transaction, true, cancellationToken);
-                    item6 = await DataReader.ToEnumerableAsync<T6>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
-                }
+                item6 = await QueryMultipleAsyncInternal<T6>(connection,
+                    reader,
+                    item6,
+                    cacheKey6,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    true,
+                    cancellationToken);
 
                 // T7
-                if (item7 == null)
-                {
-                    await reader.NextResultAsync(cancellationToken);
-                    dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T7>(), transaction, true, cancellationToken);
-                    item7 = await DataReader.ToEnumerableAsync<T7>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
-                }
+                item7 = await QueryMultipleAsyncInternal<T7>(connection,
+                    reader,
+                    item7,
+                    cacheKey7,
+                    dbSetting,
+                    cacheItemExpiration,
+                    transaction,
+                    cache,
+                    true,
+                    cancellationToken);
 
                 // Result
                 result = Tuple.Create(item1, item2, item3, item4, item5, item6, item7);
@@ -10520,7 +10864,7 @@ namespace RepoDb
         /// <param name="where"></param>
         /// <param name="queryGroups"></param>
         /// <returns></returns>
-        private static IEnumerable<T> EnsureQueryMultipleCachedItem<T>(string cacheKey,
+        private static IEnumerable<T> QueryMultipleInternal<T>(string cacheKey,
             ICache cache,
             QueryGroup where,
             List<QueryGroup> queryGroups)
@@ -10534,6 +10878,94 @@ namespace RepoDb
             }
 
             return item;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="reader"></param>
+        /// <param name="items"></param>
+        /// <param name="cacheKey"></param>
+        /// <param name="dbSetting"></param>
+        /// <param name="cacheItemExpiration"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cache"></param>
+        /// <param name="forwardToNextResult"></param>
+        /// <returns></returns>
+        private static IEnumerable<T> QueryMultipleInternal<T>(IDbConnection connection,
+            DbDataReader reader,
+            IEnumerable<T> items,
+            string cacheKey = null,
+            IDbSetting dbSetting = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            IDbTransaction transaction = null,
+            ICache cache = null,
+            bool forwardToNextResult = true)
+        {
+            if (forwardToNextResult)
+            {
+                reader.NextResult();
+            }
+
+            if (items == null)
+            {
+                var dbFields = DbFieldCache.Get(connection, ClassMappedNameCache.Get<T>(), transaction, true);
+                items = DataReader.ToEnumerable<T>(reader, dbFields, dbSetting).AsList();
+            }
+
+            if (cacheKey != null)
+            {
+                cache?.Add(cacheKey, items, cacheItemExpiration.GetValueOrDefault(), false);
+            }
+
+            return items;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="connection"></param>
+        /// <param name="reader"></param>
+        /// <param name="items"></param>
+        /// <param name="cacheKey"></param>
+        /// <param name="dbSetting"></param>
+        /// <param name="cacheItemExpiration"></param>
+        /// <param name="transaction"></param>
+        /// <param name="cache"></param>
+        /// <param name="forwardToNextResult"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        private static async Task<IEnumerable<T>> QueryMultipleAsyncInternal<T>(IDbConnection connection,
+            DbDataReader reader,
+            IEnumerable<T> items,
+            string cacheKey = null,
+            IDbSetting dbSetting = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            IDbTransaction transaction = null,
+            ICache cache = null,
+            bool forwardToNextResult = true,
+            CancellationToken cancellationToken = default)
+        {
+            if (forwardToNextResult)
+            {
+                await reader.NextResultAsync(cancellationToken);
+            }
+
+            if (items == null)
+            {
+                var dbFields = await DbFieldCache.GetAsync(connection, ClassMappedNameCache.Get<T>(), transaction, true, cancellationToken);
+                items = await DataReader.ToEnumerableAsync<T>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
+            }
+
+            if (cacheKey != null)
+            {
+                cache?.Add(cacheKey, items, cacheItemExpiration.GetValueOrDefault(), false);
+            }
+
+            return items;
         }
 
         #endregion
