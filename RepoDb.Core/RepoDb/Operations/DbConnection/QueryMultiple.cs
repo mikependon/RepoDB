@@ -9231,7 +9231,7 @@ namespace RepoDb
                     top1,
                     hints1,
                     statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T1>(request1));
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request1));
                 maps.Add(where1.MapTo<T1>());
             }
 
@@ -9248,7 +9248,7 @@ namespace RepoDb
                     top2,
                     hints2,
                     statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T2>(request2));
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request2));
                 maps.Add(where2.MapTo<T2>());
             }
 
@@ -9398,9 +9398,9 @@ namespace RepoDb
             where T3 : class
         {
             return QueryMultipleInternal<T1, T2, T3>(connection: connection,
-                where1: WhatToQueryGroup(what1),
-                where2: WhatToQueryGroup(what2),
-                where3: WhatToQueryGroup(what3),
+                where1: WhatToQueryGroup(typeof(T1), connection, what1, transaction),
+                where2: WhatToQueryGroup(typeof(T2), connection, what2, transaction),
+                where3: WhatToQueryGroup(typeof(T3), connection, what3, transaction),
                 fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
@@ -9905,7 +9905,7 @@ namespace RepoDb
                     top1,
                     hints1,
                     statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T1>(request1));
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request1));
                 maps.Add(where1.MapTo<T1>());
             }
 
@@ -9922,7 +9922,7 @@ namespace RepoDb
                     top2,
                     hints2,
                     statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T2>(request2));
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request2));
                 maps.Add(where2.MapTo<T2>());
             }
 
@@ -9939,7 +9939,7 @@ namespace RepoDb
                     top3,
                     hints3,
                     statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T2>(request3));
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request3));
                 maps.Add(where3.MapTo<T3>());
             }
 
@@ -10118,10 +10118,10 @@ namespace RepoDb
             where T4 : class
         {
             return QueryMultipleInternal<T1, T2, T3, T4>(connection: connection,
-                where1: WhatToQueryGroup(what1),
-                where2: WhatToQueryGroup(what2),
-                where3: WhatToQueryGroup(what3),
-                where4: WhatToQueryGroup(what4),
+                where1: WhatToQueryGroup(typeof(T1), connection, what1, transaction),
+                where2: WhatToQueryGroup(typeof(T2), connection, what2, transaction),
+                where3: WhatToQueryGroup(typeof(T3), connection, what3, transaction),
+                where4: WhatToQueryGroup(typeof(T4), connection, what4, transaction),
                 fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
@@ -10745,7 +10745,7 @@ namespace RepoDb
                     top1,
                     hints1,
                     statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T1>(request1));
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request1));
                 maps.Add(where1.MapTo<T1>());
             }
 
@@ -10762,7 +10762,7 @@ namespace RepoDb
                     top2,
                     hints2,
                     statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T2>(request2));
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request2));
                 maps.Add(where2.MapTo<T2>());
             }
 
@@ -10779,7 +10779,7 @@ namespace RepoDb
                     top3,
                     hints3,
                     statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T2>(request3));
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request3));
                 maps.Add(where3.MapTo<T3>());
             }
 
@@ -10796,7 +10796,7 @@ namespace RepoDb
                     top4,
                     hints4,
                     statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T2>(request4));
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request4));
                 maps.Add(where4.MapTo<T4>());
             }
 
@@ -11002,11 +11002,11 @@ namespace RepoDb
             where T5 : class
         {
             return QueryMultipleInternal<T1, T2, T3, T4, T5>(connection: connection,
-                where1: WhatToQueryGroup(what1),
-                where2: WhatToQueryGroup(what2),
-                where3: WhatToQueryGroup(what3),
-                where4: WhatToQueryGroup(what4),
-                where5: WhatToQueryGroup(what5),
+                where1: WhatToQueryGroup(typeof(T1), connection, what1, transaction),
+                where2: WhatToQueryGroup(typeof(T2), connection, what2, transaction),
+                where3: WhatToQueryGroup(typeof(T3), connection, what3, transaction),
+                where4: WhatToQueryGroup(typeof(T4), connection, what4, transaction),
+                where5: WhatToQueryGroup(typeof(T5), connection, what5, transaction),
                 fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
@@ -11744,7 +11744,7 @@ namespace RepoDb
                     top1,
                     hints1,
                     statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T1>(request1));
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request1));
                 maps.Add(where1.MapTo<T1>());
             }
 
@@ -11761,7 +11761,7 @@ namespace RepoDb
                     top2,
                     hints2,
                     statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T2>(request2));
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request2));
                 maps.Add(where2.MapTo<T2>());
             }
 
@@ -11778,7 +11778,7 @@ namespace RepoDb
                     top3,
                     hints3,
                     statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T2>(request3));
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request3));
                 maps.Add(where3.MapTo<T3>());
             }
 
@@ -11795,7 +11795,7 @@ namespace RepoDb
                     top4,
                     hints4,
                     statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T2>(request4));
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request4));
                 maps.Add(where4.MapTo<T4>());
             }
 
@@ -11812,7 +11812,7 @@ namespace RepoDb
                     top5,
                     hints5,
                     statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T2>(request5));
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request5));
                 maps.Add(where5.MapTo<T5>());
             }
 
@@ -12045,12 +12045,12 @@ namespace RepoDb
             where T6 : class
         {
             return QueryMultipleInternal<T1, T2, T3, T4, T5, T6>(connection: connection,
-                where1: WhatToQueryGroup(what1),
-                where2: WhatToQueryGroup(what2),
-                where3: WhatToQueryGroup(what3),
-                where4: WhatToQueryGroup(what4),
-                where5: WhatToQueryGroup(what5),
-                where6: WhatToQueryGroup(what6),
+                where1: WhatToQueryGroup(typeof(T1), connection, what1, transaction),
+                where2: WhatToQueryGroup(typeof(T2), connection, what2, transaction),
+                where3: WhatToQueryGroup(typeof(T3), connection, what3, transaction),
+                where4: WhatToQueryGroup(typeof(T4), connection, what4, transaction),
+                where5: WhatToQueryGroup(typeof(T5), connection, what5, transaction),
+                where6: WhatToQueryGroup(typeof(T6), connection, what6, transaction),
                 fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
@@ -12902,7 +12902,7 @@ namespace RepoDb
                     top1,
                     hints1,
                     statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T1>(request1));
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request1));
                 maps.Add(where1.MapTo<T1>());
             }
 
@@ -12919,7 +12919,7 @@ namespace RepoDb
                     top2,
                     hints2,
                     statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T2>(request2));
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request2));
                 maps.Add(where2.MapTo<T2>());
             }
 
@@ -12936,7 +12936,7 @@ namespace RepoDb
                     top3,
                     hints3,
                     statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T2>(request3));
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request3));
                 maps.Add(where3.MapTo<T3>());
             }
 
@@ -12953,7 +12953,7 @@ namespace RepoDb
                     top4,
                     hints4,
                     statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T2>(request4));
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request4));
                 maps.Add(where4.MapTo<T4>());
             }
 
@@ -12970,7 +12970,7 @@ namespace RepoDb
                     top5,
                     hints5,
                     statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T2>(request5));
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request5));
                 maps.Add(where5.MapTo<T5>());
             }
 
@@ -12987,7 +12987,7 @@ namespace RepoDb
                     top6,
                     hints6,
                     statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T2>(request6));
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request6));
                 maps.Add(where6.MapTo<T6>());
             }
 
@@ -13247,13 +13247,13 @@ namespace RepoDb
             where T7 : class
         {
             return QueryMultipleInternal<T1, T2, T3, T4, T5, T6, T7>(connection: connection,
-                where1: WhatToQueryGroup(what1),
-                where2: WhatToQueryGroup(what2),
-                where3: WhatToQueryGroup(what3),
-                where4: WhatToQueryGroup(what4),
-                where5: WhatToQueryGroup(what5),
-                where6: WhatToQueryGroup(what6),
-                where7: WhatToQueryGroup(what7),
+                where1: WhatToQueryGroup(typeof(T1), connection, what1, transaction),
+                where2: WhatToQueryGroup(typeof(T2), connection, what2, transaction),
+                where3: WhatToQueryGroup(typeof(T3), connection, what3, transaction),
+                where4: WhatToQueryGroup(typeof(T4), connection, what4, transaction),
+                where5: WhatToQueryGroup(typeof(T5), connection, what5, transaction),
+                where6: WhatToQueryGroup(typeof(T6), connection, what6, transaction),
+                where7: WhatToQueryGroup(typeof(T7), connection, what7, transaction),
                 fields1: fields1,
                 orderBy1: orderBy1,
                 top1: top1,
@@ -14219,7 +14219,7 @@ namespace RepoDb
                     top1,
                     hints1,
                     statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T1>(request1));
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request1));
                 maps.Add(where1.MapTo<T1>());
             }
 
@@ -14236,7 +14236,7 @@ namespace RepoDb
                     top2,
                     hints2,
                     statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T2>(request2));
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request2));
                 maps.Add(where2.MapTo<T2>());
             }
 
@@ -14253,7 +14253,7 @@ namespace RepoDb
                     top3,
                     hints3,
                     statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T2>(request3));
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request3));
                 maps.Add(where3.MapTo<T3>());
             }
 
@@ -14270,7 +14270,7 @@ namespace RepoDb
                     top4,
                     hints4,
                     statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T2>(request4));
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request4));
                 maps.Add(where4.MapTo<T4>());
             }
 
@@ -14287,7 +14287,7 @@ namespace RepoDb
                     top5,
                     hints5,
                     statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T2>(request5));
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request5));
                 maps.Add(where5.MapTo<T5>());
             }
 
@@ -14304,7 +14304,7 @@ namespace RepoDb
                     top6,
                     hints6,
                     statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T2>(request6));
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request6));
                 maps.Add(where6.MapTo<T6>());
             }
 
@@ -14321,7 +14321,7 @@ namespace RepoDb
                     top7,
                     hints7,
                     statementBuilder);
-                commandTexts.Add(CommandTextCache.GetQueryMultipleText<T2>(request7));
+                commandTexts.Add(CommandTextCache.GetQueryMultipleText(request7));
                 maps.Add(where7.MapTo<T7>());
             }
 
@@ -14942,7 +14942,7 @@ namespace RepoDb
                     top1,
                     hints1,
                     statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T1>(request1, cancellationToken));
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request1, cancellationToken));
                 maps.Add(where1.MapTo<T1>());
             }
 
@@ -14959,7 +14959,7 @@ namespace RepoDb
                     top2,
                     hints2,
                     statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T2>(request2, cancellationToken));
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request2, cancellationToken));
                 maps.Add(where2.MapTo<T2>());
             }
 
@@ -15651,7 +15651,7 @@ namespace RepoDb
                     top1,
                     hints1,
                     statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T1>(request1, cancellationToken));
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request1, cancellationToken));
                 maps.Add(where1.MapTo<T1>());
             }
 
@@ -15668,7 +15668,7 @@ namespace RepoDb
                     top2,
                     hints2,
                     statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T2>(request2, cancellationToken));
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request2, cancellationToken));
                 maps.Add(where2.MapTo<T2>());
             }
 
@@ -15685,7 +15685,7 @@ namespace RepoDb
                     top3,
                     hints3,
                     statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T3>(request3, cancellationToken));
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request3, cancellationToken));
                 maps.Add(where3.MapTo<T3>());
             }
 
@@ -16531,7 +16531,7 @@ namespace RepoDb
                     top1,
                     hints1,
                     statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T1>(request1, cancellationToken));
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request1, cancellationToken));
                 maps.Add(where1.MapTo<T1>());
             }
 
@@ -16548,7 +16548,7 @@ namespace RepoDb
                     top2,
                     hints2,
                     statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T2>(request2, cancellationToken));
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request2, cancellationToken));
                 maps.Add(where2.MapTo<T2>());
             }
 
@@ -16565,7 +16565,7 @@ namespace RepoDb
                     top3,
                     hints3,
                     statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T3>(request3, cancellationToken));
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request3, cancellationToken));
                 maps.Add(where3.MapTo<T3>());
             }
 
@@ -16582,7 +16582,7 @@ namespace RepoDb
                     top4,
                     hints4,
                     statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T4>(request4, cancellationToken));
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request4, cancellationToken));
                 maps.Add(where4.MapTo<T4>());
             }
 
@@ -17576,7 +17576,7 @@ namespace RepoDb
                     top1,
                     hints1,
                     statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T1>(request1, cancellationToken));
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request1, cancellationToken));
                 maps.Add(where1.MapTo<T1>());
             }
 
@@ -17593,7 +17593,7 @@ namespace RepoDb
                     top2,
                     hints2,
                     statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T2>(request2, cancellationToken));
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request2, cancellationToken));
                 maps.Add(where2.MapTo<T2>());
             }
 
@@ -17610,7 +17610,7 @@ namespace RepoDb
                     top3,
                     hints3,
                     statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T3>(request3, cancellationToken));
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request3, cancellationToken));
                 maps.Add(where3.MapTo<T3>());
             }
 
@@ -17627,7 +17627,7 @@ namespace RepoDb
                     top4,
                     hints4,
                     statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T4>(request4, cancellationToken));
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request4, cancellationToken));
                 maps.Add(where4.MapTo<T4>());
             }
 
@@ -17644,7 +17644,7 @@ namespace RepoDb
                     top5,
                     hints5,
                     statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T5>(request5, cancellationToken));
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request5, cancellationToken));
                 maps.Add(where5.MapTo<T5>());
             }
 
@@ -18786,7 +18786,7 @@ namespace RepoDb
                     top1,
                     hints1,
                     statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T1>(request1, cancellationToken));
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request1, cancellationToken));
                 maps.Add(where1.MapTo<T1>());
             }
 
@@ -18803,7 +18803,7 @@ namespace RepoDb
                     top2,
                     hints2,
                     statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T2>(request2, cancellationToken));
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request2, cancellationToken));
                 maps.Add(where2.MapTo<T2>());
             }
 
@@ -18820,7 +18820,7 @@ namespace RepoDb
                     top3,
                     hints3,
                     statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T3>(request3, cancellationToken));
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request3, cancellationToken));
                 maps.Add(where3.MapTo<T3>());
             }
 
@@ -18837,7 +18837,7 @@ namespace RepoDb
                     top4,
                     hints4,
                     statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T4>(request4, cancellationToken));
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request4, cancellationToken));
                 maps.Add(where4.MapTo<T4>());
             }
 
@@ -18854,7 +18854,7 @@ namespace RepoDb
                     top5,
                     hints5,
                     statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T5>(request5, cancellationToken));
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request5, cancellationToken));
                 maps.Add(where5.MapTo<T5>());
             }
 
@@ -18871,7 +18871,7 @@ namespace RepoDb
                     top6,
                     hints6,
                     statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T6>(request6, cancellationToken));
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request6, cancellationToken));
                 maps.Add(where6.MapTo<T6>());
             }
 
@@ -20161,7 +20161,7 @@ namespace RepoDb
                     top1,
                     hints1,
                     statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T1>(request1, cancellationToken));
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request1, cancellationToken));
                 maps.Add(where1.MapTo<T1>());
             }
 
@@ -20178,7 +20178,7 @@ namespace RepoDb
                     top2,
                     hints2,
                     statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T2>(request2, cancellationToken));
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request2, cancellationToken));
                 maps.Add(where2.MapTo<T2>());
             }
 
@@ -20195,7 +20195,7 @@ namespace RepoDb
                     top3,
                     hints3,
                     statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T3>(request3, cancellationToken));
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request3, cancellationToken));
                 maps.Add(where3.MapTo<T3>());
             }
 
@@ -20212,7 +20212,7 @@ namespace RepoDb
                     top4,
                     hints4,
                     statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T4>(request4, cancellationToken));
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request4, cancellationToken));
                 maps.Add(where4.MapTo<T4>());
             }
 
@@ -20229,7 +20229,7 @@ namespace RepoDb
                     top5,
                     hints5,
                     statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T5>(request5, cancellationToken));
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request5, cancellationToken));
                 maps.Add(where5.MapTo<T5>());
             }
 
@@ -20246,7 +20246,7 @@ namespace RepoDb
                     top6,
                     hints6,
                     statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T6>(request6, cancellationToken));
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request6, cancellationToken));
                 maps.Add(where6.MapTo<T6>());
             }
 
@@ -20263,7 +20263,7 @@ namespace RepoDb
                     top7,
                     hints7,
                     statementBuilder);
-                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync<T7>(request7, cancellationToken));
+                commandTexts.Add(await CommandTextCache.GetQueryMultipleTextAsync(request7, cancellationToken));
                 maps.Add(where7.MapTo<T7>());
             }
 
@@ -20432,6 +20432,29 @@ namespace RepoDb
             where T : class
         {
             var item = cache?.Get<IEnumerable<T>>(cacheKey, false)?.Value;
+
+            if (item == null)
+            {
+                queryGroups.Add(where);
+            }
+
+            return item;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cacheKey"></param>
+        /// <param name="cache"></param>
+        /// <param name="where"></param>
+        /// <param name="queryGroups"></param>
+        /// <returns></returns>
+        private static IEnumerable<dynamic> QueryMultipleInternal(string cacheKey,
+            ICache cache,
+            QueryGroup where,
+            List<QueryGroup> queryGroups)
+        {
+            var item = cache?.Get<IEnumerable<dynamic>>(cacheKey, false)?.Value;
 
             if (item == null)
             {

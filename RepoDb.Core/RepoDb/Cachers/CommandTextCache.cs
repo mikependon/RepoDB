@@ -742,11 +742,9 @@ namespace RepoDb
         /// <summary>
         ///
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
         /// <param name="request"></param>
         /// <returns></returns>
-        internal static string GetQueryMultipleText<TEntity>(QueryMultipleRequest request)
-            where TEntity : class
+        internal static string GetQueryMultipleText(QueryMultipleRequest request)
         {
             if (cache.TryGetValue(request, out var commandText) == false)
             {
@@ -758,7 +756,7 @@ namespace RepoDb
                     request.Name,
                     request.OrderBy,
                     request.Transaction);
-                commandText = GetQueryMultipleTextInternal<TEntity>(request, fields);
+                commandText = GetQueryMultipleTextInternal(request, fields);
                 cache.TryAdd(request, commandText);
             }
             return commandText;
@@ -767,13 +765,11 @@ namespace RepoDb
         /// <summary>
         ///
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        internal static async Task<string> GetQueryMultipleTextAsync<TEntity>(QueryMultipleRequest request,
+        internal static async Task<string> GetQueryMultipleTextAsync(QueryMultipleRequest request,
             CancellationToken cancellationToken = default)
-            where TEntity : class
         {
             if (cache.TryGetValue(request, out var commandText) == false)
             {
@@ -787,7 +783,7 @@ namespace RepoDb
                     request.OrderBy,
                     request.Transaction,
                     cancellationToken);
-                commandText = GetQueryMultipleTextInternal<TEntity>(request, fields);
+                commandText = GetQueryMultipleTextInternal(request, fields);
                 cache.TryAdd(request, commandText);
             }
             return commandText;
@@ -796,13 +792,11 @@ namespace RepoDb
         /// <summary>
         ///
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
         /// <param name="request"></param>
         /// <param name="fields"></param>
         /// <returns></returns>
-        private static string GetQueryMultipleTextInternal<TEntity>(QueryMultipleRequest request,
+        private static string GetQueryMultipleTextInternal(QueryMultipleRequest request,
             IEnumerable<Field> fields)
-            where TEntity : class
         {
             var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
             return statementBuilder.CreateQuery(request.Name,

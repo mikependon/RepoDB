@@ -21,6 +21,14 @@ namespace RepoDb.Extensions
         /// <summary>
         /// Maps the current <see cref="QueryGroup"/> object to a type.
         /// </summary> 
+        /// <param name="queryGroup">The <see cref="QueryGroup"/> object to be mapped.</param>
+        /// <returns>An instance of <see cref="QueryGroupTypeMap"/> object that holds the mapping.</returns>
+        internal static QueryGroupTypeMap MapTo(this QueryGroup queryGroup) =>
+            new(queryGroup, null);
+
+        /// <summary>
+        /// Maps the current <see cref="QueryGroup"/> object to a type.
+        /// </summary> 
         /// <typeparam name="TEntity">The target type where the current <see cref="QueryGroup"/> is to be mapped.</typeparam>
         /// <param name="queryGroup">The <see cref="QueryGroup"/> object to be mapped.</param>
         /// <returns>An instance of <see cref="QueryGroupTypeMap"/> object that holds the mapping.</returns>
