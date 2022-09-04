@@ -1,5 +1,7 @@
-﻿using RepoDb.Interfaces;
+﻿using RepoDb.Attributes.Parameter;
+using RepoDb.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Data;
 
 namespace RepoDb
@@ -91,5 +93,33 @@ namespace RepoDb
         }
 
         #endregion
+
+        #region PropertyValueAttributes
+
+        /// <summary>
+        /// Defines a property value attribute to be mapped to a specific .NET CLR type.
+        /// </summary>
+        /// <param name="attributes">The list of property value attributes to be mapped.</param>
+        /// <remarks>The default behavior will be affected if the settings are not handled properly by the user (i.e.: setting the type <see cref="string"/> name attribute to something would affect all the objects properties with type <see cref="string"/>).</remarks>
+        /// <returns>The current instance.</returns>
+        public TypeMapFluentDefinition<TType> PropertyValueAttributes(IEnumerable<PropertyValueAttribute> attributes) =>
+            PropertyValueAttributes(attributes, false);
+
+        /// <summary>
+        /// Defines a property value attribute to be mapped to a specific .NET CLR type.
+        /// </summary>
+        /// <param name="attributes">The list of property value attributes to be mapped.</param>
+        /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
+        /// <remarks>The default behavior will be affected if the settings are not handled properly by the user (i.e.: setting the type <see cref="string"/> name attribute to something would affect all the objects properties with type <see cref="string"/>).</remarks>
+        /// <returns>The current instance.</returns>
+        public TypeMapFluentDefinition<TType> PropertyValueAttributes(IEnumerable<PropertyValueAttribute> attributes,
+            bool force)
+        {
+            PropertyValueAttributeMapper.Add<TType>(attributes, force);
+            return this;
+        }
+
+        #endregion
+
     }
 }
