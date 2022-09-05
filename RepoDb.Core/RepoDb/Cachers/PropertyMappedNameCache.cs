@@ -40,7 +40,7 @@ namespace RepoDb
         /// <returns>The cached column name mappings of the property.</returns>
         public static string Get<TEntity>(string propertyName)
             where TEntity : class =>
-            Get<TEntity>(TypeExtension.GetProperty<TEntity>(propertyName, true));
+            Get<TEntity>(TypeExtension.GetProperty<TEntity>(propertyName));
 
         /// <summary>
         /// Gets the cached column name mappings of the property (via <see cref="Field"/> object).
@@ -50,7 +50,7 @@ namespace RepoDb
         /// <returns>The cached column name mappings of the property.</returns>
         public static string Get<TEntity>(Field field)
             where TEntity : class =>
-            Get<TEntity>(TypeExtension.GetProperty<TEntity>(field.Name, true));
+            Get<TEntity>(TypeExtension.GetProperty<TEntity>(field.Name));
 
         /// <summary>
         /// Gets the cached column name mappings of the property.
