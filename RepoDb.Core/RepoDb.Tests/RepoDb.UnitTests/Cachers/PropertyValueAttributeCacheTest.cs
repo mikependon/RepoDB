@@ -134,7 +134,7 @@ namespace RepoDb.UnitTests.Cachers
             var propertyName = "ColumnString";
 
             // Act
-            var actual = PropertyValueAttributeCache.Get<PropertyValueAttributeClass>(propertyName, true);
+            var actual = PropertyValueAttributeCache.Get<PropertyValueAttributeClass>(propertyName);
 
             // Assert
             Assert.AreEqual(7, actual.Count());
@@ -147,7 +147,7 @@ namespace RepoDb.UnitTests.Cachers
             var propertyName = "PropertyString";
 
             // Act
-            var actual = PropertyValueAttributeCache.Get<PropertyValueAttributeClass>(propertyName, true);
+            var actual = PropertyValueAttributeCache.Get<PropertyValueAttributeClass>(propertyName);
 
             // Assert
             Assert.AreEqual(7, actual.Count());
@@ -160,7 +160,7 @@ namespace RepoDb.UnitTests.Cachers
             var field = new Field("PropertyString");
 
             // Act
-            var actual = PropertyValueAttributeCache.Get<PropertyValueAttributeClass>(field, true);
+            var actual = PropertyValueAttributeCache.Get<PropertyValueAttributeClass>(field);
 
             // Assert
             Assert.AreEqual(7, actual.Count());
@@ -170,7 +170,7 @@ namespace RepoDb.UnitTests.Cachers
         public void TestPropertyValueAttributeCacheWithMappedAttributesViaExpression()
         {
             // Act
-            var actual = PropertyValueAttributeCache.Get<PropertyValueAttributeClass>(e => e.PropertyString, true);
+            var actual = PropertyValueAttributeCache.Get<PropertyValueAttributeClass>(e => e.PropertyString);
 
             // Assert
             Assert.AreEqual(7, actual.Count());
@@ -183,72 +183,10 @@ namespace RepoDb.UnitTests.Cachers
             var classProperty = PropertyCache.Get<PropertyValueAttributeClass>("PropertyString", true);
 
             // Act
-            var actual = PropertyValueAttributeCache.Get(classProperty.PropertyInfo, true);
+            var actual = PropertyValueAttributeCache.Get(classProperty.PropertyInfo);
 
             // Assert
             Assert.AreEqual(7, actual.Count());
-        }
-
-        [TestMethod]
-        public void TestPropertyValueAttributeCacheWithMappedAttributesWithIncludeMappingsFalseViaMappedPropertyName()
-        {
-            // Prepare
-            var propertyName = "PropertyString";
-
-            // Act
-            var actual = PropertyValueAttributeCache.Get<PropertyValueAttributeClass>(propertyName, false);
-
-            // Assert
-            Assert.AreEqual(0, actual.Count());
-        }
-
-        [TestMethod]
-        public void TestPropertyValueAttributeCacheWithMappedAttributesWithIncludeMappingsFalseViaPropertyName()
-        {
-            // Prepare
-            var propertyName = "PropertyString";
-
-            // Act
-            var actual = PropertyValueAttributeCache.Get<PropertyValueAttributeClass>(propertyName, false);
-
-            // Assert
-            Assert.AreEqual(0, actual.Count());
-        }
-
-        [TestMethod]
-        public void TestPropertyValueAttributeCacheWithMappedAttributesWithIncludeMappingsFalseViaField()
-        {
-            // Prepare
-            var field = new Field("PropertyString");
-
-            // Act
-            var actual = PropertyValueAttributeCache.Get<PropertyValueAttributeClass>(field, false);
-
-            // Assert
-            Assert.AreEqual(0, actual.Count());
-        }
-
-        [TestMethod]
-        public void TestPropertyValueAttributeCacheWithMappedAttributesWithIncludeMappingsFalseViaExpression()
-        {
-            // Act
-            var actual = PropertyValueAttributeCache.Get<PropertyValueAttributeClass>(e => e.PropertyString, false);
-
-            // Assert
-            Assert.AreEqual(0, actual.Count());
-        }
-
-        [TestMethod]
-        public void TestPropertyValueAttributeCacheWithMappedAttributesWithIncludeMappingsFalseViaPropertyInfo()
-        {
-            // Prepare
-            var classProperty = PropertyCache.Get<PropertyValueAttributeClass>("PropertyString", true);
-
-            // Act
-            var actual = PropertyValueAttributeCache.Get(classProperty.PropertyInfo, false);
-
-            // Assert
-            Assert.AreEqual(0, actual.Count());
         }
 
         /*
@@ -262,7 +200,7 @@ namespace RepoDb.UnitTests.Cachers
             var propertyName = "ColumnDecimal";
 
             // Act
-            var actual = PropertyValueAttributeCache.Get<PropertyValueAttributeClass>(propertyName, true);
+            var actual = PropertyValueAttributeCache.Get<PropertyValueAttributeClass>(propertyName);
 
             // Assert
             Assert.AreEqual(11, actual.Count());
@@ -275,7 +213,7 @@ namespace RepoDb.UnitTests.Cachers
             var propertyName = "PropertyDecimal";
 
             // Act
-            var actual = PropertyValueAttributeCache.Get<PropertyValueAttributeClass>(propertyName, true);
+            var actual = PropertyValueAttributeCache.Get<PropertyValueAttributeClass>(propertyName);
 
             // Assert
             Assert.AreEqual(11, actual.Count());
@@ -288,7 +226,7 @@ namespace RepoDb.UnitTests.Cachers
             var field = new Field("PropertyDecimal");
 
             // Act
-            var actual = PropertyValueAttributeCache.Get<PropertyValueAttributeClass>(field, true);
+            var actual = PropertyValueAttributeCache.Get<PropertyValueAttributeClass>(field);
 
             // Assert
             Assert.AreEqual(11, actual.Count());
@@ -298,7 +236,7 @@ namespace RepoDb.UnitTests.Cachers
         public void TestPropertyValueAttributeCacheCollisionsViaExpression()
         {
             // Act
-            var actual = PropertyValueAttributeCache.Get<PropertyValueAttributeClass>(e => e.PropertyDecimal, true);
+            var actual = PropertyValueAttributeCache.Get<PropertyValueAttributeClass>(e => e.PropertyDecimal);
 
             // Assert
             Assert.AreEqual(11, actual.Count());
@@ -311,59 +249,10 @@ namespace RepoDb.UnitTests.Cachers
             var classProperty = PropertyCache.Get<PropertyValueAttributeClass>("PropertyDecimal", true);
 
             // Act
-            var actual = PropertyValueAttributeCache.Get(classProperty.PropertyInfo, true);
+            var actual = PropertyValueAttributeCache.Get(classProperty.PropertyInfo);
 
             // Assert
             Assert.AreEqual(11, actual.Count());
-        }
-
-        [TestMethod]
-        public void TestPropertyValueAttributeCacheCollisionsWithIncludeMappingsFalseViaPropertyName()
-        {
-            // Prepare
-            var propertyName = "PropertyDecimal";
-
-            // Act
-            var actual = PropertyValueAttributeCache.Get<PropertyValueAttributeClass>(propertyName, false);
-
-            // Assert
-            Assert.AreEqual(7, actual.Count());
-        }
-
-        [TestMethod]
-        public void TestPropertyValueAttributeCacheCollisionsWithIncludeMappingsFalseViaField()
-        {
-            // Prepare
-            var field = new Field("PropertyDecimal");
-
-            // Act
-            var actual = PropertyValueAttributeCache.Get<PropertyValueAttributeClass>(field, false);
-
-            // Assert
-            Assert.AreEqual(7, actual.Count());
-        }
-
-        [TestMethod]
-        public void TestPropertyValueAttributeCacheCollisionsWithIncludeMappingsFalseViaExpression()
-        {
-            // Act
-            var actual = PropertyValueAttributeCache.Get<PropertyValueAttributeClass>(e => e.PropertyDecimal, false);
-
-            // Assert
-            Assert.AreEqual(7, actual.Count());
-        }
-
-        [TestMethod]
-        public void TestPropertyValueAttributeCacheCollisionsWithIncludeMappingsFalseViaPropertyInfo()
-        {
-            // Prepare
-            var classProperty = PropertyCache.Get<PropertyValueAttributeClass>("PropertyDecimal", false);
-
-            // Act
-            var actual = PropertyValueAttributeCache.Get(classProperty.PropertyInfo, false);
-
-            // Assert
-            Assert.AreEqual(7, actual.Count());
         }
 
         #endregion

@@ -6,9 +6,7 @@ using RepoDb.Resolvers;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Dynamic;
 using System.Linq;
-using static RepoDb.DbConnectionExtension;
 
 namespace RepoDb.Extensions
 {
@@ -310,21 +308,9 @@ namespace RepoDb.Extensions
             // Auto conversion
             EnsureAutomaticConversion(dbField, ref valueType, ref value);
 
-            // The reason for not using classProperty.GetDbType() is to avoid getting the type level mapping.
-
             // DbType
-            dbType ??= (classProperty != null ?
-                    TypeMapCache.Get(classProperty.GetDeclaringType(), classProperty.PropertyInfo) : null);
-
-            valueType = (valueType ??= dbField?.Type.GetUnderlyingType() ?? fallbackType);
-            if (dbType == null && valueType != null)
-            {
-                dbType =
-                    valueType.GetDbType() ??                                        // Type level, use TypeMapCache
-                    clientTypeToDbTypeResolver.Resolve(valueType) ??                // Type level, primitive mapping
-                    (dbField?.Type != null ?
-                        clientTypeToDbTypeResolver.Resolve(dbField?.Type) : null);  // Fallback to the database type
-            }
+            valueType ??= (dbField?.Type.GetUnderlyingType() ?? fallbackType);
+            dbType ??= classProperty?.GetDbType() ?? (dbField?.Type ?? fallbackType ?? valueType)?.GetDbType();
 
             // Create the parameter
             var parameter = command.CreateParameter(name, value, dbType, parameterDirection);
@@ -337,7 +323,7 @@ namespace RepoDb.Extensions
             }
 
             // Parameter values
-            InvokePropertyValueAttributes(parameter, classProperty);
+            InvokePropertyValueAttributes(parameter, GetPropertyValueAttributes(classProperty, valueType));
 
             // Return the parameter
             return parameter;
@@ -383,7 +369,7 @@ namespace RepoDb.Extensions
             parameter.Size = GetSize(size, dbField);
 
             // Type map attributes
-            InvokePropertyValueAttributes(parameter, classProperty);
+            InvokePropertyValueAttributes(parameter, GetPropertyValueAttributes(classProperty, valueType));
 
             // Return the parameter
             return parameter;
@@ -750,12 +736,21 @@ namespace RepoDb.Extensions
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="parameter"></param>
         /// <param name="classProperty"></param>
+        /// <param name="fallbackType"></param>
+        /// <returns></returns>
+        private static IEnumerable<PropertyValueAttribute> GetPropertyValueAttributes(ClassProperty classProperty,
+            Type fallbackType) =>
+            classProperty?.GetPropertyValueAttributes() ?? fallbackType?.GetPropertyValueAttributes();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <param name="attributes"></param>
         private static void InvokePropertyValueAttributes(IDbDataParameter parameter,
-            ClassProperty classProperty)
+            IEnumerable<PropertyValueAttribute> attributes)
         {
-            var attributes = classProperty?.GetPropertyValueAttributes();
             if (attributes?.Any() != true)
             {
                 return;
