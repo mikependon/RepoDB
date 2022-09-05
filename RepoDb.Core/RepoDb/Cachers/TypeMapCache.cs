@@ -77,7 +77,7 @@ namespace RepoDb
         /// <returns>The mapped <see cref="DbType"/> object of the property.</returns>
         public static DbType? Get<TEntity>(string propertyName)
             where TEntity : class =>
-            Get<TEntity>(TypeExtension.GetProperty<TEntity>(propertyName, true));
+            Get<TEntity>(TypeExtension.GetProperty<TEntity>(propertyName));
 
         /// <summary>
         /// Property Level: Gets the cached <see cref="DbType"/> object that is being mapped on a specific class property (via <see cref="Field"/> object).
@@ -87,7 +87,7 @@ namespace RepoDb
         /// <returns>The mapped <see cref="DbType"/> object of the property.</returns>
         public static DbType? Get<TEntity>(Field field)
             where TEntity : class =>
-            Get<TEntity>(TypeExtension.GetProperty<TEntity>(field.Name, true));
+            Get<TEntity>(TypeExtension.GetProperty<TEntity>(field.Name));
 
         /// <summary>
         /// Property Level: Gets the cached <see cref="DbType"/> object that is being mapped on a specific <see cref="PropertyInfo"/> object.

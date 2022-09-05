@@ -1,4 +1,5 @@
 ﻿using System;
+using RepoDb.Attributes.Parameter;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -11,6 +12,14 @@ namespace RepoDb.Extensions
     /// </summary>
     public static class TypeExtension
     {
+        /// <summary>
+        /// Gets the corresponding <see cref="PropertyValueAttribute"/> object.
+        /// </summary>
+        /// <param name="type">The target type.</param>
+        /// <returns>The instance of the <see cref="DbType"/> object.</returns>
+        public static IEnumerable<PropertyValueAttribute> GetPropertyValueAttributes(this Type type) =>
+            type != null ? PropertyValueAttributeMapper.Get(type.GetUnderlyingType()) : null;
+
         /// <summary>
         /// Gets the corresponding <see cref="DbType"/> object.
         /// </summary>
@@ -235,28 +244,24 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <typeparam name="T">The target .NET CLR type.</typeparam>
         /// <param name="propertyName">The name of the class property to be mapped.</param>
-        /// <param name="includeMappings">True to evaluate the existing mappings.</param>
         /// <returns>An instance of <see cref="PropertyInfo"/> object.</returns>
-        public static PropertyInfo GetProperty<T>(string propertyName,
-            bool includeMappings = false)
+        public static PropertyInfo GetProperty<T>(string propertyName)
             where T : class =>
-            GetProperty(typeof(T), propertyName, includeMappings);
+            GetProperty(typeof(T), propertyName);
 
         /// <summary>
         /// A helper method to return the instance of <see cref="PropertyInfo"/> object based on name.
         /// </summary>
         /// <param name="type">The target .NET CLR type.</param>
         /// <param name="propertyName">The name of the target class property.</param>
-        /// <param name="includeMappings">True to evaluate the existing mappings.</param>
         /// <returns>An instance of <see cref="PropertyInfo"/> object.</returns>
         public static PropertyInfo GetProperty(Type type,
-            string propertyName,
-            bool includeMappings = false) =>
+            string propertyName) =>
             type
                 .GetProperties()
                 .FirstOrDefault(p =>
                     string.Equals(p.Name, propertyName, StringComparison.OrdinalIgnoreCase) ||
-                    (includeMappings && string.Equals(p.GetMappedName(), propertyName, StringComparison.OrdinalIgnoreCase)));
+                    string.Equals(p.GetMappedName(), propertyName, StringComparison.OrdinalIgnoreCase));
 
         #endregion
     }
