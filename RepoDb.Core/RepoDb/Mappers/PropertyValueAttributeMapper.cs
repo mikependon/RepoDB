@@ -4,7 +4,6 @@ using RepoDb.Extensions;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -319,7 +318,7 @@ namespace RepoDb
         /// <returns>The list of mapped <see cref="PropertyValueAttribute"/> objects.</returns>
         public static IEnumerable<PropertyValueAttribute> Get<TEntity>(string propertyName)
             where TEntity : class =>
-            Get(typeof(TEntity), TypeExtension.GetProperty<TEntity>(propertyName, true));
+            Get(typeof(TEntity), TypeExtension.GetProperty<TEntity>(propertyName));
 
         /// <summary>
         /// Get the list of mapped <see cref="PropertyValueAttribute"/> objects of the class property (via <see cref="Field"/> object).
@@ -329,7 +328,7 @@ namespace RepoDb
         /// <returns>The list of mapped <see cref="PropertyValueAttribute"/> objects.</returns>
         public static IEnumerable<PropertyValueAttribute> Get<TEntity>(Field field)
             where TEntity : class =>
-            Get(typeof(TEntity), TypeExtension.GetProperty<TEntity>(field.Name, true));
+            Get(typeof(TEntity), TypeExtension.GetProperty<TEntity>(field.Name));
 
         /// <summary>
         /// Get the list of mapped <see cref="PropertyValueAttribute"/> objects of the <see cref="PropertyInfo"/> object.
@@ -381,7 +380,7 @@ namespace RepoDb
         /// <param name="propertyName">The name of the target class property.</param>
         public static void Remove<TEntity>(string propertyName)
             where TEntity : class =>
-            Remove(typeof(TEntity), TypeExtension.GetProperty<TEntity>(propertyName, true));
+            Remove(typeof(TEntity), TypeExtension.GetProperty<TEntity>(propertyName));
 
         /// <summary>
         /// Removes the existing mapped <see cref="PropertyValueAttribute"/> objects of the class property (via <see cref="Field"/> object).
@@ -390,7 +389,7 @@ namespace RepoDb
         /// <param name="field">The instance of <see cref="Field"/> object.</param>
         public static void Remove<TEntity>(Field field)
             where TEntity : class =>
-            Remove(typeof(TEntity), TypeExtension.GetProperty<TEntity>(field.Name, true));
+            Remove(typeof(TEntity), TypeExtension.GetProperty<TEntity>(field.Name));
 
         /// <summary>
         /// Removes the existing mapped <see cref="PropertyValueAttribute"/> objects of the <see cref="PropertyInfo"/> object.
@@ -420,6 +419,10 @@ namespace RepoDb
         #endregion
 
         #region Type Level
+
+        /*
+         * Add
+         */
 
         /// <summary>
         /// Type Level: Adds a mapping between a .NET CLR type and a list of <see cref="PropertyValueAttribute"/> object.
@@ -485,6 +488,38 @@ namespace RepoDb
             {
                 maps.TryAdd(key, attributes);
             }
+        }
+
+        /*
+         * Get
+         */
+
+        /// <summary>
+        /// Get the list of mapped <see cref="PropertyValueAttribute"/> objects of the .NET CLR type.
+        /// </summary>
+        /// <typeparam name="TType">The target type.</typeparam>
+        /// <returns>The list of mapped <see cref="PropertyValueAttribute"/> objects.</returns>
+        public static IEnumerable<PropertyValueAttribute> Get<TType>() =>
+            Get(typeof(TType));
+
+        /// <summary>
+        /// Get the list of mapped <see cref="PropertyValueAttribute"/> objects of the .NET CLR type.
+        /// </summary>
+        /// <param name="type">The target type.</param>
+        /// <returns>The list of mapped <see cref="PropertyValueAttribute"/> objects.</returns>
+        public static IEnumerable<PropertyValueAttribute> Get(Type type)
+        {
+            // Validate
+            ObjectExtension.ThrowIfNull(type, "Type");
+
+            // Variables
+            var key = TypeExtension.GenerateHashCode(type);
+
+            // Try get the value
+            maps.TryGetValue(key, out var value);
+
+            // Return the value
+            return value;
         }
 
         #endregion
