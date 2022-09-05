@@ -467,21 +467,10 @@ namespace RepoDb.UnitTests.Mappers
         {
             // Act
             var actual = PropertyValueAttributeCache
-                .Get<FluentMapperTestClass>(e => e.PropertyString, true);
+                .Get<FluentMapperTestClass>(e => e.PropertyString);
 
             // Assert
             Assert.AreEqual(7, actual.Count());
-        }
-
-        [TestMethod]
-        public void TestFluentMapPropertyValueAttributesMappingWithIncludeMappingFalse()
-        {
-            // Act
-            var actual = PropertyValueAttributeCache
-                .Get<FluentMapperTestClass>(e => e.PropertyString, false);
-
-            // Assert
-            Assert.AreEqual(0, actual.Count());
         }
 
         /*
@@ -493,21 +482,10 @@ namespace RepoDb.UnitTests.Mappers
         {
             // Act
             var actual = PropertyValueAttributeCache
-                .Get<FluentMapperTestWithAttributesClass>(e => e.PropertyString, true);
+                .Get<FluentMapperTestWithAttributesClass>(e => e.PropertyString);
 
             // Assert
             Assert.AreEqual(12, actual.Count());
-        }
-
-        [TestMethod]
-        public void TestFluentMapPropertyValueAttributesMappingWithMapAttributeWithIncludeMappingFalse()
-        {
-            // Act
-            var actual = PropertyValueAttributeCache
-                .Get<FluentMapperTestWithAttributesClass>(e => e.PropertyString, false);
-
-            // Assert
-            Assert.AreEqual(8, actual.Count());
         }
 
         /*
@@ -527,7 +505,7 @@ namespace RepoDb.UnitTests.Mappers
 
             // Act
             var actual = PropertyValueAttributeCache
-                .Get<FluentMapperTestClass>(e => e.PropertyString, true).ToList();
+                .Get<FluentMapperTestClass>(e => e.PropertyString).ToList();
 
             // Assert
             for (var i = 0; i < attributes.Count; i++)

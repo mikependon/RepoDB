@@ -170,7 +170,7 @@ namespace RepoDb.Extensions
         internal static PropertyInfo GetPropertyOrThrow(Type type,
             string propertyName)
         {
-            var property = TypeExtension.GetProperty(type, propertyName, true);
+            var property = TypeExtension.GetProperty(type, propertyName);
             if (property == null)
             {
                 throw new PropertyNotFoundException($"The property '{propertyName}' is not found from type '{type.FullName}'.");

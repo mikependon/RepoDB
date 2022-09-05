@@ -316,7 +316,7 @@ namespace RepoDb
         /// <returns>The mapped <see cref="DbType"/> object of the property.</returns>
         public static DbType? Get<TEntity>(string propertyName)
             where TEntity : class =>
-            Get(typeof(TEntity), TypeExtension.GetProperty<TEntity>(propertyName, true));
+            Get(typeof(TEntity), TypeExtension.GetProperty<TEntity>(propertyName));
 
         /// <summary>
         /// Property Level: Get the existing mapped <see cref="DbType"/> object of the class property (via <see cref="Field"/> object).
@@ -326,7 +326,7 @@ namespace RepoDb
         /// <returns>The mapped <see cref="DbType"/> object of the property.</returns>
         public static DbType? Get<TEntity>(Field field)
             where TEntity : class =>
-            Get(typeof(TEntity), TypeExtension.GetProperty<TEntity>(field.Name, true));
+            Get(typeof(TEntity), TypeExtension.GetProperty<TEntity>(field.Name));
 
         /// <summary>
         /// Property Level: Get the existing mapped <see cref="DbType"/> object of the <see cref="PropertyInfo"/> object.
@@ -370,7 +370,7 @@ namespace RepoDb
         /// <param name="propertyName">The name of the property.</param>
         public static void Remove<TEntity>(string propertyName)
             where TEntity : class =>
-            Remove(typeof(TEntity), TypeExtension.GetProperty<TEntity>(propertyName, true));
+            Remove(typeof(TEntity), TypeExtension.GetProperty<TEntity>(propertyName));
 
         /// <summary>
         /// Property Level: Remove the existing mapped <see cref="DbType"/> from the class property (via <see cref="Field"/> object).
@@ -379,7 +379,7 @@ namespace RepoDb
         /// <param name="field">The instance of <see cref="Field"/> object.</param>
         public static void Remove<TEntity>(Field field)
             where TEntity : class =>
-            Remove(typeof(TEntity), TypeExtension.GetProperty<TEntity>(field.Name, true));
+            Remove(typeof(TEntity), TypeExtension.GetProperty<TEntity>(field.Name));
 
         /// <summary>
         /// Property Level: Remove the existing mapped <see cref="DbType"/> from the <see cref="PropertyInfo"/> object.
