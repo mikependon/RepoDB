@@ -1,4 +1,5 @@
 using RepoDb.Extensions;
+using RepoDb.Interfaces;
 using RepoDb.Reflection;
 using System;
 using System.Collections.Generic;
@@ -19,29 +20,42 @@ namespace RepoDb
          *       we are not passing the values to the DataReader.ToEnumerable() method.
          */
 
-        private DbConnection connection = null;
-        private DbDataReader reader = null;
-        private bool isDisposeConnection = false;
-        private object param = null;
+        private DbConnection _connection = null;
+        private DbDataReader _reader = null;
+        private bool _isDisposeConnection = false;
+        private object _param = null;
+        private string _cacheKey = null;
+        private int? _cacheItemExpiration = null;
+        private ICache _cache = null;
+        private List<object> _items = new List<object>();
 
         /// <summary>
         /// Creates a new instance of <see cref="QueryMultipleExtractor"/> class.
         /// </summary>
         /// <param name="connection">The instance of the <see cref="DbConnection"/> object that is current in used.</param>
         /// <param name="reader">The instance of the <see cref="DbDataReader"/> object to be extracted.</param>
-        /// <param name="isDisposeConnection">The flag that is used to define whether the associated <paramref name="connection"/> object will be disposed during the disposition process.</param>
         /// <param name="param">The parameter in used during the execution.</param>
+        /// <param name="cacheKey">The key to the cached items.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+        /// <param name="cache">The cache object to be used.</param>
+        /// <param name="isDisposeConnection">The flag that is used to define whether the associated <paramref name="connection"/> object will be disposed during the disposition process.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        internal QueryMultipleExtractor(DbConnection connection,
-            DbDataReader reader,
-            bool isDisposeConnection = false,
+        internal QueryMultipleExtractor(DbConnection connection = null,
+            DbDataReader reader = null,
             object param = null,
+            string cacheKey = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            ICache cache = null,
+            bool isDisposeConnection = false,
             CancellationToken cancellationToken = default)
         {
-            this.connection = connection;
-            this.reader = reader;
-            this.isDisposeConnection = isDisposeConnection;
-            this.param = param;
+            _connection = connection;
+            _reader = reader;
+            _isDisposeConnection = isDisposeConnection;
+            _param = param;
+            _cacheKey = cacheKey;
+            _cacheItemExpiration = cacheItemExpiration;
+            _cache = cache;
             Position = 0;
             CancellationToken = cancellationToken;
         }
@@ -52,16 +66,16 @@ namespace RepoDb
         public void Dispose()
         {
             // Reader
-            reader?.Dispose();
+            _reader?.Dispose();
 
             // Connection
-            if (isDisposeConnection == true)
+            if (_isDisposeConnection == true)
             {
-                connection?.Dispose();
+                _connection?.Dispose();
             }
 
             // Set the output parameters
-            DbConnectionExtension.SetOutputParameters(param);
+            DbConnectionExtension.SetOutputParameters(_param);
         }
 
         #region Properties
@@ -72,9 +86,63 @@ namespace RepoDb
         public int Position { get; private set; }
 
         /// <summary>
-        /// Gets the instance of the <see cref="CancellationToken"/> currently in used.
+        /// Gets the instance of the <see cref="System.Threading.CancellationToken"/> currently in used.
         /// </summary>
         public CancellationToken CancellationToken { get; private set; }
+
+        #endregion
+
+        #region Cache
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        private bool GetCacheItem<T>(out T value)
+        {
+            if (_cacheKey != null)
+            {
+                var cachedItem = _cache?.Get<object[]>(_cacheKey, false);
+
+                if (cachedItem != null)
+                {
+                    if (Position < cachedItem.Value.Length)
+                    {
+                        value = (T)cachedItem.Value[Position];
+                        return true;
+                    }
+                }
+            }
+            
+            value = default(T);
+
+            return false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="item"></param>
+        private void AddToCache(object item)
+        {
+            if (Position == 0)
+            {
+                _items.Clear();
+            }
+
+            _items.Add(item);
+
+            if (_cacheKey != null)
+            {
+                var cachedItem = _cache?.Get<object[]>(_cacheKey, false);
+                if (cachedItem != null)
+                {
+                    cachedItem.Update(_items.AsArray(), _cacheItemExpiration, false);
+                }
+            }
+        }
 
         #endregion
 
@@ -90,11 +158,17 @@ namespace RepoDb
         /// <returns>An enumerable of extracted data entity.</returns>
         public IEnumerable<TEntity> Extract<TEntity>(bool isMoveToNextResult = true)
         {
-            var result = DataReader.ToEnumerable<TEntity>(reader).AsList();
+            if (GetCacheItem<IEnumerable<TEntity>>(out var result) == false)
+            {
+                result = DataReader.ToEnumerable<TEntity>(_reader).AsList();
+                AddToCache(result);
+            }
+
             if (isMoveToNextResult)
             {
                 NextResult();
             }
+
             return result;
         }
 
@@ -106,13 +180,19 @@ namespace RepoDb
         /// <returns>An enumerable of extracted data entity.</returns>
         public async Task<IEnumerable<TEntity>> ExtractAsync<TEntity>(bool isMoveToNextResult = true)
         {
-            var result = await DataReader.ToEnumerableAsync<TEntity>(reader, cancellationToken: CancellationToken)
-                .ToListAsync(CancellationToken);
+            if (GetCacheItem<IEnumerable<TEntity>>(out var result) == false)
+            {
+                result = await DataReader
+                    .ToEnumerableAsync<TEntity>(_reader, cancellationToken: CancellationToken)
+                    .ToListAsync(CancellationToken);
+                AddToCache(result);
+            }
 
             if (isMoveToNextResult)
             {
                 await NextResultAsync();
             }
+
             return result;
         }
 
@@ -127,11 +207,17 @@ namespace RepoDb
         /// <returns>An enumerable of extracted data entity.</returns>
         public IEnumerable<dynamic> Extract(bool isMoveToNextResult = true)
         {
-            var result = DataReader.ToEnumerable(reader).AsList();
+            if (GetCacheItem<IEnumerable<dynamic>>(out var result) == false)
+            {
+                result = DataReader.ToEnumerable(_reader).AsList();
+                AddToCache(result);
+            }
+
             if (isMoveToNextResult)
             {
                 NextResult();
             }
+
             return result;
         }
 
@@ -142,8 +228,12 @@ namespace RepoDb
         /// <returns>An enumerable of extracted data entity.</returns>
         public async Task<IEnumerable<dynamic>> ExtractAsync(bool isMoveToNextResult = true)
         {
-            var result = await DataReader.ToEnumerableAsync(reader, cancellationToken: CancellationToken)
-                .ToListAsync(CancellationToken);
+            if (GetCacheItem<IEnumerable<dynamic>>(out var result) == false)
+            {
+                result = await DataReader.ToEnumerableAsync(_reader, cancellationToken: CancellationToken)
+                    .ToListAsync(CancellationToken);
+                AddToCache(result);
+            }
 
             if (isMoveToNextResult)
             {
@@ -168,16 +258,21 @@ namespace RepoDb
         /// <returns>An instance of extracted object as value result.</returns>
         public TResult Scalar<TResult>(bool isMoveToNextResult = true)
         {
-            var value = default(TResult);
-            if (reader.Read())
+            if (GetCacheItem<TResult>(out var result) == false)
             {
-                value = Converter.ToType<TResult>(reader[0]);
+                if (_reader.Read())
+                {
+                    result = Converter.ToType<TResult>(_reader[0]);
+                    AddToCache(result);
+                }
             }
+
             if (isMoveToNextResult)
             {
                 NextResult();
             }
-            return value;
+
+            return result;
         }
 
         /// <summary>
@@ -188,16 +283,21 @@ namespace RepoDb
         /// <returns>An instance of extracted object as value result.</returns>
         public async Task<TResult> ScalarAsync<TResult>(bool isMoveToNextResult = true)
         {
-            var value = default(TResult);
-            if (await reader.ReadAsync(CancellationToken))
+            if (GetCacheItem<TResult>(out var result) == false)
             {
-                value = Converter.ToType<TResult>(reader[0]);
+                if (await _reader.ReadAsync(CancellationToken))
+                {
+                    result = Converter.ToType<TResult>(_reader[0]);
+                    AddToCache(result);
+                }
             }
+
             if (isMoveToNextResult)
             {
                 await NextResultAsync();
             }
-            return value;
+
+            return result;
         }
 
         #endregion
@@ -231,14 +331,14 @@ namespace RepoDb
         /// <returns>True if there are more result sets; otherwise false.</returns>
         /// </summary>
         public bool NextResult() =>
-            (Position = reader.NextResult() ? Position + 1 : -1) >= 0;
+            (Position = _reader.NextResult() ? Position + 1 : -1) >= 0;
 
         /// <summary>
         /// Advances the <see cref="DbDataReader"/> object to the next result in an asynchronous way.
         /// <returns>True if there are more result sets; otherwise false.</returns>
         /// </summary>
         public async Task<bool> NextResultAsync() =>
-            (Position = await reader.NextResultAsync(CancellationToken) ? Position + 1 : -1) >= 0;
+            (Position = await _reader.NextResultAsync(CancellationToken) ? Position + 1 : -1) >= 0;
 
         #endregion
     }
