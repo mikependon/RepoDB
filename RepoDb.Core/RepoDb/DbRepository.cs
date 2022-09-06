@@ -852,12 +852,17 @@ namespace RepoDb
         /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An instance of <see cref="QueryMultipleExtractor"/> used to extract the results.</returns>
         public QueryMultipleExtractor ExecuteQueryMultiple(string commandText,
             object param = null,
             CommandType? commandType = null,
+            string cacheKey = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null)
         {
@@ -874,8 +879,11 @@ namespace RepoDb
             return connection.ExecuteQueryMultipleInternal(commandText: commandText,
                 param: param,
                 commandType: commandType,
+                cacheKey: cacheKey,
+                cacheItemExpiration: CacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: Cache,
                 isDisposeConnection: isDisposeConnection);
         }
 
@@ -892,6 +900,10 @@ namespace RepoDb
         /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
@@ -899,6 +911,7 @@ namespace RepoDb
         public Task<QueryMultipleExtractor> ExecuteQueryMultipleAsync(string commandText,
             object param = null,
             CommandType? commandType = null,
+            string cacheKey = null,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
@@ -916,8 +929,11 @@ namespace RepoDb
             return connection.ExecuteQueryMultipleAsyncInternal(commandText: commandText,
                 param: param,
                 commandType: commandType,
+                cacheKey: cacheKey,
+                cacheItemExpiration: CacheItemExpiration,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                cache: Cache,
                 isDisposeConnection: isDisposeConnection,
                 cancellationToken: cancellationToken);
         }
