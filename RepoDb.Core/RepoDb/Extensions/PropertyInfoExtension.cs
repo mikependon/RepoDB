@@ -62,7 +62,7 @@ namespace RepoDb.Extensions
 
             return mappedName ??
                 PropertyMapper.Get(declaringType, property) ??
-                GetPropertyValueAttribute<NameAttribute>(property, declaringType, true)?.Name ??
+                GetPropertyValueAttribute<NameAttribute>(property, declaringType)?.Name ??
                 property.Name;
         }
 
@@ -180,15 +180,34 @@ namespace RepoDb.Extensions
             AsFields(properties.AsEnumerable<PropertyInfo>());
 
         /// <summary>
+        /// Gets the mapped <see cref="DbType"/> for the current <see cref="PropertyInfo"/>.
+        /// </summary>
+        /// <param name="propertyInfo">The target property.</param>
+        /// <returns>The mapped <see cref="DbType"/> object.</returns>
+        public static DbType? GetDbType(this PropertyInfo propertyInfo) =>
+            GetDbType(propertyInfo, propertyInfo.DeclaringType);
+
+        /// <summary>
+        /// Gets the mapped <see cref="DbType"/> for the current <see cref="PropertyInfo"/>.
+        /// </summary>
+        /// <param name="propertyInfo">The target property.</param>
+        /// <param name="declaringType">The declaring type.</param>
+        /// <returns>The mapped <see cref="DbType"/> object.</returns>
+        public static DbType? GetDbType(this PropertyInfo propertyInfo,
+            Type declaringType) =>
+            TypeMapCache.Get(declaringType, propertyInfo) ??
+                GetPropertyValueAttribute<DbTypeAttribute>(propertyInfo, declaringType)?.DbType ??
+                (DbType?)GetDbTypePropertyValueAttribute(propertyInfo, declaringType)?.Value ??
+                TypeMapCache.Get(propertyInfo.PropertyType);
+
+        /// <summary>
         /// Returns the list of <see cref="PropertyValueAttribute"/> object that is currently mapped
         /// on the target <see cref="PropertyInfo"/> object.
         /// </summary>
         /// <param name="propertyInfo">The target property.</param>
-        /// <param name="includeMappings">True to include the existing mappings.</param>
         /// <returns>The list of mapped <see cref="PropertyHandlerAttribute"/> objects.</returns>
-        public static IEnumerable<PropertyValueAttribute> GetPropertyValueAttributes(this PropertyInfo propertyInfo,
-            bool includeMappings = false) =>
-            GetPropertyValueAttributes(propertyInfo, propertyInfo.DeclaringType, includeMappings);
+        public static IEnumerable<PropertyValueAttribute> GetPropertyValueAttributes(this PropertyInfo propertyInfo) =>
+            GetPropertyValueAttributes(propertyInfo, propertyInfo.DeclaringType);
 
         /// <summary>
         /// Returns the list of <see cref="PropertyValueAttribute"/> object that is currently mapped
@@ -196,11 +215,9 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="property">The target property.</param>
         /// <param name="declaringType">The declaring type of the property.</param>
-        /// <param name="includeMappings">True to include the existing mappings.</param>
         /// <returns>The list of mapped <see cref="PropertyHandlerAttribute"/> objects.</returns>
         public static IEnumerable<PropertyValueAttribute> GetPropertyValueAttributes(this PropertyInfo property,
-            Type declaringType,
-            bool includeMappings = false)
+            Type declaringType)
         {
             var customAttributes = property?
                 .GetCustomAttributes()?
@@ -209,19 +226,12 @@ namespace RepoDb.Extensions
                 .Select(e =>
                     (PropertyValueAttribute)e);
 
-            if (includeMappings)
-            {
-                var mappedAttributes = PropertyValueAttributeMapper
-                    .Get((declaringType ?? property?.DeclaringType), property)?
-                    .Where(e => customAttributes?.Contains(e) != true);
+            var mappedAttributes = PropertyValueAttributeMapper
+                .Get((declaringType ?? property?.DeclaringType), property)?
+                .Where(e => customAttributes?.Contains(e) != true) ?? PropertyValueAttributeMapper.Get(property.PropertyType);
 
-                return customAttributes == null ? mappedAttributes : mappedAttributes == null ? customAttributes :
-                    mappedAttributes.Union(customAttributes);
-            }
-            else
-            {
-                return customAttributes;
-            }
+            return customAttributes == null ? mappedAttributes : mappedAttributes == null ? customAttributes :
+                mappedAttributes.Union(customAttributes);
         }
 
         /// <summary>
@@ -230,12 +240,10 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <typeparam name="TPropertyValueAttribute">The target type of the <see cref="PropertyValueAttribute"/>.</typeparam>
         /// <param name="property">The property where to extract the instance of <see cref="PropertyValueAttribute"/> object.</param>
-        /// <param name="includeMappings">True to include the existing mappings.</param>
         /// <returns>The instance of target <see cref="PropertyValueAttribute"/> object.</returns>
-        public static TPropertyValueAttribute GetPropertyValueAttribute<TPropertyValueAttribute>(this PropertyInfo property,
-            bool includeMappings = false)
+        public static TPropertyValueAttribute GetPropertyValueAttribute<TPropertyValueAttribute>(this PropertyInfo property)
             where TPropertyValueAttribute : PropertyValueAttribute =>
-            GetPropertyValueAttribute<TPropertyValueAttribute>(property, property.DeclaringType, includeMappings);
+            GetPropertyValueAttribute<TPropertyValueAttribute>(property, property.DeclaringType);
 
         /// <summary>
         /// Gets the instance of <see cref="PropertyValueAttribute"/> object from the existing mapped
@@ -244,13 +252,11 @@ namespace RepoDb.Extensions
         /// <typeparam name="TPropertyValueAttribute">The target type of the <see cref="PropertyValueAttribute"/>.</typeparam>
         /// <param name="property">The property where to extract the instance of <see cref="PropertyValueAttribute"/> object.</param>
         /// <param name="declaringType">The declaring type of the property.</param>
-        /// <param name="includeMappings">True to include the existing mappings.</param>
         /// <returns>The instance of target <see cref="PropertyValueAttribute"/> object.</returns>
         public static TPropertyValueAttribute GetPropertyValueAttribute<TPropertyValueAttribute>(this PropertyInfo property,
-            Type declaringType,
-            bool includeMappings = false)
+            Type declaringType)
             where TPropertyValueAttribute : PropertyValueAttribute =>
-            (TPropertyValueAttribute)GetPropertyValueAttributes(property, declaringType, includeMappings)?
+            (TPropertyValueAttribute)GetPropertyValueAttributes(property, declaringType)?
                 .LastOrDefault(e => typeof(TPropertyValueAttribute) == e.GetType());
 
         /// <summary>

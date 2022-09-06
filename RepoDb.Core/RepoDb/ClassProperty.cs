@@ -252,10 +252,7 @@ namespace RepoDb
                 return dbType;
             }
             isDbTypeWasSet = true;
-            return dbType = TypeMapCache.Get(GetDeclaringType(), PropertyInfo) ??
-                PropertyInfo.GetPropertyValueAttribute<DbTypeAttribute>(GetDeclaringType(), true)?.DbType ??
-                (DbType?)PropertyInfo.GetDbTypePropertyValueAttribute(GetDeclaringType())?.Value ??
-                TypeMapCache.Get(PropertyInfo.PropertyType);
+            return dbType = PropertyInfo.GetDbType();
         }
 
         /*
@@ -317,7 +314,7 @@ namespace RepoDb
                 return propertyValueAttributes;
             }
             isPropertyValueAttributesWasSet = true;
-            return propertyValueAttributes = PropertyInfo.GetPropertyValueAttributes(GetDeclaringType(), true);
+            return propertyValueAttributes = PropertyInfo.GetPropertyValueAttributes(GetDeclaringType());
         }
 
         #endregion

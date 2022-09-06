@@ -82,7 +82,7 @@ namespace RepoDb.UnitTests.Cachers
             var classProperty = PropertyCache.Get<PropertyValueAttributeClass>("PropertyInt", true);
 
             // Act
-            var actual = new PropertyValueAttributeResolver().Resolve(classProperty.PropertyInfo);
+            var actual = new PropertyValueAttributePropertyLevelResolver().Resolve(classProperty.PropertyInfo);
 
             // Assert
             Assert.AreEqual(2, actual.Count());
@@ -99,23 +99,10 @@ namespace RepoDb.UnitTests.Cachers
             var classProperty = PropertyCache.Get<PropertyValueAttributeClass>("PropertyString", true);
 
             // Act
-            var actual = new PropertyValueAttributeResolver().Resolve(classProperty.PropertyInfo, true);
+            var actual = new PropertyValueAttributePropertyLevelResolver().Resolve(classProperty.PropertyInfo);
 
             // Assert
             Assert.AreEqual(7, actual.Count());
-        }
-
-        [TestMethod]
-        public void TestPropertyValueAttributeResolverWithMappedAttributesAndWithIncludeMappingsFalseViaPropertyInfo()
-        {
-            // Prepare
-            var classProperty = PropertyCache.Get<PropertyValueAttributeClass>("PropertyString", true);
-
-            // Act
-            var actual = new PropertyValueAttributeResolver().Resolve(classProperty.PropertyInfo, false);
-
-            // Assert
-            Assert.AreEqual(0, actual.Count());
         }
 
         /*
@@ -129,23 +116,10 @@ namespace RepoDb.UnitTests.Cachers
             var classProperty = PropertyCache.Get<PropertyValueAttributeClass>("PropertyDecimal", true);
 
             // Act
-            var actual = new PropertyValueAttributeResolver().Resolve(classProperty.PropertyInfo, true);
+            var actual = new PropertyValueAttributePropertyLevelResolver().Resolve(classProperty.PropertyInfo);
 
             // Assert
             Assert.AreEqual(11, actual.Count());
-        }
-
-        [TestMethod]
-        public void TestPropertyValueAttributeResolverCollisionsWithIncludeMappingsFalseViaPropertyInfo()
-        {
-            // Prepare
-            var classProperty = PropertyCache.Get<PropertyValueAttributeClass>("PropertyDecimal", true);
-
-            // Act
-            var actual = new PropertyValueAttributeResolver().Resolve(classProperty.PropertyInfo, false);
-
-            // Assert
-            Assert.AreEqual(7, actual.Count());
         }
 
         #endregion

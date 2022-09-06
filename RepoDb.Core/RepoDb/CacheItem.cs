@@ -45,11 +45,11 @@ namespace RepoDb
         #region Methods
 
         /// <summary>
-        /// Updates the value of the current item based from the source item.
+        /// Updates the properties of the current item based from the passed item.
         /// </summary>
         /// <param name="item">The source item.</param>
         /// <param name="throwException">Throws an exception if the operation has failed to update an item.</param>
-        internal void UpdateFrom(CacheItem<T> item,
+        internal void Update(CacheItem<T> item,
             bool throwException = true)
         {
             if (!IsExpired() && throwException)
@@ -60,6 +60,26 @@ namespace RepoDb
             Value = item.Value;
             CreatedDate = item.CreatedDate;
             Expiration = CreatedDate.AddMinutes(item.CacheItemExpiration ?? Constant.DefaultCacheItemExpirationInMinutes);
+        }
+
+        /// <summary>
+        /// Updates the value of the current item.
+        /// </summary>
+        /// <param name="value">The actual value.</param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+        /// <param name="throwException">Throws an exception if the operation has failed to update an item.</param>
+        internal void Update(T value,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            bool throwException = true)
+        {
+            if (!IsExpired() && throwException)
+            {
+                throw new InvalidOperationException($"Cannot update the item that is not yet expired.");
+            }
+
+            Value = value;
+            CreatedDate = DateTime.UtcNow;
+            Expiration = CreatedDate.AddMinutes(cacheItemExpiration.Value);
         }
 
         #endregion

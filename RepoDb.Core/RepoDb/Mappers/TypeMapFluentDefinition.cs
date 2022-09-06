@@ -1,5 +1,7 @@
-﻿using RepoDb.Interfaces;
+﻿using RepoDb.Attributes.Parameter;
+using RepoDb.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Data;
 
 namespace RepoDb
@@ -91,5 +93,55 @@ namespace RepoDb
         }
 
         #endregion
+
+        #region PropertyValueAttributes
+
+        /// <summary>
+        /// Defines a mapping between a .NET CLR type and the list of <see cref="PropertyValueAttribute"/> object.
+        /// </summary>
+        /// <typeparam name="T">The target type.</typeparam>
+        /// <param name="attributes">The list of <see cref="PropertyValueAttribute"/> object.</param>
+        /// <remarks>The default behavior will be affected if the settings are not handled properly by the user (i.e.: setting the type <see cref="string"/> name attribute to something would affect all the objects properties with type <see cref="string"/>).</remarks>
+        public TypeMapFluentDefinition<TType> PropertyValueAttributes<T>(IEnumerable<PropertyValueAttribute> attributes) =>
+            PropertyValueAttributes<T>(attributes);
+
+        /// <summary>
+        /// Defines a mapping between a .NET CLR type and the list of <see cref="PropertyValueAttribute"/> object.
+        /// </summary>
+        /// <typeparam name="T">The target type.</typeparam>
+        /// <param name="attributes">The list of <see cref="PropertyValueAttribute"/> object.</param>
+        /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
+        /// <remarks>The default behavior will be affected if the settings are not handled properly by the user (i.e.: setting the type <see cref="string"/> name attribute to something would affect all the objects properties with type <see cref="string"/>).</remarks>
+        public TypeMapFluentDefinition<TType> PropertyValueAttributes<T>(IEnumerable<PropertyValueAttribute> attributes,
+            bool force) =>
+            PropertyValueAttributes(typeof(T), attributes, force);
+
+        /// <summary>
+        /// Defines a mapping between a .NET CLR type and the list of <see cref="PropertyValueAttribute"/> object.
+        /// </summary>
+        /// <param name="type">The target type.</param>
+        /// <param name="attributes">The list of <see cref="PropertyValueAttribute"/> object.</param>
+        /// <remarks>The default behavior will be affected if the settings are not handled properly by the user (i.e.: setting the type <see cref="string"/> name attribute to something would affect all the objects properties with type <see cref="string"/>).</remarks>
+        public TypeMapFluentDefinition<TType> PropertyValueAttributes(Type type,
+            IEnumerable<PropertyValueAttribute> attributes) =>
+            PropertyValueAttributes(type, attributes, false);
+
+        /// <summary>
+        /// Defines a mapping between a .NET CLR type and the list of <see cref="PropertyValueAttribute"/> object.
+        /// </summary>
+        /// <param name="type">The target type.</param>
+        /// <param name="attributes">The list of <see cref="PropertyValueAttribute"/> object.</param>
+        /// <param name="force">A value that indicates whether to force the mapping. If one is already exists, then it will be overwritten.</param>
+        /// <remarks>The default behavior will be affected if the settings are not handled properly by the user (i.e.: setting the type <see cref="string"/> name attribute to something would affect all the objects properties with type <see cref="string"/>).</remarks>
+        public TypeMapFluentDefinition<TType> PropertyValueAttributes(Type type,
+            IEnumerable<PropertyValueAttribute> attributes,
+            bool force)
+        {
+            PropertyValueAttributeMapper.Add(type, attributes, force);
+            return this;
+        }
+
+        #endregion
+
     }
 }
