@@ -885,55 +885,85 @@ namespace RepoDb
         /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cache">The cache object to be used.</param>
         /// <returns>An instance of <see cref="QueryMultipleExtractor"/> used to extract the results.</returns>
         public static QueryMultipleExtractor ExecuteQueryMultiple(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
+            string cacheKey = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-            IDbTransaction transaction = null) =>
+            IDbTransaction transaction = null,
+            ICache cache = null) =>
             ExecuteQueryMultipleInternal(connection,
                 commandText,
                 param,
                 commandType,
+                cacheKey,
+                cacheItemExpiration,
                 commandTimeout,
                 transaction,
+                cache,
                 false);
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="commandText"></param>
         /// <param name="param"></param>
         /// <param name="commandType"></param>
+        /// <param name="cacheKey"></param>
+        /// <param name="cacheItemExpiration"></param>
         /// <param name="commandTimeout"></param>
         /// <param name="transaction"></param>
+        /// <param name="cache"></param>
         /// <param name="isDisposeConnection"></param>
         /// <returns></returns>
         internal static QueryMultipleExtractor ExecuteQueryMultipleInternal(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
+            string cacheKey = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
+            ICache cache = null,
             bool isDisposeConnection = false)
         {
-            // Call
-            var reader = ExecuteReaderInternal(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: commandType,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                entityType: null,
-                dbFields: null,
-                skipCommandArrayParametersCheck: false);
+            IDataReader reader = null;
+
+            // Get Cache
+            if (cacheKey == null || cache?.Contains(cacheKey) != true)
+            {
+                // Call
+                reader = ExecuteReaderInternal(connection: connection,
+                    commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    entityType: null,
+                    dbFields: null,
+                    skipCommandArrayParametersCheck: false);
+            }
 
             // Return
-            return new QueryMultipleExtractor((DbConnection)connection, (DbDataReader)reader, isDisposeConnection, param);
+            return new QueryMultipleExtractor((DbConnection)connection,
+                (DbDataReader)reader,
+                param,
+                cacheKey,
+                cacheItemExpiration,
+                cache,
+                isDisposeConnection);
         }
 
         #endregion
@@ -950,35 +980,50 @@ namespace RepoDb
         /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used.</param>
+        /// <param name="cacheKey">
+        /// The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.
+        /// This will only work if the 'cache' argument is set.
+        /// </param>
+        /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="cache">The cache object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An instance of <see cref="QueryMultipleExtractor"/> used to extract the results.</returns>
         public static Task<QueryMultipleExtractor> ExecuteQueryMultipleAsync(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
+            string cacheKey = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
+            ICache cache = null,
             CancellationToken cancellationToken = default) =>
             ExecuteQueryMultipleAsyncInternal(connection,
                 commandText,
                 param,
                 commandType,
+                cacheKey,
+                cacheItemExpiration,
                 commandTimeout,
                 transaction,
+                cache,
                 false,
                 cancellationToken);
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         /// <param name="connection"></param>
         /// <param name="commandText"></param>
         /// <param name="param"></param>
         /// <param name="commandType"></param>
+        /// <param name="cacheKey"></param>
+        /// <param name="cacheItemExpiration"></param>
         /// <param name="commandTimeout"></param>
         /// <param name="transaction"></param>
+        /// <param name="cache"></param>
         /// <param name="isDisposeConnection"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
@@ -986,26 +1031,41 @@ namespace RepoDb
             string commandText,
             object param = null,
             CommandType? commandType = null,
+            string cacheKey = null,
+            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
+            ICache cache = null,
             bool isDisposeConnection = false,
             CancellationToken cancellationToken = default)
         {
-            // Call
-            var reader = await ExecuteReaderAsyncInternal(connection: connection,
-                commandText: commandText,
-                param: param,
-                commandType: commandType,
-                commandTimeout: commandTimeout,
-                transaction: transaction,
-                cancellationToken: cancellationToken,
-                entityType: null,
-                dbFields: null,
-                skipCommandArrayParametersCheck: false);
+            IDataReader reader = null;
+
+            // Get Cache
+            if (cacheKey == null || cache?.Contains(cacheKey) != true)
+            {
+                // Call
+                reader = await ExecuteReaderAsyncInternal(connection: connection,
+                    commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    cancellationToken: cancellationToken,
+                    entityType: null,
+                    dbFields: null,
+                    skipCommandArrayParametersCheck: false);
+            }
 
             // Return
-            return new QueryMultipleExtractor((DbConnection)connection, (DbDataReader)reader,
-                isDisposeConnection, param, cancellationToken);
+            return new QueryMultipleExtractor((DbConnection)connection,
+                (DbDataReader)reader,
+                param,
+                cacheKey,
+                cacheItemExpiration,
+                cache,
+                isDisposeConnection,
+                cancellationToken);
         }
 
         #endregion
