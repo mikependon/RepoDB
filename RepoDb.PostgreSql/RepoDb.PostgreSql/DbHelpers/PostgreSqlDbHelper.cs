@@ -65,7 +65,7 @@ namespace RepoDb.DbHelpers
 		                true
 	                  ELSE
 	  	                false
-	                  END AS IsNullable
+	                  END AS HasDefaultValue
                 FROM information_schema.columns C
                 LEFT JOIN
                 (

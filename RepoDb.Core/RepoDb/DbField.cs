@@ -32,7 +32,7 @@ namespace RepoDb
             byte? precision,
             byte? scale,
             string databaseType,
-            bool hasDefaultValue,
+            bool hasDefaultValue = false,
             string provider = null)
         {
             // Name is required

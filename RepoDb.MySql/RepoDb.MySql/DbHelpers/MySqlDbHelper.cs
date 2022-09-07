@@ -96,7 +96,7 @@ namespace RepoDb.DbHelpers
         {
             var columnType = reader.GetString(4);
             var excluded = GetBlobTypes();
-            var size = (int?)null;
+            int? size;
             if (excluded.Contains(columnType.ToLowerInvariant()))
             {
                 size = null;
@@ -111,8 +111,8 @@ namespace RepoDb.DbHelpers
                 reader.GetBoolean(3),
                 DbTypeResolver.Resolve(columnType),
                 size,
-                reader.IsDBNull(6) ? (byte?)null : byte.Parse(reader.GetInt32(6).ToString()),
-                reader.IsDBNull(7) ? (byte?)null : byte.Parse(reader.GetInt32(7).ToString()),
+                reader.IsDBNull(6) ? null : byte.Parse(reader.GetInt32(6).ToString()),
+                reader.IsDBNull(7) ? null : byte.Parse(reader.GetInt32(7).ToString()),
                 reader.GetString(8),
                 reader.GetBoolean(9),
                 "MYSQL");
