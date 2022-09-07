@@ -83,8 +83,9 @@ namespace RepoDb.Contexts.Providers
             }
 
             // Create
-            var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var commandText = (string)null;
+            var dbFields = DbFieldCache
+                .Get(connection, tableName, transaction);
+            string commandText;
 
             // Create a different kind of requests
             if (batchSize > 1)
@@ -167,7 +168,7 @@ namespace RepoDb.Contexts.Providers
 
             // Create
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
-            var commandText = (string)null;
+            string commandText;
 
             // Create a different kind of requests
             if (batchSize > 1)
@@ -246,13 +247,6 @@ namespace RepoDb.Contexts.Providers
                 fields = dbFields?.AsFields();
             }
 
-            // Check the qualifiers
-            if (qualifiers?.Any() != true)
-            {
-                var primary = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary == true);
-                qualifiers = primary?.AsField().AsEnumerable();
-            }
-
             // Set the identity field
             identity = IdentityCache.Get(entityType)?.AsField() ??
                 FieldCache
@@ -261,10 +255,17 @@ namespace RepoDb.Contexts.Providers
                         string.Equals(field.Name.AsUnquoted(true, dbSetting), identityDbField?.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) ??
                 identityDbField?.AsField();
 
+            // Check the qualifiers
+            if (qualifiers?.Any() != true)
+            {
+                qualifiers = identity?.AsEnumerable();
+            }
+
             // Filter the actual properties for input fields
             inputFields = dbFields?
                 .Where(dbField =>
-                    fields.FirstOrDefault(field => string.Equals(field.Name.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
+                    fields.FirstOrDefault(field =>
+                        string.Equals(field.Name.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
                 .AsList();
 
             // Exclude the fields not on the actual entity
@@ -273,38 +274,42 @@ namespace RepoDb.Contexts.Providers
                 var entityFields = Field.Parse(entities?.FirstOrDefault());
                 inputFields = inputFields?
                     .Where(field =>
-                        entityFields.FirstOrDefault(f => string.Equals(f.Name.AsUnquoted(true, dbSetting), field.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
+                        entityFields.FirstOrDefault(f =>
+                            string.Equals(f.Name.AsUnquoted(true, dbSetting), field.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
                     .AsList();
             }
 
             // Variables for the context
-            var multipleEntitiesFunc = (Action<DbCommand, IList<object>>)null;
-            var singleEntityFunc = (Action<DbCommand, object>)null;
-            var identitySetterFunc = (Action<object, object>)null;
+            Action<DbCommand, IList<object>> multipleEntitiesParametersSetterFunc = null;
+            Action<DbCommand, object> singleEntityParametersSetterFunc = null;
+            Action<object, object> identityPropertySetterFunc = null;
 
             // Get if we have not skipped it
             if (identity != null)
             {
-                identitySetterFunc = FunctionCache.GetDataEntityPropertySetterCompiledFunction(entityType, identity);
+                identityPropertySetterFunc = FunctionCache
+                    .GetDataEntityPropertySetterCompiledFunction(entityType, identity);
             }
 
             // Identity which objects to set
             if (batchSize <= 1)
             {
-                singleEntityFunc = FunctionCache.GetDataEntityDbParameterSetterCompiledFunction(entityType,
-                    string.Concat(entityType.FullName, StringConstant.Period, tableName, ".MergeAll"),
-                    inputFields,
-                    null,
-                    dbSetting);
+                singleEntityParametersSetterFunc = FunctionCache
+                    .GetDataEntityDbParameterSetterCompiledFunction(entityType,
+                        string.Concat(entityType.FullName, StringConstant.Period, tableName, ".MergeAll"),
+                        inputFields,
+                        null,
+                        dbSetting);
             }
             else
             {
-                multipleEntitiesFunc = FunctionCache.GetDataEntityListDbParameterSetterCompiledFunction(entityType,
-                    string.Concat(entityType.FullName, StringConstant.Period, tableName, ".MergeAll"),
-                    inputFields,
-                    null,
-                    batchSize,
-                    dbSetting);
+                multipleEntitiesParametersSetterFunc = FunctionCache
+                    .GetDataEntityListDbParameterSetterCompiledFunction(entityType,
+                        string.Concat(entityType.FullName, StringConstant.Period, tableName, ".MergeAll"),
+                        inputFields,
+                        null,
+                        batchSize,
+                        dbSetting);
             }
 
             // Return the value
@@ -313,9 +318,9 @@ namespace RepoDb.Contexts.Providers
                 CommandText = commandText,
                 InputFields = inputFields,
                 BatchSize = batchSize,
-                SingleDataEntityParametersSetterFunc = singleEntityFunc,
-                MultipleDataEntitiesParametersSetterFunc = multipleEntitiesFunc,
-                IdentityPropertySetterFunc = identitySetterFunc
+                SingleDataEntityParametersSetterFunc = singleEntityParametersSetterFunc,
+                MultipleDataEntitiesParametersSetterFunc = multipleEntitiesParametersSetterFunc,
+                IdentityPropertySetterFunc = identityPropertySetterFunc
             };
         }
     }

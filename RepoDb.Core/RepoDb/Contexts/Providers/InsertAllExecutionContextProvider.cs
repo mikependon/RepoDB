@@ -76,7 +76,7 @@ namespace RepoDb.Contexts.Providers
 
             // Create
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var commandText = (string)null;
+            string commandText;
 
             // Create a different kind of requests
             if (batchSize > 1)
@@ -151,7 +151,7 @@ namespace RepoDb.Contexts.Providers
 
             // Create
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
-            var commandText = (string)null;
+            string commandText;
 
             // Create a different kind of requests
             if (batchSize > 1)
@@ -216,7 +216,7 @@ namespace RepoDb.Contexts.Providers
             var inputFields = (IEnumerable<DbField>)null;
             var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
 
-            // Set the identity field
+            // Set the primary field
             identity = IdentityCache.Get(entityType)?.AsField() ??
                 FieldCache
                     .Get(entityType)?
@@ -226,40 +226,44 @@ namespace RepoDb.Contexts.Providers
 
             // Filter the actual properties for input fields
             inputFields = dbFields?
-                .Where(dbField => dbField.IsIdentity == false) // Identity field is not insertable
                 .Where(dbField =>
-                    fields.FirstOrDefault(field => string.Equals(field.Name.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
+                    dbField.IsIdentity == false)
+                .Where(dbField =>
+                    fields.FirstOrDefault(field =>
+                        string.Equals(field.Name.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
                 .AsList();
 
             // Variables for the context
-            var multipleEntitiesFunc = (Action<DbCommand, IList<object>>)null;
-            var identitySettersFunc = (List<Action<object, DbCommand>>)null;
-            var singleEntityFunc = (Action<DbCommand, object>)null;
-            var identitySetterFunc = (Action<object, object>)null;
+            Action<DbCommand, IList<object>> multipleEntitiesParametersSetterFunc = null;
+            Action<DbCommand, object> singleEntityParametersSetterFunc = null;
+            Action<object, object> identityPropertySetterFunc = null;
 
             // Get if we have not skipped it
             if (identity != null)
             {
-                identitySetterFunc = FunctionCache.GetDataEntityPropertySetterCompiledFunction(entityType, identity);
+                identityPropertySetterFunc = FunctionCache
+                    .GetDataEntityPropertySetterCompiledFunction(entityType, identity);
             }
 
             // Identity which objects to set
             if (batchSize <= 1)
             {
-                singleEntityFunc = FunctionCache.GetDataEntityDbParameterSetterCompiledFunction(entityType,
-                    string.Concat(entityType.FullName, StringConstant.Period, tableName, ".InsertAll"),
-                    inputFields,
-                    null,
-                    dbSetting);
+                singleEntityParametersSetterFunc = FunctionCache
+                    .GetDataEntityDbParameterSetterCompiledFunction(entityType,
+                        string.Concat(entityType.FullName, StringConstant.Period, tableName, ".InsertAll"),
+                        inputFields,
+                        null,
+                        dbSetting);
             }
             else
             {
-                multipleEntitiesFunc = FunctionCache.GetDataEntityListDbParameterSetterCompiledFunction(entityType,
-                    string.Concat(entityType.FullName, StringConstant.Period, tableName, ".InsertAll"),
-                    inputFields,
-                    null,
-                    batchSize,
-                    dbSetting);
+                multipleEntitiesParametersSetterFunc = FunctionCache
+                    .GetDataEntityListDbParameterSetterCompiledFunction(entityType,
+                        string.Concat(entityType.FullName, StringConstant.Period, tableName, ".InsertAll"),
+                        inputFields,
+                        null,
+                        batchSize,
+                        dbSetting);
             }
 
             // Return the value
@@ -268,10 +272,9 @@ namespace RepoDb.Contexts.Providers
                 CommandText = commandText,
                 InputFields = inputFields,
                 BatchSize = batchSize,
-                SingleDataEntityParametersSetterFunc = singleEntityFunc,
-                MultipleDataEntitiesParametersSetterFunc = multipleEntitiesFunc,
-                IdentityPropertySetterFunc = identitySetterFunc,
-                IdentityPropertySettersFunc = identitySettersFunc
+                SingleDataEntityParametersSetterFunc = singleEntityParametersSetterFunc,
+                MultipleDataEntitiesParametersSetterFunc = multipleEntitiesParametersSetterFunc,
+                IdentityPropertySetterFunc = identityPropertySetterFunc
             };
         }
     }

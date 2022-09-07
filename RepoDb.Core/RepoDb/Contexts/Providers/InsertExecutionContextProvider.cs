@@ -168,7 +168,7 @@ namespace RepoDb.Contexts.Providers
             var inputFields = (IEnumerable<DbField>)null;
             var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
 
-            // Set the identity field
+            // Set the primary field
             identity = IdentityCache.Get(entityType)?.AsField() ??
                 FieldCache
                     .Get(entityType)?
@@ -178,19 +178,21 @@ namespace RepoDb.Contexts.Providers
 
             // Filter the actual properties for input fields
             inputFields = dbFields?
-                .Where(dbField => dbField.IsIdentity == false)
+                .Where(dbField =>
+                    dbField.IsIdentity == false)
                 .Where(dbField =>
                     fields.FirstOrDefault(field =>
                         string.Equals(field.Name.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
                 .AsList();
 
             // Variables for the entity action
-            var identityPropertySetter = (Action<object, object>)null;
+            Action<object, object> identityPropertySetterFunc = null;
 
             // Get the identity setter
             if (identity != null)
             {
-                identityPropertySetter = FunctionCache.GetDataEntityPropertySetterCompiledFunction(entityType, identity);
+                identityPropertySetterFunc = FunctionCache
+                    .GetDataEntityPropertySetterCompiledFunction(entityType, identity);
             }
 
             // Return the value
@@ -198,12 +200,13 @@ namespace RepoDb.Contexts.Providers
             {
                 CommandText = commandText,
                 InputFields = inputFields,
-                ParametersSetterFunc = FunctionCache.GetDataEntityDbParameterSetterCompiledFunction(entityType,
-                    string.Concat(entityType.FullName, StringConstant.Period, tableName, ".Insert"),
-                    inputFields?.AsList(),
-                    null,
-                    dbSetting),
-                IdentityPropertySetterFunc = identityPropertySetter
+                ParametersSetterFunc = FunctionCache
+                    .GetDataEntityDbParameterSetterCompiledFunction(entityType,
+                        string.Concat(entityType.FullName, StringConstant.Period, tableName, ".Insert"),
+                        inputFields?.AsList(),
+                        null,
+                        dbSetting),
+                IdentityPropertySetterFunc = identityPropertySetterFunc
             };
         }
     }

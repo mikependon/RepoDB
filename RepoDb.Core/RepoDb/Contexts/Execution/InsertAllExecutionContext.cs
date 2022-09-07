@@ -38,10 +38,5 @@ namespace RepoDb.Contexts.Execution
         /// 
         /// </summary>
         public Action<object, object> IdentityPropertySetterFunc { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public IEnumerable<Action<object, DbCommand>> IdentityPropertySettersFunc { get; set; }
     }
 }

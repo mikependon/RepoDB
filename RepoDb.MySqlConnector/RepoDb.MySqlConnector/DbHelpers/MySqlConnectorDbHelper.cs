@@ -113,7 +113,8 @@ namespace RepoDb.DbHelpers
                 reader.IsDBNull(6) ? (byte?)null : byte.Parse(reader.GetInt32(6).ToString()),
                 reader.IsDBNull(7) ? (byte?)null : byte.Parse(reader.GetInt32(7).ToString()),
                 reader.GetString(8),
-                "MSSQLC");
+                reader.GetBoolean(9),
+                "MYSQLC");
         }
 
         /// <summary>
@@ -127,7 +128,7 @@ namespace RepoDb.DbHelpers
         {
             var columnType = await reader.GetFieldValueAsync<string>(4, cancellationToken);
             var excluded = GetBlobTypes();
-            var size = (int?)null;
+            int? size;
             if (excluded.Contains(columnType.ToLowerInvariant()))
             {
                 size = null;
@@ -143,9 +144,10 @@ namespace RepoDb.DbHelpers
                 await reader.GetFieldValueAsync<bool>(3, cancellationToken),
                 DbTypeResolver.Resolve(columnType),
                 size,
-                await reader.IsDBNullAsync(6, cancellationToken) ? (byte?)null : byte.Parse((await reader.GetFieldValueAsync<int>(6, cancellationToken)).ToString()),
-                await reader.IsDBNullAsync(7, cancellationToken) ? (byte?)null : byte.Parse((await reader.GetFieldValueAsync<int>(7, cancellationToken)).ToString()),
+                await reader.IsDBNullAsync(6, cancellationToken) ? null : byte.Parse((await reader.GetFieldValueAsync<int>(6, cancellationToken)).ToString()),
+                await reader.IsDBNullAsync(7, cancellationToken) ? null : byte.Parse((await reader.GetFieldValueAsync<int>(7, cancellationToken)).ToString()),
                 await reader.GetFieldValueAsync<string>(8, cancellationToken),
+                await reader.GetFieldValueAsync<bool>(9, cancellationToken),
                 "MYSQLC");
         }
 

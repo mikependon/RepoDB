@@ -71,7 +71,8 @@ namespace RepoDb.DbHelpers
                 null,
                 null,
                 null,
-                "SQLITE");
+                !reader.IsDBNull(4),
+                "MSSQLITE");
         }
 
         /// <summary>
@@ -94,7 +95,8 @@ namespace RepoDb.DbHelpers
                 null,
                 null,
                 null,
-                "SQLITE");
+                !await reader.IsDBNullAsync(4, cancellationToken),
+                "MSSQLITE");
         }
 
         /// <summary>

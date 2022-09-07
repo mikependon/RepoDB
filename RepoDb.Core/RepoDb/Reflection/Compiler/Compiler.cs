@@ -747,10 +747,8 @@ namespace RepoDb.Reflection
         ///
         /// </summary>
         /// <param name="expression"></param>
-        /// <param name="propertyName"></param>
         /// <returns></returns>
-        internal static Expression ConvertExpressionToDbNullExpression(Expression expression,
-            string propertyName)
+        internal static Expression ConvertExpressionToDbNullExpression(Expression expression)
         {
             var valueIsNullExpression = Expression.Equal(expression, Expression.Constant(null));
             var dbNullValueExpresion = ConvertExpressionToTypeExpression(Expression.Constant(DBNull.Value), StaticType.Object);
@@ -1455,7 +1453,7 @@ namespace RepoDb.Reflection
                     $"{classProperty}", ex);
             }
 
-            // Convert to object
+            // Return the Value
             return ConvertExpressionToTypeExpression(expression, StaticType.Object);
         }
 
@@ -1552,7 +1550,7 @@ namespace RepoDb.Reflection
             // Nullable
             if (dbField?.IsNullable == true)
             {
-                expression = ConvertExpressionToDbNullExpression(expression, dbField.Name.AsUnquoted(true, dbSetting).AsAlphaNumeric());
+                expression = ConvertExpressionToDbNullExpression(expression);
             }
 
             // Set the value
@@ -1577,7 +1575,7 @@ namespace RepoDb.Reflection
             // Nullable
             if (dbField?.IsNullable == true)
             {
-                expression = ConvertExpressionToDbNullExpression(expression, dbField.Name.AsUnquoted(true, dbSetting).AsAlphaNumeric());
+                expression = ConvertExpressionToDbNullExpression(expression);
             }
 
             // Set the value

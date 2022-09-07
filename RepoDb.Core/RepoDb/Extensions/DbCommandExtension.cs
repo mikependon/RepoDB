@@ -892,18 +892,6 @@ namespace RepoDb.Extensions
         private static object AutomaticConvertGuidToString(object value) =>
             value?.ToString();
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="value"></param>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        private static object ConvertEnumValueToType(object value,
-            Type type) =>
-            value != null ?
-                type == StaticType.String ?
-                    value?.ToString() : Convert.ChangeType(Convert.ToInt32(value), type) : null;
-
         #endregion
     }
 }

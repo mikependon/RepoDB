@@ -2153,7 +2153,7 @@ namespace RepoDb
         /// <param name="context"></param>
         /// <returns></returns>
         internal static KeyFieldNotFoundException GetKeyFieldNotFoundException(string context) =>
-            new KeyFieldNotFoundException($"No primary key and identity key found at the '{context}'.");
+            new KeyFieldNotFoundException($"No primary key found at the '{context}'.");
 
         /// <summary>
         ///
@@ -2161,7 +2161,7 @@ namespace RepoDb
         /// <param name="type"></param>
         /// <returns></returns>
         internal static KeyFieldNotFoundException GetKeyFieldNotFoundException(Type type) =>
-            new KeyFieldNotFoundException($"No primary key and identify found at the target table and also to the given '{type.FullName}' object.");
+            new KeyFieldNotFoundException($"No primary key found at the target table and also to the given '{type.FullName}' object.");
 
         #endregion
 
