@@ -2035,7 +2035,7 @@ namespace RepoDb
                 // Set the return value
                 if (result != null)
                 {
-                    context.PrimaryPropertySetterFunc?.Invoke(entity, result);
+                    context.IdentityPropertySetterFunc?.Invoke(entity, result);
                 }
             }
 
@@ -2318,7 +2318,7 @@ namespace RepoDb
                 // Set the return value
                 if (result != null)
                 {
-                    context.PrimaryPropertySetterFunc?.Invoke(entity, result);
+                    context.IdentityPropertySetterFunc?.Invoke(entity, result);
                 }
             }
 

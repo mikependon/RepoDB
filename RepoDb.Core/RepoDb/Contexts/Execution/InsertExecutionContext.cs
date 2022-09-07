@@ -27,6 +27,6 @@ namespace RepoDb.Contexts.Execution
         /// <summary>
         /// 
         /// </summary>
-        public Action<object, object> PrimaryPropertySetterFunc { get; set; }
+        public Action<object, object> IdentityPropertySetterFunc { get; set; }
     }
 }

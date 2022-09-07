@@ -230,13 +230,13 @@ namespace RepoDb.Contexts.Providers
             }
 
             // Variables for the context
-            var multipleEntitiesFunc = (Action<DbCommand, IList<object>>)null;
-            var singleEntityFunc = (Action<DbCommand, object>)null;
+            Action<DbCommand, IList<object>> multipleEntitiesParametersSetterFunc = null;
+            Action<DbCommand, object> singleEntityParametersSetterFunc = null;
 
             // Identity which objects to set
             if (batchSize <= 1)
             {
-                singleEntityFunc = FunctionCache.GetDataEntityDbParameterSetterCompiledFunction(entityType,
+                singleEntityParametersSetterFunc = FunctionCache.GetDataEntityDbParameterSetterCompiledFunction(entityType,
                     string.Concat(entityType.FullName, StringConstant.Period, tableName, ".UpdateAll"),
                     inputFields,
                     null,
@@ -244,7 +244,7 @@ namespace RepoDb.Contexts.Providers
             }
             else
             {
-                multipleEntitiesFunc = FunctionCache.GetDataEntityListDbParameterSetterCompiledFunction(entityType,
+                multipleEntitiesParametersSetterFunc = FunctionCache.GetDataEntityListDbParameterSetterCompiledFunction(entityType,
                     string.Concat(entityType.FullName, StringConstant.Period, tableName, ".UpdateAll"),
                     inputFields,
                     null,
@@ -257,8 +257,8 @@ namespace RepoDb.Contexts.Providers
             {
                 CommandText = commandText,
                 InputFields = inputFields,
-                SingleDataEntityParametersSetterFunc = singleEntityFunc,
-                MultipleDataEntitiesParametersSetterFunc = multipleEntitiesFunc
+                SingleDataEntityParametersSetterFunc = singleEntityParametersSetterFunc,
+                MultipleDataEntitiesParametersSetterFunc = multipleEntitiesParametersSetterFunc
             };
         }
     }

@@ -175,17 +175,17 @@ namespace RepoDb.Contexts.Providers
             string commandText)
         {
             var dbSetting = connection.GetDbSetting();
-            var primary = (Field)null;
+            var identity = (Field)null;
             var inputFields = new List<DbField>();
-            var primaryDbField = dbFields?.FirstOrDefault(f => f.IsPrimary);
+            var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
 
             // Set the primary field
-            primary = PrimaryCache.Get(entityType)?.AsField() ??
+            identity = IdentityCache.Get(entityType)?.AsField() ??
                 FieldCache
                     .Get(entityType)?
                     .FirstOrDefault(field =>
-                        string.Equals(field.Name.AsUnquoted(true, dbSetting), primaryDbField?.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) ??
-                primaryDbField?.AsField();
+                        string.Equals(field.Name.AsUnquoted(true, dbSetting), identityDbField?.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) ??
+                identityDbField?.AsField();
 
             // Filter the actual properties for input fields
             inputFields = dbFields?
@@ -195,13 +195,13 @@ namespace RepoDb.Contexts.Providers
                 .AsList();
 
             // Variables for the entity action
-            var primaryPropertySetter = (Action<object, object>)null;
+            Action<object, object> identityPropertySetterFunc = null;
 
             // Get the identity setter
-            if (primary != null)
+            if (identity != null)
             {
-                primaryPropertySetter = FunctionCache
-                    .GetDataEntityPropertySetterCompiledFunction(entityType, primary);
+                identityPropertySetterFunc = FunctionCache
+                    .GetDataEntityPropertySetterCompiledFunction(entityType, identity);
             }
 
             // Return the value
@@ -215,7 +215,7 @@ namespace RepoDb.Contexts.Providers
                         inputFields?.AsList(),
                         null,
                         dbSetting),
-                PrimaryPropertySetterFunc = primaryPropertySetter
+                IdentityPropertySetterFunc = identityPropertySetterFunc
             };
         }
     }
