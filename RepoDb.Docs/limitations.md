@@ -7,6 +7,7 @@ We would like you and the community of .NET to understand the limitations of the
 ## Known Limitations
 
 - [Composite Keys](#composite-keys)
+- [Auto-Generated Primary Column](#auto-generated-primary-column)
 - [Computed Columns](#computed-columns)
 - [JOIN Query (Support)](#join-query-support)
 - [Cache Invalidation](#cache-invalidation)
@@ -96,6 +97,16 @@ using (var connection = new SqlConnection(ConnectionString))
 ```
 
 **Note**: There may be plenty of undiscovered scenarios that makes RepoDB unusable for the use-cases of having a table with Composite Keys.
+
+## Auto-Generated Primary Column
+
+In the past, RepoDB always assume that the user will always define the identity column as the primary column. With this, the library is actually failing during the PUSH operations (i.e.: [Insert](https://repodb.net/operation/insert), [Merge](https://repodb.net/operation/merge), [Update](https://repodb.net/operation/update), etc) in the event the user has separated both the identity and primary into two columns.
+
+Relating to the issue #1027, the major changes to the behavior pertaining to the scenario explained above has been introduced to the library. The updates to the behavior will now allow the library to "only" return and hydrate the value of the identity column back to the model, ignoring the value of the primary column. This is also true to all other columns with default values. The updates will be available to all versions > 1.12.10.
+
+This scenario is considered a limintation due to the library only returns single value and we tend to put more priority on the identity column over the other column types.
+
+Note: The statement above is also true to a case where a user defined a default-value to the primary column (i.e.: `UUID` in MySQL).
 
 ## Computed Columns
 
