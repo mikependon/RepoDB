@@ -1,4 +1,7 @@
-﻿namespace RepoDb.Interfaces
+﻿using System.Threading;
+using System.Threading.Tasks;
+
+namespace RepoDb.Interfaces
 {
     /// <summary>
     /// An interface that is used to mark a class to be usable for tracing the operations. A trace object is being used to provide an auditing and debugging capability when executing the actual operation.
@@ -6,6 +9,52 @@
     /// </summary>
     public interface ITrace
     {
+        #region New
+
+        #region Sync
+
+        /// <summary>
+        /// A method that is being raised before the actual execution of the operation.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="log">The cancellable trace log object referenced by the execution.</param>
+        void BeforeExecution<TResult>(CancellableTraceLog<TResult> log);
+
+        /// <summary>
+        /// A method that is being raised after the actual execution of the operation.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="log">The trace log object referenced by the execution.</param>
+        void AfterExcecution<TResult>(TraceLog<TResult> log);
+
+        #endregion
+
+        #region Async
+
+        /// <summary>
+        /// A method that is being raised before the actual execution of the operation in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="log">The cancellable trace log object referenced by the execution.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        Task BeforeExecutionAsync<TResult>(CancellableTraceLog<TResult> log,
+            CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// A method that is being raised after the actual execution of the operation in an asynchronous way.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="log">The trace log object referenced by the execution.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
+        Task AfterExecutionAsync<TResult>(TraceLog<TResult> log,
+            CancellationToken cancellationToken = default);
+
+        #endregion
+
+        #endregion
+
+        #region Old
+
         #region Average
 
         /// <summary>
@@ -452,6 +501,8 @@
         /// </summary>
         /// <param name="log">The log object referenced by the 'UpdateAll' execution.</param>
         void AfterUpdateAll(TraceLog log);
+
+        #endregion
 
         #endregion
     }
