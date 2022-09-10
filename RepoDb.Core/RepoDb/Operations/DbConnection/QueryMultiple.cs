@@ -19795,15 +19795,17 @@ namespace RepoDb
             var commandTexts = new List<string>();
 
             // Items
-            var item1 = QueryMultipleInternal<T1>(cacheKey1,
+            var item1 = await QueryMultipleAsyncInternal<T1>(cacheKey1,
                 cache,
                 where1,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
-            var item2 = QueryMultipleInternal<T2>(cacheKey2,
+            var item2 = await QueryMultipleAsyncInternal<T2>(cacheKey2,
                 cache,
                 where2,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
             // Fix
             QueryGroup.FixForQueryMultiple(queryGroups.ToArray());
@@ -20499,20 +20501,23 @@ namespace RepoDb
             var commandTexts = new List<string>();
 
             // Items
-            var item1 = QueryMultipleInternal<T1>(cacheKey1,
+            var item1 = await QueryMultipleAsyncInternal<T1>(cacheKey1,
                 cache,
                 where1,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
-            var item2 = QueryMultipleInternal<T2>(cacheKey2,
+            var item2 = await QueryMultipleAsyncInternal<T2>(cacheKey2,
                 cache,
                 where2,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
-            var item3 = QueryMultipleInternal<T3>(cacheKey3,
+            var item3 = await QueryMultipleAsyncInternal<T3>(cacheKey3,
                 cache,
                 where3,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
             // Fix
             QueryGroup.FixForQueryMultiple(queryGroups.ToArray());
@@ -21374,25 +21379,29 @@ namespace RepoDb
             var commandTexts = new List<string>();
 
             // Items
-            var item1 = QueryMultipleInternal<T1>(cacheKey1,
+            var item1 = await QueryMultipleAsyncInternal<T1>(cacheKey1,
                 cache,
                 where1,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
-            var item2 = QueryMultipleInternal<T2>(cacheKey2,
+            var item2 = await QueryMultipleAsyncInternal<T2>(cacheKey2,
                 cache,
                 where2,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
-            var item3 = QueryMultipleInternal<T3>(cacheKey3,
+            var item3 = await QueryMultipleAsyncInternal<T3>(cacheKey3,
                 cache,
                 where3,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
-            var item4 = QueryMultipleInternal<T4>(cacheKey4,
+            var item4 = await QueryMultipleAsyncInternal<T4>(cacheKey4,
                 cache,
                 where4,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
             // Fix
             QueryGroup.FixForQueryMultiple(queryGroups.ToArray());
@@ -22414,30 +22423,35 @@ namespace RepoDb
             var commandTexts = new List<string>();
 
             // Items
-            var item1 = QueryMultipleInternal<T1>(cacheKey1,
+            var item1 = await QueryMultipleAsyncInternal<T1>(cacheKey1,
                 cache,
                 where1,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
-            var item2 = QueryMultipleInternal<T2>(cacheKey2,
+            var item2 = await QueryMultipleAsyncInternal<T2>(cacheKey2,
                 cache,
                 where2,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
-            var item3 = QueryMultipleInternal<T3>(cacheKey3,
+            var item3 = await QueryMultipleAsyncInternal<T3>(cacheKey3,
                 cache,
                 where3,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
-            var item4 = QueryMultipleInternal<T4>(cacheKey4,
+            var item4 = await QueryMultipleAsyncInternal<T4>(cacheKey4,
                 cache,
                 where4,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
-            var item5 = QueryMultipleInternal<T5>(cacheKey5,
+            var item5 = await QueryMultipleAsyncInternal<T5>(cacheKey5,
                 cache,
                 where5,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
             // Fix
             QueryGroup.FixForQueryMultiple(queryGroups.ToArray());
@@ -23619,35 +23633,41 @@ namespace RepoDb
             var commandTexts = new List<string>();
 
             // Items
-            var item1 = QueryMultipleInternal<T1>(cacheKey1,
+            var item1 = await QueryMultipleAsyncInternal<T1>(cacheKey1,
                 cache,
                 where1,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
-            var item2 = QueryMultipleInternal<T2>(cacheKey2,
+            var item2 = await QueryMultipleAsyncInternal<T2>(cacheKey2,
                 cache,
                 where2,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
-            var item3 = QueryMultipleInternal<T3>(cacheKey3,
+            var item3 = await QueryMultipleAsyncInternal<T3>(cacheKey3,
                 cache,
                 where3,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
-            var item4 = QueryMultipleInternal<T4>(cacheKey4,
+            var item4 = await QueryMultipleAsyncInternal<T4>(cacheKey4,
                 cache,
                 where4,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
-            var item5 = QueryMultipleInternal<T5>(cacheKey5,
+            var item5 = await QueryMultipleAsyncInternal<T5>(cacheKey5,
                 cache,
                 where5,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
-            var item6 = QueryMultipleInternal<T6>(cacheKey6,
+            var item6 = await QueryMultipleAsyncInternal<T6>(cacheKey6,
                 cache,
                 where6,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
             // Fix
             QueryGroup.FixForQueryMultiple(queryGroups.ToArray());
@@ -24989,40 +25009,47 @@ namespace RepoDb
             var commandTexts = new List<string>();
 
             // Items
-            var item1 = QueryMultipleInternal<T1>(cacheKey1,
+            var item1 = await QueryMultipleAsyncInternal<T1>(cacheKey1,
                 cache,
                 where1,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
-            var item2 = QueryMultipleInternal<T2>(cacheKey2,
+            var item2 = await QueryMultipleAsyncInternal<T2>(cacheKey2,
                 cache,
                 where2,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
-            var item3 = QueryMultipleInternal<T3>(cacheKey3,
+            var item3 = await QueryMultipleAsyncInternal<T3>(cacheKey3,
                 cache,
                 where3,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
-            var item4 = QueryMultipleInternal<T4>(cacheKey4,
+            var item4 = await QueryMultipleAsyncInternal<T4>(cacheKey4,
                 cache,
                 where4,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
-            var item5 = QueryMultipleInternal<T5>(cacheKey5,
+            var item5 = await QueryMultipleAsyncInternal<T5>(cacheKey5,
                 cache,
                 where5,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
-            var item6 = QueryMultipleInternal<T6>(cacheKey6,
+            var item6 = await QueryMultipleAsyncInternal<T6>(cacheKey6,
                 cache,
                 where6,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
-            var item7 = QueryMultipleInternal<T7>(cacheKey7,
+            var item7 = await QueryMultipleAsyncInternal<T7>(cacheKey7,
                 cache,
                 where7,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
             // Fix
             QueryGroup.FixForQueryMultiple(queryGroups.ToArray());
@@ -25639,15 +25666,17 @@ namespace RepoDb
             var commandTexts = new List<string>();
 
             // Items
-            var item1 = QueryMultipleInternal(cacheKey1,
+            var item1 = await QueryMultipleAsyncInternal(cacheKey1,
                 cache,
                 where1,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
-            var item2 = QueryMultipleInternal(cacheKey2,
+            var item2 = await QueryMultipleAsyncInternal(cacheKey2,
                 cache,
                 where2,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
             // Fix
             QueryGroup.FixForQueryMultiple(queryGroups.ToArray());
@@ -26213,20 +26242,23 @@ namespace RepoDb
             var commandTexts = new List<string>();
 
             // Items
-            var item1 = QueryMultipleInternal(cacheKey1,
+            var item1 = await QueryMultipleAsyncInternal(cacheKey1,
                 cache,
                 where1,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
-            var item2 = QueryMultipleInternal(cacheKey2,
+            var item2 = await QueryMultipleAsyncInternal(cacheKey2,
                 cache,
                 where2,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
-            var item3 = QueryMultipleInternal(cacheKey3,
+            var item3 = await QueryMultipleAsyncInternal(cacheKey3,
                 cache,
                 where3,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
             // Fix
             QueryGroup.FixForQueryMultiple(queryGroups.ToArray());
@@ -26924,25 +26956,29 @@ namespace RepoDb
             var commandTexts = new List<string>();
 
             // Items
-            var item1 = QueryMultipleInternal(cacheKey1,
+            var item1 = await QueryMultipleAsyncInternal(cacheKey1,
                 cache,
                 where1,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
-            var item2 = QueryMultipleInternal(cacheKey2,
+            var item2 = await QueryMultipleAsyncInternal(cacheKey2,
                 cache,
                 where2,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
-            var item3 = QueryMultipleInternal(cacheKey3,
+            var item3 = await QueryMultipleAsyncInternal(cacheKey3,
                 cache,
                 where3,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
-            var item4 = QueryMultipleInternal(cacheKey4,
+            var item4 = await QueryMultipleAsyncInternal(cacheKey4,
                 cache,
                 where4,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
             // Fix
             QueryGroup.FixForQueryMultiple(queryGroups.ToArray());
@@ -27767,30 +27803,35 @@ namespace RepoDb
             var commandTexts = new List<string>();
 
             // Items
-            var item1 = QueryMultipleInternal(cacheKey1,
+            var item1 = await QueryMultipleAsyncInternal(cacheKey1,
                 cache,
                 where1,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
-            var item2 = QueryMultipleInternal(cacheKey2,
+            var item2 = await QueryMultipleAsyncInternal(cacheKey2,
                 cache,
                 where2,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
-            var item3 = QueryMultipleInternal(cacheKey3,
+            var item3 = await QueryMultipleAsyncInternal(cacheKey3,
                 cache,
                 where3,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
-            var item4 = QueryMultipleInternal(cacheKey4,
+            var item4 = await QueryMultipleAsyncInternal(cacheKey4,
                 cache,
                 where4,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
-            var item5 = QueryMultipleInternal(cacheKey5,
+            var item5 = await QueryMultipleAsyncInternal(cacheKey5,
                 cache,
                 where5,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
             // Fix
             QueryGroup.FixForQueryMultiple(queryGroups.ToArray());
@@ -28742,35 +28783,41 @@ namespace RepoDb
             var commandTexts = new List<string>();
 
             // Items
-            var item1 = QueryMultipleInternal(cacheKey1,
+            var item1 = await QueryMultipleAsyncInternal(cacheKey1,
                 cache,
                 where1,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
-            var item2 = QueryMultipleInternal(cacheKey2,
+            var item2 = await QueryMultipleAsyncInternal(cacheKey2,
                 cache,
                 where2,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
-            var item3 = QueryMultipleInternal(cacheKey3,
+            var item3 = await QueryMultipleAsyncInternal(cacheKey3,
                 cache,
                 where3,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
-            var item4 = QueryMultipleInternal(cacheKey4,
+            var item4 = await QueryMultipleAsyncInternal(cacheKey4,
                 cache,
                 where4,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
-            var item5 = QueryMultipleInternal(cacheKey5,
+            var item5 = await QueryMultipleAsyncInternal(cacheKey5,
                 cache,
                 where5,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
-            var item6 = QueryMultipleInternal(cacheKey6,
+            var item6 = await QueryMultipleAsyncInternal(cacheKey6,
                 cache,
                 where6,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
             // Fix
             QueryGroup.FixForQueryMultiple(queryGroups.ToArray());
@@ -29849,40 +29896,47 @@ namespace RepoDb
             var commandTexts = new List<string>();
 
             // Items
-            var item1 = QueryMultipleInternal(cacheKey1,
+            var item1 = await QueryMultipleAsyncInternal(cacheKey1,
                 cache,
                 where1,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
-            var item2 = QueryMultipleInternal(cacheKey2,
+            var item2 = await QueryMultipleAsyncInternal(cacheKey2,
                 cache,
                 where2,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
-            var item3 = QueryMultipleInternal(cacheKey3,
+            var item3 = await QueryMultipleAsyncInternal(cacheKey3,
                 cache,
                 where3,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
-            var item4 = QueryMultipleInternal(cacheKey4,
+            var item4 = await QueryMultipleAsyncInternal(cacheKey4,
                 cache,
                 where4,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
-            var item5 = QueryMultipleInternal(cacheKey5,
+            var item5 = await QueryMultipleAsyncInternal(cacheKey5,
                 cache,
                 where5,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
-            var item6 = QueryMultipleInternal(cacheKey6,
+            var item6 = await QueryMultipleAsyncInternal(cacheKey6,
                 cache,
                 where6,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
-            var item7 = QueryMultipleInternal(cacheKey7,
+            var item7 = await QueryMultipleAsyncInternal(cacheKey7,
                 cache,
                 where7,
-                queryGroups);
+                queryGroups,
+                cancellationToken);
 
             // Fix
             QueryGroup.FixForQueryMultiple(queryGroups.ToArray());
@@ -30166,7 +30220,12 @@ namespace RepoDb
             List<QueryGroup> queryGroups)
             where T : class
         {
-            var item = cache?.Get<IEnumerable<T>>(cacheKey, false)?.Value;
+            IEnumerable<T> item = null;
+
+            if (cache != null && string.IsNullOrEmpty(cacheKey))
+            {
+                item = cache?.Get<IEnumerable<T>>(cacheKey, false)?.Value;
+            }
 
             if (item == null)
             {
@@ -30189,7 +30248,12 @@ namespace RepoDb
             QueryGroup where,
             List<QueryGroup> queryGroups)
         {
-            var item = cache?.Get<IEnumerable<dynamic>>(cacheKey, false)?.Value;
+            IEnumerable<dynamic> item = null;
+
+            if (cache != null && string.IsNullOrEmpty(cacheKey))
+            {
+                item = cache?.Get<IEnumerable<dynamic>>(cacheKey, false)?.Value;
+            }
 
             if (item == null)
             {
@@ -30234,12 +30298,74 @@ namespace RepoDb
                 items = DataReader.ToEnumerable<T>(reader, dbFields, dbSetting).AsList();
             }
 
-            if (cacheKey != null)
+            if (cache != null && string.IsNullOrEmpty(cacheKey))
             {
                 cache?.Add(cacheKey, items, cacheItemExpiration.GetValueOrDefault(), false);
             }
 
             return items;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="cacheKey"></param>
+        /// <param name="cache"></param>
+        /// <param name="where"></param>
+        /// <param name="queryGroups"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        private static async Task<IEnumerable<T>> QueryMultipleAsyncInternal<T>(string cacheKey,
+            ICache cache,
+            QueryGroup where,
+            List<QueryGroup> queryGroups,
+            CancellationToken cancellationToken = default)
+            where T : class
+        {
+            IEnumerable<T> item = null;
+
+            if (cache != null && string.IsNullOrEmpty(cacheKey))
+            {
+                item = (await cache?.GetAsync<IEnumerable<T>>(cacheKey, false, cancellationToken))?.Value;
+            }
+
+            if (item == null)
+            {
+                queryGroups.Add(where);
+            }
+
+            return item;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cacheKey"></param>
+        /// <param name="cache"></param>
+        /// <param name="where"></param>
+        /// <param name="queryGroups"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        private static async Task<IEnumerable<dynamic>> QueryMultipleAsyncInternal(string cacheKey,
+            ICache cache,
+            QueryGroup where,
+            List<QueryGroup> queryGroups,
+            CancellationToken cancellationToken = default)
+        {
+            IEnumerable<dynamic> item = null;
+
+            if (cache != null && string.IsNullOrEmpty(cacheKey))
+            {
+                item = (await cache?.GetAsync<IEnumerable<dynamic>>(cacheKey, false, cancellationToken))?.Value;
+            }
+
+            if (item == null)
+            {
+                queryGroups.Add(where);
+            }
+
+            return item;
         }
 
         /// <summary>
@@ -30279,9 +30405,9 @@ namespace RepoDb
                 items = await DataReader.ToEnumerableAsync<T>(reader, dbFields, dbSetting, cancellationToken).ToListAsync(cancellationToken);
             }
 
-            if (cacheKey != null)
+            if (cache != null && string.IsNullOrEmpty(cacheKey))
             {
-                cache?.Add(cacheKey, items, cacheItemExpiration.GetValueOrDefault(), false);
+                await cache?.AddAsync(cacheKey, items, cacheItemExpiration.GetValueOrDefault(), false, cancellationToken);
             }
 
             return items;
