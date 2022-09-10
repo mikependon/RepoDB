@@ -2154,7 +2154,7 @@ namespace RepoDb
             // Get Cache
             if (cacheKey != null)
             {
-                var item = cache?.Get<IEnumerable<TEntity>>(cacheKey, false);
+                var item = await cache?.GetAsync<IEnumerable<TEntity>>(cacheKey, false, cancellationToken);
                 if (item != null)
                 {
                     return item.Value;
@@ -2218,7 +2218,7 @@ namespace RepoDb
             // Set Cache
             if (cacheKey != null)
             {
-                cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
+                await cache?.AddAsync(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false, cancellationToken);
             }
 
             // After Execution
