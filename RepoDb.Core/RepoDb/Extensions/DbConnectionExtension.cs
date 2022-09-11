@@ -292,7 +292,7 @@ namespace RepoDb
             // Get Cache
             if (cacheKey != null)
             {
-                var item = cache?.Get<IEnumerable<dynamic>>(cacheKey, false);
+                var item = await cache?.GetAsync<IEnumerable<dynamic>>(cacheKey, false, cancellationToken);
                 if (item != null)
                 {
                     return item.Value;
@@ -326,7 +326,7 @@ namespace RepoDb
                 // Set Cache
                 if (cacheKey != null)
                 {
-                    cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
+                    await cache?.AddAsync(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false, cancellationToken);
                 }
             }
 
@@ -667,7 +667,7 @@ namespace RepoDb
         /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
         /// <returns></returns>
-        internal static Task<IEnumerable<TResult>> ExecuteQueryAsyncInternal<TResult>(this IDbConnection connection,
+        internal static async Task<IEnumerable<TResult>> ExecuteQueryAsyncInternal<TResult>(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
@@ -683,10 +683,10 @@ namespace RepoDb
             // Get Cache
             if (cacheKey != null)
             {
-                var item = cache?.Get<IEnumerable<TResult>>(cacheKey, false);
+                var item = await cache?.GetAsync<IEnumerable<TResult>>(cacheKey, false, cancellationToken);
                 if (item != null)
                 {
-                    return Task.FromResult(item.Value);
+                    return item.Value;
                 }
             }
 
@@ -696,33 +696,33 @@ namespace RepoDb
             // Identify
             if (typeOfResult.IsDictionaryStringObject() || typeOfResult.IsObjectType())
             {
-                return ExecuteQueryAsyncInternalForDictionaryStringObject<TResult>(connection: connection,
-                   commandText: commandText,
-                   param: param,
-                   commandType: commandType,
-                   cacheKey: cacheKey,
-                   cacheItemExpiration: cacheItemExpiration,
-                   commandTimeout: commandTimeout,
-                   transaction: transaction,
-                   cache: cache,
-                   cancellationToken: cancellationToken,
-                   tableName: tableName,
-                   skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
+                return await ExecuteQueryAsyncInternalForDictionaryStringObject<TResult>(connection: connection,
+                    commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    cacheKey: cacheKey,
+                    cacheItemExpiration: cacheItemExpiration,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    cache: cache,
+                    cancellationToken: cancellationToken,
+                    tableName: tableName,
+                    skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
             }
             else
             {
-                return ExecuteQueryAsyncInternalForType<TResult>(connection: connection,
-                   commandText: commandText,
-                   param: param,
-                   commandType: commandType,
-                   cacheKey: cacheKey,
-                   cacheItemExpiration: cacheItemExpiration,
-                   commandTimeout: commandTimeout,
-                   transaction: transaction,
-                   cache: cache,
-                   cancellationToken: cancellationToken,
-                   tableName: tableName,
-                   skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
+                return await ExecuteQueryAsyncInternalForType<TResult>(connection: connection,
+                    commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    cacheKey: cacheKey,
+                    cacheItemExpiration: cacheItemExpiration,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    cache: cache,
+                    cancellationToken: cancellationToken,
+                    tableName: tableName,
+                    skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
             }
         }
 
@@ -759,7 +759,7 @@ namespace RepoDb
             // Get Cache
             if (cacheKey != null)
             {
-                var item = cache?.Get<IEnumerable<TResult>>(cacheKey, false);
+                var item = await cache?.GetAsync<IEnumerable<TResult>>(cacheKey, false, cancellationToken);
                 if (item != null)
                 {
                     return item.Value;
@@ -783,7 +783,7 @@ namespace RepoDb
             // Set Cache
             if (cacheKey != null)
             {
-                cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
+                await cache?.AddAsync(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false, cancellationToken);
             }
 
             // Set the output parameters
@@ -826,7 +826,7 @@ namespace RepoDb
             // Get Cache
             if (cacheKey != null)
             {
-                var item = cache?.Get<IEnumerable<TResult>>(cacheKey, false);
+                var item = await cache?.GetAsync<IEnumerable<TResult>>(cacheKey, false, cancellationToken);
                 if (item != null)
                 {
                     return item.Value;
@@ -860,7 +860,7 @@ namespace RepoDb
                 // Set Cache
                 if (cacheKey != null)
                 {
-                    cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
+                    await cache?.AddAsync(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false, cancellationToken);
                 }
             }
 
@@ -1730,7 +1730,7 @@ namespace RepoDb
             // Get Cache
             if (cacheKey != null)
             {
-                var item = cache?.Get<TResult>(cacheKey, false);
+                var item = await cache?.GetAsync<TResult>(cacheKey, false, cancellationToken);
                 if (item != null)
                 {
                     return item.Value;
@@ -1753,7 +1753,7 @@ namespace RepoDb
             // Set Cache
             if (cacheKey != null)
             {
-                cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
+                await cache?.AddAsync(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false, cancellationToken);
             }
 
             // Set the output parameters
