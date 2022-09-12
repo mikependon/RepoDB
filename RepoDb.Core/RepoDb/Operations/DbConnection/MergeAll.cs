@@ -1219,33 +1219,7 @@ namespace RepoDb
                 hints,
                 transaction,
                 statementBuilder);
-            var sessionId = Guid.Empty;
-
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, context.CommandText, entities, null);
-                trace.BeforeMergeAll(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(context.CommandText);
-                    }
-                    return 0;
-                }
-                context.CommandText = (cancellableTraceLog.Statement ?? context.CommandText);
-                entities = (IEnumerable<TEntity>)(cancellableTraceLog.Parameter ?? entities);
-            }
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
-
-            // Execution variables
             var result = 0;
-
-            // Make sure to create transaction if there is no passed one
             var hasTransaction = (transaction != null || Transaction.Current != null);
 
             try
@@ -1394,10 +1368,6 @@ namespace RepoDb
                 }
             }
 
-            // After Execution
-            trace?.AfterMergeAll(new TraceLog(sessionId, context.CommandText, entities, result,
-                DateTime.UtcNow.Subtract(beforeExecutionTime)));
-
             // Return the result
             return result;
         }
@@ -1439,7 +1409,6 @@ namespace RepoDb
             var primary = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
             var properties = (IEnumerable<ClassProperty>)null;
             var primaryKey = (ClassProperty)null;
-            var sessionId = Guid.Empty;
 
             // Get the properties
             if (type.IsGenericType == true)
@@ -1467,26 +1436,6 @@ namespace RepoDb
             // Set the primary key
             primaryKey = properties?.FirstOrDefault(p =>
                 string.Equals(primary?.Name, p.GetMappedName(), StringComparison.OrdinalIgnoreCase));
-
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, "UpsertAll.Before", entities, null);
-                trace.BeforeMergeAll(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException("UpsertAll.Cancelled");
-                    }
-                    return default;
-                }
-                entities = (IEnumerable<TEntity>)(cancellableTraceLog.Parameter ?? entities);
-            }
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
 
             // Execution variables
             var result = 0;
@@ -1550,10 +1499,6 @@ namespace RepoDb
                     transaction.Dispose();
                 }
             }
-
-            // After Execution
-            trace?.AfterMergeAll(new TraceLog(sessionId, "UpsertAll.After", entities, result,
-                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Return the result
             return result;
@@ -1619,33 +1564,7 @@ namespace RepoDb
                 transaction,
                 statementBuilder,
                 cancellationToken);
-            var sessionId = Guid.Empty;
-
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, context.CommandText, entities, null);
-                trace.BeforeMergeAll(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(context.CommandText);
-                    }
-                    return 0;
-                }
-                context.CommandText = (cancellableTraceLog.Statement ?? context.CommandText);
-                entities = (IEnumerable<TEntity>)(cancellableTraceLog.Parameter ?? entities);
-            }
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
-
-            // Execution variables
             var result = 0;
-
-            // Make sure to create transaction if there is no passed one
             var hasTransaction = (transaction != null || Transaction.Current != null);
 
             try
@@ -1796,10 +1715,6 @@ namespace RepoDb
                 }
             }
 
-            // After Execution
-            trace?.AfterMergeAll(new TraceLog(sessionId, context.CommandText, entities, result,
-                DateTime.UtcNow.Subtract(beforeExecutionTime)));
-
             // Return the result
             return result;
         }
@@ -1843,7 +1758,6 @@ namespace RepoDb
             var primary = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
             var properties = (IEnumerable<ClassProperty>)null;
             var primaryKey = (ClassProperty)null;
-            var sessionId = Guid.Empty;
 
             // Get the properties
             if (type.IsGenericType == true)
@@ -1871,26 +1785,6 @@ namespace RepoDb
             // Set the primary key
             primaryKey = properties?.FirstOrDefault(p =>
                 string.Equals(primary?.Name, p.GetMappedName(), StringComparison.OrdinalIgnoreCase));
-
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, "UpsertAll.Before", entities, null);
-                trace.BeforeMergeAll(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException("UpsertAll.Cancelled");
-                    }
-                    return default;
-                }
-                entities = (IEnumerable<TEntity>)(cancellableTraceLog.Parameter ?? entities);
-            }
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
 
             // Execution variables
             var result = 0;
@@ -1955,10 +1849,6 @@ namespace RepoDb
                     transaction.Dispose();
                 }
             }
-
-            // After Execution
-            trace?.AfterMergeAll(new TraceLog(sessionId, "UpsertAll.After", entities, result,
-                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Return the result
             return result;

@@ -1012,29 +1012,7 @@ namespace RepoDb
             // Variables
             var commandType = CommandType.Text;
             var commandText = CommandTextCache.GetDeleteText(request);
-            var sessionId = Guid.Empty;
-
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
-                trace.BeforeDelete(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(commandText);
-                    }
-                    return 0;
-                }
-                commandText = (cancellableTraceLog.Statement ?? commandText);
-                param = (cancellableTraceLog.Parameter ?? param);
-            }
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
-
+            
             // Actual Execution
             var result = ExecuteNonQueryInternal(connection: connection,
                 commandText: commandText,
@@ -1045,10 +1023,6 @@ namespace RepoDb
                 entityType: request.Type,
                 dbFields: DbFieldCache.Get(connection, request.Name, transaction, true),
                 skipCommandArrayParametersCheck: true);
-
-            // After Execution
-            trace?.AfterDelete(new TraceLog(sessionId, commandText, param, result,
-                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Result
             return result;
@@ -1080,29 +1054,7 @@ namespace RepoDb
             // Variables
             var commandType = CommandType.Text;
             var commandText = CommandTextCache.GetDeleteText(request);
-            var sessionId = Guid.Empty;
-
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
-                trace.BeforeDelete(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(commandText);
-                    }
-                    return 0;
-                }
-                commandText = (cancellableTraceLog.Statement ?? commandText);
-                param = (cancellableTraceLog.Parameter ?? param);
-            }
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
-
+            
             // Actual Execution
             var result = await ExecuteNonQueryAsyncInternal(connection: connection,
                 commandText: commandText,
@@ -1114,10 +1066,6 @@ namespace RepoDb
                 entityType: request.Type,
                 dbFields: await DbFieldCache.GetAsync(connection, request.Name, transaction, true, cancellationToken),
                 skipCommandArrayParametersCheck: true);
-
-            // After Execution
-            trace?.AfterDelete(new TraceLog(sessionId, commandText, param, result,
-                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Result
             return result;

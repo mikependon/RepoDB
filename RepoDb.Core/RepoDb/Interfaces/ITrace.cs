@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 namespace RepoDb.Interfaces
 {
     /// <summary>
-    /// An interface that is used to mark a class to be usable for tracing the operations. A trace object is being used to provide an auditing and debugging capability when executing the actual operation.
-    /// The caller can modify the SQL Statements or the parameters being passed prior the actual execution, or even cancel the prior-execution.
+    /// An interface that is used to mark a class to be a trace object. A trace object is being used to provide an auditing and debugging capability when executing the actual operation.
+    /// The caller can modify the SQL statement and/or the parameters passed prior the actual execution, or even cancel the operation.
     /// </summary>
     public interface ITrace
     {
@@ -16,16 +16,15 @@ namespace RepoDb.Interfaces
         /// <summary>
         /// A method that is being raised before the actual execution of the operation.
         /// </summary>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="log">The cancellable trace log object referenced by the execution.</param>
-        void BeforeExecution<TResult>(CancellableTraceLog<TResult> log);
+        void BeforeExecution(CancellableTraceLog log);
 
         /// <summary>
         /// A method that is being raised after the actual execution of the operation.
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="log">The trace log object referenced by the execution.</param>
-        void AfterExcecution<TResult>(TraceLog<TResult> log);
+        void AfterExcecution<TResult>(ResultTraceLog<TResult> log);
 
         #endregion
 
@@ -34,10 +33,9 @@ namespace RepoDb.Interfaces
         /// <summary>
         /// A method that is being raised before the actual execution of the operation in an asynchronous way.
         /// </summary>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="log">The cancellable trace log object referenced by the execution.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        Task BeforeExecutionAsync<TResult>(CancellableTraceLog<TResult> log,
+        Task BeforeExecutionAsync(CancellableTraceLog log,
             CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -46,7 +44,7 @@ namespace RepoDb.Interfaces
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="log">The trace log object referenced by the execution.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        Task AfterExecutionAsync<TResult>(TraceLog<TResult> log,
+        Task AfterExecutionAsync<TResult>(ResultTraceLog<TResult> log,
             CancellationToken cancellationToken = default);
 
         #endregion

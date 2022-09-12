@@ -41,6 +41,31 @@
         public const string DeleteAll = "DeleteAll";
 
         /// <summary>
+        /// The trace key for the 'ExecuteNonQuery' operation.
+        /// </summary>
+        public const string ExecuteNonQuery = "ExecuteNonQuery";
+
+        /// <summary>
+        /// The trace key for the 'ExecuteQuery' operation.
+        /// </summary>
+        public const string ExecuteQuery = "ExecuteQuery";
+
+        /// <summary>
+        /// The trace key for the 'ExecuteQueryMultiple' operation.
+        /// </summary>
+        public const string ExecuteQueryMultiple = "ExecuteQueryMultiple";
+
+        /// <summary>
+        /// The trace key for the 'ExecuteReader' operation.
+        /// </summary>
+        public const string ExecuteReader = "ExecuteReader";
+
+        /// <summary>
+        /// The trace key for the 'ExecuteScalar' operation.
+        /// </summary>
+        public const string ExecuteScalar = "ExecuteScalar";
+
+        /// <summary>
         /// The trace key for the 'Exists' operation.
         /// </summary>
         public const string Exists = "Exists";

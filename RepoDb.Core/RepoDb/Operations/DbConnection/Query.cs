@@ -2054,34 +2054,12 @@ namespace RepoDb
                 statementBuilder);
             var commandText = CommandTextCache.GetQueryText(request);
             var param = (object)null;
-            var sessionId = Guid.Empty;
 
             // Converts to property mapped object
             if (where != null)
             {
                 param = QueryGroup.AsMappedObject(new[] { where.MapTo<TEntity>() });
             }
-
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
-                trace.BeforeQuery(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(commandText);
-                    }
-                    return null;
-                }
-                commandText = (cancellableTraceLog.Statement ?? commandText);
-                param = (cancellableTraceLog.Parameter ?? param);
-            }
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
             var result = ExecuteQueryInternal<TEntity>(connection: connection,
@@ -2101,10 +2079,6 @@ namespace RepoDb
             {
                 cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
             }
-
-            // After Execution
-            trace?.AfterQuery(new TraceLog(sessionId, commandText, param, result,
-                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Result
             return result;
@@ -2174,34 +2148,14 @@ namespace RepoDb
                 statementBuilder);
             var commandText = await CommandTextCache.GetQueryTextAsync(request, cancellationToken);
             var param = (object)null;
-            var sessionId = Guid.Empty;
-
+            
             // Converts to property mapped object
             if (where != null)
             {
                 param = QueryGroup.AsMappedObject(new[] { where.MapTo<TEntity>() });
             }
 
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
-                trace.BeforeQuery(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(commandText);
-                    }
-                    return null;
-                }
-                commandText = (cancellableTraceLog.Statement ?? commandText);
-                param = (cancellableTraceLog.Parameter ?? param);
-            }
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
+            // Actual Execution
             var result = await ExecuteQueryAsyncInternal<TEntity>(connection: connection,
                 commandText: commandText,
                 param: param,
@@ -2220,10 +2174,6 @@ namespace RepoDb
             {
                 await cache?.AddAsync(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false, cancellationToken);
             }
-
-            // After Execution
-            trace?.AfterQuery(new TraceLog(sessionId, commandText, param, result,
-                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Result
             return result;

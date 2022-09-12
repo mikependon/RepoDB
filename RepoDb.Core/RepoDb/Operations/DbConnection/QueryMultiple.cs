@@ -1,5 +1,4 @@
-﻿using RepoDb.Exceptions;
-using RepoDb.Extensions;
+﻿using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Reflection;
 using RepoDb.Requests;
@@ -9265,29 +9264,7 @@ namespace RepoDb
             // Shared variables
             var commandText = string.Join(" ", commandTexts);
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
-            var sessionId = Guid.Empty;
-
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
-                trace.BeforeQueryMultiple(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(commandText);
-                    }
-                    return null;
-                }
-                commandText = (cancellableTraceLog.Statement ?? commandText);
-                param = (cancellableTraceLog.Parameter ?? param);
-            }
-
-            // Before Execution Time
             Tuple<IEnumerable<T1>, IEnumerable<T2>> result;
-            var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
             using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
@@ -9327,10 +9304,6 @@ namespace RepoDb
                 // Result
                 result = Tuple.Create(item1, item2);
             }
-
-            // After Execution
-            trace?.AfterQueryMultiple(new TraceLog(sessionId, commandText, param, result,
-                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Result
             return result;
@@ -9971,29 +9944,7 @@ namespace RepoDb
             // Shared variables
             var commandText = string.Join(" ", commandTexts);
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
-            var sessionId = Guid.Empty;
-
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
-                trace.BeforeQueryMultiple(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(commandText);
-                    }
-                    return null;
-                }
-                commandText = (cancellableTraceLog.Statement ?? commandText);
-                param = (cancellableTraceLog.Parameter ?? param);
-            }
-
-            // Before Execution Time
             Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> result;
-            var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
             using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
@@ -10045,10 +9996,6 @@ namespace RepoDb
                 // Result
                 result = Tuple.Create(item1, item2, item3);
             }
-
-            // After Execution
-            trace?.AfterQueryMultiple(new TraceLog(sessionId, commandText, param, result,
-                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Result
             return result;
@@ -10848,29 +10795,7 @@ namespace RepoDb
             // Shared variables
             var commandText = string.Join(" ", commandTexts);
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
-            var sessionId = Guid.Empty;
-
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
-                trace.BeforeQueryMultiple(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(commandText);
-                    }
-                    return null;
-                }
-                commandText = (cancellableTraceLog.Statement ?? commandText);
-                param = (cancellableTraceLog.Parameter ?? param);
-            }
-
-            // Before Execution Time
             Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>> result;
-            var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
             using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
@@ -10933,10 +10858,6 @@ namespace RepoDb
                 // Result
                 result = Tuple.Create(item1, item2, item3, item4);
             }
-
-            // After Execution
-            trace?.AfterQueryMultiple(new TraceLog(sessionId, commandText, param, result,
-                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Result
             return result;
@@ -11889,29 +11810,7 @@ namespace RepoDb
             // Shared variables
             var commandText = string.Join(" ", commandTexts);
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
-            var sessionId = Guid.Empty;
-
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
-                trace.BeforeQueryMultiple(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(commandText);
-                    }
-                    return null;
-                }
-                commandText = (cancellableTraceLog.Statement ?? commandText);
-                param = (cancellableTraceLog.Parameter ?? param);
-            }
-
-            // Before Execution Time
             Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>> result;
-            var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
             using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
@@ -11985,10 +11884,6 @@ namespace RepoDb
                 // Result
                 result = Tuple.Create(item1, item2, item3, item4, item5);
             }
-
-            // After Execution
-            trace?.AfterQueryMultiple(new TraceLog(sessionId, commandText, param, result,
-                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Result
             return result;
@@ -13094,29 +12989,7 @@ namespace RepoDb
             // Shared variables
             var commandText = string.Join(" ", commandTexts);
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
-            var sessionId = Guid.Empty;
-
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
-                trace.BeforeQueryMultiple(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(commandText);
-                    }
-                    return null;
-                }
-                commandText = (cancellableTraceLog.Statement ?? commandText);
-                param = (cancellableTraceLog.Parameter ?? param);
-            }
-
-            // Before Execution Time
             Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>> result;
-            var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
             using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
@@ -13201,10 +13074,6 @@ namespace RepoDb
                 // Result
                 result = Tuple.Create(item1, item2, item3, item4, item5, item6);
             }
-
-            // After Execution
-            trace?.AfterQueryMultiple(new TraceLog(sessionId, commandText, param, result,
-                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Result
             return result;
@@ -14463,29 +14332,7 @@ namespace RepoDb
             // Shared variables
             var commandText = string.Join(" ", commandTexts);
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
-            var sessionId = Guid.Empty;
-
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
-                trace.BeforeQueryMultiple(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(commandText);
-                    }
-                    return null;
-                }
-                commandText = (cancellableTraceLog.Statement ?? commandText);
-                param = (cancellableTraceLog.Parameter ?? param);
-            }
-
-            // Before Execution Time
             Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>> result;
-            var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
             using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
@@ -14581,10 +14428,6 @@ namespace RepoDb
                 // Result
                 result = Tuple.Create(item1, item2, item3, item4, item5, item6, item7);
             }
-
-            // After Execution
-            trace?.AfterQueryMultiple(new TraceLog(sessionId, commandText, param, result,
-                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Result
             return result;
@@ -14982,29 +14825,7 @@ namespace RepoDb
             // Shared variables
             var commandText = string.Join(" ", commandTexts);
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
-            var sessionId = Guid.Empty;
-
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
-                trace.BeforeQueryMultiple(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(commandText);
-                    }
-                    return null;
-                }
-                commandText = (cancellableTraceLog.Statement ?? commandText);
-                param = (cancellableTraceLog.Parameter ?? param);
-            }
-
-            // Before Execution Time
             Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>> result;
-            var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
             using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
@@ -15044,10 +14865,6 @@ namespace RepoDb
                 // Result
                 result = Tuple.Create(item1, item2);
             }
-
-            // After Execution
-            trace?.AfterQueryMultiple(new TraceLog(sessionId, commandText, param, result,
-                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Result
             return result;
@@ -15561,29 +15378,7 @@ namespace RepoDb
             // Shared variables
             var commandText = string.Join(" ", commandTexts);
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
-            var sessionId = Guid.Empty;
-
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
-                trace.BeforeQueryMultiple(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(commandText);
-                    }
-                    return null;
-                }
-                commandText = (cancellableTraceLog.Statement ?? commandText);
-                param = (cancellableTraceLog.Parameter ?? param);
-            }
-
-            // Before Execution Time
             Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result;
-            var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
             using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
@@ -15635,10 +15430,6 @@ namespace RepoDb
                 // Result
                 result = Tuple.Create(item1, item2, item3);
             }
-
-            // After Execution
-            trace?.AfterQueryMultiple(new TraceLog(sessionId, commandText, param, result,
-                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Result
             return result;
@@ -16277,29 +16068,7 @@ namespace RepoDb
             // Shared variables
             var commandText = string.Join(" ", commandTexts);
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
-            var sessionId = Guid.Empty;
-
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
-                trace.BeforeQueryMultiple(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(commandText);
-                    }
-                    return null;
-                }
-                commandText = (cancellableTraceLog.Statement ?? commandText);
-                param = (cancellableTraceLog.Parameter ?? param);
-            }
-
-            // Before Execution Time
             Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result;
-            var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
             using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
@@ -16362,10 +16131,6 @@ namespace RepoDb
                 // Result
                 result = Tuple.Create(item1, item2, item3, item4);
             }
-
-            // After Execution
-            trace?.AfterQueryMultiple(new TraceLog(sessionId, commandText, param, result,
-                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Result
             return result;
@@ -17124,29 +16889,7 @@ namespace RepoDb
             // Shared variables
             var commandText = string.Join(" ", commandTexts);
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
-            var sessionId = Guid.Empty;
-
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
-                trace.BeforeQueryMultiple(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(commandText);
-                    }
-                    return null;
-                }
-                commandText = (cancellableTraceLog.Statement ?? commandText);
-                param = (cancellableTraceLog.Parameter ?? param);
-            }
-
-            // Before Execution Time
             Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result;
-            var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
             using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
@@ -17220,10 +16963,6 @@ namespace RepoDb
                 // Result
                 result = Tuple.Create(item1, item2, item3, item4, item5);
             }
-
-            // After Execution
-            trace?.AfterQueryMultiple(new TraceLog(sessionId, commandText, param, result,
-                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Result
             return result;
@@ -18102,29 +17841,7 @@ namespace RepoDb
             // Shared variables
             var commandText = string.Join(" ", commandTexts);
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
-            var sessionId = Guid.Empty;
-
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
-                trace.BeforeQueryMultiple(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(commandText);
-                    }
-                    return null;
-                }
-                commandText = (cancellableTraceLog.Statement ?? commandText);
-                param = (cancellableTraceLog.Parameter ?? param);
-            }
-
-            // Before Execution Time
             Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result;
-            var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
             using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
@@ -18209,10 +17926,6 @@ namespace RepoDb
                 // Result
                 result = Tuple.Create(item1, item2, item3, item4, item5, item6);
             }
-
-            // After Execution
-            trace?.AfterQueryMultiple(new TraceLog(sessionId, commandText, param, result,
-                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Result
             return result;
@@ -19211,29 +18924,7 @@ namespace RepoDb
             // Shared variables
             var commandText = string.Join(" ", commandTexts);
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
-            var sessionId = Guid.Empty;
-
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
-                trace.BeforeQueryMultiple(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(commandText);
-                    }
-                    return null;
-                }
-                commandText = (cancellableTraceLog.Statement ?? commandText);
-                param = (cancellableTraceLog.Parameter ?? param);
-            }
-
-            // Before Execution Time
             Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result;
-            var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
             using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
@@ -19329,10 +19020,6 @@ namespace RepoDb
                 // Result
                 result = Tuple.Create(item1, item2, item3, item4, item5, item6, item7);
             }
-
-            // After Execution
-            trace?.AfterQueryMultiple(new TraceLog(sessionId, commandText, param, result,
-                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Result
             return result;
@@ -19847,29 +19534,9 @@ namespace RepoDb
             // Shared variables
             var commandText = string.Join(" ", commandTexts);
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
-            var sessionId = Guid.Empty;
-
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
-                trace.BeforeQueryMultiple(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(commandText);
-                    }
-                    return null;
-                }
-                commandText = (cancellableTraceLog.Statement ?? commandText);
-                param = (cancellableTraceLog.Parameter ?? param);
-            }
 
             // Before Execution Time
             Tuple<IEnumerable<T1>, IEnumerable<T2>> result;
-            var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
             using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
@@ -19912,10 +19579,6 @@ namespace RepoDb
                 // Result
                 result = Tuple.Create(item1, item2);
             }
-
-            // After Execution
-            trace?.AfterQueryMultiple(new TraceLog(sessionId, commandText, param, result,
-                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Result
             return result;
@@ -20576,29 +20239,7 @@ namespace RepoDb
             // Shared variables
             var commandText = string.Join(" ", commandTexts);
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
-            var sessionId = Guid.Empty;
-
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
-                trace.BeforeQueryMultiple(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(commandText);
-                    }
-                    return null;
-                }
-                commandText = (cancellableTraceLog.Statement ?? commandText);
-                param = (cancellableTraceLog.Parameter ?? param);
-            }
-
-            // Before Execution Time
             Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> result;
-            var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
             using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
@@ -20653,10 +20294,6 @@ namespace RepoDb
                 // Result
                 result = Tuple.Create(item1, item2, item3);
             }
-
-            // After Execution
-            trace?.AfterQueryMultiple(new TraceLog(sessionId, commandText, param, result,
-                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Result
             return result;
@@ -21477,29 +21114,7 @@ namespace RepoDb
             // Shared variables
             var commandText = string.Join(" ", commandTexts);
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
-            var sessionId = Guid.Empty;
-
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
-                trace.BeforeQueryMultiple(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(commandText);
-                    }
-                    return null;
-                }
-                commandText = (cancellableTraceLog.Statement ?? commandText);
-                param = (cancellableTraceLog.Parameter ?? param);
-            }
-
-            // Before Execution Time
             Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>> result;
-            var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
             using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
@@ -21566,10 +21181,6 @@ namespace RepoDb
                 // Result
                 result = Tuple.Create(item1, item2, item3, item4);
             }
-
-            // After Execution
-            trace?.AfterQueryMultiple(new TraceLog(sessionId, commandText, param, result,
-                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Result
             return result;
@@ -22544,29 +22155,7 @@ namespace RepoDb
             // Shared variables
             var commandText = string.Join(" ", commandTexts);
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
-            var sessionId = Guid.Empty;
-
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
-                trace.BeforeQueryMultiple(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(commandText);
-                    }
-                    return null;
-                }
-                commandText = (cancellableTraceLog.Statement ?? commandText);
-                param = (cancellableTraceLog.Parameter ?? param);
-            }
-
-            // Before Execution Time
             Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>> result;
-            var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
             using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
@@ -22645,10 +22234,6 @@ namespace RepoDb
                 // Result
                 result = Tuple.Create(item1, item2, item3, item4, item5);
             }
-
-            // After Execution
-            trace?.AfterQueryMultiple(new TraceLog(sessionId, commandText, param, result,
-                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Result
             return result;
@@ -23777,29 +23362,7 @@ namespace RepoDb
             // Shared variables
             var commandText = string.Join(" ", commandTexts);
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
-            var sessionId = Guid.Empty;
-
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
-                trace.BeforeQueryMultiple(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(commandText);
-                    }
-                    return null;
-                }
-                commandText = (cancellableTraceLog.Statement ?? commandText);
-                param = (cancellableTraceLog.Parameter ?? param);
-            }
-
-            // Before Execution Time
             Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>> result;
-            var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
             using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
@@ -23890,10 +23453,6 @@ namespace RepoDb
                 // Result
                 result = Tuple.Create(item1, item2, item3, item4, item5, item6);
             }
-
-            // After Execution
-            trace?.AfterQueryMultiple(new TraceLog(sessionId, commandText, param, result,
-                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Result
             return result;
@@ -25176,29 +24735,7 @@ namespace RepoDb
             // Shared variables
             var commandText = string.Join(" ", commandTexts);
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
-            var sessionId = Guid.Empty;
-
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
-                trace.BeforeQueryMultiple(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(commandText);
-                    }
-                    return null;
-                }
-                commandText = (cancellableTraceLog.Statement ?? commandText);
-                param = (cancellableTraceLog.Parameter ?? param);
-            }
-
-            // Before Execution Time
             Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>> result;
-            var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
             using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
@@ -25301,10 +24838,6 @@ namespace RepoDb
                 // Result
                 result = Tuple.Create(item1, item2, item3, item4, item5, item6, item7);
             }
-
-            // After Execution
-            trace?.AfterQueryMultiple(new TraceLog(sessionId, commandText, param, result,
-                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Result
             return result;
@@ -25718,29 +25251,7 @@ namespace RepoDb
             // Shared variables
             var commandText = string.Join(" ", commandTexts);
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
-            var sessionId = Guid.Empty;
-
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
-                trace.BeforeQueryMultiple(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(commandText);
-                    }
-                    return null;
-                }
-                commandText = (cancellableTraceLog.Statement ?? commandText);
-                param = (cancellableTraceLog.Parameter ?? param);
-            }
-
-            // Before Execution Time
             Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>> result;
-            var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
             using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
@@ -25783,10 +25294,6 @@ namespace RepoDb
                 // Result
                 result = Tuple.Create(item1, item2);
             }
-
-            // After Execution
-            trace?.AfterQueryMultiple(new TraceLog(sessionId, commandText, param, result,
-                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Result
             return result;
@@ -26317,29 +25824,7 @@ namespace RepoDb
             // Shared variables
             var commandText = string.Join(" ", commandTexts);
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
-            var sessionId = Guid.Empty;
-
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
-                trace.BeforeQueryMultiple(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(commandText);
-                    }
-                    return null;
-                }
-                commandText = (cancellableTraceLog.Statement ?? commandText);
-                param = (cancellableTraceLog.Parameter ?? param);
-            }
-
-            // Before Execution Time
             Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result;
-            var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
             using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
@@ -26394,10 +25879,6 @@ namespace RepoDb
                 // Result
                 result = Tuple.Create(item1, item2, item3);
             }
-
-            // After Execution
-            trace?.AfterQueryMultiple(new TraceLog(sessionId, commandText, param, result,
-                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Result
             return result;
@@ -27054,29 +26535,7 @@ namespace RepoDb
             // Shared variables
             var commandText = string.Join(" ", commandTexts);
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
-            var sessionId = Guid.Empty;
-
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
-                trace.BeforeQueryMultiple(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(commandText);
-                    }
-                    return null;
-                }
-                commandText = (cancellableTraceLog.Statement ?? commandText);
-                param = (cancellableTraceLog.Parameter ?? param);
-            }
-
-            // Before Execution Time
             Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result;
-            var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
             using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
@@ -27143,10 +26602,6 @@ namespace RepoDb
                 // Result
                 result = Tuple.Create(item1, item2, item3, item4);
             }
-
-            // After Execution
-            trace?.AfterQueryMultiple(new TraceLog(sessionId, commandText, param, result,
-                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Result
             return result;
@@ -27924,29 +27379,7 @@ namespace RepoDb
             // Shared variables
             var commandText = string.Join(" ", commandTexts);
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
-            var sessionId = Guid.Empty;
-
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
-                trace.BeforeQueryMultiple(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(commandText);
-                    }
-                    return null;
-                }
-                commandText = (cancellableTraceLog.Statement ?? commandText);
-                param = (cancellableTraceLog.Parameter ?? param);
-            }
-
-            // Before Execution Time
             Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result;
-            var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
             using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
@@ -28025,10 +27458,6 @@ namespace RepoDb
                 // Result
                 result = Tuple.Create(item1, item2, item3, item4, item5);
             }
-
-            // After Execution
-            trace?.AfterQueryMultiple(new TraceLog(sessionId, commandText, param, result,
-                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Result
             return result;
@@ -28927,29 +28356,7 @@ namespace RepoDb
             // Shared variables
             var commandText = string.Join(" ", commandTexts);
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
-            var sessionId = Guid.Empty;
-
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
-                trace.BeforeQueryMultiple(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(commandText);
-                    }
-                    return null;
-                }
-                commandText = (cancellableTraceLog.Statement ?? commandText);
-                param = (cancellableTraceLog.Parameter ?? param);
-            }
-
-            // Before Execution Time
             Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result;
-            var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
             using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
@@ -29040,10 +28447,6 @@ namespace RepoDb
                 // Result
                 result = Tuple.Create(item1, item2, item3, item4, item5, item6);
             }
-
-            // After Execution
-            trace?.AfterQueryMultiple(new TraceLog(sessionId, commandText, param, result,
-                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Result
             return result;
@@ -30063,29 +29466,7 @@ namespace RepoDb
             // Shared variables
             var commandText = string.Join(" ", commandTexts);
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
-            var sessionId = Guid.Empty;
-
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
-                trace.BeforeQueryMultiple(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(commandText);
-                    }
-                    return null;
-                }
-                commandText = (cancellableTraceLog.Statement ?? commandText);
-                param = (cancellableTraceLog.Parameter ?? param);
-            }
-
-            // Before Execution Time
             Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result;
-            var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
             using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
@@ -30188,10 +29569,6 @@ namespace RepoDb
                 // Result
                 result = Tuple.Create(item1, item2, item3, item4, item5, item6, item7);
             }
-
-            // After Execution
-            trace?.AfterQueryMultiple(new TraceLog(sessionId, commandText, param, result,
-                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Result
             return result;

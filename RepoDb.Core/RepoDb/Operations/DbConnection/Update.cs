@@ -1681,30 +1681,6 @@ namespace RepoDb
                 hints,
                 transaction,
                 statementBuilder);
-            var sessionId = Guid.Empty;
-
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, context.CommandText, entity, null);
-                trace.BeforeUpdate(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(context.CommandText);
-                    }
-                    return 0;
-                }
-                context.CommandText = (cancellableTraceLog.Statement ?? context.CommandText);
-                entity = (TEntity)(cancellableTraceLog.Parameter ?? entity);
-            }
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
-
-            // Execution variables
             var result = 0;
 
             // Create the command
@@ -1721,10 +1697,6 @@ namespace RepoDb
                 // Actual Execution
                 result = command.ExecuteNonQuery();
             }
-
-            // After Execution
-            trace?.AfterUpdate(new TraceLog(sessionId, context.CommandText, entity, result,
-                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Return the result
             return result;
@@ -1777,30 +1749,6 @@ namespace RepoDb
                 transaction,
                 statementBuilder,
                 cancellationToken);
-            var sessionId = Guid.Empty;
-
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, context.CommandText, entity, null);
-                trace.BeforeUpdate(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(context.CommandText);
-                    }
-                    return 0;
-                }
-                context.CommandText = (cancellableTraceLog.Statement ?? context.CommandText);
-                entity = (TEntity)(cancellableTraceLog.Parameter ?? entity);
-            }
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
-
-            // Execution variables
             var result = 0;
 
             // Create the command
@@ -1817,10 +1765,6 @@ namespace RepoDb
                 // Actual Execution
                 result = await command.ExecuteNonQueryAsync(cancellationToken);
             }
-
-            // After Execution
-            trace?.AfterUpdate(new TraceLog(sessionId, context.CommandText, entity, result,
-                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Return the result
             return result;

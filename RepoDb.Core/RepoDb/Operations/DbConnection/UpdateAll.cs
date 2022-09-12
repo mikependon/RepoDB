@@ -1141,33 +1141,7 @@ namespace RepoDb
                 hints,
                 transaction,
                 statementBuilder);
-            var sessionId = Guid.Empty;
-
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, context.CommandText, entities, null);
-                trace.BeforeUpdateAll(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(context.CommandText);
-                    }
-                    return 0;
-                }
-                context.CommandText = (cancellableTraceLog.Statement ?? context.CommandText);
-                entities = (IEnumerable<TEntity>)(cancellableTraceLog.Parameter ?? entities);
-            }
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
-
-            // Execution variables
             var result = 0;
-
-            // Make sure to create transaction if there is no passed one
             var hasTransaction = (transaction != null || Transaction.Current != null);
 
             try
@@ -1281,10 +1255,6 @@ namespace RepoDb
                 }
             }
 
-            // After Execution
-            trace?.AfterUpdateAll(new TraceLog(sessionId, context.CommandText, entities, result,
-                DateTime.UtcNow.Subtract(beforeExecutionTime)));
-
             // Return the result
             return result;
         }
@@ -1349,33 +1319,7 @@ namespace RepoDb
                 transaction,
                 statementBuilder,
                 cancellationToken);
-            var sessionId = Guid.Empty;
-
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, context.CommandText, entities, null);
-                trace.BeforeUpdateAll(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(context.CommandText);
-                    }
-                    return 0;
-                }
-                context.CommandText = (cancellableTraceLog.Statement ?? context.CommandText);
-                entities = (IEnumerable<TEntity>)(cancellableTraceLog.Parameter ?? entities);
-            }
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
-
-            // Execution variables
             var result = 0;
-
-            // Make sure to create transaction if there is no passed one
             var hasTransaction = (transaction != null || Transaction.Current != null);
 
             try
@@ -1489,10 +1433,6 @@ namespace RepoDb
                     transaction.Dispose();
                 }
             }
-
-            // After Execution
-            trace?.AfterUpdateAll(new TraceLog(sessionId, context.CommandText, entities, result,
-                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Return the result
             return result;

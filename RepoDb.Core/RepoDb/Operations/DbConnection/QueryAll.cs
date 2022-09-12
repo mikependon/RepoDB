@@ -548,29 +548,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText = CommandTextCache.GetQueryAllText(request);
             var param = (object)null;
-            var sessionId = Guid.Empty;
-
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
-                trace.BeforeQueryAll(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(commandText);
-                    }
-                    return null;
-                }
-                commandText = (cancellableTraceLog.Statement ?? commandText);
-                param = (cancellableTraceLog.Parameter ?? param);
-            }
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
-
+            
             // Actual Execution
             var result = ExecuteQueryInternal<TEntity>(connection: connection,
                 commandText: commandText,
@@ -589,10 +567,6 @@ namespace RepoDb
             {
                 cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
             }
-
-            // After Execution
-            trace?.AfterQueryAll(new TraceLog(sessionId, commandText, param, result,
-                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Result
             return result;
@@ -656,29 +630,7 @@ namespace RepoDb
                 statementBuilder);
             var commandText = await CommandTextCache.GetQueryAllTextAsync(request, cancellationToken);
             var param = (object)null;
-            var sessionId = Guid.Empty;
-
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
-                trace.BeforeQueryAll(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(commandText);
-                    }
-                    return null;
-                }
-                commandText = (cancellableTraceLog.Statement ?? commandText);
-                param = (cancellableTraceLog.Parameter ?? param);
-            }
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
-
+            
             // Actual Execution
             var result = await ExecuteQueryAsyncInternal<TEntity>(connection: connection,
                 commandText: commandText,
@@ -698,10 +650,6 @@ namespace RepoDb
             {
                 await cache?.AddAsync(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false, cancellationToken);
             }
-
-            // After Execution
-            trace?.AfterQueryAll(new TraceLog(sessionId, commandText, param, result,
-                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Result
             return result;

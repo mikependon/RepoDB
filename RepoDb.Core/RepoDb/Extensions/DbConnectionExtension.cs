@@ -106,9 +106,11 @@ namespace RepoDb
         /// This will only work if the 'cache' argument is set.
         /// </param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+        /// <param name="traceKey">The key to the trace to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
         /// <returns>
         /// An enumerable list of dynamic objects containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
@@ -118,9 +120,11 @@ namespace RepoDb
             CommandType? commandType = null,
             string cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            string traceKey = TraceKeys.ExecuteQuery,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
-            ICache cache = null)
+            ICache cache = null,
+            ITrace trace = null)
         {
             return ExecuteQueryInternal(connection: connection,
                 commandText: commandText,
@@ -128,9 +132,11 @@ namespace RepoDb
                 commandType: commandType,
                 cacheKey: cacheKey,
                 cacheItemExpiration: cacheItemExpiration,
+                traceKey: traceKey,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
+                trace: trace,
                 tableName: null,
                 skipCommandArrayParametersCheck: false);
         }
@@ -145,8 +151,10 @@ namespace RepoDb
         /// <param name="cacheKey"></param>
         /// <param name="cacheItemExpiration"></param>
         /// <param name="commandTimeout"></param>
+		/// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cache"></param>
+		/// <param name="trace"></param>
         /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
         /// <returns></returns>
@@ -156,9 +164,11 @@ namespace RepoDb
             CommandType? commandType = null,
             string cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            string traceKey = TraceKeys.ExecuteQuery,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
+            ITrace trace = null,
             string tableName = null,
             bool skipCommandArrayParametersCheck = true)
         {
@@ -187,6 +197,27 @@ namespace RepoDb
                 dbFields: dbFields,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
 
+            // Trace
+            var sessionId = Guid.NewGuid();
+
+            // Before Execution
+            if (trace != null)
+            {
+                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
+                trace.BeforeAverageAll(cancellableTraceLog);
+                if (cancellableTraceLog.IsCancelled)
+                {
+                    if (cancellableTraceLog.IsThrowException)
+                    {
+                        throw new CancelledExecutionException(commandText);
+                    }
+                    return default;
+                }
+                commandText = (cancellableTraceLog.Statement ?? commandText);
+                param = (cancellableTraceLog.Parameter ?? param);
+            }
+
+            // Result
             var result = (IEnumerable<dynamic>)null;
 
             // Execute
@@ -200,6 +231,10 @@ namespace RepoDb
                     cache?.Add(cacheKey, (IEnumerable<dynamic>)result, cacheItemExpiration.GetValueOrDefault(), false);
                 }
             }
+
+            // After Execution
+            trace?.AfterBatchQuery(new TraceLog(sessionId, commandText, param, result,
+                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Set the output parameters
             SetOutputParameters(param);
@@ -228,9 +263,11 @@ namespace RepoDb
         /// This will only work if the 'cache' argument is set.
         /// </param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+        /// <param name="traceKey">The key to the trace to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>
         /// An enumerable list of dynamic objects containing the converted results of the underlying <see cref="IDataReader"/> object.
@@ -241,9 +278,11 @@ namespace RepoDb
             CommandType? commandType = null,
             string cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            string traceKey = TraceKeys.ExecuteQuery,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
+            ITrace trace = null,
             CancellationToken cancellationToken = default)
         {
             return ExecuteQueryAsyncInternal(connection: connection,
@@ -252,9 +291,11 @@ namespace RepoDb
                 commandType: commandType,
                 cacheKey: cacheKey,
                 cacheItemExpiration: cacheItemExpiration,
+                traceKey: traceKey,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
+                trace: trace,
                 cancellationToken: cancellationToken,
                 tableName: null,
                 skipCommandArrayParametersCheck: false);
@@ -270,8 +311,10 @@ namespace RepoDb
         /// <param name="cacheKey"></param>
         /// <param name="cacheItemExpiration"></param>
         /// <param name="commandTimeout"></param>
+		/// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cache"></param>
+		/// <param name="trace"></param>
         /// <param name="cancellationToken"></param>
         /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
@@ -282,9 +325,11 @@ namespace RepoDb
             CommandType? commandType = null,
             string cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            string traceKey = TraceKeys.ExecuteQuery,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
+            ITrace trace = null,
             CancellationToken cancellationToken = default,
             string tableName = null,
             bool skipCommandArrayParametersCheck = true)
@@ -358,9 +403,11 @@ namespace RepoDb
         /// This will only work if the 'cache' argument is set.
         /// </param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+        /// <param name="traceKey">The key to the trace to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
         /// <returns>
         /// An enumerable list of the target result type instances containing the converted results of the underlying <see cref="IDataReader"/> object.
         /// </returns>
@@ -370,9 +417,11 @@ namespace RepoDb
             CommandType? commandType = null,
             string cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            string traceKey = TraceKeys.ExecuteQuery,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
-            ICache cache = null)
+            ICache cache = null,
+            ITrace trace = null)
         {
             return ExecuteQueryInternal<TResult>(connection: connection,
                 commandText: commandText,
@@ -380,9 +429,11 @@ namespace RepoDb
                 commandType: commandType,
                 cacheKey: cacheKey,
                 cacheItemExpiration: cacheItemExpiration,
+                traceKey: traceKey,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
+                trace: trace,
                 tableName: ClassMappedNameCache.Get<TResult>(),
                 skipCommandArrayParametersCheck: false);
         }
@@ -398,8 +449,10 @@ namespace RepoDb
         /// <param name="cacheKey"></param>
         /// <param name="cacheItemExpiration"></param>
         /// <param name="commandTimeout"></param>
+		/// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cache"></param>
+		/// <param name="trace"></param>
         /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
         /// <returns></returns>
@@ -409,9 +462,11 @@ namespace RepoDb
             CommandType? commandType = null,
             string cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            string traceKey = TraceKeys.ExecuteQuery,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
+            ITrace trace = null,
             string tableName = null,
             bool skipCommandArrayParametersCheck = true)
         {
@@ -432,30 +487,34 @@ namespace RepoDb
             if (typeOfResult.IsDictionaryStringObject() || typeOfResult.IsObjectType())
             {
                 return ExecuteQueryInternalForDictionaryStringObject<TResult>(connection: connection,
-                   commandText: commandText,
-                   param: param,
-                   commandType: commandType,
-                   cacheKey: cacheKey,
-                   cacheItemExpiration: cacheItemExpiration,
-                   commandTimeout: commandTimeout,
-                   transaction: transaction,
-                   cache: cache,
-                   tableName: tableName,
-                   skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
+                    commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    cacheKey: cacheKey,
+                    cacheItemExpiration: cacheItemExpiration,
+                    traceKey: traceKey,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    cache: cache,
+                    trace: trace,
+                    tableName: tableName,
+                    skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
             }
             else
             {
                 return ExecuteQueryInternalForType<TResult>(connection: connection,
-                   commandText: commandText,
-                   param: param,
-                   commandType: commandType,
-                   cacheKey: cacheKey,
-                   cacheItemExpiration: cacheItemExpiration,
-                   commandTimeout: commandTimeout,
-                   transaction: transaction,
-                   cache: cache,
-                   tableName: tableName,
-                   skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
+                    commandText: commandText,
+                    param: param,
+                    commandType: commandType,
+                    cacheKey: cacheKey,
+                    cacheItemExpiration: cacheItemExpiration,
+                    traceKey: traceKey,
+                    commandTimeout: commandTimeout,
+                    transaction: transaction,
+                    cache: cache,
+                    trace: trace,
+                    tableName: tableName,
+                    skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
             }
         }
 
@@ -470,8 +529,10 @@ namespace RepoDb
         /// <param name="cacheKey"></param>
         /// <param name="cacheItemExpiration"></param>
         /// <param name="commandTimeout"></param>
+		/// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cache"></param>
+		/// <param name="trace"></param>
         /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
         /// <returns></returns>
@@ -481,9 +542,11 @@ namespace RepoDb
             CommandType? commandType = null,
             string cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            string traceKey = TraceKeys.ExecuteQuery,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
+            ITrace trace = null,
             string tableName = null,
             bool skipCommandArrayParametersCheck = true)
         {
@@ -499,16 +562,18 @@ namespace RepoDb
 
             // Call
             var result = ExecuteQueryInternal(connection: connection,
-               commandText: commandText,
-               param: param,
-               commandType: commandType,
-               cacheKey: null,
-               cacheItemExpiration: null,
-               commandTimeout: commandTimeout,
-               transaction: transaction,
-               cache: null,
-               tableName: tableName,
-               skipCommandArrayParametersCheck: skipCommandArrayParametersCheck).WithType<TResult>();
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                cacheKey: null,
+                cacheItemExpiration: null,
+                traceKey: traceKey,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                cache: null,
+                tableName: tableName,
+                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck).WithType<TResult>();
 
             // Set Cache
             if (cacheKey != null)
@@ -534,8 +599,10 @@ namespace RepoDb
         /// <param name="cacheKey"></param>
         /// <param name="cacheItemExpiration"></param>
         /// <param name="commandTimeout"></param>
+		/// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cache"></param>
+		/// <param name="trace"></param>
         /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
         /// <returns></returns>
@@ -545,9 +612,11 @@ namespace RepoDb
             CommandType? commandType = null,
             string cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            string traceKey = TraceKeys.ExecuteQuery,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
+            ITrace trace = null,
             string tableName = null,
             bool skipCommandArrayParametersCheck = true)
         {
@@ -618,9 +687,11 @@ namespace RepoDb
         /// This will only work if the 'cache' argument is set.
         /// </param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+        /// <param name="traceKey">The key to the trace to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>
         /// An enumerable list of the target result type instances containing the converted results of the underlying <see cref="IDataReader"/> object.
@@ -631,9 +702,11 @@ namespace RepoDb
             CommandType? commandType = null,
             string cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            string traceKey = TraceKeys.ExecuteQuery,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
+            ITrace trace = null,
             CancellationToken cancellationToken = default)
         {
             return ExecuteQueryAsyncInternal<TResult>(connection: connection,
@@ -642,10 +715,12 @@ namespace RepoDb
                 commandType: commandType,
                 cacheKey: cacheKey,
                 cacheItemExpiration: cacheItemExpiration,
+                traceKey: traceKey,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
-                cancellationToken: cancellationToken,
                 cache: cache,
+                trace: trace,
+                cancellationToken: cancellationToken,
                 tableName: ClassMappedNameCache.Get<TResult>(),
                 skipCommandArrayParametersCheck: false);
         }
@@ -661,9 +736,11 @@ namespace RepoDb
         /// <param name="cacheKey"></param>
         /// <param name="cacheItemExpiration"></param>
         /// <param name="commandTimeout"></param>
+		/// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <param name="cache"></param>
+		/// <param name="trace"></param>
         /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
         /// <returns></returns>
@@ -673,9 +750,11 @@ namespace RepoDb
             CommandType? commandType = null,
             string cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            string traceKey = TraceKeys.ExecuteQuery,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
+            ITrace trace = null,
             CancellationToken cancellationToken = default,
             string tableName = null,
             bool skipCommandArrayParametersCheck = true)
@@ -697,32 +776,36 @@ namespace RepoDb
             if (typeOfResult.IsDictionaryStringObject() || typeOfResult.IsObjectType())
             {
                 return await ExecuteQueryAsyncInternalForDictionaryStringObject<TResult>(connection: connection,
-                    commandText: commandText,
-                    param: param,
-                    commandType: commandType,
-                    cacheKey: cacheKey,
-                    cacheItemExpiration: cacheItemExpiration,
-                    commandTimeout: commandTimeout,
-                    transaction: transaction,
-                    cache: cache,
-                    cancellationToken: cancellationToken,
-                    tableName: tableName,
-                    skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
+                   commandText: commandText,
+                   param: param,
+                   commandType: commandType,
+                   cacheKey: cacheKey,
+                   cacheItemExpiration: cacheItemExpiration,
+                   commandTimeout: commandTimeout,
+                   traceKey: traceKey,
+                   transaction: transaction,
+                   cache: cache,
+                   trace: trace,
+                   cancellationToken: cancellationToken,
+                   tableName: tableName,
+                   skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
             }
             else
             {
                 return await ExecuteQueryAsyncInternalForType<TResult>(connection: connection,
-                    commandText: commandText,
-                    param: param,
-                    commandType: commandType,
-                    cacheKey: cacheKey,
-                    cacheItemExpiration: cacheItemExpiration,
-                    commandTimeout: commandTimeout,
-                    transaction: transaction,
-                    cache: cache,
-                    cancellationToken: cancellationToken,
-                    tableName: tableName,
-                    skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
+                   commandText: commandText,
+                   param: param,
+                   commandType: commandType,
+                   cacheKey: cacheKey,
+                   cacheItemExpiration: cacheItemExpiration,
+                   commandTimeout: commandTimeout,
+                   traceKey: traceKey,
+                   transaction: transaction,
+                   cache: cache,
+                   trace: trace,
+                   cancellationToken: cancellationToken,
+                   tableName: tableName,
+                   skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
             }
         }
 
@@ -737,9 +820,11 @@ namespace RepoDb
         /// <param name="cacheKey"></param>
         /// <param name="cacheItemExpiration"></param>
         /// <param name="commandTimeout"></param>
+		/// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cancellationToken"></param>
         /// <param name="cache"></param>
+		/// <param name="trace"></param>
         /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
         /// <returns></returns>
@@ -749,9 +834,11 @@ namespace RepoDb
             CommandType? commandType = null,
             string cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            string traceKey = TraceKeys.ExecuteQuery,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
+            ITrace trace = null,
             CancellationToken cancellationToken = default,
             string tableName = null,
             bool skipCommandArrayParametersCheck = true)
@@ -768,17 +855,19 @@ namespace RepoDb
 
             // Call
             var result = (await ExecuteQueryAsyncInternal(connection: connection,
-               commandText: commandText,
-               param: param,
-               commandType: commandType,
-               cacheKey: null,
-               cacheItemExpiration: null,
-               commandTimeout: commandTimeout,
-               transaction: transaction,
-               cache: null,
-               cancellationToken: cancellationToken,
-               tableName: tableName,
-               skipCommandArrayParametersCheck: skipCommandArrayParametersCheck)).WithType<TResult>();
+                commandText: commandText,
+                param: param,
+                commandType: commandType,
+                cacheKey: null,
+                cacheItemExpiration: null,
+                traceKey: traceKey,
+                commandTimeout: commandTimeout,
+                transaction: transaction,
+                trace: trace,
+                cache: null,
+                cancellationToken: cancellationToken,
+                tableName: tableName,
+                skipCommandArrayParametersCheck: skipCommandArrayParametersCheck)).WithType<TResult>();
 
             // Set Cache
             if (cacheKey != null)
@@ -804,8 +893,10 @@ namespace RepoDb
         /// <param name="cacheKey"></param>
         /// <param name="cacheItemExpiration"></param>
         /// <param name="commandTimeout"></param>
+		/// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cache"></param>
+		/// <param name="trace"></param>
         /// <param name="cancellationToken"></param>
         /// <param name="tableName"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
@@ -816,9 +907,11 @@ namespace RepoDb
             CommandType? commandType = null,
             string cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            string traceKey = TraceKeys.ExecuteQuery,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
+            ITrace trace = null,
             CancellationToken cancellationToken = default,
             string tableName = null,
             bool skipCommandArrayParametersCheck = true)
@@ -890,9 +983,11 @@ namespace RepoDb
         /// This will only work if the 'cache' argument is set.
         /// </param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+        /// <param name="traceKey">The key to the trace to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
         /// <returns>An instance of <see cref="QueryMultipleExtractor"/> used to extract the results.</returns>
         public static QueryMultipleExtractor ExecuteQueryMultiple(this IDbConnection connection,
             string commandText,
@@ -900,18 +995,22 @@ namespace RepoDb
             CommandType? commandType = null,
             string cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            string traceKey = TraceKeys.ExecuteQueryMultiple,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
-            ICache cache = null) =>
+            ICache cache = null,
+            ITrace trace = null) =>
             ExecuteQueryMultipleInternal(connection,
                 commandText,
                 param,
                 commandType,
                 cacheKey,
                 cacheItemExpiration,
+                traceKey,
                 commandTimeout,
                 transaction,
                 cache,
+                trace,
                 false);
 
         /// <summary>
@@ -924,8 +1023,10 @@ namespace RepoDb
         /// <param name="cacheKey"></param>
         /// <param name="cacheItemExpiration"></param>
         /// <param name="commandTimeout"></param>
+		/// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cache"></param>
+		/// <param name="trace"></param>
         /// <param name="isDisposeConnection"></param>
         /// <returns></returns>
         internal static QueryMultipleExtractor ExecuteQueryMultipleInternal(this IDbConnection connection,
@@ -934,9 +1035,11 @@ namespace RepoDb
             CommandType? commandType = null,
             string cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            string traceKey = TraceKeys.ExecuteQueryMultiple,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
+            ITrace trace = null,
             bool isDisposeConnection = false)
         {
             IDataReader reader = null;
@@ -949,8 +1052,10 @@ namespace RepoDb
                     commandText: commandText,
                     param: param,
                     commandType: commandType,
+                    traceKey: traceKey,
                     commandTimeout: commandTimeout,
                     transaction: transaction,
+                    trace: trace,
                     entityType: null,
                     dbFields: null,
                     skipCommandArrayParametersCheck: false);
@@ -985,9 +1090,11 @@ namespace RepoDb
         /// This will only work if the 'cache' argument is set.
         /// </param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+        /// <param name="traceKey">The key to the trace to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An instance of <see cref="QueryMultipleExtractor"/> used to extract the results.</returns>
         public static Task<QueryMultipleExtractor> ExecuteQueryMultipleAsync(this IDbConnection connection,
@@ -996,9 +1103,11 @@ namespace RepoDb
             CommandType? commandType = null,
             string cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            string traceKey = TraceKeys.ExecuteQueryMultiple,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
+            ITrace trace = null,
             CancellationToken cancellationToken = default) =>
             ExecuteQueryMultipleAsyncInternal(connection,
                 commandText,
@@ -1006,9 +1115,11 @@ namespace RepoDb
                 commandType,
                 cacheKey,
                 cacheItemExpiration,
+                traceKey,
                 commandTimeout,
                 transaction,
                 cache,
+                trace,
                 false,
                 cancellationToken);
 
@@ -1022,8 +1133,10 @@ namespace RepoDb
         /// <param name="cacheKey"></param>
         /// <param name="cacheItemExpiration"></param>
         /// <param name="commandTimeout"></param>
+		/// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cache"></param>
+		/// <param name="trace"></param>
         /// <param name="isDisposeConnection"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
@@ -1033,9 +1146,11 @@ namespace RepoDb
             CommandType? commandType = null,
             string cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            string traceKey = TraceKeys.ExecuteQueryMultiple,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
+            ITrace trace = null,
             bool isDisposeConnection = false,
             CancellationToken cancellationToken = default)
         {
@@ -1049,8 +1164,10 @@ namespace RepoDb
                     commandText: commandText,
                     param: param,
                     commandType: commandType,
+                    traceKey: traceKey,
                     commandTimeout: commandTimeout,
                     transaction: transaction,
+                    trace: trace,
                     cancellationToken: cancellationToken,
                     entityType: null,
                     dbFields: null,
@@ -1083,22 +1200,28 @@ namespace RepoDb
         /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used.</param>
+        /// <param name="traceKey">The key to the trace to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
-        /// <returns><returns>The instance of the <see cref="IDataReader"/> object.</returns></returns>
+        /// <param name="trace">The trace object to be used.</param>
+        /// <return>The instance of the <see cref="IDataReader"/> object.</return>
         public static IDataReader ExecuteReader(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
+            string traceKey = TraceKeys.ExecuteReader,
             int? commandTimeout = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            ITrace trace = null)
         {
             return ExecuteReaderInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
+                traceKey: traceKey,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                trace: trace,
                 entityType: null,
                 dbFields: null,
                 skipCommandArrayParametersCheck: false);
@@ -1112,7 +1235,9 @@ namespace RepoDb
         /// <param name="param"></param>
         /// <param name="commandType"></param>
         /// <param name="commandTimeout"></param>
+		/// <param name="traceKey"></param>
         /// <param name="transaction"></param>
+        /// <param name="trace"></param>
         /// <param name="entityType"></param>
         /// <param name="dbFields"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
@@ -1122,7 +1247,9 @@ namespace RepoDb
             object param,
             CommandType? commandType,
             int? commandTimeout,
+            string traceKey,
             IDbTransaction transaction,
+            ITrace trace,
             Type entityType,
             IEnumerable<DbField> dbFields,
             bool skipCommandArrayParametersCheck)
@@ -1180,24 +1307,30 @@ namespace RepoDb
         /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used.</param>
+        /// <param name="traceKey">The key to the trace to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
-        /// <returns><returns>The instance of the <see cref="IDataReader"/> object.</returns></returns>
+        /// <return>The instance of the <see cref="IDataReader"/> object.</return>
         public static Task<IDataReader> ExecuteReaderAsync(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
+            string traceKey = TraceKeys.ExecuteReader,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
+            ITrace trace = null,
             CancellationToken cancellationToken = default)
         {
             return ExecuteReaderAsyncInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
+                traceKey: traceKey,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                trace: trace,
                 cancellationToken: cancellationToken,
                 entityType: null,
                 dbFields: null,
@@ -1212,7 +1345,9 @@ namespace RepoDb
         /// <param name="param"></param>
         /// <param name="commandType"></param>
         /// <param name="commandTimeout"></param>
+		/// <param name="traceKey"></param>
         /// <param name="transaction"></param>
+        /// <param name="trace"></param>
         /// <param name="cancellationToken"></param>
         /// <param name="entityType"></param>
         /// <param name="dbFields"></param>
@@ -1223,7 +1358,9 @@ namespace RepoDb
             object param,
             CommandType? commandType,
             int? commandTimeout,
+            string traceKey,
             IDbTransaction transaction,
+            ITrace trace,
             CancellationToken cancellationToken,
             Type entityType,
             IEnumerable<DbField> dbFields,
@@ -1283,22 +1420,28 @@ namespace RepoDb
         /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used.</param>
+        /// <param name="traceKey">The key to the trace to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static int ExecuteNonQuery(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
+            string traceKey = TraceKeys.ExecuteNonQuery,
             int? commandTimeout = null,
-            IDbTransaction transaction = null)
+            IDbTransaction transaction = null,
+            ITrace trace = null)
         {
             return ExecuteNonQueryInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
+                traceKey: traceKey,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                trace: trace,
                 entityType: null,
                 dbFields: null,
                 skipCommandArrayParametersCheck: false);
@@ -1312,7 +1455,9 @@ namespace RepoDb
         /// <param name="param"></param>
         /// <param name="commandType"></param>
         /// <param name="commandTimeout"></param>
+		/// <param name="traceKey"></param>
         /// <param name="transaction"></param>
+        /// <param name="trace"></param>
         /// <param name="entityType"></param>
         /// <param name="dbFields"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
@@ -1322,7 +1467,9 @@ namespace RepoDb
             object param,
             CommandType? commandType,
             int? commandTimeout,
+            string traceKey,
             IDbTransaction transaction,
+            ITrace trace,
             Type entityType,
             IEnumerable<DbField> dbFields,
             bool skipCommandArrayParametersCheck)
@@ -1361,24 +1508,30 @@ namespace RepoDb
         /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used.</param>
+        /// <param name="traceKey">The key to the trace to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of rows affected by the execution.</returns>
         public static Task<int> ExecuteNonQueryAsync(this IDbConnection connection,
             string commandText,
             object param = null,
             CommandType? commandType = null,
+            string traceKey = TraceKeys.ExecuteNonQuery,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
+            ITrace trace = null,
             CancellationToken cancellationToken = default)
         {
             return ExecuteNonQueryAsyncInternal(connection: connection,
                 commandText: commandText,
                 param: param,
                 commandType: commandType,
+                traceKey: traceKey,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
+                trace: trace,
                 cancellationToken: cancellationToken,
                 entityType: null,
                 dbFields: null,
@@ -1393,7 +1546,9 @@ namespace RepoDb
         /// <param name="param"></param>
         /// <param name="commandType"></param>
         /// <param name="commandTimeout"></param>
+		/// <param name="traceKey"></param>
         /// <param name="transaction"></param>
+        /// <param name="trace"></param>
         /// <param name="cancellationToken"></param>
         /// <param name="entityType"></param>
         /// <param name="dbFields"></param>
@@ -1404,7 +1559,9 @@ namespace RepoDb
             object param,
             CommandType? commandType,
             int? commandTimeout,
+            string traceKey,
             IDbTransaction transaction,
+            ITrace trace,
             CancellationToken cancellationToken,
             Type entityType,
             IEnumerable<DbField> dbFields,
@@ -1450,9 +1607,11 @@ namespace RepoDb
         /// This will only work if the 'cache' argument is set.
         /// </param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+        /// <param name="traceKey">The key to the trace to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
         /// <returns>An object that holds the first occurrence value (first column of first row) of the execution.</returns>
         public static object ExecuteScalar(this IDbConnection connection,
             string commandText,
@@ -1460,9 +1619,11 @@ namespace RepoDb
             CommandType? commandType = null,
             string cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            string traceKey = TraceKeys.ExecuteScalar,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
-            ICache cache = null)
+            ICache cache = null,
+            ITrace trace = null)
         {
             return ExecuteScalarInternal<object>(connection: connection,
                 commandText: commandText,
@@ -1470,9 +1631,11 @@ namespace RepoDb
                 commandType: commandType,
                 cacheKey: cacheKey,
                 cacheItemExpiration: cacheItemExpiration,
+                traceKey: traceKey,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
+                trace: trace,
                 entityType: null,
                 dbFields: null,
                 skipCommandArrayParametersCheck: false);
@@ -1498,9 +1661,11 @@ namespace RepoDb
         /// This will only work if the 'cache' argument is set.
         /// </param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+        /// <param name="traceKey">The key to the trace to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An object that holds the first occurrence value (first column of first row) of the execution.</returns>
         public static Task<object> ExecuteScalarAsync(this IDbConnection connection,
@@ -1509,9 +1674,11 @@ namespace RepoDb
             CommandType? commandType = null,
             string cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            string traceKey = TraceKeys.ExecuteScalar,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
+            ITrace trace = null,
             CancellationToken cancellationToken = default)
         {
             return ExecuteScalarAsyncInternal<object>(connection: connection,
@@ -1520,9 +1687,11 @@ namespace RepoDb
                 commandType: commandType,
                 cacheKey: cacheKey,
                 cacheItemExpiration: cacheItemExpiration,
+                traceKey: traceKey,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
+                trace: trace,
                 cancellationToken: cancellationToken,
                 entityType: null,
                 dbFields: null,
@@ -1550,9 +1719,11 @@ namespace RepoDb
         /// This will only work if the 'cache' argument is set.
         /// </param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+        /// <param name="traceKey">The key to the trace to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
         /// <returns>A first occurrence value (first column of first row) of the execution.</returns>
         public static TResult ExecuteScalar<TResult>(this IDbConnection connection,
             string commandText,
@@ -1560,9 +1731,11 @@ namespace RepoDb
             CommandType? commandType = null,
             string cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            string traceKey = TraceKeys.ExecuteScalar,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
-            ICache cache = null)
+            ICache cache = null,
+            ITrace trace = null)
         {
             return ExecuteScalarInternal<TResult>(connection: connection,
                 commandText: commandText,
@@ -1570,9 +1743,11 @@ namespace RepoDb
                 commandType: commandType,
                 cacheKey: cacheKey,
                 cacheItemExpiration: cacheItemExpiration,
+                traceKey: traceKey,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
+                trace: trace,
                 entityType: null,
                 dbFields: null,
                 skipCommandArrayParametersCheck: false);
@@ -1589,8 +1764,10 @@ namespace RepoDb
         /// <param name="cacheKey"></param>
         /// <param name="cacheItemExpiration"></param>
         /// <param name="commandTimeout"></param>
+		/// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cache"></param>
+		/// <param name="trace"></param>
         /// <param name="entityType"></param>
         /// <param name="dbFields"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
@@ -1602,8 +1779,10 @@ namespace RepoDb
             string cacheKey,
             int? cacheItemExpiration,
             int? commandTimeout,
+            string traceKey,
             IDbTransaction transaction,
             ICache cache,
+            ITrace trace,
             Type entityType,
             IEnumerable<DbField> dbFields,
             bool skipCommandArrayParametersCheck)
@@ -1664,9 +1843,11 @@ namespace RepoDb
         /// This will only work if the 'cache' argument is set.
         /// </param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+        /// <param name="traceKey">The key to the trace to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
+        /// <param name="trace">The trace object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A first occurrence value (first column of first row) of the execution.</returns>
         public static Task<TResult> ExecuteScalarAsync<TResult>(this IDbConnection connection,
@@ -1675,9 +1856,11 @@ namespace RepoDb
             CommandType? commandType = null,
             string cacheKey = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            string traceKey = TraceKeys.ExecuteScalar,
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             ICache cache = null,
+            ITrace trace = null,
             CancellationToken cancellationToken = default)
         {
             return ExecuteScalarAsyncInternal<TResult>(connection: connection,
@@ -1686,9 +1869,11 @@ namespace RepoDb
                 commandType: commandType,
                 cacheKey: cacheKey,
                 cacheItemExpiration: cacheItemExpiration,
+                traceKey: traceKey,
                 commandTimeout: commandTimeout,
                 transaction: transaction,
                 cache: cache,
+                trace: trace,
                 cancellationToken: cancellationToken,
                 entityType: null,
                 dbFields: null,
@@ -1706,8 +1891,10 @@ namespace RepoDb
         /// <param name="cacheKey"></param>
         /// <param name="cacheItemExpiration"></param>
         /// <param name="commandTimeout"></param>
+		/// <param name="traceKey"></param>
         /// <param name="transaction"></param>
         /// <param name="cache"></param>
+		/// <param name="trace"></param>
         /// <param name="cancellationToken"></param>
         /// <param name="entityType"></param>
         /// <param name="dbFields"></param>
@@ -1720,8 +1907,10 @@ namespace RepoDb
             string cacheKey,
             int? cacheItemExpiration,
             int? commandTimeout,
+            string traceKey,
             IDbTransaction transaction,
             ICache cache,
+            ITrace trace,
             CancellationToken cancellationToken,
             Type entityType,
             IEnumerable<DbField> dbFields,

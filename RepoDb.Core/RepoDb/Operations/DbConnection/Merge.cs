@@ -1996,30 +1996,6 @@ namespace RepoDb
                 hints,
                 transaction,
                 statementBuilder);
-            var sessionId = Guid.Empty;
-
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, context.CommandText, entity, null);
-                trace.BeforeMerge(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(context.CommandText);
-                    }
-                    return default;
-                }
-                context.CommandText = (cancellableTraceLog.Statement ?? context.CommandText);
-                entity = (TEntity)(cancellableTraceLog.Parameter ?? entity);
-            }
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
-
-            // Execution variables
             var result = default(TResult);
 
             // Create the command
@@ -2038,10 +2014,6 @@ namespace RepoDb
                     context.IdentityPropertySetterFunc?.Invoke(entity, result);
                 }
             }
-
-            // After Execution
-            trace?.AfterMerge(new TraceLog(sessionId, context.CommandText, entity, result,
-                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Return the result
             return result;
@@ -2086,7 +2058,6 @@ namespace RepoDb
             var primary = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
             var properties = (IEnumerable<ClassProperty>)null;
             var primaryKey = (ClassProperty)null;
-            var sessionId = Guid.Empty;
 
             // Check the qualifiers
             if (qualifiers?.Any() != true)
@@ -2118,23 +2089,6 @@ namespace RepoDb
                     string.Equals(primary?.Name, p.GetMappedName(), StringComparison.OrdinalIgnoreCase));
             }
 
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, "Upsert.Before", entity, null);
-                trace.BeforeMerge(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException("Upsert.Cancelled");
-                    }
-                    return default;
-                }
-                entity = (TEntity)(cancellableTraceLog.Parameter ?? entity);
-            }
-
             // Expression
             var where = (QueryGroup)null;
             if (isDictionaryType)
@@ -2154,9 +2108,6 @@ namespace RepoDb
             {
                 throw new Exceptions.InvalidExpressionException("The generated expression from the given qualifiers is not valid.");
             }
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
 
             // Execution variables
             var result = default(TResult);
@@ -2218,10 +2169,6 @@ namespace RepoDb
                 result = Converter.ToType<TResult>(insertResult);
             }
 
-            // After Execution
-            trace?.AfterMerge(new TraceLog(sessionId, "Upsert.After", entity, result,
-                DateTime.UtcNow.Subtract(beforeExecutionTime)));
-
             // Return the result
             return result;
         }
@@ -2279,30 +2226,6 @@ namespace RepoDb
                 transaction,
                 statementBuilder,
                 cancellationToken);
-            var sessionId = Guid.Empty;
-
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, context.CommandText, entity, null);
-                trace.BeforeMerge(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(context.CommandText);
-                    }
-                    return default;
-                }
-                context.CommandText = (cancellableTraceLog.Statement ?? context.CommandText);
-                entity = (TEntity)(cancellableTraceLog.Parameter ?? entity);
-            }
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
-
-            // Execution variables
             var result = default(TResult);
 
             // Create the command
@@ -2321,10 +2244,6 @@ namespace RepoDb
                     context.IdentityPropertySetterFunc?.Invoke(entity, result);
                 }
             }
-
-            // After Execution
-            trace?.AfterMerge(new TraceLog(sessionId, context.CommandText, entity, result,
-                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Return the result
             return result;
@@ -2371,7 +2290,6 @@ namespace RepoDb
             var primary = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
             var properties = (IEnumerable<ClassProperty>)null;
             var primaryKey = (ClassProperty)null;
-            var sessionId = Guid.Empty;
 
             // Check the qualifiers
             if (qualifiers?.Any() != true)
@@ -2403,23 +2321,6 @@ namespace RepoDb
                     string.Equals(primary?.Name, p.GetMappedName(), StringComparison.OrdinalIgnoreCase));
             }
 
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, "Upsert.Before", entity, null);
-                trace.BeforeMerge(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException("Upsert.Cancelled");
-                    }
-                    return default;
-                }
-                entity = (TEntity)(cancellableTraceLog.Parameter ?? entity);
-            }
-
             // Expression
             var where = (QueryGroup)null;
             if (isDictionaryType)
@@ -2439,9 +2340,6 @@ namespace RepoDb
             {
                 throw new Exceptions.InvalidExpressionException("The generated expression from the given qualifiers is not valid.");
             }
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
 
             // Execution variables
             var result = default(TResult);
@@ -2505,10 +2403,6 @@ namespace RepoDb
                 // Set the result
                 result = Converter.ToType<TResult>(insertResult);
             }
-
-            // After Execution
-            trace?.AfterMerge(new TraceLog(sessionId, "Upsert.After", entity, result,
-                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Return the result
             return result;

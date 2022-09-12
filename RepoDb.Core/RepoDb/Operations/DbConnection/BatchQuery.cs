@@ -1707,34 +1707,12 @@ namespace RepoDb
                 statementBuilder);
             var commandText = CommandTextCache.GetBatchQueryText(request);
             var param = (object)null;
-            var sessionId = Guid.Empty;
 
             // Converts to property mapped object
             if (where != null)
             {
                 param = QueryGroup.AsMappedObject(new[] { where.MapTo<TEntity>() });
             }
-
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
-                trace.BeforeBatchQuery(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException("BatchQuery");
-                    }
-                    return null;
-                }
-                commandText = (cancellableTraceLog.Statement ?? commandText);
-                param = (cancellableTraceLog.Parameter ?? param);
-            }
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
             var result = ExecuteQueryInternal<TEntity>(connection: connection,
@@ -1748,10 +1726,6 @@ namespace RepoDb
                 cache: null,
                 tableName: tableName,
                 skipCommandArrayParametersCheck: true);
-
-            // After Execution
-            trace?.AfterBatchQuery(new TraceLog(sessionId, commandText, param, result,
-                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Result
             return result;
@@ -1808,34 +1782,12 @@ namespace RepoDb
                 statementBuilder);
             var commandText = await CommandTextCache.GetBatchQueryTextAsync(request, cancellationToken);
             var param = (object)null;
-            var sessionId = Guid.Empty;
 
             // Converts to property mapped object
             if (where != null)
             {
                 param = QueryGroup.AsMappedObject(new[] { where.MapTo<TEntity>() });
             }
-
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
-                trace.BeforeBatchQuery(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException("BatchQuery");
-                    }
-                    return null;
-                }
-                commandText = (cancellableTraceLog.Statement ?? commandText);
-                param = (cancellableTraceLog.Parameter ?? param);
-            }
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
             var result = await ExecuteQueryAsyncInternal<TEntity>(connection: connection,
@@ -1850,10 +1802,6 @@ namespace RepoDb
                 cancellationToken: cancellationToken,
                 tableName: tableName,
                 skipCommandArrayParametersCheck: true);
-
-            // After Execution
-            trace?.AfterBatchQuery(new TraceLog(sessionId, commandText, param, result,
-                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Result
             return result;

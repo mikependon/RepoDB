@@ -621,30 +621,6 @@ namespace RepoDb
                 hints,
                 transaction,
                 statementBuilder);
-            var sessionId = Guid.Empty;
-
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, context.CommandText, entity, null);
-                trace.BeforeInsert(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(context.CommandText);
-                    }
-                    return default;
-                }
-                context.CommandText = (cancellableTraceLog.Statement ?? context.CommandText);
-                entity = (TEntity)(cancellableTraceLog.Parameter ?? entity);
-            }
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
-
-            // Execution variables
             var result = default(TResult);
 
             // Create the command
@@ -663,10 +639,6 @@ namespace RepoDb
                     context.IdentityPropertySetterFunc?.Invoke(entity, result);
                 }
             }
-
-            // After Execution
-            trace?.AfterInsert(new TraceLog(sessionId, context.CommandText, entity, result,
-                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Return the result
             return result;
@@ -717,30 +689,6 @@ namespace RepoDb
                 transaction,
                 statementBuilder,
                 cancellationToken);
-            var sessionId = Guid.Empty;
-
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, context.CommandText, entity, null);
-                trace.BeforeInsert(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(context.CommandText);
-                    }
-                    return default;
-                }
-                context.CommandText = (cancellableTraceLog.Statement ?? context.CommandText);
-                entity = (TEntity)(cancellableTraceLog.Parameter ?? entity);
-            }
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
-
-            // Execution variables
             var result = default(TResult);
 
             // Create the command
@@ -759,10 +707,6 @@ namespace RepoDb
                     context.IdentityPropertySetterFunc?.Invoke(entity, result);
                 }
             }
-
-            // After Execution
-            trace?.AfterInsert(new TraceLog(sessionId, context.CommandText, entity, result,
-                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Return the result
             return result;
