@@ -20,7 +20,8 @@ namespace RepoDb
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> BatchQuery(string tableName,
             int page,
@@ -28,7 +29,8 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null)
+            string traceKey = TraceKeys.BatchQuery,
+			IDbTransaction transaction = null)
         {
             return DbRepository.BatchQuery<TEntity>(tableName: tableName,
                 page: page,
@@ -36,7 +38,8 @@ namespace RepoDb
                 orderBy: orderBy,
                 fields: fields,
                 hints: hints,
-                transaction: transaction);
+                traceKey: traceKey,
+				transaction: transaction);
         }
 
         /// <summary>
@@ -49,7 +52,8 @@ namespace RepoDb
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> BatchQuery(string tableName,
             int page,
@@ -58,7 +62,8 @@ namespace RepoDb
             object where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null)
+            string traceKey = TraceKeys.BatchQuery,
+			IDbTransaction transaction = null)
         {
             return DbRepository.BatchQuery<TEntity>(tableName: tableName,
                 page: page,
@@ -67,7 +72,8 @@ namespace RepoDb
                 where: where,
                 fields: fields,
                 hints: hints,
-                transaction: transaction);
+                traceKey: traceKey,
+				transaction: transaction);
         }
 
         /// <summary>
@@ -80,7 +86,8 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> BatchQuery(string tableName,
             int page,
@@ -89,7 +96,8 @@ namespace RepoDb
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
             IEnumerable<Field> fields = null,
-            IDbTransaction transaction = null)
+            string traceKey = TraceKeys.BatchQuery,
+			IDbTransaction transaction = null)
         {
             return DbRepository.BatchQuery<TEntity>(tableName: tableName,
                 page: page,
@@ -98,7 +106,8 @@ namespace RepoDb
                 where: where,
                 fields: fields,
                 hints: hints,
-                transaction: transaction);
+                traceKey: traceKey,
+				transaction: transaction);
         }
 
         /// <summary>
@@ -111,7 +120,8 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> BatchQuery(string tableName,
             int page,
@@ -120,7 +130,8 @@ namespace RepoDb
             QueryField where = null,
             string hints = null,
             IEnumerable<Field> fields = null,
-            IDbTransaction transaction = null)
+            string traceKey = TraceKeys.BatchQuery,
+			IDbTransaction transaction = null)
         {
             return DbRepository.BatchQuery<TEntity>(tableName: tableName,
                 page: page,
@@ -129,7 +140,8 @@ namespace RepoDb
                 where: where,
                 fields: fields,
                 hints: hints,
-                transaction: transaction);
+                traceKey: traceKey,
+				transaction: transaction);
         }
 
         /// <summary>
@@ -142,7 +154,8 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> BatchQuery(string tableName,
             int page,
@@ -151,7 +164,8 @@ namespace RepoDb
             IEnumerable<QueryField> where = null,
             string hints = null,
             IEnumerable<Field> fields = null,
-            IDbTransaction transaction = null)
+            string traceKey = TraceKeys.BatchQuery,
+			IDbTransaction transaction = null)
         {
             return DbRepository.BatchQuery<TEntity>(tableName: tableName,
                 page: page,
@@ -160,7 +174,8 @@ namespace RepoDb
                 where: where,
                 fields: fields,
                 hints: hints,
-                transaction: transaction);
+                traceKey: traceKey,
+				transaction: transaction);
         }
 
         /// <summary>
@@ -173,7 +188,8 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> BatchQuery(string tableName,
             int page,
@@ -182,7 +198,8 @@ namespace RepoDb
             QueryGroup where = null,
             string hints = null,
             IEnumerable<Field> fields = null,
-            IDbTransaction transaction = null)
+            string traceKey = TraceKeys.BatchQuery,
+			IDbTransaction transaction = null)
         {
             return DbRepository.BatchQuery<TEntity>(tableName: tableName,
                 page: page,
@@ -191,7 +208,8 @@ namespace RepoDb
                 where: where,
                 fields: fields,
                 hints: hints,
-                transaction: transaction);
+                traceKey: traceKey,
+				transaction: transaction);
         }
 
         /// <summary>
@@ -202,21 +220,24 @@ namespace RepoDb
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> BatchQuery(int page,
             int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null)
+            string traceKey = TraceKeys.BatchQuery,
+			IDbTransaction transaction = null)
         {
             return DbRepository.BatchQuery<TEntity>(page: page,
                 rowsPerBatch: rowsPerBatch,
                 orderBy: orderBy,
                 fields: fields,
                 hints: hints,
-                transaction: transaction);
+                traceKey: traceKey,
+				transaction: transaction);
         }
 
         /// <summary>
@@ -228,7 +249,8 @@ namespace RepoDb
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> BatchQuery(int page,
             int rowsPerBatch,
@@ -236,7 +258,8 @@ namespace RepoDb
             object where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null)
+            string traceKey = TraceKeys.BatchQuery,
+			IDbTransaction transaction = null)
         {
             return DbRepository.BatchQuery<TEntity>(where: where,
                 page: page,
@@ -244,7 +267,8 @@ namespace RepoDb
                 orderBy: orderBy,
                 fields: fields,
                 hints: hints,
-                transaction: transaction);
+                traceKey: traceKey,
+				transaction: transaction);
         }
 
         /// <summary>
@@ -256,14 +280,16 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> BatchQuery(int page, int rowsPerBatch,
             IEnumerable<OrderField> orderBy,
             Expression<Func<TEntity, bool>> where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null)
+            string traceKey = TraceKeys.BatchQuery,
+			IDbTransaction transaction = null)
         {
             return DbRepository.BatchQuery<TEntity>(page: page,
                 rowsPerBatch: rowsPerBatch,
@@ -271,7 +297,8 @@ namespace RepoDb
                 where: where,
                 fields: fields,
                 hints: hints,
-                transaction: transaction);
+                traceKey: traceKey,
+				transaction: transaction);
         }
 
         /// <summary>
@@ -283,7 +310,8 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> BatchQuery(int page,
             int rowsPerBatch,
@@ -291,7 +319,8 @@ namespace RepoDb
             QueryField where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null)
+            string traceKey = TraceKeys.BatchQuery,
+			IDbTransaction transaction = null)
         {
             return DbRepository.BatchQuery<TEntity>(page: page,
                 rowsPerBatch: rowsPerBatch,
@@ -299,7 +328,8 @@ namespace RepoDb
                 where: where,
                 fields: fields,
                 hints: hints,
-                transaction: transaction);
+                traceKey: traceKey,
+				transaction: transaction);
         }
 
         /// <summary>
@@ -311,7 +341,8 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> BatchQuery(int page,
             int rowsPerBatch,
@@ -319,7 +350,8 @@ namespace RepoDb
             IEnumerable<QueryField> where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null)
+            string traceKey = TraceKeys.BatchQuery,
+			IDbTransaction transaction = null)
         {
             return DbRepository.BatchQuery<TEntity>(page: page,
                 rowsPerBatch: rowsPerBatch,
@@ -327,7 +359,8 @@ namespace RepoDb
                 where: where,
                 fields: fields,
                 hints: hints,
-                transaction: transaction);
+                traceKey: traceKey,
+				transaction: transaction);
         }
 
         /// <summary>
@@ -339,7 +372,8 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> BatchQuery(int page,
             int rowsPerBatch,
@@ -347,7 +381,8 @@ namespace RepoDb
             QueryGroup where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null)
+            string traceKey = TraceKeys.BatchQuery,
+			IDbTransaction transaction = null)
         {
             return DbRepository.BatchQuery<TEntity>(page: page,
                 rowsPerBatch: rowsPerBatch,
@@ -355,7 +390,8 @@ namespace RepoDb
                 where: where,
                 fields: fields,
                 hints: hints,
-                transaction: transaction);
+                traceKey: traceKey,
+				transaction: transaction);
         }
 
         #endregion
@@ -371,7 +407,8 @@ namespace RepoDb
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> BatchQueryAsync(string tableName,
@@ -380,7 +417,8 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null,
+            string traceKey = TraceKeys.BatchQuery,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.BatchQueryAsync<TEntity>(tableName: tableName,
@@ -389,7 +427,8 @@ namespace RepoDb
                 orderBy: orderBy,
                 fields: fields,
                 hints: hints,
-                transaction: transaction,
+                traceKey: traceKey,
+				transaction: transaction,
                 cancellationToken: cancellationToken);
         }
 
@@ -403,7 +442,8 @@ namespace RepoDb
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> BatchQueryAsync(string tableName,
@@ -413,7 +453,8 @@ namespace RepoDb
             object where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null,
+            string traceKey = TraceKeys.BatchQuery,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.BatchQueryAsync<TEntity>(tableName: tableName,
@@ -423,7 +464,8 @@ namespace RepoDb
                 where: where,
                 fields: fields,
                 hints: hints,
-                transaction: transaction,
+                traceKey: traceKey,
+				transaction: transaction,
                 cancellationToken: cancellationToken);
         }
 
@@ -437,7 +479,8 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> BatchQueryAsync(string tableName,
@@ -447,7 +490,8 @@ namespace RepoDb
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
             IEnumerable<Field> fields = null,
-            IDbTransaction transaction = null,
+            string traceKey = TraceKeys.BatchQuery,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.BatchQueryAsync<TEntity>(tableName: tableName,
@@ -457,7 +501,8 @@ namespace RepoDb
                 where: where,
                 fields: fields,
                 hints: hints,
-                transaction: transaction,
+                traceKey: traceKey,
+				transaction: transaction,
                 cancellationToken: cancellationToken);
         }
 
@@ -471,7 +516,8 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> BatchQueryAsync(string tableName,
@@ -481,7 +527,8 @@ namespace RepoDb
             QueryField where = null,
             string hints = null,
             IEnumerable<Field> fields = null,
-            IDbTransaction transaction = null,
+            string traceKey = TraceKeys.BatchQuery,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.BatchQueryAsync<TEntity>(tableName: tableName,
@@ -491,7 +538,8 @@ namespace RepoDb
                 where: where,
                 fields: fields,
                 hints: hints,
-                transaction: transaction,
+                traceKey: traceKey,
+				transaction: transaction,
                 cancellationToken: cancellationToken);
         }
 
@@ -505,7 +553,8 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> BatchQueryAsync(string tableName,
@@ -515,7 +564,8 @@ namespace RepoDb
             IEnumerable<QueryField> where = null,
             string hints = null,
             IEnumerable<Field> fields = null,
-            IDbTransaction transaction = null,
+            string traceKey = TraceKeys.BatchQuery,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.BatchQueryAsync<TEntity>(tableName: tableName,
@@ -525,7 +575,8 @@ namespace RepoDb
                 where: where,
                 fields: fields,
                 hints: hints,
-                transaction: transaction,
+                traceKey: traceKey,
+				transaction: transaction,
                 cancellationToken: cancellationToken);
         }
 
@@ -539,7 +590,8 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> BatchQueryAsync(string tableName,
@@ -549,7 +601,8 @@ namespace RepoDb
             QueryGroup where = null,
             string hints = null,
             IEnumerable<Field> fields = null,
-            IDbTransaction transaction = null,
+            string traceKey = TraceKeys.BatchQuery,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.BatchQueryAsync<TEntity>(tableName: tableName,
@@ -559,7 +612,8 @@ namespace RepoDb
                 where: where,
                 fields: fields,
                 hints: hints,
-                transaction: transaction,
+                traceKey: traceKey,
+				transaction: transaction,
                 cancellationToken: cancellationToken);
         }
 
@@ -571,7 +625,8 @@ namespace RepoDb
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> BatchQueryAsync(int page,
@@ -579,7 +634,8 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null,
+            string traceKey = TraceKeys.BatchQuery,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.BatchQueryAsync<TEntity>(page: page,
@@ -587,7 +643,8 @@ namespace RepoDb
                 orderBy: orderBy,
                 fields: fields,
                 hints: hints,
-                transaction: transaction,
+                traceKey: traceKey,
+				transaction: transaction,
                 cancellationToken: cancellationToken);
         }
 
@@ -600,7 +657,8 @@ namespace RepoDb
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> BatchQueryAsync(int page,
@@ -609,7 +667,8 @@ namespace RepoDb
             object where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null,
+            string traceKey = TraceKeys.BatchQuery,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.BatchQueryAsync<TEntity>(page: page,
@@ -618,7 +677,8 @@ namespace RepoDb
                 where: where,
                 fields: fields,
                 hints: hints,
-                transaction: transaction,
+                traceKey: traceKey,
+				transaction: transaction,
                 cancellationToken: cancellationToken);
         }
 
@@ -631,7 +691,8 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> BatchQueryAsync(int page,
@@ -640,7 +701,8 @@ namespace RepoDb
             Expression<Func<TEntity, bool>> where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null,
+            string traceKey = TraceKeys.BatchQuery,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.BatchQueryAsync<TEntity>(page: page,
@@ -649,7 +711,8 @@ namespace RepoDb
                 where: where,
                 fields: fields,
                 hints: hints,
-                transaction: transaction,
+                traceKey: traceKey,
+				transaction: transaction,
                 cancellationToken: cancellationToken);
         }
 
@@ -662,7 +725,8 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> BatchQueryAsync(int page,
@@ -671,7 +735,8 @@ namespace RepoDb
             QueryField where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null,
+            string traceKey = TraceKeys.BatchQuery,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.BatchQueryAsync<TEntity>(page: page,
@@ -680,7 +745,8 @@ namespace RepoDb
                 where: where,
                 fields: fields,
                 hints: hints,
-                transaction: transaction,
+                traceKey: traceKey,
+				transaction: transaction,
                 cancellationToken: cancellationToken);
         }
 
@@ -693,7 +759,8 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> BatchQueryAsync(int page,
@@ -702,7 +769,8 @@ namespace RepoDb
             IEnumerable<QueryField> where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null,
+            string traceKey = TraceKeys.BatchQuery,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.BatchQueryAsync<TEntity>(page: page,
@@ -711,7 +779,8 @@ namespace RepoDb
                 where: where,
                 fields: fields,
                 hints: hints,
-                transaction: transaction,
+                traceKey: traceKey,
+				transaction: transaction,
                 cancellationToken: cancellationToken);
         }
 
@@ -724,7 +793,8 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> BatchQueryAsync(int page,
@@ -733,7 +803,8 @@ namespace RepoDb
             QueryGroup where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null,
+            string traceKey = TraceKeys.BatchQuery,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.BatchQueryAsync<TEntity>(page: page,
@@ -742,7 +813,8 @@ namespace RepoDb
                 where: where,
                 fields: fields,
                 hints: hints,
-                transaction: transaction,
+                traceKey: traceKey,
+				transaction: transaction,
                 cancellationToken: cancellationToken);
         }
 

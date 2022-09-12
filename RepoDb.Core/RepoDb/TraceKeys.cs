@@ -91,6 +91,16 @@
         public const string MaxAll = "MaxAll";
 
         /// <summary>
+        /// The trace key for the 'Merge' operation.
+        /// </summary>
+        public const string Merge = "Merge";
+
+        /// <summary>
+        /// The trace key for the 'MergeAll' operation.
+        /// </summary>
+        public const string MergeAll = "MergeAll";
+
+        /// <summary>
         /// The trace key for the 'Min' operation.
         /// </summary>
         public const string Min = "Min";

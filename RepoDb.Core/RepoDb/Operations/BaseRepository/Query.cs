@@ -21,7 +21,8 @@ namespace RepoDb
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> Query(string tableName,
             object what,
@@ -30,7 +31,8 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
-            IDbTransaction transaction = null)
+            string traceKey = TraceKeys.Query,
+			IDbTransaction transaction = null)
         {
             return DbRepository.Query<TEntity>(tableName: tableName,
                 what: what,
@@ -39,7 +41,8 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
-                transaction: transaction);
+                traceKey: traceKey,
+				transaction: transaction);
         }
 
         /// <summary>
@@ -53,7 +56,8 @@ namespace RepoDb
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> Query<TWhat>(string tableName,
             TWhat what,
@@ -62,7 +66,8 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
-            IDbTransaction transaction = null)
+            string traceKey = TraceKeys.Query,
+			IDbTransaction transaction = null)
         {
             return DbRepository.Query<TEntity, TWhat>(tableName: tableName,
                 what: what,
@@ -71,7 +76,8 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
-                transaction: transaction);
+                traceKey: traceKey,
+				transaction: transaction);
         }
 
         /// <summary>
@@ -84,7 +90,8 @@ namespace RepoDb
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> Query(string tableName,
             Expression<Func<TEntity, bool>> where,
@@ -93,7 +100,8 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
-            IDbTransaction transaction = null)
+            string traceKey = TraceKeys.Query,
+			IDbTransaction transaction = null)
         {
             return DbRepository.Query<TEntity>(tableName: tableName,
                 where: where,
@@ -102,7 +110,8 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
-                transaction: transaction);
+                traceKey: traceKey,
+				transaction: transaction);
         }
 
         /// <summary>
@@ -115,7 +124,8 @@ namespace RepoDb
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> Query(string tableName,
             QueryField where,
@@ -124,7 +134,8 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
-            IDbTransaction transaction = null)
+            string traceKey = TraceKeys.Query,
+			IDbTransaction transaction = null)
         {
             return DbRepository.Query<TEntity>(tableName: tableName,
                 where: where,
@@ -133,7 +144,8 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
-                transaction: transaction);
+                traceKey: traceKey,
+				transaction: transaction);
         }
 
         /// <summary>
@@ -146,7 +158,8 @@ namespace RepoDb
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> Query(string tableName,
             IEnumerable<QueryField> where,
@@ -155,7 +168,8 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
-            IDbTransaction transaction = null)
+            string traceKey = TraceKeys.Query,
+			IDbTransaction transaction = null)
         {
             return DbRepository.Query<TEntity>(tableName: tableName,
                 where: where,
@@ -164,7 +178,8 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
-                transaction: transaction);
+                traceKey: traceKey,
+				transaction: transaction);
         }
 
         /// <summary>
@@ -177,7 +192,8 @@ namespace RepoDb
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> Query(string tableName,
             QueryGroup where,
@@ -186,7 +202,8 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
-            IDbTransaction transaction = null)
+            string traceKey = TraceKeys.Query,
+			IDbTransaction transaction = null)
         {
             return DbRepository.Query<TEntity>(tableName: tableName,
                 where: where,
@@ -195,7 +212,8 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
-                transaction: transaction);
+                traceKey: traceKey,
+				transaction: transaction);
         }
 
         /// <summary>
@@ -207,7 +225,8 @@ namespace RepoDb
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> Query(object what,
             IEnumerable<Field> fields = null,
@@ -215,7 +234,8 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
-            IDbTransaction transaction = null)
+            string traceKey = TraceKeys.Query,
+			IDbTransaction transaction = null)
         {
             return DbRepository.Query<TEntity>(what: what,
                 fields: fields,
@@ -223,7 +243,8 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
-                transaction: transaction);
+                traceKey: traceKey,
+				transaction: transaction);
         }
 
         /// <summary>
@@ -236,7 +257,8 @@ namespace RepoDb
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> Query<TWhat>(TWhat what,
             IEnumerable<Field> fields = null,
@@ -244,7 +266,8 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
-            IDbTransaction transaction = null)
+            string traceKey = TraceKeys.Query,
+			IDbTransaction transaction = null)
         {
             return DbRepository.Query<TEntity, TWhat>(what: what,
                 fields: fields,
@@ -252,7 +275,8 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
-                transaction: transaction);
+                traceKey: traceKey,
+				transaction: transaction);
         }
 
         /// <summary>
@@ -264,7 +288,8 @@ namespace RepoDb
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> Query(Expression<Func<TEntity, bool>> where,
             IEnumerable<Field> fields = null,
@@ -272,7 +297,8 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
-            IDbTransaction transaction = null)
+            string traceKey = TraceKeys.Query,
+			IDbTransaction transaction = null)
         {
             return DbRepository.Query<TEntity>(where: where,
                 fields: fields,
@@ -280,7 +306,8 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
-                transaction: transaction);
+                traceKey: traceKey,
+				transaction: transaction);
         }
 
         /// <summary>
@@ -292,7 +319,8 @@ namespace RepoDb
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> Query(QueryField where,
             IEnumerable<Field> fields = null,
@@ -300,7 +328,8 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
-            IDbTransaction transaction = null)
+            string traceKey = TraceKeys.Query,
+			IDbTransaction transaction = null)
         {
             return DbRepository.Query<TEntity>(where: where,
                 fields: fields,
@@ -308,7 +337,8 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
-                transaction: transaction);
+                traceKey: traceKey,
+				transaction: transaction);
         }
 
         /// <summary>
@@ -320,7 +350,8 @@ namespace RepoDb
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> Query(IEnumerable<QueryField> where,
             IEnumerable<Field> fields = null,
@@ -328,7 +359,8 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
-            IDbTransaction transaction = null)
+            string traceKey = TraceKeys.Query,
+			IDbTransaction transaction = null)
         {
             return DbRepository.Query<TEntity>(where: where,
                 fields: fields,
@@ -336,7 +368,8 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
-                transaction: transaction);
+                traceKey: traceKey,
+				transaction: transaction);
         }
 
         /// <summary>
@@ -348,7 +381,8 @@ namespace RepoDb
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> Query(QueryGroup where,
             IEnumerable<Field> fields = null,
@@ -356,7 +390,8 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
-            IDbTransaction transaction = null)
+            string traceKey = TraceKeys.Query,
+			IDbTransaction transaction = null)
         {
             return DbRepository.Query<TEntity>(where: where,
                 fields: fields,
@@ -364,7 +399,8 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
-                transaction: transaction);
+                traceKey: traceKey,
+				transaction: transaction);
         }
 
         #endregion
@@ -381,7 +417,8 @@ namespace RepoDb
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> QueryAsync(string tableName,
@@ -391,7 +428,8 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
-            IDbTransaction transaction = null,
+            string traceKey = TraceKeys.Query,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.QueryAsync<TEntity>(tableName: tableName,
@@ -401,7 +439,8 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
-                transaction: transaction,
+                traceKey: traceKey,
+				transaction: transaction,
                 cancellationToken: cancellationToken);
         }
 
@@ -416,7 +455,8 @@ namespace RepoDb
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> QueryAsync<TWhat>(string tableName,
@@ -426,7 +466,8 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
-            IDbTransaction transaction = null,
+            string traceKey = TraceKeys.Query,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.QueryAsync<TEntity, TWhat>(tableName: tableName,
@@ -436,7 +477,8 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
-                transaction: transaction,
+                traceKey: traceKey,
+				transaction: transaction,
                 cancellationToken: cancellationToken);
         }
 
@@ -450,7 +492,8 @@ namespace RepoDb
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> QueryAsync(string tableName,
@@ -460,7 +503,8 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
-            IDbTransaction transaction = null,
+            string traceKey = TraceKeys.Query,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.QueryAsync<TEntity>(tableName: tableName,
@@ -470,7 +514,8 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
-                transaction: transaction,
+                traceKey: traceKey,
+				transaction: transaction,
                 cancellationToken: cancellationToken);
         }
 
@@ -484,7 +529,8 @@ namespace RepoDb
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> QueryAsync(string tableName,
@@ -494,7 +540,8 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
-            IDbTransaction transaction = null,
+            string traceKey = TraceKeys.Query,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.QueryAsync<TEntity>(tableName: tableName,
@@ -504,7 +551,8 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
-                transaction: transaction,
+                traceKey: traceKey,
+				transaction: transaction,
                 cancellationToken: cancellationToken);
         }
 
@@ -518,7 +566,8 @@ namespace RepoDb
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> QueryAsync(string tableName,
@@ -528,7 +577,8 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
-            IDbTransaction transaction = null,
+            string traceKey = TraceKeys.Query,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.QueryAsync<TEntity>(tableName: tableName,
@@ -538,7 +588,8 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
-                transaction: transaction,
+                traceKey: traceKey,
+				transaction: transaction,
                 cancellationToken: cancellationToken);
         }
 
@@ -552,7 +603,8 @@ namespace RepoDb
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> QueryAsync(string tableName,
@@ -562,7 +614,8 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
-            IDbTransaction transaction = null,
+            string traceKey = TraceKeys.Query,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.QueryAsync<TEntity>(tableName: tableName,
@@ -572,7 +625,8 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
-                transaction: transaction,
+                traceKey: traceKey,
+				transaction: transaction,
                 cancellationToken: cancellationToken);
         }
 
@@ -585,7 +639,8 @@ namespace RepoDb
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> QueryAsync(object what,
@@ -594,7 +649,8 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
-            IDbTransaction transaction = null,
+            string traceKey = TraceKeys.Query,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.QueryAsync<TEntity>(what: what,
@@ -603,7 +659,8 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
-                transaction: transaction,
+                traceKey: traceKey,
+				transaction: transaction,
                 cancellationToken: cancellationToken);
         }
 
@@ -617,7 +674,8 @@ namespace RepoDb
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> QueryAsync<TWhat>(TWhat what,
@@ -626,7 +684,8 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
-            IDbTransaction transaction = null,
+            string traceKey = TraceKeys.Query,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.QueryAsync<TEntity, TWhat>(what: what,
@@ -635,7 +694,8 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
-                transaction: transaction,
+                traceKey: traceKey,
+				transaction: transaction,
                 cancellationToken: cancellationToken);
         }
 
@@ -648,7 +708,8 @@ namespace RepoDb
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> QueryAsync(Expression<Func<TEntity, bool>> where,
@@ -657,7 +718,8 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
-            IDbTransaction transaction = null,
+            string traceKey = TraceKeys.Query,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.QueryAsync<TEntity>(where: where,
@@ -666,7 +728,8 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
-                transaction: transaction,
+                traceKey: traceKey,
+				transaction: transaction,
                 cancellationToken: cancellationToken);
         }
 
@@ -679,7 +742,8 @@ namespace RepoDb
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> QueryAsync(QueryField where,
@@ -688,7 +752,8 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
-            IDbTransaction transaction = null,
+            string traceKey = TraceKeys.Query,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.QueryAsync<TEntity>(where: where,
@@ -697,7 +762,8 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
-                transaction: transaction,
+                traceKey: traceKey,
+				transaction: transaction,
                 cancellationToken: cancellationToken);
         }
 
@@ -710,7 +776,8 @@ namespace RepoDb
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> QueryAsync(IEnumerable<QueryField> where,
@@ -719,7 +786,8 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
-            IDbTransaction transaction = null,
+            string traceKey = TraceKeys.Query,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.QueryAsync<TEntity>(where: where,
@@ -728,7 +796,8 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
-                transaction: transaction,
+                traceKey: traceKey,
+				transaction: transaction,
                 cancellationToken: cancellationToken);
         }
 
@@ -741,7 +810,8 @@ namespace RepoDb
         /// <param name="top">The number of rows to be returned.</param>
         /// <param name="hints">The table hints to be used.</param>
         /// <param name="cacheKey">The key to the cache item. By setting this argument, it will return the item from the cache if present, otherwise it will query the database.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public Task<IEnumerable<TEntity>> QueryAsync(QueryGroup where,
@@ -750,7 +820,8 @@ namespace RepoDb
             int? top = 0,
             string hints = null,
             string cacheKey = null,
-            IDbTransaction transaction = null,
+            string traceKey = TraceKeys.Query,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.QueryAsync<TEntity>(where: where,
@@ -759,7 +830,8 @@ namespace RepoDb
                 top: top,
                 hints: hints,
                 cacheKey: cacheKey,
-                transaction: transaction,
+                traceKey: traceKey,
+				transaction: transaction,
                 cancellationToken: cancellationToken);
         }
 

@@ -18,19 +18,22 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
         public int MergeAll(IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null)
+            string traceKey = TraceKeys.MergeAll,
+			IDbTransaction transaction = null)
         {
             return DbRepository.MergeAll<TEntity>(entities: entities,
                 batchSize: batchSize,
                 fields: fields,
                 hints: hints,
-                transaction: transaction);
+                traceKey: traceKey,
+				transaction: transaction);
         }
 
         /// <summary>
@@ -41,21 +44,24 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
         public int MergeAll(IEnumerable<TEntity> entities,
             IEnumerable<Field> qualifiers,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null)
+            string traceKey = TraceKeys.MergeAll,
+			IDbTransaction transaction = null)
         {
             return DbRepository.MergeAll<TEntity>(entities: entities,
                 qualifiers: qualifiers,
                 batchSize: batchSize,
                 fields: fields,
                 hints: hints,
-                transaction: transaction);
+                traceKey: traceKey,
+				transaction: transaction);
         }
 
         /// <summary>
@@ -66,6 +72,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
         public int MergeAll(IEnumerable<TEntity> entities,
@@ -73,14 +80,16 @@ namespace RepoDb
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null)
+            string traceKey = TraceKeys.MergeAll,
+			IDbTransaction transaction = null)
         {
             return DbRepository.MergeAll<TEntity>(entities: entities,
                 qualifiers: qualifiers,
                 batchSize: batchSize,
                 fields: fields,
                 hints: hints,
-                transaction: transaction);
+                traceKey: traceKey,
+				transaction: transaction);
         }
 
         #endregion
@@ -94,6 +103,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
@@ -101,14 +111,16 @@ namespace RepoDb
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null,
+            string traceKey = TraceKeys.MergeAll,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.MergeAllAsync<TEntity>(entities: entities,
                 batchSize: batchSize,
                 fields: fields,
                 hints: hints,
-                transaction: transaction,
+                traceKey: traceKey,
+				transaction: transaction,
                 cancellationToken: cancellationToken);
         }
 
@@ -120,6 +132,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
@@ -128,7 +141,8 @@ namespace RepoDb
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null,
+            string traceKey = TraceKeys.MergeAll,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.MergeAllAsync<TEntity>(entities: entities,
@@ -136,7 +150,8 @@ namespace RepoDb
                 batchSize: batchSize,
                 fields: fields,
                 hints: hints,
-                transaction: transaction,
+                traceKey: traceKey,
+				transaction: transaction,
                 cancellationToken: cancellationToken);
         }
 
@@ -148,7 +163,8 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
         public Task<int> MergeAllAsync(IEnumerable<TEntity> entities,
@@ -156,7 +172,8 @@ namespace RepoDb
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             string hints = null,
-            IDbTransaction transaction = null,
+            string traceKey = TraceKeys.MergeAll,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.MergeAllAsync<TEntity>(entities: entities,
@@ -164,7 +181,8 @@ namespace RepoDb
                 batchSize: batchSize,
                 fields: fields,
                 hints: hints,
-                transaction: transaction,
+                traceKey: traceKey,
+				transaction: transaction,
                 cancellationToken: cancellationToken);
         }
 

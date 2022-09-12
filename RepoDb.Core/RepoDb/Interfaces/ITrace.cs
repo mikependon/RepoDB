@@ -24,7 +24,7 @@ namespace RepoDb.Interfaces
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="log">The trace log object referenced by the execution.</param>
-        void AfterExcecution<TResult>(ResultTraceLog<TResult> log);
+        void AfterExecution<TResult>(ResultTraceLog<TResult> log);
 
         #endregion
 

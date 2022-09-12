@@ -32,7 +32,8 @@ namespace RepoDb
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<T1, T2>(object what1,
             object what2,
@@ -46,7 +47,8 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy2 = null,
             string hints2 = null,
             string cacheKey2 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
         {
@@ -70,7 +72,8 @@ namespace RepoDb
                     cacheKey2: cacheKey2,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -99,7 +102,8 @@ namespace RepoDb
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<T1, T2>(Expression<Func<T1, bool>> where1,
             Expression<Func<T2, bool>> where2,
@@ -113,7 +117,8 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy2 = null,
             string hints2 = null,
             string cacheKey2 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
         {
@@ -137,7 +142,8 @@ namespace RepoDb
                     cacheKey2: cacheKey2,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -166,7 +172,8 @@ namespace RepoDb
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<T1, T2>(QueryField where1,
             QueryField where2,
@@ -180,7 +187,8 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy2 = null,
             string hints2 = null,
             string cacheKey2 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
         {
@@ -204,7 +212,8 @@ namespace RepoDb
                     cacheKey2: cacheKey2,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -233,7 +242,8 @@ namespace RepoDb
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<T1, T2>(IEnumerable<QueryField> where1,
             IEnumerable<QueryField> where2,
@@ -247,7 +257,8 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy2 = null,
             string hints2 = null,
             string cacheKey2 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
         {
@@ -271,7 +282,8 @@ namespace RepoDb
                     cacheKey2: cacheKey2,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -300,7 +312,8 @@ namespace RepoDb
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<T1, T2>(QueryGroup where1,
             QueryGroup where2,
@@ -314,7 +327,8 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy2 = null,
             string hints2 = null,
             string cacheKey2 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
         {
@@ -338,7 +352,8 @@ namespace RepoDb
                     cacheKey2: cacheKey2,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -378,7 +393,8 @@ namespace RepoDb
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<T1, T2, T3>(object what1,
             object what2,
@@ -398,7 +414,8 @@ namespace RepoDb
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -429,7 +446,8 @@ namespace RepoDb
                     cacheKey3: cacheKey3,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -465,7 +483,8 @@ namespace RepoDb
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<T1, T2, T3>(Expression<Func<T1, bool>> where1,
             Expression<Func<T2, bool>> where2,
@@ -485,7 +504,8 @@ namespace RepoDb
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -516,7 +536,8 @@ namespace RepoDb
                     cacheKey3: cacheKey3,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -552,7 +573,8 @@ namespace RepoDb
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<T1, T2, T3>(QueryField where1,
             QueryField where2,
@@ -572,7 +594,8 @@ namespace RepoDb
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -603,7 +626,8 @@ namespace RepoDb
                     cacheKey3: cacheKey3,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -639,7 +663,8 @@ namespace RepoDb
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<T1, T2, T3>(IEnumerable<QueryField> where1,
             IEnumerable<QueryField> where2,
@@ -659,7 +684,8 @@ namespace RepoDb
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -690,7 +716,8 @@ namespace RepoDb
                     cacheKey3: cacheKey3,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -726,7 +753,8 @@ namespace RepoDb
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<T1, T2, T3>(QueryGroup where1,
             QueryGroup where2,
@@ -746,7 +774,8 @@ namespace RepoDb
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -777,7 +806,8 @@ namespace RepoDb
                     cacheKey3: cacheKey3,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -824,7 +854,8 @@ namespace RepoDb
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>
             QueryMultiple<T1, T2, T3, T4>(object what1,
@@ -851,7 +882,8 @@ namespace RepoDb
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -889,7 +921,8 @@ namespace RepoDb
                     cacheKey4: cacheKey4,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -932,7 +965,8 @@ namespace RepoDb
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>
             QueryMultiple<T1, T2, T3, T4>(Expression<Func<T1, bool>> where1,
@@ -959,7 +993,8 @@ namespace RepoDb
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -997,7 +1032,8 @@ namespace RepoDb
                     cacheKey4: cacheKey4,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -1040,7 +1076,8 @@ namespace RepoDb
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>
             QueryMultiple<T1, T2, T3, T4>(QueryField where1,
@@ -1067,7 +1104,8 @@ namespace RepoDb
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -1105,7 +1143,8 @@ namespace RepoDb
                     cacheKey4: cacheKey4,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -1148,7 +1187,8 @@ namespace RepoDb
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>
             QueryMultiple<T1, T2, T3, T4>(IEnumerable<QueryField> where1,
@@ -1175,7 +1215,8 @@ namespace RepoDb
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -1213,7 +1254,8 @@ namespace RepoDb
                     cacheKey4: cacheKey4,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -1256,7 +1298,8 @@ namespace RepoDb
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>
             QueryMultiple<T1, T2, T3, T4>(QueryGroup where1,
@@ -1283,7 +1326,8 @@ namespace RepoDb
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -1321,7 +1365,8 @@ namespace RepoDb
                     cacheKey4: cacheKey4,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -1375,7 +1420,8 @@ namespace RepoDb
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>
             QueryMultiple<T1, T2, T3, T4, T5>(object what1,
@@ -1408,7 +1454,8 @@ namespace RepoDb
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -1453,7 +1500,8 @@ namespace RepoDb
                     cacheKey5: cacheKey5,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -1503,7 +1551,8 @@ namespace RepoDb
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>
             QueryMultiple<T1, T2, T3, T4, T5>(Expression<Func<T1, bool>> where1,
@@ -1536,7 +1585,8 @@ namespace RepoDb
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -1581,7 +1631,8 @@ namespace RepoDb
                     cacheKey5: cacheKey5,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -1631,7 +1682,8 @@ namespace RepoDb
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>
             QueryMultiple<T1, T2, T3, T4, T5>(QueryField where1,
@@ -1664,7 +1716,8 @@ namespace RepoDb
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -1709,7 +1762,8 @@ namespace RepoDb
                     cacheKey5: cacheKey5,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -1759,7 +1813,8 @@ namespace RepoDb
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>
             QueryMultiple<T1, T2, T3, T4, T5>(IEnumerable<QueryField> where1,
@@ -1792,7 +1847,8 @@ namespace RepoDb
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -1837,7 +1893,8 @@ namespace RepoDb
                     cacheKey5: cacheKey5,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -1887,7 +1944,8 @@ namespace RepoDb
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>
             QueryMultiple<T1, T2, T3, T4, T5>(QueryGroup where1,
@@ -1920,7 +1978,8 @@ namespace RepoDb
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -1965,7 +2024,8 @@ namespace RepoDb
                     cacheKey5: cacheKey5,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -2026,7 +2086,8 @@ namespace RepoDb
         /// <param name="top6">The number of rows to be returned (for T6).</param>
         /// <param name="hints6">The table hints to be used (for T6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>
             QueryMultiple<T1, T2, T3, T4, T5, T6>(object what1,
@@ -2065,7 +2126,8 @@ namespace RepoDb
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -2117,7 +2179,8 @@ namespace RepoDb
                     cacheKey6: cacheKey6,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -2174,7 +2237,8 @@ namespace RepoDb
         /// <param name="top6">The number of rows to be returned (for T6).</param>
         /// <param name="hints6">The table hints to be used (for T6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>
             QueryMultiple<T1, T2, T3, T4, T5, T6>(Expression<Func<T1, bool>> where1,
@@ -2213,7 +2277,8 @@ namespace RepoDb
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -2265,7 +2330,8 @@ namespace RepoDb
                     cacheKey6: cacheKey6,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -2322,7 +2388,8 @@ namespace RepoDb
         /// <param name="top6">The number of rows to be returned (for T6).</param>
         /// <param name="hints6">The table hints to be used (for T6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>
             QueryMultiple<T1, T2, T3, T4, T5, T6>(QueryField where1,
@@ -2361,7 +2428,8 @@ namespace RepoDb
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -2413,7 +2481,8 @@ namespace RepoDb
                     cacheKey6: cacheKey6,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -2470,7 +2539,8 @@ namespace RepoDb
         /// <param name="top6">The number of rows to be returned (for T6).</param>
         /// <param name="hints6">The table hints to be used (for T6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>
             QueryMultiple<T1, T2, T3, T4, T5, T6>(IEnumerable<QueryField> where1,
@@ -2509,7 +2579,8 @@ namespace RepoDb
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -2561,7 +2632,8 @@ namespace RepoDb
                     cacheKey6: cacheKey6,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -2618,7 +2690,8 @@ namespace RepoDb
         /// <param name="top6">The number of rows to be returned (for T6).</param>
         /// <param name="hints6">The table hints to be used (for T6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>
             QueryMultiple<T1, T2, T3, T4, T5, T6>(QueryGroup where1,
@@ -2657,7 +2730,8 @@ namespace RepoDb
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -2709,7 +2783,8 @@ namespace RepoDb
                     cacheKey6: cacheKey6,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -2777,7 +2852,8 @@ namespace RepoDb
         /// <param name="top7">The number of rows to be returned (for T7).</param>
         /// <param name="hints7">The table hints to be used (for T7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>
             QueryMultiple<T1, T2, T3, T4, T5, T6, T7>(object what1,
@@ -2822,7 +2898,8 @@ namespace RepoDb
             int? top7 = 0,
             string hints7 = null,
             string cacheKey7 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -2881,7 +2958,8 @@ namespace RepoDb
                     cacheKey7: cacheKey7,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -2945,7 +3023,8 @@ namespace RepoDb
         /// <param name="top7">The number of rows to be returned (for T7).</param>
         /// <param name="hints7">The table hints to be used (for T7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>
             QueryMultiple<T1, T2, T3, T4, T5, T6, T7>(Expression<Func<T1, bool>> where1,
@@ -2990,7 +3069,8 @@ namespace RepoDb
             int? top7 = 0,
             string hints7 = null,
             string cacheKey7 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -3049,7 +3129,8 @@ namespace RepoDb
                     cacheKey7: cacheKey7,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -3113,7 +3194,8 @@ namespace RepoDb
         /// <param name="top7">The number of rows to be returned (for T7).</param>
         /// <param name="hints7">The table hints to be used (for T7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>
             QueryMultiple<T1, T2, T3, T4, T5, T6, T7>(QueryField where1,
@@ -3158,7 +3240,8 @@ namespace RepoDb
             int? top7 = 0,
             string hints7 = null,
             string cacheKey7 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -3217,7 +3300,8 @@ namespace RepoDb
                     cacheKey7: cacheKey7,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -3281,7 +3365,8 @@ namespace RepoDb
         /// <param name="top7">The number of rows to be returned (for T7).</param>
         /// <param name="hints7">The table hints to be used (for T7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>
             QueryMultiple<T1, T2, T3, T4, T5, T6, T7>(IEnumerable<QueryField> where1,
@@ -3326,7 +3411,8 @@ namespace RepoDb
             int? top7 = 0,
             string hints7 = null,
             string cacheKey7 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -3385,7 +3471,8 @@ namespace RepoDb
                     cacheKey7: cacheKey7,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -3449,7 +3536,8 @@ namespace RepoDb
         /// <param name="top7">The number of rows to be returned (for T7).</param>
         /// <param name="hints7">The table hints to be used (for T7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>
             QueryMultiple<T1, T2, T3, T4, T5, T6, T7>(QueryGroup where1,
@@ -3494,7 +3582,8 @@ namespace RepoDb
             int? top7 = 0,
             string hints7 = null,
             string cacheKey7 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -3553,7 +3642,8 @@ namespace RepoDb
                     cacheKey7: cacheKey7,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -3590,7 +3680,8 @@ namespace RepoDb
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<T1, T2>(object what1,
@@ -3605,7 +3696,8 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy2 = null,
             string hints2 = null,
             string cacheKey2 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -3630,7 +3722,8 @@ namespace RepoDb
                     cacheKey2: cacheKey2,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -3660,7 +3753,8 @@ namespace RepoDb
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<T1, T2>(Expression<Func<T1, bool>> where1,
@@ -3675,7 +3769,8 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy2 = null,
             string hints2 = null,
             string cacheKey2 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -3700,7 +3795,8 @@ namespace RepoDb
                     cacheKey2: cacheKey2,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -3730,7 +3826,8 @@ namespace RepoDb
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<T1, T2>(QueryField where1,
@@ -3745,7 +3842,8 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy2 = null,
             string hints2 = null,
             string cacheKey2 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -3770,7 +3868,8 @@ namespace RepoDb
                     cacheKey2: cacheKey2,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -3800,7 +3899,8 @@ namespace RepoDb
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<T1, T2>(IEnumerable<QueryField> where1,
@@ -3815,7 +3915,8 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy2 = null,
             string hints2 = null,
             string cacheKey2 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -3840,7 +3941,8 @@ namespace RepoDb
                     cacheKey2: cacheKey2,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -3870,7 +3972,8 @@ namespace RepoDb
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<T1, T2>(QueryGroup where1,
@@ -3885,7 +3988,8 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy2 = null,
             string hints2 = null,
             string cacheKey2 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -3910,7 +4014,8 @@ namespace RepoDb
                     cacheKey2: cacheKey2,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -3951,7 +4056,8 @@ namespace RepoDb
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<T1, T2, T3>(object what1,
@@ -3972,7 +4078,8 @@ namespace RepoDb
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -4004,7 +4111,8 @@ namespace RepoDb
                     cacheKey3: cacheKey3,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -4041,7 +4149,8 @@ namespace RepoDb
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<T1, T2, T3>(Expression<Func<T1, bool>> where1,
@@ -4062,7 +4171,8 @@ namespace RepoDb
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -4094,7 +4204,8 @@ namespace RepoDb
                     cacheKey3: cacheKey3,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -4131,7 +4242,8 @@ namespace RepoDb
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<T1, T2, T3>(QueryField where1,
@@ -4152,7 +4264,8 @@ namespace RepoDb
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -4184,7 +4297,8 @@ namespace RepoDb
                     cacheKey3: cacheKey3,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -4221,7 +4335,8 @@ namespace RepoDb
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<T1, T2, T3>(IEnumerable<QueryField> where1,
@@ -4242,7 +4357,8 @@ namespace RepoDb
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -4274,7 +4390,8 @@ namespace RepoDb
                     cacheKey3: cacheKey3,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -4311,7 +4428,8 @@ namespace RepoDb
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<T1, T2, T3>(QueryGroup where1,
@@ -4332,7 +4450,8 @@ namespace RepoDb
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -4364,7 +4483,8 @@ namespace RepoDb
                     cacheKey3: cacheKey3,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -4412,7 +4532,8 @@ namespace RepoDb
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>>
@@ -4440,7 +4561,8 @@ namespace RepoDb
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -4479,7 +4601,8 @@ namespace RepoDb
                     cacheKey4: cacheKey4,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -4523,7 +4646,8 @@ namespace RepoDb
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>>
@@ -4551,7 +4675,8 @@ namespace RepoDb
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -4590,7 +4715,8 @@ namespace RepoDb
                     cacheKey4: cacheKey4,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -4634,7 +4760,8 @@ namespace RepoDb
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>>
@@ -4662,7 +4789,8 @@ namespace RepoDb
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -4701,7 +4829,8 @@ namespace RepoDb
                     cacheKey4: cacheKey4,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -4745,7 +4874,8 @@ namespace RepoDb
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>>
@@ -4773,7 +4903,8 @@ namespace RepoDb
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -4812,7 +4943,8 @@ namespace RepoDb
                     cacheKey4: cacheKey4,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -4856,7 +4988,8 @@ namespace RepoDb
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>>
@@ -4884,7 +5017,8 @@ namespace RepoDb
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -4923,7 +5057,8 @@ namespace RepoDb
                     cacheKey4: cacheKey4,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -4978,7 +5113,8 @@ namespace RepoDb
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>>
@@ -5012,7 +5148,8 @@ namespace RepoDb
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -5058,7 +5195,8 @@ namespace RepoDb
                     cacheKey5: cacheKey5,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -5109,7 +5247,8 @@ namespace RepoDb
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>>
@@ -5143,7 +5282,8 @@ namespace RepoDb
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -5189,7 +5329,8 @@ namespace RepoDb
                     cacheKey5: cacheKey5,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -5240,7 +5381,8 @@ namespace RepoDb
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>>
@@ -5274,7 +5416,8 @@ namespace RepoDb
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -5320,7 +5463,8 @@ namespace RepoDb
                     cacheKey5: cacheKey5,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -5371,7 +5515,8 @@ namespace RepoDb
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>>
@@ -5405,7 +5550,8 @@ namespace RepoDb
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -5451,7 +5597,8 @@ namespace RepoDb
                     cacheKey5: cacheKey5,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -5502,7 +5649,8 @@ namespace RepoDb
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>>
@@ -5536,7 +5684,8 @@ namespace RepoDb
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -5582,7 +5731,8 @@ namespace RepoDb
                     cacheKey5: cacheKey5,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -5644,7 +5794,8 @@ namespace RepoDb
         /// <param name="top6">The number of rows to be returned (for T6).</param>
         /// <param name="hints6">The table hints to be used (for T6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>>
@@ -5684,7 +5835,8 @@ namespace RepoDb
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -5737,7 +5889,8 @@ namespace RepoDb
                     cacheKey6: cacheKey6,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -5795,7 +5948,8 @@ namespace RepoDb
         /// <param name="top6">The number of rows to be returned (for T6).</param>
         /// <param name="hints6">The table hints to be used (for T6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>>
@@ -5835,7 +5989,8 @@ namespace RepoDb
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -5888,7 +6043,8 @@ namespace RepoDb
                     cacheKey6: cacheKey6,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -5946,7 +6102,8 @@ namespace RepoDb
         /// <param name="top6">The number of rows to be returned (for T6).</param>
         /// <param name="hints6">The table hints to be used (for T6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>>
@@ -5986,7 +6143,8 @@ namespace RepoDb
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -6039,7 +6197,8 @@ namespace RepoDb
                     cacheKey6: cacheKey6,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -6097,7 +6256,8 @@ namespace RepoDb
         /// <param name="top6">The number of rows to be returned (for T6).</param>
         /// <param name="hints6">The table hints to be used (for T6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>>
@@ -6137,7 +6297,8 @@ namespace RepoDb
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -6190,7 +6351,8 @@ namespace RepoDb
                     cacheKey6: cacheKey6,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -6248,7 +6410,8 @@ namespace RepoDb
         /// <param name="top6">The number of rows to be returned (for T6).</param>
         /// <param name="hints6">The table hints to be used (for T6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>>
@@ -6288,7 +6451,8 @@ namespace RepoDb
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -6341,7 +6505,8 @@ namespace RepoDb
                     cacheKey6: cacheKey6,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -6410,7 +6575,8 @@ namespace RepoDb
         /// <param name="top7">The number of rows to be returned (for T7).</param>
         /// <param name="hints7">The table hints to be used (for T7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>>
@@ -6456,7 +6622,8 @@ namespace RepoDb
             int? top7 = 0,
             string hints7 = null,
             string cacheKey7 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -6516,7 +6683,8 @@ namespace RepoDb
                     cacheKey7: cacheKey7,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -6581,7 +6749,8 @@ namespace RepoDb
         /// <param name="top7">The number of rows to be returned (for T7).</param>
         /// <param name="hints7">The table hints to be used (for T7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>>
@@ -6627,7 +6796,8 @@ namespace RepoDb
             int? top7 = 0,
             string hints7 = null,
             string cacheKey7 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -6687,7 +6857,8 @@ namespace RepoDb
                     cacheKey7: cacheKey7,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -6752,7 +6923,8 @@ namespace RepoDb
         /// <param name="top7">The number of rows to be returned (for T7).</param>
         /// <param name="hints7">The table hints to be used (for T7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>>
@@ -6798,7 +6970,8 @@ namespace RepoDb
             int? top7 = 0,
             string hints7 = null,
             string cacheKey7 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -6858,7 +7031,8 @@ namespace RepoDb
                     cacheKey7: cacheKey7,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -6923,7 +7097,8 @@ namespace RepoDb
         /// <param name="top7">The number of rows to be returned (for T7).</param>
         /// <param name="hints7">The table hints to be used (for T7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>>
@@ -6969,7 +7144,8 @@ namespace RepoDb
             int? top7 = 0,
             string hints7 = null,
             string cacheKey7 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -7029,7 +7205,8 @@ namespace RepoDb
                     cacheKey7: cacheKey7,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -7094,7 +7271,8 @@ namespace RepoDb
         /// <param name="top7">The number of rows to be returned (for T7).</param>
         /// <param name="hints7">The table hints to be used (for T7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>>
@@ -7140,7 +7318,8 @@ namespace RepoDb
             int? top7 = 0,
             string hints7 = null,
             string cacheKey7 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -7200,7 +7379,8 @@ namespace RepoDb
                     cacheKey7: cacheKey7,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -7242,7 +7422,8 @@ namespace RepoDb
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<T1, T2>(string tableName1,
             object what1,
@@ -7258,7 +7439,8 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy2 = null,
             string hints2 = null,
             string cacheKey2 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
         {
@@ -7284,7 +7466,8 @@ namespace RepoDb
                     cacheKey2: cacheKey2,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -7315,7 +7498,8 @@ namespace RepoDb
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<T1, T2>(string tableName1,
             Expression<Func<T1, bool>> where1,
@@ -7331,7 +7515,8 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy2 = null,
             string hints2 = null,
             string cacheKey2 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
         {
@@ -7357,7 +7542,8 @@ namespace RepoDb
                     cacheKey2: cacheKey2,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -7388,7 +7574,8 @@ namespace RepoDb
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<T1, T2>(string tableName1,
             QueryField where1,
@@ -7404,7 +7591,8 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy2 = null,
             string hints2 = null,
             string cacheKey2 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
         {
@@ -7430,7 +7618,8 @@ namespace RepoDb
                     cacheKey2: cacheKey2,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -7461,7 +7650,8 @@ namespace RepoDb
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<T1, T2>(string tableName1,
             IEnumerable<QueryField> where1,
@@ -7477,7 +7667,8 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy2 = null,
             string hints2 = null,
             string cacheKey2 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
         {
@@ -7503,7 +7694,8 @@ namespace RepoDb
                     cacheKey2: cacheKey2,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -7534,7 +7726,8 @@ namespace RepoDb
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>> QueryMultiple<T1, T2>(string tableName1,
             QueryGroup where1,
@@ -7550,7 +7743,8 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy2 = null,
             string hints2 = null,
             string cacheKey2 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
         {
@@ -7576,7 +7770,8 @@ namespace RepoDb
                     cacheKey2: cacheKey2,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -7619,7 +7814,8 @@ namespace RepoDb
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<T1, T2, T3>(string tableName1,
             object what1,
@@ -7642,7 +7838,8 @@ namespace RepoDb
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -7676,7 +7873,8 @@ namespace RepoDb
                     cacheKey3: cacheKey3,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -7715,7 +7913,8 @@ namespace RepoDb
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<T1, T2, T3>(string tableName1,
             Expression<Func<T1, bool>> where1,
@@ -7738,7 +7937,8 @@ namespace RepoDb
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -7772,7 +7972,8 @@ namespace RepoDb
                     cacheKey3: cacheKey3,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -7811,7 +8012,8 @@ namespace RepoDb
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<T1, T2, T3>(string tableName1,
             QueryField where1,
@@ -7834,7 +8036,8 @@ namespace RepoDb
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -7868,7 +8071,8 @@ namespace RepoDb
                     cacheKey3: cacheKey3,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -7907,7 +8111,8 @@ namespace RepoDb
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<T1, T2, T3>(string tableName1,
             IEnumerable<QueryField> where1,
@@ -7930,7 +8135,8 @@ namespace RepoDb
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -7964,7 +8170,8 @@ namespace RepoDb
                     cacheKey3: cacheKey3,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -8003,7 +8210,8 @@ namespace RepoDb
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> QueryMultiple<T1, T2, T3>(string tableName1,
             QueryGroup where1,
@@ -8026,7 +8234,8 @@ namespace RepoDb
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -8060,7 +8269,8 @@ namespace RepoDb
                     cacheKey3: cacheKey3,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -8111,7 +8321,8 @@ namespace RepoDb
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>
             QueryMultiple<T1, T2, T3, T4>(string tableName1,
@@ -8142,7 +8353,8 @@ namespace RepoDb
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -8184,7 +8396,8 @@ namespace RepoDb
                     cacheKey4: cacheKey4,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -8231,7 +8444,8 @@ namespace RepoDb
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>
             QueryMultiple<T1, T2, T3, T4>(string tableName1,
@@ -8262,7 +8476,8 @@ namespace RepoDb
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -8304,7 +8519,8 @@ namespace RepoDb
                     cacheKey4: cacheKey4,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -8351,7 +8567,8 @@ namespace RepoDb
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>
             QueryMultiple<T1, T2, T3, T4>(string tableName1,
@@ -8382,7 +8599,8 @@ namespace RepoDb
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -8424,7 +8642,8 @@ namespace RepoDb
                     cacheKey4: cacheKey4,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -8471,7 +8690,8 @@ namespace RepoDb
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>
             QueryMultiple<T1, T2, T3, T4>(string tableName1,
@@ -8502,7 +8722,8 @@ namespace RepoDb
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -8544,7 +8765,8 @@ namespace RepoDb
                     cacheKey4: cacheKey4,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -8591,7 +8813,8 @@ namespace RepoDb
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>
             QueryMultiple<T1, T2, T3, T4>(string tableName1,
@@ -8622,7 +8845,8 @@ namespace RepoDb
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -8664,7 +8888,8 @@ namespace RepoDb
                     cacheKey4: cacheKey4,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -8723,7 +8948,8 @@ namespace RepoDb
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>
             QueryMultiple<T1, T2, T3, T4, T5>(string tableName1,
@@ -8761,7 +8987,8 @@ namespace RepoDb
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -8811,7 +9038,8 @@ namespace RepoDb
                     cacheKey5: cacheKey5,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -8866,7 +9094,8 @@ namespace RepoDb
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>
             QueryMultiple<T1, T2, T3, T4, T5>(string tableName1,
@@ -8904,7 +9133,8 @@ namespace RepoDb
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -8954,7 +9184,8 @@ namespace RepoDb
                     cacheKey5: cacheKey5,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -9009,7 +9240,8 @@ namespace RepoDb
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>
             QueryMultiple<T1, T2, T3, T4, T5>(string tableName1,
@@ -9047,7 +9279,8 @@ namespace RepoDb
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -9097,7 +9330,8 @@ namespace RepoDb
                     cacheKey5: cacheKey5,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -9152,7 +9386,8 @@ namespace RepoDb
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>
             QueryMultiple<T1, T2, T3, T4, T5>(string tableName1,
@@ -9190,7 +9425,8 @@ namespace RepoDb
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -9240,7 +9476,8 @@ namespace RepoDb
                     cacheKey5: cacheKey5,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -9295,7 +9532,8 @@ namespace RepoDb
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>
             QueryMultiple<T1, T2, T3, T4, T5>(string tableName1,
@@ -9333,7 +9571,8 @@ namespace RepoDb
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -9383,7 +9622,8 @@ namespace RepoDb
                     cacheKey5: cacheKey5,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -9450,7 +9690,8 @@ namespace RepoDb
         /// <param name="top6">The number of rows to be returned (for T6).</param>
         /// <param name="hints6">The table hints to be used (for T6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>
             QueryMultiple<T1, T2, T3, T4, T5, T6>(string tableName1,
@@ -9495,7 +9736,8 @@ namespace RepoDb
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -9553,7 +9795,8 @@ namespace RepoDb
                     cacheKey6: cacheKey6,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -9616,7 +9859,8 @@ namespace RepoDb
         /// <param name="top6">The number of rows to be returned (for T6).</param>
         /// <param name="hints6">The table hints to be used (for T6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>
             QueryMultiple<T1, T2, T3, T4, T5, T6>(string tableName1,
@@ -9661,7 +9905,8 @@ namespace RepoDb
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -9719,7 +9964,8 @@ namespace RepoDb
                     cacheKey6: cacheKey6,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -9782,7 +10028,8 @@ namespace RepoDb
         /// <param name="top6">The number of rows to be returned (for T6).</param>
         /// <param name="hints6">The table hints to be used (for T6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>
             QueryMultiple<T1, T2, T3, T4, T5, T6>(string tableName1,
@@ -9827,7 +10074,8 @@ namespace RepoDb
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -9885,7 +10133,8 @@ namespace RepoDb
                     cacheKey6: cacheKey6,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -9948,7 +10197,8 @@ namespace RepoDb
         /// <param name="top6">The number of rows to be returned (for T6).</param>
         /// <param name="hints6">The table hints to be used (for T6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>
             QueryMultiple<T1, T2, T3, T4, T5, T6>(string tableName1,
@@ -9993,7 +10243,8 @@ namespace RepoDb
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -10051,7 +10302,8 @@ namespace RepoDb
                     cacheKey6: cacheKey6,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -10114,7 +10366,8 @@ namespace RepoDb
         /// <param name="top6">The number of rows to be returned (for T6).</param>
         /// <param name="hints6">The table hints to be used (for T6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>
             QueryMultiple<T1, T2, T3, T4, T5, T6>(string tableName1,
@@ -10159,7 +10412,8 @@ namespace RepoDb
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -10217,7 +10471,8 @@ namespace RepoDb
                     cacheKey6: cacheKey6,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -10292,7 +10547,8 @@ namespace RepoDb
         /// <param name="top7">The number of rows to be returned (for T7).</param>
         /// <param name="hints7">The table hints to be used (for T7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>
             QueryMultiple<T1, T2, T3, T4, T5, T6, T7>(string tableName1,
@@ -10344,7 +10600,8 @@ namespace RepoDb
             int? top7 = 0,
             string hints7 = null,
             string cacheKey7 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -10410,7 +10667,8 @@ namespace RepoDb
                     cacheKey7: cacheKey7,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -10481,7 +10739,8 @@ namespace RepoDb
         /// <param name="top7">The number of rows to be returned (for T7).</param>
         /// <param name="hints7">The table hints to be used (for T7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>
             QueryMultiple<T1, T2, T3, T4, T5, T6, T7>(string tableName1,
@@ -10533,7 +10792,8 @@ namespace RepoDb
             int? top7 = 0,
             string hints7 = null,
             string cacheKey7 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -10599,7 +10859,8 @@ namespace RepoDb
                     cacheKey7: cacheKey7,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -10670,7 +10931,8 @@ namespace RepoDb
         /// <param name="top7">The number of rows to be returned (for T7).</param>
         /// <param name="hints7">The table hints to be used (for T7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>
             QueryMultiple<T1, T2, T3, T4, T5, T6, T7>(string tableName1,
@@ -10722,7 +10984,8 @@ namespace RepoDb
             int? top7 = 0,
             string hints7 = null,
             string cacheKey7 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -10788,7 +11051,8 @@ namespace RepoDb
                     cacheKey7: cacheKey7,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -10859,7 +11123,8 @@ namespace RepoDb
         /// <param name="top7">The number of rows to be returned (for T7).</param>
         /// <param name="hints7">The table hints to be used (for T7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>
             QueryMultiple<T1, T2, T3, T4, T5, T6, T7>(string tableName1,
@@ -10911,7 +11176,8 @@ namespace RepoDb
             int? top7 = 0,
             string hints7 = null,
             string cacheKey7 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -10977,7 +11243,8 @@ namespace RepoDb
                     cacheKey7: cacheKey7,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -11048,7 +11315,8 @@ namespace RepoDb
         /// <param name="top7">The number of rows to be returned (for T7).</param>
         /// <param name="hints7">The table hints to be used (for T7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>
             QueryMultiple<T1, T2, T3, T4, T5, T6, T7>(string tableName1,
@@ -11100,7 +11368,8 @@ namespace RepoDb
             int? top7 = 0,
             string hints7 = null,
             string cacheKey7 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
             where T1 : class
             where T2 : class
             where T3 : class
@@ -11166,7 +11435,8 @@ namespace RepoDb
                     cacheKey7: cacheKey7,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -11203,7 +11473,8 @@ namespace RepoDb
         /// <param name="top2">The number of rows to be returned (for dynamic type 2).</param>
         /// <param name="hints2">The table hints to be used (for dynamic type 2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>> QueryMultiple(string tableName1,
             object what1,
@@ -11219,7 +11490,8 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy2 = null,
             string hints2 = null,
             string cacheKey2 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -11243,7 +11515,8 @@ namespace RepoDb
                     cacheKey2: cacheKey2,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -11272,7 +11545,8 @@ namespace RepoDb
         /// <param name="top2">The number of rows to be returned (for dynamic type 2).</param>
         /// <param name="hints2">The table hints to be used (for dynamic type 2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>> QueryMultiple(string tableName1,
             QueryField where1,
@@ -11288,7 +11562,8 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy2 = null,
             string hints2 = null,
             string cacheKey2 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -11312,7 +11587,8 @@ namespace RepoDb
                     cacheKey2: cacheKey2,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -11341,7 +11617,8 @@ namespace RepoDb
         /// <param name="top2">The number of rows to be returned (for dynamic type 2).</param>
         /// <param name="hints2">The table hints to be used (for dynamic type 2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>> QueryMultiple(string tableName1,
             IEnumerable<QueryField> where1,
@@ -11357,7 +11634,8 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy2 = null,
             string hints2 = null,
             string cacheKey2 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -11381,7 +11659,8 @@ namespace RepoDb
                     cacheKey2: cacheKey2,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -11410,7 +11689,8 @@ namespace RepoDb
         /// <param name="top2">The number of rows to be returned (for dynamic type 2).</param>
         /// <param name="hints2">The table hints to be used (for dynamic type 2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>> QueryMultiple(string tableName1,
             QueryGroup where1,
@@ -11426,7 +11706,8 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy2 = null,
             string hints2 = null,
             string cacheKey2 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -11450,7 +11731,8 @@ namespace RepoDb
                     cacheKey2: cacheKey2,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -11490,7 +11772,8 @@ namespace RepoDb
         /// <param name="top3">The number of rows to be returned (for dynamic type 3).</param>
         /// <param name="hints3">The table hints to be used (for dynamic type 3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> QueryMultiple(string tableName1,
             object what1,
@@ -11513,7 +11796,8 @@ namespace RepoDb
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -11544,7 +11828,8 @@ namespace RepoDb
                     cacheKey3: cacheKey3,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -11580,7 +11865,8 @@ namespace RepoDb
         /// <param name="top3">The number of rows to be returned (for dynamic type 3).</param>
         /// <param name="hints3">The table hints to be used (for dynamic type 3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> QueryMultiple(string tableName1,
             QueryField where1,
@@ -11603,7 +11889,8 @@ namespace RepoDb
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -11634,7 +11921,8 @@ namespace RepoDb
                     cacheKey3: cacheKey3,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -11670,7 +11958,8 @@ namespace RepoDb
         /// <param name="top3">The number of rows to be returned (for dynamic type 3).</param>
         /// <param name="hints3">The table hints to be used (for dynamic type 3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> QueryMultiple(string tableName1,
             IEnumerable<QueryField> where1,
@@ -11693,7 +11982,8 @@ namespace RepoDb
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -11724,7 +12014,8 @@ namespace RepoDb
                     cacheKey3: cacheKey3,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -11760,7 +12051,8 @@ namespace RepoDb
         /// <param name="top3">The number of rows to be returned (for dynamic type 3).</param>
         /// <param name="hints3">The table hints to be used (for dynamic type 3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> QueryMultiple(string tableName1,
             QueryGroup where1,
@@ -11783,7 +12075,8 @@ namespace RepoDb
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -11814,7 +12107,8 @@ namespace RepoDb
                     cacheKey3: cacheKey3,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -11861,7 +12155,8 @@ namespace RepoDb
         /// <param name="top4">The number of rows to be returned (for dynamic type 4).</param>
         /// <param name="hints4">The table hints to be used (for dynamic type 4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>
             QueryMultiple(string tableName1,
@@ -11892,7 +12187,8 @@ namespace RepoDb
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -11930,7 +12226,8 @@ namespace RepoDb
                     cacheKey4: cacheKey4,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -11973,7 +12270,8 @@ namespace RepoDb
         /// <param name="top4">The number of rows to be returned (for dynamic type 4).</param>
         /// <param name="hints4">The table hints to be used (for dynamic type 4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>
             QueryMultiple(string tableName1,
@@ -12004,7 +12302,8 @@ namespace RepoDb
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -12042,7 +12341,8 @@ namespace RepoDb
                     cacheKey4: cacheKey4,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -12085,7 +12385,8 @@ namespace RepoDb
         /// <param name="top4">The number of rows to be returned (for dynamic type 4).</param>
         /// <param name="hints4">The table hints to be used (for dynamic type 4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>
             QueryMultiple(string tableName1,
@@ -12116,7 +12417,8 @@ namespace RepoDb
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -12154,7 +12456,8 @@ namespace RepoDb
                     cacheKey4: cacheKey4,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -12197,7 +12500,8 @@ namespace RepoDb
         /// <param name="top4">The number of rows to be returned (for dynamic type 4).</param>
         /// <param name="hints4">The table hints to be used (for dynamic type 4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>
             QueryMultiple(string tableName1,
@@ -12228,7 +12532,8 @@ namespace RepoDb
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -12266,7 +12571,8 @@ namespace RepoDb
                     cacheKey4: cacheKey4,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -12320,7 +12626,8 @@ namespace RepoDb
         /// <param name="top5">The number of rows to be returned (for dynamic type 5).</param>
         /// <param name="hints5">The table hints to be used (for dynamic type 5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>
             QueryMultiple(string tableName1,
@@ -12358,7 +12665,8 @@ namespace RepoDb
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -12403,7 +12711,8 @@ namespace RepoDb
                     cacheKey5: cacheKey5,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -12453,7 +12762,8 @@ namespace RepoDb
         /// <param name="top5">The number of rows to be returned (for dynamic type 5).</param>
         /// <param name="hints5">The table hints to be used (for dynamic type 5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>
             QueryMultiple(string tableName1,
@@ -12491,7 +12801,8 @@ namespace RepoDb
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -12536,7 +12847,8 @@ namespace RepoDb
                     cacheKey5: cacheKey5,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -12586,7 +12898,8 @@ namespace RepoDb
         /// <param name="top5">The number of rows to be returned (for dynamic type 5).</param>
         /// <param name="hints5">The table hints to be used (for dynamic type 5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>
             QueryMultiple(string tableName1,
@@ -12624,7 +12937,8 @@ namespace RepoDb
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -12669,7 +12983,8 @@ namespace RepoDb
                     cacheKey5: cacheKey5,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -12719,7 +13034,8 @@ namespace RepoDb
         /// <param name="top5">The number of rows to be returned (for dynamic type 5).</param>
         /// <param name="hints5">The table hints to be used (for dynamic type 5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>
             QueryMultiple(string tableName1,
@@ -12757,7 +13073,8 @@ namespace RepoDb
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -12802,7 +13119,8 @@ namespace RepoDb
                     cacheKey5: cacheKey5,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -12863,7 +13181,8 @@ namespace RepoDb
         /// <param name="top6">The number of rows to be returned (for dynamic type 6).</param>
         /// <param name="hints6">The table hints to be used (for dynamic type 6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>
             QueryMultiple(string tableName1,
@@ -12908,7 +13227,8 @@ namespace RepoDb
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -12960,7 +13280,8 @@ namespace RepoDb
                     cacheKey6: cacheKey6,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -13017,7 +13338,8 @@ namespace RepoDb
         /// <param name="top6">The number of rows to be returned (for dynamic type 6).</param>
         /// <param name="hints6">The table hints to be used (for dynamic type 6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>
             QueryMultiple(string tableName1,
@@ -13062,7 +13384,8 @@ namespace RepoDb
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -13114,7 +13437,8 @@ namespace RepoDb
                     cacheKey6: cacheKey6,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -13171,7 +13495,8 @@ namespace RepoDb
         /// <param name="top6">The number of rows to be returned (for dynamic type 6).</param>
         /// <param name="hints6">The table hints to be used (for dynamic type 6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>
             QueryMultiple(string tableName1,
@@ -13216,7 +13541,8 @@ namespace RepoDb
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -13268,7 +13594,8 @@ namespace RepoDb
                     cacheKey6: cacheKey6,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -13325,7 +13652,8 @@ namespace RepoDb
         /// <param name="top6">The number of rows to be returned (for dynamic type 6).</param>
         /// <param name="hints6">The table hints to be used (for dynamic type 6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>
             QueryMultiple(string tableName1,
@@ -13370,7 +13698,8 @@ namespace RepoDb
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -13422,7 +13751,8 @@ namespace RepoDb
                     cacheKey6: cacheKey6,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -13490,7 +13820,8 @@ namespace RepoDb
         /// <param name="top7">The number of rows to be returned (for dynamic type 7).</param>
         /// <param name="hints7">The table hints to be used (for dynamic type 7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>
             QueryMultiple(string tableName1,
@@ -13542,7 +13873,8 @@ namespace RepoDb
             int? top7 = 0,
             string hints7 = null,
             string cacheKey7 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -13601,7 +13933,8 @@ namespace RepoDb
                     cacheKey7: cacheKey7,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -13665,7 +13998,8 @@ namespace RepoDb
         /// <param name="top7">The number of rows to be returned (for dynamic type 7).</param>
         /// <param name="hints7">The table hints to be used (for dynamic type 7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>
             QueryMultiple(string tableName1,
@@ -13717,7 +14051,8 @@ namespace RepoDb
             int? top7 = 0,
             string hints7 = null,
             string cacheKey7 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -13776,7 +14111,8 @@ namespace RepoDb
                     cacheKey7: cacheKey7,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -13840,7 +14176,8 @@ namespace RepoDb
         /// <param name="top7">The number of rows to be returned (for dynamic type 7).</param>
         /// <param name="hints7">The table hints to be used (for dynamic type 7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>
             QueryMultiple(string tableName1,
@@ -13892,7 +14229,8 @@ namespace RepoDb
             int? top7 = 0,
             string hints7 = null,
             string cacheKey7 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -13951,7 +14289,8 @@ namespace RepoDb
                     cacheKey7: cacheKey7,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -14015,7 +14354,8 @@ namespace RepoDb
         /// <param name="top7">The number of rows to be returned (for dynamic type 7).</param>
         /// <param name="hints7">The table hints to be used (for dynamic type 7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>
             QueryMultiple(string tableName1,
@@ -14067,7 +14407,8 @@ namespace RepoDb
             int? top7 = 0,
             string hints7 = null,
             string cacheKey7 = null,
-            IDbTransaction transaction = null)
+            string traceKey = null,
+			IDbTransaction transaction = null)
         {
             // Create a connection
             var connection = (transaction?.Connection ?? CreateConnection());
@@ -14126,7 +14467,8 @@ namespace RepoDb
                     cacheKey7: cacheKey7,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
@@ -14169,7 +14511,8 @@ namespace RepoDb
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<T1, T2>(string tableName1,
@@ -14186,7 +14529,8 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy2 = null,
             string hints2 = null,
             string cacheKey2 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -14213,7 +14557,8 @@ namespace RepoDb
                     cacheKey2: cacheKey2,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -14245,7 +14590,8 @@ namespace RepoDb
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<T1, T2>(string tableName1,
@@ -14262,7 +14608,8 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy2 = null,
             string hints2 = null,
             string cacheKey2 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -14289,7 +14636,8 @@ namespace RepoDb
                     cacheKey2: cacheKey2,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -14321,7 +14669,8 @@ namespace RepoDb
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<T1, T2>(string tableName1,
@@ -14338,7 +14687,8 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy2 = null,
             string hints2 = null,
             string cacheKey2 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -14365,7 +14715,8 @@ namespace RepoDb
                     cacheKey2: cacheKey2,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -14397,7 +14748,8 @@ namespace RepoDb
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<T1, T2>(string tableName1,
@@ -14414,7 +14766,8 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy2 = null,
             string hints2 = null,
             string cacheKey2 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -14441,7 +14794,8 @@ namespace RepoDb
                     cacheKey2: cacheKey2,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -14473,7 +14827,8 @@ namespace RepoDb
         /// <param name="top2">The number of rows to be returned (for T2).</param>
         /// <param name="hints2">The table hints to be used (for T2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> QueryMultipleAsync<T1, T2>(string tableName1,
@@ -14490,7 +14845,8 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy2 = null,
             string hints2 = null,
             string cacheKey2 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -14517,7 +14873,8 @@ namespace RepoDb
                     cacheKey2: cacheKey2,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -14561,7 +14918,8 @@ namespace RepoDb
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<T1, T2, T3>(string tableName1,
@@ -14585,7 +14943,8 @@ namespace RepoDb
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -14620,7 +14979,8 @@ namespace RepoDb
                     cacheKey3: cacheKey3,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -14660,7 +15020,8 @@ namespace RepoDb
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<T1, T2, T3>(string tableName1,
@@ -14684,7 +15045,8 @@ namespace RepoDb
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -14719,7 +15081,8 @@ namespace RepoDb
                     cacheKey3: cacheKey3,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -14759,7 +15122,8 @@ namespace RepoDb
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<T1, T2, T3>(string tableName1,
@@ -14783,7 +15147,8 @@ namespace RepoDb
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -14818,7 +15183,8 @@ namespace RepoDb
                     cacheKey3: cacheKey3,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -14858,7 +15224,8 @@ namespace RepoDb
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<T1, T2, T3>(string tableName1,
@@ -14882,7 +15249,8 @@ namespace RepoDb
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -14917,7 +15285,8 @@ namespace RepoDb
                     cacheKey3: cacheKey3,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -14957,7 +15326,8 @@ namespace RepoDb
         /// <param name="top3">The number of rows to be returned (for T3).</param>
         /// <param name="hints3">The table hints to be used (for T3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>>> QueryMultipleAsync<T1, T2, T3>(string tableName1,
@@ -14981,7 +15351,8 @@ namespace RepoDb
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -15016,7 +15387,8 @@ namespace RepoDb
                     cacheKey3: cacheKey3,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -15068,7 +15440,8 @@ namespace RepoDb
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>>
@@ -15100,7 +15473,8 @@ namespace RepoDb
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -15143,7 +15517,8 @@ namespace RepoDb
                     cacheKey4: cacheKey4,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -15191,7 +15566,8 @@ namespace RepoDb
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>>
@@ -15223,7 +15599,8 @@ namespace RepoDb
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -15266,7 +15643,8 @@ namespace RepoDb
                     cacheKey4: cacheKey4,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -15314,7 +15692,8 @@ namespace RepoDb
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>>
@@ -15346,7 +15725,8 @@ namespace RepoDb
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -15389,7 +15769,8 @@ namespace RepoDb
                     cacheKey4: cacheKey4,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -15437,7 +15818,8 @@ namespace RepoDb
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>>
@@ -15469,7 +15851,8 @@ namespace RepoDb
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -15512,7 +15895,8 @@ namespace RepoDb
                     cacheKey4: cacheKey4,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -15560,7 +15944,8 @@ namespace RepoDb
         /// <param name="top4">The number of rows to be returned (for T4).</param>
         /// <param name="hints4">The table hints to be used (for T4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>>>
@@ -15592,7 +15977,8 @@ namespace RepoDb
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -15635,7 +16021,8 @@ namespace RepoDb
                     cacheKey4: cacheKey4,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -15695,7 +16082,8 @@ namespace RepoDb
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>>
@@ -15734,7 +16122,8 @@ namespace RepoDb
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -15785,7 +16174,8 @@ namespace RepoDb
                     cacheKey5: cacheKey5,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -15841,7 +16231,8 @@ namespace RepoDb
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>>
@@ -15880,7 +16271,8 @@ namespace RepoDb
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -15931,7 +16323,8 @@ namespace RepoDb
                     cacheKey5: cacheKey5,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -15987,7 +16380,8 @@ namespace RepoDb
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>>
@@ -16026,7 +16420,8 @@ namespace RepoDb
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -16077,7 +16472,8 @@ namespace RepoDb
                     cacheKey5: cacheKey5,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -16133,7 +16529,8 @@ namespace RepoDb
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>>
@@ -16172,7 +16569,8 @@ namespace RepoDb
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -16223,7 +16621,8 @@ namespace RepoDb
                     cacheKey5: cacheKey5,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -16279,7 +16678,8 @@ namespace RepoDb
         /// <param name="top5">The number of rows to be returned (for T5).</param>
         /// <param name="hints5">The table hints to be used (for T5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>>>
@@ -16318,7 +16718,8 @@ namespace RepoDb
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -16369,7 +16770,8 @@ namespace RepoDb
                     cacheKey5: cacheKey5,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -16437,7 +16839,8 @@ namespace RepoDb
         /// <param name="top6">The number of rows to be returned (for T6).</param>
         /// <param name="hints6">The table hints to be used (for T6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>>
@@ -16483,7 +16886,8 @@ namespace RepoDb
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -16542,7 +16946,8 @@ namespace RepoDb
                     cacheKey6: cacheKey6,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -16606,7 +17011,8 @@ namespace RepoDb
         /// <param name="top6">The number of rows to be returned (for T6).</param>
         /// <param name="hints6">The table hints to be used (for T6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>>
@@ -16652,7 +17058,8 @@ namespace RepoDb
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -16711,7 +17118,8 @@ namespace RepoDb
                     cacheKey6: cacheKey6,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -16775,7 +17183,8 @@ namespace RepoDb
         /// <param name="top6">The number of rows to be returned (for T6).</param>
         /// <param name="hints6">The table hints to be used (for T6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>>
@@ -16821,7 +17230,8 @@ namespace RepoDb
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -16880,7 +17290,8 @@ namespace RepoDb
                     cacheKey6: cacheKey6,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -16944,7 +17355,8 @@ namespace RepoDb
         /// <param name="top6">The number of rows to be returned (for T6).</param>
         /// <param name="hints6">The table hints to be used (for T6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>>
@@ -16990,7 +17402,8 @@ namespace RepoDb
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -17049,7 +17462,8 @@ namespace RepoDb
                     cacheKey6: cacheKey6,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -17113,7 +17527,8 @@ namespace RepoDb
         /// <param name="top6">The number of rows to be returned (for T6).</param>
         /// <param name="hints6">The table hints to be used (for T6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>>>
@@ -17159,7 +17574,8 @@ namespace RepoDb
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -17218,7 +17634,8 @@ namespace RepoDb
                     cacheKey6: cacheKey6,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -17294,7 +17711,8 @@ namespace RepoDb
         /// <param name="top7">The number of rows to be returned (for T7).</param>
         /// <param name="hints7">The table hints to be used (for T7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>>
@@ -17347,7 +17765,8 @@ namespace RepoDb
             int? top7 = 0,
             string hints7 = null,
             string cacheKey7 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -17414,7 +17833,8 @@ namespace RepoDb
                     cacheKey7: cacheKey7,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -17486,7 +17906,8 @@ namespace RepoDb
         /// <param name="top7">The number of rows to be returned (for T7).</param>
         /// <param name="hints7">The table hints to be used (for T7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>>
@@ -17539,7 +17960,8 @@ namespace RepoDb
             int? top7 = 0,
             string hints7 = null,
             string cacheKey7 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -17606,7 +18028,8 @@ namespace RepoDb
                     cacheKey7: cacheKey7,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -17678,7 +18101,8 @@ namespace RepoDb
         /// <param name="top7">The number of rows to be returned (for T7).</param>
         /// <param name="hints7">The table hints to be used (for T7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>>
@@ -17731,7 +18155,8 @@ namespace RepoDb
             int? top7 = 0,
             string hints7 = null,
             string cacheKey7 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -17798,7 +18223,8 @@ namespace RepoDb
                     cacheKey7: cacheKey7,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -17870,7 +18296,8 @@ namespace RepoDb
         /// <param name="top7">The number of rows to be returned (for T7).</param>
         /// <param name="hints7">The table hints to be used (for T7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>>
@@ -17923,7 +18350,8 @@ namespace RepoDb
             int? top7 = 0,
             string hints7 = null,
             string cacheKey7 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -17990,7 +18418,8 @@ namespace RepoDb
                     cacheKey7: cacheKey7,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -18062,7 +18491,8 @@ namespace RepoDb
         /// <param name="top7">The number of rows to be returned (for T7).</param>
         /// <param name="hints7">The table hints to be used (for T7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>>>
@@ -18115,7 +18545,8 @@ namespace RepoDb
             int? top7 = 0,
             string hints7 = null,
             string cacheKey7 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where T1 : class
             where T2 : class
@@ -18182,7 +18613,8 @@ namespace RepoDb
                     cacheKey7: cacheKey7,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -18220,7 +18652,8 @@ namespace RepoDb
         /// <param name="top2">The number of rows to be returned (for dynamic type 2).</param>
         /// <param name="hints2">The table hints to be used (for dynamic type 2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>>> QueryMultipleAsync(string tableName1,
@@ -18237,7 +18670,8 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy2 = null,
             string hints2 = null,
             string cacheKey2 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -18262,7 +18696,8 @@ namespace RepoDb
                     cacheKey2: cacheKey2,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -18292,7 +18727,8 @@ namespace RepoDb
         /// <param name="top2">The number of rows to be returned (for dynamic type 2).</param>
         /// <param name="hints2">The table hints to be used (for dynamic type 2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>>> QueryMultipleAsync(string tableName1,
@@ -18309,7 +18745,8 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy2 = null,
             string hints2 = null,
             string cacheKey2 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -18334,7 +18771,8 @@ namespace RepoDb
                     cacheKey2: cacheKey2,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -18364,7 +18802,8 @@ namespace RepoDb
         /// <param name="top2">The number of rows to be returned (for dynamic type 2).</param>
         /// <param name="hints2">The table hints to be used (for dynamic type 2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>>> QueryMultipleAsync(string tableName1,
@@ -18381,7 +18820,8 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy2 = null,
             string hints2 = null,
             string cacheKey2 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -18406,7 +18846,8 @@ namespace RepoDb
                     cacheKey2: cacheKey2,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -18436,7 +18877,8 @@ namespace RepoDb
         /// <param name="top2">The number of rows to be returned (for dynamic type 2).</param>
         /// <param name="hints2">The table hints to be used (for dynamic type 2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 2 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>>> QueryMultipleAsync(string tableName1,
@@ -18453,7 +18895,8 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy2 = null,
             string hints2 = null,
             string cacheKey2 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -18478,7 +18921,8 @@ namespace RepoDb
                     cacheKey2: cacheKey2,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -18519,7 +18963,8 @@ namespace RepoDb
         /// <param name="top3">The number of rows to be returned (for dynamic type 3).</param>
         /// <param name="hints3">The table hints to be used (for dynamic type 3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>> QueryMultipleAsync(string tableName1,
@@ -18543,7 +18988,8 @@ namespace RepoDb
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -18575,7 +19021,8 @@ namespace RepoDb
                     cacheKey3: cacheKey3,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -18612,7 +19059,8 @@ namespace RepoDb
         /// <param name="top3">The number of rows to be returned (for dynamic type 3).</param>
         /// <param name="hints3">The table hints to be used (for dynamic type 3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>> QueryMultipleAsync(string tableName1,
@@ -18636,7 +19084,8 @@ namespace RepoDb
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -18668,7 +19117,8 @@ namespace RepoDb
                     cacheKey3: cacheKey3,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -18705,7 +19155,8 @@ namespace RepoDb
         /// <param name="top3">The number of rows to be returned (for dynamic type 3).</param>
         /// <param name="hints3">The table hints to be used (for dynamic type 3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>> QueryMultipleAsync(string tableName1,
@@ -18729,7 +19180,8 @@ namespace RepoDb
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -18761,7 +19213,8 @@ namespace RepoDb
                     cacheKey3: cacheKey3,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -18798,7 +19251,8 @@ namespace RepoDb
         /// <param name="top3">The number of rows to be returned (for dynamic type 3).</param>
         /// <param name="hints3">The table hints to be used (for dynamic type 3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 3 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>> QueryMultipleAsync(string tableName1,
@@ -18822,7 +19276,8 @@ namespace RepoDb
             int? top3 = 0,
             string hints3 = null,
             string cacheKey3 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -18854,7 +19309,8 @@ namespace RepoDb
                     cacheKey3: cacheKey3,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -18902,7 +19358,8 @@ namespace RepoDb
         /// <param name="top4">The number of rows to be returned (for dynamic type 4).</param>
         /// <param name="hints4">The table hints to be used (for dynamic type 4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>>
@@ -18934,7 +19391,8 @@ namespace RepoDb
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -18973,7 +19431,8 @@ namespace RepoDb
                     cacheKey4: cacheKey4,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -19017,7 +19476,8 @@ namespace RepoDb
         /// <param name="top4">The number of rows to be returned (for dynamic type 4).</param>
         /// <param name="hints4">The table hints to be used (for dynamic type 4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>>
@@ -19049,7 +19509,8 @@ namespace RepoDb
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -19088,7 +19549,8 @@ namespace RepoDb
                     cacheKey4: cacheKey4,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -19132,7 +19594,8 @@ namespace RepoDb
         /// <param name="top4">The number of rows to be returned (for dynamic type 4).</param>
         /// <param name="hints4">The table hints to be used (for dynamic type 4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>>
@@ -19164,7 +19627,8 @@ namespace RepoDb
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -19203,7 +19667,8 @@ namespace RepoDb
                     cacheKey4: cacheKey4,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -19247,7 +19712,8 @@ namespace RepoDb
         /// <param name="top4">The number of rows to be returned (for dynamic type 4).</param>
         /// <param name="hints4">The table hints to be used (for dynamic type 4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 4 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>>
@@ -19279,7 +19745,8 @@ namespace RepoDb
             int? top4 = 0,
             string hints4 = null,
             string cacheKey4 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -19318,7 +19785,8 @@ namespace RepoDb
                     cacheKey4: cacheKey4,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -19373,7 +19841,8 @@ namespace RepoDb
         /// <param name="top5">The number of rows to be returned (for dynamic type 5).</param>
         /// <param name="hints5">The table hints to be used (for dynamic type 5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>>
@@ -19412,7 +19881,8 @@ namespace RepoDb
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -19458,7 +19928,8 @@ namespace RepoDb
                     cacheKey5: cacheKey5,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -19509,7 +19980,8 @@ namespace RepoDb
         /// <param name="top5">The number of rows to be returned (for dynamic type 5).</param>
         /// <param name="hints5">The table hints to be used (for dynamic type 5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>>
@@ -19548,7 +20020,8 @@ namespace RepoDb
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -19594,7 +20067,8 @@ namespace RepoDb
                     cacheKey5: cacheKey5,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -19645,7 +20119,8 @@ namespace RepoDb
         /// <param name="top5">The number of rows to be returned (for dynamic type 5).</param>
         /// <param name="hints5">The table hints to be used (for dynamic type 5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>>
@@ -19684,7 +20159,8 @@ namespace RepoDb
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -19730,7 +20206,8 @@ namespace RepoDb
                     cacheKey5: cacheKey5,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -19781,7 +20258,8 @@ namespace RepoDb
         /// <param name="top5">The number of rows to be returned (for dynamic type 5).</param>
         /// <param name="hints5">The table hints to be used (for dynamic type 5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 5 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>>
@@ -19820,7 +20298,8 @@ namespace RepoDb
             int? top5 = 0,
             string hints5 = null,
             string cacheKey5 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -19866,7 +20345,8 @@ namespace RepoDb
                     cacheKey5: cacheKey5,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -19928,7 +20408,8 @@ namespace RepoDb
         /// <param name="top6">The number of rows to be returned (for dynamic type 6).</param>
         /// <param name="hints6">The table hints to be used (for dynamic type 6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>>
@@ -19974,7 +20455,8 @@ namespace RepoDb
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -20027,7 +20509,8 @@ namespace RepoDb
                     cacheKey6: cacheKey6,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -20085,7 +20568,8 @@ namespace RepoDb
         /// <param name="top6">The number of rows to be returned (for dynamic type 6).</param>
         /// <param name="hints6">The table hints to be used (for dynamic type 6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>>
@@ -20131,7 +20615,8 @@ namespace RepoDb
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -20184,7 +20669,8 @@ namespace RepoDb
                     cacheKey6: cacheKey6,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -20242,7 +20728,8 @@ namespace RepoDb
         /// <param name="top6">The number of rows to be returned (for dynamic type 6).</param>
         /// <param name="hints6">The table hints to be used (for dynamic type 6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>>
@@ -20288,7 +20775,8 @@ namespace RepoDb
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -20341,7 +20829,8 @@ namespace RepoDb
                     cacheKey6: cacheKey6,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -20399,7 +20888,8 @@ namespace RepoDb
         /// <param name="top6">The number of rows to be returned (for dynamic type 6).</param>
         /// <param name="hints6">The table hints to be used (for dynamic type 6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 6 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>>
@@ -20445,7 +20935,8 @@ namespace RepoDb
             int? top6 = 0,
             string hints6 = null,
             string cacheKey6 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -20498,7 +20989,8 @@ namespace RepoDb
                     cacheKey6: cacheKey6,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -20567,7 +21059,8 @@ namespace RepoDb
         /// <param name="top7">The number of rows to be returned (for dynamic type 7).</param>
         /// <param name="hints7">The table hints to be used (for dynamic type 7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>>
@@ -20620,7 +21113,8 @@ namespace RepoDb
             int? top7 = 0,
             string hints7 = null,
             string cacheKey7 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -20680,7 +21174,8 @@ namespace RepoDb
                     cacheKey7: cacheKey7,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -20745,7 +21240,8 @@ namespace RepoDb
         /// <param name="top7">The number of rows to be returned (for dynamic type 7).</param>
         /// <param name="hints7">The table hints to be used (for dynamic type 7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>>
@@ -20798,7 +21294,8 @@ namespace RepoDb
             int? top7 = 0,
             string hints7 = null,
             string cacheKey7 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -20858,7 +21355,8 @@ namespace RepoDb
                     cacheKey7: cacheKey7,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -20923,7 +21421,8 @@ namespace RepoDb
         /// <param name="top7">The number of rows to be returned (for dynamic type 7).</param>
         /// <param name="hints7">The table hints to be used (for dynamic type 7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>>
@@ -20976,7 +21475,8 @@ namespace RepoDb
             int? top7 = 0,
             string hints7 = null,
             string cacheKey7 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -21036,7 +21536,8 @@ namespace RepoDb
                     cacheKey7: cacheKey7,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
@@ -21101,7 +21602,8 @@ namespace RepoDb
         /// <param name="top7">The number of rows to be returned (for dynamic type 7).</param>
         /// <param name="hints7">The table hints to be used (for dynamic type 7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>A tuple of 7 enumerable target data entity types.</returns>
         public async Task<Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>>>
@@ -21154,7 +21656,8 @@ namespace RepoDb
             int? top7 = 0,
             string hints7 = null,
             string cacheKey7 = null,
-            IDbTransaction transaction = null,
+            string traceKey = null,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Create a connection
@@ -21214,7 +21717,8 @@ namespace RepoDb
                     cacheKey7: cacheKey7,
                     cacheItemExpiration: CacheItemExpiration,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     cache: Cache,
                     trace: Trace,
                     statementBuilder: StatementBuilder,

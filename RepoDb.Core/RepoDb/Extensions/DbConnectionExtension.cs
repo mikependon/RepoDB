@@ -106,7 +106,7 @@ namespace RepoDb
         /// This will only work if the 'cache' argument is set.
         /// </param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
-        /// <param name="traceKey">The key to the trace to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -173,9 +173,9 @@ namespace RepoDb
             bool skipCommandArrayParametersCheck = true)
         {
             // Get Cache
-            if (cacheKey != null)
+            if (cache != null && cacheKey != null)
             {
-                var item = cache?.Get<IEnumerable<dynamic>>(cacheKey, false);
+                var item = cache.Get<IEnumerable<dynamic>>(cacheKey, false);
                 if (item != null)
                 {
                     return item.Value;
@@ -200,22 +200,22 @@ namespace RepoDb
             // Trace
             var sessionId = Guid.NewGuid();
 
-            // Before Execution
-            if (trace != null)
-            {
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
-                trace.BeforeAverageAll(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(commandText);
-                    }
-                    return default;
-                }
-                commandText = (cancellableTraceLog.Statement ?? commandText);
-                param = (cancellableTraceLog.Parameter ?? param);
-            }
+            // TODO: Before Execution
+            //if (trace != null)
+            //{
+            //    var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
+            //    trace.BeforeAverageAll(cancellableTraceLog);
+            //    if (cancellableTraceLog.IsCancelled)
+            //    {
+            //        if (cancellableTraceLog.IsThrowException)
+            //        {
+            //            throw new CancelledExecutionException(commandText);
+            //        }
+            //        return default;
+            //    }
+            //    commandText = (cancellableTraceLog.Statement ?? commandText);
+            //    param = (cancellableTraceLog.Parameter ?? param);
+            //}
 
             // Result
             var result = (IEnumerable<dynamic>)null;
@@ -226,15 +226,15 @@ namespace RepoDb
                 result = DataReader.ToEnumerable(reader, dbFields, connection.GetDbSetting()).AsList();
 
                 // Set Cache
-                if (cacheKey != null)
+                if (cache != null && cacheKey != null)
                 {
-                    cache?.Add(cacheKey, (IEnumerable<dynamic>)result, cacheItemExpiration.GetValueOrDefault(), false);
+                    cache.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
                 }
             }
 
-            // After Execution
-            trace?.AfterBatchQuery(new TraceLog(sessionId, commandText, param, result,
-                DateTime.UtcNow.Subtract(beforeExecutionTime)));
+            // TODO: After Execution
+            //trace?.AfterBatchQuery(new TraceLog(sessionId, commandText, param, result,
+            //    DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Set the output parameters
             SetOutputParameters(param);
@@ -263,7 +263,7 @@ namespace RepoDb
         /// This will only work if the 'cache' argument is set.
         /// </param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
-        /// <param name="traceKey">The key to the trace to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -335,9 +335,9 @@ namespace RepoDb
             bool skipCommandArrayParametersCheck = true)
         {
             // Get Cache
-            if (cacheKey != null)
+            if (cache != null && cacheKey != null)
             {
-                var item = await cache?.GetAsync<IEnumerable<dynamic>>(cacheKey, false, cancellationToken);
+                var item = await cache.GetAsync<IEnumerable<dynamic>>(cacheKey, false, cancellationToken);
                 if (item != null)
                 {
                     return item.Value;
@@ -369,9 +369,9 @@ namespace RepoDb
                     .ToListAsync(cancellationToken);
 
                 // Set Cache
-                if (cacheKey != null)
+                if (cache != null && cacheKey != null)
                 {
-                    await cache?.AddAsync(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false, cancellationToken);
+                    await cache.AddAsync(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false, cancellationToken);
                 }
             }
 
@@ -403,7 +403,7 @@ namespace RepoDb
         /// This will only work if the 'cache' argument is set.
         /// </param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
-        /// <param name="traceKey">The key to the trace to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -471,9 +471,9 @@ namespace RepoDb
             bool skipCommandArrayParametersCheck = true)
         {
             // Get Cache
-            if (cacheKey != null)
+            if (cache != null && cacheKey != null)
             {
-                var item = cache?.Get<IEnumerable<TResult>>(cacheKey, false);
+                var item = cache.Get<IEnumerable<TResult>>(cacheKey, false);
                 if (item != null)
                 {
                     return item.Value;
@@ -551,9 +551,9 @@ namespace RepoDb
             bool skipCommandArrayParametersCheck = true)
         {
             // Get Cache
-            if (cacheKey != null)
+            if (cache != null && cacheKey != null)
             {
-                var item = cache?.Get<IEnumerable<TResult>>(cacheKey, false);
+                var item = cache.Get<IEnumerable<TResult>>(cacheKey, false);
                 if (item != null)
                 {
                     return item.Value;
@@ -576,9 +576,9 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck).WithType<TResult>();
 
             // Set Cache
-            if (cacheKey != null)
+            if (cache != null && cacheKey != null)
             {
-                cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
+                cache.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
             }
 
             // Set the output parameters
@@ -621,9 +621,9 @@ namespace RepoDb
             bool skipCommandArrayParametersCheck = true)
         {
             // Get Cache
-            if (cacheKey != null)
+            if (cache != null && cacheKey != null)
             {
-                var item = cache?.Get<IEnumerable<TResult>>(cacheKey, false);
+                var item = cache.Get<IEnumerable<TResult>>(cacheKey, false);
                 if (item != null)
                 {
                     return item.Value;
@@ -653,9 +653,9 @@ namespace RepoDb
                 result = DataReader.ToEnumerable<TResult>(reader, dbFields, connection.GetDbSetting()).AsList();
 
                 // Set Cache
-                if (cacheKey != null)
+                if (cache != null && cacheKey != null)
                 {
-                    cache?.Add(cacheKey, (IEnumerable<TResult>)result, cacheItemExpiration.GetValueOrDefault(), false);
+                    cache.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
                 }
             }
 
@@ -687,7 +687,7 @@ namespace RepoDb
         /// This will only work if the 'cache' argument is set.
         /// </param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
-        /// <param name="traceKey">The key to the trace to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -760,9 +760,9 @@ namespace RepoDb
             bool skipCommandArrayParametersCheck = true)
         {
             // Get Cache
-            if (cacheKey != null)
+            if (cache != null && cacheKey != null)
             {
-                var item = await cache?.GetAsync<IEnumerable<TResult>>(cacheKey, false, cancellationToken);
+                var item = await cache.GetAsync<IEnumerable<TResult>>(cacheKey, false, cancellationToken);
                 if (item != null)
                 {
                     return item.Value;
@@ -844,9 +844,9 @@ namespace RepoDb
             bool skipCommandArrayParametersCheck = true)
         {
             // Get Cache
-            if (cacheKey != null)
+            if (cache != null && cacheKey != null)
             {
-                var item = await cache?.GetAsync<IEnumerable<TResult>>(cacheKey, false, cancellationToken);
+                var item = await cache.GetAsync<IEnumerable<TResult>>(cacheKey, false, cancellationToken);
                 if (item != null)
                 {
                     return item.Value;
@@ -870,9 +870,9 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck)).WithType<TResult>();
 
             // Set Cache
-            if (cacheKey != null)
+            if (cache != null && cacheKey != null)
             {
-                await cache?.AddAsync(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false, cancellationToken);
+                await cache.AddAsync(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false, cancellationToken);
             }
 
             // Set the output parameters
@@ -917,9 +917,9 @@ namespace RepoDb
             bool skipCommandArrayParametersCheck = true)
         {
             // Get Cache
-            if (cacheKey != null)
+            if (cache != null && cacheKey != null)
             {
-                var item = await cache?.GetAsync<IEnumerable<TResult>>(cacheKey, false, cancellationToken);
+                var item = await cache.GetAsync<IEnumerable<TResult>>(cacheKey, false, cancellationToken);
                 if (item != null)
                 {
                     return item.Value;
@@ -951,9 +951,9 @@ namespace RepoDb
                     .ToListAsync(cancellationToken);
 
                 // Set Cache
-                if (cacheKey != null)
+                if (cache != null && cacheKey != null)
                 {
-                    await cache?.AddAsync(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false, cancellationToken);
+                    await cache.AddAsync(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false, cancellationToken);
                 }
             }
 
@@ -983,7 +983,7 @@ namespace RepoDb
         /// This will only work if the 'cache' argument is set.
         /// </param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
-        /// <param name="traceKey">The key to the trace to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -1090,7 +1090,7 @@ namespace RepoDb
         /// This will only work if the 'cache' argument is set.
         /// </param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
-        /// <param name="traceKey">The key to the trace to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -1200,7 +1200,7 @@ namespace RepoDb
         /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used.</param>
-        /// <param name="traceKey">The key to the trace to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -1307,7 +1307,7 @@ namespace RepoDb
         /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used.</param>
-        /// <param name="traceKey">The key to the trace to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -1420,7 +1420,7 @@ namespace RepoDb
         /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used.</param>
-        /// <param name="traceKey">The key to the trace to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -1508,7 +1508,7 @@ namespace RepoDb
         /// <see cref="ExpandoObject"/>, <see cref="QueryField"/>, <see cref="QueryGroup"/> and an enumerable of <see cref="QueryField"/> objects.
         /// </param>
         /// <param name="commandType">The command type to be used.</param>
-        /// <param name="traceKey">The key to the trace to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -1607,7 +1607,7 @@ namespace RepoDb
         /// This will only work if the 'cache' argument is set.
         /// </param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
-        /// <param name="traceKey">The key to the trace to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -1661,7 +1661,7 @@ namespace RepoDb
         /// This will only work if the 'cache' argument is set.
         /// </param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
-        /// <param name="traceKey">The key to the trace to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -1719,7 +1719,7 @@ namespace RepoDb
         /// This will only work if the 'cache' argument is set.
         /// </param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
-        /// <param name="traceKey">The key to the trace to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -1788,9 +1788,9 @@ namespace RepoDb
             bool skipCommandArrayParametersCheck)
         {
             // Get Cache
-            if (cacheKey != null)
+            if (cache != null && cacheKey != null)
             {
-                var item = cache?.Get<TResult>(cacheKey, false);
+                var item = cache.Get<TResult>(cacheKey, false);
                 if (item != null)
                 {
                     return item.Value;
@@ -1810,9 +1810,9 @@ namespace RepoDb
             var result = Converter.ToType<TResult>(command.ExecuteScalar());
 
             // Set Cache
-            if (cacheKey != null)
+            if (cache != null && cacheKey != null)
             {
-                cache?.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
+                cache.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
             }
 
             // Set the output parameters
@@ -1843,7 +1843,7 @@ namespace RepoDb
         /// This will only work if the 'cache' argument is set.
         /// </param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
-        /// <param name="traceKey">The key to the trace to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -1917,9 +1917,9 @@ namespace RepoDb
             bool skipCommandArrayParametersCheck)
         {
             // Get Cache
-            if (cacheKey != null)
+            if (cache != null && cacheKey != null)
             {
-                var item = await cache?.GetAsync<TResult>(cacheKey, false, cancellationToken);
+                var item = await cache.GetAsync<TResult>(cacheKey, false, cancellationToken);
                 if (item != null)
                 {
                     return item.Value;
@@ -1940,9 +1940,9 @@ namespace RepoDb
             var result = Converter.ToType<TResult>(await command.ExecuteScalarAsync(cancellationToken));
 
             // Set Cache
-            if (cacheKey != null)
+            if (cache != null && cacheKey != null)
             {
-                await cache?.AddAsync(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false, cancellationToken);
+                await cache.AddAsync(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false, cancellationToken);
             }
 
             // Set the output parameters

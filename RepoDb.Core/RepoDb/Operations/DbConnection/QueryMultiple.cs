@@ -41,6 +41,7 @@ namespace RepoDb
         /// <param name="hints2">The table hints to be used (for T2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -62,6 +63,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -84,9 +86,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -109,6 +112,7 @@ namespace RepoDb
         /// <param name="hints2">The table hints to be used (for T2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -130,6 +134,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -152,9 +157,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -177,6 +183,7 @@ namespace RepoDb
         /// <param name="hints2">The table hints to be used (for T2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -198,6 +205,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -220,9 +228,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -245,6 +254,7 @@ namespace RepoDb
         /// <param name="hints2">The table hints to be used (for T2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -266,6 +276,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -288,9 +299,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -313,6 +325,7 @@ namespace RepoDb
         /// <param name="hints2">The table hints to be used (for T2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -334,6 +347,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -356,9 +370,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -381,6 +396,7 @@ namespace RepoDb
         /// <param name="hints2">The table hints to be used (for T2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -402,6 +418,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -426,9 +443,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -462,6 +480,7 @@ namespace RepoDb
         /// <param name="hints3">The table hints to be used (for T3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -489,6 +508,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -518,9 +538,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -550,6 +571,7 @@ namespace RepoDb
         /// <param name="hints3">The table hints to be used (for T3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -577,6 +599,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -606,9 +629,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -638,6 +662,7 @@ namespace RepoDb
         /// <param name="hints3">The table hints to be used (for T3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -665,6 +690,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -694,9 +720,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -726,6 +753,7 @@ namespace RepoDb
         /// <param name="hints3">The table hints to be used (for T3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -753,6 +781,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -782,9 +811,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -814,6 +844,7 @@ namespace RepoDb
         /// <param name="hints3">The table hints to be used (for T3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -841,6 +872,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -870,9 +902,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -902,6 +935,7 @@ namespace RepoDb
         /// <param name="hints3">The table hints to be used (for T3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -929,6 +963,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -961,9 +996,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -1004,6 +1040,7 @@ namespace RepoDb
         /// <param name="hints4">The table hints to be used (for T4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -1038,6 +1075,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -1074,9 +1112,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -1113,6 +1152,7 @@ namespace RepoDb
         /// <param name="hints4">The table hints to be used (for T4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -1147,6 +1187,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -1183,9 +1224,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -1222,6 +1264,7 @@ namespace RepoDb
         /// <param name="hints4">The table hints to be used (for T4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -1256,6 +1299,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -1292,9 +1336,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -1331,6 +1376,7 @@ namespace RepoDb
         /// <param name="hints4">The table hints to be used (for T4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -1365,6 +1411,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -1401,9 +1448,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -1440,6 +1488,7 @@ namespace RepoDb
         /// <param name="hints4">The table hints to be used (for T4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -1474,6 +1523,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -1510,9 +1560,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -1549,6 +1600,7 @@ namespace RepoDb
         /// <param name="hints4">The table hints to be used (for T4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -1583,6 +1635,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -1623,9 +1676,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -1673,6 +1727,7 @@ namespace RepoDb
         /// <param name="hints5">The table hints to be used (for T5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -1713,6 +1768,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -1756,9 +1812,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -1802,6 +1859,7 @@ namespace RepoDb
         /// <param name="hints5">The table hints to be used (for T5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -1842,6 +1900,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -1885,9 +1944,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -1931,6 +1991,7 @@ namespace RepoDb
         /// <param name="hints5">The table hints to be used (for T5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -1971,6 +2032,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -2014,9 +2076,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -2060,6 +2123,7 @@ namespace RepoDb
         /// <param name="hints5">The table hints to be used (for T5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -2100,6 +2164,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -2143,9 +2208,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -2189,6 +2255,7 @@ namespace RepoDb
         /// <param name="hints5">The table hints to be used (for T5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -2229,6 +2296,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -2272,9 +2340,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -2318,6 +2387,7 @@ namespace RepoDb
         /// <param name="hints5">The table hints to be used (for T5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -2358,6 +2428,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -2406,9 +2477,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -2463,6 +2535,7 @@ namespace RepoDb
         /// <param name="hints6">The table hints to be used (for T6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -2509,6 +2582,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -2559,9 +2633,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -2612,6 +2687,7 @@ namespace RepoDb
         /// <param name="hints6">The table hints to be used (for T6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -2658,6 +2734,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -2708,9 +2785,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -2761,6 +2839,7 @@ namespace RepoDb
         /// <param name="hints6">The table hints to be used (for T6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -2807,6 +2886,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -2857,9 +2937,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -2910,6 +2991,7 @@ namespace RepoDb
         /// <param name="hints6">The table hints to be used (for T6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -2956,6 +3038,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -3006,9 +3089,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -3059,6 +3143,7 @@ namespace RepoDb
         /// <param name="hints6">The table hints to be used (for T6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -3105,6 +3190,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -3155,9 +3241,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -3208,6 +3295,7 @@ namespace RepoDb
         /// <param name="hints6">The table hints to be used (for T6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -3254,6 +3342,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -3310,9 +3399,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -3374,6 +3464,7 @@ namespace RepoDb
         /// <param name="hints7">The table hints to be used (for T7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -3426,6 +3517,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -3483,9 +3575,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -3543,6 +3636,7 @@ namespace RepoDb
         /// <param name="hints7">The table hints to be used (for T7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -3595,6 +3689,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -3652,9 +3747,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -3712,6 +3808,7 @@ namespace RepoDb
         /// <param name="hints7">The table hints to be used (for T7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -3764,6 +3861,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -3821,9 +3919,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -3881,6 +3980,7 @@ namespace RepoDb
         /// <param name="hints7">The table hints to be used (for T7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -3933,6 +4033,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -3990,9 +4091,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -4050,6 +4152,7 @@ namespace RepoDb
         /// <param name="hints7">The table hints to be used (for T7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -4102,6 +4205,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -4159,9 +4263,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -4219,6 +4324,7 @@ namespace RepoDb
         /// <param name="hints7">The table hints to be used (for T7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -4271,6 +4377,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -4335,9 +4442,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -4368,6 +4476,7 @@ namespace RepoDb
         /// <param name="hints2">The table hints to be used (for T2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -4390,6 +4499,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -4413,9 +4523,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -4439,6 +4550,7 @@ namespace RepoDb
         /// <param name="hints2">The table hints to be used (for T2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -4461,6 +4573,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -4484,9 +4597,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -4510,6 +4624,7 @@ namespace RepoDb
         /// <param name="hints2">The table hints to be used (for T2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -4532,6 +4647,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -4555,9 +4671,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -4581,6 +4698,7 @@ namespace RepoDb
         /// <param name="hints2">The table hints to be used (for T2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -4603,6 +4721,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -4626,9 +4745,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -4652,6 +4772,7 @@ namespace RepoDb
         /// <param name="hints2">The table hints to be used (for T2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -4674,6 +4795,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -4697,9 +4819,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -4723,6 +4846,7 @@ namespace RepoDb
         /// <param name="hints2">The table hints to be used (for T2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -4745,6 +4869,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -4770,9 +4895,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -4807,6 +4933,7 @@ namespace RepoDb
         /// <param name="hints3">The table hints to be used (for T3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -4835,6 +4962,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -4865,9 +4993,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -4898,6 +5027,7 @@ namespace RepoDb
         /// <param name="hints3">The table hints to be used (for T3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -4926,6 +5056,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -4956,9 +5087,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -4989,6 +5121,7 @@ namespace RepoDb
         /// <param name="hints3">The table hints to be used (for T3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -5017,6 +5150,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -5047,9 +5181,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -5080,6 +5215,7 @@ namespace RepoDb
         /// <param name="hints3">The table hints to be used (for T3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -5108,6 +5244,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -5138,9 +5275,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -5171,6 +5309,7 @@ namespace RepoDb
         /// <param name="hints3">The table hints to be used (for T3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -5199,6 +5338,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -5229,9 +5369,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -5262,6 +5403,7 @@ namespace RepoDb
         /// <param name="hints3">The table hints to be used (for T3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -5290,6 +5432,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -5323,9 +5466,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -5367,6 +5511,7 @@ namespace RepoDb
         /// <param name="hints4">The table hints to be used (for T4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -5402,6 +5547,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -5439,9 +5585,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -5479,6 +5626,7 @@ namespace RepoDb
         /// <param name="hints4">The table hints to be used (for T4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -5514,6 +5662,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -5551,9 +5700,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -5591,6 +5741,7 @@ namespace RepoDb
         /// <param name="hints4">The table hints to be used (for T4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -5626,6 +5777,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -5663,9 +5815,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -5703,6 +5856,7 @@ namespace RepoDb
         /// <param name="hints4">The table hints to be used (for T4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -5738,6 +5892,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -5775,9 +5930,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -5815,6 +5971,7 @@ namespace RepoDb
         /// <param name="hints4">The table hints to be used (for T4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -5850,6 +6007,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -5887,9 +6045,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -5927,6 +6086,7 @@ namespace RepoDb
         /// <param name="hints4">The table hints to be used (for T4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -5962,6 +6122,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -6003,9 +6164,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -6054,6 +6216,7 @@ namespace RepoDb
         /// <param name="hints5">The table hints to be used (for T5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -6095,6 +6258,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -6139,9 +6303,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -6186,6 +6351,7 @@ namespace RepoDb
         /// <param name="hints5">The table hints to be used (for T5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -6227,6 +6393,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -6271,9 +6438,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -6318,6 +6486,7 @@ namespace RepoDb
         /// <param name="hints5">The table hints to be used (for T5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -6359,6 +6528,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -6403,9 +6573,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -6450,6 +6621,7 @@ namespace RepoDb
         /// <param name="hints5">The table hints to be used (for T5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -6491,6 +6663,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -6535,9 +6708,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -6582,6 +6756,7 @@ namespace RepoDb
         /// <param name="hints5">The table hints to be used (for T5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -6623,6 +6798,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -6667,9 +6843,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -6714,6 +6891,7 @@ namespace RepoDb
         /// <param name="hints5">The table hints to be used (for T5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -6755,6 +6933,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -6804,9 +6983,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -6862,6 +7042,7 @@ namespace RepoDb
         /// <param name="hints6">The table hints to be used (for T6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -6909,6 +7090,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -6960,9 +7142,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -7014,6 +7197,7 @@ namespace RepoDb
         /// <param name="hints6">The table hints to be used (for T6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -7061,6 +7245,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -7112,9 +7297,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -7166,6 +7352,7 @@ namespace RepoDb
         /// <param name="hints6">The table hints to be used (for T6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -7213,6 +7400,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -7264,9 +7452,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -7318,6 +7507,7 @@ namespace RepoDb
         /// <param name="hints6">The table hints to be used (for T6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -7365,6 +7555,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -7416,9 +7607,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -7470,6 +7662,7 @@ namespace RepoDb
         /// <param name="hints6">The table hints to be used (for T6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -7517,6 +7710,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -7568,9 +7762,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -7622,6 +7817,7 @@ namespace RepoDb
         /// <param name="hints6">The table hints to be used (for T6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -7669,6 +7865,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -7726,9 +7923,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -7791,6 +7989,7 @@ namespace RepoDb
         /// <param name="hints7">The table hints to be used (for T7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -7844,6 +8043,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -7902,9 +8102,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -7963,6 +8164,7 @@ namespace RepoDb
         /// <param name="hints7">The table hints to be used (for T7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -8016,6 +8218,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -8074,9 +8277,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -8135,6 +8339,7 @@ namespace RepoDb
         /// <param name="hints7">The table hints to be used (for T7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -8188,6 +8393,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -8246,9 +8452,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -8307,6 +8514,7 @@ namespace RepoDb
         /// <param name="hints7">The table hints to be used (for T7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -8360,6 +8568,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -8418,9 +8627,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -8479,6 +8689,7 @@ namespace RepoDb
         /// <param name="hints7">The table hints to be used (for T7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -8532,6 +8743,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -8590,9 +8802,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -8651,6 +8864,7 @@ namespace RepoDb
         /// <param name="hints7">The table hints to be used (for T7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -8704,6 +8918,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -8769,9 +8984,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -8807,7 +9023,8 @@ namespace RepoDb
         /// <param name="hints2">The table hints to be used (for T2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -8830,6 +9047,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -8854,9 +9072,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -8881,6 +9100,7 @@ namespace RepoDb
         /// <param name="hints2">The table hints to be used (for T2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -8904,6 +9124,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -8928,9 +9149,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -8955,6 +9177,7 @@ namespace RepoDb
         /// <param name="hints2">The table hints to be used (for T2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -8978,6 +9201,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -9002,9 +9226,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -9029,6 +9254,7 @@ namespace RepoDb
         /// <param name="hints2">The table hints to be used (for T2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -9052,6 +9278,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -9076,9 +9303,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -9103,6 +9331,7 @@ namespace RepoDb
         /// <param name="hints2">The table hints to be used (for T2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -9126,6 +9355,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -9150,9 +9380,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -9177,6 +9408,7 @@ namespace RepoDb
         /// <param name="hints2">The table hints to be used (for T2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -9200,6 +9432,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -9272,7 +9505,9 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
+				trace: trace,
                 entityType: null,
                 dbFields: null,
                 skipCommandArrayParametersCheck: true))
@@ -9342,6 +9577,7 @@ namespace RepoDb
         /// <param name="hints3">The table hints to be used (for T3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -9372,6 +9608,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -9404,9 +9641,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -9439,6 +9677,7 @@ namespace RepoDb
         /// <param name="hints3">The table hints to be used (for T3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -9469,6 +9708,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -9501,9 +9741,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -9536,6 +9777,7 @@ namespace RepoDb
         /// <param name="hints3">The table hints to be used (for T3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -9566,6 +9808,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -9598,9 +9841,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -9633,6 +9877,7 @@ namespace RepoDb
         /// <param name="hints3">The table hints to be used (for T3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -9663,6 +9908,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -9695,9 +9941,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -9730,6 +9977,7 @@ namespace RepoDb
         /// <param name="hints3">The table hints to be used (for T3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -9760,6 +10008,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -9792,9 +10041,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -9827,6 +10077,7 @@ namespace RepoDb
         /// <param name="hints3">The table hints to be used (for T3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -9857,6 +10108,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -9952,7 +10204,9 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
+				trace: trace,
                 entityType: null,
                 dbFields: null,
                 skipCommandArrayParametersCheck: true))
@@ -10042,6 +10296,7 @@ namespace RepoDb
         /// <param name="hints4">The table hints to be used (for T4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -10080,6 +10335,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -10120,9 +10376,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -10163,6 +10420,7 @@ namespace RepoDb
         /// <param name="hints4">The table hints to be used (for T4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -10201,6 +10459,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -10241,9 +10500,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -10284,6 +10544,7 @@ namespace RepoDb
         /// <param name="hints4">The table hints to be used (for T4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -10322,6 +10583,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -10362,9 +10624,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -10405,6 +10668,7 @@ namespace RepoDb
         /// <param name="hints4">The table hints to be used (for T4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -10443,6 +10707,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -10483,9 +10748,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -10526,6 +10792,7 @@ namespace RepoDb
         /// <param name="hints4">The table hints to be used (for T4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -10564,6 +10831,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -10604,9 +10872,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -10647,6 +10916,7 @@ namespace RepoDb
         /// <param name="hints4">The table hints to be used (for T4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -10685,6 +10955,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -10803,7 +11074,9 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
+				trace: trace,
                 entityType: null,
                 dbFields: null,
                 skipCommandArrayParametersCheck: true))
@@ -10912,6 +11185,7 @@ namespace RepoDb
         /// <param name="hints5">The table hints to be used (for T5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -10957,6 +11231,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -11005,9 +11280,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -11056,6 +11332,7 @@ namespace RepoDb
         /// <param name="hints5">The table hints to be used (for T5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -11101,6 +11378,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -11149,9 +11427,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -11200,6 +11479,7 @@ namespace RepoDb
         /// <param name="hints5">The table hints to be used (for T5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -11245,6 +11525,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -11293,9 +11574,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -11344,6 +11626,7 @@ namespace RepoDb
         /// <param name="hints5">The table hints to be used (for T5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -11389,6 +11672,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -11437,9 +11721,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -11488,6 +11773,7 @@ namespace RepoDb
         /// <param name="hints5">The table hints to be used (for T5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -11533,6 +11819,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -11581,9 +11868,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -11632,6 +11920,7 @@ namespace RepoDb
         /// <param name="hints5">The table hints to be used (for T5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -11677,6 +11966,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -11818,7 +12108,9 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
+				trace: trace,
                 entityType: null,
                 dbFields: null,
                 skipCommandArrayParametersCheck: true))
@@ -11946,6 +12238,7 @@ namespace RepoDb
         /// <param name="hints6">The table hints to be used (for T6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -11998,6 +12291,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -12054,9 +12348,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -12113,6 +12408,7 @@ namespace RepoDb
         /// <param name="hints6">The table hints to be used (for T6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -12165,6 +12461,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -12221,9 +12518,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -12280,6 +12578,7 @@ namespace RepoDb
         /// <param name="hints6">The table hints to be used (for T6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -12332,6 +12631,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -12388,9 +12688,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -12447,6 +12748,7 @@ namespace RepoDb
         /// <param name="hints6">The table hints to be used (for T6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -12499,6 +12801,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -12555,9 +12858,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -12614,6 +12918,7 @@ namespace RepoDb
         /// <param name="hints6">The table hints to be used (for T6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -12666,6 +12971,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -12722,9 +13028,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -12781,6 +13088,7 @@ namespace RepoDb
         /// <param name="hints6">The table hints to be used (for T6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -12833,6 +13141,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -12997,7 +13306,9 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
+				trace: trace,
                 entityType: null,
                 dbFields: null,
                 skipCommandArrayParametersCheck: true))
@@ -13144,6 +13455,7 @@ namespace RepoDb
         /// <param name="hints7">The table hints to be used (for T7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -13203,6 +13515,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -13267,9 +13580,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -13334,6 +13648,7 @@ namespace RepoDb
         /// <param name="hints7">The table hints to be used (for T7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -13393,6 +13708,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -13457,9 +13773,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -13524,6 +13841,7 @@ namespace RepoDb
         /// <param name="hints7">The table hints to be used (for T7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -13583,6 +13901,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -13647,9 +13966,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -13714,6 +14034,7 @@ namespace RepoDb
         /// <param name="hints7">The table hints to be used (for T7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -13773,6 +14094,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -13837,9 +14159,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -13904,6 +14227,7 @@ namespace RepoDb
         /// <param name="hints7">The table hints to be used (for T7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -13963,6 +14287,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -14027,9 +14352,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -14094,6 +14420,7 @@ namespace RepoDb
         /// <param name="hints7">The table hints to be used (for T7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -14153,6 +14480,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -14340,7 +14668,9 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
+				trace: trace,
                 entityType: null,
                 dbFields: null,
                 skipCommandArrayParametersCheck: true))
@@ -14460,7 +14790,8 @@ namespace RepoDb
         /// <param name="hints2">The table hints to be used (for dynamic type 2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -14483,6 +14814,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -14505,9 +14837,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -14530,6 +14863,7 @@ namespace RepoDb
         /// <param name="hints2">The table hints to be used (for dynamic type 2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -14553,6 +14887,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -14575,9 +14910,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -14600,6 +14936,7 @@ namespace RepoDb
         /// <param name="hints2">The table hints to be used (for dynamic type 2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -14623,6 +14960,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -14645,9 +14983,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -14670,6 +15009,7 @@ namespace RepoDb
         /// <param name="hints2">The table hints to be used (for dynamic type 2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -14693,6 +15033,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -14715,9 +15056,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -14740,6 +15082,7 @@ namespace RepoDb
         /// <param name="hints2">The table hints to be used (for dynamic type 2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -14763,6 +15106,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -14833,7 +15177,9 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
+				trace: trace,
                 entityType: null,
                 dbFields: null,
                 skipCommandArrayParametersCheck: true))
@@ -14900,6 +15246,7 @@ namespace RepoDb
         /// <param name="hints3">The table hints to be used (for dynamic type 3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -14930,6 +15277,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -14959,9 +15307,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -14991,6 +15340,7 @@ namespace RepoDb
         /// <param name="hints3">The table hints to be used (for dynamic type 3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -15021,6 +15371,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -15050,9 +15401,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -15082,6 +15434,7 @@ namespace RepoDb
         /// <param name="hints3">The table hints to be used (for dynamic type 3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -15112,6 +15465,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -15141,9 +15495,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -15173,6 +15528,7 @@ namespace RepoDb
         /// <param name="hints3">The table hints to be used (for dynamic type 3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -15203,6 +15559,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -15232,9 +15589,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -15264,6 +15622,7 @@ namespace RepoDb
         /// <param name="hints3">The table hints to be used (for dynamic type 3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -15294,6 +15653,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -15386,7 +15746,9 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
+				trace: trace,
                 entityType: null,
                 dbFields: null,
                 skipCommandArrayParametersCheck: true))
@@ -15472,6 +15834,7 @@ namespace RepoDb
         /// <param name="hints4">The table hints to be used (for dynamic type 4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -15510,6 +15873,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -15546,9 +15910,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -15585,6 +15950,7 @@ namespace RepoDb
         /// <param name="hints4">The table hints to be used (for dynamic type 4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -15623,6 +15989,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -15659,9 +16026,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -15698,6 +16066,7 @@ namespace RepoDb
         /// <param name="hints4">The table hints to be used (for dynamic type 4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -15736,6 +16105,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -15772,9 +16142,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -15811,6 +16182,7 @@ namespace RepoDb
         /// <param name="hints4">The table hints to be used (for dynamic type 4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -15849,6 +16221,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -15885,9 +16258,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -15924,6 +16298,7 @@ namespace RepoDb
         /// <param name="hints4">The table hints to be used (for dynamic type 4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -15962,6 +16337,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -16076,7 +16452,9 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
+				trace: trace,
                 entityType: null,
                 dbFields: null,
                 skipCommandArrayParametersCheck: true))
@@ -16180,6 +16558,7 @@ namespace RepoDb
         /// <param name="hints5">The table hints to be used (for dynamic type 5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -16225,6 +16604,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -16268,9 +16648,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -16314,6 +16695,7 @@ namespace RepoDb
         /// <param name="hints5">The table hints to be used (for dynamic type 5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -16359,6 +16741,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -16402,9 +16785,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -16448,6 +16832,7 @@ namespace RepoDb
         /// <param name="hints5">The table hints to be used (for dynamic type 5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -16493,6 +16878,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -16536,9 +16922,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -16582,6 +16969,7 @@ namespace RepoDb
         /// <param name="hints5">The table hints to be used (for dynamic type 5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -16627,6 +17015,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -16670,9 +17059,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -16716,6 +17106,7 @@ namespace RepoDb
         /// <param name="hints5">The table hints to be used (for dynamic type 5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -16761,6 +17152,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -16897,7 +17289,9 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
+				trace: trace,
                 entityType: null,
                 dbFields: null,
                 skipCommandArrayParametersCheck: true))
@@ -17019,6 +17413,7 @@ namespace RepoDb
         /// <param name="hints6">The table hints to be used (for dynamic type 6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -17071,6 +17466,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -17121,9 +17517,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -17174,6 +17571,7 @@ namespace RepoDb
         /// <param name="hints6">The table hints to be used (for dynamic type 6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -17226,6 +17624,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -17276,9 +17675,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -17329,6 +17729,7 @@ namespace RepoDb
         /// <param name="hints6">The table hints to be used (for dynamic type 6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -17381,6 +17782,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -17431,9 +17833,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -17484,6 +17887,7 @@ namespace RepoDb
         /// <param name="hints6">The table hints to be used (for dynamic type 6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -17536,6 +17940,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -17586,9 +17991,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -17639,6 +18045,7 @@ namespace RepoDb
         /// <param name="hints6">The table hints to be used (for dynamic type 6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -17691,6 +18098,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -17849,7 +18257,9 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
+				trace: trace,
                 entityType: null,
                 dbFields: null,
                 skipCommandArrayParametersCheck: true))
@@ -17989,6 +18399,7 @@ namespace RepoDb
         /// <param name="hints7">The table hints to be used (for dynamic type 7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -18048,6 +18459,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -18105,9 +18517,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -18165,6 +18578,7 @@ namespace RepoDb
         /// <param name="hints7">The table hints to be used (for dynamic type 7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -18224,6 +18638,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -18281,9 +18696,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -18341,6 +18757,7 @@ namespace RepoDb
         /// <param name="hints7">The table hints to be used (for dynamic type 7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -18400,6 +18817,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -18457,9 +18875,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -18517,6 +18936,7 @@ namespace RepoDb
         /// <param name="hints7">The table hints to be used (for dynamic type 7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -18576,6 +18996,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -18633,9 +19054,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -18693,6 +19115,7 @@ namespace RepoDb
         /// <param name="hints7">The table hints to be used (for dynamic type 7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -18752,6 +19175,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -18932,7 +19356,9 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
+				trace: trace,
                 entityType: null,
                 dbFields: null,
                 skipCommandArrayParametersCheck: true))
@@ -19058,7 +19484,8 @@ namespace RepoDb
         /// <param name="hints2">The table hints to be used (for T2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -19082,6 +19509,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -19107,9 +19535,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -19135,6 +19564,7 @@ namespace RepoDb
         /// <param name="hints2">The table hints to be used (for T2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -19159,6 +19589,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -19184,9 +19615,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -19212,6 +19644,7 @@ namespace RepoDb
         /// <param name="hints2">The table hints to be used (for T2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -19236,6 +19669,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -19261,9 +19695,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -19289,6 +19724,7 @@ namespace RepoDb
         /// <param name="hints2">The table hints to be used (for T2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -19313,6 +19749,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -19338,9 +19775,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -19366,6 +19804,7 @@ namespace RepoDb
         /// <param name="hints2">The table hints to be used (for T2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -19390,6 +19829,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -19415,9 +19855,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -19443,6 +19884,7 @@ namespace RepoDb
         /// <param name="hints2">The table hints to be used (for T2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -19467,6 +19909,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -19544,7 +19987,9 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
+				trace: trace,
                 cancellationToken: cancellationToken,
                 entityType: null,
                 dbFields: null,
@@ -19617,6 +20062,7 @@ namespace RepoDb
         /// <param name="hints3">The table hints to be used (for T3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -19648,6 +20094,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -19681,9 +20128,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -19717,6 +20165,7 @@ namespace RepoDb
         /// <param name="hints3">The table hints to be used (for T3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -19748,6 +20197,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -19781,9 +20231,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -19817,6 +20268,7 @@ namespace RepoDb
         /// <param name="hints3">The table hints to be used (for T3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -19848,6 +20300,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -19881,9 +20334,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -19917,6 +20371,7 @@ namespace RepoDb
         /// <param name="hints3">The table hints to be used (for T3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -19948,6 +20403,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -19981,9 +20437,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -20017,6 +20474,7 @@ namespace RepoDb
         /// <param name="hints3">The table hints to be used (for T3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -20048,6 +20506,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -20081,9 +20540,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -20117,6 +20577,7 @@ namespace RepoDb
         /// <param name="hints3">The table hints to be used (for T3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -20148,6 +20609,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -20247,7 +20709,9 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
+				trace: trace,
                 cancellationToken: cancellationToken,
                 entityType: null,
                 dbFields: null,
@@ -20340,6 +20804,7 @@ namespace RepoDb
         /// <param name="hints4">The table hints to be used (for T4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -20379,6 +20844,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -20420,9 +20886,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -20464,6 +20931,7 @@ namespace RepoDb
         /// <param name="hints4">The table hints to be used (for T4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -20503,6 +20971,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -20544,9 +21013,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -20588,6 +21058,7 @@ namespace RepoDb
         /// <param name="hints4">The table hints to be used (for T4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -20627,6 +21098,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -20668,9 +21140,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -20712,6 +21185,7 @@ namespace RepoDb
         /// <param name="hints4">The table hints to be used (for T4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -20751,6 +21225,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -20792,9 +21267,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -20836,6 +21312,7 @@ namespace RepoDb
         /// <param name="hints4">The table hints to be used (for T4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -20875,6 +21352,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -20916,9 +21394,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -20960,6 +21439,7 @@ namespace RepoDb
         /// <param name="hints4">The table hints to be used (for T4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -20999,6 +21479,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -21122,7 +21603,9 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
+				trace: trace,
                 cancellationToken: cancellationToken,
                 entityType: null,
                 dbFields: null,
@@ -21235,6 +21718,7 @@ namespace RepoDb
         /// <param name="hints5">The table hints to be used (for T5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -21281,6 +21765,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -21330,9 +21815,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -21382,6 +21868,7 @@ namespace RepoDb
         /// <param name="hints5">The table hints to be used (for T5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -21428,6 +21915,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -21477,9 +21965,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -21529,6 +22018,7 @@ namespace RepoDb
         /// <param name="hints5">The table hints to be used (for T5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -21575,6 +22065,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -21624,9 +22115,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -21676,6 +22168,7 @@ namespace RepoDb
         /// <param name="hints5">The table hints to be used (for T5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -21722,6 +22215,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -21771,9 +22265,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -21823,6 +22318,7 @@ namespace RepoDb
         /// <param name="hints5">The table hints to be used (for T5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -21869,6 +22365,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -21918,9 +22415,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -21970,6 +22468,7 @@ namespace RepoDb
         /// <param name="hints5">The table hints to be used (for T5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -22016,6 +22515,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -22163,7 +22663,9 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
+				trace: trace,
                 cancellationToken: cancellationToken,
                 entityType: null,
                 dbFields: null,
@@ -22296,6 +22798,7 @@ namespace RepoDb
         /// <param name="hints6">The table hints to be used (for T6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -22349,6 +22852,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -22406,9 +22910,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -22466,6 +22971,7 @@ namespace RepoDb
         /// <param name="hints6">The table hints to be used (for T6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -22519,6 +23025,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -22576,9 +23083,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -22636,6 +23144,7 @@ namespace RepoDb
         /// <param name="hints6">The table hints to be used (for T6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -22689,6 +23198,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -22746,9 +23256,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -22806,6 +23317,7 @@ namespace RepoDb
         /// <param name="hints6">The table hints to be used (for T6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -22859,6 +23371,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -22916,9 +23429,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -22976,6 +23490,7 @@ namespace RepoDb
         /// <param name="hints6">The table hints to be used (for T6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -23029,6 +23544,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -23086,9 +23602,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -23146,6 +23663,7 @@ namespace RepoDb
         /// <param name="hints6">The table hints to be used (for T6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -23199,6 +23717,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -23370,7 +23889,9 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
+				trace: trace,
                 cancellationToken: cancellationToken,
                 entityType: null,
                 dbFields: null,
@@ -23523,6 +24044,7 @@ namespace RepoDb
         /// <param name="hints7">The table hints to be used (for T7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -23583,6 +24105,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -23648,9 +24171,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -23716,6 +24240,7 @@ namespace RepoDb
         /// <param name="hints7">The table hints to be used (for T7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -23776,6 +24301,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -23841,9 +24367,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -23909,6 +24436,7 @@ namespace RepoDb
         /// <param name="hints7">The table hints to be used (for T7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -23969,6 +24497,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -24034,9 +24563,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -24102,6 +24632,7 @@ namespace RepoDb
         /// <param name="hints7">The table hints to be used (for T7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -24162,6 +24693,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -24227,9 +24759,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -24295,6 +24828,7 @@ namespace RepoDb
         /// <param name="hints7">The table hints to be used (for T7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -24355,6 +24889,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -24420,9 +24955,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -24488,6 +25024,7 @@ namespace RepoDb
         /// <param name="hints7">The table hints to be used (for T7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -24548,6 +25085,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -24743,7 +25281,9 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
+				trace: trace,
                 cancellationToken: cancellationToken,
                 entityType: null,
                 dbFields: null,
@@ -24870,7 +25410,8 @@ namespace RepoDb
         /// <param name="hints2">The table hints to be used (for dynamic type 2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
@@ -24894,6 +25435,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -24917,9 +25459,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -24943,6 +25486,7 @@ namespace RepoDb
         /// <param name="hints2">The table hints to be used (for dynamic type 2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -24967,6 +25511,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -24990,9 +25535,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -25016,6 +25562,7 @@ namespace RepoDb
         /// <param name="hints2">The table hints to be used (for dynamic type 2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -25040,6 +25587,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -25063,9 +25611,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -25089,6 +25638,7 @@ namespace RepoDb
         /// <param name="hints2">The table hints to be used (for dynamic type 2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -25113,6 +25663,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -25136,9 +25687,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -25162,6 +25714,7 @@ namespace RepoDb
         /// <param name="hints2">The table hints to be used (for dynamic type 2).</param>
         /// <param name="cacheKey2">The key to the cache item 2. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -25186,6 +25739,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -25259,7 +25813,9 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
+				trace: trace,
                 cancellationToken: cancellationToken,
                 entityType: null,
                 dbFields: null,
@@ -25329,6 +25885,7 @@ namespace RepoDb
         /// <param name="hints3">The table hints to be used (for dynamic type 3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -25360,6 +25917,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -25390,9 +25948,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -25423,6 +25982,7 @@ namespace RepoDb
         /// <param name="hints3">The table hints to be used (for dynamic type 3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -25454,6 +26014,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -25484,9 +26045,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -25517,6 +26079,7 @@ namespace RepoDb
         /// <param name="hints3">The table hints to be used (for dynamic type 3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -25548,6 +26111,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -25578,9 +26142,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -25611,6 +26176,7 @@ namespace RepoDb
         /// <param name="hints3">The table hints to be used (for dynamic type 3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -25642,6 +26208,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -25672,9 +26239,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -25705,6 +26273,7 @@ namespace RepoDb
         /// <param name="hints3">The table hints to be used (for dynamic type 3).</param>
         /// <param name="cacheKey3">The key to the cache item 3. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -25736,6 +26305,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -25832,7 +26402,9 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
+				trace: trace,
                 cancellationToken: cancellationToken,
                 entityType: null,
                 dbFields: null,
@@ -25921,6 +26493,7 @@ namespace RepoDb
         /// <param name="hints4">The table hints to be used (for dynamic type 4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -25960,6 +26533,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -25997,9 +26571,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -26037,6 +26612,7 @@ namespace RepoDb
         /// <param name="hints4">The table hints to be used (for dynamic type 4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -26076,6 +26652,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -26113,9 +26690,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -26153,6 +26731,7 @@ namespace RepoDb
         /// <param name="hints4">The table hints to be used (for dynamic type 4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -26192,6 +26771,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -26229,9 +26809,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -26269,6 +26850,7 @@ namespace RepoDb
         /// <param name="hints4">The table hints to be used (for dynamic type 4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -26308,6 +26890,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -26345,9 +26928,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -26385,6 +26969,7 @@ namespace RepoDb
         /// <param name="hints4">The table hints to be used (for dynamic type 4).</param>
         /// <param name="cacheKey4">The key to the cache item 4. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -26424,6 +27009,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -26543,7 +27129,9 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
+				trace: trace,
                 cancellationToken: cancellationToken,
                 entityType: null,
                 dbFields: null,
@@ -26651,6 +27239,7 @@ namespace RepoDb
         /// <param name="hints5">The table hints to be used (for dynamic type 5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -26697,6 +27286,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -26741,9 +27331,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -26788,6 +27379,7 @@ namespace RepoDb
         /// <param name="hints5">The table hints to be used (for dynamic type 5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -26834,6 +27426,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -26878,9 +27471,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -26925,6 +27519,7 @@ namespace RepoDb
         /// <param name="hints5">The table hints to be used (for dynamic type 5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -26971,6 +27566,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -27015,9 +27611,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -27062,6 +27659,7 @@ namespace RepoDb
         /// <param name="hints5">The table hints to be used (for dynamic type 5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -27108,6 +27706,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -27152,9 +27751,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -27199,6 +27799,7 @@ namespace RepoDb
         /// <param name="hints5">The table hints to be used (for dynamic type 5).</param>
         /// <param name="cacheKey5">The key to the cache item 5. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -27245,6 +27846,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -27387,7 +27989,9 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
+				trace: trace,
                 cancellationToken: cancellationToken,
                 entityType: null,
                 dbFields: null,
@@ -27514,6 +28118,7 @@ namespace RepoDb
         /// <param name="hints6">The table hints to be used (for dynamic type 6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -27567,6 +28172,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -27618,9 +28224,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -27672,6 +28279,7 @@ namespace RepoDb
         /// <param name="hints6">The table hints to be used (for dynamic type 6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -27725,6 +28333,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -27776,9 +28385,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -27830,6 +28440,7 @@ namespace RepoDb
         /// <param name="hints6">The table hints to be used (for dynamic type 6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -27883,6 +28494,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -27934,9 +28546,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -27988,6 +28601,7 @@ namespace RepoDb
         /// <param name="hints6">The table hints to be used (for dynamic type 6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -28041,6 +28655,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -28092,9 +28707,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -28146,6 +28762,7 @@ namespace RepoDb
         /// <param name="hints6">The table hints to be used (for dynamic type 6).</param>
         /// <param name="cacheKey6">The key to the cache item 6. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -28199,6 +28816,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -28364,7 +28982,9 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
+				trace: trace,
                 cancellationToken: cancellationToken,
                 entityType: null,
                 dbFields: null,
@@ -28510,6 +29130,7 @@ namespace RepoDb
         /// <param name="hints7">The table hints to be used (for dynamic type 7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -28570,6 +29191,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -28628,9 +29250,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -28689,6 +29312,7 @@ namespace RepoDb
         /// <param name="hints7">The table hints to be used (for dynamic type 7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -28749,6 +29373,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -28807,9 +29432,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -28868,6 +29494,7 @@ namespace RepoDb
         /// <param name="hints7">The table hints to be used (for dynamic type 7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -28928,6 +29555,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -28986,9 +29614,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -29047,6 +29676,7 @@ namespace RepoDb
         /// <param name="hints7">The table hints to be used (for dynamic type 7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -29107,6 +29737,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -29165,9 +29796,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
-                cache: cache,
-                trace: trace,
+				cache: null,
+				trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -29226,6 +29858,7 @@ namespace RepoDb
         /// <param name="hints7">The table hints to be used (for dynamic type 7).</param>
         /// <param name="cacheKey7">The key to the cache item 7. By setting this argument, it will return the item from the cache if present, otherwise it will query the database. This will only work if the 'cache' argument is set.</param>
         /// <param name="cacheItemExpiration">The expiration in minutes of the cache item.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cache">The cache object to be used.</param>
@@ -29286,6 +29919,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
+			string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -29474,7 +30108,9 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
+				traceKey: traceKey,
                 transaction: transaction,
+				trace: trace,
                 cancellationToken: cancellationToken,
                 entityType: null,
                 dbFields: null,

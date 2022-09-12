@@ -23,6 +23,7 @@ namespace RepoDb
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> BatchQuery<TEntity>(string tableName,
@@ -31,6 +32,7 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -47,7 +49,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -69,6 +72,7 @@ namespace RepoDb
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> BatchQuery<TEntity>(string tableName,
@@ -78,6 +82,7 @@ namespace RepoDb
             object where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -95,7 +100,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -117,6 +123,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> BatchQuery<TEntity>(string tableName,
@@ -126,6 +133,7 @@ namespace RepoDb
             Expression<Func<TEntity, bool>> where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -144,7 +152,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -166,6 +175,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> BatchQuery<TEntity>(string tableName,
@@ -175,6 +185,7 @@ namespace RepoDb
             QueryField where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -192,7 +203,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -214,6 +226,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> BatchQuery<TEntity>(string tableName,
@@ -223,6 +236,7 @@ namespace RepoDb
             IEnumerable<QueryField> where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -240,7 +254,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -262,6 +277,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> BatchQuery<TEntity>(string tableName,
@@ -271,6 +287,7 @@ namespace RepoDb
             QueryGroup where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -288,7 +305,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -308,6 +326,7 @@ namespace RepoDb
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> BatchQuery<TEntity>(int page,
@@ -315,6 +334,7 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -330,7 +350,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -351,6 +372,7 @@ namespace RepoDb
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> BatchQuery<TEntity>(int page,
@@ -359,6 +381,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             object where = null,
             string hints = null,
+			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -375,7 +398,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -396,6 +420,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> BatchQuery<TEntity>(int page,
@@ -404,6 +429,7 @@ namespace RepoDb
             Expression<Func<TEntity, bool>> where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -420,7 +446,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -441,6 +468,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> BatchQuery<TEntity>(int page,
@@ -449,6 +477,7 @@ namespace RepoDb
             QueryField where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -465,7 +494,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -486,6 +516,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> BatchQuery<TEntity>(int page,
@@ -494,6 +525,7 @@ namespace RepoDb
             IEnumerable<QueryField> where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -510,7 +542,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -531,6 +564,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
         public IEnumerable<TEntity> BatchQuery<TEntity>(int page,
@@ -539,6 +573,7 @@ namespace RepoDb
             QueryGroup where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -554,7 +589,8 @@ namespace RepoDb
                     where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -579,6 +615,7 @@ namespace RepoDb
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
@@ -588,6 +625,7 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -605,7 +643,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -628,6 +667,7 @@ namespace RepoDb
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
@@ -638,6 +678,7 @@ namespace RepoDb
             object where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -656,7 +697,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -679,6 +721,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
@@ -689,6 +732,7 @@ namespace RepoDb
             Expression<Func<TEntity, bool>> where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -708,7 +752,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -731,6 +776,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
@@ -741,6 +787,7 @@ namespace RepoDb
             QueryField where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -759,7 +806,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -782,6 +830,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
@@ -792,6 +841,7 @@ namespace RepoDb
             IEnumerable<QueryField> where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -810,7 +860,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -831,6 +882,7 @@ namespace RepoDb
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
@@ -839,6 +891,7 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -855,7 +908,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -877,6 +931,7 @@ namespace RepoDb
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
@@ -886,6 +941,7 @@ namespace RepoDb
             object where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -904,7 +960,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -926,6 +983,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
@@ -935,6 +993,7 @@ namespace RepoDb
             Expression<Func<TEntity, bool>> where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -953,7 +1012,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -975,6 +1035,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
@@ -984,6 +1045,7 @@ namespace RepoDb
             QueryField where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -1002,7 +1064,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -1024,6 +1087,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
@@ -1033,6 +1097,7 @@ namespace RepoDb
             IEnumerable<QueryField> where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -1051,7 +1116,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -1073,6 +1139,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of data entity objects.</returns>
@@ -1082,6 +1149,7 @@ namespace RepoDb
             QueryGroup where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -1100,7 +1168,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -1125,6 +1194,7 @@ namespace RepoDb
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of dynamic objects.</returns>
         public IEnumerable<dynamic> BatchQuery(string tableName,
@@ -1133,6 +1203,7 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -1148,7 +1219,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -1169,6 +1241,7 @@ namespace RepoDb
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of dynamic objects.</returns>
         public IEnumerable<dynamic> BatchQuery(string tableName,
@@ -1178,6 +1251,7 @@ namespace RepoDb
             object where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -1194,7 +1268,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -1215,6 +1290,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of dynamic objects.</returns>
         public IEnumerable<dynamic> BatchQuery(string tableName,
@@ -1224,6 +1300,7 @@ namespace RepoDb
             QueryField where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -1240,7 +1317,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -1261,6 +1339,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of dynamic objects.</returns>
         public IEnumerable<dynamic> BatchQuery(string tableName,
@@ -1270,6 +1349,7 @@ namespace RepoDb
             IEnumerable<QueryField> where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -1286,7 +1366,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -1307,6 +1388,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An enumerable list of dynamic objects.</returns>
         public IEnumerable<dynamic> BatchQuery(string tableName,
@@ -1316,6 +1398,7 @@ namespace RepoDb
             QueryGroup where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -1332,7 +1415,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -1356,6 +1440,7 @@ namespace RepoDb
         /// <param name="orderBy">The order definition of the fields to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of dynamic objects.</returns>
@@ -1365,6 +1450,7 @@ namespace RepoDb
             IEnumerable<OrderField> orderBy,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -1381,7 +1467,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -1403,6 +1490,7 @@ namespace RepoDb
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of dynamic objects.</returns>
@@ -1413,6 +1501,7 @@ namespace RepoDb
             object where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -1431,7 +1520,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -1453,6 +1543,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of dynamic objects.</returns>
@@ -1463,6 +1554,7 @@ namespace RepoDb
             QueryField where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -1481,7 +1573,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -1503,6 +1596,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of dynamic objects.</returns>
@@ -1513,6 +1607,7 @@ namespace RepoDb
             IEnumerable<QueryField> where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -1531,7 +1626,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -1553,6 +1649,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An enumerable list of dynamic objects.</returns>
@@ -1563,6 +1660,7 @@ namespace RepoDb
             QueryGroup where = null,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.BatchQuery,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -1581,7 +1679,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);

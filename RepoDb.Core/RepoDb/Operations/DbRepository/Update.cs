@@ -21,12 +21,14 @@ namespace RepoDb
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
         public int Update<TEntity>(string tableName,
             TEntity entity,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.Update,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -41,7 +43,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -62,6 +65,7 @@ namespace RepoDb
         /// <param name="what">The dynamic expression or the key value to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
         public int Update<TEntity, TWhat>(string tableName,
@@ -69,6 +73,7 @@ namespace RepoDb
             TWhat what,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.Update,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -84,7 +89,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -104,6 +110,7 @@ namespace RepoDb
         /// <param name="what">The dynamic expression or the key value to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
         public int Update<TEntity>(string tableName,
@@ -111,6 +118,7 @@ namespace RepoDb
             object what,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.Update,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -126,7 +134,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -146,6 +155,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
         public int Update<TEntity>(string tableName,
@@ -153,6 +163,7 @@ namespace RepoDb
             Expression<Func<TEntity, bool>> where,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.Update,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -168,7 +179,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -188,6 +200,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
         public int Update<TEntity>(string tableName,
@@ -195,6 +208,7 @@ namespace RepoDb
             QueryField where,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.Update,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -210,7 +224,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -230,6 +245,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
         public int Update<TEntity>(string tableName,
@@ -237,6 +253,7 @@ namespace RepoDb
             IEnumerable<QueryField> where,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.Update,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -252,7 +269,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -272,6 +290,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
         public int Update<TEntity>(string tableName,
@@ -279,6 +298,7 @@ namespace RepoDb
             QueryGroup where,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.Update,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -294,7 +314,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -312,11 +333,13 @@ namespace RepoDb
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
         public int Update<TEntity>(TEntity entity,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.Update,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -330,7 +353,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -350,12 +374,14 @@ namespace RepoDb
         /// <param name="what">The dynamic expression or the key value to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
         public int Update<TEntity, TWhat>(TEntity entity,
             TWhat what,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.Update,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -370,7 +396,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -389,12 +416,14 @@ namespace RepoDb
         /// <param name="what">The dynamic expression or the key value to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
         public int Update<TEntity>(TEntity entity,
             object what,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.Update,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -409,7 +438,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -428,12 +458,14 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
         public int Update<TEntity>(TEntity entity,
             Expression<Func<TEntity, bool>> where,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.Update,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -448,7 +480,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -467,12 +500,14 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
         public int Update<TEntity>(TEntity entity,
             QueryField where,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.Update,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -487,7 +522,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -506,12 +542,14 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
         public int Update<TEntity>(TEntity entity,
             IEnumerable<QueryField> where,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.Update,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -526,7 +564,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -545,12 +584,14 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
         public int Update<TEntity>(TEntity entity,
             QueryGroup where,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.Update,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -565,7 +606,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -588,6 +630,7 @@ namespace RepoDb
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
@@ -595,6 +638,7 @@ namespace RepoDb
             TEntity entity,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.Update,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -610,7 +654,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -632,6 +677,7 @@ namespace RepoDb
         /// <param name="what">The dynamic expression or the key value to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
@@ -640,6 +686,7 @@ namespace RepoDb
             TWhat what,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.Update,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -656,7 +703,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -677,6 +725,7 @@ namespace RepoDb
         /// <param name="what">The dynamic expression or the key value to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
@@ -685,6 +734,7 @@ namespace RepoDb
             object what,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.Update,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -701,7 +751,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -722,6 +773,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
@@ -730,6 +782,7 @@ namespace RepoDb
             Expression<Func<TEntity, bool>> where,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.Update,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -746,7 +799,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -767,6 +821,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
@@ -775,6 +830,7 @@ namespace RepoDb
             QueryField where,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.Update,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -791,7 +847,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -812,6 +869,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
@@ -820,6 +878,7 @@ namespace RepoDb
             IEnumerable<QueryField> where,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.Update,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -836,7 +895,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -857,6 +917,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
@@ -865,6 +926,7 @@ namespace RepoDb
             QueryGroup where,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.Update,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -881,7 +943,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -900,12 +963,14 @@ namespace RepoDb
         /// <param name="entity">The data entity object to be updated.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
         public async Task<int> UpdateAsync<TEntity>(TEntity entity,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.Update,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -920,7 +985,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -941,6 +1007,7 @@ namespace RepoDb
         /// <param name="what">The dynamic expression or the key value to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
@@ -948,6 +1015,7 @@ namespace RepoDb
             TWhat what,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.Update,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -963,7 +1031,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -983,6 +1052,7 @@ namespace RepoDb
         /// <param name="what">The dynamic expression or the key value to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
@@ -990,6 +1060,7 @@ namespace RepoDb
             object what,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.Update,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -1005,7 +1076,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -1025,6 +1097,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
@@ -1032,6 +1105,7 @@ namespace RepoDb
             Expression<Func<TEntity, bool>> where,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.Update,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -1047,7 +1121,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -1067,6 +1142,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
@@ -1074,6 +1150,7 @@ namespace RepoDb
             QueryField where,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.Update,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -1089,7 +1166,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -1109,6 +1187,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
@@ -1116,6 +1195,7 @@ namespace RepoDb
             IEnumerable<QueryField> where,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.Update,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -1131,7 +1211,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -1151,6 +1232,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
@@ -1158,6 +1240,7 @@ namespace RepoDb
             QueryGroup where,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.Update,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -1173,7 +1256,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -1196,12 +1280,14 @@ namespace RepoDb
         /// <param name="entity">The dynamic object to be used for update.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
         public int Update(string tableName,
             object entity,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.Update,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -1215,7 +1301,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -1234,6 +1321,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
         public int Update(string tableName,
@@ -1241,6 +1329,7 @@ namespace RepoDb
             object where,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.Update,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -1255,7 +1344,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -1274,6 +1364,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
         public int Update(string tableName,
@@ -1281,6 +1372,7 @@ namespace RepoDb
             QueryField where,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.Update,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -1295,7 +1387,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -1314,6 +1407,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
         public int Update(string tableName,
@@ -1321,6 +1415,7 @@ namespace RepoDb
             IEnumerable<QueryField> where,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.Update,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -1335,7 +1430,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -1354,6 +1450,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the update process.</returns>
         public int Update(string tableName,
@@ -1361,6 +1458,7 @@ namespace RepoDb
             QueryGroup where,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.Update,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -1375,7 +1473,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -1397,6 +1496,7 @@ namespace RepoDb
         /// <param name="entity">The dynamic object to be used for update.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
@@ -1404,6 +1504,7 @@ namespace RepoDb
             object entity,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.Update,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -1418,7 +1519,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -1438,6 +1540,7 @@ namespace RepoDb
         /// <param name="where">The dynamic expression or the key value to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
@@ -1446,6 +1549,7 @@ namespace RepoDb
             object where,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.Update,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -1461,7 +1565,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -1481,6 +1586,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
@@ -1489,6 +1595,7 @@ namespace RepoDb
             QueryField where,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.Update,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -1504,7 +1611,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -1524,6 +1632,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
@@ -1532,6 +1641,7 @@ namespace RepoDb
             IEnumerable<QueryField> where,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.Update,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -1547,7 +1657,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -1567,6 +1678,7 @@ namespace RepoDb
         /// <param name="where">The query expression to be used.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the update process.</returns>
@@ -1575,6 +1687,7 @@ namespace RepoDb
             QueryGroup where,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.Update,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -1590,7 +1703,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
