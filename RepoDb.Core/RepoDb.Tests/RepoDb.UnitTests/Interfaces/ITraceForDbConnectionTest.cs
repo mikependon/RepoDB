@@ -3,6 +3,9 @@ using Moq;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.UnitTests.CustomObjects;
+using System;
+using System.Collections.Generic;
+using System.Threading;
 
 namespace RepoDb.UnitTests.Interfaces
 {
@@ -46,7 +49,8 @@ namespace RepoDb.UnitTests.Interfaces
                 where: (object)null);
 
             // Assert
-            trace.Verify(t => t.BeforeAverage(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -62,7 +66,8 @@ namespace RepoDb.UnitTests.Interfaces
                 where: (object)null);
 
             // Assert
-            trace.Verify(t => t.AfterAverage(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -79,7 +84,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.BeforeAverage(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -96,7 +102,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.AfterAverage(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(1));
         }
 
         #endregion
@@ -116,7 +123,9 @@ namespace RepoDb.UnitTests.Interfaces
                 where: (object)null).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeAverage(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -132,7 +141,9 @@ namespace RepoDb.UnitTests.Interfaces
                 where: (object)null).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterAverage(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<object>>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -149,7 +160,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeAverage(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -166,7 +179,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterAverage(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<object>>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         #endregion
@@ -189,7 +204,8 @@ namespace RepoDb.UnitTests.Interfaces
                 field: e => e.Id);
 
             // Assert
-            trace.Verify(t => t.BeforeAverageAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -204,7 +220,8 @@ namespace RepoDb.UnitTests.Interfaces
                 field: e => e.Id);
 
             // Assert
-            trace.Verify(t => t.AfterAverageAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -220,7 +237,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.BeforeAverageAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -236,7 +254,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.AfterAverageAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(1));
         }
 
         #endregion
@@ -255,7 +274,9 @@ namespace RepoDb.UnitTests.Interfaces
                 field: e => e.Id).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeAverageAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -270,7 +291,9 @@ namespace RepoDb.UnitTests.Interfaces
                 field: e => e.Id).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterAverageAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<object>>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -286,7 +309,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeAverageAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -302,7 +327,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterAverageAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<object>>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         #endregion
@@ -328,7 +355,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.BeforeBatchQuery(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -346,7 +374,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.AfterBatchQuery(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<IEnumerable<TraceEntity>>>()), Times.Exactly(1));
         }
 
         #endregion
@@ -368,7 +397,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeBatchQuery(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -386,7 +417,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterBatchQuery(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<IEnumerable<TraceEntity>>>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         #endregion
@@ -426,7 +459,7 @@ namespace RepoDb.UnitTests.Interfaces
         //        trace: trace.Object);
 
         //    // Assert
-        //    trace.Verify(t => t.AfterBulkInsert(It.IsAny<TraceLog>()), Times.Exactly(1));
+        //    trace.Verify(t => t.AfterBulkInsert(It.IsAny<ResultTraceLog>()), Times.Exactly(1));
         //}
 
         //#endregion
@@ -462,7 +495,7 @@ namespace RepoDb.UnitTests.Interfaces
         //        trace: trace.Object).Wait();
 
         //    // Assert
-        //    trace.Verify(t => t.AfterBulkInsert(It.IsAny<TraceLog>()), Times.Exactly(1));
+        //    trace.Verify(t => t.AfterBulkInsert(It.IsAny<ResultTraceLog>()), Times.Exactly(1));
         //}
 
         //#endregion
@@ -485,7 +518,8 @@ namespace RepoDb.UnitTests.Interfaces
                 where: (object)null);
 
             // Assert
-            trace.Verify(t => t.BeforeCount(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -500,7 +534,8 @@ namespace RepoDb.UnitTests.Interfaces
                 where: (object)null);
 
             // Assert
-            trace.Verify(t => t.AfterCount(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<long>>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -516,7 +551,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.BeforeCount(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -532,7 +568,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.AfterCount(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<long>>()), Times.Exactly(1));
         }
 
         #endregion
@@ -551,7 +588,9 @@ namespace RepoDb.UnitTests.Interfaces
                 where: (object)null).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeCount(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -566,7 +605,9 @@ namespace RepoDb.UnitTests.Interfaces
                 where: (object)null).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterCount(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<long>>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -582,7 +623,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeCount(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -598,7 +641,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterCount(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<long>>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         #endregion
@@ -620,7 +665,8 @@ namespace RepoDb.UnitTests.Interfaces
             connection.CountAll<TraceEntity>(trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.BeforeCountAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -634,7 +680,8 @@ namespace RepoDb.UnitTests.Interfaces
             connection.CountAll<TraceEntity>(trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.AfterCountAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<long>>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -649,7 +696,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.BeforeCountAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -664,7 +712,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.AfterCountAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<long>>()), Times.Exactly(1));
         }
 
         #endregion
@@ -682,7 +731,9 @@ namespace RepoDb.UnitTests.Interfaces
             connection.CountAllAsync<TraceEntity>(trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeCountAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -696,7 +747,9 @@ namespace RepoDb.UnitTests.Interfaces
             connection.CountAllAsync<TraceEntity>(trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterCountAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<long>>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -711,7 +764,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeCountAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -726,7 +781,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterCountAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<long>>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         #endregion
@@ -749,7 +806,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.BeforeDelete(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -764,7 +822,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.AfterDelete(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<int>>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -783,7 +842,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.BeforeDelete(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -802,7 +862,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.AfterDelete(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<int>>()), Times.Exactly(1));
         }
 
         #endregion
@@ -821,7 +882,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeDelete(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -836,7 +899,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterDelete(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<int>>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -855,7 +920,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeDelete(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -874,7 +941,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterDelete(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<int>>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         #endregion
@@ -896,7 +965,8 @@ namespace RepoDb.UnitTests.Interfaces
             connection.DeleteAll<TraceEntity>(trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.BeforeDeleteAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -910,7 +980,8 @@ namespace RepoDb.UnitTests.Interfaces
             connection.DeleteAll<TraceEntity>(trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.AfterDeleteAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<int>>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -925,7 +996,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.BeforeDeleteAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -940,7 +1012,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.AfterDeleteAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<int>>()), Times.Exactly(1));
         }
 
         #endregion
@@ -958,7 +1031,9 @@ namespace RepoDb.UnitTests.Interfaces
             connection.DeleteAllAsync<TraceEntity>(trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeDeleteAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -972,7 +1047,9 @@ namespace RepoDb.UnitTests.Interfaces
             connection.DeleteAllAsync<TraceEntity>(trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterDeleteAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<int>>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -987,7 +1064,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeDeleteAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -1002,7 +1081,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterDeleteAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<int>>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         #endregion
@@ -1025,7 +1106,8 @@ namespace RepoDb.UnitTests.Interfaces
                 what: (object)null);
 
             // Assert
-            trace.Verify(t => t.BeforeExists(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -1040,7 +1122,8 @@ namespace RepoDb.UnitTests.Interfaces
                 what: (object)null);
 
             // Assert
-            trace.Verify(t => t.AfterExists(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<bool>>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -1056,7 +1139,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.BeforeExists(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -1072,7 +1156,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.AfterExists(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<bool>>()), Times.Exactly(1));
         }
 
         #endregion
@@ -1091,7 +1176,9 @@ namespace RepoDb.UnitTests.Interfaces
                 what: (object)null).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeExists(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -1106,7 +1193,9 @@ namespace RepoDb.UnitTests.Interfaces
                 what: (object)null).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterExists(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<bool>>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -1122,7 +1211,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeExists(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -1138,7 +1229,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterExists(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<bool>>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         #endregion
@@ -1162,7 +1255,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.BeforeInsert(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -1178,7 +1272,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.AfterInsert(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -1194,7 +1289,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.BeforeInsert(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -1210,7 +1306,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.AfterInsert(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(1));
         }
 
         #endregion
@@ -1230,7 +1327,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeInsert(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -1246,7 +1345,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterInsert(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<object>>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -1262,7 +1363,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeInsert(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -1278,7 +1381,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterInsert(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<object>>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         #endregion
@@ -1301,7 +1406,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.BeforeInsertAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -1316,7 +1422,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.AfterInsertAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<int>>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -1333,7 +1440,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.BeforeInsertAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -1350,7 +1458,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.AfterInsertAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<int>>()), Times.Exactly(1));
         }
 
         #endregion
@@ -1369,7 +1478,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeInsertAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -1384,7 +1495,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterInsertAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<int>>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -1401,7 +1514,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeInsertAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -1418,7 +1533,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterInsertAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<int>>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         #endregion
@@ -1442,7 +1559,8 @@ namespace RepoDb.UnitTests.Interfaces
                 where: (object)null);
 
             // Assert
-            trace.Verify(t => t.BeforeMax(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -1458,7 +1576,8 @@ namespace RepoDb.UnitTests.Interfaces
                 where: (object)null);
 
             // Assert
-            trace.Verify(t => t.AfterMax(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -1475,7 +1594,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.BeforeMax(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -1492,7 +1612,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.AfterMax(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(1));
         }
 
         #endregion
@@ -1512,7 +1633,8 @@ namespace RepoDb.UnitTests.Interfaces
                 where: (object)null).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeMax(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -1528,7 +1650,8 @@ namespace RepoDb.UnitTests.Interfaces
                 where: (object)null).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterMax(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -1545,7 +1668,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeMax(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -1562,7 +1686,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterMax(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(1));
         }
 
         #endregion
@@ -1585,7 +1710,8 @@ namespace RepoDb.UnitTests.Interfaces
                 field: e => e.Id);
 
             // Assert
-            trace.Verify(t => t.BeforeMaxAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -1600,7 +1726,8 @@ namespace RepoDb.UnitTests.Interfaces
                 field: e => e.Id);
 
             // Assert
-            trace.Verify(t => t.AfterMaxAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -1616,7 +1743,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.BeforeMaxAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -1632,7 +1760,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.AfterMaxAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(1));
         }
 
         #endregion
@@ -1651,7 +1780,9 @@ namespace RepoDb.UnitTests.Interfaces
                 field: e => e.Id).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeMaxAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -1666,7 +1797,9 @@ namespace RepoDb.UnitTests.Interfaces
                 field: e => e.Id).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterMaxAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<object>>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -1682,7 +1815,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeMaxAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -1698,7 +1833,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterMaxAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<object>>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         #endregion
@@ -1722,7 +1859,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.BeforeMerge(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -1738,7 +1876,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.AfterMerge(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -1754,7 +1893,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.BeforeMerge(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -1770,7 +1910,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.AfterMerge(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(1));
         }
 
         #endregion
@@ -1790,7 +1931,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeMerge(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -1806,7 +1949,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterMerge(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<object>>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -1822,7 +1967,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeMerge(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -1838,7 +1985,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterMerge(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<object>>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         #endregion
@@ -1862,7 +2011,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.BeforeMergeAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -1878,7 +2028,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.AfterMergeAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -1894,7 +2045,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.BeforeMergeAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -1910,7 +2062,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.AfterMergeAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(1));
         }
 
         #endregion
@@ -1930,7 +2083,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeMergeAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -1946,7 +2101,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterMergeAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<int>>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -1962,7 +2119,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeMergeAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -1978,7 +2137,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterMergeAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<int>>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         #endregion
@@ -2002,7 +2163,8 @@ namespace RepoDb.UnitTests.Interfaces
                 where: (object)null);
 
             // Assert
-            trace.Verify(t => t.BeforeMin(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -2018,7 +2180,8 @@ namespace RepoDb.UnitTests.Interfaces
                 where: (object)null);
 
             // Assert
-            trace.Verify(t => t.AfterMin(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -2035,7 +2198,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.BeforeMin(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -2052,7 +2216,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.AfterMin(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(1));
         }
 
         #endregion
@@ -2072,7 +2237,9 @@ namespace RepoDb.UnitTests.Interfaces
                 where: (object)null).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeMin(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -2088,7 +2255,9 @@ namespace RepoDb.UnitTests.Interfaces
                 where: (object)null).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterMin(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<object>>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -2105,7 +2274,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeMin(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -2122,7 +2293,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterMin(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<object>>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         #endregion
@@ -2145,7 +2318,8 @@ namespace RepoDb.UnitTests.Interfaces
                 field: e => e.Id);
 
             // Assert
-            trace.Verify(t => t.BeforeMinAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -2160,7 +2334,8 @@ namespace RepoDb.UnitTests.Interfaces
                 field: e => e.Id);
 
             // Assert
-            trace.Verify(t => t.AfterMinAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -2176,7 +2351,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.BeforeMinAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -2192,7 +2368,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.AfterMinAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(1));
         }
 
         #endregion
@@ -2211,7 +2388,9 @@ namespace RepoDb.UnitTests.Interfaces
                 field: e => e.Id).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeMinAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -2226,7 +2405,9 @@ namespace RepoDb.UnitTests.Interfaces
                 field: e => e.Id).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterMinAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<object>>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -2242,7 +2423,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeMinAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -2258,7 +2441,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterMinAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<object>>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         #endregion
@@ -2281,7 +2466,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.BeforeQuery(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -2296,7 +2482,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.AfterQuery(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<IEnumerable<TraceEntity>>>()), Times.Exactly(1));
         }
 
         #endregion
@@ -2315,7 +2502,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeQuery(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -2330,7 +2519,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterQuery(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<IEnumerable<TraceEntity>>>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         #endregion
@@ -2352,7 +2543,8 @@ namespace RepoDb.UnitTests.Interfaces
             connection.QueryAll<TraceEntity>(trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.BeforeQueryAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -2366,7 +2558,8 @@ namespace RepoDb.UnitTests.Interfaces
             connection.QueryAll<TraceEntity>(trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.AfterQueryAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<IEnumerable<TraceEntity>>>()), Times.Exactly(1));
         }
 
         #endregion
@@ -2384,7 +2577,9 @@ namespace RepoDb.UnitTests.Interfaces
             connection.QueryAllAsync<TraceEntity>(trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.BeforeQueryAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -2398,7 +2593,9 @@ namespace RepoDb.UnitTests.Interfaces
             connection.QueryAllAsync<TraceEntity>(trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.AfterQueryAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<IEnumerable<TraceEntity>>>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         #endregion
@@ -2409,8 +2606,10 @@ namespace RepoDb.UnitTests.Interfaces
 
         #region QueryMultiple
 
+        #region T2
+
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeQueryMultiple()
+        public void TestDbConnectionTraceForBeforeQueryMultipleForT2()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -2422,11 +2621,12 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.BeforeQueryMultiple(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterQueryMultiple()
+        public void TestDbConnectionTraceForAfterQueryMultipleForT2()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -2438,15 +2638,261 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.AfterQueryMultiple(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<Tuple<IEnumerable<TraceEntity>,
+                    IEnumerable<TraceEntity>>>>()), Times.Exactly(1));
         }
+
+        #endregion
+
+        #region T3
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeQueryMultipleForT3()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new TraceDbConnection();
+
+            // Act
+            connection.QueryMultiple<TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                trace: trace.Object);
+
+            // Assert
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterQueryMultipleT3()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new TraceDbConnection();
+
+            // Act
+            connection.QueryMultiple<TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                trace: trace.Object);
+
+            // Assert
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<Tuple<IEnumerable<TraceEntity>,
+                    IEnumerable<TraceEntity>,
+                    IEnumerable<TraceEntity>>>>()), Times.Exactly(1));
+        }
+
+        #endregion
+
+        #region T4
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeQueryMultipleForT4()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new TraceDbConnection();
+
+            // Act
+            connection.QueryMultiple<TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                trace: trace.Object);
+
+            // Assert
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterQueryMultipleT4()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new TraceDbConnection();
+
+            // Act
+            connection.QueryMultiple<TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                trace: trace.Object);
+
+            // Assert
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<Tuple<IEnumerable<TraceEntity>,
+                IEnumerable<TraceEntity>,
+                IEnumerable<TraceEntity>,
+                IEnumerable<TraceEntity>>>>()), Times.Exactly(1));
+        }
+
+        #endregion
+
+        #region T5
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeQueryMultipleForT5()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new TraceDbConnection();
+
+            // Act
+            connection.QueryMultiple<TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                trace: trace.Object);
+
+            // Assert
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterQueryMultipleT5()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new TraceDbConnection();
+
+            // Act
+            connection.QueryMultiple<TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                trace: trace.Object);
+
+            // Assert
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<Tuple<IEnumerable<TraceEntity>,
+                IEnumerable<TraceEntity>,
+                IEnumerable<TraceEntity>,
+                IEnumerable<TraceEntity>,
+                IEnumerable<TraceEntity>>>>()), Times.Exactly(1));
+        }
+
+        #endregion
+
+        #region T6
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeQueryMultipleForT6()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new TraceDbConnection();
+
+            // Act
+            connection.QueryMultiple<TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                trace: trace.Object);
+
+            // Assert
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterQueryMultipleT6()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new TraceDbConnection();
+
+            // Act
+            connection.QueryMultiple<TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                trace: trace.Object);
+
+            // Assert
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<Tuple<IEnumerable<TraceEntity>,
+                IEnumerable<TraceEntity>,
+                IEnumerable<TraceEntity>,
+                IEnumerable<TraceEntity>,
+                IEnumerable<TraceEntity>,
+                IEnumerable<TraceEntity>>>>()), Times.Exactly(1));
+        }
+
+        #endregion
+
+        #region T7
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeQueryMultipleForT7()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new TraceDbConnection();
+
+            // Act
+            connection.QueryMultiple<TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                trace: trace.Object);
+
+            // Assert
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterQueryMultipleT7()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new TraceDbConnection();
+
+            // Act
+            connection.QueryMultiple<TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                trace: trace.Object);
+
+            // Assert
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<Tuple<IEnumerable<TraceEntity>,
+                IEnumerable<TraceEntity>,
+                IEnumerable<TraceEntity>,
+                IEnumerable<TraceEntity>,
+                IEnumerable<TraceEntity>,
+                IEnumerable<TraceEntity>,
+                IEnumerable<TraceEntity>>>>()), Times.Exactly(1));
+        }
+
+        #endregion
 
         #endregion
 
         #region QueryMultipleAsync
 
+        #region T2
+
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeQueryMultipleAsync()
+        public void TestDbConnectionTraceForBeforeQueryMultipleAsyncForT2()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -2458,11 +2904,13 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeQueryMultiple(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterQueryMultipleAsync()
+        public void TestDbConnectionTraceForAfterQueryMultipleAsyncForT2()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -2474,8 +2922,257 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterQueryMultiple(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<Tuple<IEnumerable<TraceEntity>,
+                    IEnumerable<TraceEntity>>>>(), It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
+
+        #endregion
+
+        #region T3
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeQueryMultipleAsyncForT3()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new TraceDbConnection();
+
+            // Act
+            connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                trace: trace.Object).Wait();
+
+            // Assert
+            trace.Verify(t =>
+                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterQueryMultipleAsyncForT3()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new TraceDbConnection();
+
+            // Act
+            connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                trace: trace.Object).Wait();
+
+            // Assert
+            trace.Verify(t =>
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<Tuple<IEnumerable<TraceEntity>,
+                    IEnumerable<TraceEntity>,
+                    IEnumerable<TraceEntity>>>>(), It.IsAny<CancellationToken>()), Times.Exactly(1));
+        }
+
+        #endregion
+
+        #region T4
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeQueryMultipleAsyncForT4()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new TraceDbConnection();
+
+            // Act
+            connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                trace: trace.Object).Wait();
+
+            // Assert
+            trace.Verify(t =>
+                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterQueryMultipleAsyncForT4()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new TraceDbConnection();
+
+            // Act
+            connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                trace: trace.Object).Wait();
+
+            // Assert
+            trace.Verify(t =>
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<Tuple<IEnumerable<TraceEntity>,
+                    IEnumerable<TraceEntity>,
+                    IEnumerable<TraceEntity>,
+                    IEnumerable<TraceEntity>>>>(), It.IsAny<CancellationToken>()), Times.Exactly(1));
+        }
+
+        #endregion
+
+        #region T5
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeQueryMultipleAsyncForT5()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new TraceDbConnection();
+
+            // Act
+            connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                trace: trace.Object).Wait();
+
+            // Assert
+            trace.Verify(t =>
+                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterQueryMultipleAsyncForT5()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new TraceDbConnection();
+
+            // Act
+            connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                trace: trace.Object).Wait();
+
+            // Assert
+            trace.Verify(t =>
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<Tuple<IEnumerable<TraceEntity>,
+                    IEnumerable<TraceEntity>,
+                    IEnumerable<TraceEntity>,
+                    IEnumerable<TraceEntity>,
+                    IEnumerable<TraceEntity>>>>(), It.IsAny<CancellationToken>()), Times.Exactly(1));
+        }
+
+        #endregion
+
+        #region T6
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeQueryMultipleAsyncForT6()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new TraceDbConnection();
+
+            // Act
+            connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                trace: trace.Object).Wait();
+
+            // Assert
+            trace.Verify(t =>
+                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterQueryMultipleAsyncForT6()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new TraceDbConnection();
+
+            // Act
+            connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                trace: trace.Object).Wait();
+
+            // Assert
+            trace.Verify(t =>
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<Tuple<IEnumerable<TraceEntity>,
+                    IEnumerable<TraceEntity>,
+                    IEnumerable<TraceEntity>,
+                    IEnumerable<TraceEntity>,
+                    IEnumerable<TraceEntity>,
+                    IEnumerable<TraceEntity>>>>(), It.IsAny<CancellationToken>()), Times.Exactly(1));
+        }
+
+        #endregion
+
+        #region T7
+
+        [TestMethod]
+        public void TestDbConnectionTraceForBeforeQueryMultipleAsyncForT7()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new TraceDbConnection();
+
+            // Act
+            connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                trace: trace.Object).Wait();
+
+            // Assert
+            trace.Verify(t =>
+                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
+        public void TestDbConnectionTraceForAfterQueryMultipleAsyncForT7()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new TraceDbConnection();
+
+            // Act
+            connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                te => te.Id == 1,
+                trace: trace.Object).Wait();
+
+            // Assert
+            trace.Verify(t =>
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<Tuple<IEnumerable<TraceEntity>,
+                    IEnumerable<TraceEntity>,
+                    IEnumerable<TraceEntity>,
+                    IEnumerable<TraceEntity>,
+                    IEnumerable<TraceEntity>,
+                    IEnumerable<TraceEntity>,
+                    IEnumerable<TraceEntity>>>>(), It.IsAny<CancellationToken>()), Times.Exactly(1));
+        }
+
+        #endregion
 
         #endregion
 
@@ -2498,7 +3195,8 @@ namespace RepoDb.UnitTests.Interfaces
                 where: (object)null);
 
             // Assert
-            trace.Verify(t => t.BeforeSum(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -2514,7 +3212,8 @@ namespace RepoDb.UnitTests.Interfaces
                 where: (object)null);
 
             // Assert
-            trace.Verify(t => t.AfterSum(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -2531,7 +3230,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.BeforeSum(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -2548,7 +3248,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.AfterSum(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(1));
         }
 
         #endregion
@@ -2568,7 +3269,9 @@ namespace RepoDb.UnitTests.Interfaces
                 where: (object)null).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeSum(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -2584,7 +3287,9 @@ namespace RepoDb.UnitTests.Interfaces
                 where: (object)null).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterSum(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<object>>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -2601,7 +3306,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeSum(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -2618,7 +3325,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterSum(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<object>>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         #endregion
@@ -2641,7 +3350,8 @@ namespace RepoDb.UnitTests.Interfaces
                 field: e => e.Id);
 
             // Assert
-            trace.Verify(t => t.BeforeSumAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -2656,7 +3366,8 @@ namespace RepoDb.UnitTests.Interfaces
                 field: e => e.Id);
 
             // Assert
-            trace.Verify(t => t.AfterSumAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -2672,7 +3383,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.BeforeSumAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -2688,7 +3400,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.AfterSumAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(1));
         }
 
         #endregion
@@ -2707,7 +3420,9 @@ namespace RepoDb.UnitTests.Interfaces
                 field: e => e.Id).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeSumAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -2722,7 +3437,9 @@ namespace RepoDb.UnitTests.Interfaces
                 field: e => e.Id).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterSumAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<object>>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -2738,7 +3455,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeSumAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -2754,7 +3473,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterSumAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<object>>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         #endregion
@@ -2776,7 +3497,8 @@ namespace RepoDb.UnitTests.Interfaces
             connection.Truncate<TraceEntity>(trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.BeforeTruncate(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -2790,7 +3512,8 @@ namespace RepoDb.UnitTests.Interfaces
             connection.Truncate<TraceEntity>(trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.AfterTruncate(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<int>>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -2805,7 +3528,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.BeforeTruncate(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -2820,7 +3544,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.AfterTruncate(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<int>>()), Times.Exactly(1));
         }
 
         #endregion
@@ -2838,7 +3563,9 @@ namespace RepoDb.UnitTests.Interfaces
             connection.TruncateAsync<TraceEntity>(trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeTruncate(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -2852,7 +3579,9 @@ namespace RepoDb.UnitTests.Interfaces
             connection.TruncateAsync<TraceEntity>(trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterTruncate(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<int>>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -2867,7 +3596,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeTruncate(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -2882,7 +3613,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterTruncate(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<int>>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         #endregion
@@ -2911,7 +3644,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.BeforeUpdate(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -2932,7 +3666,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.AfterUpdate(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<int>>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -2955,7 +3690,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.BeforeUpdate(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -2978,7 +3714,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.AfterUpdate(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<int>>()), Times.Exactly(1));
         }
 
         #endregion
@@ -3003,7 +3740,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeUpdate(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -3024,7 +3763,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterUpdate(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<int>>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -3047,7 +3788,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeUpdate(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -3070,7 +3813,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterUpdate(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<int>>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         #endregion
@@ -3094,7 +3839,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.BeforeUpdateAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -3110,7 +3856,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.AfterUpdateAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<int>>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -3126,7 +3873,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.BeforeUpdateAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -3142,7 +3890,8 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object);
 
             // Assert
-            trace.Verify(t => t.AfterUpdateAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecution(It.IsAny<ResultTraceLog<int>>()), Times.Exactly(1));
         }
 
         #endregion
@@ -3162,7 +3911,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeUpdateAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -3178,7 +3929,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterUpdateAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<int>>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -3194,7 +3947,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.BeforeUpdateAll(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -3210,7 +3965,9 @@ namespace RepoDb.UnitTests.Interfaces
                 trace: trace.Object).Wait();
 
             // Assert
-            trace.Verify(t => t.AfterUpdateAll(It.IsAny<TraceLog>()), Times.Exactly(1));
+            trace.Verify(t =>
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<int>>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         #endregion
