@@ -43,7 +43,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.UpdateAll,
+            string traceKey = TraceKeys.UpdateAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -57,7 +57,7 @@ namespace RepoDb
                 fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -88,7 +88,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.UpdateAll,
+            string traceKey = TraceKeys.UpdateAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -102,7 +102,7 @@ namespace RepoDb
                 fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -133,7 +133,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.UpdateAll,
+            string traceKey = TraceKeys.UpdateAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -147,7 +147,7 @@ namespace RepoDb
                 fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -178,7 +178,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.UpdateAll,
+            string traceKey = TraceKeys.UpdateAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -192,7 +192,7 @@ namespace RepoDb
                 fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -219,7 +219,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.UpdateAll,
+            string traceKey = TraceKeys.UpdateAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -233,7 +233,7 @@ namespace RepoDb
                 fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -262,7 +262,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.UpdateAll,
+            string traceKey = TraceKeys.UpdateAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -276,7 +276,7 @@ namespace RepoDb
                 fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -305,7 +305,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.UpdateAll,
+            string traceKey = TraceKeys.UpdateAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -319,7 +319,7 @@ namespace RepoDb
                 fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -348,7 +348,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.UpdateAll,
+            string traceKey = TraceKeys.UpdateAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -362,7 +362,7 @@ namespace RepoDb
                 fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -393,7 +393,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.UpdateAll,
+            string traceKey = TraceKeys.UpdateAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -415,7 +415,7 @@ namespace RepoDb
                     qualifiers: qualifiers,
                     hints: hints,
                     commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                     transaction: transaction,
                     trace: trace,
                     statementBuilder: statementBuilder);
@@ -430,7 +430,7 @@ namespace RepoDb
                     qualifiers: qualifiers,
                     hints: hints,
                     commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                     transaction: transaction,
                     trace: trace,
                     statementBuilder: statementBuilder);
@@ -465,7 +465,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.UpdateAll,
+            string traceKey = TraceKeys.UpdateAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -480,7 +480,7 @@ namespace RepoDb
                 fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -513,7 +513,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.UpdateAll,
+            string traceKey = TraceKeys.UpdateAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -528,7 +528,7 @@ namespace RepoDb
                 fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -561,7 +561,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.UpdateAll,
+            string traceKey = TraceKeys.UpdateAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -576,7 +576,7 @@ namespace RepoDb
                 fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -609,7 +609,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.UpdateAll,
+            string traceKey = TraceKeys.UpdateAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -624,7 +624,7 @@ namespace RepoDb
                 fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -653,7 +653,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.UpdateAll,
+            string traceKey = TraceKeys.UpdateAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -668,7 +668,7 @@ namespace RepoDb
                 fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -699,7 +699,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.UpdateAll,
+            string traceKey = TraceKeys.UpdateAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -714,7 +714,7 @@ namespace RepoDb
                 fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -745,7 +745,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.UpdateAll,
+            string traceKey = TraceKeys.UpdateAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -760,7 +760,7 @@ namespace RepoDb
                 fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -791,7 +791,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.UpdateAll,
+            string traceKey = TraceKeys.UpdateAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -806,7 +806,7 @@ namespace RepoDb
                 fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -839,7 +839,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.UpdateAll,
+            string traceKey = TraceKeys.UpdateAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -862,7 +862,7 @@ namespace RepoDb
                     qualifiers: qualifiers,
                     hints: hints,
                     commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                     transaction: transaction,
                     trace: trace,
                     statementBuilder: statementBuilder,
@@ -878,7 +878,7 @@ namespace RepoDb
                     qualifiers: qualifiers,
                     hints: hints,
                     commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                     transaction: transaction,
                     trace: trace,
                     statementBuilder: statementBuilder,
@@ -912,7 +912,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.UpdateAll,
+            string traceKey = TraceKeys.UpdateAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -925,7 +925,7 @@ namespace RepoDb
                 fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -955,7 +955,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.UpdateAll,
+            string traceKey = TraceKeys.UpdateAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -968,7 +968,7 @@ namespace RepoDb
                 fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -998,7 +998,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.UpdateAll,
+            string traceKey = TraceKeys.UpdateAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -1011,7 +1011,7 @@ namespace RepoDb
                 fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -1044,7 +1044,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.UpdateAll,
+            string traceKey = TraceKeys.UpdateAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -1058,7 +1058,7 @@ namespace RepoDb
                 fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -1090,7 +1090,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.UpdateAll,
+            string traceKey = TraceKeys.UpdateAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -1104,7 +1104,7 @@ namespace RepoDb
                 fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -1136,7 +1136,7 @@ namespace RepoDb
             IEnumerable<Field> fields = null,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.UpdateAll,
+            string traceKey = TraceKeys.UpdateAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -1150,7 +1150,7 @@ namespace RepoDb
                 fields: fields,
                 hints: hints,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -1186,7 +1186,7 @@ namespace RepoDb
             IEnumerable<Field> fields,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.UpdateAll,
+            string traceKey = TraceKeys.UpdateAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -1249,12 +1249,16 @@ namespace RepoDb
                                 command.Prepare();
                             }
 
-                            // TODO: Before Execution
+                            // Before Execution
+                            var traceResult = Tracer
+                                .InvokeBeforeExecution(traceKey, trace, command);
 
                             // Actual Execution
                             result += command.ExecuteNonQuery();
 
-                            // TODO: After Execution
+                            // After Execution
+                            Tracer
+                                .InvokeAfterExecution(traceResult, trace, result);
                         }
                     }
                     else
@@ -1304,12 +1308,16 @@ namespace RepoDb
                                 command.Prepare();
                             }
 
-                            // TODO: Before Execution
+                            // Before Execution
+                            var traceResult = Tracer
+                                .InvokeBeforeExecution(traceKey, trace, command);
 
                             // Actual Execution
                             result += command.ExecuteNonQuery();
 
-                            // TODO: After Execution
+                            // After Execution
+                            Tracer
+                                .InvokeAfterExecution(traceResult, trace, result);
                         }
                     }
                 }
@@ -1372,7 +1380,7 @@ namespace RepoDb
             IEnumerable<Field> fields,
             string hints = null,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.UpdateAll,
+            string traceKey = TraceKeys.UpdateAll,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -1437,12 +1445,16 @@ namespace RepoDb
                                 command.Prepare();
                             }
 
-                            // TODO: Before Execution
+                            // Before Execution
+                            var traceResult = await Tracer
+                                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
 
                             // Actual Execution
                             result += await command.ExecuteNonQueryAsync(cancellationToken);
 
-                            // TODO: After Execution
+                            // After Execution
+                            await Tracer
+                                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
                         }
                     }
                     else
@@ -1493,12 +1505,16 @@ namespace RepoDb
                                 command.Prepare();
                             }
 
-                            // TODO: Before Execution
+                            // Before Execution
+                            var traceResult = await Tracer
+                                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
 
                             // Actual Execution
                             result += await command.ExecuteNonQueryAsync(cancellationToken);
 
-                            // TODO: After Execution
+                            // After Execution
+                            await Tracer
+                                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
                         }
                     }
                 }

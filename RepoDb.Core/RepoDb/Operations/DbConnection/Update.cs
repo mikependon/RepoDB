@@ -1817,12 +1817,16 @@ namespace RepoDb
                 WhereToCommandParameters(command, where, entity?.GetType(),
                     DbFieldCache.Get(connection, tableName, transaction));
 
-                // TODO: Before Execution
+                // Before Execution
+                var traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
 
                 // Actual Execution
                 result = command.ExecuteNonQuery();
 
-                // TODO: After Execution
+                // After Execution
+                Tracer
+                    .InvokeAfterExecution(traceResult, trace, result);
             }
 
             // Return the result
@@ -1891,12 +1895,16 @@ namespace RepoDb
                 WhereToCommandParameters(command, where, entity?.GetType(),
                     await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken));
 
-                // TODO: Before Execution
+                // Before Execution
+                var traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
 
                 // Actual Execution
                 result = await command.ExecuteNonQueryAsync(cancellationToken);
 
-                // TODO: After Execution
+                // After Execution
+                await Tracer
+                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
             }
 
             // Return the result

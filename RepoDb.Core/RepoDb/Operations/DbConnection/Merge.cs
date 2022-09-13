@@ -2151,12 +2151,16 @@ namespace RepoDb
                 // Set the values
                 context.ParametersSetterFunc(command, entity);
 
-                // TODO: Before Execution
+                // Before Execution
+                var traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
 
                 // Actual Execution
                 result = Converter.ToType<TResult>(command.ExecuteScalar());
 
-                // TODO: After Execution
+                // After Execution
+                Tracer
+                    .InvokeAfterExecution(traceResult, trace, result);
 
                 // Set the return value
                 if (result != null)
@@ -2392,12 +2396,16 @@ namespace RepoDb
                 // Set the values
                 context.ParametersSetterFunc(command, entity);
 
-                // TODO: Before Execution
+                // Before Execution
+                var traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
 
                 // Actual Execution
                 result = Converter.ToType<TResult>(await command.ExecuteScalarAsync(cancellationToken));
 
-                // TODO: After Execution
+                // After Execution
+                await Tracer
+                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
 
                 // Set the return value
                 if (result != null)

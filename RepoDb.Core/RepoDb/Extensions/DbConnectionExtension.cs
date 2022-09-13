@@ -197,33 +197,21 @@ namespace RepoDb
                 dbFields: dbFields,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
 
-            // Trace
-            var sessionId = Guid.NewGuid();
-
-            // TODO: Before Execution
-            //if (trace != null)
-            //{
-            //    var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
-            //    trace.BeforeAverageAll(cancellableTraceLog);
-            //    if (cancellableTraceLog.IsCancelled)
-            //    {
-            //        if (cancellableTraceLog.IsThrowException)
-            //        {
-            //            throw new CancelledExecutionException(commandText);
-            //        }
-            //        return default;
-            //    }
-            //    commandText = (cancellableTraceLog.Statement ?? commandText);
-            //    param = (cancellableTraceLog.Parameter ?? param);
-            //}
-
-            // Result
+            // Variables
             var result = (IEnumerable<dynamic>)null;
+
+            // Before Execution
+            var traceResult = Tracer
+                .InvokeBeforeExecution(traceKey, trace, command);
 
             // Execute
             using (var reader = command.ExecuteReader())
             {
                 result = DataReader.ToEnumerable(reader, dbFields, connection.GetDbSetting()).AsList();
+
+                // After Execution
+                Tracer
+                    .InvokeAfterExecution(traceResult, trace, result);
 
                 // Set Cache
                 if (cache != null && cacheKey != null)
@@ -231,10 +219,6 @@ namespace RepoDb
                     cache.Add(cacheKey, result, cacheItemExpiration.GetValueOrDefault(), false);
                 }
             }
-
-            // TODO: After Execution
-            //trace?.AfterBatchQuery(new TraceLog(sessionId, commandText, param, result,
-            //    DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Set the output parameters
             SetOutputParameters(param);
@@ -360,13 +344,22 @@ namespace RepoDb
                 dbFields: dbFields,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
 
+            // Variables
             IEnumerable<dynamic> result;
+
+            // Before Execution
+            var traceResult = await Tracer
+                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
 
             // Execute
             using (var reader = await command.ExecuteReaderAsync(cancellationToken))
             {
                 result = await DataReader.ToEnumerableAsync(reader, dbFields, connection.GetDbSetting(), cancellationToken)
                     .ToListAsync(cancellationToken);
+
+                // After Execution
+                await Tracer
+                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
 
                 // Set Cache
                 if (cache != null && cacheKey != null)
@@ -645,12 +638,21 @@ namespace RepoDb
                 dbFields: dbFields,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
 
+            // Variables
             var result = (IEnumerable<TResult>)null;
+
+            // Before Execution
+            var traceResult = Tracer
+                .InvokeBeforeExecution(traceKey, trace, command);
 
             // Execute
             using (var reader = command.ExecuteReader())
             {
                 result = DataReader.ToEnumerable<TResult>(reader, dbFields, connection.GetDbSetting()).AsList();
+
+                // After Execution
+                Tracer
+                    .InvokeAfterExecution(traceResult, trace, result);
 
                 // Set Cache
                 if (cache != null && cacheKey != null)
@@ -944,11 +946,19 @@ namespace RepoDb
 
             IEnumerable<TResult> result;
 
+            // Before Execution
+            var traceResult = await Tracer
+                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+
             // Execute
             using (var reader = await command.ExecuteReaderAsync(cancellationToken))
             {
                 result = await DataReader.ToEnumerableAsync<TResult>(reader, dbFields, connection.GetDbSetting(), cancellationToken)
                     .ToListAsync(cancellationToken);
+
+                // After Execution
+                await Tracer
+                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
 
                 // Set Cache
                 if (cache != null && cacheKey != null)
@@ -1270,7 +1280,16 @@ namespace RepoDb
             // Ensure the DbCommand disposal
             try
             {
+                // Before Execution
+                var traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
+
+                // Execute
                 var reader = command.ExecuteReader();
+
+                // After Execution
+                Tracer
+                    .InvokeAfterExecution(traceResult, trace, reader);
 
                 // Set the output parameters
                 SetOutputParameters(param);
@@ -1383,7 +1402,16 @@ namespace RepoDb
             // Ensure the DbCommand disposal
             try
             {
+                // Before Execution
+                var traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+
+                // Execute
                 var reader = await command.ExecuteReaderAsync(cancellationToken);
+
+                // After Execution
+                await Tracer
+                    .InvokeAfterExecutionAsync(traceResult, trace, reader, cancellationToken);
 
                 // Set the output parameters
                 SetOutputParameters(param);
@@ -1484,7 +1512,16 @@ namespace RepoDb
                 dbFields: dbFields,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
 
+            // Before Execution
+            var traceResult = Tracer
+                .InvokeBeforeExecution(traceKey, trace, command);
+
+            // Execution
             var result = command.ExecuteNonQuery();
+
+            // After Execution
+            Tracer
+                .InvokeAfterExecution(traceResult, trace, result);
 
             // Set the output parameters
             SetOutputParameters(param);
@@ -1578,7 +1615,16 @@ namespace RepoDb
                 dbFields: dbFields,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
 
+            // Before Execution
+            var traceResult = await Tracer
+                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+
+            // Execution
             var result = await command.ExecuteNonQueryAsync(cancellationToken);
+
+            // After Execution
+            await Tracer
+                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
 
             // Set the output parameters
             SetOutputParameters(param);
@@ -1807,7 +1853,16 @@ namespace RepoDb
                 dbFields: dbFields,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
 
+            // Before Execution
+            var traceResult = Tracer
+                .InvokeBeforeExecution(traceKey, trace, command);
+
+            // Execute
             var result = Converter.ToType<TResult>(command.ExecuteScalar());
+
+            // After Execution
+            Tracer
+                .InvokeAfterExecution(traceResult, trace, result);
 
             // Set Cache
             if (cache != null && cacheKey != null)
@@ -1937,7 +1992,16 @@ namespace RepoDb
                 dbFields: dbFields,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
 
+            // Before Execution
+            var traceResult = await Tracer
+                .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+
+            // Execution
             var result = Converter.ToType<TResult>(await command.ExecuteScalarAsync(cancellationToken));
+
+            // After Execution
+            await Tracer
+                .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
 
             // Set Cache
             if (cache != null && cacheKey != null)

@@ -3,7 +3,7 @@
     /// <summary>
     /// A class that holds the contant values of the operation tracking keys.
     /// </summary>
-    public static class TraceKeys
+    public static partial class TraceKeys
     {
         /// <summary>
         /// The trace key for the 'Average' operation.
