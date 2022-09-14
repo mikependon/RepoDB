@@ -204,6 +204,12 @@ namespace RepoDb
             var traceResult = Tracer
                 .InvokeBeforeExecution(traceKey, trace, command);
 
+            // Silent cancellation
+            if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+            {
+                return result;
+            }
+
             // Execute
             using (var reader = command.ExecuteReader())
             {
@@ -345,11 +351,17 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
 
             // Variables
-            IEnumerable<dynamic> result;
+            IEnumerable<dynamic> result = null;
 
             // Before Execution
             var traceResult = await Tracer
                 .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+
+            // Silent cancellation
+            if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+            {
+                return result;
+            }
 
             // Execute
             using (var reader = await command.ExecuteReaderAsync(cancellationToken))
@@ -639,11 +651,17 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
 
             // Variables
-            var result = (IEnumerable<TResult>)null;
+            IEnumerable<TResult> result = null;
 
             // Before Execution
             var traceResult = Tracer
                 .InvokeBeforeExecution(traceKey, trace, command);
+
+            // Silent cancellation
+            if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+            {
+                return default;
+            }
 
             // Execute
             using (var reader = command.ExecuteReader())
@@ -944,11 +962,17 @@ namespace RepoDb
                 dbFields: dbFields,
                 skipCommandArrayParametersCheck: skipCommandArrayParametersCheck);
 
-            IEnumerable<TResult> result;
+            IEnumerable<TResult> result = null;
 
             // Before Execution
             var traceResult = await Tracer
                 .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+
+            // Silent cancellation
+            if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+            {
+                return result;
+            }
 
             // Execute
             using (var reader = await command.ExecuteReaderAsync(cancellationToken))
@@ -1264,7 +1288,7 @@ namespace RepoDb
             Type entityType,
             IEnumerable<DbField> dbFields,
             bool skipCommandArrayParametersCheck,
-            Action<DbCommand> beforeExecutionCallback = null)
+            Func<DbCommand, TraceResult> beforeExecutionCallback = null)
         {
             // Variables
             var setting = DbSettingMapper.Get(connection);
@@ -1283,11 +1307,17 @@ namespace RepoDb
             try
             {
                 // A hacky solution for other operations (i.e.: QueryMultiple)
-                beforeExecutionCallback?.Invoke(command);
+                var traceResult = beforeExecutionCallback?.Invoke(command);
 
                 // Before Execution
-                var traceResult = Tracer
+                traceResult ??= Tracer
                     .InvokeBeforeExecution(traceKey, trace, command);
+
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
 
                 // Execute
                 var reader = command.ExecuteReader();
@@ -1390,7 +1420,7 @@ namespace RepoDb
             Type entityType,
             IEnumerable<DbField> dbFields,
             bool skipCommandArrayParametersCheck,
-            Func<DbCommand, CancellationToken, Task> beforeExecutionCallbackAsync = null)
+            Func<DbCommand, CancellationToken, Task<TraceResult>> beforeExecutionCallbackAsync = null)
         {
             // Variables
             var setting = connection.GetDbSetting();
@@ -1409,15 +1439,23 @@ namespace RepoDb
             // Ensure the DbCommand disposal
             try
             {
+                TraceResult traceResult = null;
+
                 // A hacky solution for other operations (i.e.: QueryMultipleAsync)
                 if (beforeExecutionCallbackAsync != null)
                 {
-                    await beforeExecutionCallbackAsync(command, cancellationToken);
+                    traceResult = await beforeExecutionCallbackAsync(command, cancellationToken);
                 }
 
                 // Before Execution
-                var traceResult = await Tracer
+                traceResult ??= await Tracer
                     .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
 
                 // Execute
                 var reader = await command.ExecuteReaderAsync(cancellationToken);
@@ -1529,6 +1567,12 @@ namespace RepoDb
             var traceResult = Tracer
                 .InvokeBeforeExecution(traceKey, trace, command);
 
+            // Silent cancellation
+            if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+            {
+                return default;
+            }
+
             // Execution
             var result = command.ExecuteNonQuery();
 
@@ -1631,6 +1675,12 @@ namespace RepoDb
             // Before Execution
             var traceResult = await Tracer
                 .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+
+            // Silent cancellation
+            if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+            {
+                return default;
+            }
 
             // Execution
             var result = await command.ExecuteNonQueryAsync(cancellationToken);
@@ -1870,6 +1920,12 @@ namespace RepoDb
             var traceResult = Tracer
                 .InvokeBeforeExecution(traceKey, trace, command);
 
+            // Silent cancellation
+            if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+            {
+                return default;
+            }
+
             // Execute
             var result = Converter.ToType<TResult>(command.ExecuteScalar());
 
@@ -2008,6 +2064,12 @@ namespace RepoDb
             // Before Execution
             var traceResult = await Tracer
                 .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+
+            // Silent cancellation
+            if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+            {
+                return default;
+            }
 
             // Execution
             var result = Converter.ToType<TResult>(await command.ExecuteScalarAsync(cancellationToken));

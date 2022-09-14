@@ -85,7 +85,7 @@ namespace RepoDb
             ITrace trace,
             TResult value)
         {
-            if (result == null)
+            if (trace == null || result == null)
             {
                 return;
             }
@@ -118,7 +118,7 @@ namespace RepoDb
             TResult value,
             CancellationToken cancellationToken = default)
         {
-            if (result == null)
+            if (trace == null || result == null)
             {
                 return;
             }

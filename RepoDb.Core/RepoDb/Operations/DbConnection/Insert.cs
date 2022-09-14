@@ -678,6 +678,12 @@ namespace RepoDb
                 var traceResult = Tracer
                     .InvokeBeforeExecution(traceKey, trace, command);
 
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return result;
+                }
+
                 // Actual Execution
                 result = Converter.ToType<TResult>(command.ExecuteScalar());
 
@@ -755,6 +761,12 @@ namespace RepoDb
                 // Before Execution
                 var traceResult = await Tracer
                     .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return result;
+                }
 
                 // Actual Execution
                 result = Converter.ToType<TResult>(await command.ExecuteScalarAsync(cancellationToken));

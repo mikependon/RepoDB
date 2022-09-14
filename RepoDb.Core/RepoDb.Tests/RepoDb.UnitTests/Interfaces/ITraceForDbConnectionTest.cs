@@ -31,6 +31,31 @@ namespace RepoDb.UnitTests.Interfaces
             public string Name { get; set; }
         }
 
+        private class RejectorTrace : ITrace
+        {
+            public void AfterExecution<TResult>(ResultTraceLog<TResult> log)
+            {
+            }
+
+            public Task AfterExecutionAsync<TResult>(ResultTraceLog<TResult> log,
+                CancellationToken cancellationToken = default)
+            {
+                return Task.CompletedTask;
+            }
+
+            public void BeforeExecution(CancellableTraceLog log)
+            {
+                log.Cancel(true);
+            }
+
+            public Task BeforeExecutionAsync(CancellableTraceLog log,
+                CancellationToken cancellationToken = default)
+            {
+                log.Cancel(true);
+                return Task.CompletedTask;
+            }
+        }
+
         #endregion
 
         #region Average

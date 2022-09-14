@@ -9501,11 +9501,9 @@ namespace RepoDb
             TraceResult traceResult = null;
 
             // Before Execution
-            var beforeExecutionCallback = new Action<DbCommand>(command =>
-            {
+            var beforeExecutionCallback = new Func<DbCommand, TraceResult>(command =>
                 traceResult = Tracer
-                    .InvokeBeforeExecution(traceKey, trace, command);
-            });
+                    .InvokeBeforeExecution(traceKey, trace, command));
 
             // Actual Execution
             using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
@@ -9521,6 +9519,13 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true,
                 beforeExecutionCallback: beforeExecutionCallback))
             {
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                // DB setting
                 var dbSetting = connection.GetDbSetting();
 
                 // T1
@@ -10213,11 +10218,9 @@ namespace RepoDb
             TraceResult traceResult = null;
 
             // Before Execution
-            var beforeExecutionCallback = new Action<DbCommand>(command =>
-            {
+            var beforeExecutionCallback = new Func<DbCommand, TraceResult>(command =>
                 traceResult = Tracer
-                    .InvokeBeforeExecution(traceKey, trace, command);
-            });
+                    .InvokeBeforeExecution(traceKey, trace, command));
 
             // Actual Execution
             using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
@@ -10233,6 +10236,13 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true,
                 beforeExecutionCallback: beforeExecutionCallback))
             {
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                // DB setting
                 var dbSetting = connection.GetDbSetting();
 
                 // T1
@@ -11096,11 +11106,9 @@ namespace RepoDb
             TraceResult traceResult = null;
 
             // Before Execution
-            var beforeExecutionCallback = new Action<DbCommand>(command =>
-            {
+            var beforeExecutionCallback = new Func<DbCommand, TraceResult>(command =>
                 traceResult = Tracer
-                    .InvokeBeforeExecution(traceKey, trace, command);
-            });
+                    .InvokeBeforeExecution(traceKey, trace, command));
 
             // Actual Execution
             using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
@@ -11116,6 +11124,13 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true,
                 beforeExecutionCallback: beforeExecutionCallback))
             {
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                // DB setting
                 var dbSetting = connection.GetDbSetting();
 
                 // T1
@@ -12143,11 +12158,9 @@ namespace RepoDb
             TraceResult traceResult = null;
 
             // Before Execution
-            var beforeExecutionCallback = new Action<DbCommand>(command =>
-            {
+            var beforeExecutionCallback = new Func<DbCommand, TraceResult>(command =>
                 traceResult = Tracer
-                    .InvokeBeforeExecution(traceKey, trace, command);
-            });
+                    .InvokeBeforeExecution(traceKey, trace, command));
 
             // Actual Execution
             using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
@@ -12163,6 +12176,13 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true,
                 beforeExecutionCallback: beforeExecutionCallback))
             {
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                // DB setting
                 var dbSetting = connection.GetDbSetting();
 
                 // T1
@@ -13354,11 +13374,9 @@ namespace RepoDb
             TraceResult traceResult = null;
 
             // Before Execution
-            var beforeExecutionCallback = new Action<DbCommand>(command =>
-            {
+            var beforeExecutionCallback = new Func<DbCommand, TraceResult>(command =>
                 traceResult = Tracer
-                    .InvokeBeforeExecution(traceKey, trace, command);
-            });
+                    .InvokeBeforeExecution(traceKey, trace, command));
 
             // Actual Execution
             using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
@@ -13374,6 +13392,13 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true,
                 beforeExecutionCallback: beforeExecutionCallback))
             {
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                // DB setting
                 var dbSetting = connection.GetDbSetting();
 
                 // T1
@@ -14729,11 +14754,9 @@ namespace RepoDb
             TraceResult traceResult = null;
 
             // Before Execution
-            var beforeExecutionCallback = new Action<DbCommand>(command =>
-            {
+            var beforeExecutionCallback = new Func<DbCommand, TraceResult>(command =>
                 traceResult = Tracer
-                    .InvokeBeforeExecution(traceKey, trace, command);
-            });
+                    .InvokeBeforeExecution(traceKey, trace, command));
 
             // Actual Execution
             using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
@@ -14749,6 +14772,13 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true,
                 beforeExecutionCallback: beforeExecutionCallback))
             {
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                // DB setting
                 var dbSetting = connection.GetDbSetting();
 
                 // T1
@@ -15251,11 +15281,9 @@ namespace RepoDb
             TraceResult traceResult = null;
 
             // Before Execution
-            var beforeExecutionCallback = new Action<DbCommand>(command =>
-            {
+            var beforeExecutionCallback = new Func<DbCommand, TraceResult>(command =>
                 traceResult = Tracer
-                    .InvokeBeforeExecution(traceKey, trace, command);
-            });
+                    .InvokeBeforeExecution(traceKey, trace, command));
 
             // Actual Execution
             using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
@@ -15271,6 +15299,13 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true,
                 beforeExecutionCallback: beforeExecutionCallback))
             {
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                // DB setting
                 var dbSetting = connection.GetDbSetting();
 
                 // T1
@@ -15833,11 +15868,9 @@ namespace RepoDb
             TraceResult traceResult = null;
 
             // Before Execution
-            var beforeExecutionCallback = new Action<DbCommand>(command =>
-            {
+            var beforeExecutionCallback = new Func<DbCommand, TraceResult>(command =>
                 traceResult = Tracer
-                    .InvokeBeforeExecution(traceKey, trace, command);
-            });
+                    .InvokeBeforeExecution(traceKey, trace, command));
 
             // Actual Execution
             using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
@@ -15853,6 +15886,13 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true,
                 beforeExecutionCallback: beforeExecutionCallback))
             {
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                // DB setting
                 var dbSetting = connection.GetDbSetting();
 
                 // T1
@@ -16552,11 +16592,9 @@ namespace RepoDb
             TraceResult traceResult = null;
 
             // Before Execution
-            var beforeExecutionCallback = new Action<DbCommand>(command =>
-            {
+            var beforeExecutionCallback = new Func<DbCommand, TraceResult>(command =>
                 traceResult = Tracer
-                    .InvokeBeforeExecution(traceKey, trace, command);
-            });
+                    .InvokeBeforeExecution(traceKey, trace, command));
 
             // Actual Execution
             using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
@@ -16572,6 +16610,13 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true,
                 beforeExecutionCallback: beforeExecutionCallback))
             {
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                // DB setting
                 var dbSetting = connection.GetDbSetting();
 
                 // T1
@@ -17401,11 +17446,9 @@ namespace RepoDb
             TraceResult traceResult = null;
 
             // Before Execution
-            var beforeExecutionCallback = new Action<DbCommand>(command =>
-            {
+            var beforeExecutionCallback = new Func<DbCommand, TraceResult>(command =>
                 traceResult = Tracer
-                    .InvokeBeforeExecution(traceKey, trace, command);
-            });
+                    .InvokeBeforeExecution(traceKey, trace, command));
 
             // Actual Execution
             using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
@@ -17421,6 +17464,13 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true,
                 beforeExecutionCallback: beforeExecutionCallback))
             {
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                // DB setting
                 var dbSetting = connection.GetDbSetting();
 
                 // T1
@@ -18382,11 +18432,9 @@ namespace RepoDb
             TraceResult traceResult = null;
 
             // Before Execution
-            var beforeExecutionCallback = new Action<DbCommand>(command =>
-            {
+            var beforeExecutionCallback = new Func<DbCommand, TraceResult>(command =>
                 traceResult = Tracer
-                    .InvokeBeforeExecution(traceKey, trace, command);
-            });
+                    .InvokeBeforeExecution(traceKey, trace, command));
 
             // Actual Execution
             using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
@@ -18402,6 +18450,13 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true,
                 beforeExecutionCallback: beforeExecutionCallback))
             {
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                // DB setting
                 var dbSetting = connection.GetDbSetting();
 
                 // T1
@@ -19494,11 +19549,9 @@ namespace RepoDb
             TraceResult traceResult = null;
 
             // Before Execution
-            var beforeExecutionCallback = new Action<DbCommand>(command =>
-            {
+            var beforeExecutionCallback = new Func<DbCommand, TraceResult>(command =>
                 traceResult = Tracer
-                    .InvokeBeforeExecution(traceKey, trace, command);
-            });
+                    .InvokeBeforeExecution(traceKey, trace, command));
 
             // Actual Execution
             using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
@@ -19514,6 +19567,13 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true,
                 beforeExecutionCallback: beforeExecutionCallback))
             {
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                // DB setting
                 var dbSetting = connection.GetDbSetting();
 
                 // T1
@@ -20136,11 +20196,9 @@ namespace RepoDb
             TraceResult traceResult = null;
 
             // Before Execution
-            Func<DbCommand, CancellationToken, Task> beforeExecutionCallbackAsync = async (command, cancellationToken) =>
-            {
+            async Task<TraceResult> beforeExecutionCallbackAsync(DbCommand command, CancellationToken cancellationToken) =>
                 traceResult = await Tracer
                     .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
-            };
 
             // Actual Execution
             using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
@@ -20157,6 +20215,13 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true,
                 beforeExecutionCallbackAsync: beforeExecutionCallbackAsync)))
             {
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                // DB setting
                 var dbSetting = connection.GetDbSetting();
 
                 // T1
@@ -20871,11 +20936,9 @@ namespace RepoDb
             TraceResult traceResult = null;
 
             // Before Execution
-            Func<DbCommand, CancellationToken, Task> beforeExecutionCallbackAsync = async (command, cancellationToken) =>
-            {
+            async Task<TraceResult> beforeExecutionCallbackAsync(DbCommand command, CancellationToken cancellationToken) =>
                 traceResult = await Tracer
                     .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
-            };
 
             // Actual Execution
             using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
@@ -20892,6 +20955,13 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true,
                 beforeExecutionCallbackAsync: beforeExecutionCallbackAsync)))
             {
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                // DB setting
                 var dbSetting = connection.GetDbSetting();
 
                 // T1
@@ -21778,11 +21848,9 @@ namespace RepoDb
             TraceResult traceResult = null;
 
             // Before Execution
-            Func<DbCommand, CancellationToken, Task> beforeExecutionCallbackAsync = async (command, cancellationToken) =>
-            {
+            async Task<TraceResult> beforeExecutionCallbackAsync(DbCommand command, CancellationToken cancellationToken) =>
                 traceResult = await Tracer
                     .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
-            };
 
             // Actual Execution
             using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
@@ -21799,6 +21867,13 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true,
                 beforeExecutionCallbackAsync: beforeExecutionCallbackAsync)))
             {
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                // DB setting
                 var dbSetting = connection.GetDbSetting();
 
                 // T1
@@ -22851,11 +22926,9 @@ namespace RepoDb
             TraceResult traceResult = null;
 
             // Before Execution
-            Func<DbCommand, CancellationToken, Task> beforeExecutionCallbackAsync = async (command, cancellationToken) =>
-            {
+            async Task<TraceResult> beforeExecutionCallbackAsync(DbCommand command, CancellationToken cancellationToken) =>
                 traceResult = await Tracer
                     .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
-            };
 
             // Actual Execution
             using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
@@ -22872,6 +22945,13 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true,
                 beforeExecutionCallbackAsync: beforeExecutionCallbackAsync)))
             {
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                // DB setting
                 var dbSetting = connection.GetDbSetting();
 
                 // T1
@@ -24090,11 +24170,9 @@ namespace RepoDb
             TraceResult traceResult = null;
 
             // Before Execution
-            Func<DbCommand, CancellationToken, Task> beforeExecutionCallbackAsync = async (command, cancellationToken) =>
-            {
+            async Task<TraceResult> beforeExecutionCallbackAsync(DbCommand command, CancellationToken cancellationToken) =>
                 traceResult = await Tracer
                     .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
-            };
 
             // Actual Execution
             using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
@@ -24111,6 +24189,13 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true,
                 beforeExecutionCallbackAsync: beforeExecutionCallbackAsync)))
             {
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                // DB setting
                 var dbSetting = connection.GetDbSetting();
 
                 // T1
@@ -25495,11 +25580,9 @@ namespace RepoDb
             TraceResult traceResult = null;
 
             // Before Execution
-            Func<DbCommand, CancellationToken, Task> beforeExecutionCallbackAsync = async (command, cancellationToken) =>
-            {
+            async Task<TraceResult> beforeExecutionCallbackAsync(DbCommand command, CancellationToken cancellationToken) =>
                 traceResult = await Tracer
                     .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
-            };
 
             // Actual Execution
             using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
@@ -25516,6 +25599,13 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true,
                 beforeExecutionCallbackAsync: beforeExecutionCallbackAsync)))
             {
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                // DB setting
                 var dbSetting = connection.GetDbSetting();
 
                 // T1
@@ -26040,11 +26130,9 @@ namespace RepoDb
             TraceResult traceResult = null;
 
             // Before Execution
-            Func<DbCommand, CancellationToken, Task> beforeExecutionCallbackAsync = async (command, cancellationToken) =>
-            {
+            async Task<TraceResult> beforeExecutionCallbackAsync(DbCommand command, CancellationToken cancellationToken) =>
                 traceResult = await Tracer
                     .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
-            };
 
             // Actual Execution
             using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
@@ -26061,6 +26149,13 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true,
                 beforeExecutionCallbackAsync: beforeExecutionCallbackAsync)))
             {
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                // DB setting
                 var dbSetting = connection.GetDbSetting();
 
                 // T1
@@ -26642,11 +26737,9 @@ namespace RepoDb
             TraceResult traceResult = null;
 
             // Before Execution
-            Func<DbCommand, CancellationToken, Task> beforeExecutionCallbackAsync = async (command, cancellationToken) =>
-            {
+            async Task<TraceResult> beforeExecutionCallbackAsync(DbCommand command, CancellationToken cancellationToken) =>
                 traceResult = await Tracer
                     .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
-            };
 
             // Actual Execution
             using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
@@ -26663,6 +26756,13 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true,
                 beforeExecutionCallbackAsync: beforeExecutionCallbackAsync)))
             {
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                // DB setting
                 var dbSetting = connection.GetDbSetting();
 
                 // T1
@@ -27382,11 +27482,9 @@ namespace RepoDb
             TraceResult traceResult = null;
 
             // Before Execution
-            Func<DbCommand, CancellationToken, Task> beforeExecutionCallbackAsync = async (command, cancellationToken) =>
-            {
+            async Task<TraceResult> beforeExecutionCallbackAsync(DbCommand command, CancellationToken cancellationToken) =>
                 traceResult = await Tracer
                     .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
-            };
 
             // Actual Execution
             using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
@@ -27403,6 +27501,13 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true,
                 beforeExecutionCallbackAsync: beforeExecutionCallbackAsync)))
             {
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                // DB setting
                 var dbSetting = connection.GetDbSetting();
 
                 // T1
@@ -28255,11 +28360,9 @@ namespace RepoDb
             TraceResult traceResult = null;
 
             // Before Execution
-            Func<DbCommand, CancellationToken, Task> beforeExecutionCallbackAsync = async (command, cancellationToken) =>
-            {
+            async Task<TraceResult> beforeExecutionCallbackAsync(DbCommand command, CancellationToken cancellationToken) =>
                 traceResult = await Tracer
                     .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
-            };
 
             // Actual Execution
             using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
@@ -28276,6 +28379,13 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true,
                 beforeExecutionCallbackAsync: beforeExecutionCallbackAsync)))
             {
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                // DB setting
                 var dbSetting = connection.GetDbSetting();
 
                 // T1
@@ -29261,11 +29371,9 @@ namespace RepoDb
             TraceResult traceResult = null;
 
             // Before Execution
-            Func<DbCommand, CancellationToken, Task> beforeExecutionCallbackAsync = async (command, cancellationToken) =>
-            {
+            async Task<TraceResult> beforeExecutionCallbackAsync(DbCommand command, CancellationToken cancellationToken) =>
                 traceResult = await Tracer
                     .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
-            };
 
             // Actual Execution
             using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
@@ -29282,6 +29390,13 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true,
                 beforeExecutionCallbackAsync: beforeExecutionCallbackAsync)))
             {
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                // DB setting
                 var dbSetting = connection.GetDbSetting();
 
                 // T1
@@ -30400,11 +30515,9 @@ namespace RepoDb
             TraceResult traceResult = null;
 
             // Before Execution
-            Func<DbCommand, CancellationToken, Task> beforeExecutionCallbackAsync = async (command, cancellationToken) =>
-            {
+            async Task<TraceResult> beforeExecutionCallbackAsync(DbCommand command, CancellationToken cancellationToken) =>
                 traceResult = await Tracer
                     .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
-            };
 
             // Actual Execution
             using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
@@ -30421,6 +30534,13 @@ namespace RepoDb
                 skipCommandArrayParametersCheck: true,
                 beforeExecutionCallbackAsync: beforeExecutionCallbackAsync)))
             {
+                // Silent cancellation
+                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                {
+                    return default;
+                }
+
+                // DB setting
                 var dbSetting = connection.GetDbSetting();
 
                 // T1

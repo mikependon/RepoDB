@@ -1336,6 +1336,12 @@ namespace RepoDb
                             var traceResult = Tracer
                                 .InvokeBeforeExecution(traceKey, trace, command);
 
+                            // Silent cancellation
+                            if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                            {
+                                return result;
+                            }
+
                             // Actual Execution
                             var returnValue = Converter.DbNullToNull(command.ExecuteScalar());
 
@@ -1408,6 +1414,12 @@ namespace RepoDb
                                 // Before Execution
                                 var traceResult = Tracer
                                     .InvokeBeforeExecution(traceKey, trace, command);
+
+                                // Silent cancellation
+                                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                                {
+                                    return result;
+                                }
 
                                 // No identity setters
                                 result += command.ExecuteNonQuery();
@@ -1710,6 +1722,12 @@ namespace RepoDb
                             var traceResult = await Tracer
                                 .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
 
+                            // Silent cancellation
+                            if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                            {
+                                return result;
+                            }
+
                             // Actual Execution
                             var returnValue = Converter.DbNullToNull(await command.ExecuteScalarAsync(cancellationToken));
 
@@ -1783,6 +1801,12 @@ namespace RepoDb
                                 // Before Execution
                                 var traceResult = await Tracer
                                     .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+
+                                // Silent cancellation
+                                if (traceResult?.CancellableTraceLog?.IsCancelled == true)
+                                {
+                                    return result;
+                                }
 
                                 // No identity setters
                                 result += await command.ExecuteNonQueryAsync(cancellationToken);
