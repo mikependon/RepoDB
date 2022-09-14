@@ -63,7 +63,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -86,10 +86,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -134,7 +134,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -157,10 +157,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -205,7 +205,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -228,10 +228,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -276,7 +276,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -299,10 +299,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -347,7 +347,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -370,10 +370,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -418,7 +418,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -443,10 +443,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -508,7 +508,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -538,10 +538,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -599,7 +599,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -629,10 +629,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -690,7 +690,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -720,10 +720,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -781,7 +781,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -811,10 +811,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -872,7 +872,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -902,10 +902,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -963,7 +963,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -996,10 +996,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -1075,7 +1075,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -1112,10 +1112,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -1187,7 +1187,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -1224,10 +1224,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -1299,7 +1299,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -1336,10 +1336,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -1411,7 +1411,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -1448,10 +1448,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -1523,7 +1523,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -1560,10 +1560,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -1635,7 +1635,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -1676,10 +1676,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -1768,7 +1768,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -1812,10 +1812,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -1900,7 +1900,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -1944,10 +1944,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -2032,7 +2032,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -2076,10 +2076,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -2164,7 +2164,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -2208,10 +2208,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -2296,7 +2296,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -2340,10 +2340,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -2428,7 +2428,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -2477,10 +2477,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -2582,7 +2582,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -2633,10 +2633,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -2734,7 +2734,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -2785,10 +2785,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -2886,7 +2886,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -2937,10 +2937,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -3038,7 +3038,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -3089,10 +3089,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -3190,7 +3190,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -3241,10 +3241,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -3342,7 +3342,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -3399,10 +3399,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -3517,7 +3517,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -3575,10 +3575,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -3689,7 +3689,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -3747,10 +3747,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -3861,7 +3861,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -3919,10 +3919,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -4033,7 +4033,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -4091,10 +4091,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -4205,7 +4205,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -4263,10 +4263,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -4377,7 +4377,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -4442,10 +4442,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -4499,7 +4499,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -4523,10 +4523,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -4573,7 +4573,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -4597,10 +4597,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -4647,7 +4647,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -4671,10 +4671,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -4721,7 +4721,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -4745,10 +4745,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -4795,7 +4795,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -4819,10 +4819,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -4869,7 +4869,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -4895,10 +4895,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -4962,7 +4962,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -4993,10 +4993,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -5056,7 +5056,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -5087,10 +5087,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -5150,7 +5150,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -5181,10 +5181,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -5244,7 +5244,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -5275,10 +5275,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -5338,7 +5338,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -5369,10 +5369,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -5432,7 +5432,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -5466,10 +5466,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -5547,7 +5547,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -5585,10 +5585,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -5662,7 +5662,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -5700,10 +5700,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -5777,7 +5777,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -5815,10 +5815,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -5892,7 +5892,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -5930,10 +5930,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -6007,7 +6007,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -6045,10 +6045,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -6122,7 +6122,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -6164,10 +6164,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -6258,7 +6258,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -6303,10 +6303,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -6393,7 +6393,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -6438,10 +6438,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -6528,7 +6528,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -6573,10 +6573,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -6663,7 +6663,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -6708,10 +6708,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -6798,7 +6798,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -6843,10 +6843,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -6933,7 +6933,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -6983,10 +6983,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -7090,7 +7090,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -7142,10 +7142,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -7245,7 +7245,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -7297,10 +7297,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -7400,7 +7400,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -7452,10 +7452,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -7555,7 +7555,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -7607,10 +7607,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -7710,7 +7710,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -7762,10 +7762,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -7865,7 +7865,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -7923,10 +7923,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -8043,7 +8043,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -8102,10 +8102,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -8218,7 +8218,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -8277,10 +8277,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -8393,7 +8393,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -8452,10 +8452,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -8568,7 +8568,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -8627,10 +8627,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -8743,7 +8743,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -8802,10 +8802,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -8918,7 +8918,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -8984,10 +8984,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -9047,7 +9047,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -9072,10 +9072,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -9124,7 +9124,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -9149,10 +9149,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -9201,7 +9201,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -9226,10 +9226,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -9278,7 +9278,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -9303,10 +9303,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -9355,7 +9355,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -9380,10 +9380,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -9432,7 +9432,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -9498,6 +9498,14 @@ namespace RepoDb
             var commandText = string.Join(" ", commandTexts);
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             Tuple<IEnumerable<T1>, IEnumerable<T2>> result;
+            TraceResult traceResult = null;
+
+            // Before Execution
+            var beforeExecutionCallback = new Action<DbCommand>(command =>
+            {
+                traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
+            });
 
             // Actual Execution
             using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
@@ -9505,12 +9513,13 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: null,
                 transaction: transaction,
-				trace: trace,
+                trace: null,
                 entityType: null,
                 dbFields: null,
-                skipCommandArrayParametersCheck: true))
+                skipCommandArrayParametersCheck: true,
+                beforeExecutionCallback: beforeExecutionCallback))
             {
                 var dbSetting = connection.GetDbSetting();
 
@@ -9538,6 +9547,10 @@ namespace RepoDb
 
                 // Result
                 result = Tuple.Create(item1, item2);
+
+                // After Execution
+                Tracer
+                    .InvokeAfterExecution(traceResult, trace, result);
             }
 
             // Result
@@ -9608,7 +9621,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -9641,10 +9654,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -9708,7 +9721,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -9741,10 +9754,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -9808,7 +9821,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -9841,10 +9854,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -9908,7 +9921,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -9941,10 +9954,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -10008,7 +10021,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -10041,10 +10054,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -10108,7 +10121,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -10197,6 +10210,14 @@ namespace RepoDb
             var commandText = string.Join(" ", commandTexts);
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> result;
+            TraceResult traceResult = null;
+
+            // Before Execution
+            var beforeExecutionCallback = new Action<DbCommand>(command =>
+            {
+                traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
+            });
 
             // Actual Execution
             using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
@@ -10204,12 +10225,13 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: null,
                 transaction: transaction,
-				trace: trace,
+                trace: null,
                 entityType: null,
                 dbFields: null,
-                skipCommandArrayParametersCheck: true))
+                skipCommandArrayParametersCheck: true,
+                beforeExecutionCallback: beforeExecutionCallback))
             {
                 var dbSetting = connection.GetDbSetting();
 
@@ -10249,6 +10271,10 @@ namespace RepoDb
 
                 // Result
                 result = Tuple.Create(item1, item2, item3);
+
+                // After Execution
+                Tracer
+                    .InvokeAfterExecution(traceResult, trace, result);
             }
 
             // Result
@@ -10335,7 +10361,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -10376,10 +10402,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -10459,7 +10485,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -10500,10 +10526,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -10583,7 +10609,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -10624,10 +10650,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -10707,7 +10733,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -10748,10 +10774,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -10831,7 +10857,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -10872,10 +10898,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -10955,7 +10981,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -11067,6 +11093,14 @@ namespace RepoDb
             var commandText = string.Join(" ", commandTexts);
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>> result;
+            TraceResult traceResult = null;
+
+            // Before Execution
+            var beforeExecutionCallback = new Action<DbCommand>(command =>
+            {
+                traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
+            });
 
             // Actual Execution
             using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
@@ -11074,12 +11108,13 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: null,
                 transaction: transaction,
-				trace: trace,
+                trace: null,
                 entityType: null,
                 dbFields: null,
-                skipCommandArrayParametersCheck: true))
+                skipCommandArrayParametersCheck: true,
+                beforeExecutionCallback: beforeExecutionCallback))
             {
                 var dbSetting = connection.GetDbSetting();
 
@@ -11130,6 +11165,10 @@ namespace RepoDb
 
                 // Result
                 result = Tuple.Create(item1, item2, item3, item4);
+
+                // After Execution
+                Tracer
+                    .InvokeAfterExecution(traceResult, trace, result);
             }
 
             // Result
@@ -11231,7 +11270,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -11280,10 +11319,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -11378,7 +11417,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -11427,10 +11466,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -11525,7 +11564,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -11574,10 +11613,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -11672,7 +11711,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -11721,10 +11760,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -11819,7 +11858,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -11868,10 +11907,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -11966,7 +12005,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -12101,6 +12140,14 @@ namespace RepoDb
             var commandText = string.Join(" ", commandTexts);
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>> result;
+            TraceResult traceResult = null;
+
+            // Before Execution
+            var beforeExecutionCallback = new Action<DbCommand>(command =>
+            {
+                traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
+            });
 
             // Actual Execution
             using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
@@ -12108,12 +12155,13 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: null,
                 transaction: transaction,
-				trace: trace,
+                trace: null,
                 entityType: null,
                 dbFields: null,
-                skipCommandArrayParametersCheck: true))
+                skipCommandArrayParametersCheck: true,
+                beforeExecutionCallback: beforeExecutionCallback))
             {
                 var dbSetting = connection.GetDbSetting();
 
@@ -12175,6 +12223,10 @@ namespace RepoDb
 
                 // Result
                 result = Tuple.Create(item1, item2, item3, item4, item5);
+
+                // After Execution
+                Tracer
+                    .InvokeAfterExecution(traceResult, trace, result);
             }
 
             // Result
@@ -12291,7 +12343,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -12348,10 +12400,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -12461,7 +12513,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -12518,10 +12570,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -12631,7 +12683,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -12688,10 +12740,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -12801,7 +12853,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -12858,10 +12910,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -12971,7 +13023,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -13028,10 +13080,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -13141,7 +13193,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -13299,6 +13351,14 @@ namespace RepoDb
             var commandText = string.Join(" ", commandTexts);
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>> result;
+            TraceResult traceResult = null;
+
+            // Before Execution
+            var beforeExecutionCallback = new Action<DbCommand>(command =>
+            {
+                traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
+            });
 
             // Actual Execution
             using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
@@ -13306,12 +13366,13 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: null,
                 transaction: transaction,
-				trace: trace,
+                trace: null,
                 entityType: null,
                 dbFields: null,
-                skipCommandArrayParametersCheck: true))
+                skipCommandArrayParametersCheck: true,
+                beforeExecutionCallback: beforeExecutionCallback))
             {
                 var dbSetting = connection.GetDbSetting();
 
@@ -13384,6 +13445,10 @@ namespace RepoDb
 
                 // Result
                 result = Tuple.Create(item1, item2, item3, item4, item5, item6);
+
+                // After Execution
+                Tracer
+                    .InvokeAfterExecution(traceResult, trace, result);
             }
 
             // Result
@@ -13515,7 +13580,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -13580,10 +13645,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -13708,7 +13773,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -13773,10 +13838,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -13901,7 +13966,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -13966,10 +14031,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -14094,7 +14159,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -14159,10 +14224,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -14287,7 +14352,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -14352,10 +14417,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -14480,7 +14545,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -14661,6 +14726,14 @@ namespace RepoDb
             var commandText = string.Join(" ", commandTexts);
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>> result;
+            TraceResult traceResult = null;
+
+            // Before Execution
+            var beforeExecutionCallback = new Action<DbCommand>(command =>
+            {
+                traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
+            });
 
             // Actual Execution
             using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
@@ -14668,12 +14741,13 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: null,
                 transaction: transaction,
-				trace: trace,
+                trace: null,
                 entityType: null,
                 dbFields: null,
-                skipCommandArrayParametersCheck: true))
+                skipCommandArrayParametersCheck: true,
+                beforeExecutionCallback: beforeExecutionCallback))
             {
                 var dbSetting = connection.GetDbSetting();
 
@@ -14757,6 +14831,10 @@ namespace RepoDb
 
                 // Result
                 result = Tuple.Create(item1, item2, item3, item4, item5, item6, item7);
+
+                // After Execution
+                Tracer
+                    .InvokeAfterExecution(traceResult, trace, result);
             }
 
             // Result
@@ -14814,7 +14892,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -14837,10 +14915,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -14887,7 +14965,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -14910,10 +14988,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -14960,7 +15038,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -14983,10 +15061,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -15033,7 +15111,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -15056,10 +15134,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -15106,7 +15184,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -15170,6 +15248,14 @@ namespace RepoDb
             var commandText = string.Join(" ", commandTexts);
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>> result;
+            TraceResult traceResult = null;
+
+            // Before Execution
+            var beforeExecutionCallback = new Action<DbCommand>(command =>
+            {
+                traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
+            });
 
             // Actual Execution
             using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
@@ -15177,12 +15263,13 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: null,
                 transaction: transaction,
-				trace: trace,
+                trace: null,
                 entityType: null,
                 dbFields: null,
-                skipCommandArrayParametersCheck: true))
+                skipCommandArrayParametersCheck: true,
+                beforeExecutionCallback: beforeExecutionCallback))
             {
                 var dbSetting = connection.GetDbSetting();
 
@@ -15210,6 +15297,10 @@ namespace RepoDb
 
                 // Result
                 result = Tuple.Create(item1, item2);
+
+                // After Execution
+                Tracer
+                    .InvokeAfterExecution(traceResult, trace, result);
             }
 
             // Result
@@ -15277,7 +15368,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -15307,10 +15398,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -15371,7 +15462,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -15401,10 +15492,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -15465,7 +15556,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -15495,10 +15586,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -15559,7 +15650,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -15589,10 +15680,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -15653,7 +15744,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -15739,6 +15830,14 @@ namespace RepoDb
             var commandText = string.Join(" ", commandTexts);
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result;
+            TraceResult traceResult = null;
+
+            // Before Execution
+            var beforeExecutionCallback = new Action<DbCommand>(command =>
+            {
+                traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
+            });
 
             // Actual Execution
             using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
@@ -15746,12 +15845,13 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: null,
                 transaction: transaction,
-				trace: trace,
+                trace: null,
                 entityType: null,
                 dbFields: null,
-                skipCommandArrayParametersCheck: true))
+                skipCommandArrayParametersCheck: true,
+                beforeExecutionCallback: beforeExecutionCallback))
             {
                 var dbSetting = connection.GetDbSetting();
 
@@ -15791,6 +15891,10 @@ namespace RepoDb
 
                 // Result
                 result = Tuple.Create(item1, item2, item3);
+
+                // After Execution
+                Tracer
+                    .InvokeAfterExecution(traceResult, trace, result);
             }
 
             // Result
@@ -15873,7 +15977,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -15910,10 +16014,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -15989,7 +16093,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -16026,10 +16130,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -16105,7 +16209,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -16142,10 +16246,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -16221,7 +16325,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -16258,10 +16362,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -16337,7 +16441,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -16445,6 +16549,14 @@ namespace RepoDb
             var commandText = string.Join(" ", commandTexts);
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result;
+            TraceResult traceResult = null;
+
+            // Before Execution
+            var beforeExecutionCallback = new Action<DbCommand>(command =>
+            {
+                traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
+            });
 
             // Actual Execution
             using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
@@ -16452,12 +16564,13 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: null,
                 transaction: transaction,
-				trace: trace,
+                trace: null,
                 entityType: null,
                 dbFields: null,
-                skipCommandArrayParametersCheck: true))
+                skipCommandArrayParametersCheck: true,
+                beforeExecutionCallback: beforeExecutionCallback))
             {
                 var dbSetting = connection.GetDbSetting();
 
@@ -16494,7 +16607,6 @@ namespace RepoDb
                     cache,
                     true);
 
-
                 // T4
                 item4 = QueryMultipleInternal(connection,
                     reader,
@@ -16508,6 +16620,10 @@ namespace RepoDb
 
                 // Result
                 result = Tuple.Create(item1, item2, item3, item4);
+
+                // After Execution
+                Tracer
+                    .InvokeAfterExecution(traceResult, trace, result);
             }
 
             // Result
@@ -16604,7 +16720,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -16648,10 +16764,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -16741,7 +16857,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -16785,10 +16901,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -16878,7 +16994,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -16922,10 +17038,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -17015,7 +17131,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -17059,10 +17175,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -17152,7 +17268,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -17282,6 +17398,14 @@ namespace RepoDb
             var commandText = string.Join(" ", commandTexts);
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result;
+            TraceResult traceResult = null;
+
+            // Before Execution
+            var beforeExecutionCallback = new Action<DbCommand>(command =>
+            {
+                traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
+            });
 
             // Actual Execution
             using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
@@ -17289,12 +17413,13 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: null,
                 transaction: transaction,
-				trace: trace,
+                trace: null,
                 entityType: null,
                 dbFields: null,
-                skipCommandArrayParametersCheck: true))
+                skipCommandArrayParametersCheck: true,
+                beforeExecutionCallback: beforeExecutionCallback))
             {
                 var dbSetting = connection.GetDbSetting();
 
@@ -17356,6 +17481,10 @@ namespace RepoDb
 
                 // Result
                 result = Tuple.Create(item1, item2, item3, item4, item5);
+
+                // After Execution
+                Tracer
+                    .InvokeAfterExecution(traceResult, trace, result);
             }
 
             // Result
@@ -17466,7 +17595,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -17517,10 +17646,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -17624,7 +17753,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -17675,10 +17804,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -17782,7 +17911,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -17833,10 +17962,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -17940,7 +18069,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -17991,10 +18120,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -18098,7 +18227,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -18250,6 +18379,14 @@ namespace RepoDb
             var commandText = string.Join(" ", commandTexts);
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result;
+            TraceResult traceResult = null;
+
+            // Before Execution
+            var beforeExecutionCallback = new Action<DbCommand>(command =>
+            {
+                traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
+            });
 
             // Actual Execution
             using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
@@ -18257,12 +18394,13 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: null,
                 transaction: transaction,
-				trace: trace,
+                trace: null,
                 entityType: null,
                 dbFields: null,
-                skipCommandArrayParametersCheck: true))
+                skipCommandArrayParametersCheck: true,
+                beforeExecutionCallback: beforeExecutionCallback))
             {
                 var dbSetting = connection.GetDbSetting();
 
@@ -18335,6 +18473,10 @@ namespace RepoDb
 
                 // Result
                 result = Tuple.Create(item1, item2, item3, item4, item5, item6);
+
+                // After Execution
+                Tracer
+                    .InvokeAfterExecution(traceResult, trace, result);
             }
 
             // Result
@@ -18459,7 +18601,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -18517,10 +18659,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -18638,7 +18780,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -18696,10 +18838,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -18817,7 +18959,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -18875,10 +19017,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -18996,7 +19138,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -19054,10 +19196,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder);
         }
 
@@ -19175,7 +19317,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -19349,6 +19491,14 @@ namespace RepoDb
             var commandText = string.Join(" ", commandTexts);
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result;
+            TraceResult traceResult = null;
+
+            // Before Execution
+            var beforeExecutionCallback = new Action<DbCommand>(command =>
+            {
+                traceResult = Tracer
+                    .InvokeBeforeExecution(traceKey, trace, command);
+            });
 
             // Actual Execution
             using (var reader = (DbDataReader)ExecuteReaderInternal(connection: connection,
@@ -19356,12 +19506,13 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: null,
                 transaction: transaction,
-				trace: trace,
+                trace: null,
                 entityType: null,
                 dbFields: null,
-                skipCommandArrayParametersCheck: true))
+                skipCommandArrayParametersCheck: true,
+                beforeExecutionCallback: beforeExecutionCallback))
             {
                 var dbSetting = connection.GetDbSetting();
 
@@ -19445,6 +19596,10 @@ namespace RepoDb
 
                 // Result
                 result = Tuple.Create(item1, item2, item3, item4, item5, item6, item7);
+
+                // After Execution
+                Tracer
+                    .InvokeAfterExecution(traceResult, trace, result);
             }
 
             // Result
@@ -19509,7 +19664,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -19535,10 +19690,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -19589,7 +19744,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -19615,10 +19770,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -19669,7 +19824,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -19695,10 +19850,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -19749,7 +19904,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -19775,10 +19930,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -19829,7 +19984,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -19855,10 +20010,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -19909,7 +20064,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -19977,9 +20132,15 @@ namespace RepoDb
             // Shared variables
             var commandText = string.Join(" ", commandTexts);
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
-
-            // Before Execution Time
             Tuple<IEnumerable<T1>, IEnumerable<T2>> result;
+            TraceResult traceResult = null;
+
+            // Before Execution
+            Func<DbCommand, CancellationToken, Task> beforeExecutionCallbackAsync = async (command, cancellationToken) =>
+            {
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+            };
 
             // Actual Execution
             using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
@@ -19987,13 +20148,14 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: null,
                 transaction: transaction,
-				trace: trace,
+                trace: null,
                 cancellationToken: cancellationToken,
                 entityType: null,
                 dbFields: null,
-                skipCommandArrayParametersCheck: true)))
+                skipCommandArrayParametersCheck: true,
+                beforeExecutionCallbackAsync: beforeExecutionCallbackAsync)))
             {
                 var dbSetting = connection.GetDbSetting();
 
@@ -20023,6 +20185,10 @@ namespace RepoDb
 
                 // Result
                 result = Tuple.Create(item1, item2);
+
+                // After Execution
+                await Tracer
+                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
             }
 
             // Result
@@ -20094,7 +20260,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -20128,10 +20294,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -20197,7 +20363,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -20231,10 +20397,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -20300,7 +20466,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -20334,10 +20500,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -20403,7 +20569,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -20437,10 +20603,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -20506,7 +20672,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -20540,10 +20706,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -20609,7 +20775,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -20702,6 +20868,14 @@ namespace RepoDb
             var commandText = string.Join(" ", commandTexts);
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>> result;
+            TraceResult traceResult = null;
+
+            // Before Execution
+            Func<DbCommand, CancellationToken, Task> beforeExecutionCallbackAsync = async (command, cancellationToken) =>
+            {
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+            };
 
             // Actual Execution
             using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
@@ -20709,13 +20883,14 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: null,
                 transaction: transaction,
-				trace: trace,
+                trace: null,
                 cancellationToken: cancellationToken,
                 entityType: null,
                 dbFields: null,
-                skipCommandArrayParametersCheck: true)))
+                skipCommandArrayParametersCheck: true,
+                beforeExecutionCallbackAsync: beforeExecutionCallbackAsync)))
             {
                 var dbSetting = connection.GetDbSetting();
 
@@ -20757,6 +20932,10 @@ namespace RepoDb
 
                 // Result
                 result = Tuple.Create(item1, item2, item3);
+
+                // After Execution
+                await Tracer
+                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
             }
 
             // Result
@@ -20844,7 +21023,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -20886,10 +21065,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -20971,7 +21150,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -21013,10 +21192,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -21098,7 +21277,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -21140,10 +21319,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -21225,7 +21404,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -21267,10 +21446,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -21352,7 +21531,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -21394,10 +21573,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -21479,7 +21658,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -21596,6 +21775,14 @@ namespace RepoDb
             var commandText = string.Join(" ", commandTexts);
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>> result;
+            TraceResult traceResult = null;
+
+            // Before Execution
+            Func<DbCommand, CancellationToken, Task> beforeExecutionCallbackAsync = async (command, cancellationToken) =>
+            {
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+            };
 
             // Actual Execution
             using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
@@ -21603,13 +21790,14 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: null,
                 transaction: transaction,
-				trace: trace,
+                trace: null,
                 cancellationToken: cancellationToken,
                 entityType: null,
                 dbFields: null,
-                skipCommandArrayParametersCheck: true)))
+                skipCommandArrayParametersCheck: true,
+                beforeExecutionCallbackAsync: beforeExecutionCallbackAsync)))
             {
                 var dbSetting = connection.GetDbSetting();
 
@@ -21663,6 +21851,10 @@ namespace RepoDb
 
                 // Result
                 result = Tuple.Create(item1, item2, item3, item4);
+
+                // After Execution
+                await Tracer
+                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
             }
 
             // Result
@@ -21765,7 +21957,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -21815,10 +22007,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -21915,7 +22107,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -21965,10 +22157,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -22065,7 +22257,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -22115,10 +22307,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -22215,7 +22407,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -22265,10 +22457,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -22365,7 +22557,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -22415,10 +22607,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -22515,7 +22707,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -22656,6 +22848,14 @@ namespace RepoDb
             var commandText = string.Join(" ", commandTexts);
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>> result;
+            TraceResult traceResult = null;
+
+            // Before Execution
+            Func<DbCommand, CancellationToken, Task> beforeExecutionCallbackAsync = async (command, cancellationToken) =>
+            {
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+            };
 
             // Actual Execution
             using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
@@ -22663,13 +22863,14 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: null,
                 transaction: transaction,
-				trace: trace,
+                trace: null,
                 cancellationToken: cancellationToken,
                 entityType: null,
                 dbFields: null,
-                skipCommandArrayParametersCheck: true)))
+                skipCommandArrayParametersCheck: true,
+                beforeExecutionCallbackAsync: beforeExecutionCallbackAsync)))
             {
                 var dbSetting = connection.GetDbSetting();
 
@@ -22735,6 +22936,10 @@ namespace RepoDb
 
                 // Result
                 result = Tuple.Create(item1, item2, item3, item4, item5);
+
+                // After Execution
+                await Tracer
+                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
             }
 
             // Result
@@ -22852,7 +23057,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -22910,10 +23115,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -23025,7 +23230,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -23083,10 +23288,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -23198,7 +23403,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -23256,10 +23461,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -23371,7 +23576,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -23429,10 +23634,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -23544,7 +23749,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -23602,10 +23807,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -23717,7 +23922,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -23882,6 +24087,14 @@ namespace RepoDb
             var commandText = string.Join(" ", commandTexts);
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>> result;
+            TraceResult traceResult = null;
+
+            // Before Execution
+            Func<DbCommand, CancellationToken, Task> beforeExecutionCallbackAsync = async (command, cancellationToken) =>
+            {
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+            };
 
             // Actual Execution
             using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
@@ -23889,13 +24102,14 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: null,
                 transaction: transaction,
-				trace: trace,
+                trace: null,
                 cancellationToken: cancellationToken,
                 entityType: null,
                 dbFields: null,
-                skipCommandArrayParametersCheck: true)))
+                skipCommandArrayParametersCheck: true,
+                beforeExecutionCallbackAsync: beforeExecutionCallbackAsync)))
             {
                 var dbSetting = connection.GetDbSetting();
 
@@ -23973,6 +24187,10 @@ namespace RepoDb
 
                 // Result
                 result = Tuple.Create(item1, item2, item3, item4, item5, item6);
+
+                // After Execution
+                await Tracer
+                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
             }
 
             // Result
@@ -24105,7 +24323,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -24171,10 +24389,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -24301,7 +24519,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -24367,10 +24585,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -24497,7 +24715,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -24563,10 +24781,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -24693,7 +24911,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -24759,10 +24977,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -24889,7 +25107,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -24955,10 +25173,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -25085,7 +25303,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -25274,6 +25492,14 @@ namespace RepoDb
             var commandText = string.Join(" ", commandTexts);
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             Tuple<IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>, IEnumerable<T5>, IEnumerable<T6>, IEnumerable<T7>> result;
+            TraceResult traceResult = null;
+
+            // Before Execution
+            Func<DbCommand, CancellationToken, Task> beforeExecutionCallbackAsync = async (command, cancellationToken) =>
+            {
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+            };
 
             // Actual Execution
             using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
@@ -25281,13 +25507,14 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: null,
                 transaction: transaction,
-				trace: trace,
+                trace: null,
                 cancellationToken: cancellationToken,
                 entityType: null,
                 dbFields: null,
-                skipCommandArrayParametersCheck: true)))
+                skipCommandArrayParametersCheck: true,
+                beforeExecutionCallbackAsync: beforeExecutionCallbackAsync)))
             {
                 var dbSetting = connection.GetDbSetting();
 
@@ -25377,6 +25604,10 @@ namespace RepoDb
 
                 // Result
                 result = Tuple.Create(item1, item2, item3, item4, item5, item6, item7);
+
+                // After Execution
+                await Tracer
+                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
             }
 
             // Result
@@ -25435,7 +25666,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -25459,10 +25690,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -25511,7 +25742,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -25535,10 +25766,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -25587,7 +25818,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -25611,10 +25842,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -25663,7 +25894,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -25687,10 +25918,10 @@ namespace RepoDb
                 cacheKey2: cacheKey2,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -25739,7 +25970,7 @@ namespace RepoDb
             string cacheKey2 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -25806,6 +26037,14 @@ namespace RepoDb
             var commandText = string.Join(" ", commandTexts);
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>> result;
+            TraceResult traceResult = null;
+
+            // Before Execution
+            Func<DbCommand, CancellationToken, Task> beforeExecutionCallbackAsync = async (command, cancellationToken) =>
+            {
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+            };
 
             // Actual Execution
             using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
@@ -25813,13 +26052,14 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				trace: trace,
+                trace: trace,
                 cancellationToken: cancellationToken,
                 entityType: null,
                 dbFields: null,
-                skipCommandArrayParametersCheck: true)))
+                skipCommandArrayParametersCheck: true,
+                beforeExecutionCallbackAsync: beforeExecutionCallbackAsync)))
             {
                 var dbSetting = connection.GetDbSetting();
 
@@ -25849,6 +26089,10 @@ namespace RepoDb
 
                 // Result
                 result = Tuple.Create(item1, item2);
+
+                // After Execution
+                await Tracer
+                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
             }
 
             // Result
@@ -25917,7 +26161,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -25948,10 +26192,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -26014,7 +26258,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -26045,10 +26289,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -26111,7 +26355,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -26142,10 +26386,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -26208,7 +26452,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -26239,10 +26483,10 @@ namespace RepoDb
                 cacheKey3: cacheKey3,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -26305,7 +26549,7 @@ namespace RepoDb
             string cacheKey3 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -26395,6 +26639,14 @@ namespace RepoDb
             var commandText = string.Join(" ", commandTexts);
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result;
+            TraceResult traceResult = null;
+
+            // Before Execution
+            Func<DbCommand, CancellationToken, Task> beforeExecutionCallbackAsync = async (command, cancellationToken) =>
+            {
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+            };
 
             // Actual Execution
             using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
@@ -26402,13 +26654,14 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				trace: trace,
+                trace: trace,
                 cancellationToken: cancellationToken,
                 entityType: null,
                 dbFields: null,
-                skipCommandArrayParametersCheck: true)))
+                skipCommandArrayParametersCheck: true,
+                beforeExecutionCallbackAsync: beforeExecutionCallbackAsync)))
             {
                 var dbSetting = connection.GetDbSetting();
 
@@ -26450,6 +26703,10 @@ namespace RepoDb
 
                 // Result
                 result = Tuple.Create(item1, item2, item3);
+
+                // After Execution
+                await Tracer
+                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
             }
 
             // Result
@@ -26533,7 +26790,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -26571,10 +26828,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -26652,7 +26909,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -26690,10 +26947,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -26771,7 +27028,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -26809,10 +27066,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -26890,7 +27147,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -26928,10 +27185,10 @@ namespace RepoDb
                 cacheKey4: cacheKey4,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -27009,7 +27266,7 @@ namespace RepoDb
             string cacheKey4 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -27122,6 +27379,14 @@ namespace RepoDb
             var commandText = string.Join(" ", commandTexts);
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result;
+            TraceResult traceResult = null;
+
+            // Before Execution
+            Func<DbCommand, CancellationToken, Task> beforeExecutionCallbackAsync = async (command, cancellationToken) =>
+            {
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+            };
 
             // Actual Execution
             using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
@@ -27129,13 +27394,14 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				trace: trace,
+                trace: trace,
                 cancellationToken: cancellationToken,
                 entityType: null,
                 dbFields: null,
-                skipCommandArrayParametersCheck: true)))
+                skipCommandArrayParametersCheck: true,
+                beforeExecutionCallbackAsync: beforeExecutionCallbackAsync)))
             {
                 var dbSetting = connection.GetDbSetting();
 
@@ -27189,6 +27455,10 @@ namespace RepoDb
 
                 // Result
                 result = Tuple.Create(item1, item2, item3, item4);
+
+                // After Execution
+                await Tracer
+                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
             }
 
             // Result
@@ -27286,7 +27556,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -27331,10 +27601,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -27426,7 +27696,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -27471,10 +27741,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -27566,7 +27836,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -27611,10 +27881,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -27706,7 +27976,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -27751,10 +28021,10 @@ namespace RepoDb
                 cacheKey5: cacheKey5,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -27846,7 +28116,7 @@ namespace RepoDb
             string cacheKey5 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -27982,6 +28252,14 @@ namespace RepoDb
             var commandText = string.Join(" ", commandTexts);
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result;
+            TraceResult traceResult = null;
+
+            // Before Execution
+            Func<DbCommand, CancellationToken, Task> beforeExecutionCallbackAsync = async (command, cancellationToken) =>
+            {
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+            };
 
             // Actual Execution
             using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
@@ -27989,13 +28267,14 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				trace: trace,
+                trace: trace,
                 cancellationToken: cancellationToken,
                 entityType: null,
                 dbFields: null,
-                skipCommandArrayParametersCheck: true)))
+                skipCommandArrayParametersCheck: true,
+                beforeExecutionCallbackAsync: beforeExecutionCallbackAsync)))
             {
                 var dbSetting = connection.GetDbSetting();
 
@@ -28061,6 +28340,10 @@ namespace RepoDb
 
                 // Result
                 result = Tuple.Create(item1, item2, item3, item4, item5);
+
+                // After Execution
+                await Tracer
+                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
             }
 
             // Result
@@ -28172,7 +28455,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -28224,10 +28507,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -28333,7 +28616,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -28385,10 +28668,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -28494,7 +28777,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -28546,10 +28829,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -28655,7 +28938,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -28707,10 +28990,10 @@ namespace RepoDb
                 cacheKey6: cacheKey6,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -28816,7 +29099,7 @@ namespace RepoDb
             string cacheKey6 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -28975,6 +29258,14 @@ namespace RepoDb
             var commandText = string.Join(" ", commandTexts);
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result;
+            TraceResult traceResult = null;
+
+            // Before Execution
+            Func<DbCommand, CancellationToken, Task> beforeExecutionCallbackAsync = async (command, cancellationToken) =>
+            {
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+            };
 
             // Actual Execution
             using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
@@ -28982,13 +29273,14 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				trace: trace,
+                trace: trace,
                 cancellationToken: cancellationToken,
                 entityType: null,
                 dbFields: null,
-                skipCommandArrayParametersCheck: true)))
+                skipCommandArrayParametersCheck: true,
+                beforeExecutionCallbackAsync: beforeExecutionCallbackAsync)))
             {
                 var dbSetting = connection.GetDbSetting();
 
@@ -29066,6 +29358,10 @@ namespace RepoDb
 
                 // Result
                 result = Tuple.Create(item1, item2, item3, item4, item5, item6);
+
+                // After Execution
+                await Tracer
+                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
             }
 
             // Result
@@ -29191,7 +29487,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -29250,10 +29546,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -29373,7 +29669,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -29432,10 +29728,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -29555,7 +29851,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -29614,10 +29910,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -29737,7 +30033,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -29796,10 +30092,10 @@ namespace RepoDb
                 cacheKey7: cacheKey7,
                 cacheItemExpiration: cacheItemExpiration,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				cache: null,
-				trace: trace,
+                cache: null,
+                trace: trace,
                 statementBuilder: statementBuilder,
                 cancellationToken: cancellationToken);
         }
@@ -29919,7 +30215,7 @@ namespace RepoDb
             string cacheKey7 = null,
             int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
             int? commandTimeout = null,
-			string traceKey = TraceKeys.QueryMultiple,
+            string traceKey = TraceKeys.QueryMultiple,
             IDbTransaction transaction = null,
             ICache cache = null,
             ITrace trace = null,
@@ -30101,6 +30397,14 @@ namespace RepoDb
             var commandText = string.Join(" ", commandTexts);
             var param = QueryGroup.AsMappedObject(maps.ToArray(), false);
             Tuple<IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>, IEnumerable<dynamic>> result;
+            TraceResult traceResult = null;
+
+            // Before Execution
+            Func<DbCommand, CancellationToken, Task> beforeExecutionCallbackAsync = async (command, cancellationToken) =>
+            {
+                traceResult = await Tracer
+                    .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);
+            };
 
             // Actual Execution
             using (var reader = (DbDataReader)(await ExecuteReaderAsyncInternal(connection: connection,
@@ -30108,13 +30412,14 @@ namespace RepoDb
                 param: param,
                 commandType: commandType,
                 commandTimeout: commandTimeout,
-				traceKey: traceKey,
+                traceKey: traceKey,
                 transaction: transaction,
-				trace: trace,
+                trace: trace,
                 cancellationToken: cancellationToken,
                 entityType: null,
                 dbFields: null,
-                skipCommandArrayParametersCheck: true)))
+                skipCommandArrayParametersCheck: true,
+                beforeExecutionCallbackAsync: beforeExecutionCallbackAsync)))
             {
                 var dbSetting = connection.GetDbSetting();
 
@@ -30204,6 +30509,10 @@ namespace RepoDb
 
                 // Result
                 result = Tuple.Create(item1, item2, item3, item4, item5, item6, item7);
+
+                // After Execution
+                await Tracer
+                    .InvokeAfterExecutionAsync(traceResult, trace, result, cancellationToken);
             }
 
             // Result

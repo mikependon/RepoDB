@@ -1251,6 +1251,7 @@ namespace RepoDb
         /// <param name="entityType"></param>
         /// <param name="dbFields"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
+        /// <param name="beforeExecutionCallback"></param>
         /// <returns></returns>
         internal static IDataReader ExecuteReaderInternal(this IDbConnection connection,
             string commandText,
@@ -1262,7 +1263,8 @@ namespace RepoDb
             ITrace trace,
             Type entityType,
             IEnumerable<DbField> dbFields,
-            bool skipCommandArrayParametersCheck)
+            bool skipCommandArrayParametersCheck,
+            Action<DbCommand> beforeExecutionCallback = null)
         {
             // Variables
             var setting = DbSettingMapper.Get(connection);
@@ -1280,6 +1282,9 @@ namespace RepoDb
             // Ensure the DbCommand disposal
             try
             {
+                // A hacky solution for other operations (i.e.: QueryMultiple)
+                beforeExecutionCallback?.Invoke(command);
+
                 // Before Execution
                 var traceResult = Tracer
                     .InvokeBeforeExecution(traceKey, trace, command);
@@ -1371,6 +1376,7 @@ namespace RepoDb
         /// <param name="entityType"></param>
         /// <param name="dbFields"></param>
         /// <param name="skipCommandArrayParametersCheck"></param>
+        /// <param name="beforeExecutionCallbackAsync"></param>
         /// <returns></returns>
         internal static async Task<IDataReader> ExecuteReaderAsyncInternal(this IDbConnection connection,
             string commandText,
@@ -1383,7 +1389,8 @@ namespace RepoDb
             CancellationToken cancellationToken,
             Type entityType,
             IEnumerable<DbField> dbFields,
-            bool skipCommandArrayParametersCheck)
+            bool skipCommandArrayParametersCheck,
+            Func<DbCommand, CancellationToken, Task> beforeExecutionCallbackAsync = null)
         {
             // Variables
             var setting = connection.GetDbSetting();
@@ -1402,6 +1409,12 @@ namespace RepoDb
             // Ensure the DbCommand disposal
             try
             {
+                // A hacky solution for other operations (i.e.: QueryMultipleAsync)
+                if (beforeExecutionCallbackAsync != null)
+                {
+                    await beforeExecutionCallbackAsync(command, cancellationToken);
+                }
+
                 // Before Execution
                 var traceResult = await Tracer
                     .InvokeBeforeExecutionAsync(traceKey, trace, command, cancellationToken);

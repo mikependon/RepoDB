@@ -6,6 +6,7 @@ using RepoDb.UnitTests.CustomObjects;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace RepoDb.UnitTests.Interfaces
 {
@@ -1621,23 +1622,6 @@ namespace RepoDb.UnitTests.Interfaces
         #region MaxAsync
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeMaxAsync()
-        {
-            // Prepare
-            var trace = new Mock<ITrace>();
-            var connection = new TraceDbConnection();
-
-            // Act
-            connection.MaxAsync<TraceEntity>(trace: trace.Object,
-                field: e => e.Id,
-                where: (object)null).Wait();
-
-            // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-        }
-
-        [TestMethod]
         public void TestDbConnectionTraceForAfterMaxAsync()
         {
             // Prepare
@@ -1651,7 +1635,8 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Assert
             trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(1));
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<object>>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -1669,7 +1654,8 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Assert
             trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -1687,7 +1673,8 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Assert
             trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(1));
+                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<object>>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         #endregion
@@ -2029,7 +2016,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Assert
             trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(1));
+                t.AfterExecution(It.IsAny<ResultTraceLog<int>>()), Times.Exactly(1));
         }
 
         [TestMethod]
@@ -2063,7 +2050,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Assert
             trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(1));
+                t.AfterExecution(It.IsAny<ResultTraceLog<int>>()), Times.Exactly(1));
         }
 
         #endregion
@@ -2666,7 +2653,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterQueryMultipleT3()
+        public void TestDbConnectionTraceForAfterQueryMultipleForT3()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -2709,7 +2696,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterQueryMultipleT4()
+        public void TestDbConnectionTraceForAfterQueryMultipleForT4()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -2755,7 +2742,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterQueryMultipleT5()
+        public void TestDbConnectionTraceForAfterQueryMultipleForT5()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -2804,7 +2791,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterQueryMultipleT6()
+        public void TestDbConnectionTraceForAfterQueryMultipleForT6()
         {
             // Prepare
             var trace = new Mock<ITrace>();
@@ -2856,7 +2843,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterQueryMultipleT7()
+        public void TestDbConnectionTraceForAfterQueryMultipleForT7()
         {
             // Prepare
             var trace = new Mock<ITrace>();
