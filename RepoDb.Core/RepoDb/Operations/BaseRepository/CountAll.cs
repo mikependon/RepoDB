@@ -13,13 +13,16 @@ namespace RepoDb
         /// Count the number of rows from the table.
         /// </summary>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public long CountAll(string hints = null,
-            IDbTransaction transaction = null)
+            string traceKey = TraceKeys.CountAll,
+			IDbTransaction transaction = null)
         {
             return DbRepository.CountAll<TEntity>(hints: hints,
-                transaction: transaction);
+                traceKey: traceKey,
+				transaction: transaction);
         }
 
         #endregion
@@ -30,15 +33,18 @@ namespace RepoDb
         /// Count the number of rows from the table in an asynchronous way.
         /// </summary>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public Task<long> CountAllAsync(string hints = null,
-            IDbTransaction transaction = null,
+            string traceKey = TraceKeys.CountAll,
+			IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
             return DbRepository.CountAllAsync<TEntity>(hints: hints,
-                transaction: transaction,
+                traceKey: traceKey,
+				transaction: transaction,
                 cancellationToken: cancellationToken);
         }
 

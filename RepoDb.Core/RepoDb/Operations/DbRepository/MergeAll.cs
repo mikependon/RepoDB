@@ -22,6 +22,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
         public int MergeAll<TEntity>(string tableName,
@@ -29,6 +30,7 @@ namespace RepoDb
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.MergeAll,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -44,7 +46,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -65,6 +68,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
         public int MergeAll<TEntity>(string tableName,
@@ -73,6 +77,7 @@ namespace RepoDb
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.MergeAll,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -89,7 +94,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -110,6 +116,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
         public int MergeAll<TEntity>(string tableName,
@@ -118,6 +125,7 @@ namespace RepoDb
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.MergeAll,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -134,7 +142,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -153,12 +162,14 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
         public int MergeAll<TEntity>(IEnumerable<TEntity> entities,
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.MergeAll,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -173,7 +184,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -193,6 +205,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
         public int MergeAll<TEntity>(IEnumerable<TEntity> entities,
@@ -200,6 +213,7 @@ namespace RepoDb
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.MergeAll,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -215,7 +229,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -235,6 +250,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
         public int MergeAll<TEntity>(IEnumerable<TEntity> entities,
@@ -242,6 +258,7 @@ namespace RepoDb
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.MergeAll,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -257,7 +274,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -281,6 +299,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
@@ -289,6 +308,7 @@ namespace RepoDb
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.MergeAll,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -305,7 +325,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -327,6 +348,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
@@ -336,6 +358,7 @@ namespace RepoDb
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.MergeAll,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -353,7 +376,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -375,6 +399,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
@@ -384,6 +409,7 @@ namespace RepoDb
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.MergeAll,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -401,7 +427,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -421,6 +448,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
@@ -428,6 +456,7 @@ namespace RepoDb
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.MergeAll,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -443,7 +472,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -464,6 +494,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
@@ -472,6 +503,7 @@ namespace RepoDb
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.MergeAll,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -488,7 +520,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -509,6 +542,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
@@ -517,6 +551,7 @@ namespace RepoDb
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.MergeAll,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -533,7 +568,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -557,6 +593,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
         public int MergeAll(string tableName,
@@ -564,6 +601,7 @@ namespace RepoDb
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.MergeAll,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -578,7 +616,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -598,6 +637,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
         public int MergeAll(string tableName,
@@ -606,6 +646,7 @@ namespace RepoDb
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.MergeAll,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -621,7 +662,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -644,6 +686,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
@@ -652,6 +695,7 @@ namespace RepoDb
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.MergeAll,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -667,7 +711,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -688,6 +733,7 @@ namespace RepoDb
         /// <param name="batchSize">The batch size of the merge operation.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The number of affected rows during the merge process.</returns>
@@ -697,6 +743,7 @@ namespace RepoDb
             int batchSize = Constant.DefaultBatchOperationSize,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.MergeAll,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -713,7 +760,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);

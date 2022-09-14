@@ -19,10 +19,12 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public long Count<TEntity>(object where = null,
             string hints = null,
+			string traceKey = TraceKeys.Count,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -35,7 +37,8 @@ namespace RepoDb
                 return connection.Count<TEntity>(where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -52,10 +55,12 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public long Count<TEntity>(Expression<Func<TEntity, bool>> where = null,
             string hints = null,
+			string traceKey = TraceKeys.Count,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -68,7 +73,8 @@ namespace RepoDb
                 return connection.Count<TEntity>(where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -85,10 +91,12 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public long Count<TEntity>(QueryField where = null,
             string hints = null,
+			string traceKey = TraceKeys.Count,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -101,7 +109,8 @@ namespace RepoDb
                 return connection.Count<TEntity>(where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -118,10 +127,12 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public long Count<TEntity>(IEnumerable<QueryField> where = null,
             string hints = null,
+			string traceKey = TraceKeys.Count,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -134,7 +145,8 @@ namespace RepoDb
                 return connection.Count<TEntity>(where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -151,10 +163,12 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public long Count<TEntity>(QueryGroup where = null,
             string hints = null,
+			string traceKey = TraceKeys.Count,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -167,7 +181,8 @@ namespace RepoDb
                 return connection.Count<TEntity>(where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -188,11 +203,13 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public async Task<long> CountAsync<TEntity>(object where = null,
             string hints = null,
+			string traceKey = TraceKeys.Count,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -206,7 +223,8 @@ namespace RepoDb
                 return await connection.CountAsync<TEntity>(where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -224,11 +242,13 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public async Task<long> CountAsync<TEntity>(Expression<Func<TEntity, bool>> where = null,
             string hints = null,
+			string traceKey = TraceKeys.Count,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -242,7 +262,8 @@ namespace RepoDb
                 return await connection.CountAsync<TEntity>(where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -260,11 +281,13 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public async Task<long> CountAsync<TEntity>(QueryField where = null,
             string hints = null,
+			string traceKey = TraceKeys.Count,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -278,7 +301,8 @@ namespace RepoDb
                 return await connection.CountAsync<TEntity>(where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -296,11 +320,13 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public async Task<long> CountAsync<TEntity>(IEnumerable<QueryField> where = null,
             string hints = null,
+			string traceKey = TraceKeys.Count,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -314,7 +340,8 @@ namespace RepoDb
                 return await connection.CountAsync<TEntity>(where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -332,11 +359,13 @@ namespace RepoDb
         /// <typeparam name="TEntity">The type of the data entity.</typeparam>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public async Task<long> CountAsync<TEntity>(QueryGroup where = null,
             string hints = null,
+			string traceKey = TraceKeys.Count,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -350,7 +379,8 @@ namespace RepoDb
                 return await connection.CountAsync<TEntity>(where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -372,11 +402,13 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public long Count(string tableName,
             object where = null,
             string hints = null,
+			string traceKey = TraceKeys.Count,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -389,7 +421,8 @@ namespace RepoDb
                     where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -406,11 +439,13 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public long Count(string tableName,
             QueryField where = null,
             string hints = null,
+			string traceKey = TraceKeys.Count,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -423,7 +458,8 @@ namespace RepoDb
                     where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -440,11 +476,13 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public long Count(string tableName,
             IEnumerable<QueryField> where = null,
             string hints = null,
+			string traceKey = TraceKeys.Count,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -457,7 +495,8 @@ namespace RepoDb
                     where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -474,11 +513,13 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public long Count(string tableName,
             QueryGroup where = null,
             string hints = null,
+			string traceKey = TraceKeys.Count,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -491,7 +532,8 @@ namespace RepoDb
                     hints: hints,
                     where: where,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -512,12 +554,14 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public async Task<long> CountAsync(string tableName,
             object where = null,
             string hints = null,
+			string traceKey = TraceKeys.Count,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -531,7 +575,8 @@ namespace RepoDb
                     where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -549,12 +594,14 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public async Task<long> CountAsync(string tableName,
             QueryField where = null,
             string hints = null,
+			string traceKey = TraceKeys.Count,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -568,7 +615,8 @@ namespace RepoDb
                     where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -586,12 +634,14 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public async Task<long> CountAsync(string tableName,
             IEnumerable<QueryField> where = null,
             string hints = null,
+			string traceKey = TraceKeys.Count,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -605,7 +655,8 @@ namespace RepoDb
                     where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -623,12 +674,14 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table to be used.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>An integer value that holds the number of rows from the table.</returns>
         public async Task<long> CountAsync(string tableName,
             QueryGroup where = null,
             string hints = null,
+			string traceKey = TraceKeys.Count,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -642,7 +695,8 @@ namespace RepoDb
                     where: where,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);

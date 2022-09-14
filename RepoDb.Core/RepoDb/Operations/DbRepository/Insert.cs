@@ -20,12 +20,14 @@ namespace RepoDb
         /// <param name="entity">The data entity object to be inserted.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public object Insert<TEntity>(string tableName,
             TEntity entity,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.Insert,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -40,7 +42,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -60,12 +63,14 @@ namespace RepoDb
         /// <param name="entity">The data entity object to be inserted.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public TResult Insert<TEntity, TResult>(string tableName,
             TEntity entity,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.Insert,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -80,7 +85,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -98,11 +104,13 @@ namespace RepoDb
         /// <param name="entity">The data entity object to be inserted.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public object Insert<TEntity>(TEntity entity,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.Insert,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -116,7 +124,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -135,11 +144,13 @@ namespace RepoDb
         /// <param name="entity">The data entity object to be inserted.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public TResult Insert<TEntity, TResult>(TEntity entity,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.Insert,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -153,7 +164,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -176,6 +188,7 @@ namespace RepoDb
         /// <param name="entity">The data entity object to be inserted.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
@@ -183,6 +196,7 @@ namespace RepoDb
             TEntity entity,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.Insert,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -198,7 +212,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -219,6 +234,7 @@ namespace RepoDb
         /// <param name="entity">The data entity object to be inserted.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
@@ -226,6 +242,7 @@ namespace RepoDb
             TEntity entity,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.Insert,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -241,7 +258,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -260,12 +278,14 @@ namespace RepoDb
         /// <param name="entity">The data entity object to be inserted.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public async Task<object> InsertAsync<TEntity>(TEntity entity,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.Insert,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -280,7 +300,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -300,12 +321,14 @@ namespace RepoDb
         /// <param name="entity">The data entity object to be inserted.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
 		/// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public async Task<TResult> InsertAsync<TEntity, TResult>(TEntity entity,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.Insert,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -320,7 +343,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -343,12 +367,14 @@ namespace RepoDb
         /// <param name="entity">The dynamic object to be inserted.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public object Insert(string tableName,
             object entity,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.Insert,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -362,7 +388,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -381,12 +408,14 @@ namespace RepoDb
         /// <param name="entity">The dynamic object to be inserted.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
         public TResult Insert<TResult>(string tableName,
             object entity,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.Insert,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -400,7 +429,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder);
             }
@@ -422,6 +452,7 @@ namespace RepoDb
         /// <param name="entity">The dynamic object to be inserted.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The value of the identity field if present, otherwise, the value of the primary field.</returns>
@@ -429,6 +460,7 @@ namespace RepoDb
             object entity,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.Insert,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -443,7 +475,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);
@@ -463,6 +496,7 @@ namespace RepoDb
         /// <param name="entity">The dynamic object to be inserted.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
+		/// <param name="traceKey">The tracing key to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The value of the primary key of the newly inserted data.</returns>
@@ -470,6 +504,7 @@ namespace RepoDb
             object entity,
             IEnumerable<Field> fields = null,
             string hints = null,
+			string traceKey = TraceKeys.Insert,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -484,7 +519,8 @@ namespace RepoDb
                     fields: fields,
                     hints: hints,
                     commandTimeout: CommandTimeout,
-                    transaction: transaction,
+                    traceKey: traceKey,
+					transaction: transaction,
                     trace: Trace,
                     statementBuilder: StatementBuilder,
                     cancellationToken: cancellationToken);

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Data;
 
 namespace RepoDb
 {
@@ -10,20 +12,20 @@ namespace RepoDb
         /// <summary>
         /// Creates a new instance of <see cref="CancellableTraceLog"/> object.
         /// </summary>
-        /// <param name="sessionId">The session identifier for the current trace object.</param>
-        /// <param name="statement">A SQL statement that was used in the trace operation.</param>
-        /// <param name="parameter">An object that was used as a parameter in the operation.</param>
-        /// <param name="result">A result of the operation.</param>
+        /// <param name="sessionId"></param>
+        /// <param name="key"></param>
+        /// <param name="statement"></param>
+        /// <param name="parameters"></param>
+        /// <param name="executionTime"></param>
         protected internal CancellableTraceLog(Guid sessionId,
+            string key,
             string statement,
-            object parameter,
-            object result)
-            : base(sessionId,
-                  statement,
-                  parameter,
-                  result,
-                  null)
+            IEnumerable<IDbDataParameter> parameters = null,
+            TimeSpan? executionTime = null)
+            : base(sessionId, key, statement, parameters, executionTime)
         { }
+
+        #region Properties
 
         /// <summary>
         /// Gets a value whether the operation is cancelled.
@@ -35,6 +37,10 @@ namespace RepoDb
         /// </summary>
         public bool IsThrowException { get; private set; }
 
+        #endregion
+
+        #region Methods
+
         /// <summary>
         /// Cancel the current executing repository operation.
         /// </summary>
@@ -44,5 +50,7 @@ namespace RepoDb
             IsCancelled = true;
             IsThrowException = throwException;
         }
+
+        #endregion
     }
 }

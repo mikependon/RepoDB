@@ -1,5 +1,4 @@
-﻿using RepoDb.Exceptions;
-using RepoDb.Extensions;
+﻿using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.Requests;
 using System;
@@ -27,7 +26,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -37,6 +37,7 @@ namespace RepoDb
             object where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -47,6 +48,7 @@ namespace RepoDb
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -60,7 +62,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -70,6 +73,7 @@ namespace RepoDb
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -80,6 +84,7 @@ namespace RepoDb
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -93,7 +98,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -103,6 +109,7 @@ namespace RepoDb
             QueryField where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -113,6 +120,7 @@ namespace RepoDb
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -126,7 +134,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -136,6 +145,7 @@ namespace RepoDb
             IEnumerable<QueryField> where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -146,6 +156,7 @@ namespace RepoDb
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -159,7 +170,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -169,6 +181,7 @@ namespace RepoDb
             QueryGroup where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -179,6 +192,7 @@ namespace RepoDb
                 where: where,
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -192,7 +206,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -202,6 +217,7 @@ namespace RepoDb
             object where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -212,6 +228,7 @@ namespace RepoDb
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -225,7 +242,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -235,6 +253,7 @@ namespace RepoDb
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -245,6 +264,7 @@ namespace RepoDb
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -258,7 +278,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -268,6 +289,7 @@ namespace RepoDb
             QueryField where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -278,6 +300,7 @@ namespace RepoDb
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -291,7 +314,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -301,6 +325,7 @@ namespace RepoDb
             IEnumerable<QueryField> where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -311,6 +336,7 @@ namespace RepoDb
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -324,7 +350,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -334,6 +361,7 @@ namespace RepoDb
             QueryGroup where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -344,6 +372,7 @@ namespace RepoDb
                 where: where,
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -357,7 +386,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -367,6 +397,7 @@ namespace RepoDb
             QueryGroup where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -393,6 +424,7 @@ namespace RepoDb
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace);
         }
@@ -406,7 +438,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -416,6 +449,7 @@ namespace RepoDb
             object where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -426,6 +460,7 @@ namespace RepoDb
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -440,7 +475,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -450,6 +486,7 @@ namespace RepoDb
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -460,6 +497,7 @@ namespace RepoDb
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -474,7 +512,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -484,6 +523,7 @@ namespace RepoDb
             QueryField where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -494,6 +534,7 @@ namespace RepoDb
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -508,7 +549,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -518,6 +560,7 @@ namespace RepoDb
             IEnumerable<QueryField> where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -528,6 +571,7 @@ namespace RepoDb
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -542,7 +586,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -552,6 +597,7 @@ namespace RepoDb
             QueryGroup where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -562,6 +608,7 @@ namespace RepoDb
                 where: where,
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -576,7 +623,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -586,6 +634,7 @@ namespace RepoDb
             object where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -596,6 +645,7 @@ namespace RepoDb
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -610,7 +660,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -620,6 +671,7 @@ namespace RepoDb
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -630,6 +682,7 @@ namespace RepoDb
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -644,7 +697,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -654,6 +708,7 @@ namespace RepoDb
             QueryField where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -664,6 +719,7 @@ namespace RepoDb
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -678,7 +734,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -688,6 +745,7 @@ namespace RepoDb
             IEnumerable<QueryField> where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -698,6 +756,7 @@ namespace RepoDb
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -712,7 +771,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -722,6 +782,7 @@ namespace RepoDb
             QueryGroup where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -732,6 +793,7 @@ namespace RepoDb
                 where: where,
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -746,7 +808,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -756,6 +819,7 @@ namespace RepoDb
             QueryGroup where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -782,6 +846,7 @@ namespace RepoDb
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace);
         }
@@ -798,7 +863,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -809,6 +875,7 @@ namespace RepoDb
             object where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -820,6 +887,7 @@ namespace RepoDb
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -834,7 +902,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -845,6 +914,7 @@ namespace RepoDb
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -856,6 +926,7 @@ namespace RepoDb
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -870,7 +941,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -881,6 +953,7 @@ namespace RepoDb
             QueryField where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -892,6 +965,7 @@ namespace RepoDb
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -906,7 +980,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -917,6 +992,7 @@ namespace RepoDb
             IEnumerable<QueryField> where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -928,6 +1004,7 @@ namespace RepoDb
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -942,7 +1019,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -953,6 +1031,7 @@ namespace RepoDb
             QueryGroup where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -964,6 +1043,7 @@ namespace RepoDb
                 where: where,
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -978,7 +1058,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -989,6 +1070,7 @@ namespace RepoDb
             object where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -1000,6 +1082,7 @@ namespace RepoDb
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -1014,7 +1097,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -1025,6 +1109,7 @@ namespace RepoDb
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -1036,6 +1121,7 @@ namespace RepoDb
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -1050,7 +1136,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -1061,6 +1148,7 @@ namespace RepoDb
             QueryField where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -1072,6 +1160,7 @@ namespace RepoDb
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -1086,7 +1175,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -1097,6 +1187,7 @@ namespace RepoDb
             IEnumerable<QueryField> where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -1108,6 +1199,7 @@ namespace RepoDb
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -1122,7 +1214,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -1133,6 +1226,7 @@ namespace RepoDb
             QueryGroup where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -1144,6 +1238,7 @@ namespace RepoDb
                 where: where,
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -1158,7 +1253,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -1168,6 +1264,7 @@ namespace RepoDb
             Field field,
             QueryGroup where = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             string hints = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -1196,6 +1293,7 @@ namespace RepoDb
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 cancellationToken: cancellationToken);
@@ -1210,7 +1308,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -1221,6 +1320,7 @@ namespace RepoDb
             object where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -1232,6 +1332,7 @@ namespace RepoDb
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -1247,7 +1348,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -1258,6 +1360,7 @@ namespace RepoDb
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -1269,6 +1372,7 @@ namespace RepoDb
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -1284,7 +1388,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -1295,6 +1400,7 @@ namespace RepoDb
             QueryField where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -1306,6 +1412,7 @@ namespace RepoDb
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -1321,7 +1428,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -1332,6 +1440,7 @@ namespace RepoDb
             IEnumerable<QueryField> where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -1343,6 +1452,7 @@ namespace RepoDb
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -1358,7 +1468,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -1369,6 +1480,7 @@ namespace RepoDb
             QueryGroup where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -1380,6 +1492,7 @@ namespace RepoDb
                 where: where,
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -1395,7 +1508,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -1406,6 +1520,7 @@ namespace RepoDb
             object where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -1417,6 +1532,7 @@ namespace RepoDb
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -1432,7 +1548,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -1443,6 +1560,7 @@ namespace RepoDb
             Expression<Func<TEntity, bool>> where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -1454,6 +1572,7 @@ namespace RepoDb
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -1469,7 +1588,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -1480,6 +1600,7 @@ namespace RepoDb
             QueryField where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -1491,6 +1612,7 @@ namespace RepoDb
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -1506,7 +1628,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -1517,6 +1640,7 @@ namespace RepoDb
             IEnumerable<QueryField> where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -1528,6 +1652,7 @@ namespace RepoDb
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -1543,7 +1668,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -1554,6 +1680,7 @@ namespace RepoDb
             QueryGroup where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -1565,6 +1692,7 @@ namespace RepoDb
                 where: where,
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -1580,7 +1708,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -1590,6 +1719,7 @@ namespace RepoDb
             Field field,
             QueryGroup where = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             string hints = null,
             IDbTransaction transaction = null,
             ITrace trace = null,
@@ -1618,6 +1748,7 @@ namespace RepoDb
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 cancellationToken: cancellationToken);
@@ -1635,7 +1766,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -1646,6 +1778,7 @@ namespace RepoDb
             object where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -1656,6 +1789,7 @@ namespace RepoDb
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -1669,7 +1803,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -1680,6 +1815,7 @@ namespace RepoDb
             QueryField where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -1690,6 +1826,7 @@ namespace RepoDb
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -1703,7 +1840,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -1714,6 +1852,7 @@ namespace RepoDb
             IEnumerable<QueryField> where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -1724,6 +1863,7 @@ namespace RepoDb
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -1737,7 +1877,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -1748,6 +1889,7 @@ namespace RepoDb
             QueryGroup where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -1758,6 +1900,7 @@ namespace RepoDb
                 where: where,
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -1771,7 +1914,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -1782,6 +1926,7 @@ namespace RepoDb
             QueryGroup where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -1807,6 +1952,7 @@ namespace RepoDb
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace);
         }
@@ -1820,7 +1966,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -1831,6 +1978,7 @@ namespace RepoDb
             object where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -1841,6 +1989,7 @@ namespace RepoDb
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -1855,7 +2004,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -1866,6 +2016,7 @@ namespace RepoDb
             QueryField where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -1876,6 +2027,7 @@ namespace RepoDb
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -1890,7 +2042,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -1901,6 +2054,7 @@ namespace RepoDb
             IEnumerable<QueryField> where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -1911,6 +2065,7 @@ namespace RepoDb
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -1925,7 +2080,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -1936,6 +2092,7 @@ namespace RepoDb
             QueryGroup where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -1946,6 +2103,7 @@ namespace RepoDb
                 where: where,
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder);
@@ -1960,7 +2118,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -1971,6 +2130,7 @@ namespace RepoDb
             QueryGroup where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null)
@@ -1996,6 +2156,7 @@ namespace RepoDb
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace);
         }
@@ -2012,7 +2173,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -2024,6 +2186,7 @@ namespace RepoDb
             object where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -2035,6 +2198,7 @@ namespace RepoDb
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -2049,7 +2213,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -2061,6 +2226,7 @@ namespace RepoDb
             QueryField where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -2072,6 +2238,7 @@ namespace RepoDb
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -2086,7 +2253,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -2098,6 +2266,7 @@ namespace RepoDb
             IEnumerable<QueryField> where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -2109,6 +2278,7 @@ namespace RepoDb
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -2123,7 +2293,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -2135,6 +2306,7 @@ namespace RepoDb
             QueryGroup where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -2146,6 +2318,7 @@ namespace RepoDb
                 where: where,
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -2160,7 +2333,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -2172,6 +2346,7 @@ namespace RepoDb
             QueryGroup where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -2198,6 +2373,7 @@ namespace RepoDb
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 cancellationToken: cancellationToken);
@@ -2212,7 +2388,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The dynamic expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -2224,6 +2401,7 @@ namespace RepoDb
             object where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -2235,6 +2413,7 @@ namespace RepoDb
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -2250,7 +2429,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -2262,6 +2442,7 @@ namespace RepoDb
             QueryField where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -2273,6 +2454,7 @@ namespace RepoDb
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -2288,7 +2470,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -2300,6 +2483,7 @@ namespace RepoDb
             IEnumerable<QueryField> where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -2311,6 +2495,7 @@ namespace RepoDb
                 where: ToQueryGroup(where),
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -2326,7 +2511,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -2338,6 +2524,7 @@ namespace RepoDb
             QueryGroup where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -2349,6 +2536,7 @@ namespace RepoDb
                 where: where,
                 hints: hints,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 statementBuilder: statementBuilder,
@@ -2364,7 +2552,8 @@ namespace RepoDb
         /// <param name="field">The field to be averaged.</param>
         /// <param name="where">The query expression to be used.</param>
         /// <param name="hints">The table hints to be used.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="statementBuilder">The statement builder object to be used.</param>
@@ -2376,6 +2565,7 @@ namespace RepoDb
             QueryGroup where = null,
             string hints = null,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             IStatementBuilder statementBuilder = null,
@@ -2402,6 +2592,7 @@ namespace RepoDb
                 request: request,
                 param: param,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 trace: trace,
                 cancellationToken: cancellationToken);
@@ -2417,7 +2608,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="request">The actual <see cref="AverageRequest"/> object.</param>
         /// <param name="param">The mapped object parameters.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <returns>The average value of the target field.</returns>
@@ -2425,34 +2617,13 @@ namespace RepoDb
             AverageRequest request,
             object param,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null)
         {
             // Variables
             var commandType = CommandType.Text;
             var commandText = CommandTextCache.GetAverageText(request);
-            var sessionId = Guid.Empty;
-
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
-                trace.BeforeAverage(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(commandText);
-                    }
-                    return default;
-                }
-                commandText = (cancellableTraceLog.Statement ?? commandText);
-                param = (cancellableTraceLog.Parameter ?? param);
-            }
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
             var result = ExecuteScalarInternal<TResult>(connection: connection,
@@ -2462,15 +2633,13 @@ namespace RepoDb
                 cacheKey: null,
                 cacheItemExpiration: null,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 cache: null,
+				trace: trace,
                 entityType: request.Type,
                 dbFields: DbFieldCache.Get(connection, request.Name, transaction, true),
                 skipCommandArrayParametersCheck: true);
-
-            // After Execution
-            trace?.AfterAverage(new TraceLog(sessionId, commandText, param, result,
-                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Result
             return result;
@@ -2486,7 +2655,8 @@ namespace RepoDb
         /// <param name="connection">The connection object to be used.</param>
         /// <param name="request">The actual <see cref="AverageRequest"/> object.</param>
         /// <param name="param">The mapped object parameters.</param>
-        /// <param name="commandTimeout">The command timeout in seconds to be used.</param>
+        /// <param name="traceKey">The tracing key to be used.</param>
+		/// <param name="commandTimeout">The command timeout in seconds to be used.</param>
         /// <param name="transaction">The transaction to be used.</param>
         /// <param name="trace">The trace object to be used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
@@ -2495,6 +2665,7 @@ namespace RepoDb
             AverageRequest request,
             object param,
             int? commandTimeout = null,
+            string traceKey = TraceKeys.Average,
             IDbTransaction transaction = null,
             ITrace trace = null,
             CancellationToken cancellationToken = default)
@@ -2502,28 +2673,6 @@ namespace RepoDb
             // Variables
             var commandType = CommandType.Text;
             var commandText = CommandTextCache.GetAverageText(request);
-            var sessionId = Guid.Empty;
-
-            // Before Execution
-            if (trace != null)
-            {
-                sessionId = Guid.NewGuid();
-                var cancellableTraceLog = new CancellableTraceLog(sessionId, commandText, param, null);
-                trace.BeforeAverage(cancellableTraceLog);
-                if (cancellableTraceLog.IsCancelled)
-                {
-                    if (cancellableTraceLog.IsThrowException)
-                    {
-                        throw new CancelledExecutionException(commandText);
-                    }
-                    return default;
-                }
-                commandText = (cancellableTraceLog.Statement ?? commandText);
-                param = (cancellableTraceLog.Parameter ?? param);
-            }
-
-            // Before Execution Time
-            var beforeExecutionTime = DateTime.UtcNow;
 
             // Actual Execution
             var result = await ExecuteScalarAsyncInternal<TResult>(connection: connection,
@@ -2533,16 +2682,14 @@ namespace RepoDb
                 cacheKey: null,
                 cacheItemExpiration: null,
                 commandTimeout: commandTimeout,
+                traceKey: traceKey,
                 transaction: transaction,
                 cache: null,
+				trace: trace,
                 cancellationToken: cancellationToken,
                 entityType: request.Type,
                 dbFields: await DbFieldCache.GetAsync(connection, request.Name, transaction, true, cancellationToken),
                 skipCommandArrayParametersCheck: true);
-
-            // After Execution
-            trace?.AfterAverage(new TraceLog(sessionId, commandText, param, result,
-                DateTime.UtcNow.Subtract(beforeExecutionTime)));
 
             // Result
             return result;
