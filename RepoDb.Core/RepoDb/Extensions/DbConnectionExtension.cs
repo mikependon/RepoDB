@@ -3227,10 +3227,7 @@ namespace RepoDb
                     .Select(cap => cap.ParameterName)
                     .ToHashSet(StringComparer.OrdinalIgnoreCase);
 
-                command.CreateParameters(param,
-                    propertiesToSkip,
-                    entityType,
-                    dbFields);
+                command.CreateParameters(param, propertiesToSkip, entityType, dbFields);
             }
 
             // Return the command
