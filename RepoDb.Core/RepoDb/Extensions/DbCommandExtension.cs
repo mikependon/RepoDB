@@ -826,18 +826,17 @@ namespace RepoDb.Extensions
             {
                 return null;
             }
-            if (fieldName.Contains("_In_", StringComparison.OrdinalIgnoreCase))
-            {
-                return dbFields?.FirstOrDefault(df =>
-                    fieldName.StartsWith(df.Name, StringComparison.OrdinalIgnoreCase));
-            }
-            else
-            {
-                return dbFields?.FirstOrDefault(df =>
-                    string.Equals(df.Name, fieldName, StringComparison.OrdinalIgnoreCase));
-            }
-        }
 
+            var index = fieldName.IndexOf("_In_", StringComparison.OrdinalIgnoreCase);
+
+            if (index >= 0)
+            {
+                fieldName = fieldName.Substring(0, index);
+            }
+
+            return dbFields?.FirstOrDefault(df =>
+                string.Equals(df.Name, fieldName, StringComparison.OrdinalIgnoreCase));
+        }
 
         /// <summary>
         ///
