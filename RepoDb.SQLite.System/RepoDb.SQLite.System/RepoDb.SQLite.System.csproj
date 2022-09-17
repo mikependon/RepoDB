@@ -3,9 +3,9 @@
   <PropertyGroup>
 	<Title>RepoDb.SQLite.System</Title>
     <TargetFrameworks>netstandard2.0;net5.0;net6.0</TargetFrameworks>
-    <Version>1.0.1</Version>
-    <AssemblyVersion>1.0.0.2</AssemblyVersion>
-    <FileVersion>1.0.0.2</FileVersion>
+    <Version>1.13.0-alpha1</Version>
+    <AssemblyVersion>1.13.0.1</AssemblyVersion>
+    <FileVersion>1.13.0.1</FileVersion>
     <Description>A hybrid .NET ORM library for SQLite (using System.Data.SQLite.Core).</Description>
 	<PackageTags>orm hybrid-orm micro-orm sqlite</PackageTags>
     <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.SqLite</RepositoryUrl>
@@ -15,26 +15,15 @@
     <PackageProjectUrl>https://repodb.net/tutorial/get-started-sqlite</PackageProjectUrl>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>bin\Release\netstandard2.0\RepoDb.SqLite.xml</DocumentationFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DefineConstants>TRACE;DEBUG;NETSTANDARD;NETSTANDARD2_0</DefineConstants>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-    <Optimize>false</Optimize>
-    <DocumentationFile>bin\Debug\netstandard2.0\RepoDb.SqLite.xml</DocumentationFile>
-  </PropertyGroup>
-
-  <ItemGroup>
+	<ItemGroup>
     <Compile Remove="Properties\**" />
     <EmbeddedResource Remove="Properties\**" />
     <None Remove="Properties\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="RepoDb" Version="1.12.9" />
-    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.115.5" />
+    <PackageReference Include="RepoDb" Version="1.13.0-alpha1" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.116" />
   </ItemGroup>
 
   <ItemGroup>

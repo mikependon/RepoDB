@@ -3,9 +3,9 @@
   <PropertyGroup>
 	<Title>RepoDb.MySqlConnector</Title>
     <TargetFrameworks>netstandard2.0;net5.0;net6.0</TargetFrameworks>
-    <Version>1.1.5</Version>
-    <AssemblyVersion>1.1.5.0</AssemblyVersion>
-    <FileVersion>1.1.5.0</FileVersion>
+    <Version>1.13.0-alpha1</Version>
+    <AssemblyVersion>1.13.0.1</AssemblyVersion>
+    <FileVersion>1.13.0.1</FileVersion>
     <Description>A hybrid .NET ORM library for MySQL (using MySqlConnector).</Description>
 	<PackageTags>orm hybrid-orm micro-orm mysql mysqlconnector</PackageTags>
     <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.MySqlConnector</RepositoryUrl>
@@ -16,8 +16,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MySqlConnector" Version="2.1.6" />
-    <PackageReference Include="RepoDb" Version="1.12.10" />
+    <Compile Remove="Attributes\MySqlConnectorTypeMapAttribute.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MySqlConnector" Version="2.1.13" />
+    <PackageReference Include="RepoDb" Version="1.13.0-alpha1" />
     <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
   </ItemGroup>
 

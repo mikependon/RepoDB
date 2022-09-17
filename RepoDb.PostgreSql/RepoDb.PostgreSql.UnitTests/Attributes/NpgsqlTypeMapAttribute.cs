@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Npgsql;
 using NpgsqlTypes;
-using RepoDb.Attributes;
+using RepoDb.Attributes.Parameter.Npgsql;
 using RepoDb.DbSettings;
 using RepoDb.Extensions;
 
@@ -20,7 +20,7 @@ namespace RepoDb.PostgreSql.UnitTests.Attributes
 
         private class NpgsqlTypeMapAttributeTestClass
         {
-            [NpgsqlTypeMap(NpgsqlDbType.Box)]
+            [NpgsqlDbType(NpgsqlDbType.Box)]
             public object ColumnName { get; set; }
         }
 

@@ -121,7 +121,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 Assert.AreEqual(table.Id, result);
 
                 // Act
-                var queryResult = connection.Query<NonIdentityCompleteTable>(result);
+                var queryResult = connection.Query<NonIdentityCompleteTable>(table.Id);
 
                 // Assert
                 Assert.AreEqual(1, queryResult?.Count());

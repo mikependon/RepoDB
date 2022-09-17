@@ -3,9 +3,9 @@
   <PropertyGroup>
 	<Title>RepoDb.PostgreSql</Title>
     <TargetFrameworks>netstandard2.0;net5.0;net6.0</TargetFrameworks>
-    <Version>1.1.5</Version>
-    <AssemblyVersion>1.1.5.3</AssemblyVersion>
-    <FileVersion>1.1.5.3</FileVersion>
+    <Version>1.13.0-alpha1</Version>
+    <AssemblyVersion>1.13.0.1</AssemblyVersion>
+    <FileVersion>1.13.0.1</FileVersion>
     <Description>A hybrid .NET ORM library for PostgreSQL.</Description>
 	<PackageTags>orm hybrid-orm micro-orm postgresql npgsql</PackageTags>
     <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.PostgreSql</RepositoryUrl>
@@ -16,14 +16,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Npgsql" Version="6.0.0" />
-    <PackageReference Include="RepoDb" Version="1.12.10" />
+    <Compile Remove="Attributes\NpgsqlTypeMapAttribute.cs" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-	<PackageReference Include="Npgsql" Version="6.0.3" />
+  <ItemGroup>
+    <PackageReference Include="Npgsql" Version="6.0.7" />
+    <PackageReference Include="RepoDb" Version="1.13.0-alpha1" />
   </ItemGroup>
-
+	
   <ItemGroup>
     <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
   </ItemGroup>

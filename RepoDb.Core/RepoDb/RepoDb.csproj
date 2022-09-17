@@ -1,18 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Title>RepoDB</Title>
-    <TargetFrameworks>netstandard2.0;net5.0;net6.0</TargetFrameworks>
-    <Version>1.12.10</Version>
-    <AssemblyVersion>1.12.10.5</AssemblyVersion>
-    <FileVersion>1.12.10.5</FileVersion>
-    <Description>A hybrid ORM library for .NET.</Description>
-	<PackageTags>orm hybrid-orm micro-orm</PackageTags>
-    <PackageReleaseNotes>http://repodb.net/release/core</PackageReleaseNotes>
-    <PackageProjectUrl>https://repodb.net/</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core</RepositoryUrl>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+	  <Title>RepoDB</Title>
+	  <TargetFrameworks>netstandard2.0;net5.0;net6.0</TargetFrameworks>
+	  <Version>1.13.0-alpha1</Version>
+	  <AssemblyVersion>1.13.0.1</AssemblyVersion>
+	  <FileVersion>1.13.0.1</FileVersion>
+	  <Description>A hybrid ORM library for .NET.</Description>
+	  <PackageTags>orm hybrid-orm micro-orm</PackageTags>
+	  <PackageReleaseNotes>http://repodb.net/release/core</PackageReleaseNotes>
+	  <PackageProjectUrl>https://repodb.net/</PackageProjectUrl>
+	  <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Core</RepositoryUrl>
+	  <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	  <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

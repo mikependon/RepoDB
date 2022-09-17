@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MySqlConnector;
-using RepoDb.Attributes;
+using RepoDb.Attributes.Parameter.MySqlConnector;
 using RepoDb.DbSettings;
 using RepoDb.Extensions;
 
@@ -19,7 +19,7 @@ namespace RepoDb.MySqlConnector.UnitTests.Attributes
 
         private class MySqlDbTypeAttributeTestClass
         {
-            [MySqlConnectorTypeMap(MySqlDbType.Geometry)]
+            [MySqlDbType(MySqlDbType.Geometry)]
             public object ColumnName { get; set; }
         }
 
