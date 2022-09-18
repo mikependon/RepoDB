@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Attributes;
 using RepoDb.Interfaces;
+using RepoDb.Options;
 using System;
 using System.Linq;
 
@@ -26,12 +27,12 @@ namespace RepoDb.UnitTests.Caches
 
         private class StringPropertyHandler : IPropertyHandler<string, string>
         {
-            public string Get(string input, ClassProperty property)
+            public string Get(string input, PropertyHandlerOptions options)
             {
                 throw new NotImplementedException();
             }
 
-            public string Set(string input, ClassProperty property)
+            public string Set(string input, PropertyHandlerOptions options)
             {
                 throw new NotImplementedException();
             }
@@ -39,12 +40,12 @@ namespace RepoDb.UnitTests.Caches
 
         private class TextPropertyHandler : IPropertyHandler<string, string>
         {
-            public string Get(string input, ClassProperty property)
+            public string Get(string input, PropertyHandlerOptions options)
             {
                 throw new NotImplementedException();
             }
 
-            public string Set(string input, ClassProperty property)
+            public string Set(string input, PropertyHandlerOptions options)
             {
                 throw new NotImplementedException();
             }

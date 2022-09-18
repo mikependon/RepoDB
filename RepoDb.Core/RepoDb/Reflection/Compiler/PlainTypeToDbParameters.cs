@@ -43,6 +43,7 @@ namespace RepoDb.Reflection
                 var targetProperty = (entityProperty ?? paramProperty);
                 var valueExpression = (Expression)Expression.Property(entityExpression, paramProperty.PropertyInfo);
                 var parameterExpression = (Expression)null;
+                var parameterVariableExpression = Expression.Parameter(StaticType.DbParameter);
 
                 // Add the value itself
                 if (StaticType.IDbDataParameter.IsAssignableFrom(targetProperty.PropertyInfo.PropertyType))
@@ -58,48 +59,96 @@ namespace RepoDb.Reflection
                 }
                 else
                 {
+                    #region Original
+
+                    //var valueType = targetProperty.PropertyInfo.PropertyType.GetUnderlyingType();
+
+                    //// Property Handler
+                    //InvokePropertyHandlerViaExpression(paramProperty, ref valueType, ref valueExpression);
+
+                    //// Create
+                    //if (valueType.IsEnum)
+                    //{
+                    //    parameterExpression = GetPlainTypeToDbParametersForEnumCompiledFunction(commandParameterExpression,
+                    //        paramProperty,
+                    //        dbField,
+                    //        valueType,
+                    //        valueExpression);
+                    //}
+                    //else
+                    //{
+                    //    parameterExpression = GetPlainTypeToDbParametersForNonEnumCompiledFunction(commandParameterExpression,
+                    //        paramProperty,
+                    //        entityProperty,
+                    //        dbField,
+                    //        valueType,
+                    //        valueExpression);
+                    //}
+
+                    //// Size
+                    //var size = GetSize(null, dbField);
+                    //if (size > 0)
+                    //{
+                    //    var setSizeExpression = GetDbParameterSizeAssignmentExpression(parameterExpression, size);
+                    //    callExpressions.AddIfNotNull(setSizeExpression);
+                    //}
+
+                    //// Type map attributes
+                    //var parameterPropertyValueSetterAttributesExpressions = GetParameterPropertyValueSetterAttributesAssignmentExpressions(
+                    //    parameterExpression,
+                    //    (entityProperty ?? paramProperty));
+                    //callExpressions.AddRangeIfNotNullOrNotEmpty(parameterPropertyValueSetterAttributesExpressions);
+
+                    #endregion
+
                     var valueType = targetProperty.PropertyInfo.PropertyType.GetUnderlyingType();
 
-                    // Property Handler
-                    InvokePropertyHandlerViaExpression(paramProperty, ref valueType, ref valueExpression);
+                    // Create parameter
+                    parameterExpression = CreateDbParameterExpression(
+                        commandParameterExpression, paramProperty.GetMappedName());
 
-                    // Create
-                    if (valueType.IsEnum)
+                    // Variable
+                    callExpressions.Add(Expression.Assign(parameterVariableExpression,
+                        ConvertExpressionToTypeExpression(parameterExpression, StaticType.DbParameter)));
+
+                    // Convert
+                    if (Converter.ConversionType == ConversionType.Automatic && dbField?.Type != null)
                     {
-                        parameterExpression = GetPlainTypeToDbParametersForEnumCompiledFunction(commandParameterExpression,
-                            paramProperty,
-                            dbField,
-                            valueType,
-                            valueExpression);
+                        valueType = dbField.Type.GetUnderlyingType();
+                        valueExpression = ConvertExpressionWithAutomaticConversion(valueExpression, valueType);
                     }
-                    else
-                    {
-                        parameterExpression = GetPlainTypeToDbParametersForNonEnumCompiledFunction(commandParameterExpression,
-                            paramProperty,
-                            entityProperty,
-                            dbField,
-                            valueType,
-                            valueExpression);
-                    }
+
+                    // Property Handler
+                    InvokePropertyHandlerViaExpression(parameterVariableExpression, paramProperty, ref valueType, ref valueExpression);
+
+                    // Value
+                    var setValueExpression = GetDbParameterValueAssignmentExpression(parameterVariableExpression,
+                        valueExpression);
+                    callExpressions.AddIfNotNull(setValueExpression);
+
+                    // DbType
+                    var setDbTypeExpression = GetDbParameterDbTypeAssignmentExpression(parameterVariableExpression,
+                        paramProperty, entityProperty, dbField, valueType);
+                    callExpressions.AddIfNotNull(setDbTypeExpression);
 
                     // Size
                     var size = GetSize(null, dbField);
                     if (size > 0)
                     {
-                        var sizeExpression = GetDbParameterSizeAssignmentExpression(parameterExpression, GetSize(null, dbField));
-                        callExpressions.AddIfNotNull(sizeExpression);
+                        var setSizeExpression = GetDbParameterSizeAssignmentExpression(parameterVariableExpression, size);
+                        callExpressions.AddIfNotNull(setSizeExpression);
                     }
 
                     // Type map attributes
                     var parameterPropertyValueSetterAttributesExpressions = GetParameterPropertyValueSetterAttributesAssignmentExpressions(
-                        parameterExpression,
+                        parameterVariableExpression,
                         (entityProperty ?? paramProperty));
                     callExpressions.AddRangeIfNotNullOrNotEmpty(parameterPropertyValueSetterAttributesExpressions);
                 }
 
                 // DbCommand.Parameters.Add
                 var parametersExpression = Expression.Property(commandParameterExpression, "Parameters");
-                var addExpression = Expression.Call(parametersExpression, GetDbParameterCollectionAddMethod(), parameterExpression);
+                var addExpression = Expression.Call(parametersExpression, GetDbParameterCollectionAddMethod(), parameterVariableExpression);
 
                 // Add
                 callExpressions.Add(addExpression);
@@ -111,6 +160,80 @@ namespace RepoDb.Reflection
                 .Compile();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="commandParameterExpression"></param>
+        /// <param name="parameterName"></param>
+        /// <returns></returns>
+        public static Expression CreateDbParameterExpression(Expression commandParameterExpression,
+            string parameterName)
+        {
+            var methodInfo = GetDbCommandCreateParameterMethod();
+
+            return Expression.Call(methodInfo, new Expression[]
+            {
+                commandParameterExpression,
+                Expression.Constant(parameterName),
+                ConvertExpressionToTypeExpression(Expression.Constant(DBNull.Value), StaticType.Object),
+                Expression.Default(StaticType.DbTypeNullable),
+            });
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="commandParameterExpression"></param>
+        /// <param name="paramProperty"></param>
+        /// <param name="entityProperty"></param>
+        /// <param name="dbField"></param>
+        /// <param name="valueType"></param>
+        /// <returns></returns>
+        public static Expression GetDbParameterDbTypeAssignmentExpression(Expression commandParameterExpression,
+            ClassProperty paramProperty,
+            ClassProperty entityProperty,
+            DbField dbField,
+            Type valueType)
+        {
+            // Automatic
+            if (Converter.ConversionType == ConversionType.Automatic && dbField?.Type != null)
+            {
+                valueType = dbField.Type.GetUnderlyingType();
+            }
+
+            // DbType
+            // TODO: Optimize with below.
+            // var dbType = (entityProperty ?? paramProperty).GetDbType() ?? (dbField?.Type ?? valueType ?? valueType)?.GetDbType();
+            var dbType = (paramProperty == null ? null : TypeMapCache.Get(paramProperty.GetDeclaringType(), paramProperty.PropertyInfo)) ??
+                (entityProperty == null ? null : TypeMapCache.Get(entityProperty.GetDeclaringType(), entityProperty.PropertyInfo));
+
+            valueType ??= dbField?.Type.GetUnderlyingType();
+            if (dbType == null && valueType != null)
+            {
+                var resolver = new ClientTypeToDbTypeResolver();
+                dbType =
+                    valueType.GetDbType() ??                        // type level, use TypeMapCache
+                    resolver.Resolve(valueType) ??                  // type level, primitive mapping
+                    (dbField?.Type != null ?
+                        resolver.Resolve(dbField?.Type) : null);    // Fallback to the database type
+            }
+            // End TODO
+
+            // Return
+            return dbType == null ? null :
+                GetDbParameterDbTypeAssignmentExpression(commandParameterExpression, dbType.Value);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="commandParameterExpression"></param>
+        /// <param name="paramProperty"></param>
+        /// <param name="entityProperty"></param>
+        /// <param name="dbField"></param>
+        /// <param name="valueType"></param>
+        /// <param name="valueExpression"></param>
+        /// <returns></returns>
         public static Expression GetPlainTypeToDbParametersForNonEnumCompiledFunction(Expression commandParameterExpression,
             ClassProperty paramProperty,
             ClassProperty entityProperty,
@@ -126,6 +249,8 @@ namespace RepoDb.Reflection
             }
 
             // DbType
+            // TODO: Optimize with below.
+            // var dbType = (entityProperty ?? paramProperty).GetDbType() ?? (dbField?.Type ?? valueType ?? valueType)?.GetDbType();
             var dbType = (paramProperty == null ? null : TypeMapCache.Get(paramProperty.GetDeclaringType(), paramProperty.PropertyInfo)) ??
                 (entityProperty == null ? null : TypeMapCache.Get(entityProperty.GetDeclaringType(), entityProperty.PropertyInfo));
 
@@ -139,6 +264,8 @@ namespace RepoDb.Reflection
                     (dbField?.Type != null ?
                         resolver.Resolve(dbField?.Type) : null);    // Fallback to the database type
             }
+            // End TODO
+
             var dbTypeExpression = dbType == null ? GetNullableTypeExpression(StaticType.DbType) :
                 ConvertExpressionToNullableExpression(Expression.Constant(dbType), StaticType.DbType);
 
@@ -189,14 +316,16 @@ namespace RepoDb.Reflection
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="paramterExpression"></param>
         /// <param name="classProperty"></param>
         /// <param name="valueType"></param>
         /// <param name="valueExpression"></param>
-        public static void InvokePropertyHandlerViaExpression(ClassProperty classProperty,
+        public static void InvokePropertyHandlerViaExpression(Expression paramterExpression,
+            ClassProperty classProperty,
             ref Type valueType,
             ref Expression valueExpression)
         {
-            var (expression, type) = ConvertExpressionToPropertyHandlerSetExpressionTuple(valueExpression, classProperty, valueType);
+            var (expression, type) = ConvertExpressionToPropertyHandlerSetExpressionTuple(valueExpression, paramterExpression, classProperty, valueType);
             if (type != null)
             {
                 valueType = type;

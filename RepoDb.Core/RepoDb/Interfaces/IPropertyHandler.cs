@@ -1,4 +1,6 @@
-﻿namespace RepoDb.Interfaces
+﻿using RepoDb.Options;
+
+namespace RepoDb.Interfaces
 {
     /// <summary>
     /// An interface that is used to mark a class to be a property handler.
@@ -7,22 +9,24 @@
     /// <typeparam name="TResult">Usually refers to the type of the data entity type property. The input type for the setter; the output type for the getter.</typeparam>
     public interface IPropertyHandler<TInput, TResult>
     {
+        // TODO: Change to the proper type
+
         /// <summary>
         /// The method that is being invoked when the outbound transformation is triggered (i.e.: BatchQuery, ExecuteQuery and Query).
         /// </summary>
         /// <param name="input">The input value.</param>
-        /// <param name="property">The property in the current execution context.</param>
-        /// <returns>An instance of the TResult generic type.</returns>
+        /// <param name="options">The object that contains optional values in the current execution context.</param>
+        /// <returns>An instance of the <typeparamref name="TInput"/> generic type.</returns>
         TResult Get(TInput input,
-            ClassProperty property);
+            PropertyHandlerOptions options);
 
         /// <summary>
         /// The method that is being invoked when the inbound transformation is triggered (i.e.: Insert, Merge and Update).
         /// </summary>
         /// <param name="input">The input value.</param>
-        /// <param name="property">The property in the current execution context.</param>
-        /// <returns>An instance of the TInput generic type.</returns>
+        /// <param name="options">The object that contains optional values in the current execution context.</param>
+        /// <returns>An instance of the <typeparamref name="TInput"/> generic type.</returns>
         TInput Set(TResult input,
-            ClassProperty property);
+            PropertyHandlerOptions options);
     }
 }

@@ -2,6 +2,7 @@
 using RepoDb.Enumerations;
 using RepoDb.Exceptions;
 using RepoDb.Interfaces;
+using RepoDb.Options;
 using RepoDb.Resolvers;
 using System;
 using System.Collections.Generic;
@@ -302,18 +303,17 @@ namespace RepoDb.Extensions
             DbType? dbType,
             Type fallbackType)
         {
-            // Property Handler
-            InvokePropertyHandler(classProperty, ref valueType, ref value);
-
-            // Auto conversion
-            EnsureAutomaticConversion(dbField, ref valueType, ref value);
-
             // DbType
             valueType ??= (dbField?.Type.GetUnderlyingType() ?? fallbackType);
             dbType ??= classProperty?.GetDbType() ?? (dbField?.Type ?? fallbackType ?? valueType)?.GetDbType();
 
             // Create the parameter
             var parameter = command.CreateParameter(name, value, dbType, parameterDirection);
+
+            // Set the parameter value
+            InvokePropertyHandler(classProperty, parameter, ref valueType, ref value);
+            EnsureAutomaticConversion(dbField, ref valueType, ref value);
+            parameter.Value = (value ?? DBNull.Value);
 
             // Set the size
             var parameterSize = GetSize(size, dbField);
@@ -352,9 +352,6 @@ namespace RepoDb.Extensions
             ParameterDirection? parameterDirection,
             DbType? dbType)
         {
-            // Property handler
-            InvokePropertyHandler(classProperty, ref valueType, ref value);
-
             // DbType
             dbType ??= IsPostgreSqlUserDefined(dbField) ? default :
                 classProperty?.GetDbType() ??
@@ -364,6 +361,12 @@ namespace RepoDb.Extensions
 
             // Create the parameter
             var parameter = command.CreateParameter(name, value, dbType, parameterDirection);
+
+            // Property handler
+            InvokePropertyHandler(classProperty, parameter, ref valueType, ref value);
+
+            // Set the parameter value (in case)
+            parameter.Value = (value ?? DBNull.Value);
 
             // Set the size
             parameter.Size = GetSize(size, dbField);
@@ -694,10 +697,12 @@ namespace RepoDb.Extensions
         /// 
         /// </summary>
         /// <param name="classProperty"></param>
+        /// <param name="parameter"></param>
         /// <param name="valueType"></param>
         /// <param name="value"></param>
         /// <returns></returns>
         private static object InvokePropertyHandler(ClassProperty classProperty,
+            IDbDataParameter parameter,
             ref Type valueType,
             ref object value)
         {
@@ -707,7 +712,9 @@ namespace RepoDb.Extensions
             if (propertyHandler != null)
             {
                 var propertyHandlerSetMethod = propertyHandler.GetType().GetMethod("Set");
-                value = propertyHandlerSetMethod.Invoke(propertyHandler, new[] { value, classProperty });
+                value = propertyHandlerSetMethod
+                    .Invoke(propertyHandler, new[] { value,
+                        PropertyHandlerSetOptions.Create(parameter,classProperty) });
                 valueType = propertyHandlerSetMethod.ReturnType.GetUnderlyingType();
             }
 

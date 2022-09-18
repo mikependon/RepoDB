@@ -65,7 +65,7 @@ namespace RepoDb.Reflection
             {
                 var classProperty = PropertyCache.Get(entityType, property, true);
                 valueExpression = ConvertExpressionToPropertyHandlerSetExpression(valueExpression,
-                    classProperty, targetType ?? classProperty.PropertyInfo.PropertyType);
+                    null, classProperty, targetType ?? classProperty.PropertyInfo.PropertyType);
             }
 
             // Assign the value into DataEntity.Property

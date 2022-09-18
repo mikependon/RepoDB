@@ -11,6 +11,7 @@ using RepoDb.Interfaces;
 using RepoDb;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using RepoDb.Options;
 
 namespace RepoDb.IntegrationTests
 {
@@ -35,7 +36,7 @@ namespace RepoDb.IntegrationTests
 
         public class BooleanValuePropertyHandler : IPropertyHandler<bool?, BooleanValue?>
         {
-            public BooleanValue? Get(bool? input, ClassProperty property)
+            public BooleanValue? Get(bool? input, PropertyHandlerOptions options)
             {
                 if (input == null)
                 {
@@ -44,7 +45,7 @@ namespace RepoDb.IntegrationTests
                 return input == true ? BooleanValue.True : BooleanValue.False;
             }
 
-            public bool? Set(BooleanValue? input, ClassProperty property)
+            public bool? Set(BooleanValue? input, PropertyHandlerOptions options)
             {
                 if (input == null)
                 {
@@ -56,7 +57,7 @@ namespace RepoDb.IntegrationTests
 
         public class DirectionPropertyHandler : IPropertyHandler<string, Direction?>
         {
-            public Direction? Get(string input, ClassProperty property)
+            public Direction? Get(string input, PropertyHandlerOptions options)
             {
                 if (input == null)
                 {
@@ -73,7 +74,7 @@ namespace RepoDb.IntegrationTests
                 return null;
             }
 
-            public string Set(Direction? input, ClassProperty property)
+            public string Set(Direction? input, PropertyHandlerOptions options)
             {
                 if (input == null)
                 {
@@ -2261,10 +2262,10 @@ namespace RepoDb.IntegrationTests
                 dbToEnum = mapping.ToDictionary(n => n.Value, n => n.Key);
             }
 
-            public TEnum Get(TDbType input, ClassProperty property)
+            public TEnum Get(TDbType input, PropertyHandlerOptions options)
                 => input == null || !dbToEnum.TryGetValue(input, out var v) ? default(TEnum) : v;
 
-            public TDbType Set(TEnum input, ClassProperty property)
+            public TDbType Set(TEnum input, PropertyHandlerOptions options)
                 => input == null || !enumToDb.TryGetValue(input, out var v) ? default(TDbType) : v;
         }
 
