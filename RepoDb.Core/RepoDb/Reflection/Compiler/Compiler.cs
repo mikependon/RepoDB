@@ -5,6 +5,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+
 using RepoDb.Enumerations;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
@@ -229,13 +230,28 @@ namespace RepoDb.Reflection
         /// </summary>
         /// <param name="handlerInstance"></param>
         /// <returns></returns>
-        internal static MethodInfo GetPropertyHandlerGetMethod(object handlerInstance) =>
-            handlerInstance?.GetType().GetMethod("Get") ??
-            // In F#, the instance is not a concrete class, therefore, we need to extract it by interface
-            GetPropertyHandlerGetMethodFromInterface(handlerInstance);
+        internal static Type GetPropertyHandlerInterfaceOrHandlerType(object handlerInstance)
+        {
+            if (handlerInstance is null) return null;
+            Type handlerType = handlerInstance.GetType();
+            var propertyHandlerInterface = handlerType
+                .GetInterfaces()
+                .FirstOrDefault(interfaceType =>
+                    interfaceType.IsInterfacedTo(StaticType.IPropertyHandler));
+            return propertyHandlerInterface ?? handlerType;
+        }
 
         /// <summary>
-        /// 
+        ///
+        /// </summary>
+        /// <param name="handlerInstance"></param>
+        /// <returns></returns>
+        internal static MethodInfo GetPropertyHandlerGetMethod(object handlerInstance) =>
+            // In F#, the instance is not a concrete class, therefore, we need to extract it by interface
+            GetPropertyHandlerInterfaceOrHandlerType(handlerInstance)?.GetMethod("Get");
+
+        /// <summary>
+        ///
         /// </summary>
         /// <param name="handlerInstance"></param>
         /// <returns></returns>
@@ -275,7 +291,7 @@ namespace RepoDb.Reflection
         /// <param name="handlerInstance"></param>
         /// <returns></returns>
         internal static MethodInfo GetPropertyHandlerSetMethod(object handlerInstance) =>
-            handlerInstance?.GetType().GetMethod("Set");
+            GetPropertyHandlerInterfaceOrHandlerType(handlerInstance)?.GetMethod("Set");
 
         /// <summary>
         ///
@@ -1512,7 +1528,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="dbField"></param>
         /// <returns></returns>
@@ -1521,7 +1537,7 @@ namespace RepoDb.Reflection
             string.Equals(dbField?.Provider, "PGSQL", StringComparison.OrdinalIgnoreCase);
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="size"></param>
         /// <param name="dbField"></param>
@@ -1637,7 +1653,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="classProperty"></param>
         /// <param name="dbField"></param>
@@ -1699,7 +1715,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="commandParameterExpression"></param>
         /// <param name="dbField"></param>
@@ -1712,7 +1728,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="commandParameterExpression"></param>
         /// <param name="dbField"></param>
