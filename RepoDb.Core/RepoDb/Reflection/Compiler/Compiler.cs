@@ -1759,7 +1759,7 @@ namespace RepoDb.Reflection
         /// <param name="dbField"></param>
         /// <param name="entityIndex"></param>
         /// <param name="dbSetting"></param>
-        internal static MethodCallExpression GetDbParameterNameAssignmentExpression(ParameterExpression parameterVariableExpression,
+        internal static MethodCallExpression GetDbParameterNameAssignmentExpression(Expression parameterVariableExpression,
             DbField dbField,
             int entityIndex,
             IDbSetting dbSetting)
@@ -1775,7 +1775,7 @@ namespace RepoDb.Reflection
         /// </summary>
         /// <param name="parameterVariableExpression"></param>
         /// <param name="parameterName"></param>
-        internal static MethodCallExpression GetDbParameterNameAssignmentExpression(ParameterExpression parameterVariableExpression,
+        internal static MethodCallExpression GetDbParameterNameAssignmentExpression(Expression parameterVariableExpression,
             string parameterName) =>
             GetDbParameterNameAssignmentExpression(parameterVariableExpression, Expression.Constant(parameterName));
 
@@ -1783,12 +1783,12 @@ namespace RepoDb.Reflection
         ///
         /// </summary>
         /// <param name="parameterVariableExpression"></param>
-        /// <param name="parmaterNameExpression"></param>
-        internal static MethodCallExpression GetDbParameterNameAssignmentExpression(ParameterExpression parameterVariableExpression,
-            Expression parmaterNameExpression)
+        /// <param name="paramaterNameExpression"></param>
+        internal static MethodCallExpression GetDbParameterNameAssignmentExpression(Expression parameterVariableExpression,
+            Expression paramaterNameExpression)
         {
-            var dbParameterValueNameMethod = StaticType.DbParameter.GetProperty("Name").SetMethod;
-            return Expression.Call(parameterVariableExpression, dbParameterValueNameMethod, parmaterNameExpression);
+            var dbParameterValueNameMethod = StaticType.DbParameter.GetProperty("ParameterName").SetMethod;
+            return Expression.Call(parameterVariableExpression, dbParameterValueNameMethod, paramaterNameExpression);
         }
 
         /// <summary>
@@ -1812,8 +1812,9 @@ namespace RepoDb.Reflection
         {
             var parameterExpression = ConvertExpressionToTypeExpression(parameterVariableExpression, StaticType.DbParameter);
             var dbParameterValueSetMethod = StaticType.DbParameter.GetProperty("Value").SetMethod;
+            var convertToDbNullMethod = StaticType.Converter.GetMethod("NullToDbNull");
             return Expression.Call(parameterExpression, dbParameterValueSetMethod,
-                ConvertExpressionToTypeExpression(valueExpression, StaticType.Object));
+                Expression.Call(convertToDbNullMethod, ConvertExpressionToTypeExpression(valueExpression, StaticType.Object)));
         }
 
         /// <summary>
@@ -1939,11 +1940,23 @@ namespace RepoDb.Reflection
         /// <summary>
         ///
         /// </summary>
+        /// <param name="parameterVariableExpression"></param>
+        /// <returns></returns>
+        internal static MethodCallExpression EnsureTableValueParameterExpression(Expression parameterVariableExpression)
+        {
+            var method = StaticType.DbCommandExtension.GetMethod("EnsureTableValueParameter",
+                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+            return Expression.Call(method, parameterVariableExpression);
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
         /// <param name="commandParameterExpression"></param>
         /// <param name="parameterVariable"></param>
         /// <returns></returns>
         internal static MethodCallExpression GetDbCommandParametersAddExpression(Expression commandParameterExpression,
-            ParameterExpression parameterVariable)
+            Expression parameterVariable)
         {
             var dbCommandParametersProperty = StaticType.DbCommand.GetProperty("Parameters");
             var dbParameterCollection = Expression.Property(commandParameterExpression, dbCommandParametersProperty);
