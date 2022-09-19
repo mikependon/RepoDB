@@ -10,6 +10,7 @@ using System.Linq;
 using RepoDb.IntegrationTests.Models;
 using System.Data.Common;
 using RepoDb.Enumerations;
+using RepoDb.Options;
 
 namespace RepoDb.IntegrationTests
 {
@@ -51,14 +52,13 @@ namespace RepoDb.IntegrationTests
 
             public int SetMethodCallCount { get; set; }
 
-            public ClassHandlerIdentityTable Get(ClassHandlerIdentityTable entity,
-                DbDataReader reader)
+            public ClassHandlerIdentityTable Get(ClassHandlerIdentityTable entity, ClassHandlerGetOptions options)
             {
                 ++GetMethodCallCount;
                 return entity;
             }
 
-            public ClassHandlerIdentityTable Set(ClassHandlerIdentityTable entity)
+            public ClassHandlerIdentityTable Set(ClassHandlerIdentityTable entity, ClassHandlerSetOptions options)
             {
                 ++SetMethodCallCount;
                 return entity;

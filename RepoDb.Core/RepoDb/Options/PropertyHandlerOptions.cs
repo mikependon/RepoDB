@@ -1,5 +1,4 @@
-﻿
-namespace RepoDb.Options
+﻿namespace RepoDb.Options
 {
     /// <summary>
     /// An option class that is containing the optional values during the hydration process or when pushing the property values towards the database.

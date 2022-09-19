@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using RepoDb.Interfaces;
+using RepoDb.Options;
 using RepoDb.UnitTests.CustomObjects;
 using System.Data;
 using System.Data.Common;
@@ -76,7 +77,7 @@ namespace RepoDb.UnitTests.ClassHandlers
             }
 
             // Assert
-            classHandler.Verify(c => c.Get(It.IsAny<ClassHandlerTestClass>(), It.IsAny<DbDataReader>()), Times.Once);
+            classHandler.Verify(c => c.Get(It.IsAny<ClassHandlerTestClass>(), It.IsAny<ClassHandlerGetOptions>()), Times.Once);
         }
 
         //[TestMethod]

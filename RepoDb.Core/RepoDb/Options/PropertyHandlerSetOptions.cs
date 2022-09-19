@@ -22,7 +22,7 @@ namespace RepoDb.Options
         #region Properties
 
         /// <summary>
-        /// Gets the associated <see cref="IDataReader"/> object in used during the push operation.
+        /// Gets the associated <see cref="IDbDataParameter"/> object in used during the push operation.
         /// </summary>
         public IDbDataParameter DbParameter { get; }
 

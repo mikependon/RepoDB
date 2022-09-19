@@ -5,7 +5,6 @@ using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-
 using RepoDb.Enumerations;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
@@ -220,10 +219,9 @@ namespace RepoDb.Reflection
         ///
         /// </summary>
         /// <param name="handlerInstance"></param>
-        /// <param name="types"></param>
         /// <returns></returns>
-        internal static MethodInfo GetClassHandlerSetMethod(object handlerInstance, params Type[] types) =>
-            handlerInstance?.GetType().GetMethod("Set", types);
+        internal static MethodInfo GetClassHandlerSetMethod(object handlerInstance) =>
+            handlerInstance?.GetType().GetMethod("Set");
 
         /// <summary>
         ///
@@ -936,28 +934,7 @@ namespace RepoDb.Reflection
             return Expression.Call(Expression.Constant(handlerInstance),
                 getMethod,
                 entityExpression,
-                readerParameterExpression);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="readerExpression"></param>
-        /// <param name="classProperty"></param>
-        /// <returns></returns>
-        internal static Expression CreatePropertyHandlerGetOptionsExpression(Expression readerExpression,
-            ClassProperty classProperty)
-        {
-            // Get the 'Create' method
-            var method = StaticType.PropertyHandlerGetOptions.GetMethod("Create",
-                BindingFlags.Static | BindingFlags.NonPublic);
-            var classPropertyExpression = ConvertExpressionToTypeExpression(Expression.Constant(classProperty), StaticType.ClassProperty);
-
-            // Set to default
-            readerExpression ??= Expression.Default(StaticType.DbDataReader);
-
-            // Call the method
-            return Expression.Call(method, readerExpression, classPropertyExpression);
+                CreateClassHandlerGetOptionsExpression(readerParameterExpression));
         }
 
         /// <summary>
@@ -1019,33 +996,14 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="parameterExpression"></param>
-        /// <param name="classProperty"></param>
-        /// <returns></returns>
-        internal static Expression CreatePropertyHandlerSetOptionsExpression(Expression parameterExpression,
-            ClassProperty classProperty)
-        {
-            // Get the 'Create' method
-            var method = StaticType.PropertyHandlerSetOptions.GetMethod("Create",
-                BindingFlags.Static | BindingFlags.NonPublic);
-            var classPropertyExpression = Expression.Constant(classProperty);
-
-            // Set to default
-            parameterExpression ??= Expression.Default(StaticType.IDbDataParameter);
-
-            // Call the method
-            return Expression.Call(method, parameterExpression, classPropertyExpression);
-        }
-
-        /// <summary>
         ///
         /// </summary>
+        /// <param name="commandExpression"></param>
         /// <param name="resultType"></param>
         /// <param name="entityOrEntitiesExpression"></param>
         /// <returns></returns>
-        internal static Expression ConvertExpressionToClassHandlerSetExpression(Type resultType,
+        internal static Expression ConvertExpressionToClassHandlerSetExpression(Expression commandExpression,
+            Type resultType,
             Expression entityOrEntitiesExpression)
         {
             // Check the handler
@@ -1064,13 +1022,14 @@ namespace RepoDb.Reflection
             }
 
             // Call the IClassHandler.Set method
-            var typeOfListEntity = typeof(IList<>).MakeGenericType(StaticType.Object);
-            var type = typeOfListEntity.IsAssignableFrom(entityOrEntitiesExpression.Type) ?
-                typeOfListEntity : resultType;
-            var setMethod = GetClassHandlerSetMethod(handlerInstance, type);
+            //var typeOfListEntity = typeof(IList<>).MakeGenericType(StaticType.Object);
+            //var type = typeOfListEntity.IsAssignableFrom(entityOrEntitiesExpression.Type) ?
+            //    typeOfListEntity : resultType;
+            var setMethod = GetClassHandlerSetMethod(handlerInstance);
             entityOrEntitiesExpression = Expression.Call(Expression.Constant(handlerInstance),
                 setMethod,
-                ConvertExpressionToTypeExpression(entityOrEntitiesExpression, resultType));
+                ConvertExpressionToTypeExpression(entityOrEntitiesExpression, resultType),
+                CreateClassHandlerSetOptionsExpression(commandExpression));
 
             // Return the block
             return entityOrEntitiesExpression;
@@ -2148,7 +2107,7 @@ namespace RepoDb.Reflection
             var entityVariables = new List<ParameterExpression>();
 
             // Class handler
-            entityParameter = ConvertExpressionToClassHandlerSetExpression(entityType, entityParameter);
+            entityParameter = ConvertExpressionToClassHandlerSetExpression(commandParameterExpression, entityType, entityParameter);
 
             // Entity instance
             entityVariables.Add(entityVariableExpression);

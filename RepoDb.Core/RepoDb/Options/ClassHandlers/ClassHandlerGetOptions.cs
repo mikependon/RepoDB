@@ -3,18 +3,20 @@
 namespace RepoDb.Options
 {
     /// <summary>
-    /// An option class that is containing the optional values during the hydration process of the property.
+    /// An option class that is containing the optional values when pushing the class properties values towards the database.
     /// </summary>
-    public sealed class PropertyHandlerGetOptions : PropertyHandlerOptions
+    public sealed class ClassHandlerGetOptions : ClassHandlerOptions
     {
         /// <summary>
         /// 
         /// </summary>
+        private ClassHandlerGetOptions() { }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="reader"></param>
-        /// <param name="property"></param>
-        private PropertyHandlerGetOptions(DbDataReader reader,
-            ClassProperty property)
-            : base(property)
+        internal ClassHandlerGetOptions(DbDataReader reader)
         {
             DataReader = reader;
         }
@@ -34,11 +36,9 @@ namespace RepoDb.Options
         /// 
         /// </summary>
         /// <param name="reader"></param>
-        /// <param name="property"></param>
         /// <returns></returns>
-        internal static PropertyHandlerGetOptions Create(DbDataReader reader,
-            ClassProperty property) =>
-            new PropertyHandlerGetOptions(reader, property);
+        internal static ClassHandlerGetOptions Create(DbDataReader reader) =>
+            new ClassHandlerGetOptions(reader);
 
         #endregion
     }

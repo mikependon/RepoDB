@@ -46,6 +46,21 @@ namespace RepoDb
         public static Type CharArray => typeof(char[]);
 
         /// <summary>
+        /// Gets a type of the <see cref="Options.ClassHandlerGetOptions"/> .NET CLR type.
+        /// </summary>
+        public static Type ClassHandlerGetOptions => typeof(ClassHandlerGetOptions);
+
+        /// <summary>
+        /// Gets a type of the <see cref="Options.ClassHandlerOptions"/> .NET CLR type.
+        /// </summary>
+        public static Type ClassHandlerOptions => typeof(ClassHandlerOptions);
+
+        /// <summary>
+        /// Gets a type of the <see cref="Options.ClassHandlerSetOptions"/> .NET CLR type.
+        /// </summary>
+        public static Type ClassHandlerSetOptions => typeof(ClassHandlerSetOptions);
+
+        /// <summary>
         /// Gets a type of the <see cref="RepoDb.ClassProperty"/> .NET CLR type.
         /// </summary>
         public static Type ClassProperty => typeof(ClassProperty);
