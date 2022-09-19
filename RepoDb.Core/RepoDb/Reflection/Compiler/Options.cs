@@ -58,7 +58,8 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static Expression CreatePropertyHandlerGetOptionsExpression(Expression readerExpression,
             ClassProperty classProperty) =>
-            CreatePropertyHandlerGetOptionsExpression(readerExpression, Expression.Constant(classProperty));
+            CreatePropertyHandlerGetOptionsExpression(readerExpression,
+                classProperty == null ? null : Expression.Constant(classProperty));
 
         /// <summary>
         /// 
@@ -75,6 +76,7 @@ namespace RepoDb.Reflection
 
             // Set to default
             readerExpression ??= Expression.Default(StaticType.DbDataReader);
+            classPropertyExpression ??= Expression.Default(StaticType.ClassProperty);
 
             // Call the method
             return Expression.Call(method, readerExpression, classPropertyExpression);
@@ -88,7 +90,8 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static Expression CreatePropertyHandlerSetOptionsExpression(Expression parameterExpression,
             ClassProperty classProperty) =>
-            CreatePropertyHandlerSetOptionsExpression(parameterExpression, Expression.Constant(classProperty));
+            CreatePropertyHandlerSetOptionsExpression(parameterExpression,
+                classProperty == null ? null : Expression.Constant(classProperty));
 
         /// <summary>
         /// 
@@ -105,6 +108,7 @@ namespace RepoDb.Reflection
 
             // Set to default
             parameterExpression ??= Expression.Default(StaticType.IDbDataParameter);
+            classPropertyExpression ??= Expression.Default(StaticType.ClassProperty);
 
             // Call the method
             return Expression.Call(method, parameterExpression, classPropertyExpression);
