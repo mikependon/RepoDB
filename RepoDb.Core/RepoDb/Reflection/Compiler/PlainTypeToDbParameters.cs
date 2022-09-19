@@ -41,68 +41,106 @@ namespace RepoDb.Reflection
                 var dbField = dbFields?.FirstOrDefault(df =>
                     string.Equals(df.Name, paramProperty.GetMappedName(), StringComparison.OrdinalIgnoreCase));
                 var targetProperty = (entityProperty ?? paramProperty);
+                var parameterName = paramProperty.GetMappedName(); // There is a purpose of why it is not 'targetProperty'
                 var valueExpression = (Expression)Expression.Property(entityExpression, paramProperty.PropertyInfo);
-                var parameterExpression = (Expression)null;
 
                 // Add the value itself
                 if (StaticType.IDbDataParameter.IsAssignableFrom(targetProperty.PropertyInfo.PropertyType))
                 {
-                    parameterExpression = valueExpression;
+                    // The 'valueExpression' is of type 'IDbDataParameter' itself
+
+                    #region DbParameter
 
                     // Set the name
-                    var dbParameterParameterNameSetMethod = StaticType.DbParameter.GetProperty("ParameterName").SetMethod;
-                    var parameterName = targetProperty.PropertyInfo.Name;
-                    var setParameterNameExpression = Expression.Call(parameterExpression, dbParameterParameterNameSetMethod,
-                        Expression.Constant(parameterName));
-                    callExpressions.AddIfNotNull(setParameterNameExpression);
+                    var setNameExpression = GetDbParameterNameAssignmentExpression(valueExpression, parameterName);
+                    callExpressions.AddIfNotNull(setNameExpression);
+
+                    // DbCommand.Parameters.Add
+                    var addExpression = GetDbCommandParametersAddExpression(commandParameterExpression, valueExpression);
+                    callExpressions.Add(addExpression);
+
+                    #endregion
                 }
                 else
                 {
-                    var valueType = targetProperty.PropertyInfo.PropertyType.GetUnderlyingType();
+                    #region NewParameter
 
-                    // Property Handler
-                    InvokePropertyHandlerViaExpression(paramProperty, ref valueType, ref valueExpression);
+                    var underlyingType = targetProperty.PropertyInfo.PropertyType.GetUnderlyingType();
+                    var valueType = GetPropertyHandlerSetMethodReturnType(paramProperty, underlyingType) ?? underlyingType;
+                    var parameterVariableExpression = Expression.Variable(StaticType.DbParameter, $"var{parameterName}");
+                    var parameterCallExpressions = new List<Expression>();
 
                     // Create
+                    var createParameterExpression =
+                        CreateDbParameterExpression(commandParameterExpression, parameterName, valueExpression);
+                    parameterCallExpressions.Add(
+                        Expression.Assign(parameterVariableExpression,
+                            ConvertExpressionToTypeExpression(createParameterExpression, StaticType.DbParameter)));
+
+                    // Convert
+                    if (Converter.ConversionType == ConversionType.Automatic && dbField?.Type != null)
+                    {
+                        valueType = dbField.Type.GetUnderlyingType();
+                        valueExpression = ConvertExpressionWithAutomaticConversion(valueExpression, valueType);
+                    }
+
+                    // DbType
+                    var dbType = (DbType?)null;
                     if (valueType.IsEnum)
                     {
-                        parameterExpression = GetPlainTypeToDbParametersForEnumCompiledFunction(commandParameterExpression,
-                            paramProperty,
-                            dbField,
-                            valueType,
-                            valueExpression);
+                        dbType = IsPostgreSqlUserDefined(dbField) ? default :
+                            paramProperty.GetDbType() ??
+                            valueType.GetDbType() ??
+                            (dbField != null ? new ClientTypeToDbTypeResolver().Resolve(dbField.Type) : null) ??
+                            (DbType?)Converter.EnumDefaultDatabaseType;
                     }
                     else
                     {
-                        parameterExpression = GetPlainTypeToDbParametersForNonEnumCompiledFunction(commandParameterExpression,
-                            paramProperty,
-                            entityProperty,
-                            dbField,
-                            valueType,
-                            valueExpression);
+                        var targetType = dbField?.Type.GetUnderlyingType() ?? valueType;
+                        dbType = targetProperty.GetDbType() ??
+                            targetType?.GetDbType() ??
+                            new ClientTypeToDbTypeResolver().Resolve(targetType);
                     }
+                    var setDbTypeExpression = GetDbParameterDbTypeAssignmentExpression(parameterVariableExpression, dbType);
+                    parameterCallExpressions.AddIfNotNull(setDbTypeExpression);
+
+                    // PropertyHandler
+                    InvokePropertyHandlerViaExpression(
+                        parameterVariableExpression, paramProperty, ref valueType, ref valueExpression);
+
+                    // Value
+                    var setValueExpression = GetDbParameterValueAssignmentExpression(parameterVariableExpression,
+                        valueExpression);
+                    parameterCallExpressions.AddIfNotNull(setValueExpression);
 
                     // Size
                     var size = GetSize(null, dbField);
                     if (size > 0)
                     {
-                        var sizeExpression = GetDbParameterSizeAssignmentExpression(parameterExpression, GetSize(null, dbField));
-                        callExpressions.AddIfNotNull(sizeExpression);
+                        var setSizeExpression = GetDbParameterSizeAssignmentExpression(parameterVariableExpression, size);
+                        parameterCallExpressions.AddIfNotNull(setSizeExpression);
+                    }
+
+                    // Table-Valued Parameters
+                    if (valueType == StaticType.DataTable)
+                    {
+                        parameterCallExpressions.AddIfNotNull(EnsureTableValueParameterExpression(parameterVariableExpression));
                     }
 
                     // Type map attributes
                     var parameterPropertyValueSetterAttributesExpressions = GetParameterPropertyValueSetterAttributesAssignmentExpressions(
-                        parameterExpression,
-                        (entityProperty ?? paramProperty));
-                    callExpressions.AddRangeIfNotNullOrNotEmpty(parameterPropertyValueSetterAttributesExpressions);
+                        parameterVariableExpression, targetProperty);
+                    parameterCallExpressions.AddRangeIfNotNullOrNotEmpty(parameterPropertyValueSetterAttributesExpressions);
+
+                    // DbCommand.Parameters.Add
+                    var addExpression = GetDbCommandParametersAddExpression(commandParameterExpression, parameterVariableExpression);
+                    parameterCallExpressions.Add(addExpression);
+
+                    // Add the parameter block
+                    callExpressions.Add(Expression.Block(new[] { parameterVariableExpression }, parameterCallExpressions));
+
+                    #endregion
                 }
-
-                // DbCommand.Parameters.Add
-                var parametersExpression = Expression.Property(commandParameterExpression, "Parameters");
-                var addExpression = Expression.Call(parametersExpression, GetDbParameterCollectionAddMethod(), parameterExpression);
-
-                // Add
-                callExpressions.Add(addExpression);
             }
 
             // Return
@@ -111,92 +149,41 @@ namespace RepoDb.Reflection
                 .Compile();
         }
 
-        public static Expression GetPlainTypeToDbParametersForNonEnumCompiledFunction(Expression commandParameterExpression,
-            ClassProperty paramProperty,
-            ClassProperty entityProperty,
-            DbField dbField,
-            Type valueType,
-            Expression valueExpression)
-        {
-            // Automatic
-            if (Converter.ConversionType == ConversionType.Automatic && dbField?.Type != null)
-            {
-                valueType = dbField.Type.GetUnderlyingType();
-                valueExpression = ConvertExpressionWithAutomaticConversion(valueExpression, valueType);
-            }
-
-            // DbType
-            var dbType = (paramProperty == null ? null : TypeMapCache.Get(paramProperty.GetDeclaringType(), paramProperty.PropertyInfo)) ??
-                (entityProperty == null ? null : TypeMapCache.Get(entityProperty.GetDeclaringType(), entityProperty.PropertyInfo));
-
-            valueType ??= dbField?.Type.GetUnderlyingType();
-            if (dbType == null && valueType != null)
-            {
-                var resolver = new ClientTypeToDbTypeResolver();
-                dbType =
-                    valueType.GetDbType() ??                        // type level, use TypeMapCache
-                    resolver.Resolve(valueType) ??                  // type level, primitive mapping
-                    (dbField?.Type != null ?
-                        resolver.Resolve(dbField?.Type) : null);    // Fallback to the database type
-            }
-            var dbTypeExpression = dbType == null ? GetNullableTypeExpression(StaticType.DbType) :
-                ConvertExpressionToNullableExpression(Expression.Constant(dbType), StaticType.DbType);
-
-            // DbCommandExtension.CreateParameter
-            var methodInfo = GetDbCommandCreateParameterMethod();
-            return Expression.Call(methodInfo, new Expression[]
-            {
-                commandParameterExpression,
-                Expression.Constant(paramProperty.GetMappedName()),
-                ConvertExpressionToTypeExpression(valueExpression, StaticType.Object),
-                dbTypeExpression
-            });
-        }
-
         /// <summary>
         /// 
         /// </summary>
         /// <param name="commandParameterExpression"></param>
-        /// <param name="paramProperty"></param>
-        /// <param name="dbField"></param>
-        /// <param name="valueType"></param>
+        /// <param name="parameterName"></param>
         /// <param name="valueExpression"></param>
         /// <returns></returns>
-        public static Expression GetPlainTypeToDbParametersForEnumCompiledFunction(Expression commandParameterExpression,
-            ClassProperty paramProperty,
-            DbField dbField,
-            Type valueType,
+        public static Expression CreateDbParameterExpression(Expression commandParameterExpression,
+            string parameterName,
             Expression valueExpression)
         {
-            // DbType
-            var dbType = IsPostgreSqlUserDefined(dbField) ? default :
-                paramProperty.GetDbType() ??
-                valueType.GetDbType() ??
-                (dbField != null ? new ClientTypeToDbTypeResolver().Resolve(dbField.Type) : null) ??
-                (DbType?)Converter.EnumDefaultDatabaseType;
-
-            // DbCommandExtension.CreateParameter
             var methodInfo = GetDbCommandCreateParameterMethod();
+
             return Expression.Call(methodInfo, new Expression[]
             {
                 commandParameterExpression,
-                Expression.Constant(paramProperty.GetMappedName()),
+                Expression.Constant(parameterName),
                 ConvertExpressionToTypeExpression(valueExpression, StaticType.Object),
-                ConvertExpressionToNullableExpression(Expression.Constant(dbType), StaticType.DbType)
+                Expression.Default(StaticType.DbTypeNullable),
             });
         }
 
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="paramterExpression"></param>
         /// <param name="classProperty"></param>
         /// <param name="valueType"></param>
         /// <param name="valueExpression"></param>
-        public static void InvokePropertyHandlerViaExpression(ClassProperty classProperty,
+        public static void InvokePropertyHandlerViaExpression(Expression paramterExpression,
+            ClassProperty classProperty,
             ref Type valueType,
             ref Expression valueExpression)
         {
-            var (expression, type) = ConvertExpressionToPropertyHandlerSetExpressionTuple(valueExpression, classProperty, valueType);
+            var (expression, type) = ConvertExpressionToPropertyHandlerSetExpressionTuple(valueExpression, paramterExpression, classProperty, valueType);
             if (type != null)
             {
                 valueType = type;

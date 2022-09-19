@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
+using RepoDb.Options;
 using RepoDb.UnitTests.CustomObjects;
 using System;
 using System.Collections.Generic;
@@ -40,13 +41,13 @@ namespace RepoDb.UnitTests.Extensions
 
         private class StringToGuidPropertyHandler : IPropertyHandler<string, Guid>
         {
-            public Guid Get(string input, ClassProperty property)
+            public Guid Get(string input, PropertyHandlerGetOptions options)
             {
                 Guid.TryParse(input, out Guid output);
                 return output;
             }
 
-            public string Set(Guid input, ClassProperty property)
+            public string Set(Guid input, PropertyHandlerSetOptions options)
             {
                 return input.ToString();
             }

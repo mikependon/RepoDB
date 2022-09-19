@@ -29,7 +29,15 @@ namespace RepoDb
         #region Methods
 
         /// <summary>
-        /// Converts a value to null if the value is equals to <see cref="DBNull.Value"/>.
+        /// Converts the value into <see cref="DBNull.Value"/> if it is null.
+        /// </summary>
+        /// <param name="value">The value to be checked for <see cref="DBNull.Value"/>.</param>
+        /// <returns>The converted value.</returns>
+        public static object NullToDbNull(object value) =>
+            ReferenceEquals(null, value) ? DBNull.Value : value;
+
+        /// <summary>
+        /// Converts the value into null if the value is equals to <see cref="DBNull.Value"/>.
         /// </summary>
         /// <param name="value">The value to be checked for <see cref="DBNull.Value"/>.</param>
         /// <returns>The converted value.</returns>

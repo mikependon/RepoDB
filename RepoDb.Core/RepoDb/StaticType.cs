@@ -3,6 +3,7 @@ using RepoDb.Attributes.Parameter;
 using RepoDb.Enumerations;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
+using RepoDb.Options;
 using RepoDb.Types;
 using System;
 using System.Collections.Generic;
@@ -43,6 +44,21 @@ namespace RepoDb
         /// Gets a type of the <see cref="char"/> (array) .NET CLR type.
         /// </summary>
         public static Type CharArray => typeof(char[]);
+
+        /// <summary>
+        /// Gets a type of the <see cref="Options.ClassHandlerGetOptions"/> .NET CLR type.
+        /// </summary>
+        public static Type ClassHandlerGetOptions => typeof(ClassHandlerGetOptions);
+
+        /// <summary>
+        /// Gets a type of the <see cref="Options.ClassHandlerOptions"/> .NET CLR type.
+        /// </summary>
+        public static Type ClassHandlerOptions => typeof(ClassHandlerOptions);
+
+        /// <summary>
+        /// Gets a type of the <see cref="Options.ClassHandlerSetOptions"/> .NET CLR type.
+        /// </summary>
+        public static Type ClassHandlerSetOptions => typeof(ClassHandlerSetOptions);
 
         /// <summary>
         /// Gets a type of the <see cref="RepoDb.ClassProperty"/> .NET CLR type.
@@ -243,6 +259,21 @@ namespace RepoDb
         /// Gets a type of the <see cref="Enumerations.Operation"/> .NET CLR type.
         /// </summary>
         public static Type Operation => typeof(Operation);
+
+        /// <summary>
+        /// Gets a type of the <see cref="Options.PropertyHandlerGetOptions"/> .NET CLR type.
+        /// </summary>
+        public static Type PropertyHandlerGetOptions => typeof(PropertyHandlerGetOptions);
+
+        /// <summary>
+        /// Gets a type of the <see cref="Options.PropertyHandlerOptions"/> .NET CLR type.
+        /// </summary>
+        public static Type PropertyHandlerOptions => typeof(PropertyHandlerOptions);
+
+        /// <summary>
+        /// Gets a type of the <see cref="Options.PropertyHandlerSetOptions"/> .NET CLR type.
+        /// </summary>
+        public static Type PropertyHandlerSetOptions => typeof(PropertyHandlerSetOptions);
 
         /// <summary>
         /// Gets a type of the <see cref="PropertyValueAttribute"/> .NET CLR type.

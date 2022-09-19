@@ -7,6 +7,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Data;
 using System.Text;
+using RepoDb.Options;
 
 namespace RepoDb.UnitTests.Mappers
 {
@@ -156,10 +157,10 @@ namespace RepoDb.UnitTests.Mappers
         }
         public class WithHandlerPropertyHandler : IPropertyHandler<decimal?, WithHandlerEnum?>
         {
-            public WithHandlerEnum? Get(decimal? input, ClassProperty property)
+            public WithHandlerEnum? Get(decimal? input, PropertyHandlerGetOptions options)
                 => throw new NotImplementedException();
 
-            public decimal? Set(WithHandlerEnum? input, ClassProperty property)
+            public decimal? Set(WithHandlerEnum? input, PropertyHandlerSetOptions options)
                 => input switch
                 {
                     WithHandlerEnum.A => 100,

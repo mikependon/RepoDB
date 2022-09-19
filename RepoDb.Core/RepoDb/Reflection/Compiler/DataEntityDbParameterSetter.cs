@@ -32,7 +32,7 @@ namespace RepoDb.Reflection
             var bodyExpressions = new List<Expression>();
 
             // Class handler
-            var handledEntityParameterExpression = ConvertExpressionToClassHandlerSetExpression(entityType, entityParameterExpression);
+            var handledEntityParameterExpression = ConvertExpressionToClassHandlerSetExpression(commandParameterExpression, entityType, entityParameterExpression);
 
             // Field directions
             fieldDirections.AddRange(GetInputFieldDirections(inputFields));

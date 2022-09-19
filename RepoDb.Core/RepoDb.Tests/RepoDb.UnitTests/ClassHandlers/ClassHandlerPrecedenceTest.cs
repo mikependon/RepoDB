@@ -2,6 +2,7 @@
 using Moq;
 using RepoDb.Attributes;
 using RepoDb.Interfaces;
+using RepoDb.Options;
 using RepoDb.UnitTests.CustomObjects;
 using System.Data;
 using System.Data.Common;
@@ -79,12 +80,12 @@ namespace RepoDb.UnitTests.ClassHandlers
 
         public class TestClassHandler : IClassHandler<ClassHandlerTestClass>
         {
-            public ClassHandlerTestClass Get(ClassHandlerTestClass entity, DbDataReader reader)
+            public ClassHandlerTestClass Get(ClassHandlerTestClass entity, ClassHandlerGetOptions options)
             {
                 return entity;
             }
 
-            public ClassHandlerTestClass Set(ClassHandlerTestClass entity)
+            public ClassHandlerTestClass Set(ClassHandlerTestClass entity, ClassHandlerSetOptions options)
             {
                 return entity;
             }
@@ -92,12 +93,12 @@ namespace RepoDb.UnitTests.ClassHandlers
 
         public class TestClassHandlerForEntityWithAttribute : IClassHandler<ClassHandlerTestClassWithAttribute>
         {
-            public ClassHandlerTestClassWithAttribute Get(ClassHandlerTestClassWithAttribute entity, DbDataReader reader)
+            public ClassHandlerTestClassWithAttribute Get(ClassHandlerTestClassWithAttribute entity, ClassHandlerGetOptions options)
             {
                 return entity;
             }
 
-            public ClassHandlerTestClassWithAttribute Set(ClassHandlerTestClassWithAttribute entity)
+            public ClassHandlerTestClassWithAttribute Set(ClassHandlerTestClassWithAttribute entity, ClassHandlerSetOptions options)
             {
                 return entity;
             }
@@ -140,7 +141,7 @@ namespace RepoDb.UnitTests.ClassHandlers
             }
 
             // Assert
-            classHandler.Verify(c => c.Get(It.IsAny<ClassHandlerTestClass>(), It.IsAny<DbDataReader>()), Times.Once);
+            classHandler.Verify(c => c.Get(It.IsAny<ClassHandlerTestClass>(), It.IsAny<ClassHandlerGetOptions>()), Times.Once);
         }
 
         [TestMethod]
@@ -159,7 +160,7 @@ namespace RepoDb.UnitTests.ClassHandlers
             }
 
             // Assert
-            classHandler.Verify(c => c.Get(It.IsAny<ClassHandlerTestClassWithAttribute>(), It.IsAny<DbDataReader>()), Times.Never);
+            classHandler.Verify(c => c.Get(It.IsAny<ClassHandlerTestClassWithAttribute>(), It.IsAny<ClassHandlerGetOptions>()), Times.Never);
         }
 
         #endregion
