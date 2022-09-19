@@ -96,7 +96,7 @@ namespace RepoDb.UnitTests.PropertyHandlers
             }
 
             // Assert
-            propertyHandler.Verify(c => c.Set(It.IsAny<int>(), It.IsAny<PropertyHandlerOptions>()), Times.Once);
+            propertyHandler.Verify(c => c.Set(It.IsAny<int>(), It.IsAny<PropertyHandlerSetOptions>()), Times.Once);
         }
 
         [TestMethod]
@@ -115,7 +115,7 @@ namespace RepoDb.UnitTests.PropertyHandlers
             }
 
             // Assert
-            propertyHandler.Verify(c => c.Set(It.IsAny<int>(), It.IsAny<PropertyHandlerOptions>()), Times.Once);
+            propertyHandler.Verify(c => c.Set(It.IsAny<int>(), It.IsAny<PropertyHandlerSetOptions>()), Times.Once);
         }
 
         [TestMethod]
@@ -134,7 +134,7 @@ namespace RepoDb.UnitTests.PropertyHandlers
             }
 
             // Assert
-            propertyHandler.Verify(c => c.Set(It.IsAny<int>(), It.IsAny<PropertyHandlerOptions>()), Times.Once);
+            propertyHandler.Verify(c => c.Set(It.IsAny<int>(), It.IsAny<PropertyHandlerSetOptions>()), Times.Once);
         }
 
         [TestMethod]
@@ -153,7 +153,7 @@ namespace RepoDb.UnitTests.PropertyHandlers
             }
 
             // Assert
-            propertyHandler.Verify(c => c.Set(It.IsAny<int>(), It.IsAny<PropertyHandlerOptions>()), Times.Once);
+            propertyHandler.Verify(c => c.Set(It.IsAny<int>(), It.IsAny<PropertyHandlerSetOptions>()), Times.Once);
         }
 
         [TestMethod]
@@ -172,7 +172,7 @@ namespace RepoDb.UnitTests.PropertyHandlers
             }
 
             // Assert
-            propertyHandler.Verify(c => c.Set(It.IsAny<int>(), It.IsAny<PropertyHandlerOptions>()), Times.Once);
+            propertyHandler.Verify(c => c.Set(It.IsAny<int>(), It.IsAny<PropertyHandlerSetOptions>()), Times.Once);
         }
 
         [TestMethod]
@@ -191,7 +191,7 @@ namespace RepoDb.UnitTests.PropertyHandlers
             }
 
             // Assert
-            propertyHandler.Verify(c => c.Set(It.IsAny<int>(), It.IsAny<PropertyHandlerOptions>()), Times.Once);
+            propertyHandler.Verify(c => c.Set(It.IsAny<int>(), It.IsAny<PropertyHandlerSetOptions>()), Times.Once);
         }
 
         #endregion
@@ -214,7 +214,7 @@ namespace RepoDb.UnitTests.PropertyHandlers
             }
 
             // Assert
-            propertyHandler.Verify(c => c.Get(It.IsAny<int>(), It.IsAny<PropertyHandlerOptions>()), Times.Once);
+            propertyHandler.Verify(c => c.Get(It.IsAny<int>(), It.IsAny<PropertyHandlerGetOptions>()), Times.Once);
         }
 
         #endregion
@@ -241,7 +241,7 @@ namespace RepoDb.UnitTests.PropertyHandlers
             }
 
             // Assert
-            propertyHandler.Verify(c => c.Set(It.IsAny<string>(), It.IsAny<PropertyHandlerOptions>()), Times.Once);
+            propertyHandler.Verify(c => c.Set(It.IsAny<string>(), It.IsAny<PropertyHandlerSetOptions>()), Times.Once);
         }
 
         #endregion

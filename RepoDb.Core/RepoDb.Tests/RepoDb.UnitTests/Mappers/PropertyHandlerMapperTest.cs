@@ -29,12 +29,12 @@ namespace RepoDb.UnitTests.Mappers
 
         private class StringPropertyHandler : IPropertyHandler<string, string>
         {
-            public string Get(string input, PropertyHandlerOptions options)
+            public string Get(string input, PropertyHandlerGetOptions options)
             {
                 throw new NotImplementedException();
             }
 
-            public string Set(string input, PropertyHandlerOptions options)
+            public string Set(string input, PropertyHandlerSetOptions options)
             {
                 throw new NotImplementedException();
             }
@@ -42,12 +42,12 @@ namespace RepoDb.UnitTests.Mappers
 
         private class TextPropertyHandler : IPropertyHandler<string, string>
         {
-            public string Get(string input, PropertyHandlerOptions options)
+            public string Get(string input, PropertyHandlerGetOptions options)
             {
                 throw new NotImplementedException();
             }
 
-            public string Set(string input, PropertyHandlerOptions options)
+            public string Set(string input, PropertyHandlerSetOptions options)
             {
                 throw new NotImplementedException();
             }

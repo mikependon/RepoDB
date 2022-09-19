@@ -36,7 +36,7 @@ namespace RepoDb.Options
         /// <param name="parameter"></param>
         /// <param name="property"></param>
         /// <returns></returns>
-        internal static PropertyHandlerOptions Create(IDbDataParameter parameter,
+        internal static PropertyHandlerSetOptions Create(IDbDataParameter parameter,
             ClassProperty property) =>
             new PropertyHandlerSetOptions(parameter, property);
 

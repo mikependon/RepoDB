@@ -37,7 +37,7 @@ namespace RepoDb.Options
         /// <param name="reader"></param>
         /// <param name="property"></param>
         /// <returns></returns>
-        internal static PropertyHandlerOptions Create(DbDataReader reader,
+        internal static PropertyHandlerGetOptions Create(DbDataReader reader,
             ClassProperty property) =>
             new PropertyHandlerGetOptions(reader, property);
 

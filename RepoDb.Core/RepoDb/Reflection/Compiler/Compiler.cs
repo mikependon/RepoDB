@@ -296,10 +296,37 @@ namespace RepoDb.Reflection
         /// <summary>
         ///
         /// </summary>
+        /// <param name="property"></param>
+        /// <returns></returns>
+        internal static Type GetPropertyHandlerSetMethodReturnType(ClassProperty property) =>
+            GetPropertyHandlerSetMethod(property?.GetPropertyHandler())?.ReturnType;
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="handlerInstance"></param>
+        /// <returns></returns>
+        internal static Type GetPropertyHandlerSetMethodReturnType(object handlerInstance) =>
+            GetPropertyHandlerSetMethod(handlerInstance)?.ReturnType;
+
+        /// <summary>
+        ///
+        /// </summary>
         /// <param name="classPropertyParameterInfo"></param>
         /// <returns></returns>
         internal static ParameterInfo GetPropertyHandlerGetParameter(ClassPropertyParameterInfo classPropertyParameterInfo) =>
             GetPropertyHandlerGetParameter(classPropertyParameterInfo?.ClassProperty);
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="property"></param>
+        /// <param name="targetType"></param>
+        /// <returns></returns>
+        internal static Type GetPropertyHandlerSetMethodReturnType(ClassProperty property,
+            Type targetType) =>
+            GetPropertyHandlerSetMethod(property?.GetPropertyHandler() ??
+                PropertyHandlerCache.Get<object>(targetType))?.ReturnType;
 
         /// <summary>
         ///

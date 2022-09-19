@@ -36,7 +36,7 @@ namespace RepoDb.IntegrationTests
 
         public class BooleanValuePropertyHandler : IPropertyHandler<bool?, BooleanValue?>
         {
-            public BooleanValue? Get(bool? input, PropertyHandlerOptions options)
+            public BooleanValue? Get(bool? input, PropertyHandlerGetOptions options)
             {
                 if (input == null)
                 {
@@ -45,7 +45,7 @@ namespace RepoDb.IntegrationTests
                 return input == true ? BooleanValue.True : BooleanValue.False;
             }
 
-            public bool? Set(BooleanValue? input, PropertyHandlerOptions options)
+            public bool? Set(BooleanValue? input, PropertyHandlerSetOptions options)
             {
                 if (input == null)
                 {
@@ -57,7 +57,7 @@ namespace RepoDb.IntegrationTests
 
         public class DirectionPropertyHandler : IPropertyHandler<string, Direction?>
         {
-            public Direction? Get(string input, PropertyHandlerOptions options)
+            public Direction? Get(string input, PropertyHandlerGetOptions options)
             {
                 if (input == null)
                 {
@@ -74,7 +74,7 @@ namespace RepoDb.IntegrationTests
                 return null;
             }
 
-            public string Set(Direction? input, PropertyHandlerOptions options)
+            public string Set(Direction? input, PropertyHandlerSetOptions options)
             {
                 if (input == null)
                 {
@@ -2262,10 +2262,10 @@ namespace RepoDb.IntegrationTests
                 dbToEnum = mapping.ToDictionary(n => n.Value, n => n.Key);
             }
 
-            public TEnum Get(TDbType input, PropertyHandlerOptions options)
+            public TEnum Get(TDbType input, PropertyHandlerGetOptions options)
                 => input == null || !dbToEnum.TryGetValue(input, out var v) ? default(TEnum) : v;
 
-            public TDbType Set(TEnum input, PropertyHandlerOptions options)
+            public TDbType Set(TEnum input, PropertyHandlerSetOptions options)
                 => input == null || !enumToDb.TryGetValue(input, out var v) ? default(TDbType) : v;
         }
 

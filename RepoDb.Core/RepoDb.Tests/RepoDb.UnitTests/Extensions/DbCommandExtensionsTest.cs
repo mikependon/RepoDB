@@ -41,13 +41,13 @@ namespace RepoDb.UnitTests.Extensions
 
         private class StringToGuidPropertyHandler : IPropertyHandler<string, Guid>
         {
-            public Guid Get(string input, PropertyHandlerOptions options)
+            public Guid Get(string input, PropertyHandlerGetOptions options)
             {
                 Guid.TryParse(input, out Guid output);
                 return output;
             }
 
-            public string Set(Guid input, PropertyHandlerOptions options)
+            public string Set(Guid input, PropertyHandlerSetOptions options)
             {
                 return input.ToString();
             }

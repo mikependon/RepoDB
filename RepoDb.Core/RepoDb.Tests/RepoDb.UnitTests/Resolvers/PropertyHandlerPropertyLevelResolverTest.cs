@@ -13,12 +13,12 @@ namespace RepoDb.UnitTests.Resolvers
 
         private class IdentityPropertyHandler : IPropertyHandler<int, int>
         {
-            public int Get(int input, PropertyHandlerOptions options)
+            public int Get(int input, PropertyHandlerGetOptions options)
             {
                 return input;
             }
 
-            public int Set(int input, PropertyHandlerOptions options)
+            public int Set(int input, PropertyHandlerSetOptions options)
             {
                 return input;
             }
@@ -26,12 +26,12 @@ namespace RepoDb.UnitTests.Resolvers
 
         private class IntPropertyHandler : IPropertyHandler<int, int>
         {
-            public int Get(int input, PropertyHandlerOptions options)
+            public int Get(int input, PropertyHandlerGetOptions options)
             {
                 return input;
             }
 
-            public int Set(int input, PropertyHandlerOptions options)
+            public int Set(int input, PropertyHandlerSetOptions options)
             {
                 return input;
             }

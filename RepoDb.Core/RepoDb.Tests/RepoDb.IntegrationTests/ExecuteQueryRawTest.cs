@@ -48,12 +48,12 @@ namespace RepoDb.IntegrationTests
 
         private class IntPropertyHandler : IPropertyHandler<uint, uint>
         {
-            public uint Get(uint input, PropertyHandlerOptions options)
+            public uint Get(uint input, PropertyHandlerGetOptions options)
             {
                 return input * 2;
             }
 
-            public uint Set(uint input, PropertyHandlerOptions options)
+            public uint Set(uint input, PropertyHandlerSetOptions options)
             {
                 return input;
             }

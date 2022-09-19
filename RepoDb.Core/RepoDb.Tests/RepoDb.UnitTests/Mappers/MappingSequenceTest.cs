@@ -157,10 +157,10 @@ namespace RepoDb.UnitTests.Mappers
         }
         public class WithHandlerPropertyHandler : IPropertyHandler<decimal?, WithHandlerEnum?>
         {
-            public WithHandlerEnum? Get(decimal? input, PropertyHandlerOptions options)
+            public WithHandlerEnum? Get(decimal? input, PropertyHandlerGetOptions options)
                 => throw new NotImplementedException();
 
-            public decimal? Set(WithHandlerEnum? input, PropertyHandlerOptions options)
+            public decimal? Set(WithHandlerEnum? input, PropertyHandlerSetOptions options)
                 => input switch
                 {
                     WithHandlerEnum.A => 100,

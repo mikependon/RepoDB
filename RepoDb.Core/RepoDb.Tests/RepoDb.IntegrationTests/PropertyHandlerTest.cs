@@ -39,13 +39,13 @@ namespace RepoDb.IntegrationTests
         private class PropertyToClassHandler : IPropertyHandler<string, TargetModel>
         {
             public TargetModel Get(string input,
-                PropertyHandlerOptions options)
+                PropertyHandlerGetOptions options)
             {
                 return new TargetModel { Value = input };
             }
 
             public string Set(TargetModel input,
-                PropertyHandlerOptions options)
+                PropertyHandlerSetOptions options)
             {
                 return input?.Value;
             }
@@ -57,13 +57,13 @@ namespace RepoDb.IntegrationTests
         public class IntToStringTypeHandler : IPropertyHandler<int?, string>
         {
             public string Get(int? input,
-                PropertyHandlerOptions options)
+                PropertyHandlerGetOptions options)
             {
                 return input > 0 ? Convert.ToString(input) : null;
             }
 
             public int? Set(string input,
-                PropertyHandlerOptions options)
+                PropertyHandlerSetOptions options)
             {
                 return Convert.ToInt32(input);
             }
@@ -75,7 +75,7 @@ namespace RepoDb.IntegrationTests
         public class DecimalToLongTypeHandler : IPropertyHandler<decimal?, long?>
         {
             public long? Get(decimal? input,
-                PropertyHandlerOptions options)
+                PropertyHandlerGetOptions options)
             {
                 if (input > 0)
                 {
@@ -95,7 +95,7 @@ namespace RepoDb.IntegrationTests
             }
 
             public decimal? Set(long? input,
-                PropertyHandlerOptions options)
+                PropertyHandlerSetOptions options)
             {
                 return Convert.ToDecimal(input);
             }
@@ -107,7 +107,7 @@ namespace RepoDb.IntegrationTests
         public class PropertiesToLongTypeHandler : IPropertyHandler<object, long?>
         {
             public long? Get(object input,
-                PropertyHandlerOptions options)
+                PropertyHandlerGetOptions options)
             {
                 var value = Convert.ToInt64(input);
                 if (value > 0)
@@ -128,7 +128,7 @@ namespace RepoDb.IntegrationTests
             }
 
             public object Set(long? input,
-                PropertyHandlerOptions options)
+                PropertyHandlerSetOptions options)
             {
                 return input;
             }
@@ -140,7 +140,7 @@ namespace RepoDb.IntegrationTests
         public class DateTimeToUtcKindHandler : IPropertyHandler<DateTime?, DateTime?>
         {
             public DateTime? Get(DateTime? input,
-                PropertyHandlerOptions options)
+                PropertyHandlerGetOptions options)
             {
                 return input.HasValue ?
                     DateTime.SpecifyKind(input.Value, DateTimeKind.Utc) :
@@ -148,7 +148,7 @@ namespace RepoDb.IntegrationTests
             }
 
             public DateTime? Set(DateTime? input,
-                PropertyHandlerOptions options)
+                PropertyHandlerSetOptions options)
             {
                 return input.HasValue ?
                     DateTime.SpecifyKind(input.Value, DateTimeKind.Unspecified) :
@@ -161,7 +161,7 @@ namespace RepoDb.IntegrationTests
         /// </summary>
         public class DictionaryPropertyHandlerForString : IPropertyHandler<string, IDictionary<string, string>>
         {
-            public IDictionary<string, string> Get(string input, PropertyHandlerOptions options)
+            public IDictionary<string, string> Get(string input, PropertyHandlerGetOptions options)
             {
                 if (input == null)
                 {
@@ -170,7 +170,7 @@ namespace RepoDb.IntegrationTests
                 return new Dictionary<string, string>() { { "MyKey", input } };
             }
 
-            public string Set(IDictionary<string, string> input, PropertyHandlerOptions options)
+            public string Set(IDictionary<string, string> input, PropertyHandlerSetOptions options)
             {
                 if (input == null)
                 {
@@ -185,10 +185,10 @@ namespace RepoDb.IntegrationTests
         /// </summary>
         public class IntPropertyHandlerForTimeSpan : IPropertyHandler<long, TimeSpan>
         {
-            public TimeSpan Get(long input, PropertyHandlerOptions options) =>
+            public TimeSpan Get(long input, PropertyHandlerGetOptions options) =>
                 TimeSpan.FromTicks(input);
 
-            public long Set(TimeSpan input, PropertyHandlerOptions options) =>
+            public long Set(TimeSpan input, PropertyHandlerSetOptions options) =>
                 input.Ticks;
         }
 
