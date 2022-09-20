@@ -1139,7 +1139,7 @@ namespace RepoDb.Reflection
             var valueExpression = (Expression)GetDbReaderGetValueExpression(readerParameterExpression,
                 readerGetValueMethod, readerField.Ordinal);
             var targetTypeUnderlyingType = targetType.GetUnderlyingType();
-            var isAutomaticConversion = Converter.ConversionType == ConversionType.Automatic ||
+            var isAutomaticConversion = ApplicationConfiguration.Options.ConversionType == ConversionType.Automatic ||
                 targetTypeUnderlyingType == StaticType.TimeSpan ||
                 /* SQLite: Guid/String (Vice-Versa) : Enforce automatic conversion for the Primary/Identity fields */
                 readerField.DbField?.IsPrimary == true || readerField.DbField?.IsIdentity == true;
@@ -1460,7 +1460,7 @@ namespace RepoDb.Reflection
             var targetType = GetPropertyHandlerSetParameter(handlerInstance)?.ParameterType ?? dbField.Type;
 
             // Auto-conversion Handling
-            if (Converter.ConversionType == ConversionType.Automatic || dbField?.IsPrimary == true || dbField?.IsIdentity == true)
+            if (ApplicationConfiguration.Options.ConversionType == ConversionType.Automatic || dbField?.IsPrimary == true || dbField?.IsIdentity == true)
             {
                 try
                 {

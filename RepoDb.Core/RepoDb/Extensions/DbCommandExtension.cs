@@ -357,7 +357,7 @@ namespace RepoDb.Extensions
                 classProperty?.GetDbType() ??
                 valueType.GetDbType() ??
                 (dbField != null ? clientTypeToDbTypeResolver.Resolve(dbField.Type) : null) ??
-                (DbType?)Converter.EnumDefaultDatabaseType;
+                (DbType?)ApplicationConfiguration.Options.EnumDefaultDatabaseType;
 
             // Create the parameter
             var parameter = command.CreateParameter(name, value, dbType, parameterDirection);
@@ -814,7 +814,7 @@ namespace RepoDb.Extensions
         /// <returns></returns>
         private static bool IsAutomaticConversion(DbField dbField) =>
             (
-                Converter.ConversionType == ConversionType.Automatic ||
+                ApplicationConfiguration.Options.ConversionType == ConversionType.Automatic ||
                 dbField?.IsPrimary == true ||
                 dbField?.IsIdentity == true
             ) &&

@@ -78,7 +78,7 @@ namespace RepoDb.Reflection
                             ConvertExpressionToTypeExpression(createParameterExpression, StaticType.DbParameter)));
 
                     // Convert
-                    if (Converter.ConversionType == ConversionType.Automatic && dbField?.Type != null)
+                    if (ApplicationConfiguration.Options.ConversionType == ConversionType.Automatic && dbField?.Type != null)
                     {
                         valueType = dbField.Type.GetUnderlyingType();
                         valueExpression = ConvertExpressionWithAutomaticConversion(valueExpression, valueType);
@@ -92,7 +92,7 @@ namespace RepoDb.Reflection
                             paramProperty.GetDbType() ??
                             valueType.GetDbType() ??
                             (dbField != null ? new ClientTypeToDbTypeResolver().Resolve(dbField.Type) : null) ??
-                            (DbType?)Converter.EnumDefaultDatabaseType;
+                            (DbType?)ApplicationConfiguration.Options.EnumDefaultDatabaseType;
                     }
                     else
                     {

@@ -14,10 +14,5 @@
         /// The default value of the cache expiration in minutes.
         /// </summary>
         public const int DefaultCacheItemExpirationInMinutes = 180;
-
-        /// <summary>
-        /// The maximum parameters of ADO.Net when executing a command.
-        /// </summary>
-        public const int MaxParametersCount = 2100;
     }
 }

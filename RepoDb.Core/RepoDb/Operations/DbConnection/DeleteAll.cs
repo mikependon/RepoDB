@@ -21,7 +21,7 @@ namespace RepoDb
          * Link: https://github.com/dotnet/SqlClient/issues/531
          */
 
-        private const int ParameterBatchCount = Constant.MaxParametersCount - 2;
+        private const int ParameterBatchCount = 2100 - 2;
 
         #region DeleteAll<TEntity>
 
