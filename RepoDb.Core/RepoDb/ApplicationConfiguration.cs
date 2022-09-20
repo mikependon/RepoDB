@@ -23,7 +23,7 @@ namespace RepoDb
         /// <summary>
         /// Gets the globalized configurations.
         /// </summary>
-        public static ApplicationConfigurationOptions Options { get; private set; } = new ApplicationConfigurationOptions();
+        public static ApplicationConfigurationOptions Options { get; private set; } = new();
 
         #endregion
     }
