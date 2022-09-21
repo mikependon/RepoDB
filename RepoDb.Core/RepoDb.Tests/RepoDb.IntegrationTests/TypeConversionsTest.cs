@@ -19,7 +19,7 @@ namespace RepoDb.IntegrationTests
             Database.Initialize();
             Cleanup();
 
-            ApplicationConfiguration.Setup(new()
+            GlobalConfiguration.Setup(new()
             {
                 ConversionType = ConversionType.Automatic
             });
@@ -30,7 +30,7 @@ namespace RepoDb.IntegrationTests
         {
             Database.Cleanup();
 
-            ApplicationConfiguration.Setup(new()
+            GlobalConfiguration.Setup(new()
             {
                 ConversionType = ConversionType.Default
             });

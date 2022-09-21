@@ -7,7 +7,7 @@ namespace RepoDb.Options
     /// <summary>
     /// A class that is being used to define the globalized configurations for the application.
     /// </summary>
-    public class ApplicationConfigurationOptions
+    public class GlobalConfigurationOptions
     {
         /// <summary>
         /// Gets or sets the value that defines the conversion logic when converting an instance of <see cref="DbDataReader"/> into a .NET CLR class.

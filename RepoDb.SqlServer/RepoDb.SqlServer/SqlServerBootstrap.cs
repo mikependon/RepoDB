@@ -2,6 +2,7 @@
 using RepoDb.DbHelpers;
 using RepoDb.DbSettings;
 using RepoDb.StatementBuilders;
+using System;
 
 namespace RepoDb
 {
@@ -24,7 +25,13 @@ namespace RepoDb
         /// <summary>
         /// Initializes all the necessary settings for SQL Server.
         /// </summary>
-        public static void Initialize()
+        [Obsolete("Use the GlobalConfiguration.UseSqlServer() method instead.")]
+        public static void Initialize() => InitializeInternal();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static void InitializeInternal()
         {
             // Skip if already initialized
             if (IsInitialized == true)
