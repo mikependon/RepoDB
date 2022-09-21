@@ -11,7 +11,9 @@ namespace RepoDb.SQLite.System.UnitTests.Resolvers
         [TestInitialize]
         public void Initialize()
         {
-            SQLiteBootstrap.Initialize();
+            GlobalConfiguration
+                .Setup()
+                .UseSQLite();
         }
 
         #region SDS

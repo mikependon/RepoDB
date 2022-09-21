@@ -9,7 +9,9 @@ namespace RepoDb.SQLite.System.UnitTests
         [TestInitialize]
         public void Initialize()
         {
-            SQLiteBootstrap.Initialize();
+            GlobalConfiguration
+                .Setup()
+                .UseSQLite();
         }
 
         #region SDS
