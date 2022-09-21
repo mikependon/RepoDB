@@ -10,7 +10,9 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
         [TestInitialize]
         public void Initialize()
         {
-            PostgreSqlBootstrap.Initialize();
+            GlobalConfiguration
+                .Setup()
+                .UsePostgreSql();
         }
 
         [TestMethod]
