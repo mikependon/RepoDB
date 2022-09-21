@@ -34,7 +34,9 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Setup
             ConnectionString = (connectionString ?? @"Server=localhost;Database=RepoDb;Uid=user;Pwd=Password123;");
 
             // Initialize MySql
-            MySqlConnectorBootstrap.Initialize();
+            GlobalConfiguration
+                .Setup()
+                .UseMySqlConnector();
 
             // Create databases
             CreateDatabase();

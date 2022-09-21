@@ -18,14 +18,22 @@ namespace RepoDb.IntegrationTests
         {
             Database.Initialize();
             Cleanup();
-            Converter.ConversionType = ConversionType.Automatic;
+
+            GlobalConfiguration.Setup(new()
+            {
+                ConversionType = ConversionType.Automatic
+            });
         }
 
         [TestCleanup]
         public void Cleanup()
         {
             Database.Cleanup();
-            Converter.ConversionType = ConversionType.Default;
+
+            GlobalConfiguration.Setup(new()
+            {
+                ConversionType = ConversionType.Default
+            });
         }
 
         #region TypedResult

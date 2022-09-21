@@ -16,14 +16,23 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         {
             Database.Initialize();
             Cleanup();
-            Converter.ConversionType = Enumerations.ConversionType.Automatic;
+            GlobalConfiguration
+                .Setup(new()
+                {
+                    ConversionType = Enumerations.ConversionType.Automatic
+                })
+                .UseSQLite();
         }
 
         [TestCleanup]
         public void Cleanup()
         {
             Database.Cleanup();
-            Converter.ConversionType = Enumerations.ConversionType.Default;
+            GlobalConfiguration
+                .Setup(new()
+                {
+                    ConversionType = Enumerations.ConversionType.Default
+                });
         }
 
         #region List

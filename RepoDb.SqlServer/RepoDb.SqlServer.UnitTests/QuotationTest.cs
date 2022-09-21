@@ -10,7 +10,9 @@ namespace RepoDb.SqlServer.UnitTests
         [TestInitialize]
         public void Initialize()
         {
-            SqlServerBootstrap.Initialize();
+            GlobalConfiguration
+                .Setup()
+                .UseSqlServer();
         }
 
         #region AsQuoted

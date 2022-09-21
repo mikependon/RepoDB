@@ -12,7 +12,9 @@ namespace RepoDb.MySqlConnector.UnitTests
         [TestInitialize]
         public void Initialize()
         {
-            MySqlConnectorBootstrap.Initialize();
+            GlobalConfiguration
+                .Setup()
+                .UseMySqlConnector();
         }
 
         #region CreateBatchQuery

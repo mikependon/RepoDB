@@ -16,7 +16,12 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         {
             Database.Initialize();
             Cleanup();
-            Converter.ConversionType = Enumerations.ConversionType.Automatic;
+            GlobalConfiguration
+                .Setup(new()
+                {
+                    ConversionType = Enumerations.ConversionType.Automatic
+                })
+                .UseSqlite();
         }
 
         [TestCleanup]

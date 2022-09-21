@@ -35,7 +35,9 @@ namespace RepoDb.SqlServer.IntegrationTests.Setup
                 @"Server=(local);Database=RepoDbTest;Integrated Security=SSPI;TrustServerCertificate=True;";
 
             // Initialize the SqlServer
-            SqlServerBootstrap.Initialize();
+            GlobalConfiguration
+                .Setup()
+                .UseSqlServer();
 
             // Set the DateTime type
             TypeMapper.Add(typeof(DateTime), DbType.DateTime2, true);

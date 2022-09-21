@@ -12,7 +12,9 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         [TestInitialize]
         public void Initialize()
         {
-            SqlServerBootstrap.Initialize();
+            GlobalConfiguration
+                .Setup()
+                .UseSqlServer();
         }
 
         #region CreateBatchQuery
