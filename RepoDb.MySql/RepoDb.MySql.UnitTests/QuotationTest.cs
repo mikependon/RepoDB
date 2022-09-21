@@ -10,7 +10,9 @@ namespace RepoDb.MySql.UnitTests
         [TestInitialize]
         public void Initialize()
         {
-            MySqlBootstrap.Initialize();
+            GlobalConfiguration
+                .Setup()
+                .UseMySql();
         }
 
         #region AsQuoted
