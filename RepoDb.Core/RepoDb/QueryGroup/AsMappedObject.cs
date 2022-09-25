@@ -41,11 +41,11 @@ namespace RepoDb
             bool fixParameters = true)
         {
             var queryFields = queryGroupTypeMap
-                .QueryGroup
+                .QueryGroup?
                 .GetFields(true);
 
             // Identify if there are fields to count
-            if (queryFields.Any() != true)
+            if (queryFields?.Any() != true)
             {
                 return;
             }

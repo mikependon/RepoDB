@@ -543,9 +543,14 @@ namespace RepoDb
         {
             for (var i = 0; i < queryGroups.Length; i++)
             {
-                foreach (var field in queryGroups[i].GetFields(true))
+                var fields = queryGroups[i]?.GetFields(true);
+
+                if (fields?.Any() == true)
                 {
-                    field.Parameter.SetName(string.Format("T{0}_{1}", i, field.Parameter.Name));
+                    foreach (var field in fields)
+                    {
+                        field.Parameter.SetName(string.Format("T{0}_{1}", i, field.Parameter.Name));
+                    }
                 }
             }
         }

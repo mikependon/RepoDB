@@ -146,7 +146,7 @@ namespace RepoDb
         private static void ValidateCancellation(string key,
             CancellableTraceLog log)
         {
-            if (log.IsThrowException)
+            if (log?.IsCancelled == true && log?.IsThrowException == true)
             {
                 throw new CancelledExecutionException($"The execution has been cancelled for {key}.");
             }
