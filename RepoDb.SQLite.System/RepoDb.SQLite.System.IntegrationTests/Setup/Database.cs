@@ -10,7 +10,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Setup
         static Database()
         {
             // Get the environment variable
-            var variable = Environment.GetEnvironmentVariable("REPODB_IS_IN_MEMORY", EnvironmentVariableTarget.Process);
+            //var variable = Environment.GetEnvironmentVariable("REPODB_IS_IN_MEMORY", EnvironmentVariableTarget.Process);
 
             // Set the property
             IsInMemory = true; //string.Equals(variable, "TRUE", StringComparison.OrdinalIgnoreCase);
@@ -40,7 +40,9 @@ namespace RepoDb.SQLite.System.IntegrationTests.Setup
         public static void Initialize()
         {
             // Initialize SqLite
-            SQLiteBootstrap.Initialize();
+            GlobalConfiguration
+                .Setup()
+                .UseSQLite();
 
             // Check the type of database
             if (IsInMemory == true)

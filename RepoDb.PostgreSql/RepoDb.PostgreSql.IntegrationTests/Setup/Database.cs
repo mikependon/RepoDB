@@ -40,7 +40,9 @@ namespace RepoDb.PostgreSql.IntegrationTests.Setup
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
             // Initialize PostgreSql
-            PostgreSqlBootstrap.Initialize();
+            GlobalConfiguration
+                .Setup()
+                .UsePostgreSql();
 
             // Create databases
             CreateDatabase();

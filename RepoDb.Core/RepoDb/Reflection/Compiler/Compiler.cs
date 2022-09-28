@@ -219,10 +219,25 @@ namespace RepoDb.Reflection
         ///
         /// </summary>
         /// <param name="handlerInstance"></param>
-        /// <param name="types"></param>
         /// <returns></returns>
-        internal static MethodInfo GetClassHandlerSetMethod(object handlerInstance, params Type[] types) =>
-            handlerInstance?.GetType().GetMethod("Set", types);
+        internal static MethodInfo GetClassHandlerSetMethod(object handlerInstance) =>
+            handlerInstance?.GetType().GetMethod("Set");
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="handlerInstance"></param>
+        /// <returns></returns>
+        internal static Type GetPropertyHandlerInterfaceOrHandlerType(object handlerInstance)
+        {
+            if (handlerInstance is null) return null;
+            Type handlerType = handlerInstance.GetType();
+            var propertyHandlerInterface = handlerType
+                .GetInterfaces()
+                .FirstOrDefault(interfaceType =>
+                    interfaceType.IsInterfacedTo(StaticType.IPropertyHandler));
+            return propertyHandlerInterface ?? handlerType;
+        }
 
         /// <summary>
         ///
@@ -230,12 +245,11 @@ namespace RepoDb.Reflection
         /// <param name="handlerInstance"></param>
         /// <returns></returns>
         internal static MethodInfo GetPropertyHandlerGetMethod(object handlerInstance) =>
-            handlerInstance?.GetType().GetMethod("Get") ??
             // In F#, the instance is not a concrete class, therefore, we need to extract it by interface
-            GetPropertyHandlerGetMethodFromInterface(handlerInstance);
+            GetPropertyHandlerInterfaceOrHandlerType(handlerInstance)?.GetMethod("Get");
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="handlerInstance"></param>
         /// <returns></returns>
@@ -275,7 +289,23 @@ namespace RepoDb.Reflection
         /// <param name="handlerInstance"></param>
         /// <returns></returns>
         internal static MethodInfo GetPropertyHandlerSetMethod(object handlerInstance) =>
-            handlerInstance?.GetType().GetMethod("Set");
+            GetPropertyHandlerInterfaceOrHandlerType(handlerInstance)?.GetMethod("Set");
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="property"></param>
+        /// <returns></returns>
+        internal static Type GetPropertyHandlerSetMethodReturnType(ClassProperty property) =>
+            GetPropertyHandlerSetMethod(property?.GetPropertyHandler())?.ReturnType;
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="handlerInstance"></param>
+        /// <returns></returns>
+        internal static Type GetPropertyHandlerSetMethodReturnType(object handlerInstance) =>
+            GetPropertyHandlerSetMethod(handlerInstance)?.ReturnType;
 
         /// <summary>
         ///
@@ -284,6 +314,17 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static ParameterInfo GetPropertyHandlerGetParameter(ClassPropertyParameterInfo classPropertyParameterInfo) =>
             GetPropertyHandlerGetParameter(classPropertyParameterInfo?.ClassProperty);
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="property"></param>
+        /// <param name="targetType"></param>
+        /// <returns></returns>
+        internal static Type GetPropertyHandlerSetMethodReturnType(ClassProperty property,
+            Type targetType) =>
+            GetPropertyHandlerSetMethod(property?.GetPropertyHandler() ??
+                PropertyHandlerCache.Get<object>(targetType))?.ReturnType;
 
         /// <summary>
         ///
@@ -787,38 +828,6 @@ namespace RepoDb.Reflection
         ///
         /// </summary>
         /// <param name="expression"></param>
-        /// <param name="handlerInstance"></param>
-        /// <param name="classPropertyParameterInfo"></param>
-        /// <returns></returns>
-        internal static Expression ConvertExpressionToPropertyHandlerGetExpression(Expression expression,
-            object handlerInstance,
-            ClassPropertyParameterInfo classPropertyParameterInfo)
-        {
-            // Return if null
-            if (handlerInstance == null)
-            {
-                return expression;
-            }
-
-            // Variables Needed
-            var getMethod = GetPropertyHandlerGetMethod(handlerInstance);
-            var getParameter = GetPropertyHandlerGetParameter(getMethod);
-
-            // Call the PropertyHandler.Get
-            expression = Expression.Call(Expression.Constant(handlerInstance), getMethod, new[]
-            {
-                ConvertExpressionToTypeExpression(expression, getParameter.ParameterType),
-                Expression.Convert(Expression.Constant(classPropertyParameterInfo?.ClassProperty), StaticType.ClassProperty)
-            });
-
-            // Convert to the return type
-            return ConvertExpressionToTypeExpression(expression, getMethod.ReturnType);
-        }
-
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="expression"></param>
         /// <param name="toType"></param>
         /// <returns></returns>
         internal static Expression ConvertExpressionWithAutomaticConversion(Expression expression,
@@ -864,51 +873,34 @@ namespace RepoDb.Reflection
         ///
         /// </summary>
         /// <param name="expression"></param>
-        /// <param name="classProperty"></param>
-        /// <param name="targetType"></param>
+        /// <param name="readerExpression"></param>
+        /// <param name="handlerInstance"></param>
+        /// <param name="classPropertyParameterInfo"></param>
         /// <returns></returns>
-        internal static Expression ConvertExpressionToPropertyHandlerSetExpression(Expression expression,
-            ClassProperty classProperty,
-            Type targetType) =>
-            ConvertExpressionToPropertyHandlerSetExpressionTuple(expression, classProperty, targetType).convertedExpression;
-
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="expression"></param>
-        /// <param name="classProperty"></param>
-        /// <param name="targetType"></param>
-        /// <returns></returns>
-        internal static (Expression convertedExpression, Type handlerSetReturnType) ConvertExpressionToPropertyHandlerSetExpressionTuple(Expression expression,
-            ClassProperty classProperty,
-            Type targetType)
+        internal static Expression ConvertExpressionToPropertyHandlerGetExpression(Expression expression,
+            Expression readerExpression,
+            object handlerInstance,
+            ClassPropertyParameterInfo classPropertyParameterInfo)
         {
-            var handlerInstance = classProperty?.GetPropertyHandler() ??
-                PropertyHandlerCache.Get<object>(targetType);
-
-            // Check
+            // Return if null
             if (handlerInstance == null)
             {
-                return (expression, null);
+                return expression;
             }
 
-            // Variables
-            var setMethod = GetPropertyHandlerSetMethod(handlerInstance);
-            var setParameter = GetPropertyHandlerSetParameter(setMethod);
+            // Variables Needed
+            var getMethod = GetPropertyHandlerGetMethod(handlerInstance);
+            var getParameter = GetPropertyHandlerGetParameter(getMethod);
 
-            // Nullable
-            expression = ConvertExpressionToNullableExpression(expression,
-                setParameter.ParameterType.GetUnderlyingType() ?? targetType);
+            // Call the PropertyHandler.Get
+            expression = Expression.Call(Expression.Constant(handlerInstance), getMethod, new[]
+            {
+                ConvertExpressionToTypeExpression(expression, getParameter.ParameterType),
+                CreatePropertyHandlerGetOptionsExpression(readerExpression, classPropertyParameterInfo?.ClassProperty)
+            });
 
-            // Call
-            var valueExpression = ConvertExpressionToTypeExpression(expression, setParameter.ParameterType);
-            var classPropertyExpression = classProperty != null ? (Expression)Expression.Constant(classProperty) : Expression.Default(StaticType.ClassProperty);
-            expression = Expression.Call(Expression.Constant(handlerInstance),
-                setMethod,
-                new[] { valueExpression, classPropertyExpression });
-
-            // Align
-            return (ConvertExpressionToTypeExpression(expression, setMethod.ReturnType), setMethod.ReturnType);
+            // Convert to the return type
+            return ConvertExpressionToTypeExpression(expression, getMethod.ReturnType);
         }
 
         /// <summary>
@@ -942,16 +934,76 @@ namespace RepoDb.Reflection
             return Expression.Call(Expression.Constant(handlerInstance),
                 getMethod,
                 entityExpression,
-                readerParameterExpression);
+                CreateClassHandlerGetOptionsExpression(readerParameterExpression));
         }
 
         /// <summary>
         ///
         /// </summary>
+        /// <param name="expression"></param>
+        /// <param name="parameterExpression"></param>
+        /// <param name="classProperty"></param>
+        /// <param name="targetType"></param>
+        /// <returns></returns>
+        internal static Expression ConvertExpressionToPropertyHandlerSetExpression(Expression expression,
+            Expression parameterExpression,
+            ClassProperty classProperty,
+            Type targetType) =>
+            ConvertExpressionToPropertyHandlerSetExpressionTuple(expression, parameterExpression, classProperty, targetType).convertedExpression;
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <param name="parameterExpression"></param>
+        /// <param name="classProperty"></param>
+        /// <param name="targetType"></param>
+        /// <returns></returns>
+        internal static (Expression convertedExpression, Type handlerSetReturnType) ConvertExpressionToPropertyHandlerSetExpressionTuple(Expression expression,
+            Expression parameterExpression,
+            ClassProperty classProperty,
+            Type targetType)
+        {
+            var handlerInstance = classProperty?.GetPropertyHandler() ??
+                PropertyHandlerCache.Get<object>(targetType);
+
+            // Check
+            if (handlerInstance == null)
+            {
+                return (expression, null);
+            }
+
+            // Variables
+            var setMethod = GetPropertyHandlerSetMethod(handlerInstance);
+            var setParameter = GetPropertyHandlerSetParameter(setMethod);
+
+            // Nullable
+            expression = ConvertExpressionToNullableExpression(expression,
+                setParameter.ParameterType.GetUnderlyingType() ?? targetType);
+
+            // Call
+            var valueExpression = ConvertExpressionToTypeExpression(expression, setParameter.ParameterType);
+            expression = Expression.Call(Expression.Constant(handlerInstance),
+                setMethod,
+                new[]
+                {
+                    valueExpression,
+                    CreatePropertyHandlerSetOptionsExpression(parameterExpression,classProperty)
+                });
+
+            // Align
+            return (ConvertExpressionToTypeExpression(expression, setMethod.ReturnType), setMethod.ReturnType);
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="commandExpression"></param>
         /// <param name="resultType"></param>
         /// <param name="entityOrEntitiesExpression"></param>
         /// <returns></returns>
-        internal static Expression ConvertExpressionToClassHandlerSetExpression(Type resultType,
+        internal static Expression ConvertExpressionToClassHandlerSetExpression(Expression commandExpression,
+            Type resultType,
             Expression entityOrEntitiesExpression)
         {
             // Check the handler
@@ -970,13 +1022,14 @@ namespace RepoDb.Reflection
             }
 
             // Call the IClassHandler.Set method
-            var typeOfListEntity = typeof(IList<>).MakeGenericType(StaticType.Object);
-            var type = typeOfListEntity.IsAssignableFrom(entityOrEntitiesExpression.Type) ?
-                typeOfListEntity : resultType;
-            var setMethod = GetClassHandlerSetMethod(handlerInstance, type);
+            //var typeOfListEntity = typeof(IList<>).MakeGenericType(StaticType.Object);
+            //var type = typeOfListEntity.IsAssignableFrom(entityOrEntitiesExpression.Type) ?
+            //    typeOfListEntity : resultType;
+            var setMethod = GetClassHandlerSetMethod(handlerInstance);
             entityOrEntitiesExpression = Expression.Call(Expression.Constant(handlerInstance),
                 setMethod,
-                ConvertExpressionToTypeExpression(entityOrEntitiesExpression, resultType));
+                ConvertExpressionToTypeExpression(entityOrEntitiesExpression, resultType),
+                CreateClassHandlerSetOptionsExpression(commandExpression));
 
             // Return the block
             return entityOrEntitiesExpression;
@@ -1012,8 +1065,8 @@ namespace RepoDb.Reflection
                 StaticType.DbDataReader.GetMethod("IsDBNull"), Expression.Constant(readerField.Ordinal));
 
             // True Expression
-            var trueExpression = GetClassPropertyParameterInfoIsDbNullTrueValueExpression(classPropertyParameterInfo,
-                readerField);
+            var trueExpression = GetClassPropertyParameterInfoIsDbNullTrueValueExpression(readerParameterExpression,
+                classPropertyParameterInfo, readerField);
 
             // Set the value
             return Expression.Condition(isDbNullExpression, trueExpression, falseExpression);
@@ -1022,10 +1075,12 @@ namespace RepoDb.Reflection
         /// <summary>
         ///
         /// </summary>
+        /// <param name="readerExpression"></param>
         /// <param name="classPropertyParameterInfo"></param>
         /// <param name="readerField"></param>
         /// <returns></returns>
-        internal static Expression GetClassPropertyParameterInfoIsDbNullTrueValueExpression(ClassPropertyParameterInfo classPropertyParameterInfo,
+        internal static Expression GetClassPropertyParameterInfoIsDbNullTrueValueExpression(Expression readerExpression,
+            ClassPropertyParameterInfo classPropertyParameterInfo,
             DataReaderField readerField)
         {
             var parameterType = GetPropertyHandlerGetParameter(classPropertyParameterInfo)?.ParameterType;
@@ -1043,7 +1098,7 @@ namespace RepoDb.Reflection
             // Property Handler
             try
             {
-                valueExpression = ConvertExpressionToPropertyHandlerGetExpression(valueExpression, handlerInstance, classPropertyParameterInfo);
+                valueExpression = ConvertExpressionToPropertyHandlerGetExpression(valueExpression, readerExpression, handlerInstance, classPropertyParameterInfo);
             }
             catch (Exception ex)
             {
@@ -1084,7 +1139,7 @@ namespace RepoDb.Reflection
             var valueExpression = (Expression)GetDbReaderGetValueExpression(readerParameterExpression,
                 readerGetValueMethod, readerField.Ordinal);
             var targetTypeUnderlyingType = targetType.GetUnderlyingType();
-            var isAutomaticConversion = Converter.ConversionType == ConversionType.Automatic ||
+            var isAutomaticConversion = GlobalConfiguration.Options.ConversionType == ConversionType.Automatic ||
                 targetTypeUnderlyingType == StaticType.TimeSpan ||
                 /* SQLite: Guid/String (Vice-Versa) : Enforce automatic conversion for the Primary/Identity fields */
                 readerField.DbField?.IsPrimary == true || readerField.DbField?.IsIdentity == true;
@@ -1136,7 +1191,8 @@ namespace RepoDb.Reflection
             // Property Handler
             try
             {
-                valueExpression = ConvertExpressionToPropertyHandlerGetExpression(valueExpression, handlerInstance, classPropertyParameterInfo);
+                valueExpression = ConvertExpressionToPropertyHandlerGetExpression(
+                    valueExpression, readerParameterExpression, handlerInstance, classPropertyParameterInfo);
             }
             catch (Exception ex)
             {
@@ -1404,7 +1460,7 @@ namespace RepoDb.Reflection
             var targetType = GetPropertyHandlerSetParameter(handlerInstance)?.ParameterType ?? dbField.Type;
 
             // Auto-conversion Handling
-            if (Converter.ConversionType == ConversionType.Automatic || dbField?.IsPrimary == true || dbField?.IsIdentity == true)
+            if (GlobalConfiguration.Options.ConversionType == ConversionType.Automatic || dbField?.IsPrimary == true || dbField?.IsIdentity == true)
             {
                 try
                 {
@@ -1444,8 +1500,8 @@ namespace RepoDb.Reflection
             // Property Handler
             try
             {
-                expression = ConvertExpressionToPropertyHandlerSetExpression(expression, classProperty,
-                    dbField?.Type.GetUnderlyingType());
+                expression = ConvertExpressionToPropertyHandlerSetExpression(
+                    expression, null, classProperty, dbField?.Type.GetUnderlyingType());
             }
             catch (Exception ex)
             {
@@ -1458,7 +1514,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="dbField"></param>
         /// <returns></returns>
@@ -1467,7 +1523,7 @@ namespace RepoDb.Reflection
             string.Equals(dbField?.Provider, "PGSQL", StringComparison.OrdinalIgnoreCase);
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="size"></param>
         /// <param name="dbField"></param>
@@ -1491,8 +1547,8 @@ namespace RepoDb.Reflection
             var expression = (Expression)Expression.Call(propertyExpression, methodInfo, objectInstanceExpression);
 
             // Property Handler
-            expression = ConvertExpressionToPropertyHandlerSetExpression(expression, null,
-                dbField?.Type.GetUnderlyingType());
+            expression = ConvertExpressionToPropertyHandlerSetExpression(expression,
+                null, null, dbField?.Type.GetUnderlyingType());
 
             // Convert to object
             return ConvertExpressionToTypeExpression(expression, StaticType.Object);
@@ -1511,8 +1567,8 @@ namespace RepoDb.Reflection
             var expression = (Expression)Expression.Call(dictionaryInstanceExpression, methodInfo, Expression.Constant(dbField.Name));
 
             // Property Handler
-            expression = ConvertExpressionToPropertyHandlerSetExpression(expression, null,
-                dbField.Type.GetUnderlyingType());
+            expression = ConvertExpressionToPropertyHandlerSetExpression(expression,
+                null, null, dbField.Type.GetUnderlyingType());
 
             // Convert to object
             return ConvertExpressionToTypeExpression(expression, StaticType.Object);
@@ -1583,7 +1639,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="classProperty"></param>
         /// <param name="dbField"></param>
@@ -1645,7 +1701,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="commandParameterExpression"></param>
         /// <param name="dbField"></param>
@@ -1658,7 +1714,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="commandParameterExpression"></param>
         /// <param name="dbField"></param>
@@ -1689,17 +1745,86 @@ namespace RepoDb.Reflection
         /// <param name="dbField"></param>
         /// <param name="entityIndex"></param>
         /// <param name="dbSetting"></param>
-        internal static MethodCallExpression GetDbParameterNameAssignmentExpression(ParameterExpression parameterVariableExpression,
+        internal static MethodCallExpression GetDbParameterNameAssignmentExpression(Expression parameterVariableExpression,
             DbField dbField,
             int entityIndex,
             IDbSetting dbSetting)
         {
-            var dbParameterParameterNameSetMethod = StaticType.DbParameter.GetProperty("ParameterName").SetMethod;
             var parameterName = dbField.Name.AsUnquoted(true, dbSetting).AsAlphaNumeric();
             parameterName = entityIndex > 0 ? string.Concat(dbSetting.ParameterPrefix, parameterName, "_", entityIndex.ToString()) :
                 string.Concat(dbSetting.ParameterPrefix, parameterName);
-            return Expression.Call(parameterVariableExpression, dbParameterParameterNameSetMethod,
-                Expression.Constant(parameterName));
+            return GetDbParameterNameAssignmentExpression(parameterVariableExpression, parameterName);
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="parameterVariableExpression"></param>
+        /// <param name="parameterName"></param>
+        internal static MethodCallExpression GetDbParameterNameAssignmentExpression(Expression parameterVariableExpression,
+            string parameterName) =>
+            GetDbParameterNameAssignmentExpression(parameterVariableExpression, Expression.Constant(parameterName));
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="parameterVariableExpression"></param>
+        /// <param name="paramaterNameExpression"></param>
+        internal static MethodCallExpression GetDbParameterNameAssignmentExpression(Expression parameterVariableExpression,
+            Expression paramaterNameExpression)
+        {
+            var dbParameterValueNameMethod = StaticType.DbParameter.GetProperty("ParameterName").SetMethod;
+            return Expression.Call(parameterVariableExpression, dbParameterValueNameMethod, paramaterNameExpression);
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="parameterVariableExpression"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        internal static MethodCallExpression GetDbParameterValueAssignmentExpression(Expression parameterVariableExpression,
+            object value) =>
+            GetDbParameterValueAssignmentExpression(parameterVariableExpression, Expression.Constant(value));
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="parameterVariableExpression"></param>
+        /// <param name="valueExpression"></param>
+        /// <returns></returns>
+        internal static MethodCallExpression GetDbParameterValueAssignmentExpression(Expression parameterVariableExpression,
+            Expression valueExpression)
+        {
+            var parameterExpression = ConvertExpressionToTypeExpression(parameterVariableExpression, StaticType.DbParameter);
+            var dbParameterValueSetMethod = StaticType.DbParameter.GetProperty("Value").SetMethod;
+            var convertToDbNullMethod = StaticType.Converter.GetMethod("NullToDbNull");
+            return Expression.Call(parameterExpression, dbParameterValueSetMethod,
+                Expression.Call(convertToDbNullMethod, ConvertExpressionToTypeExpression(valueExpression, StaticType.Object)));
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="parameterVariableExpression"></param>
+        /// <param name="dbType"></param>
+        /// <returns></returns>
+        internal static MethodCallExpression GetDbParameterDbTypeAssignmentExpression(Expression parameterVariableExpression,
+            DbType dbType) =>
+            GetDbParameterDbTypeAssignmentExpression(parameterVariableExpression, Expression.Constant(dbType));
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="parameterVariableExpression"></param>
+        /// <param name="dbTypeExpression"></param>
+        /// <returns></returns>
+        internal static MethodCallExpression GetDbParameterDbTypeAssignmentExpression(Expression parameterVariableExpression,
+            Expression dbTypeExpression)
+        {
+            var parameterExpression = ConvertExpressionToTypeExpression(parameterVariableExpression, StaticType.DbParameter);
+            var dbParameterDbTypeSetMethod = StaticType.DbParameter.GetProperty("DbType").SetMethod;
+            return Expression.Call(parameterExpression, dbParameterDbTypeSetMethod, dbTypeExpression);
         }
 
         /// <summary>
@@ -1708,22 +1833,23 @@ namespace RepoDb.Reflection
         /// <param name="parameterVariableExpression"></param>
         /// <param name="direction"></param>
         /// <returns></returns>
-        internal static MethodCallExpression GetDbParameterDirectionAssignmentExpression(ParameterExpression parameterVariableExpression,
-            ParameterDirection direction)
-        {
-            var dbParameterDirectionSetMethod = StaticType.DbParameter.GetProperty("Direction").SetMethod;
-            return Expression.Call(parameterVariableExpression, dbParameterDirectionSetMethod, Expression.Constant(direction));
-        }
+        internal static MethodCallExpression GetDbParameterDirectionAssignmentExpression(Expression parameterVariableExpression,
+            ParameterDirection direction) =>
+            GetDbParameterDirectionAssignmentExpression(parameterVariableExpression, Expression.Constant(direction));
 
         /// <summary>
         ///
         /// </summary>
         /// <param name="parameterVariableExpression"></param>
-        /// <param name="size"></param>
+        /// <param name="directionExpression"></param>
         /// <returns></returns>
-        internal static MethodCallExpression GetDbParameterSizeAssignmentExpression(ParameterExpression parameterVariableExpression,
-            int size) =>
-            GetDbParameterSizeAssignmentExpression((Expression)parameterVariableExpression, size);
+        internal static MethodCallExpression GetDbParameterDirectionAssignmentExpression(Expression parameterVariableExpression,
+            Expression directionExpression)
+        {
+            var parameterExpression = ConvertExpressionToTypeExpression(parameterVariableExpression, StaticType.DbParameter);
+            var dbParameterDirectionSetMethod = StaticType.DbParameter.GetProperty("Direction").SetMethod;
+            return Expression.Call(parameterExpression, dbParameterDirectionSetMethod, directionExpression);
+        }
 
         /// <summary>
         ///
@@ -1732,11 +1858,21 @@ namespace RepoDb.Reflection
         /// <param name="size"></param>
         /// <returns></returns>
         internal static MethodCallExpression GetDbParameterSizeAssignmentExpression(Expression parameterVariableExpression,
-            int size)
+            int size) =>
+            GetDbParameterSizeAssignmentExpression(parameterVariableExpression, Expression.Constant(size));
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="parameterVariableExpression"></param>
+        /// <param name="sizeExpression"></param>
+        /// <returns></returns>
+        internal static MethodCallExpression GetDbParameterSizeAssignmentExpression(Expression parameterVariableExpression,
+            Expression sizeExpression)
         {
-            var parameterExpression = ConvertEnumExpressionToTypeExpression(parameterVariableExpression, StaticType.DbParameter);
+            var parameterExpression = ConvertExpressionToTypeExpression(parameterVariableExpression, StaticType.DbParameter);
             var dbParameterSizeSetMethod = StaticType.DbParameter.GetProperty("Size").SetMethod;
-            return Expression.Call(parameterExpression, dbParameterSizeSetMethod, Expression.Constant(size));
+            return Expression.Call(parameterExpression, dbParameterSizeSetMethod, sizeExpression);
         }
 
         /// <summary>
@@ -1745,11 +1881,22 @@ namespace RepoDb.Reflection
         /// <param name="parameterVariableExpression"></param>
         /// <param name="precision"></param>
         /// <returns></returns>
-        internal static MethodCallExpression GetDbParameterPrecisionAssignmentExpression(ParameterExpression parameterVariableExpression,
-            byte precision)
+        internal static MethodCallExpression GetDbParameterPrecisionAssignmentExpression(Expression parameterVariableExpression,
+            byte precision) =>
+            GetDbParameterPrecisionAssignmentExpression(parameterVariableExpression, Expression.Constant(precision));
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="parameterVariableExpression"></param>
+        /// <param name="precisionExpression"></param>
+        /// <returns></returns>
+        internal static MethodCallExpression GetDbParameterPrecisionAssignmentExpression(Expression parameterVariableExpression,
+            Expression precisionExpression)
         {
+            var parameterExpression = ConvertExpressionToTypeExpression(parameterVariableExpression, StaticType.DbParameter);
             var dbParameterPrecisionSetMethod = StaticType.DbParameter.GetProperty("Precision").SetMethod;
-            return Expression.Call(parameterVariableExpression, dbParameterPrecisionSetMethod, Expression.Constant(precision));
+            return Expression.Call(parameterExpression, dbParameterPrecisionSetMethod, precisionExpression);
         }
 
         /// <summary>
@@ -1758,11 +1905,34 @@ namespace RepoDb.Reflection
         /// <param name="parameterVariableExpression"></param>
         /// <param name="scale"></param>
         /// <returns></returns>
-        internal static MethodCallExpression GetDbParameterScaleAssignmentExpression(ParameterExpression parameterVariableExpression,
-            byte scale)
+        internal static MethodCallExpression GetDbParameterScaleAssignmentExpression(Expression parameterVariableExpression,
+            byte scale) =>
+            GetDbParameterScaleAssignmentExpression(parameterVariableExpression, Expression.Constant(scale));
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="parameterVariableExpression"></param>
+        /// <param name="scaleExpression"></param>
+        /// <returns></returns>
+        internal static MethodCallExpression GetDbParameterScaleAssignmentExpression(Expression parameterVariableExpression,
+            Expression scaleExpression)
         {
+            var parameterExpression = ConvertExpressionToTypeExpression(parameterVariableExpression, StaticType.DbParameter);
             var dbParameterScaleSetMethod = StaticType.DbParameter.GetProperty("Scale").SetMethod;
-            return Expression.Call(parameterVariableExpression, dbParameterScaleSetMethod, Expression.Constant(scale));
+            return Expression.Call(parameterExpression, dbParameterScaleSetMethod, scaleExpression);
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="parameterVariableExpression"></param>
+        /// <returns></returns>
+        internal static MethodCallExpression EnsureTableValueParameterExpression(Expression parameterVariableExpression)
+        {
+            var method = StaticType.DbCommandExtension.GetMethod("EnsureTableValueParameter",
+                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+            return Expression.Call(method, parameterVariableExpression);
         }
 
         /// <summary>
@@ -1771,8 +1941,8 @@ namespace RepoDb.Reflection
         /// <param name="commandParameterExpression"></param>
         /// <param name="parameterVariable"></param>
         /// <returns></returns>
-        internal static MethodCallExpression GetDbCommandParametersAddExpression(ParameterExpression commandParameterExpression,
-            ParameterExpression parameterVariable)
+        internal static MethodCallExpression GetDbCommandParametersAddExpression(Expression commandParameterExpression,
+            Expression parameterVariable)
         {
             var dbCommandParametersProperty = StaticType.DbCommand.GetProperty("Parameters");
             var dbParameterCollection = Expression.Property(commandParameterExpression, dbCommandParametersProperty);
@@ -1937,7 +2107,7 @@ namespace RepoDb.Reflection
             var entityVariables = new List<ParameterExpression>();
 
             // Class handler
-            entityParameter = ConvertExpressionToClassHandlerSetExpression(entityType, entityParameter);
+            entityParameter = ConvertExpressionToClassHandlerSetExpression(commandParameterExpression, entityType, entityParameter);
 
             // Entity instance
             entityVariables.Add(entityVariableExpression);

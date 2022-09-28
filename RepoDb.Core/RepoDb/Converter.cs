@@ -16,12 +16,14 @@ namespace RepoDb
         /// Gets or sets the conversion type when converting the instance of <see cref="DbDataReader"/> object into its destination .NET CLR Types.
         /// The default value is <see cref="ConversionType.Default"/>.
         /// </summary>
+        [Obsolete("Use the definition of the ApplicationConfigurationOptions class instead.")]
         public static ConversionType ConversionType { get; set; } = ConversionType.Default;
 
         /// <summary>
         /// Gets or sets the default equivalent database type (of type <see cref="DbType"/>) of an enumeration if it is being used as a parameter to the 
         /// execution of any non-entity-based operations.
         /// </summary>
+        [Obsolete("Use the definition of the ApplicationConfigurationOptions class instead.")]
         public static DbType EnumDefaultDatabaseType { get; set; } = DbType.String;
 
         #endregion
@@ -29,7 +31,15 @@ namespace RepoDb
         #region Methods
 
         /// <summary>
-        /// Converts a value to null if the value is equals to <see cref="DBNull.Value"/>.
+        /// Converts the value into <see cref="DBNull.Value"/> if it is null.
+        /// </summary>
+        /// <param name="value">The value to be checked for <see cref="DBNull.Value"/>.</param>
+        /// <returns>The converted value.</returns>
+        public static object NullToDbNull(object value) =>
+            value is null ? DBNull.Value : value;
+
+        /// <summary>
+        /// Converts the value into null if the value is equals to <see cref="DBNull.Value"/>.
         /// </summary>
         /// <param name="value">The value to be checked for <see cref="DBNull.Value"/>.</param>
         /// <returns>The converted value.</returns>

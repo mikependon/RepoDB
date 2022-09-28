@@ -7,6 +7,7 @@ using System.Data;
 using Microsoft.Data.SqlClient;
 using System.Linq;
 using RepoDb.Interfaces;
+using RepoDb.Options;
 
 namespace RepoDb.IntegrationTests
 {
@@ -47,12 +48,12 @@ namespace RepoDb.IntegrationTests
 
         private class IntPropertyHandler : IPropertyHandler<uint, uint>
         {
-            public uint Get(uint input, ClassProperty property)
+            public uint Get(uint input, PropertyHandlerGetOptions options)
             {
-                return (uint)(input * 2);
+                return input * 2;
             }
 
-            public uint Set(uint input, ClassProperty property)
+            public uint Set(uint input, PropertyHandlerSetOptions options)
             {
                 return input;
             }

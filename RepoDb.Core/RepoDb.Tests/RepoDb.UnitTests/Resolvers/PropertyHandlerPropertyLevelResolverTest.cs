@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Attributes;
 using RepoDb.Interfaces;
+using RepoDb.Options;
 using RepoDb.Resolvers;
 
 namespace RepoDb.UnitTests.Resolvers
@@ -12,12 +13,12 @@ namespace RepoDb.UnitTests.Resolvers
 
         private class IdentityPropertyHandler : IPropertyHandler<int, int>
         {
-            public int Get(int input, ClassProperty property)
+            public int Get(int input, PropertyHandlerGetOptions options)
             {
                 return input;
             }
 
-            public int Set(int input, ClassProperty property)
+            public int Set(int input, PropertyHandlerSetOptions options)
             {
                 return input;
             }
@@ -25,12 +26,12 @@ namespace RepoDb.UnitTests.Resolvers
 
         private class IntPropertyHandler : IPropertyHandler<int, int>
         {
-            public int Get(int input, ClassProperty property)
+            public int Get(int input, PropertyHandlerGetOptions options)
             {
                 return input;
             }
 
-            public int Set(int input, ClassProperty property)
+            public int Set(int input, PropertyHandlerSetOptions options)
             {
                 return input;
             }

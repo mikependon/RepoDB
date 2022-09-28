@@ -11,6 +11,7 @@ using RepoDb.IntegrationTests.Models;
 using System.Data.Common;
 using RepoDb.Enumerations;
 using RepoDb.Exceptions;
+using RepoDb.Options;
 
 namespace RepoDb.IntegrationTests
 {
@@ -38,14 +39,13 @@ namespace RepoDb.IntegrationTests
 
             public int SetMethodCallCount { get; set; }
 
-            public ClassHandlerIdentityTable Get(ClassHandlerIdentityTable entity,
-                DbDataReader reader)
+            public ClassHandlerIdentityTable Get(ClassHandlerIdentityTable entity, ClassHandlerGetOptions options)
             {
                 ++GetMethodCallCount;
                 return entity;
             }
 
-            public ClassHandlerIdentityTable Set(ClassHandlerIdentityTable entity)
+            public ClassHandlerIdentityTable Set(ClassHandlerIdentityTable entity, ClassHandlerSetOptions options)
             {
                 ++SetMethodCallCount;
                 return entity;
@@ -60,13 +60,12 @@ namespace RepoDb.IntegrationTests
 
         private class ClassHandlerTestModelClassHandler : IClassHandler<TestModel>
         {
-            public TestModel Get(TestModel entity,
-                DbDataReader reader)
+            public TestModel Get(TestModel entity, ClassHandlerGetOptions options)
             {
                 return entity;
             }
 
-            public TestModel Set(TestModel entity)
+            public TestModel Set(TestModel entity, ClassHandlerSetOptions options)
             {
                 return entity;
             }

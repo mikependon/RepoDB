@@ -38,7 +38,7 @@ namespace RepoDb.Reflection
             var createParameterExpression = GetDbCommandCreateParameterExpression(commandParameterExpression, dbField);
             parameterAssignmentExpressions.AddIfNotNull(Expression.Assign(parameterVariableExpression, createParameterExpression));
 
-            // DbParameter.Name
+            // DbParameter.ParameterName
             var nameAssignmentExpression = GetDbParameterNameAssignmentExpression(parameterVariableExpression,
                 dbField,
                 entityIndex,

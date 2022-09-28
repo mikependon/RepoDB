@@ -10,7 +10,9 @@ namespace RepoDb.MySql.UnitTests.Resolvers
         [TestInitialize]
         public void Initialize()
         {
-            MySqlBootstrap.Initialize();
+            GlobalConfiguration
+                .Setup()
+                .UseMySql();
         }
 
         [TestMethod]

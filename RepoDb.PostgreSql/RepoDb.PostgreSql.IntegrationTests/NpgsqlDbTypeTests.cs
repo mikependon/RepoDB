@@ -3,6 +3,7 @@ using Npgsql;
 using NpgsqlTypes;
 using RepoDb.Attributes;
 using RepoDb.Attributes.Parameter.Npgsql;
+using RepoDb.Enumerations;
 using RepoDb.Extensions;
 using RepoDb.PostgreSql.IntegrationTests.Setup;
 using System;
@@ -24,7 +25,8 @@ namespace RepoDb.PostgreSql.IntegrationTests
         [TestCleanup]
         public void Cleanup()
         {
-            Converter.ConversionType = RepoDb.Enumerations.ConversionType.Default;
+            GlobalConfiguration
+                .Setup(new() { ConversionType = ConversionType.Default });
             Database.Cleanup();
         }
 
@@ -218,7 +220,8 @@ namespace RepoDb.PostgreSql.IntegrationTests
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Setup
-                Converter.ConversionType = RepoDb.Enumerations.ConversionType.Automatic;
+                GlobalConfiguration
+                    .Setup(new() { ConversionType = ConversionType.Automatic });
                 var entity = GetCompleteTableForDateTimes(1).First();
 
                 // Act
@@ -243,7 +246,8 @@ namespace RepoDb.PostgreSql.IntegrationTests
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Setup
-                Converter.ConversionType = RepoDb.Enumerations.ConversionType.Automatic;
+                GlobalConfiguration
+                    .Setup(new() { ConversionType = ConversionType.Automatic });
                 var entity = GetCompleteTableForDateTimes(1).First();
 
                 // Act

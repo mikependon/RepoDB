@@ -2,6 +2,7 @@
 using RepoDb.DbSettings;
 using RepoDb.Resolvers;
 using RepoDb.StatementBuilders;
+using System;
 using System.Data.SQLite;
 
 namespace RepoDb
@@ -9,6 +10,7 @@ namespace RepoDb
     /// <summary>
     /// A class that is being used to initialize necessary objects that is connected to <see cref="SQLiteConnection"/> object.
     /// </summary>
+    [Obsolete("This class will soon to be hidden as internal class. Use the 'GlobalConfiguration' class instead.")]
     public static class SQLiteBootstrap
     {
         #region Properties
@@ -25,7 +27,13 @@ namespace RepoDb
         /// <summary>
         /// Initializes all necessary settings for SqLite.
         /// </summary>
-        public static void Initialize()
+        [Obsolete("Use the 'GlobalConfiguration.Setup().UseSQLite()' method instead.")]
+        public static void Initialize() => InitializeInternal();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static void InitializeInternal()
         {
             // Skip if already initialized
             if (IsInitialized == true)

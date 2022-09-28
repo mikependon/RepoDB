@@ -1,4 +1,4 @@
-﻿using System.Data.Common;
+﻿using RepoDb.Options;
 
 namespace RepoDb.Interfaces
 {
@@ -13,16 +13,18 @@ namespace RepoDb.Interfaces
         /// The method that is being invoked when the outbound execution is triggered (i.e.: BatchQuery, ExecuteQuery and Query).
         /// </summary>
         /// <param name="entity">The current instance of data entity object.</param>
-        /// <param name="reader">The instance of <see cref="DbDataReader"/> in used to populate the data entity object.</param>
+        /// <param name="options">The instance of <see cref="ClassHandlerGetOptions"/> object in used during the hydration process.</param>
         /// <returns>The current or the newly created instance data entity object.</returns>
         TEntity Get(TEntity entity,
-            DbDataReader reader);
+            ClassHandlerGetOptions options);
 
         /// <summary>
         /// The method that is being invoked when the inbound execution is triggered (i.e.: Insert, Update and Merge).
         /// </summary>
         /// <param name="entity">The current instance of data entity object.</param>
+        /// <param name="options">The instance of <see cref="ClassHandlerSetOptions"/> object in used during the push operations.</param>
         /// <returns>The current or the newly created instance data entity object.</returns>
-        TEntity Set(TEntity entity);
+        TEntity Set(TEntity entity,
+            ClassHandlerSetOptions options);
     }
 }

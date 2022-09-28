@@ -2,6 +2,7 @@
 using RepoDb.Attributes;
 using RepoDb.Exceptions;
 using RepoDb.Interfaces;
+using RepoDb.Options;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -28,12 +29,12 @@ namespace RepoDb.UnitTests.Mappers
 
         private class StringPropertyHandler : IPropertyHandler<string, string>
         {
-            public string Get(string input, ClassProperty property)
+            public string Get(string input, PropertyHandlerGetOptions options)
             {
                 throw new NotImplementedException();
             }
 
-            public string Set(string input, ClassProperty property)
+            public string Set(string input, PropertyHandlerSetOptions options)
             {
                 throw new NotImplementedException();
             }
@@ -41,12 +42,12 @@ namespace RepoDb.UnitTests.Mappers
 
         private class TextPropertyHandler : IPropertyHandler<string, string>
         {
-            public string Get(string input, ClassProperty property)
+            public string Get(string input, PropertyHandlerGetOptions options)
             {
                 throw new NotImplementedException();
             }
 
-            public string Set(string input, ClassProperty property)
+            public string Set(string input, PropertyHandlerSetOptions options)
             {
                 throw new NotImplementedException();
             }

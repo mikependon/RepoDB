@@ -35,7 +35,9 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Setup
         public static void Initialize()
         {
             // Initialize SqLite
-            SqliteBootstrap.Initialize();
+            GlobalConfiguration
+                .Setup()
+                .UseSqlite();
 
             // Check the type of database
             if (IsInMemory == true)

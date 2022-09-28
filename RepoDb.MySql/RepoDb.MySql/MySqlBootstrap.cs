@@ -2,12 +2,14 @@
 using RepoDb.DbHelpers;
 using RepoDb.DbSettings;
 using RepoDb.StatementBuilders;
+using System;
 
 namespace RepoDb
 {
     /// <summary>
     /// A class used to initialize necessary objects that is connected to <see cref="MySqlConnection"/> object.
     /// </summary>
+    [Obsolete("This class will soon to be hidden as internal class. Use the 'GlobalConfiguration' class instead.")]
     public static class MySqlBootstrap
     {
         #region Properties
@@ -24,7 +26,13 @@ namespace RepoDb
         /// <summary>
         /// Initializes all necessary settings for MySql.
         /// </summary>
-        public static void Initialize()
+        [Obsolete("Use the 'GlobalConfiguration.Setup().UseMySql()' method instead.")]
+        public static void Initialize() => InitializeInternal();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static void InitializeInternal()
         {
             // Skip if already initialized
             if (IsInitialized == true)
