@@ -90,6 +90,11 @@ namespace RepoDb
                 return;
             }
 
+            if (result.CancellableTraceLog?.IsCancelled == true)
+            {
+                return;
+            }
+
             var log = new ResultTraceLog<TResult>(result.SessionId,
                 result.CancellableTraceLog.Key,
                 result.CancellableTraceLog.Statement,
@@ -146,7 +151,7 @@ namespace RepoDb
         private static void ValidateCancellation(string key,
             CancellableTraceLog log)
         {
-            if (log.IsThrowException)
+            if (log?.IsCancelled == true && log?.IsThrowException == true)
             {
                 throw new CancelledExecutionException($"The execution has been cancelled for {key}.");
             }

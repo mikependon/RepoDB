@@ -1622,6 +1622,24 @@ namespace RepoDb.UnitTests.Interfaces
         #region MaxAsync
 
         [TestMethod]
+        public void TestDbConnectionTraceForBeforeMaxAsync()
+        {
+            // Prepare
+            var trace = new Mock<ITrace>();
+            var connection = new TraceDbConnection();
+
+            // Act
+            connection.MaxAsync<TraceEntity>(trace: trace.Object,
+                field: e => e.Id,
+                where: (object)null).Wait();
+
+            // Assert
+            trace.Verify(t =>
+                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
+        }
+
+        [TestMethod]
         public void TestDbConnectionTraceForAfterMaxAsync()
         {
             // Prepare
