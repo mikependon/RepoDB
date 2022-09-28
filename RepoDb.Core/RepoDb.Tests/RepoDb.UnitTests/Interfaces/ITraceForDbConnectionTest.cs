@@ -1635,7 +1635,8 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Assert
             trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
+                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
+                    It.IsAny<CancellationToken>()), Times.Exactly(1));
         }
 
         [TestMethod]

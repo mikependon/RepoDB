@@ -90,6 +90,11 @@ namespace RepoDb
                 return;
             }
 
+            if (result.CancellableTraceLog?.IsCancelled == true)
+            {
+                return;
+            }
+
             var log = new ResultTraceLog<TResult>(result.SessionId,
                 result.CancellableTraceLog.Key,
                 result.CancellableTraceLog.Statement,

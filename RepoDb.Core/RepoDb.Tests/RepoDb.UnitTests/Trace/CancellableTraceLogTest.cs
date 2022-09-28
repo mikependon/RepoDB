@@ -1,11 +1,9 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.UnitTests.CustomObjects;
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -26,11 +24,16 @@ namespace RepoDb.UnitTests.Trace
 
         private class TraceDbConnection : CustomDbConnection { }
 
-        private class CancelTrace : ITrace
+        private class TraceEntity
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
+        }
+
+        private class ErroneousCancellationTrace : ITrace
         {
             public void AfterExecution<TResult>(ResultTraceLog<TResult> log)
             {
-                // Do nothing
             }
 
             public Task AfterExecutionAsync<TResult>(ResultTraceLog<TResult> log,
@@ -52,10 +55,41 @@ namespace RepoDb.UnitTests.Trace
             }
         }
 
-        private class TraceEntity
+        private class SilentCancellationTrace : ITrace
         {
-            public int Id { get; set; }
-            public string Name { get; set; }
+            public void AfterExecution<TResult>(ResultTraceLog<TResult> log)
+            {
+                AfterExecutionInvocationCount++;
+            }
+
+            public Task AfterExecutionAsync<TResult>(ResultTraceLog<TResult> log,
+                CancellationToken cancellationToken = default)
+            {
+                AfterExecutionInvocationCount++;
+                return Task.CompletedTask;
+            }
+
+            public void BeforeExecution(CancellableTraceLog log)
+            {
+                log.Cancel(false);
+                BeforeExecutionInvocationCount++;
+            }
+
+            public Task BeforeExecutionAsync(CancellableTraceLog log,
+                CancellationToken cancellationToken = default)
+            {
+                log.Cancel(false);
+                BeforeExecutionInvocationCount++;
+                return Task.CompletedTask;
+            }
+
+            #region Properties
+
+            public int BeforeExecutionInvocationCount { get; private set; }
+
+            public int AfterExecutionInvocationCount { get; private set; }
+
+            #endregion
         }
 
         #endregion
@@ -72,7 +106,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .ExecuteNonQuery("", trace: new CancelTrace());
+                .ExecuteNonQuery("", trace: new ErroneousCancellationTrace());
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
@@ -83,7 +117,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .ExecuteNonQueryAsync("", trace: new CancelTrace())
+                .ExecuteNonQueryAsync("", trace: new ErroneousCancellationTrace())
                 .Wait();
         }
 
@@ -99,7 +133,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .ExecuteQuery("", trace: new CancelTrace());
+                .ExecuteQuery("", trace: new ErroneousCancellationTrace());
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
@@ -110,7 +144,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .ExecuteQueryAsync("", trace: new CancelTrace())
+                .ExecuteQueryAsync("", trace: new ErroneousCancellationTrace())
                 .Wait();
         }
 
@@ -126,7 +160,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .ExecuteScalar("", trace: new CancelTrace());
+                .ExecuteScalar("", trace: new ErroneousCancellationTrace());
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
@@ -137,7 +171,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .ExecuteScalarAsync("", trace: new CancelTrace())
+                .ExecuteScalarAsync("", trace: new ErroneousCancellationTrace())
                 .Wait();
         }
 
@@ -153,7 +187,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .ExecuteQueryMultiple("", trace: new CancelTrace());
+                .ExecuteQueryMultiple("", trace: new ErroneousCancellationTrace());
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
@@ -164,7 +198,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .ExecuteQueryMultipleAsync("", trace: new CancelTrace())
+                .ExecuteQueryMultipleAsync("", trace: new ErroneousCancellationTrace())
                 .Wait();
         }
 
@@ -180,7 +214,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .Average("", (Field)null, (object)null, trace: new CancelTrace());
+                .Average("", (Field)null, (object)null, trace: new ErroneousCancellationTrace());
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
@@ -191,7 +225,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .AverageAsync("", (Field)null, (object)null, trace: new CancelTrace())
+                .AverageAsync("", (Field)null, (object)null, trace: new ErroneousCancellationTrace())
                 .Wait();
         }
 
@@ -207,7 +241,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .AverageAll("", (Field)null, trace: new CancelTrace());
+                .AverageAll("", (Field)null, trace: new ErroneousCancellationTrace());
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
@@ -218,7 +252,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .AverageAllAsync("", (Field)null, trace: new CancelTrace())
+                .AverageAllAsync("", (Field)null, trace: new ErroneousCancellationTrace())
                 .Wait();
         }
 
@@ -234,7 +268,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .BatchQuery("", 0, 100, null, (object)null, trace: new CancelTrace());
+                .BatchQuery("", 0, 100, null, (object)null, trace: new ErroneousCancellationTrace());
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
@@ -245,7 +279,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .BatchQueryAsync("", 0, 100, null, (object)null, trace: new CancelTrace())
+                .BatchQueryAsync("", 0, 100, null, (object)null, trace: new ErroneousCancellationTrace())
                 .Wait();
         }
 
@@ -261,7 +295,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .Count("", (Field)null, trace: new CancelTrace());
+                .Count("", (Field)null, trace: new ErroneousCancellationTrace());
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
@@ -272,7 +306,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .CountAsync("", (Field)null, trace: new CancelTrace())
+                .CountAsync("", (Field)null, trace: new ErroneousCancellationTrace())
                 .Wait();
         }
 
@@ -288,7 +322,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .CountAll("", trace: new CancelTrace());
+                .CountAll("", trace: new ErroneousCancellationTrace());
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
@@ -299,7 +333,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .CountAllAsync("", trace: new CancelTrace())
+                .CountAllAsync("", trace: new ErroneousCancellationTrace())
                 .Wait();
         }
 
@@ -315,7 +349,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .Delete("", (Field)null, trace: new CancelTrace());
+                .Delete("", (Field)null, trace: new ErroneousCancellationTrace());
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
@@ -326,7 +360,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .DeleteAsync("", (Field)null, trace: new CancelTrace())
+                .DeleteAsync("", (Field)null, trace: new ErroneousCancellationTrace())
                 .Wait();
         }
 
@@ -342,7 +376,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .DeleteAll("", trace: new CancelTrace());
+                .DeleteAll("", trace: new ErroneousCancellationTrace());
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
@@ -353,7 +387,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .DeleteAllAsync("", trace: new CancelTrace())
+                .DeleteAllAsync("", trace: new ErroneousCancellationTrace())
                 .Wait();
         }
 
@@ -369,7 +403,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .Exists("", (Field)null, trace: new CancelTrace());
+                .Exists("", (Field)null, trace: new ErroneousCancellationTrace());
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
@@ -380,7 +414,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .ExistsAsync("", (Field)null, trace: new CancelTrace())
+                .ExistsAsync("", (Field)null, trace: new ErroneousCancellationTrace())
                 .Wait();
         }
 
@@ -396,7 +430,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .Insert("", null, trace: new CancelTrace());
+                .Insert("", null, trace: new ErroneousCancellationTrace());
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
@@ -407,7 +441,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .InsertAsync("", null, trace: new CancelTrace())
+                .InsertAsync("", null, trace: new ErroneousCancellationTrace())
                 .Wait();
         }
 
@@ -428,7 +462,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .InsertAll("", entities, trace: new CancelTrace());
+                .InsertAll("", entities, trace: new ErroneousCancellationTrace());
         }
 
         [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
@@ -443,7 +477,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .InsertAll("", entities, trace: new CancelTrace());
+                .InsertAll("", entities, trace: new ErroneousCancellationTrace());
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
@@ -460,7 +494,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .InsertAllAsync("", entities, trace: new CancelTrace())
+                .InsertAllAsync("", entities, trace: new ErroneousCancellationTrace())
                 .Wait();
         }
 
@@ -478,7 +512,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .InsertAllAsync("", entities, trace: new CancelTrace())
+                .InsertAllAsync("", entities, trace: new ErroneousCancellationTrace())
                 .Wait();
         }
 
@@ -494,7 +528,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .Max("", (Field)null, (object)null, trace: new CancelTrace());
+                .Max("", (Field)null, (object)null, trace: new ErroneousCancellationTrace());
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
@@ -505,7 +539,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .MaxAsync("", (Field)null, (object)null, trace: new CancelTrace())
+                .MaxAsync("", (Field)null, (object)null, trace: new ErroneousCancellationTrace())
                 .Wait();
         }
 
@@ -521,7 +555,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .MaxAll("", (Field)null, trace: new CancelTrace());
+                .MaxAll("", (Field)null, trace: new ErroneousCancellationTrace());
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
@@ -532,7 +566,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .MaxAllAsync("", (Field)null, trace: new CancelTrace())
+                .MaxAllAsync("", (Field)null, trace: new ErroneousCancellationTrace())
                 .Wait();
         }
 
@@ -548,7 +582,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .Merge("", new { Id = 1 }, (Field)null, trace: new CancelTrace());
+                .Merge("", new { Id = 1 }, (Field)null, trace: new ErroneousCancellationTrace());
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
@@ -559,7 +593,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .MergeAsync("", new { Id = 1 }, (Field)null, trace: new CancelTrace())
+                .MergeAsync("", new { Id = 1 }, (Field)null, trace: new ErroneousCancellationTrace())
                 .Wait();
         }
 
@@ -579,7 +613,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .MergeAll("", entities, trace: new CancelTrace());
+                .MergeAll("", entities, trace: new ErroneousCancellationTrace());
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
@@ -594,7 +628,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .MergeAllAsync("", entities, trace: new CancelTrace())
+                .MergeAllAsync("", entities, trace: new ErroneousCancellationTrace())
                 .Wait();
         }
 
@@ -612,7 +646,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .MergeAll("", entities, trace: new CancelTrace());
+                .MergeAll("", entities, trace: new ErroneousCancellationTrace());
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
@@ -629,7 +663,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .MergeAllAsync("", entities, trace: new CancelTrace())
+                .MergeAllAsync("", entities, trace: new ErroneousCancellationTrace())
                 .Wait();
         }
 
@@ -645,7 +679,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .Min("", (Field)null, (object)null, trace: new CancelTrace());
+                .Min("", (Field)null, (object)null, trace: new ErroneousCancellationTrace());
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
@@ -656,7 +690,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .MinAsync("", (Field)null, (object)null, trace: new CancelTrace())
+                .MinAsync("", (Field)null, (object)null, trace: new ErroneousCancellationTrace())
                 .Wait();
         }
 
@@ -672,7 +706,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .MinAll("", (Field)null, trace: new CancelTrace());
+                .MinAll("", (Field)null, trace: new ErroneousCancellationTrace());
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
@@ -683,7 +717,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .MinAllAsync("", (Field)null, trace: new CancelTrace())
+                .MinAllAsync("", (Field)null, trace: new ErroneousCancellationTrace())
                 .Wait();
         }
 
@@ -699,7 +733,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .Query("", (QueryField)null, trace: new CancelTrace());
+                .Query("", (QueryField)null, trace: new ErroneousCancellationTrace());
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
@@ -710,7 +744,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .QueryAsync("", (QueryField)null, trace: new CancelTrace())
+                .QueryAsync("", (QueryField)null, trace: new ErroneousCancellationTrace())
                 .Wait();
         }
 
@@ -726,7 +760,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .QueryAll("", trace: new CancelTrace());
+                .QueryAll("", trace: new ErroneousCancellationTrace());
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
@@ -737,7 +771,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .QueryAllAsync("", trace: new CancelTrace())
+                .QueryAllAsync("", trace: new ErroneousCancellationTrace())
                 .Wait();
         }
 
@@ -757,7 +791,7 @@ namespace RepoDb.UnitTests.Trace
             connection
                 .QueryMultiple("", (QueryField)null,
                     "", (QueryField)null,
-                    trace: new CancelTrace());
+                    trace: new ErroneousCancellationTrace());
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
@@ -770,7 +804,7 @@ namespace RepoDb.UnitTests.Trace
             connection
                 .QueryMultipleAsync("", (QueryField)null,
                     "", (QueryField)null,
-                    trace: new CancelTrace())
+                    trace: new ErroneousCancellationTrace())
                 .Wait();
         }
 
@@ -789,7 +823,7 @@ namespace RepoDb.UnitTests.Trace
                 .QueryMultiple("", (QueryField)null,
                     "", (QueryField)null,
                     "", (QueryField)null,
-                    trace: new CancelTrace());
+                    trace: new ErroneousCancellationTrace());
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
@@ -803,7 +837,7 @@ namespace RepoDb.UnitTests.Trace
                 .QueryMultipleAsync("", (QueryField)null,
                     "", (QueryField)null,
                     "", (QueryField)null,
-                    trace: new CancelTrace())
+                    trace: new ErroneousCancellationTrace())
                 .Wait();
         }
 
@@ -823,7 +857,7 @@ namespace RepoDb.UnitTests.Trace
                     "", (QueryField)null,
                     "", (QueryField)null,
                     "", (QueryField)null,
-                    trace: new CancelTrace());
+                    trace: new ErroneousCancellationTrace());
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
@@ -838,7 +872,7 @@ namespace RepoDb.UnitTests.Trace
                     "", (QueryField)null,
                     "", (QueryField)null,
                     "", (QueryField)null,
-                    trace: new CancelTrace())
+                    trace: new ErroneousCancellationTrace())
                 .Wait();
         }
 
@@ -859,7 +893,7 @@ namespace RepoDb.UnitTests.Trace
                     "", (QueryField)null,
                     "", (QueryField)null,
                     "", (QueryField)null,
-                    trace: new CancelTrace());
+                    trace: new ErroneousCancellationTrace());
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
@@ -875,7 +909,7 @@ namespace RepoDb.UnitTests.Trace
                     "", (QueryField)null,
                     "", (QueryField)null,
                     "", (QueryField)null,
-                    trace: new CancelTrace())
+                    trace: new ErroneousCancellationTrace())
                 .Wait();
         }
 
@@ -897,7 +931,7 @@ namespace RepoDb.UnitTests.Trace
                     "", (QueryField)null,
                     "", (QueryField)null,
                     "", (QueryField)null,
-                    trace: new CancelTrace());
+                    trace: new ErroneousCancellationTrace());
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
@@ -914,7 +948,7 @@ namespace RepoDb.UnitTests.Trace
                     "", (QueryField)null,
                     "", (QueryField)null,
                     "", (QueryField)null,
-                    trace: new CancelTrace())
+                    trace: new ErroneousCancellationTrace())
                 .Wait();
         }
 
@@ -937,7 +971,7 @@ namespace RepoDb.UnitTests.Trace
                     "", (QueryField)null,
                     "", (QueryField)null,
                     "", (QueryField)null,
-                    trace: new CancelTrace());
+                    trace: new ErroneousCancellationTrace());
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
@@ -955,7 +989,7 @@ namespace RepoDb.UnitTests.Trace
                     "", (QueryField)null,
                     "", (QueryField)null,
                     "", (QueryField)null,
-                    trace: new CancelTrace())
+                    trace: new ErroneousCancellationTrace())
                 .Wait();
         }
 
@@ -973,7 +1007,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .Sum("", (Field)null, (object)null, trace: new CancelTrace());
+                .Sum("", (Field)null, (object)null, trace: new ErroneousCancellationTrace());
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
@@ -984,7 +1018,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .SumAsync("", (Field)null, (object)null, trace: new CancelTrace())
+                .SumAsync("", (Field)null, (object)null, trace: new ErroneousCancellationTrace())
                 .Wait();
         }
 
@@ -1000,7 +1034,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .SumAll("", (Field)null, trace: new CancelTrace());
+                .SumAll("", (Field)null, trace: new ErroneousCancellationTrace());
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
@@ -1011,7 +1045,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .SumAllAsync("", (Field)null, trace: new CancelTrace())
+                .SumAllAsync("", (Field)null, trace: new ErroneousCancellationTrace())
                 .Wait();
         }
 
@@ -1027,7 +1061,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .Truncate("", trace: new CancelTrace());
+                .Truncate("", trace: new ErroneousCancellationTrace());
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
@@ -1038,7 +1072,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .TruncateAsync("", trace: new CancelTrace())
+                .TruncateAsync("", trace: new ErroneousCancellationTrace())
                 .Wait();
         }
 
@@ -1054,7 +1088,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .Update("", new { Id = 1 }, (Field)null, trace: new CancelTrace());
+                .Update("", new { Id = 1 }, (Field)null, trace: new ErroneousCancellationTrace());
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
@@ -1065,7 +1099,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .UpdateAsync("", new { Id = 1 }, (Field)null, trace: new CancelTrace())
+                .UpdateAsync("", new { Id = 1 }, (Field)null, trace: new ErroneousCancellationTrace())
                 .Wait();
         }
 
@@ -1085,7 +1119,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .UpdateAll("", entities, trace: new CancelTrace());
+                .UpdateAll("", entities, trace: new ErroneousCancellationTrace());
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
@@ -1100,7 +1134,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .UpdateAllAsync("", entities, trace: new CancelTrace())
+                .UpdateAllAsync("", entities, trace: new ErroneousCancellationTrace())
                 .Wait();
         }
 
@@ -1118,7 +1152,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .UpdateAll("", entities, trace: new CancelTrace());
+                .UpdateAll("", entities, trace: new ErroneousCancellationTrace());
         }
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
@@ -1135,7 +1169,7 @@ namespace RepoDb.UnitTests.Trace
 
             // Act
             connection
-                .UpdateAllAsync("", entities, trace: new CancelTrace())
+                .UpdateAllAsync("", entities, trace: new ErroneousCancellationTrace())
                 .Wait();
         }
 
@@ -1153,19 +1187,17 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForAverage()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.Average<TraceEntity>(trace: trace.Object,
+            connection.Average<TraceEntity>(trace: trace,
                 field: e => e.Id,
                 where: (object)null);
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
 
@@ -1173,20 +1205,18 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForAverageViaTableName()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.Average(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
                 where: (object)null,
-                trace: trace.Object);
+                trace: trace);
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -1197,43 +1227,35 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForAverageAsync()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.AverageAsync<TraceEntity>(trace: trace.Object,
+            connection.AverageAsync<TraceEntity>(trace: trace,
                 field: e => e.Id,
                 where: (object)null).Wait();
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<object>>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
         public void TestDbConnectionTraceSilentCancellationForAverageAsyncViaTableName()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.AverageAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
                 where: (object)null,
-                trace: trace.Object).Wait();
+                trace: trace).Wait();
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<object>>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -1248,37 +1270,33 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForAverageAll()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.AverageAll<TraceEntity>(trace: trace.Object,
+            connection.AverageAll<TraceEntity>(trace: trace,
                 field: e => e.Id);
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
         public void TestDbConnectionTraceSilentCancellationForAverageAllViaTableName()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.AverageAll(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
-                trace: trace.Object);
+                trace: trace);
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -1289,41 +1307,33 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForAverageAllAsync()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.AverageAllAsync<TraceEntity>(trace: trace.Object,
+            connection.AverageAllAsync<TraceEntity>(trace: trace,
                 field: e => e.Id).Wait();
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<object>>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
         public void TestDbConnectionTraceSilentCancellationForAverageAllAsyncViaTableName()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.AverageAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
-                trace: trace.Object).Wait();
+                trace: trace).Wait();
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<object>>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -1338,7 +1348,7 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForBatchQuery()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
@@ -1346,13 +1356,11 @@ namespace RepoDb.UnitTests.Trace
                 10,
                 OrderField.Ascending<TraceEntity>(t => t.Id).AsEnumerable(),
                 where: (QueryGroup)null,
-                trace: trace.Object);
+                trace: trace);
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<IEnumerable<TraceEntity>>>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -1363,7 +1371,7 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForBatchQueryAsync()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
@@ -1371,94 +1379,14 @@ namespace RepoDb.UnitTests.Trace
                 10,
                 OrderField.Ascending<TraceEntity>(t => t.Id).AsEnumerable(),
                 where: (QueryGroup)null,
-                trace: trace.Object).Wait();
+                trace: trace).Wait();
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<IEnumerable<TraceEntity>>>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
-
-        #endregion
-
-        #region BulkInsert
-
-        //#region BulkInsert
-
-        //[TestMethod]
-        //public void TestDbConnectionTraceSilentCancellationForBulkInsert()
-        //{
-        //    // Prepare
-        //    var trace = new Mock<ITrace>();
-        //    var connection = new TraceDbConnection();
-        //    var entities = new[] { new TraceEntity() { Id = 1, Name = "Name" } };
-
-        //    // Act
-        //    connection.BulkInsert<TraceEntity>(entities,
-        //        trace: trace.Object);
-
-        //    // Assert
-        //    trace.Verify(t => t.BeforeBulkInsert(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-        //}
-
-        //[TestMethod]
-        //public void TestDbConnectionTraceSilentCancellationForAfterBulkInsert()
-        //{
-        //    // Prepare
-        //    var trace = new Mock<ITrace>();
-        //    var connection = new TraceDbConnection();
-        //    var entities = new[] { new TraceEntity() { Id = 1, Name = "Name" } };
-
-        //    // Act
-        //    connection.BulkInsert<TraceEntity>(entities,
-        //        trace: trace.Object);
-
-        //    // Assert
-        //    trace.Verify(t => t.AfterBulkInsert(It.IsAny<ResultTraceLog>()), Times.Exactly(1));
-        //}
-
-        //#endregion
-
-        //#region BulkInsertAsync
-
-        //[TestMethod]
-        //public void TestDbConnectionTraceSilentCancellationForBulkInsertAsync()
-        //{
-        //    // Prepare
-        //    var trace = new Mock<ITrace>();
-        //    var connection = new TraceDbConnection();
-        //    var entities = new[] { new TraceEntity() { Id = 1, Name = "Name" } };
-
-        //    // Act
-        //    connection.BulkInsertAsync<TraceEntity>(entities,
-        //        trace: trace.Object).Wait();
-
-        //    // Assert
-        //    trace.Verify(t => t.BeforeBulkInsert(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-        //}
-
-        //[TestMethod]
-        //public void TestDbConnectionTraceSilentCancellationForAfterBulkInsertAsync()
-        //{
-        //    // Prepare
-        //    var trace = new Mock<ITrace>();
-        //    var connection = new TraceDbConnection();
-        //    var entities = new[] { new TraceEntity() { Id = 1, Name = "Name" } };
-
-        //    // Act
-        //    connection.BulkInsertAsync<TraceEntity>(entities,
-        //        trace: trace.Object).Wait();
-
-        //    // Assert
-        //    trace.Verify(t => t.AfterBulkInsert(It.IsAny<ResultTraceLog>()), Times.Exactly(1));
-        //}
-
-        //#endregion
 
         #endregion
 
@@ -1470,37 +1398,33 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForCount()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.Count<TraceEntity>(trace: trace.Object,
+            connection.Count<TraceEntity>(trace: trace,
                 where: (object)null);
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<long>>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
         public void TestDbConnectionTraceSilentCancellationForCountViaTableName()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.Count(ClassMappedNameCache.Get<TraceEntity>(),
                 where: (object)null,
-                trace: trace.Object);
+                trace: trace);
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<long>>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -1511,40 +1435,33 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForCountAsync()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.CountAsync<TraceEntity>(trace: trace.Object,
+            connection.CountAsync<TraceEntity>(trace: trace,
                 where: (object)null).Wait();
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<long>>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
         public void TestDbConnectionTraceSilentCancellationForCountAsyncViaTableName()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.CountAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 where: (object)null,
-                trace: trace.Object).Wait();
+                trace: trace).Wait();
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
-            trace.AfterExecutionAsync(It.IsAny<ResultTraceLog<long>>(),
-                It.IsAny<CancellationToken>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -1559,35 +1476,31 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForCountAll()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.CountAll<TraceEntity>(trace: trace.Object);
+            connection.CountAll<TraceEntity>(trace: trace);
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<long>>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
         public void TestDbConnectionTraceSilentCancellationForCountAllViaTableName()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.CountAll(ClassMappedNameCache.Get<TraceEntity>(),
-                trace: trace.Object);
+                trace: trace);
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<long>>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -1598,39 +1511,31 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForCountAllAsync()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.CountAllAsync<TraceEntity>(trace: trace.Object).Wait();
+            connection.CountAllAsync<TraceEntity>(trace: trace).Wait();
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<long>>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
         public void TestDbConnectionTraceSilentCancellationForCountAllAsyncViaTableName()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.CountAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
-                trace: trace.Object).Wait();
+                trace: trace).Wait();
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<long>>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -1645,25 +1550,23 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForDelete()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.Delete<TraceEntity>(0,
-                trace: trace.Object);
+                trace: trace);
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<int>>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
         public void TestDbConnectionTraceSilentCancellationForDeleteViaTableName()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
@@ -1672,13 +1575,11 @@ namespace RepoDb.UnitTests.Trace
                 {
                     Id = 1
                 },
-                trace: trace.Object);
+                trace: trace);
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<int>>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -1689,27 +1590,23 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForDeleteAsync()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.DeleteAsync<TraceEntity>(0,
-                trace: trace.Object).Wait();
+                trace: trace).Wait();
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<int>>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
         public void TestDbConnectionTraceSilentCancellationForDeleteAsyncViaTableName()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
@@ -1718,15 +1615,11 @@ namespace RepoDb.UnitTests.Trace
                 {
                     Id = 1
                 },
-                trace: trace.Object).Wait();
+                trace: trace).Wait();
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<int>>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -1741,35 +1634,31 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForDeleteAll()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.DeleteAll<TraceEntity>(trace: trace.Object);
+            connection.DeleteAll<TraceEntity>(trace: trace);
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<int>>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
         public void TestDbConnectionTraceSilentCancellationForDeleteAllViaTableName()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.DeleteAll(ClassMappedNameCache.Get<TraceEntity>(),
-                trace: trace.Object);
+                trace: trace);
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<int>>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -1780,39 +1669,31 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForDeleteAllAsync()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.DeleteAllAsync<TraceEntity>(trace: trace.Object).Wait();
+            connection.DeleteAllAsync<TraceEntity>(trace: trace).Wait();
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<int>>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
         public void TestDbConnectionTraceSilentCancellationForDeleteAllAsyncViaTableName()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.DeleteAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
-                trace: trace.Object).Wait();
+                trace: trace).Wait();
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<int>>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -1827,37 +1708,33 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForExists()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.Exists<TraceEntity>(trace: trace.Object,
+            connection.Exists<TraceEntity>(trace: trace,
                 what: (object)null);
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<bool>>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
         public void TestDbConnectionTraceSilentCancellationForExistsViaTableName()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.Exists(ClassMappedNameCache.Get<TraceEntity>(),
                 what: (object)null,
-                trace: trace.Object);
+                trace: trace);
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<bool>>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -1868,41 +1745,33 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForExistsAsync()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.ExistsAsync<TraceEntity>(trace: trace.Object,
+            connection.ExistsAsync<TraceEntity>(trace: trace,
                 what: (object)null).Wait();
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<bool>>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
         public void TestDbConnectionTraceSilentCancellationForExistsAsyncViaTableName()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.ExistsAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 what: (object)null,
-                trace: trace.Object).Wait();
+                trace: trace).Wait();
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<bool>>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -1917,38 +1786,34 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForInsert()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.Insert<TraceEntity>(
                 new TraceEntity { Name = "Name" },
-                trace: trace.Object);
+                trace: trace);
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
         public void TestDbConnectionTraceSilentCancellationForInsertViaTableName()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.Insert(ClassMappedNameCache.Get<TraceEntity>(),
                 new { Name = "Name" },
-                trace: trace.Object);
+                trace: trace);
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -1959,42 +1824,34 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForInsertAsync()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.InsertAsync<TraceEntity>(
                 new TraceEntity { Name = "Name" },
-                trace: trace.Object).Wait();
+                trace: trace).Wait();
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<object>>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
         public void TestDbConnectionTraceSilentCancellationForInsertAsyncViaTableName()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.InsertAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new { Name = "Name" },
-                trace: trace.Object).Wait();
+                trace: trace).Wait();
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<object>>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -2009,38 +1866,34 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForInsertAll()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.InsertAll<TraceEntity>(new[] { new TraceEntity { Name = "Name" } },
-                trace: trace.Object);
+                trace: trace);
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<int>>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
         public void TestDbConnectionTraceSilentCancellationForInsertAllViaTableName()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.InsertAll(ClassMappedNameCache.Get<TraceEntity>(),
                 new[] { new { Name = "Name" } },
                 fields: Field.From("Name"),
-                trace: trace.Object);
+                trace: trace);
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<int>>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -2051,42 +1904,34 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForInsertAllAsync()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.InsertAllAsync<TraceEntity>(new[] { new TraceEntity { Name = "Name" } },
-                trace: trace.Object).Wait();
+                trace: trace).Wait();
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<int>>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
         public void TestDbConnectionTraceSilentCancellationForInsertAllAsyncViaTableName()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.InsertAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new[] { new { Name = "Name" } },
                 fields: Field.From("Name"),
-                trace: trace.Object).Wait();
+                trace: trace).Wait();
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<int>>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -2101,39 +1946,35 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForMax()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.Max<TraceEntity>(trace: trace.Object,
+            connection.Max<TraceEntity>(trace: trace,
                 field: e => e.Id,
                 where: (object)null);
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
         public void TestDbConnectionTraceSilentCancellationForMaxViaTableName()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.Max(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
                 where: (object)null,
-                trace: trace.Object);
+                trace: trace);
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -2144,41 +1985,35 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForMaxAsync()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MaxAsync<TraceEntity>(trace: trace.Object,
+            connection.MaxAsync<TraceEntity>(trace: trace,
                 field: e => e.Id,
                 where: (object)null).Wait();
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
         public void TestDbConnectionTraceSilentCancellationForMaxAsyncViaTableName()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.MaxAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
                 where: (object)null,
-                trace: trace.Object).Wait();
+                trace: trace).Wait();
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<object>>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -2193,37 +2028,33 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForMaxAll()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MaxAll<TraceEntity>(trace: trace.Object,
+            connection.MaxAll<TraceEntity>(trace: trace,
                 field: e => e.Id);
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
         public void TestDbConnectionTraceSilentCancellationForMaxAllViaTableName()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.MaxAll(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
-                trace: trace.Object);
+                trace: trace);
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -2234,41 +2065,33 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForMaxAllAsync()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MaxAllAsync<TraceEntity>(trace: trace.Object,
+            connection.MaxAllAsync<TraceEntity>(trace: trace,
                 field: e => e.Id).Wait();
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<object>>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
         public void TestDbConnectionTraceSilentCancellationForMaxAllAsyncViaTableName()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.MaxAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
-                trace: trace.Object).Wait();
+                trace: trace).Wait();
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<object>>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -2283,38 +2106,34 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForMerge()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.Merge<TraceEntity>(
                 new TraceEntity { Id = 1, Name = "Name" },
-                trace: trace.Object);
+                trace: trace);
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
         public void TestDbConnectionTraceSilentCancellationForMergeViaTableName()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.Merge(ClassMappedNameCache.Get<TraceEntity>(),
                 new { Id = 1, Name = "Name" },
-                trace: trace.Object);
+                trace: trace);
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -2325,42 +2144,34 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForMergeAsync()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.MergeAsync<TraceEntity>(
                 new TraceEntity { Id = 1, Name = "Name" },
-                trace: trace.Object).Wait();
+                trace: trace).Wait();
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<object>>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
         public void TestDbConnectionTraceSilentCancellationForMergeAsyncViaTableName()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.MergeAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new { Id = 1, Name = "Name" },
-                trace: trace.Object).Wait();
+                trace: trace).Wait();
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<object>>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -2375,38 +2186,34 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForMergeAll()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.MergeAll<TraceEntity>(
                 new[] { new TraceEntity { Id = 1, Name = "Name" } },
-                trace: trace.Object);
+                trace: trace);
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<int>>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
         public void TestDbConnectionTraceSilentCancellationForMergeAllViaTableName()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.MergeAll(ClassMappedNameCache.Get<TraceEntity>(),
                 new[] { new TraceEntity { Id = 1, Name = "Name" } },
-                trace: trace.Object);
+                trace: trace);
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<int>>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -2417,42 +2224,34 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForMergeAllAsync()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.MergeAllAsync<TraceEntity>(
                 new[] { new TraceEntity { Id = 1, Name = "Name" } },
-                trace: trace.Object).Wait();
+                trace: trace).Wait();
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<int>>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
         public void TestDbConnectionTraceSilentCancellationForMergeAllAsyncViaTableName()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.MergeAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new[] { new { Id = 1, Name = "Name" } },
-                trace: trace.Object).Wait();
+                trace: trace).Wait();
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<int>>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -2467,39 +2266,35 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForMin()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.Min<TraceEntity>(trace: trace.Object,
+            connection.Min<TraceEntity>(trace: trace,
                 field: e => e.Id,
                 where: (object)null);
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
         public void TestDbConnectionTraceSilentCancellationForMinViaTableName()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.Min(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
                 where: (object)null,
-                trace: trace.Object);
+                trace: trace);
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -2510,43 +2305,35 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForMinAsync()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MinAsync<TraceEntity>(trace: trace.Object,
+            connection.MinAsync<TraceEntity>(trace: trace,
                 field: e => e.Id,
                 where: (object)null).Wait();
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<object>>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
         public void TestDbConnectionTraceSilentCancellationForMinAsyncViaTableName()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.MinAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
                 where: (object)null,
-                trace: trace.Object).Wait();
+                trace: trace).Wait();
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<object>>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -2561,37 +2348,33 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForMinAll()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MinAll<TraceEntity>(trace: trace.Object,
+            connection.MinAll<TraceEntity>(trace: trace,
                 field: e => e.Id);
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
         public void TestDbConnectionTraceSilentCancellationForMinAllViaTableName()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.MinAll(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
-                trace: trace.Object);
+                trace: trace);
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -2602,41 +2385,33 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForMinAllAsync()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MinAllAsync<TraceEntity>(trace: trace.Object,
+            connection.MinAllAsync<TraceEntity>(trace: trace,
                 field: e => e.Id).Wait();
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<object>>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
         public void TestDbConnectionTraceSilentCancellationForMinAllAsyncViaTableName()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.MinAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
-                trace: trace.Object).Wait();
+                trace: trace).Wait();
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<object>>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -2651,18 +2426,16 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForQuery()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.Query<TraceEntity>(te => te.Id == 1,
-                trace: trace.Object);
+                trace: trace);
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<IEnumerable<TraceEntity>>>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -2673,20 +2446,16 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForQueryAsync()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.QueryAsync<TraceEntity>(te => te.Id == 1,
-                trace: trace.Object).Wait();
+                trace: trace).Wait();
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
-            trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<IEnumerable<TraceEntity>>>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(0));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -2701,30 +2470,15 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForQueryAll()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.QueryAll<TraceEntity>(trace: trace.Object);
+            connection.QueryAll<TraceEntity>(trace: trace);
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-        }
-
-        [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForAfterQueryAll()
-        {
-            // Prepare
-            var trace = new Mock<ITrace>();
-            var connection = new TraceDbConnection();
-
-            // Act
-            connection.QueryAll<TraceEntity>(trace: trace.Object);
-
-            // Assert
-            trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<IEnumerable<TraceEntity>>>()), Times.Exactly(1));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -2735,32 +2489,15 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForQueryAllAsync()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.QueryAllAsync<TraceEntity>(trace: trace.Object);
+            connection.QueryAllAsync<TraceEntity>(trace: trace);
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
-        }
-
-        [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForAfterQueryAllAsync()
-        {
-            // Prepare
-            var trace = new Mock<ITrace>();
-            var connection = new TraceDbConnection();
-
-            // Act
-            connection.QueryAllAsync<TraceEntity>(trace: trace.Object);
-
-            // Assert
-            trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<IEnumerable<TraceEntity>>>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -2777,35 +2514,17 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForQueryMultipleForT2()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.QueryMultiple<TraceEntity, TraceEntity>(te => te.Id == 1,
                 te => te.Id == 1,
-                trace: trace.Object);
+                trace: trace);
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-        }
-
-        [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForAfterQueryMultipleForT2()
-        {
-            // Prepare
-            var trace = new Mock<ITrace>();
-            var connection = new TraceDbConnection();
-
-            // Act
-            connection.QueryMultiple<TraceEntity, TraceEntity>(te => te.Id == 1,
-                te => te.Id == 1,
-                trace: trace.Object);
-
-            // Assert
-            trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<Tuple<IEnumerable<TraceEntity>,
-                    IEnumerable<TraceEntity>>>>()), Times.Exactly(1));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -2816,38 +2535,18 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForQueryMultipleForT3()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.QueryMultiple<TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
-                trace: trace.Object);
+                trace: trace);
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-        }
-
-        [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForAfterQueryMultipleForT3()
-        {
-            // Prepare
-            var trace = new Mock<ITrace>();
-            var connection = new TraceDbConnection();
-
-            // Act
-            connection.QueryMultiple<TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
-                te => te.Id == 1,
-                te => te.Id == 1,
-                trace: trace.Object);
-
-            // Assert
-            trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<Tuple<IEnumerable<TraceEntity>,
-                    IEnumerable<TraceEntity>,
-                    IEnumerable<TraceEntity>>>>()), Times.Exactly(1));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -2858,7 +2557,7 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForQueryMultipleForT4()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
@@ -2866,33 +2565,11 @@ namespace RepoDb.UnitTests.Trace
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
-                trace: trace.Object);
+                trace: trace);
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-        }
-
-        [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForAfterQueryMultipleForT4()
-        {
-            // Prepare
-            var trace = new Mock<ITrace>();
-            var connection = new TraceDbConnection();
-
-            // Act
-            connection.QueryMultiple<TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
-                te => te.Id == 1,
-                te => te.Id == 1,
-                te => te.Id == 1,
-                trace: trace.Object);
-
-            // Assert
-            trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<Tuple<IEnumerable<TraceEntity>,
-                IEnumerable<TraceEntity>,
-                IEnumerable<TraceEntity>,
-                IEnumerable<TraceEntity>>>>()), Times.Exactly(1));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -2903,7 +2580,7 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForQueryMultipleForT5()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
@@ -2912,35 +2589,11 @@ namespace RepoDb.UnitTests.Trace
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
-                trace: trace.Object);
+                trace: trace);
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-        }
-
-        [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForAfterQueryMultipleForT5()
-        {
-            // Prepare
-            var trace = new Mock<ITrace>();
-            var connection = new TraceDbConnection();
-
-            // Act
-            connection.QueryMultiple<TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
-                te => te.Id == 1,
-                te => te.Id == 1,
-                te => te.Id == 1,
-                te => te.Id == 1,
-                trace: trace.Object);
-
-            // Assert
-            trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<Tuple<IEnumerable<TraceEntity>,
-                IEnumerable<TraceEntity>,
-                IEnumerable<TraceEntity>,
-                IEnumerable<TraceEntity>,
-                IEnumerable<TraceEntity>>>>()), Times.Exactly(1));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -2951,7 +2604,7 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForQueryMultipleForT6()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
@@ -2961,37 +2614,11 @@ namespace RepoDb.UnitTests.Trace
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
-                trace: trace.Object);
+                trace: trace);
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-        }
-
-        [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForAfterQueryMultipleForT6()
-        {
-            // Prepare
-            var trace = new Mock<ITrace>();
-            var connection = new TraceDbConnection();
-
-            // Act
-            connection.QueryMultiple<TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
-                te => te.Id == 1,
-                te => te.Id == 1,
-                te => te.Id == 1,
-                te => te.Id == 1,
-                te => te.Id == 1,
-                trace: trace.Object);
-
-            // Assert
-            trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<Tuple<IEnumerable<TraceEntity>,
-                IEnumerable<TraceEntity>,
-                IEnumerable<TraceEntity>,
-                IEnumerable<TraceEntity>,
-                IEnumerable<TraceEntity>,
-                IEnumerable<TraceEntity>>>>()), Times.Exactly(1));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -3002,7 +2629,7 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForQueryMultipleForT7()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
@@ -3013,39 +2640,11 @@ namespace RepoDb.UnitTests.Trace
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
-                trace: trace.Object);
+                trace: trace);
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-        }
-
-        [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForAfterQueryMultipleForT7()
-        {
-            // Prepare
-            var trace = new Mock<ITrace>();
-            var connection = new TraceDbConnection();
-
-            // Act
-            connection.QueryMultiple<TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
-                te => te.Id == 1,
-                te => te.Id == 1,
-                te => te.Id == 1,
-                te => te.Id == 1,
-                te => te.Id == 1,
-                te => te.Id == 1,
-                trace: trace.Object);
-
-            // Assert
-            trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<Tuple<IEnumerable<TraceEntity>,
-                IEnumerable<TraceEntity>,
-                IEnumerable<TraceEntity>,
-                IEnumerable<TraceEntity>,
-                IEnumerable<TraceEntity>,
-                IEnumerable<TraceEntity>,
-                IEnumerable<TraceEntity>>>>()), Times.Exactly(1));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -3060,36 +2659,17 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForQueryMultipleAsyncForT2()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.QueryMultipleAsync<TraceEntity, TraceEntity>(te => te.Id == 1,
                 te => te.Id == 1,
-                trace: trace.Object).Wait();
+                trace: trace).Wait();
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
-        }
-
-        [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForAfterQueryMultipleAsyncForT2()
-        {
-            // Prepare
-            var trace = new Mock<ITrace>();
-            var connection = new TraceDbConnection();
-
-            // Act
-            connection.QueryMultipleAsync<TraceEntity, TraceEntity>(te => te.Id == 1,
-                te => te.Id == 1,
-                trace: trace.Object).Wait();
-
-            // Assert
-            trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<Tuple<IEnumerable<TraceEntity>,
-                    IEnumerable<TraceEntity>>>>(), It.IsAny<CancellationToken>()), Times.Exactly(1));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -3100,39 +2680,18 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForQueryMultipleAsyncForT3()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
-                trace: trace.Object).Wait();
+                trace: trace).Wait();
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
-        }
-
-        [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForAfterQueryMultipleAsyncForT3()
-        {
-            // Prepare
-            var trace = new Mock<ITrace>();
-            var connection = new TraceDbConnection();
-
-            // Act
-            connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
-                te => te.Id == 1,
-                te => te.Id == 1,
-                trace: trace.Object).Wait();
-
-            // Assert
-            trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<Tuple<IEnumerable<TraceEntity>,
-                    IEnumerable<TraceEntity>,
-                    IEnumerable<TraceEntity>>>>(), It.IsAny<CancellationToken>()), Times.Exactly(1));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -3143,7 +2702,7 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForQueryMultipleAsyncForT4()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
@@ -3151,34 +2710,11 @@ namespace RepoDb.UnitTests.Trace
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
-                trace: trace.Object).Wait();
+                trace: trace).Wait();
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
-        }
-
-        [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForAfterQueryMultipleAsyncForT4()
-        {
-            // Prepare
-            var trace = new Mock<ITrace>();
-            var connection = new TraceDbConnection();
-
-            // Act
-            connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
-                te => te.Id == 1,
-                te => te.Id == 1,
-                te => te.Id == 1,
-                trace: trace.Object).Wait();
-
-            // Assert
-            trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<Tuple<IEnumerable<TraceEntity>,
-                    IEnumerable<TraceEntity>,
-                    IEnumerable<TraceEntity>,
-                    IEnumerable<TraceEntity>>>>(), It.IsAny<CancellationToken>()), Times.Exactly(1));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -3189,7 +2725,7 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForQueryMultipleAsyncForT5()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
@@ -3198,36 +2734,11 @@ namespace RepoDb.UnitTests.Trace
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
-                trace: trace.Object).Wait();
+                trace: trace).Wait();
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
-        }
-
-        [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForAfterQueryMultipleAsyncForT5()
-        {
-            // Prepare
-            var trace = new Mock<ITrace>();
-            var connection = new TraceDbConnection();
-
-            // Act
-            connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
-                te => te.Id == 1,
-                te => te.Id == 1,
-                te => te.Id == 1,
-                te => te.Id == 1,
-                trace: trace.Object).Wait();
-
-            // Assert
-            trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<Tuple<IEnumerable<TraceEntity>,
-                    IEnumerable<TraceEntity>,
-                    IEnumerable<TraceEntity>,
-                    IEnumerable<TraceEntity>,
-                    IEnumerable<TraceEntity>>>>(), It.IsAny<CancellationToken>()), Times.Exactly(1));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -3238,7 +2749,7 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForQueryMultipleAsyncForT6()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
@@ -3248,38 +2759,11 @@ namespace RepoDb.UnitTests.Trace
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
-                trace: trace.Object).Wait();
+                trace: trace).Wait();
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
-        }
-
-        [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForAfterQueryMultipleAsyncForT6()
-        {
-            // Prepare
-            var trace = new Mock<ITrace>();
-            var connection = new TraceDbConnection();
-
-            // Act
-            connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
-                te => te.Id == 1,
-                te => te.Id == 1,
-                te => te.Id == 1,
-                te => te.Id == 1,
-                te => te.Id == 1,
-                trace: trace.Object).Wait();
-
-            // Assert
-            trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<Tuple<IEnumerable<TraceEntity>,
-                    IEnumerable<TraceEntity>,
-                    IEnumerable<TraceEntity>,
-                    IEnumerable<TraceEntity>,
-                    IEnumerable<TraceEntity>,
-                    IEnumerable<TraceEntity>>>>(), It.IsAny<CancellationToken>()), Times.Exactly(1));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -3290,7 +2774,7 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForQueryMultipleAsyncForT7()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
@@ -3301,40 +2785,11 @@ namespace RepoDb.UnitTests.Trace
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
-                trace: trace.Object).Wait();
+                trace: trace).Wait();
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
-        }
-
-        [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForAfterQueryMultipleAsyncForT7()
-        {
-            // Prepare
-            var trace = new Mock<ITrace>();
-            var connection = new TraceDbConnection();
-
-            // Act
-            connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
-                te => te.Id == 1,
-                te => te.Id == 1,
-                te => te.Id == 1,
-                te => te.Id == 1,
-                te => te.Id == 1,
-                te => te.Id == 1,
-                trace: trace.Object).Wait();
-
-            // Assert
-            trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<Tuple<IEnumerable<TraceEntity>,
-                    IEnumerable<TraceEntity>,
-                    IEnumerable<TraceEntity>,
-                    IEnumerable<TraceEntity>,
-                    IEnumerable<TraceEntity>,
-                    IEnumerable<TraceEntity>,
-                    IEnumerable<TraceEntity>>>>(), It.IsAny<CancellationToken>()), Times.Exactly(1));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -3351,70 +2806,35 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForSum()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.Sum<TraceEntity>(trace: trace.Object,
+            connection.Sum<TraceEntity>(trace: trace,
                 field: e => e.Id,
                 where: (object)null);
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-        }
-
-        [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForAfterSum()
-        {
-            // Prepare
-            var trace = new Mock<ITrace>();
-            var connection = new TraceDbConnection();
-
-            // Act
-            connection.Sum<TraceEntity>(trace: trace.Object,
-                field: e => e.Id,
-                where: (object)null);
-
-            // Assert
-            trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(1));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
         public void TestDbConnectionTraceSilentCancellationForSumViaTableName()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.Sum(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
                 where: (object)null,
-                trace: trace.Object);
+                trace: trace);
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-        }
-
-        [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForAfterSumViaTableName()
-        {
-            // Prepare
-            var trace = new Mock<ITrace>();
-            var connection = new TraceDbConnection();
-
-            // Act
-            connection.Sum(ClassMappedNameCache.Get<TraceEntity>(),
-                field: new Field("Id"),
-                where: (object)null,
-                trace: trace.Object);
-
-            // Assert
-            trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(1));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -3425,74 +2845,35 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForSumAsync()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.SumAsync<TraceEntity>(trace: trace.Object,
+            connection.SumAsync<TraceEntity>(trace: trace,
                 field: e => e.Id,
                 where: (object)null).Wait();
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
-        }
-
-        [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForAfterSumAsync()
-        {
-            // Prepare
-            var trace = new Mock<ITrace>();
-            var connection = new TraceDbConnection();
-
-            // Act
-            connection.SumAsync<TraceEntity>(trace: trace.Object,
-                field: e => e.Id,
-                where: (object)null).Wait();
-
-            // Assert
-            trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<object>>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
         public void TestDbConnectionTraceSilentCancellationForSumAsyncViaTableName()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.SumAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
                 where: (object)null,
-                trace: trace.Object).Wait();
+                trace: trace).Wait();
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
-        }
-
-        [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForAfterSumAsyncViaTableName()
-        {
-            // Prepare
-            var trace = new Mock<ITrace>();
-            var connection = new TraceDbConnection();
-
-            // Act
-            connection.SumAsync(ClassMappedNameCache.Get<TraceEntity>(),
-                field: new Field("Id"),
-                where: (object)null,
-                trace: trace.Object).Wait();
-
-            // Assert
-            trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<object>>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -3507,66 +2888,33 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForSumAll()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.SumAll<TraceEntity>(trace: trace.Object,
+            connection.SumAll<TraceEntity>(trace: trace,
                 field: e => e.Id);
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-        }
-
-        [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForAfterSumAll()
-        {
-            // Prepare
-            var trace = new Mock<ITrace>();
-            var connection = new TraceDbConnection();
-
-            // Act
-            connection.SumAll<TraceEntity>(trace: trace.Object,
-                field: e => e.Id);
-
-            // Assert
-            trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(1));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
         public void TestDbConnectionTraceSilentCancellationForSumAllViaTableName()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.SumAll(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
-                trace: trace.Object);
+                trace: trace);
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-        }
-
-        [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForAfterSumAllViaTableName()
-        {
-            // Prepare
-            var trace = new Mock<ITrace>();
-            var connection = new TraceDbConnection();
-
-            // Act
-            connection.SumAll(ClassMappedNameCache.Get<TraceEntity>(),
-                field: new Field("Id"),
-                trace: trace.Object);
-
-            // Assert
-            trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<object>>()), Times.Exactly(1));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -3577,70 +2925,33 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForSumAllAsync()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.SumAllAsync<TraceEntity>(trace: trace.Object,
+            connection.SumAllAsync<TraceEntity>(trace: trace,
                 field: e => e.Id).Wait();
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
-        }
-
-        [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForAfterSumAllAsync()
-        {
-            // Prepare
-            var trace = new Mock<ITrace>();
-            var connection = new TraceDbConnection();
-
-            // Act
-            connection.SumAllAsync<TraceEntity>(trace: trace.Object,
-                field: e => e.Id).Wait();
-
-            // Assert
-            trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<object>>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
         public void TestDbConnectionTraceSilentCancellationForSumAllAsyncViaTableName()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.SumAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
-                trace: trace.Object).Wait();
+                trace: trace).Wait();
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
-        }
-
-        [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForAfterSumAllAsyncViaTableName()
-        {
-            // Prepare
-            var trace = new Mock<ITrace>();
-            var connection = new TraceDbConnection();
-
-            // Act
-            connection.SumAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
-                field: new Field("Id"),
-                trace: trace.Object).Wait();
-
-            // Assert
-            trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<object>>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -3655,62 +2966,31 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForTruncate()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.Truncate<TraceEntity>(trace: trace.Object);
+            connection.Truncate<TraceEntity>(trace: trace);
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-        }
-
-        [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForAfterTruncate()
-        {
-            // Prepare
-            var trace = new Mock<ITrace>();
-            var connection = new TraceDbConnection();
-
-            // Act
-            connection.Truncate<TraceEntity>(trace: trace.Object);
-
-            // Assert
-            trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<int>>()), Times.Exactly(1));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
         public void TestDbConnectionTraceSilentCancellationForTruncateViaTableName()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.Truncate(ClassMappedNameCache.Get<TraceEntity>(),
-                trace: trace.Object);
+                trace: trace);
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-        }
-
-        [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForAfterTruncateViaTableName()
-        {
-            // Prepare
-            var trace = new Mock<ITrace>();
-            var connection = new TraceDbConnection();
-
-            // Act
-            connection.Truncate(ClassMappedNameCache.Get<TraceEntity>(),
-                trace: trace.Object);
-
-            // Assert
-            trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<int>>()), Times.Exactly(1));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -3721,66 +3001,31 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForTruncateAsync()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.TruncateAsync<TraceEntity>(trace: trace.Object).Wait();
+            connection.TruncateAsync<TraceEntity>(trace: trace).Wait();
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
-        }
-
-        [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForAfterTruncateAsync()
-        {
-            // Prepare
-            var trace = new Mock<ITrace>();
-            var connection = new TraceDbConnection();
-
-            // Act
-            connection.TruncateAsync<TraceEntity>(trace: trace.Object).Wait();
-
-            // Assert
-            trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<int>>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
         public void TestDbConnectionTraceSilentCancellationForTruncateAsyncViaTableName()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.TruncateAsync(ClassMappedNameCache.Get<TraceEntity>(),
-                trace: trace.Object).Wait();
+                trace: trace).Wait();
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
-        }
-
-        [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForAfterTruncateAsyncViaTableName()
-        {
-            // Prepare
-            var trace = new Mock<ITrace>();
-            var connection = new TraceDbConnection();
-
-            // Act
-            connection.TruncateAsync(ClassMappedNameCache.Get<TraceEntity>(),
-                trace: trace.Object).Wait();
-
-            // Assert
-            trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<int>>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -3795,7 +3040,7 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForUpdate()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
@@ -3806,40 +3051,18 @@ namespace RepoDb.UnitTests.Trace
                     Name = "Name"
                 },
                 what: 1,
-                trace: trace.Object);
+                trace: trace);
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-        }
-
-        [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForAfterUpdate()
-        {
-            // Prepare
-            var trace = new Mock<ITrace>();
-            var connection = new TraceDbConnection();
-
-            // Act
-            connection.Update<TraceEntity>(
-                new TraceEntity
-                {
-                    Id = 1,
-                    Name = "Name"
-                },
-                what: 1,
-                trace: trace.Object);
-
-            // Assert
-            trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<int>>()), Times.Exactly(1));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
         public void TestDbConnectionTraceSilentCancellationForUpdateViaTableName()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
@@ -3852,35 +3075,11 @@ namespace RepoDb.UnitTests.Trace
                 {
                     Id = 1
                 },
-                trace: trace.Object);
+                trace: trace);
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-        }
-
-        [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForAfterUpdateViaTableName()
-        {
-            // Prepare
-            var trace = new Mock<ITrace>();
-            var connection = new TraceDbConnection();
-
-            // Act
-            connection.Update(ClassMappedNameCache.Get<TraceEntity>(),
-                new
-                {
-                    Name = "Name"
-                },
-                new
-                {
-                    Id = 1
-                },
-                trace: trace.Object);
-
-            // Assert
-            trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<int>>()), Times.Exactly(1));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -3891,7 +3090,7 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForUpdateAsync()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
@@ -3902,42 +3101,18 @@ namespace RepoDb.UnitTests.Trace
                     Name = "Name"
                 },
                 what: 1,
-                trace: trace.Object).Wait();
+                trace: trace).Wait();
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
-        }
-
-        [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForAfterUpdateAsync()
-        {
-            // Prepare
-            var trace = new Mock<ITrace>();
-            var connection = new TraceDbConnection();
-
-            // Act
-            connection.UpdateAsync<TraceEntity>(
-                new TraceEntity
-                {
-                    Id = 1,
-                    Name = "Name"
-                },
-                what: 1,
-                trace: trace.Object).Wait();
-
-            // Assert
-            trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<int>>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
         public void TestDbConnectionTraceSilentCancellationForUpdateAsyncViaTableName()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
@@ -3950,37 +3125,11 @@ namespace RepoDb.UnitTests.Trace
                 {
                     Id = 1
                 },
-                trace: trace.Object).Wait();
+                trace: trace).Wait();
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
-        }
-
-        [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForAfterUpdateAsyncViaTableName()
-        {
-            // Prepare
-            var trace = new Mock<ITrace>();
-            var connection = new TraceDbConnection();
-
-            // Act
-            connection.UpdateAsync(ClassMappedNameCache.Get<TraceEntity>(),
-                new
-                {
-                    Name = "Name"
-                },
-                new
-                {
-                    Id = 1
-                },
-                trace: trace.Object).Wait();
-
-            // Assert
-            trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<int>>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -3995,68 +3144,34 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForUpdateAll()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.UpdateAll<TraceEntity>(
                 new[] { new TraceEntity { Id = 1, Name = "Name" } },
-                trace: trace.Object);
+                trace: trace);
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-        }
-
-        [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForAfterUpdateAll()
-        {
-            // Prepare
-            var trace = new Mock<ITrace>();
-            var connection = new TraceDbConnection();
-
-            // Act
-            connection.UpdateAll<TraceEntity>(
-                new[] { new TraceEntity { Id = 1, Name = "Name" } },
-                trace: trace.Object);
-
-            // Assert
-            trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<int>>()), Times.Exactly(1));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
         public void TestDbConnectionTraceSilentCancellationForUpdateAllViaTableName()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.UpdateAll(ClassMappedNameCache.Get<TraceEntity>(),
                 new[] { new { Id = 1, Name = "Name" } },
-                trace: trace.Object);
+                trace: trace);
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecution(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
-        }
-
-        [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForAfterUpdateAllViaTableName()
-        {
-            // Prepare
-            var trace = new Mock<ITrace>();
-            var connection = new TraceDbConnection();
-
-            // Act
-            connection.UpdateAll(ClassMappedNameCache.Get<TraceEntity>(),
-                new[] { new { Id = 1, Name = "Name" } },
-                trace: trace.Object);
-
-            // Assert
-            trace.Verify(t =>
-                t.AfterExecution(It.IsAny<ResultTraceLog<int>>()), Times.Exactly(1));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
@@ -4067,72 +3182,34 @@ namespace RepoDb.UnitTests.Trace
         public void TestDbConnectionTraceSilentCancellationForUpdateAllAsync()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.UpdateAllAsync<TraceEntity>(
                 new[] { new TraceEntity { Id = 1, Name = "Name" } },
-                trace: trace.Object).Wait();
+                trace: trace).Wait();
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
-        }
-
-        [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForAfterUpdateAllAsync()
-        {
-            // Prepare
-            var trace = new Mock<ITrace>();
-            var connection = new TraceDbConnection();
-
-            // Act
-            connection.UpdateAllAsync<TraceEntity>(
-                new[] { new TraceEntity { Id = 1, Name = "Name" } },
-                trace: trace.Object).Wait();
-
-            // Assert
-            trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<int>>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         [TestMethod]
         public void TestDbConnectionTraceSilentCancellationForUpdateAllAsyncViaTableName()
         {
             // Prepare
-            var trace = new Mock<ITrace>();
+            var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
             connection.UpdateAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new[] { new { Id = 1, Name = "Name" } },
-                trace: trace.Object).Wait();
+                trace: trace).Wait();
 
             // Assert
-            trace.Verify(t =>
-                t.BeforeExecutionAsync(It.IsAny<CancellableTraceLog>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
-        }
-
-        [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForAfterUpdateAllAsyncViaTableName()
-        {
-            // Prepare
-            var trace = new Mock<ITrace>();
-            var connection = new TraceDbConnection();
-
-            // Act
-            connection.UpdateAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
-                new[] { new { Id = 1, Name = "Name" } },
-                trace: trace.Object).Wait();
-
-            // Assert
-            trace.Verify(t =>
-                t.AfterExecutionAsync(It.IsAny<ResultTraceLog<int>>(),
-                    It.IsAny<CancellationToken>()), Times.Exactly(1));
+            Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
+            Assert.AreEqual(0, trace.AfterExecutionInvocationCount);
         }
 
         #endregion
