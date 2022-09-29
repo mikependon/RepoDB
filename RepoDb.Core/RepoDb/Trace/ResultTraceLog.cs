@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
 
 namespace RepoDb
 {
@@ -15,27 +13,40 @@ namespace RepoDb
         /// </summary>
         /// <param name="sessionId"></param>
         /// <param name="key"></param>
-        /// <param name="statement"></param>
-        /// <param name="parameters"></param>
         /// <param name="executionTime"></param>
         /// <param name="result"></param>
+        /// <param name="beforeExecutionLog"></param>
         protected internal ResultTraceLog(Guid sessionId,
             string key,
-            string statement,
-            IEnumerable<IDbDataParameter> parameters = null,
             TimeSpan? executionTime = null,
-            TResult result = default)
-            : base(sessionId, key, statement, parameters, executionTime)
+            TResult result = default,
+            CancellableTraceLog beforeExecutionLog = null)
+            : base(sessionId, key)
         {
             Result = result;
+            BeforeExecutionLog = beforeExecutionLog;
+            if (executionTime != null)
+            {
+                ExecutionTime = executionTime.Value;
+            }
         }
 
         #region Properties
 
         /// <summary>
-        /// Gets the actual result of the operation.
+        /// Gets the actual length of the actual execution.
+        /// </summary>
+        public TimeSpan ExecutionTime { get; }
+
+        /// <summary>
+        /// Gets the actual result of the actual execution.
         /// </summary>
         public TResult Result { get; }
+
+        /// <summary>
+        /// Gets the associated <see cref="CancellableTraceLog"/> object of the actual execution.
+        /// </summary>
+        public CancellableTraceLog BeforeExecutionLog { get; }
 
         #endregion
     }

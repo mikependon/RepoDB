@@ -97,10 +97,9 @@ namespace RepoDb
 
             var log = new ResultTraceLog<TResult>(result.SessionId,
                 result.CancellableTraceLog.Key,
-                result.CancellableTraceLog.Statement,
-                result.CancellableTraceLog.Parameters,
-                DateTime.UtcNow.TimeOfDay.Subtract(result.ExecutionTime.Value),
-                value);
+                DateTime.UtcNow.TimeOfDay.Subtract(result.StartTime.TimeOfDay),
+                value,
+                result.CancellableTraceLog);
 
             trace.AfterExecution(log);
         }
@@ -130,10 +129,9 @@ namespace RepoDb
 
             var log = new ResultTraceLog<TResult>(result.SessionId,
                 result.CancellableTraceLog.Key,
-                result.CancellableTraceLog.Statement,
-                result.CancellableTraceLog.Parameters,
-                DateTime.UtcNow.TimeOfDay.Subtract(result.ExecutionTime.Value),
-                value);
+                DateTime.UtcNow.TimeOfDay.Subtract(result.StartTime.TimeOfDay),
+                value,
+                result.CancellableTraceLog);
 
             await trace.AfterExecutionAsync(log, cancellationToken);
         }

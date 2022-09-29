@@ -17,7 +17,7 @@ namespace RepoDb
         public TraceResult(CancellableTraceLog log)
         {
             SessionId = log.SessionId;
-            ExecutionTime = log.ExecutionTime;
+            StartTime = log.StartTime;
             CancellableTraceLog = log;
         }
 
@@ -31,7 +31,7 @@ namespace RepoDb
         /// <summary>
         /// 
         /// </summary>
-        public TimeSpan? ExecutionTime { get; }
+        public DateTime StartTime { get; }
 
         /// <summary>
         /// 
@@ -52,7 +52,7 @@ namespace RepoDb
             DbCommand command) =>
             new TraceResult(
                 new CancellableTraceLog(Guid.NewGuid(),
-                    key, command.CommandText, GetParameters(command), DateTime.UtcNow.TimeOfDay));
+                    key, command.CommandText, GetParameters(command)));
 
         /// <summary>
         /// 

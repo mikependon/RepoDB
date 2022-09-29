@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 
 namespace RepoDb
 {
@@ -16,16 +17,32 @@ namespace RepoDb
         /// <param name="key"></param>
         /// <param name="statement"></param>
         /// <param name="parameters"></param>
-        /// <param name="executionTime"></param>
         protected internal CancellableTraceLog(Guid sessionId,
             string key,
             string statement,
-            IEnumerable<IDbDataParameter> parameters = null,
-            TimeSpan? executionTime = null)
-            : base(sessionId, key, statement, parameters, executionTime)
-        { }
+            IEnumerable<IDbDataParameter> parameters = null)
+            : base(sessionId, key)
+        {
+            Statement = statement;
+            Parameters = parameters;
+        }
 
         #region Properties
+
+        /// <summary>
+        /// Gets or sets the SQL Statement used on the actual operation execution.
+        /// </summary>
+        public string Statement { get; set; }
+
+        /// <summary>
+        /// Gets the parameters used on the actual operation.
+        /// </summary>
+        public IEnumerable<IDbDataParameter> Parameters { get; }
+
+        /// <summary>
+        /// Gets the actual date/time value of when the actual execution has started.
+        /// </summary>
+        public DateTime StartTime => DateTime.UtcNow;
 
         /// <summary>
         /// Gets a value whether the operation is cancelled.
@@ -50,6 +67,18 @@ namespace RepoDb
             IsCancelled = true;
             IsThrowException = throwException;
         }
+
+        /// <summary>
+        /// Returns the manipulated string based from the value of the <see cref="Statement"/> and <see cref="Parameters"/> properties.
+        /// The value is the representation of the current object.
+        /// </summary>
+        /// <returns>The string representation of the current object.</returns>
+        public override string ToString() =>
+            $"SessiontId: {SessionId}\n" +
+            $"Key: {Key}\n" +
+            $"Statement: {Statement}\n" +
+            $"StarTime (Ticks): {StartTime.Ticks}\n" +
+            $"Parameters: {(Parameters?.Any() == true ? string.Join(", ", Parameters.ToArray().Select(param => $"({param.ParameterName}={param.Value})")) : "No Parameters")}";
 
         #endregion
     }
