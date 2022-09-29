@@ -28,5 +28,10 @@ namespace RepoDb.Options
         /// Gets or sets the default equivalent <see cref="DbType"/> of an enumeration if it is being used as a parameter to the execution of any non-entity-based operations.
         /// </summary>
         public DbType EnumDefaultDatabaseType { get; set; } = DbType.String;
+
+        /// <summary>
+        /// Gets or sets the default value of how the push operations (i.e.: Insert, InsertAll, Merge and MergeAll) behaves when returning the value from the key columns (i.e.: Primary and Identity).
+        /// </summary>
+        public KeyColumnReturnBehavior KeyColumnReturnBehavior { get; set; } = KeyColumnReturnBehavior.Primary;
     }
 }
