@@ -1,9 +1,10 @@
-﻿using RepoDb.Attributes.Parameter;
+using RepoDb.Attributes.Parameter;
 using RepoDb.Enumerations;
 using RepoDb.Exceptions;
 using RepoDb.Interfaces;
 using RepoDb.Options;
 using RepoDb.Resolvers;
+
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -227,7 +228,7 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="command"></param>
         /// <param name="name"></param>
@@ -279,7 +280,7 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="command"></param>
         /// <param name="valueType"></param>
@@ -330,7 +331,7 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="command"></param>
         /// <param name="valueType"></param>
@@ -379,7 +380,7 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="name"></param>
         /// <param name="value"></param>
@@ -694,7 +695,7 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="classProperty"></param>
         /// <param name="parameter"></param>
@@ -711,7 +712,7 @@ namespace RepoDb.Extensions
 
             if (propertyHandler != null)
             {
-                var propertyHandlerSetMethod = propertyHandler.GetType().GetMethod("Set");
+                var propertyHandlerSetMethod = Reflection.Compiler.GetPropertyHandlerInterfaceOrHandlerType(propertyHandler)?.GetMethod("Set");
                 value = propertyHandlerSetMethod
                     .Invoke(propertyHandler, new[] { value,
                         PropertyHandlerSetOptions.Create(parameter,classProperty) });
@@ -722,7 +723,7 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="dbField"></param>
         /// <returns></returns>
@@ -731,7 +732,7 @@ namespace RepoDb.Extensions
             string.Equals(dbField?.Provider, "PGSQL", StringComparison.OrdinalIgnoreCase);
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="size"></param>
         /// <param name="dbField"></param>
@@ -741,7 +742,7 @@ namespace RepoDb.Extensions
                  dbField?.Size.HasValue == true ? dbField.Size.Value : default;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="classProperty"></param>
         /// <param name="fallbackType"></param>
@@ -751,7 +752,7 @@ namespace RepoDb.Extensions
             classProperty?.GetPropertyValueAttributes() ?? fallbackType?.GetPropertyValueAttributes();
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="parameter"></param>
         /// <param name="attributes"></param>
@@ -784,7 +785,7 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="dbField"></param>
         /// <param name="valueType"></param>
