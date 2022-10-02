@@ -14,20 +14,12 @@
         /// </summary>
         Identity = 2,
         /// <summary>
-        /// Returns the coalesce value of the primary and identity columns.
+        /// Returns the coalesced value of the primary and identity columns.
         /// </summary>
-        PrimaryOrIdentity = 3,
+        PrimaryOrElseIdentity = 3,
         /// <summary>
-        /// Returns the coalesce value of the identity and primary columns.
+        /// Returns the coalesced value of the identity and primary columns.
         /// </summary>
-        IdentityOrPrimary = 4,
-        /// <summary>
-        /// Returns the value of the identity column. If the identity column is not present, it will return the value of the primary column.
-        /// </summary>
-        IdentityOrElsePrimary = 5,
-        /// <summary>
-        /// Returns the value of the primary column. If the primary column is not present, it will return the value of the identity column.
-        /// </summary>
-        PrimaryOrElseIdentity = 6
+        IdentityOrElsePrimary = 4,
     }
 }
