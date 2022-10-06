@@ -3,9 +3,9 @@
   <PropertyGroup>
 	<Title>RepoDb.SQLite.System</Title>
     <TargetFrameworks>netstandard2.0;net5.0;net6.0</TargetFrameworks>
-    <Version>1.13.0-alpha1</Version>
-    <AssemblyVersion>1.13.0.1</AssemblyVersion>
-    <FileVersion>1.13.0.1</FileVersion>
+    <Version>1.13.0-alpha2</Version>
+    <AssemblyVersion>1.13.0.21</AssemblyVersion>
+    <FileVersion>1.13.0.2</FileVersion>
     <Description>A hybrid .NET ORM library for SQLite (using System.Data.SQLite.Core).</Description>
 	<PackageTags>orm hybrid-orm micro-orm sqlite</PackageTags>
     <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.SqLite</RepositoryUrl>
@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="RepoDb" Version="1.13.0-alpha1" />
+    <PackageReference Include="RepoDb" Version="1.13.0-alpha2" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.116" />
   </ItemGroup>
 
