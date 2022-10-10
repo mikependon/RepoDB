@@ -81,7 +81,8 @@ namespace RepoDb.Contexts.Providers
             // Create a different kind of requests
             if (batchSize > 1)
             {
-                var request = new InsertAllRequest(tableName,
+                var request = new InsertAllRequest(entityType,
+                    tableName,
                     connection,
                     transaction,
                     fields,
@@ -92,7 +93,8 @@ namespace RepoDb.Contexts.Providers
             }
             else
             {
-                var request = new InsertRequest(tableName,
+                var request = new InsertRequest(entityType,
+                    tableName,
                     connection,
                     transaction,
                     fields,

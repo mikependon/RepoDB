@@ -14,7 +14,7 @@
         /// </summary>
         Identity = 2,
         /// <summary>
-        /// Returns the coalesced value of the primary and identity columns.
+        /// Returns the coalesced value of the primary and identity columns. This is the default value.
         /// </summary>
         PrimaryOrElseIdentity = 3,
         /// <summary>

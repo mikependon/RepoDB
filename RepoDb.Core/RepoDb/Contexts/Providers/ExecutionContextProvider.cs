@@ -20,18 +20,10 @@ namespace RepoDb.Contexts.Providers
         /// <param name="dbFields"></param>
         /// <returns></returns>
         public static Field GetTargetReturnColumnAsField(Type entityType,
-            IEnumerable<DbField> dbFields) =>
-            GetReturnKeyField(entityType) ?? GetReturnDbField(dbFields)?.AsField();
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="entityType"></param>
-        /// <returns></returns>
-        private static Field GetReturnKeyField(Type entityType)
+            IEnumerable<DbField> dbFields)
         {
-            var primaryField = PrimaryCache.Get(entityType)?.AsField();
-            var identityField = IdentityCache.Get(entityType)?.AsField();
+            var primaryField = GetPrimaryAsReturnKeyField(entityType, dbFields);
+            var identityField = GetIdentityAsReturnKeyField(entityType, dbFields);
 
             switch (GlobalConfiguration.Options.KeyColumnReturnBehavior)
             {
@@ -51,27 +43,26 @@ namespace RepoDb.Contexts.Providers
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="entityType"></param>
         /// <param name="dbFields"></param>
         /// <returns></returns>
-        private static DbField GetReturnDbField(IEnumerable<DbField> dbFields)
-        {
-            var primaryDbField = dbFields?.FirstOrDefault(f => f.IsPrimary);
-            var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
+        /// <exception cref="InvalidOperationException"></exception>
+        private static Field GetPrimaryAsReturnKeyField(Type entityType,
+            IEnumerable<DbField> dbFields) =>
+            PrimaryCache.Get(entityType)?.AsField() ??
+                dbFields?.FirstOrDefault(f => f.IsPrimary)?.AsField();
 
-            switch (GlobalConfiguration.Options.KeyColumnReturnBehavior)
-            {
-                case KeyColumnReturnBehavior.Primary:
-                    return primaryDbField;
-                case KeyColumnReturnBehavior.Identity:
-                    return identityDbField;
-                case KeyColumnReturnBehavior.PrimaryOrElseIdentity:
-                    return primaryDbField ?? identityDbField;
-                case KeyColumnReturnBehavior.IdentityOrElsePrimary:
-                    return identityDbField ?? primaryDbField;
-                default:
-                    throw new InvalidOperationException(nameof(GlobalConfiguration.Options.KeyColumnReturnBehavior));
-            }
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entityType"></param>
+        /// <param name="dbFields"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
+        private static Field GetIdentityAsReturnKeyField(Type entityType,
+            IEnumerable<DbField> dbFields) =>
+            IdentityCache.Get(entityType)?.AsField() ??
+                dbFields?.FirstOrDefault(f => f.IsIdentity)?.AsField();
 
         #endregion
     }

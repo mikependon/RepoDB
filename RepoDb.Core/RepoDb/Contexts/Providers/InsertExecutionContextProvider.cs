@@ -69,7 +69,8 @@ namespace RepoDb.Contexts.Providers
 
             // Create
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var request = new InsertRequest(tableName,
+            var request = new InsertRequest(entityType,
+                tableName,
                 connection,
                 transaction,
                 fields,

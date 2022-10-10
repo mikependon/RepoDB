@@ -32,7 +32,8 @@ namespace RepoDb.Requests
             int batchSize = Constant.DefaultBatchOperationSize,
             string hints = null,
             IStatementBuilder statementBuilder = null)
-            : this(ClassMappedNameCache.Get(type),
+            : this(type,
+                ClassMappedNameCache.Get(type),
                 connection,
                 transaction,
                 fields,
@@ -40,9 +41,7 @@ namespace RepoDb.Requests
                 batchSize,
                 hints,
                 statementBuilder)
-        {
-            Type = type;
-        }
+        { }
 
         /// <summary>
         /// Creates a new instance of <see cref="MergeAllRequest"/> object.
@@ -63,11 +62,44 @@ namespace RepoDb.Requests
             int batchSize = Constant.DefaultBatchOperationSize,
             string hints = null,
             IStatementBuilder statementBuilder = null)
-            : base(name,
+            : this(null,
+                name,
+                connection,
+                transaction,
+                fields,
+                qualifiers,
+                batchSize,
+                hints,
+                statementBuilder)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="MergeAllRequest"/> object.
+        /// </summary>
+        /// <param name="type">The target type.</param>
+        /// <param name="name">The name of the request.</param>
+        /// <param name="connection">The connection object.</param>
+        /// <param name="transaction">The transaction object.</param>
+        /// <param name="fields">The list of the target fields.</param>
+        /// <param name="qualifiers">The list of qualifier <see cref="Field"/> objects.</param>
+        /// <param name="batchSize">The batch size of the merge operation.</param>
+        /// <param name="hints">The hints for the table.</param>
+        /// <param name="statementBuilder">The statement builder.</param>
+        public MergeAllRequest(Type type,
+            string name,
+            IDbConnection connection,
+            IDbTransaction transaction,
+            IEnumerable<Field> fields = null,
+            IEnumerable<Field> qualifiers = null,
+            int batchSize = Constant.DefaultBatchOperationSize,
+            string hints = null,
+            IStatementBuilder statementBuilder = null)
+            : base(name ?? ClassMappedNameCache.Get(type),
                 connection,
                 transaction,
                 statementBuilder)
         {
+            Type = type;
             Fields = fields?.AsList();
             Qualifiers = qualifiers?.AsList();
             BatchSize = batchSize;

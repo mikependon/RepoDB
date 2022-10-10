@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using RepoDb.Exceptions;
+using RepoDb.Enumerations;
 
 namespace RepoDb.StatementBuilders
 {
@@ -372,7 +373,7 @@ namespace RepoDb.StatementBuilders
 
                 if (isPresent == false)
                 {
-                    throw new PrimaryFieldNotFoundException($"As the primary field '{primaryField.Name}' is not an identity nor has a default value, it must be present on the insert operation.");
+                    throw new PrimaryFieldNotFoundException($"Primary field '{primaryField.Name}' must be present from the list.");
                 }
             }
 
@@ -1128,12 +1129,13 @@ namespace RepoDb.StatementBuilders
 
         #endregion
 
-        #region Helper
+        #region Helpers
 
         /// <summary>
-        /// Throws an exception if the table name is null or empty.
+        /// 
         /// </summary>
-        /// <param name="tableName">The name of the table.</param>
+        /// <param name="tableName"></param>
+        /// <exception cref="NullReferenceException"></exception>
         protected void GuardTableName(string tableName)
         {
             if (string.IsNullOrWhiteSpace(tableName))
@@ -1143,9 +1145,10 @@ namespace RepoDb.StatementBuilders
         }
 
         /// <summary>
-        /// Throws an exception if the primary field is not really a primary field.
+        /// 
         /// </summary>
-        /// <param name="field">The instance of the primary field.</param>
+        /// <param name="field"></param>
+        /// <exception cref="InvalidOperationException"></exception>
         protected void GuardPrimary(DbField field)
         {
             if (field?.IsPrimary == false)
@@ -1155,9 +1158,10 @@ namespace RepoDb.StatementBuilders
         }
 
         /// <summary>
-        /// Throws an exception if the identity field is not really an identity field.
+        /// 
         /// </summary>
-        /// <param name="field">The instance of the identity field.</param>
+        /// <param name="field"></param>
+        /// <exception cref="InvalidOperationException"></exception>
         protected void GuardIdentity(DbField field)
         {
             if (field?.IsIdentity == false)
@@ -1167,9 +1171,10 @@ namespace RepoDb.StatementBuilders
         }
 
         /// <summary>
-        /// Throws an exception if the 'hints' is present and the <see cref="IDbSetting"/> object does not support it.
+        /// 
         /// </summary>
-        /// <param name="hints">The value to be evaluated.</param>
+        /// <param name="hints"></param>
+        /// <exception cref="NotSupportedException"></exception>
         protected void GuardHints(string hints = null)
         {
             if (!string.IsNullOrWhiteSpace(hints) && !DbSetting.AreTableHintsSupported)
@@ -1179,15 +1184,38 @@ namespace RepoDb.StatementBuilders
         }
 
         /// <summary>
-        /// Throws an exception if the 'batchSize' is greater than 1 and the multiple statement execution is not being supported
-        /// based on the settings of the <see cref="IDbSetting"/> object.
+        /// 
         /// </summary>
-        /// <param name="batchSize">The batch size to be evaluated.</param>
+        /// <param name="batchSize"></param>
+        /// <exception cref="NotSupportedException"></exception>
         protected void ValidateMultipleStatementExecution(int batchSize = Constant.DefaultBatchOperationSize)
         {
             if (DbSetting.IsMultiStatementExecutable == false && batchSize > 1)
             {
                 throw new NotSupportedException($"Multiple execution is not supported based on the current database setting '{DbSetting.GetType().FullName}'. Consider setting the batchSize to 1.");
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="primaryDbField"></param>
+        /// <param name="identityDbField"></param>
+        protected DbField GetReturnKeyColumnAsDbField(DbField primaryDbField,
+            DbField identityDbField)
+        {
+            switch (GlobalConfiguration.Options.KeyColumnReturnBehavior)
+            {
+                case KeyColumnReturnBehavior.Primary:
+                    return primaryDbField;
+                case KeyColumnReturnBehavior.Identity:
+                    return identityDbField;
+                case KeyColumnReturnBehavior.PrimaryOrElseIdentity:
+                    return primaryDbField ?? identityDbField;
+                case KeyColumnReturnBehavior.IdentityOrElsePrimary:
+                    return identityDbField ?? primaryDbField;
+                default:
+                    throw new InvalidOperationException(nameof(GlobalConfiguration.Options.KeyColumnReturnBehavior));
             }
         }
 

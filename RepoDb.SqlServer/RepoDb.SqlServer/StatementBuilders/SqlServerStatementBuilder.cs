@@ -229,26 +229,29 @@ namespace RepoDb.StatementBuilders
                     hints));
 
             // Variables needed
-            var databaseType = "BIGINT";
+            var keyColumn = GetReturnKeyColumnAsDbField(primaryField, identityField);
+            var returnValue = "NULL";
 
-            // Check for the identity
-            if (identityField != null)
+            // Set the return value
+            if (keyColumn != null)
             {
-                var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
+                var dbType = new ClientTypeToDbTypeResolver().Resolve(keyColumn.Type);
+                string databaseType = null;
+
                 if (dbType != null)
                 {
                     databaseType = new DbTypeToSqlServerStringNameResolver().Resolve(dbType.Value);
                 }
+
+                var keyColumnText = (keyColumn == identityField || string.Equals(keyColumn.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase)) ? "SCOPE_IDENTITY()" :
+                    keyColumn.Name.AsParameter(DbSetting);
+                returnValue = keyColumn != null ?
+                    string.IsNullOrWhiteSpace(databaseType) ?
+                    keyColumnText : string.Concat("CONVERT(", databaseType, ", ", keyColumnText, ")") : "NULL";
             }
-
-            // Set the return value
-            var result = identityField != null ?
-                string.Concat("CONVERT(", databaseType, ", SCOPE_IDENTITY())") :
-                    primaryField != null ? primaryField.Name.AsParameter(DbSetting) : "NULL";
-
             builder
                 .Select()
-                .WriteText(result)
+                .WriteText(returnValue)
                 .As("[Result]")
                 .End();
 
@@ -286,35 +289,35 @@ namespace RepoDb.StatementBuilders
                 hints);
 
             // Variables needed
-            var databaseType = (string)null;
+            var keyColumn = GetReturnKeyColumnAsDbField(primaryField, identityField);
 
-            // Check for the identity
-            if (identityField != null)
+            // Set the return value
+            if (keyColumn != null)
             {
-                var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
+                var dbType = new ClientTypeToDbTypeResolver().Resolve(keyColumn.Type);
+                string databaseType = null;
+
                 if (dbType != null)
                 {
                     databaseType = new DbTypeToSqlServerStringNameResolver().Resolve(dbType.Value);
                 }
-            }
 
-            if (identityField != null)
-            {
-                // Variables needed
                 var commandTexts = new List<string>();
                 var splitted = commandText.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 
-                // Iterate the indexes
                 for (var index = 0; index < splitted.Length; index++)
                 {
                     var line = splitted[index].Trim();
-                    var returnValue = string.IsNullOrEmpty(databaseType) ?
-                        "SELECT SCOPE_IDENTITY()" :
-                        $"SELECT CONVERT({databaseType}, SCOPE_IDENTITY()) AS [Id]";
-                    commandTexts.Add(string.Concat(line, " ; ", returnValue, $", {DbSetting.ParameterPrefix}__RepoDb_OrderColumn_{index} AS [OrderColumn] ;"));
+                    var keyColumnText = (keyColumn == identityField || string.Equals(keyColumn.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase)) ? "SCOPE_IDENTITY()" :
+                        keyColumn.Name.AsParameter(index, DbSetting);
+                    var returnValue = keyColumn != null ?
+                        string.IsNullOrWhiteSpace(databaseType) ?
+                        keyColumnText : string.Concat("CONVERT(", databaseType, ", ", keyColumnText, ")") : "NULL";
+                    var result = string.Concat("SELECT ", returnValue, $" AS [Result]," +
+                        $" {DbSetting.ParameterPrefix}__RepoDb_OrderColumn_{index} AS [OrderColumn] ;");
+                    commandTexts.Add(string.Concat(line, " ; ", result));
                 }
 
-                // Set the command text
                 commandText = commandTexts.Join(" ");
             }
 

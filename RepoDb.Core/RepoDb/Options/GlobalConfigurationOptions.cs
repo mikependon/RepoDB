@@ -32,6 +32,6 @@ namespace RepoDb.Options
         /// <summary>
         /// Gets or sets the default value of how the push operations (i.e.: Insert, InsertAll, Merge and MergeAll) behaves when returning the value from the key columns (i.e.: Primary and Identity).
         /// </summary>
-        public KeyColumnReturnBehavior KeyColumnReturnBehavior { get; set; } = KeyColumnReturnBehavior.Primary;
+        public KeyColumnReturnBehavior KeyColumnReturnBehavior { get; set; } = KeyColumnReturnBehavior.IdentityOrElsePrimary;
     }
 }
