@@ -404,19 +404,6 @@ namespace RepoDb.StatementBuilders
                 .Where(field => !string.Equals(field.Name, primaryField?.Name, StringComparison.OrdinalIgnoreCase) &&
                     !string.Equals(field.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase));
 
-            // Variables needed
-            var databaseType = "BIGINT";
-
-            // Check for the identity
-            if (identityField != null)
-            {
-                var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
-                if (dbType != null)
-                {
-                    databaseType = new DbTypeToSqlServerStringNameResolver().Resolve(dbType.Value);
-                }
-            }
-
             // Initialize the builder
             var builder = new QueryBuilder();
 
@@ -462,12 +449,14 @@ namespace RepoDb.StatementBuilders
                 .Set()
                 .FieldsAndAliasFieldsFrom(updateableFields, "T", "S", DbSetting);
 
+            // Variables needed
+            var keyColumn = GetReturnKeyColumnAsDbField(primaryField, identityField);
+
             // Set the output
-            var outputField = identityField ?? primaryField;
-            if (outputField != null)
+            if (keyColumn != null)
             {
                 builder
-                    .WriteText(string.Concat("OUTPUT INSERTED.", outputField.Name.AsField(DbSetting)))
+                    .WriteText(string.Concat("OUTPUT INSERTED.", keyColumn.Name.AsField(DbSetting)))
                     .As("[Result]");
             }
 
@@ -559,27 +548,8 @@ namespace RepoDb.StatementBuilders
                 .Where(field => !string.Equals(field.Name, primaryField?.Name, StringComparison.OrdinalIgnoreCase) &&
                     !string.Equals(field.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase));
 
-            // Variables needed
-            var databaseType = (string)null;
-
-            // Check for the identity
-            if (identityField != null)
-            {
-                var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
-                if (dbType != null)
-                {
-                    databaseType = new DbTypeToSqlServerStringNameResolver().Resolve(dbType.Value);
-                }
-            }
-            else if (primaryField != null)
-            {
-                var dbType = new ClientTypeToDbTypeResolver().Resolve(primaryField.Type);
-                if (dbType != null)
-                {
-                    databaseType = new DbTypeToSqlServerStringNameResolver().Resolve(dbType.Value);
-                }
-            }
             // Initialize the builder
+            var keyColumn = GetReturnKeyColumnAsDbField(primaryField, identityField);
             var builder = new QueryBuilder();
 
             // Build the query
@@ -629,12 +599,11 @@ namespace RepoDb.StatementBuilders
                     .FieldsAndAliasFieldsFrom(updateableFields, "T", "S", DbSetting);
 
                 // Set the output
-                var outputField = identityField ?? primaryField;
-                if (outputField != null)
+                if (keyColumn != null)
                 {
                     builder
-                        .WriteText(string.Concat("OUTPUT INSERTED.", outputField.Name.AsField(DbSetting)))
-                            .As("[Id],")
+                        .WriteText(string.Concat("OUTPUT INSERTED.", keyColumn.Name.AsField(DbSetting)))
+                            .As("[Result],")
                         .WriteText($"{DbSetting.ParameterPrefix}__RepoDb_OrderColumn_{index}")
                             .As("[OrderColumn]");
                 }
