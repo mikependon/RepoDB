@@ -60,6 +60,7 @@ namespace RepoDb.DbHelpers
                 , COALESCE(NUMERIC_PRECISION, DATETIME_PRECISION) AS `Precision`
                 , NUMERIC_SCALE AS Scale
                 , DATA_TYPE AS DatabaseType
+                , CASE WHEN COLUMN_DEFAULT IS NOT NULL THEN 1 ELSE 0 END AS HasDefaultValue
             FROM INFORMATION_SCHEMA.COLUMNS
             WHERE TABLE_SCHEMA = @TableSchema
                 AND TABLE_NAME = @TableName

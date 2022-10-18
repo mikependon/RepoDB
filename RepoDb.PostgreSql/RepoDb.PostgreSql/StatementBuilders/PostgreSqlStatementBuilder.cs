@@ -5,6 +5,7 @@ using RepoDb.Interfaces;
 using RepoDb.Resolvers;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 
 namespace RepoDb.StatementBuilders
@@ -67,7 +68,7 @@ namespace RepoDb.StatementBuilders
             // There should be fields
             if (fields?.Any() != true)
             {
-                throw new NullReferenceException($"The list of queryable fields must not be null for '{tableName}'.");
+                throw new EmptyException($"The list of queryable fields must not be null for '{tableName}'.");
             }
 
             // Validate order by
@@ -179,31 +180,23 @@ namespace RepoDb.StatementBuilders
                     hints));
 
             // Variables needed
-            var databaseType = (string)null;
-
-            // Check for the identity
-            if (identityField != null)
-            {
-                var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
-                if (dbType != null)
-                {
-                    databaseType = new DbTypeToPostgreSqlStringNameResolver().Resolve(dbType.Value);
-                }
-            }
+            var keyColumn = GetReturnKeyColumnAsDbField(primaryField, identityField);
+            var returnValue = "NULL";
 
             // Set the return value
-            var result = identityField != null ?
-                string.IsNullOrEmpty(databaseType) ?
-                    identityField.Name.AsQuoted(DbSetting) :
-                        $"CAST({identityField.Name.AsQuoted(DbSetting)} AS {databaseType})" :
-                            primaryField != null ? primaryField.Name.AsQuoted(DbSetting) : "NULL";
+            if (keyColumn != null)
+            {
+                var databaseType = GetDatabaseType(keyColumn);
+                returnValue = string.IsNullOrWhiteSpace(databaseType) ?
+                    keyColumn.Name.AsQuoted(DbSetting) : $"CAST({keyColumn.Name.AsQuoted(DbSetting)} AS {databaseType})";
+            }
 
             // Get the string
             var sql = builder.GetString().Trim();
 
             // Append the result
             sql = string.Concat(sql.Substring(0, sql.Length - 1),
-                "RETURNING ", result, " AS ", "Result".AsQuoted(DbSetting), " ;");
+                "RETURNING ", returnValue, " AS ", "Result".AsQuoted(DbSetting), " ;");
 
             // Return the query
             return sql;
@@ -239,38 +232,28 @@ namespace RepoDb.StatementBuilders
                 hints);
 
             // Variables needed
-            var databaseType = "BIGINT";
+            var keyColumn = GetReturnKeyColumnAsDbField(primaryField, identityField);
+            var returnValue = "NULL";
 
-            // Check for the identity
-            if (identityField != null)
+            // Key Column
+            if (keyColumn != null)
             {
-                var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
-                if (dbType != null)
-                {
-                    databaseType = new DbTypeToPostgreSqlStringNameResolver().Resolve(dbType.Value);
-                }
+                var databaseType = GetDatabaseType(keyColumn);
+                returnValue = string.IsNullOrWhiteSpace(databaseType) ?
+                    keyColumn.Name.AsQuoted(DbSetting) : $"CAST({keyColumn.Name.AsQuoted(DbSetting)} AS {databaseType})";
             }
 
-            // Variables needed
+            // Set the return value
             var commandTexts = new List<string>();
             var splitted = commandText.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 
-            // Iterate the indexes
             for (var index = 0; index < splitted.Length; index++)
             {
                 var line = splitted[index].Trim();
-
-                // Set the return value
-                var returnValue = identityField != null ?
-                    string.IsNullOrEmpty(databaseType) ?
-                        identityField.Name.AsQuoted(DbSetting) :
-                        $"CAST({identityField.Name.AsQuoted(DbSetting)} AS {databaseType})" :
-                    primaryField != null ? primaryField.Name.AsQuoted(DbSetting) : "NULL";
-                commandTexts.Add(string.Concat(line, " RETURNING ", returnValue, " AS ", "Id".AsQuoted(DbSetting), ", ",
+                commandTexts.Add(string.Concat(line, " RETURNING ", returnValue, " AS ", "Result".AsQuoted(DbSetting), ", ",
                     $"{DbSetting.ParameterPrefix}__RepoDb_OrderColumn_{index} AS ", "OrderColumn".AsQuoted(DbSetting), " ;"));
             }
 
-            // Set the command text
             commandText = commandTexts.Join(" ");
 
             // Return the query
@@ -307,7 +290,7 @@ namespace RepoDb.StatementBuilders
             // Verify the fields
             if (fields?.Any() != true)
             {
-                throw new NullReferenceException($"The list of fields cannot be null or empty.");
+                throw new EmptyException($"The list of fields cannot be null or empty.");
             }
 
             // Set the qualifiers
@@ -365,32 +348,23 @@ namespace RepoDb.StatementBuilders
                 .FieldsAndParametersFrom(updatableFields, 0, DbSetting);
 
             // Variables needed
-            var databaseType = (string)null;
+            var keyColumn = GetReturnKeyColumnAsDbField(primaryField, identityField);
+            var returnValue = "NULL";
 
-            // Check for the identity
-            if (identityField != null)
+            // Key Column
+            if (keyColumn != null)
             {
-                var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
-                if (dbType != null)
-                {
-                    databaseType = new DbTypeToPostgreSqlStringNameResolver().Resolve(dbType.Value);
-                }
+                var databaseType = GetDatabaseType(keyColumn);
+                returnValue = string.IsNullOrWhiteSpace(databaseType) ?
+                    keyColumn.Name.AsQuoted(DbSetting) : $"CAST({keyColumn.Name.AsQuoted(DbSetting)} AS {databaseType})";
             }
 
-            // Set the return value
-            var result = identityField == null ? primaryField.Name.AsParameter(DbSetting) :
-                string.IsNullOrEmpty(databaseType) ? identityField.Name.AsQuoted(DbSetting) :
-                $"CAST({identityField.Name.AsQuoted(DbSetting)} AS {databaseType})";
+            // Get the string
+            var sql = string.Concat("RETURNING ", returnValue, " AS ", "Result".AsQuoted(DbSetting));
 
-            if (!string.IsNullOrEmpty(result))
-            {
-                // Get the string
-                var sql = string.Concat("RETURNING ", result, " AS ", "Result".AsQuoted(DbSetting));
-
-                // Set the result
-                builder
-                    .WriteText(sql);
-            }
+            // Set the result
+            builder
+                .WriteText(sql);
 
             // End the builder
             builder.End();
@@ -431,7 +405,7 @@ namespace RepoDb.StatementBuilders
             // Verify the fields
             if (fields?.Any() != true)
             {
-                throw new NullReferenceException($"The list of fields cannot be null or empty.");
+                throw new EmptyException($"The list of fields cannot be null or empty.");
             }
 
             // Set the qualifiers
@@ -463,22 +437,16 @@ namespace RepoDb.StatementBuilders
                 .AsList();
 
             // Variables needed
-            var databaseType = (string)null;
+            var keyColumn = GetReturnKeyColumnAsDbField(primaryField, identityField);
+            var returnValue = "NULL";
 
-            // Check for the identity
-            if (identityField != null)
+            // Key Column
+            if (keyColumn != null)
             {
-                var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
-                if (dbType != null)
-                {
-                    databaseType = new DbTypeToPostgreSqlStringNameResolver().Resolve(dbType.Value);
-                }
+                var databaseType = GetDatabaseType(keyColumn);
+                returnValue = string.IsNullOrWhiteSpace(databaseType) ?
+                    keyColumn.Name.AsQuoted(DbSetting) : $"CAST({keyColumn.Name.AsQuoted(DbSetting)} AS {databaseType})";
             }
-
-            // Set the return value
-            var result = identityField == null ? primaryField.Name.AsParameter(DbSetting) :
-                string.IsNullOrEmpty(databaseType) ? identityField.Name.AsQuoted(DbSetting) :
-                $"CAST({identityField.Name.AsQuoted(DbSetting)} AS {databaseType})";
 
             // Clear the builder
             builder.Clear();
@@ -512,16 +480,13 @@ namespace RepoDb.StatementBuilders
                     .Set()
                     .FieldsAndParametersFrom(updatableFields, index, DbSetting);
 
-                if (!string.IsNullOrEmpty(result))
-                {
-                    // Get the string
-                    var sql = string.Concat("RETURNING ", result, " AS ", "Id".AsQuoted(DbSetting), ", ",
-                        $"{DbSetting.ParameterPrefix}__RepoDb_OrderColumn_{index}", " AS ", "OrderColumn".AsQuoted(DbSetting));
+                // Get the string
+                var sql = string.Concat("RETURNING ", returnValue, " AS ", "Result".AsQuoted(DbSetting), ", ",
+                    $"{DbSetting.ParameterPrefix}__RepoDb_OrderColumn_{index}", " AS ", "OrderColumn".AsQuoted(DbSetting));
 
-                    // Set the result
-                    builder
-                        .WriteText(sql);
-                }
+                // Set the result
+                builder
+                    .WriteText(sql);
 
                 // End the builder
                 builder.End();
@@ -561,7 +526,7 @@ namespace RepoDb.StatementBuilders
             // There should be fields
             if (fields?.Any() != true)
             {
-                throw new NullReferenceException($"The list of queryable fields must not be null for '{tableName}'.");
+                throw new EmptyException($"The list of queryable fields must not be null for '{tableName}'.");
             }
 
             // Initialize the builder
@@ -612,6 +577,17 @@ namespace RepoDb.StatementBuilders
 
             // Return the query
             return builder.GetString();
+        }
+
+        #endregion
+
+        #region Helpers
+
+        private string GetDatabaseType(DbField dbField)
+        {
+            var dbType = new ClientTypeToDbTypeResolver().Resolve(dbField.Type);
+            return dbType.HasValue ?
+                new DbTypeToPostgreSqlStringNameResolver().Resolve(dbType.Value) : null;
         }
 
         #endregion

@@ -565,7 +565,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"( [Field2], [Field3] ) " +
                 $"VALUES " +
                 $"( @Field2, @Field3 ) ; " +
-                $"SELECT CONVERT(INT, SCOPE_IDENTITY()) AS [Id], @__RepoDb_OrderColumn_0 AS [OrderColumn] ;";
+                $"SELECT CONVERT(INT, SCOPE_IDENTITY()) AS [Result], @__RepoDb_OrderColumn_0 AS [OrderColumn] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -591,7 +591,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"( [Field2], [Field3] ) " +
                 $"VALUES " +
                 $"( @Field2, @Field3 ) ; " +
-                $"SELECT CONVERT(BIGINT, SCOPE_IDENTITY()) AS [Id], @__RepoDb_OrderColumn_0 AS [OrderColumn] ;";
+                $"SELECT CONVERT(BIGINT, SCOPE_IDENTITY()) AS [Result], @__RepoDb_OrderColumn_0 AS [OrderColumn] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -618,7 +618,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"( [Field1], [Field3] ) " +
                 $"VALUES " +
                 $"( @Field1, @Field3 ) ; " +
-                $"SELECT CONVERT(INT, SCOPE_IDENTITY()) AS [Id], @__RepoDb_OrderColumn_0 AS [OrderColumn] ;";
+                $"SELECT CONVERT(INT, SCOPE_IDENTITY()) AS [Result], @__RepoDb_OrderColumn_0 AS [OrderColumn] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -645,7 +645,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"( [Field1], [Field3] ) " +
                 $"VALUES " +
                 $"( @Field1, @Field3 ) ; " +
-                $"SELECT CONVERT(BIGINT, SCOPE_IDENTITY()) AS [Id], @__RepoDb_OrderColumn_0 AS [OrderColumn] ;";
+                $"SELECT CONVERT(BIGINT, SCOPE_IDENTITY()) AS [Result], @__RepoDb_OrderColumn_0 AS [OrderColumn] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -671,17 +671,17 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"( [Field2], [Field3] ) " +
                 $"VALUES " +
                 $"( @Field2, @Field3 ) ; " +
-                $"SELECT CONVERT(INT, SCOPE_IDENTITY()) AS [Id], @__RepoDb_OrderColumn_0 AS [OrderColumn] ; " +
+                $"SELECT CONVERT(INT, SCOPE_IDENTITY()) AS [Result], @__RepoDb_OrderColumn_0 AS [OrderColumn] ; " +
                 $"INSERT INTO [Table] " +
                 $"( [Field2], [Field3] ) " +
                 $"VALUES " +
                 $"( @Field2_1, @Field3_1 ) ; " +
-                $"SELECT CONVERT(INT, SCOPE_IDENTITY()) AS [Id], @__RepoDb_OrderColumn_1 AS [OrderColumn] ; " +
+                $"SELECT CONVERT(INT, SCOPE_IDENTITY()) AS [Result], @__RepoDb_OrderColumn_1 AS [OrderColumn] ; " +
                 $"INSERT INTO [Table] " +
                 $"( [Field2], [Field3] ) " +
                 $"VALUES " +
                 $"( @Field2_2, @Field3_2 ) ; " +
-                $"SELECT CONVERT(INT, SCOPE_IDENTITY()) AS [Id], @__RepoDb_OrderColumn_2 AS [OrderColumn] ;";
+                $"SELECT CONVERT(INT, SCOPE_IDENTITY()) AS [Result], @__RepoDb_OrderColumn_2 AS [OrderColumn] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -708,7 +708,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"( [Field2], [Field3] ) " +
                 $"VALUES " +
                 $"( @Field2, @Field3 ) ; " +
-                $"SELECT CONVERT(INT, SCOPE_IDENTITY()) AS [Id], @__RepoDb_OrderColumn_0 AS [OrderColumn] ;";
+                $"SELECT CONVERT(INT, SCOPE_IDENTITY()) AS [Result], @__RepoDb_OrderColumn_0 AS [OrderColumn] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -735,17 +735,17 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"( [Field2], [Field3] ) " +
                 $"VALUES " +
                 $"( @Field2, @Field3 ) ; " +
-                $"SELECT CONVERT(INT, SCOPE_IDENTITY()) AS [Id], @__RepoDb_OrderColumn_0 AS [OrderColumn] ; " +
+                $"SELECT CONVERT(INT, SCOPE_IDENTITY()) AS [Result], @__RepoDb_OrderColumn_0 AS [OrderColumn] ; " +
                 $"INSERT INTO [Table] WITH (TABLOCK) " +
                 $"( [Field2], [Field3] ) " +
                 $"VALUES " +
                 $"( @Field2_1, @Field3_1 ) ; " +
-                $"SELECT CONVERT(INT, SCOPE_IDENTITY()) AS [Id], @__RepoDb_OrderColumn_1 AS [OrderColumn] ; " +
+                $"SELECT CONVERT(INT, SCOPE_IDENTITY()) AS [Result], @__RepoDb_OrderColumn_1 AS [OrderColumn] ; " +
                 $"INSERT INTO [Table] WITH (TABLOCK) " +
                 $"( [Field2], [Field3] ) " +
                 $"VALUES " +
                 $"( @Field2_2, @Field3_2 ) ; " +
-                $"SELECT CONVERT(INT, SCOPE_IDENTITY()) AS [Id], @__RepoDb_OrderColumn_2 AS [OrderColumn] ;";
+                $"SELECT CONVERT(INT, SCOPE_IDENTITY()) AS [Result], @__RepoDb_OrderColumn_2 AS [OrderColumn] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -846,7 +846,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"( [Field1], [Field2], [Field3] ) " +
                 $"VALUES " +
                 $"( @Field1, @Field2, @Field3 ) ; " +
-                $"SELECT @Field1 AS [Result] ;";
+                $"SELECT CONVERT(INT, @Field1) AS [Result] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -1099,7 +1099,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
                 $"UPDATE SET T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
-                $"OUTPUT INSERTED.[Field1] AS [Id], @__RepoDb_OrderColumn_0 AS [OrderColumn] ;";
+                $"OUTPUT INSERTED.[Field1] AS [Result], @__RepoDb_OrderColumn_0 AS [OrderColumn] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -1132,7 +1132,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"VALUES ( S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
                 $"UPDATE SET T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
-                $"OUTPUT INSERTED.[Field1] AS [Id], @__RepoDb_OrderColumn_0 AS [OrderColumn] ;";
+                $"OUTPUT INSERTED.[Field1] AS [Result], @__RepoDb_OrderColumn_0 AS [OrderColumn] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -1164,7 +1164,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
                 $"UPDATE SET T.[Field1] = S.[Field1], T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
-                $"OUTPUT INSERTED.[Id] AS [Id], @__RepoDb_OrderColumn_0 AS [OrderColumn] ;";
+                $"OUTPUT INSERTED.[Id] AS [Result], @__RepoDb_OrderColumn_0 AS [OrderColumn] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -1196,7 +1196,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"VALUES ( S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
                 $"UPDATE SET T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
-                $"OUTPUT INSERTED.[Field1] AS [Id], @__RepoDb_OrderColumn_0 AS [OrderColumn] ;";
+                $"OUTPUT INSERTED.[Field1] AS [Result], @__RepoDb_OrderColumn_0 AS [OrderColumn] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -1228,7 +1228,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
                 $"UPDATE SET T.[Field1] = S.[Field1], T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
-                $"OUTPUT INSERTED.[Id] AS [Id], @__RepoDb_OrderColumn_0 AS [OrderColumn] ;";
+                $"OUTPUT INSERTED.[Id] AS [Result], @__RepoDb_OrderColumn_0 AS [OrderColumn] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -1259,7 +1259,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"VALUES ( S.[Field1], S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
                 $"UPDATE SET T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
-                $"OUTPUT INSERTED.[Field1] AS [Id], @__RepoDb_OrderColumn_0 AS [OrderColumn] ;";
+                $"OUTPUT INSERTED.[Field1] AS [Result], @__RepoDb_OrderColumn_0 AS [OrderColumn] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -1291,7 +1291,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"VALUES ( S.[Field1], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
                 $"UPDATE SET T.[Field3] = S.[Field3] " +
-                $"OUTPUT INSERTED.[Field2] AS [Id], @__RepoDb_OrderColumn_0 AS [OrderColumn] ;";
+                $"OUTPUT INSERTED.[Field2] AS [Result], @__RepoDb_OrderColumn_0 AS [OrderColumn] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -1323,7 +1323,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"VALUES ( S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
                 $"UPDATE SET T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
-                $"OUTPUT INSERTED.[Field1] AS [Id], @__RepoDb_OrderColumn_0 AS [OrderColumn] ; " +
+                $"OUTPUT INSERTED.[Field1] AS [Result], @__RepoDb_OrderColumn_0 AS [OrderColumn] ; " +
                 $"MERGE [Table] AS T " +
                 $"USING ( SELECT @Field1_1 AS [Field1], @Field2_1 AS [Field2], @Field3_1 AS [Field3] ) " +
                 $"AS S ON ( (S.[Field1] = T.[Field1] OR (S.[Field1] IS NULL AND T.[Field1] IS NULL)) ) " +
@@ -1332,7 +1332,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"VALUES ( S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
                 $"UPDATE SET T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
-                $"OUTPUT INSERTED.[Field1] AS [Id], @__RepoDb_OrderColumn_1 AS [OrderColumn] ; " +
+                $"OUTPUT INSERTED.[Field1] AS [Result], @__RepoDb_OrderColumn_1 AS [OrderColumn] ; " +
                 $"MERGE [Table] AS T " +
                 $"USING ( SELECT @Field1_2 AS [Field1], @Field2_2 AS [Field2], @Field3_2 AS [Field3] ) " +
                 $"AS S ON ( (S.[Field1] = T.[Field1] OR (S.[Field1] IS NULL AND T.[Field1] IS NULL)) ) " +
@@ -1341,7 +1341,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"VALUES ( S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
                 $"UPDATE SET T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
-                $"OUTPUT INSERTED.[Field1] AS [Id], @__RepoDb_OrderColumn_2 AS [OrderColumn] ;";
+                $"OUTPUT INSERTED.[Field1] AS [Result], @__RepoDb_OrderColumn_2 AS [OrderColumn] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -1405,7 +1405,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"VALUES ( S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
                 $"UPDATE SET T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
-                $"OUTPUT INSERTED.[Field1] AS [Id], @__RepoDb_OrderColumn_0 AS [OrderColumn] ; " +
+                $"OUTPUT INSERTED.[Field1] AS [Result], @__RepoDb_OrderColumn_0 AS [OrderColumn] ; " +
                 $"MERGE [Table] WITH (TABLOCK) AS T " +
                 $"USING ( SELECT @Field1_1 AS [Field1], @Field2_1 AS [Field2], @Field3_1 AS [Field3] ) " +
                 $"AS S ON ( (S.[Field1] = T.[Field1] OR (S.[Field1] IS NULL AND T.[Field1] IS NULL)) ) " +
@@ -1414,7 +1414,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"VALUES ( S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
                 $"UPDATE SET T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
-                $"OUTPUT INSERTED.[Field1] AS [Id], @__RepoDb_OrderColumn_1 AS [OrderColumn] ; " +
+                $"OUTPUT INSERTED.[Field1] AS [Result], @__RepoDb_OrderColumn_1 AS [OrderColumn] ; " +
                 $"MERGE [Table] WITH (TABLOCK) AS T " +
                 $"USING ( SELECT @Field1_2 AS [Field1], @Field2_2 AS [Field2], @Field3_2 AS [Field3] ) " +
                 $"AS S ON ( (S.[Field1] = T.[Field1] OR (S.[Field1] IS NULL AND T.[Field1] IS NULL)) ) " +
@@ -1423,7 +1423,7 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 $"VALUES ( S.[Field2], S.[Field3] ) " +
                 $"WHEN MATCHED THEN " +
                 $"UPDATE SET T.[Field2] = S.[Field2], T.[Field3] = S.[Field3] " +
-                $"OUTPUT INSERTED.[Field1] AS [Id], @__RepoDb_OrderColumn_2 AS [OrderColumn] ;";
+                $"OUTPUT INSERTED.[Field1] AS [Result], @__RepoDb_OrderColumn_2 AS [OrderColumn] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);

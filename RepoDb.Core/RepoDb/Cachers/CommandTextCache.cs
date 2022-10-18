@@ -1145,30 +1145,28 @@ namespace RepoDb
         /// <returns></returns>
         private static DbField GetPrimaryField(BaseRequest request)
         {
-            if (request.Type != null && request.Type != StaticType.Object)
+            var dbFields = DbFieldCache.Get(request.Connection, request.Name, request.Transaction);
+            var primaryField = GetPrimaryField(request.Type, dbFields);
+
+            if (primaryField != null)
             {
-                var primaryProperty = PrimaryCache.Get(request.Type);
-                if (primaryProperty != null)
-                {
-                    var identityProperty = IdentityCache.Get(request.Type);
-                    var isIdentity = false;
-                    if (identityProperty != null)
-                    {
-                        isIdentity = string.Equals(identityProperty.GetMappedName(), primaryProperty.GetMappedName(), StringComparison.OrdinalIgnoreCase);
-                    }
-                    return new DbField(primaryProperty.GetMappedName(),
-                        true,
-                        isIdentity,
-                        false,
-                        primaryProperty.PropertyInfo.PropertyType,
-                        null,
-                        null,
-                        null,
-                        null,
-                        false);
-                }
+                var identityField = GetIdentityField(request.Type, dbFields);
+                var isIdentity = identityField == primaryField ||
+                    string.Equals(identityField?.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase);
+
+                return new DbField(primaryField.Name,
+                    true,
+                    isIdentity,
+                    false,
+                    primaryField.Type,
+                    null,
+                    null,
+                    null,
+                    null,
+                    false);
             }
-            return DbFieldCache.Get(request.Connection, request.Name, request.Transaction)?.FirstOrDefault(f => f.IsPrimary);
+
+            return null;
         }
 
         /// <summary>
@@ -1178,31 +1176,51 @@ namespace RepoDb
         /// <returns></returns>
         private static DbField GetIdentityField(BaseRequest request)
         {
-            if (request.Type != null && request.Type != StaticType.Object)
+            var dbFields = DbFieldCache.Get(request.Connection, request.Name, request.Transaction);
+            var identityField = GetIdentityField(request.Type, dbFields);
+
+            if (identityField != null)
             {
-                var identityProperty = IdentityCache.Get(request.Type);
-                if (identityProperty != null)
-                {
-                    var primaryProperty = PrimaryCache.Get(request.Type);
-                    var isPrimary = false;
-                    if (primaryProperty != null)
-                    {
-                        isPrimary = string.Equals(primaryProperty.GetMappedName(), identityProperty.GetMappedName(), StringComparison.OrdinalIgnoreCase);
-                    }
-                    return new DbField(identityProperty.GetMappedName(),
-                        isPrimary,
-                        true,
-                        false,
-                        identityProperty.PropertyInfo.PropertyType,
-                        null,
-                        null,
-                        null,
-                        null,
-                        false);
-                }
+                var primaryField = GetPrimaryField(request.Type, dbFields);
+                var isPrimary = identityField == primaryField ||
+                    string.Equals(primaryField?.Name, identityField.Name, StringComparison.OrdinalIgnoreCase);
+
+                return new DbField(identityField.Name,
+                    isPrimary,
+                    true,
+                    false,
+                    identityField.Type,
+                    null,
+                    null,
+                    null,
+                    null,
+                    false);
             }
-            return DbFieldCache.Get(request.Connection, request.Name, request.Transaction)?.FirstOrDefault(f => f.IsIdentity);
+
+            return null;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="dbFields"></param>
+        /// <returns></returns>
+        private static Field GetPrimaryField(Type type,
+            IEnumerable<DbField> dbFields) =>
+            (type != null && type.IsObjectType() == false ? PrimaryCache.Get(type) : null)?.AsField() ??
+                dbFields?.FirstOrDefault(f => f.IsPrimary)?.AsField();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="dbFields"></param>
+        /// <returns></returns>
+        private static Field GetIdentityField(Type type,
+            IEnumerable<DbField> dbFields) =>
+            (type != null && type.IsObjectType() == false ? IdentityCache.Get(type) : null)?.AsField() ??
+                dbFields?.FirstOrDefault(f => f.IsIdentity)?.AsField();
 
         /// <summary>
         ///

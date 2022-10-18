@@ -2,6 +2,7 @@
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
+using RepoDb.Resolvers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -220,15 +221,18 @@ namespace RepoDb.StatementBuilders
                     identityField,
                     hints));
 
+            // Variables needed
+            var keyColumn = GetReturnKeyColumnAsDbField(primaryField, identityField);
+            var returnValue = keyColumn != null ?
+                keyColumn.IsIdentity ? "LAST_INSERT_ID()" :
+                    keyColumn.Name.AsParameter(DbSetting) : "NULL";
+
             // Set the return value
-            if (primaryField == identityField)
-            {
-                builder
-                    .Select()
-                    .WriteText("LAST_INSERT_ID()")
-                    .As("Result".AsQuoted(DbSetting))
-                    .End();
-            }
+            builder
+                .Select()
+                .WriteText(returnValue)
+                .As("Result".AsQuoted(DbSetting))
+                .End();
 
             // Return the query
             return builder.GetString();
@@ -255,9 +259,6 @@ namespace RepoDb.StatementBuilders
             DbField identityField = null,
             string hints = null)
         {
-            // Initialize the builder
-            var builder = new QueryBuilder();
-
             // Call the base
             var commandText = base.CreateInsertAll(tableName,
                 fields,
@@ -266,23 +267,24 @@ namespace RepoDb.StatementBuilders
                 identityField,
                 hints);
 
-            if (primaryField == identityField)
+            // Variables needed
+            var commandTexts = new List<string>();
+            var splitted = commandText.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            var keyColumn = GetReturnKeyColumnAsDbField(primaryField, identityField);
+
+            // Iterate the indexes
+            for (var index = 0; index < splitted.Length; index++)
             {
-                // Variables needed
-                var commandTexts = new List<string>();
-                var splitted = commandText.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-
-                // Iterate the indexes
-                for (var index = 0; index < splitted.Length; index++)
-                {
-                    var line = splitted[index].Trim();
-                    commandTexts.Add(string.Concat(line, " ; SELECT LAST_INSERT_ID() AS ", "Id".AsQuoted(DbSetting), ", ",
-                        $"@__RepoDb_OrderColumn_{index} AS ", "OrderColumn".AsQuoted(DbSetting), " ;"));
-                }
-
-                // Set the command text
-                commandText = commandTexts.Join(" ");
+                var returnValue = keyColumn != null ?
+                    keyColumn.IsIdentity ? "LAST_INSERT_ID()" :
+                        keyColumn.Name.AsParameter(index, DbSetting) : "NULL";
+                var line = splitted[index].Trim();
+                commandTexts.Add(string.Concat(line, " ; SELECT ", returnValue, " AS ", "Result".AsQuoted(DbSetting), ", ",
+                    $"@__RepoDb_OrderColumn_{index} AS ", "OrderColumn".AsQuoted(DbSetting), " ;"));
             }
+
+            // Set the command text
+            commandText = commandTexts.Join(" ");
 
             // Return the query
             return commandText;
@@ -396,15 +398,16 @@ namespace RepoDb.StatementBuilders
                 .FieldsAndParametersFrom(fields, 0, DbSetting)
                 .End();
 
-            if (primaryField == identityField)
-            {
-                // Set the result
-                builder
-                    .Select()
-                    .WriteText("LAST_INSERT_ID()")
-                    .As("Result".AsQuoted(DbSetting))
-                    .End();
-            }
+            // Variables needed
+            var keyColumn = GetReturnKeyColumnAsDbField(primaryField, identityField);
+            var returnValue = keyColumn != null ? keyColumn.Name.AsParameter(DbSetting) : "NULL";
+
+            // Set the return value
+            builder
+                .Select()
+                .WriteText($"COALESCE({returnValue}, LAST_INSERT_ID())")
+                .As("Result".AsQuoted(DbSetting))
+                .End();
 
             // Return the query
             return builder.GetString();
@@ -451,10 +454,8 @@ namespace RepoDb.StatementBuilders
                 throw new PrimaryFieldNotFoundException($"The is no primary field from the table '{tableName}'.");
             }
 
-            // Initialize the builder
+            var keyColumn = GetReturnKeyColumnAsDbField(primaryField, identityField);
             var builder = new QueryBuilder();
-
-            // Clear the builder
             builder.Clear();
 
             // Iterate the indexes
@@ -477,16 +478,14 @@ namespace RepoDb.StatementBuilders
                     .FieldsAndParametersFrom(fields, index, DbSetting)
                     .End();
 
-                if (primaryField == identityField)
-                {
-                    // Set the result
-                    builder
-                        .Select()
+                // Set the return value
+                var returnValue = keyColumn != null ? keyColumn.Name.AsParameter(index, DbSetting) : "NULL";
+                builder
+                    .Select()
                         .WriteText(
-                            string.Concat("LAST_INSERT_ID() AS ", "Id".AsQuoted(DbSetting), ","))
+                            string.Concat($"COALESCE({returnValue}, LAST_INSERT_ID())", " AS ", "Result".AsQuoted(DbSetting), ","))
                         .WriteText(
                             string.Concat($"{DbSetting.ParameterPrefix}__RepoDb_OrderColumn_{index}", " AS ", "OrderColumn".AsQuoted(DbSetting)));
-                }
 
                 // End the builder
                 builder

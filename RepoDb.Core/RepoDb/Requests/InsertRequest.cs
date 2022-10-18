@@ -28,15 +28,14 @@ namespace RepoDb.Requests
             IEnumerable<Field> fields = null,
             string hints = null,
             IStatementBuilder statementBuilder = null)
-            : this(ClassMappedNameCache.Get(type),
+            : this(type,
+                ClassMappedNameCache.Get(type),
                 connection,
                 transaction,
                 fields,
                 hints,
                 statementBuilder)
-        {
-            Type = type;
-        }
+        { }
 
         /// <summary>
         /// Creates a new instance of <see cref="InsertRequest"/> object.
@@ -53,11 +52,38 @@ namespace RepoDb.Requests
             IEnumerable<Field> fields = null,
             string hints = null,
             IStatementBuilder statementBuilder = null)
-            : base(name,
+            : this(null,
+                name,
+                connection,
+                transaction,
+                fields,
+                hints,
+                statementBuilder)
+        { }
+
+        /// <summary>
+        /// Creates a new instance of <see cref="InsertRequest"/> object.
+        /// </summary>
+        /// <param name="type">The target type.</param>
+        /// <param name="name">The name of the request.</param>
+        /// <param name="connection">The connection object.</param>
+        /// <param name="transaction">The transaction object.</param>
+        /// <param name="fields">The list of the target fields.</param>
+        /// <param name="hints">The hints for the table.</param>
+        /// <param name="statementBuilder">The statement builder.</param>
+        public InsertRequest(Type type,
+            string name,
+            IDbConnection connection,
+            IDbTransaction transaction,
+            IEnumerable<Field> fields = null,
+            string hints = null,
+            IStatementBuilder statementBuilder = null)
+            : base(name ?? ClassMappedNameCache.Get(type),
                 connection,
                 transaction,
                 statementBuilder)
         {
+            Type = type;
             Fields = fields?.AsList();
             Hints = hints;
         }

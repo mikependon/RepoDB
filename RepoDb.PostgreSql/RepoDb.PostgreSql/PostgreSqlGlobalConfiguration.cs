@@ -1,4 +1,6 @@
-﻿namespace RepoDb
+﻿using Npgsql;
+
+namespace RepoDb
 {
     /// <summary>
     /// A class that is being used to initialize the necessary settings for the <see cref="NpgsqlConnection"/> object.

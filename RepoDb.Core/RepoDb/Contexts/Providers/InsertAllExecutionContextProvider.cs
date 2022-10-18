@@ -81,7 +81,8 @@ namespace RepoDb.Contexts.Providers
             // Create a different kind of requests
             if (batchSize > 1)
             {
-                var request = new InsertAllRequest(tableName,
+                var request = new InsertAllRequest(entityType,
+                    tableName,
                     connection,
                     transaction,
                     fields,
@@ -92,7 +93,8 @@ namespace RepoDb.Contexts.Providers
             }
             else
             {
-                var request = new InsertRequest(tableName,
+                var request = new InsertRequest(entityType,
+                    tableName,
                     connection,
                     transaction,
                     fields,
@@ -212,17 +214,7 @@ namespace RepoDb.Contexts.Providers
             string commandText)
         {
             var dbSetting = connection.GetDbSetting();
-            var identity = (Field)null;
             var inputFields = (IEnumerable<DbField>)null;
-            var identityDbField = dbFields?.FirstOrDefault(f => f.IsIdentity);
-
-            // Set the primary field
-            identity = IdentityCache.Get(entityType)?.AsField() ??
-                FieldCache
-                    .Get(entityType)?
-                    .FirstOrDefault(field =>
-                        string.Equals(field.Name.AsUnquoted(true, dbSetting), identityDbField?.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) ??
-                identityDbField?.AsField();
 
             // Filter the actual properties for input fields
             inputFields = dbFields?
@@ -234,18 +226,19 @@ namespace RepoDb.Contexts.Providers
                 .AsList();
 
             // Variables for the context
-            Action<DbCommand, IList<object>> multipleEntitiesParametersSetterFunc = null;
-            Action<DbCommand, object> singleEntityParametersSetterFunc = null;
-            Action<object, object> identityPropertySetterFunc = null;
-
-            // Get if we have not skipped it
-            if (identity != null)
+            Action<object, object> keyPropertySetterFunc = null;
+            var keyField = ExecutionContextProvider
+                .GetTargetReturnColumnAsField(entityType, dbFields);
+            if (keyField != null)
             {
-                identityPropertySetterFunc = FunctionCache
-                    .GetDataEntityPropertySetterCompiledFunction(entityType, identity);
+                keyPropertySetterFunc = FunctionCache
+                    .GetDataEntityPropertySetterCompiledFunction(entityType, keyField);
             }
 
             // Identity which objects to set
+            Action<DbCommand, IList<object>> multipleEntitiesParametersSetterFunc = null;
+            Action<DbCommand, object> singleEntityParametersSetterFunc = null;
+
             if (batchSize <= 1)
             {
                 singleEntityParametersSetterFunc = FunctionCache
@@ -274,7 +267,7 @@ namespace RepoDb.Contexts.Providers
                 BatchSize = batchSize,
                 SingleDataEntityParametersSetterFunc = singleEntityParametersSetterFunc,
                 MultipleDataEntitiesParametersSetterFunc = multipleEntitiesParametersSetterFunc,
-                IdentityPropertySetterFunc = identityPropertySetterFunc
+                KeyPropertySetterFunc = keyPropertySetterFunc
             };
         }
     }
