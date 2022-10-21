@@ -260,7 +260,9 @@ namespace RepoDb
                     request.Name,
                     request.Fields,
                     request.Transaction);
-                commandText = GetInsertTextInternal(request, fields);
+                var primaryField = GetPrimaryField(request);
+                var identityField = GetIdentityField(request);
+                commandText = GetInsertTextInternal(request, fields, primaryField, identityField);
                 cache.TryAdd(request, commandText);
             }
             return commandText;
@@ -282,24 +284,28 @@ namespace RepoDb
                     request.Fields,
                     request.Transaction,
                     cancellationToken);
-                commandText = GetInsertTextInternal(request, fields);
+                var primaryField = await GetPrimaryFieldAsync(request, cancellationToken);
+                var identityField = await GetIdentityFieldAsync(request, cancellationToken);
+                commandText = GetInsertTextInternal(request, fields, primaryField, identityField);
                 cache.TryAdd(request, commandText);
             }
             return commandText;
         }
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         /// <param name="request"></param>
         /// <param name="fields"></param>
+        /// <param name="primaryField"></param>
+        /// <param name="identityField"></param>
         /// <returns></returns>
         private static string GetInsertTextInternal(InsertRequest request,
-            IEnumerable<Field> fields)
+            IEnumerable<Field> fields,
+            DbField primaryField,
+            DbField identityField)
         {
             var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-            var primaryField = GetPrimaryField(request);
-            var identityField = GetIdentityField(request);
             return statementBuilder.CreateInsert(request.Name,
                 fields,
                 primaryField,
@@ -324,7 +330,9 @@ namespace RepoDb
                     request.Name,
                     request.Fields,
                     request.Transaction);
-                commandText = GetInsertAllTextInternal(request, fields);
+                var primaryField = GetPrimaryField(request);
+                var identityField = GetIdentityField(request);
+                commandText = GetInsertAllTextInternal(request, fields, primaryField, identityField);
                 cache.TryAdd(request, commandText);
             }
             return commandText;
@@ -346,24 +354,28 @@ namespace RepoDb
                     request.Fields,
                     request.Transaction,
                     cancellationToken);
-                commandText = GetInsertAllTextInternal(request, fields);
+                var primaryField = await GetPrimaryFieldAsync(request, cancellationToken);
+                var identityField = await GetIdentityFieldAsync(request, cancellationToken);
+                commandText = GetInsertAllTextInternal(request, fields, primaryField, identityField);
                 cache.TryAdd(request, commandText);
             }
             return commandText;
         }
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         /// <param name="request"></param>
         /// <param name="fields"></param>
+        /// <param name="primaryField"></param>
+        /// <param name="identityField"></param>
         /// <returns></returns>
         private static string GetInsertAllTextInternal(InsertAllRequest request,
-            IEnumerable<Field> fields)
+            IEnumerable<Field> fields,
+            DbField primaryField,
+            DbField identityField)
         {
             var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-            var primaryField = GetPrimaryField(request);
-            var identityField = GetIdentityField(request);
             return statementBuilder.CreateInsertAll(request.Name,
                 fields,
                 request.BatchSize,
@@ -434,7 +446,9 @@ namespace RepoDb
                     request.Name,
                     request.Fields,
                     request.Transaction);
-                commandText = GetMergeTextInternal(request, fields);
+                var primaryField = GetPrimaryField(request);
+                var identityField = GetIdentityField(request);
+                commandText = GetMergeTextInternal(request, fields, primaryField, identityField);
                 cache.TryAdd(request, commandText);
             }
             return commandText;
@@ -456,24 +470,28 @@ namespace RepoDb
                     request.Fields,
                     request.Transaction,
                     cancellationToken);
-                commandText = GetMergeTextInternal(request, fields);
+                var primaryField = await GetPrimaryFieldAsync(request, cancellationToken);
+                var identityField = await GetIdentityFieldAsync(request, cancellationToken);
+                commandText = GetMergeTextInternal(request, fields, primaryField, identityField);
                 cache.TryAdd(request, commandText);
             }
             return commandText;
         }
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         /// <param name="request"></param>
         /// <param name="fields"></param>
+        /// <param name="primaryField"></param>
+        /// <param name="identityField"></param>
         /// <returns></returns>
         private static string GetMergeTextInternal(MergeRequest request,
-            IEnumerable<Field> fields)
+            IEnumerable<Field> fields,
+            DbField primaryField,
+            DbField identityField)
         {
             var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-            var primaryField = GetPrimaryField(request);
-            var identityField = GetIdentityField(request);
             return statementBuilder.CreateMerge(request.Name,
                 fields,
                 request.Qualifiers,
@@ -499,7 +517,9 @@ namespace RepoDb
                     request.Name,
                     request.Fields,
                     request.Transaction);
-                commandText = GetMergeAllTextInternal(request, fields);
+                var primaryField = GetPrimaryField(request);
+                var identityField = GetIdentityField(request);
+                commandText = GetMergeAllTextInternal(request, fields, primaryField, identityField);
                 cache.TryAdd(request, commandText);
             }
             return commandText;
@@ -521,24 +541,28 @@ namespace RepoDb
                     request.Fields,
                     request.Transaction,
                     cancellationToken);
-                commandText = GetMergeAllTextInternal(request, fields);
+                var primaryField = await GetPrimaryFieldAsync(request, cancellationToken);
+                var identityField = await GetIdentityFieldAsync(request, cancellationToken);
+                commandText = GetMergeAllTextInternal(request, fields, primaryField, identityField);
                 cache.TryAdd(request, commandText);
             }
             return commandText;
         }
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         /// <param name="request"></param>
         /// <param name="fields"></param>
+        /// <param name="primaryField"></param>
+        /// <param name="identityField"></param>
         /// <returns></returns>
         private static string GetMergeAllTextInternal(MergeAllRequest request,
-            IEnumerable<Field> fields)
+            IEnumerable<Field> fields,
+            DbField primaryField,
+            DbField identityField)
         {
             var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-            var primaryField = GetPrimaryField(request);
-            var identityField = GetIdentityField(request);
             return statementBuilder.CreateMergeAll(request.Name,
                 fields,
                 request.Qualifiers,
@@ -889,7 +913,9 @@ namespace RepoDb
                     request.Name,
                     request.Fields,
                     request.Transaction);
-                commandText = GetUpdateTextInternal(request, fields);
+                var primaryField = GetPrimaryField(request);
+                var identityField = GetIdentityField(request);
+                commandText = GetUpdateTextInternal(request, fields, primaryField, identityField);
                 cache.TryAdd(request, commandText);
             }
             return commandText;
@@ -911,24 +937,28 @@ namespace RepoDb
                     request.Fields,
                     request.Transaction,
                     cancellationToken);
-                commandText = GetUpdateTextInternal(request, fields);
+                var primaryField = await GetPrimaryFieldAsync(request, cancellationToken);
+                var identityField = await GetIdentityFieldAsync(request, cancellationToken);
+                commandText = GetUpdateTextInternal(request, fields, primaryField, identityField);
                 cache.TryAdd(request, commandText);
             }
             return commandText;
         }
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         /// <param name="request"></param>
         /// <param name="fields"></param>
+        /// <param name="primaryField"></param>
+        /// <param name="identityField"></param>
         /// <returns></returns>
         private static string GetUpdateTextInternal(UpdateRequest request,
-            IEnumerable<Field> fields)
+            IEnumerable<Field> fields,
+            DbField primaryField,
+            DbField identityField)
         {
             var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-            var primaryField = GetPrimaryField(request);
-            var identityField = GetIdentityField(request);
             return statementBuilder.CreateUpdate(request.Name,
                 fields,
                 request.Where,
@@ -954,7 +984,9 @@ namespace RepoDb
                     request.Name,
                     request.Fields,
                     request.Transaction);
-                commandText = GetUpdateAllTextInternal(request, fields);
+                var primaryField = GetPrimaryField(request);
+                var identityField = GetIdentityField(request);
+                commandText = GetUpdateAllTextInternal(request, fields, primaryField, identityField);
                 cache.TryAdd(request, commandText);
             }
             return commandText;
@@ -976,24 +1008,28 @@ namespace RepoDb
                     request.Fields,
                     request.Transaction,
                     cancellationToken);
-                commandText = GetUpdateAllTextInternal(request, fields);
+                var primaryField = await GetPrimaryFieldAsync(request, cancellationToken);
+                var identityField = await GetIdentityFieldAsync(request, cancellationToken);
+                commandText = GetUpdateAllTextInternal(request, fields, primaryField, identityField);
                 cache.TryAdd(request, commandText);
             }
             return commandText;
         }
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         /// <param name="request"></param>
         /// <param name="fields"></param>
+        /// <param name="primaryField"></param>
+        /// <param name="identityField"></param>
         /// <returns></returns>
         private static string GetUpdateAllTextInternal(UpdateAllRequest request,
-            IEnumerable<Field> fields)
+            IEnumerable<Field> fields,
+            DbField primaryField,
+            DbField identityField)
         {
             var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
-            var primaryField = GetPrimaryField(request);
-            var identityField = GetIdentityField(request);
             return statementBuilder.CreateUpdateAll(request.Name,
                 fields,
                 request.Qualifiers,
@@ -1146,6 +1182,31 @@ namespace RepoDb
         private static DbField GetPrimaryField(BaseRequest request)
         {
             var dbFields = DbFieldCache.Get(request.Connection, request.Name, request.Transaction);
+            return GetPrimaryField(request, dbFields);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        private static async Task<DbField> GetPrimaryFieldAsync(BaseRequest request,
+            CancellationToken cancellationToken = default)
+        {
+            var dbFields = await DbFieldCache.GetAsync(request.Connection, request.Name, request.Transaction, cancellationToken);
+            return GetPrimaryField(request, dbFields);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="dbFields"></param>
+        /// <returns></returns>
+        private static DbField GetPrimaryField(BaseRequest request,
+            IEnumerable<DbField> dbFields)
+        {
             var primaryField = GetPrimaryField(request.Type, dbFields);
 
             if (primaryField != null)
@@ -1177,6 +1238,31 @@ namespace RepoDb
         private static DbField GetIdentityField(BaseRequest request)
         {
             var dbFields = DbFieldCache.Get(request.Connection, request.Name, request.Transaction);
+            return GetIdentityField(request, dbFields);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        private static async Task<DbField> GetIdentityFieldAsync(BaseRequest request,
+            CancellationToken cancellationToken = default)
+        {
+            var dbFields = await DbFieldCache.GetAsync(request.Connection, request.Name, request.Transaction, cancellationToken);
+            return GetIdentityField(request, dbFields);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="dbFields"></param>
+        /// <returns></returns>
+        private static DbField GetIdentityField(BaseRequest request,
+            IEnumerable<DbField> dbFields)
+        {
             var identityField = GetIdentityField(request.Type, dbFields);
 
             if (identityField != null)
