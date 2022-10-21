@@ -170,23 +170,15 @@ namespace RepoDb.StatementBuilders
                     hints));
 
             // Variables needed
-            var databaseType = "BIGINT";
-
-            // Check for the identity
-            if (identityField != null)
-            {
-                var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
-                if (dbType != null)
-                {
-                    databaseType = new DbTypeToSqLiteStringNameResolver().Resolve(dbType.Value);
-                }
-            }
+            var keyColumn = GetReturnKeyColumnAsDbField(primaryField, identityField);
+            var databaseType = GetDatabaseType(keyColumn);
 
             // Set the return value
-            var result = identityField != null ?
-                $"CAST(last_insert_rowid() AS {databaseType})" :
-                    primaryField != null ? primaryField.Name.AsParameter(DbSetting) : "NULL";
-
+            var columnName = keyColumn != null ?
+                keyColumn.IsIdentity ?
+                    "last_insert_rowid()" : keyColumn.Name.AsParameter(DbSetting) : "NULL";
+            var result = string.IsNullOrWhiteSpace(databaseType) ?
+                columnName : $"CAST({columnName} AS {databaseType})";
             builder
                 .Select()
                 .WriteText(result)
@@ -227,37 +219,27 @@ namespace RepoDb.StatementBuilders
                 hints);
 
             // Variables needed
-            var databaseType = (string)null;
+            var keyColumn = GetReturnKeyColumnAsDbField(primaryField, identityField);
+            var databaseType = GetDatabaseType(keyColumn);
 
-            // Check for the identity
-            if (identityField != null)
+            // Set the return value
+            var commandTexts = new List<string>();
+            var splitted = commandText.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+
+            // Iterate the indexes
+            for (var index = 0; index < splitted.Length; index++)
             {
-                var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
-                if (dbType != null)
-                {
-                    databaseType = new DbTypeToSqLiteStringNameResolver().Resolve(dbType.Value);
-                }
+                var line = splitted[index].Trim();
+                var columnName = keyColumn != null ?
+                    keyColumn.IsIdentity ?
+                        "last_insert_rowid()" : keyColumn.Name.AsParameter(index, DbSetting) : "NULL";
+                var result = string.IsNullOrWhiteSpace(databaseType) ?
+                    columnName : $"CAST({columnName} AS {databaseType})";
+                commandTexts.Add(string.Concat(line, " ; SELECT ", result, " AS ", "Result".AsQuoted(DbSetting), $", {DbSetting.ParameterPrefix}__RepoDb_OrderColumn_{index} AS [OrderColumn] ;"));
             }
 
-            if (identityField != null)
-            {
-                // Variables needed
-                var commandTexts = new List<string>();
-                var splitted = commandText.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-
-                // Iterate the indexes
-                for (var index = 0; index < splitted.Length; index++)
-                {
-                    var line = splitted[index].Trim();
-                    var returnValue = string.IsNullOrEmpty(databaseType) ?
-                        "SELECT last_insert_rowid()" :
-                        $"SELECT CAST(last_insert_rowid() AS {databaseType}) AS [Id]";
-                    commandTexts.Add(string.Concat(line, " ; ", returnValue, $", {DbSetting.ParameterPrefix}__RepoDb_OrderColumn_{index} AS [OrderColumn] ;"));
-                }
-
-                // Set the command text
-                commandText = commandTexts.Join(" ");
-            }
+            // Set the command text
+            commandText = commandTexts.Join(" ");
 
             // Return the query
             return commandText;
@@ -285,89 +267,6 @@ namespace RepoDb.StatementBuilders
             string hints = null)
         {
             throw new NotImplementedException("The merge statement is not supported in SQLite. SQLite is using the 'Upsert (Insert/Update)' operation.");
-            //// Ensure with guards
-            //GuardTableName(tableName);
-            //GuardHints(hints);
-            //GuardPrimary(primaryField);
-            //GuardIdentity(identityField);
-
-            //// Verify the fields
-            //if (fields?.Any() != true)
-            //{
-            //    throw new NullReferenceException($"The list of fields cannot be null or empty.");
-            //}
-
-            //// Check the primary field
-            //if (primaryField == null)
-            //{
-            //    throw new PrimaryFieldNotFoundException($"SqLite is using the primary key as qualifier for (INSERT or REPLACE) operation.");
-            //}
-
-            //// Check the qualifiers
-            //if (qualifiers?.Any() == true)
-            //{
-            //    var others = qualifiers.Where(f => !string.Equals(f.Name, primaryField?.Name, StringComparison.OrdinalIgnoreCase));
-            //    if (others?.Any() == true)
-            //    {
-            //        throw new InvalidQualifiersException($"SqLite is using the primary key as qualifier for (INSERT or REPLACE) operation. " +
-            //            $"Consider creating 'PrimaryKey' in the {tableName} and set the 'qualifiers' to NULL.");
-            //    }
-            //}
-
-            //// Initialize the builder
-            //var builder = new QueryBuilder();
-
-            //// Variables needed
-            //var databaseType = "BIGINT";
-
-            //// Set the return value
-            //var result = (string)null;
-
-            //// Check both primary and identity
-            //if (identityField != null)
-            //{
-            //    result = string.Concat($"CAST(COALESCE(last_insert_rowid(), {primaryField.Name.AsParameter(DbSetting)}) AS {databaseType})");
-
-            //    // Set the type
-            //    var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
-            //    if (dbType != null)
-            //    {
-            //        databaseType = new DbTypeToSqLiteStringNameResolver().Resolve(dbType.Value);
-            //    }
-            //}
-            //else
-            //{
-            //    result = string.Concat($"CAST({primaryField.Name.AsParameter(DbSetting)} AS {databaseType})");
-            //}
-
-            //// Build the query
-            //builder.Clear()
-            //    .Insert()
-            //    .Or()
-            //    .Replace()
-            //    .Into()
-            //    .TableNameFrom(tableName, DbSetting)
-            //    .OpenParen()
-            //    .FieldsFrom(fields, DbSetting)
-            //    .CloseParen()
-            //    .Values()
-            //    .OpenParen()
-            //    .ParametersFrom(fields, 0, DbSetting)
-            //    .CloseParen()
-            //    .End();
-
-            //if (!string.IsNullOrEmpty(result))
-            //{
-            //    // Set the result
-            //    builder
-            //        .Select()
-            //        .WriteText(result)
-            //        .As("Result".AsQuoted(DbSetting))
-            //        .End();
-            //}
-
-            //// Return the query
-            //return builder.GetString();
         }
 
         #endregion
@@ -394,100 +293,6 @@ namespace RepoDb.StatementBuilders
             string hints = null)
         {
             throw new NotImplementedException("The merge statement is not supported in SQLite. SQLite is using the 'Upsert (Insert/Update)' operation.");
-
-            //// Ensure with guards
-            //GuardTableName(tableName);
-            //GuardHints(hints);
-            //GuardPrimary(primaryField);
-            //GuardIdentity(identityField);
-
-            //// Verify the fields
-            //if (fields?.Any() != true)
-            //{
-            //    throw new NullReferenceException($"The list of fields cannot be null or empty.");
-            //}
-
-            //// Check the primary field
-            //if (primaryField == null)
-            //{
-            //    throw new PrimaryFieldNotFoundException($"SqLite is using the primary key as qualifier for (INSERT or REPLACE) operation.");
-            //}
-
-            //// Check the qualifiers
-            //if (qualifiers?.Any() == true)
-            //{
-            //    var others = qualifiers.Where(f => !string.Equals(f.Name, primaryField?.Name, StringComparison.OrdinalIgnoreCase));
-            //    if (others?.Any() == true)
-            //    {
-            //        throw new InvalidQualifiersException($"SqLite is using the primary key as qualifier for (INSERT or REPLACE) operation. " +
-            //            $"Consider creating 'PrimaryKey' in the {tableName} and set the 'qualifiers' to NULL.");
-            //    }
-            //}
-
-            //// Initialize the builder
-            //var builder = new QueryBuilder();
-
-            //// Variables needed
-            //var databaseType = "BIGINT";
-
-            //// Set the return value
-            //var result = (string)null;
-
-            //// Set the type
-            //if (identityField != null)
-            //{
-            //    var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
-            //    if (dbType != null)
-            //    {
-            //        databaseType = new DbTypeToSqLiteStringNameResolver().Resolve(dbType.Value);
-            //    }
-            //}
-
-            //// Clear the builder
-            //builder.Clear();
-
-            //// Iterate the indexes
-            //for (var index = 0; index < batchSize; index++)
-            //{
-            //    // Build the query
-            //    builder
-            //        .Insert()
-            //        .Or()
-            //        .Replace()
-            //        .Into()
-            //        .TableNameFrom(tableName, DbSetting)
-            //        .OpenParen()
-            //        .FieldsFrom(fields, DbSetting)
-            //        .CloseParen()
-            //        .Values()
-            //        .OpenParen()
-            //        .ParametersFrom(fields, index, DbSetting)
-            //        .CloseParen()
-            //        .End();
-
-            //    // Check both primary and identity
-            //    if (identityField != null)
-            //    {
-            //        result = string.Concat($"CAST(COALESCE(last_insert_rowid(), {primaryField.Name.AsParameter(index, DbSetting)}) AS {databaseType})");
-            //    }
-            //    else
-            //    {
-            //        result = string.Concat($"CAST({primaryField.Name.AsParameter(index, DbSetting)} AS {databaseType})");
-            //    }
-
-            //    if (!string.IsNullOrEmpty(result))
-            //    {
-            //        // Set the result
-            //        builder
-            //            .Select()
-            //            .WriteText(result)
-            //            .As("Result".AsQuoted(DbSetting))
-            //            .End();
-            //    }
-            //}
-
-            //// Return the query
-            //return builder.GetString();
         }
 
         #endregion
@@ -573,6 +378,22 @@ namespace RepoDb.StatementBuilders
 
             // Return the query
             return builder.GetString();
+        }
+
+        #endregion
+
+        #region Helpers
+
+        private string GetDatabaseType(DbField dbField)
+        {
+            if (dbField == null)
+            {
+                return default;
+            }
+
+            var dbType = new ClientTypeToDbTypeResolver().Resolve(dbField.Type);
+            return dbType.HasValue ?
+                new DbTypeToSqLiteStringNameResolver().Resolve(dbType.Value) : null;
         }
 
         #endregion

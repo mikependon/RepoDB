@@ -311,10 +311,16 @@ namespace RepoDb.Extensions
             // Create the parameter
             var parameter = command.CreateParameter(name, value, dbType, parameterDirection);
 
-            // Set the parameter value
+            // Property Handler
             InvokePropertyHandler(classProperty, parameter, ref valueType, ref value);
-            EnsureAutomaticConversion(dbField, ref valueType, ref value);
+
+            // Automatic Conversion
+            bool converted = AutomaticConvert(dbField, ref valueType, ref value);
             parameter.Value = (value ?? DBNull.Value);
+            if (converted)
+            {
+                parameter.DbType = clientTypeToDbTypeResolver.Resolve(valueType).Value;
+            }
 
             // Set the size
             var parameterSize = GetSize(size, dbField);
@@ -785,27 +791,34 @@ namespace RepoDb.Extensions
         }
 
         /// <summary>
-        ///
+        /// 
         /// </summary>
         /// <param name="dbField"></param>
         /// <param name="valueType"></param>
         /// <param name="value"></param>
-        private static void EnsureAutomaticConversion(DbField dbField,
+        /// <returns></returns>
+        private static bool AutomaticConvert(DbField dbField,
             ref Type valueType,
             ref object value)
         {
             if (valueType != null && dbField != null && IsAutomaticConversion(dbField))
             {
                 var dbFieldType = dbField.Type.GetUnderlyingType();
+
                 if (dbFieldType != valueType)
                 {
                     if (value != null)
                     {
                         value = AutomaticConvert(value, valueType, dbFieldType);
                     }
+
                     valueType = dbFieldType;
+
+                    return true;
                 }
             }
+
+            return false;
         }
 
         /// <summary>
