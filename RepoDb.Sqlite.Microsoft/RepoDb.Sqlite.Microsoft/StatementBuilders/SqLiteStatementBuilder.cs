@@ -159,7 +159,6 @@ namespace RepoDb.StatementBuilders
             DbField identityField = null,
             string hints = null)
         {
-            // Initialize the builder
             var builder = new QueryBuilder();
 
             // Call the base
@@ -171,23 +170,15 @@ namespace RepoDb.StatementBuilders
                     hints));
 
             // Variables needed
-            var databaseType = "BIGINT";
-
-            // Check for the identity
-            if (identityField != null)
-            {
-                var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
-                if (dbType != null)
-                {
-                    databaseType = new DbTypeToSqLiteStringNameResolver().Resolve(dbType.Value);
-                }
-            }
+            var keyColumn = GetReturnKeyColumnAsDbField(primaryField, identityField);
+            var databaseType = GetDatabaseType(keyColumn);
 
             // Set the return value
-            var result = identityField != null ?
-                $"CAST(last_insert_rowid() AS {databaseType})" :
-                    primaryField != null ? primaryField.Name.AsParameter(DbSetting) : "NULL";
-
+            var columnName = keyColumn != null ?
+                keyColumn.IsIdentity ?
+                    "last_insert_rowid()" : keyColumn.Name.AsParameter(DbSetting) : "NULL";
+            var result = string.IsNullOrWhiteSpace(databaseType) ?
+                columnName : $"CAST({columnName} AS {databaseType})";
             builder
                 .Select()
                 .WriteText(result)
@@ -228,37 +219,27 @@ namespace RepoDb.StatementBuilders
                 hints);
 
             // Variables needed
-            var databaseType = (string)null;
+            var keyColumn = GetReturnKeyColumnAsDbField(primaryField, identityField);
+            var databaseType = GetDatabaseType(keyColumn);
 
-            // Check for the identity
-            if (identityField != null)
+            // Set the return value
+            var commandTexts = new List<string>();
+            var splitted = commandText.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+
+            // Iterate the indexes
+            for (var index = 0; index < splitted.Length; index++)
             {
-                var dbType = new ClientTypeToDbTypeResolver().Resolve(identityField.Type);
-                if (dbType != null)
-                {
-                    databaseType = new DbTypeToSqLiteStringNameResolver().Resolve(dbType.Value);
-                }
+                var line = splitted[index].Trim();
+                var columnName = keyColumn != null ?
+                    keyColumn.IsIdentity ?
+                        "last_insert_rowid()" : keyColumn.Name.AsParameter(index, DbSetting) : "NULL";
+                var result = string.IsNullOrWhiteSpace(databaseType) ?
+                    columnName : $"CAST({columnName} AS {databaseType})";
+                commandTexts.Add(string.Concat(line, " ; SELECT ", result, " AS ", "Result".AsQuoted(DbSetting), $", {DbSetting.ParameterPrefix}__RepoDb_OrderColumn_{index} AS [OrderColumn] ;"));
             }
 
-            if (identityField != null)
-            {
-                // Variables needed
-                var commandTexts = new List<string>();
-                var splitted = commandText.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-
-                // Iterate the indexes
-                for (var index = 0; index < splitted.Length; index++)
-                {
-                    var line = splitted[index].Trim();
-                    var returnValue = string.IsNullOrEmpty(databaseType) ?
-                        "SELECT last_insert_rowid()" :
-                        $"SELECT CAST(last_insert_rowid() AS {databaseType}) AS [Id]";
-                    commandTexts.Add(string.Concat(line, " ; ", returnValue, $", {DbSetting.ParameterPrefix}__RepoDb_OrderColumn_{index} AS [OrderColumn] ;"));
-                }
-
-                // Set the command text
-                commandText = commandTexts.Join(" ");
-            }
+            // Set the command text
+            commandText = commandTexts.Join(" ");
 
             // Return the query
             return commandText;
@@ -552,6 +533,22 @@ namespace RepoDb.StatementBuilders
 
             // Return the query
             return builder.GetString();
+        }
+
+        #endregion
+
+        #region Helpers
+
+        private string GetDatabaseType(DbField dbField)
+        {
+            if (dbField == null)
+            {
+                return default;
+            }
+
+            var dbType = new ClientTypeToDbTypeResolver().Resolve(dbField.Type);
+            return dbType.HasValue ?
+                new DbTypeToSqLiteStringNameResolver().Resolve(dbType.Value) : null;
         }
 
         #endregion

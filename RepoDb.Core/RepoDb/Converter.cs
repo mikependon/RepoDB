@@ -58,8 +58,27 @@ namespace RepoDb
             {
                 return t;
             }
-            return value == null || DbNullToNull(value) == null ? default :
-                (T)Convert.ChangeType(value, typeof(T));
+            if (typeof(T).Equals(StaticType.Guid) && value is string)
+            {
+                return (T)StringToGuidAsObject(value);
+            }
+            return value == null || DbNullToNull(value) == null ?
+                default :
+                    (T)Convert.ChangeType(value, typeof(T));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        private static object StringToGuidAsObject(object value)
+        {
+            if (Guid.TryParse(value.ToString(), out var result))
+            {
+                return result;
+            }
+            return null;
         }
 
         #endregion
