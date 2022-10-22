@@ -1147,43 +1147,43 @@ namespace RepoDb.Reflection
             // get handler on class property or type level
             var handlerInstance = GetHandlerInstance(classPropertyParameterInfo, readerField) ?? PropertyHandlerCache.Get<object>(classPropertyParameterInfo.GetTargetType());
 
-            // Auto-conversion
-            if (isAutomaticConversion == true)
+            // Enumerations
+            if (targetTypeUnderlyingType.IsEnum)
             {
-                try
+                // If it has a PropertyHandler and the parameter type is matching, then, skip the auto conversion.
+                var autoConvertEnum = true;
+                if (handlerInstance != null)
                 {
-                    valueExpression = ConvertExpressionWithAutomaticConversion(valueExpression, targetTypeUnderlyingType);
+                    var getParameter = GetPropertyHandlerGetParameter(GetPropertyHandlerGetMethod(handlerInstance));
+                    autoConvertEnum = !(getParameter.ParameterType.GetUnderlyingType() == readerField.Type);
                 }
-                catch (Exception ex)
+                if (autoConvertEnum)
                 {
-                    throw new InvalidOperationException($"Compiler.DataReader.IsDbNull.FalseExpression: Failed to automatically convert the value expression. " +
-                        $"{classPropertyParameterInfo.GetDescriptiveContextString()}", ex);
+                    try
+                    {
+                        valueExpression = ConvertExpressionToEnumExpression(valueExpression, readerField.Type, targetTypeUnderlyingType);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new InvalidOperationException($"Compiler.DataReader.IsDbNull.FalseExpression: Failed to convert the value expression into enum type '{targetType.GetUnderlyingType()}'. " +
+                            $"{classPropertyParameterInfo.GetDescriptiveContextString()}", ex);
+                    }
+
                 }
             }
             else
             {
-                // Enumerations
-                if (targetTypeUnderlyingType.IsEnum)
+                // Auto-conversion
+                if (isAutomaticConversion == true)
                 {
-                    // If it has a PropertyHandler and the parameter type is matching, then, skip the auto conversion.
-                    var autoConvertEnum = true;
-                    if (handlerInstance != null)
+                    try
                     {
-                        var getParameter = GetPropertyHandlerGetParameter(GetPropertyHandlerGetMethod(handlerInstance));
-                        autoConvertEnum = !(getParameter.ParameterType.GetUnderlyingType() == readerField.Type);
+                        valueExpression = ConvertExpressionWithAutomaticConversion(valueExpression, targetTypeUnderlyingType);
                     }
-                    if (autoConvertEnum)
+                    catch (Exception ex)
                     {
-                        try
-                        {
-                            valueExpression = ConvertExpressionToEnumExpression(valueExpression, readerField.Type, targetTypeUnderlyingType);
-                        }
-                        catch (Exception ex)
-                        {
-                            throw new InvalidOperationException($"Compiler.DataReader.IsDbNull.FalseExpression: Failed to convert the value expression into enum type '{targetType.GetUnderlyingType()}'. " +
-                                $"{classPropertyParameterInfo.GetDescriptiveContextString()}", ex);
-                        }
-
+                        throw new InvalidOperationException($"Compiler.DataReader.IsDbNull.FalseExpression: Failed to automatically convert the value expression. " +
+                            $"{classPropertyParameterInfo.GetDescriptiveContextString()}", ex);
                     }
                 }
             }
@@ -1459,20 +1459,6 @@ namespace RepoDb.Reflection
             var handlerInstance = classProperty.GetPropertyHandler() ?? PropertyHandlerCache.Get<object>(dbField.Type.GetUnderlyingType());
             var targetType = GetPropertyHandlerSetParameter(handlerInstance)?.ParameterType ?? dbField.Type;
 
-            // Auto-conversion Handling
-            if (GlobalConfiguration.Options.ConversionType == ConversionType.Automatic || dbField?.IsPrimary == true || dbField?.IsIdentity == true)
-            {
-                try
-                {
-                    expression = ConvertExpressionWithAutomaticConversion(expression, targetType?.GetUnderlyingType());
-                }
-                catch (Exception ex)
-                {
-                    throw new InvalidOperationException($"Compiler.Entity/Object.Property: Failed to automatically convert the value expression for " +
-                        $"property '{classProperty.GetMappedName()} ({classProperty.PropertyInfo.PropertyType.FullName})'. {classProperty}", ex);
-                }
-            }
-
             /*
              * Note: The other data provider can coerce the Enum into its destination data type in the DB by default,
              *       except for PostgreSQL. The code written below is only to address the issue for this specific provider.
@@ -1494,6 +1480,20 @@ namespace RepoDb.Reflection
                 {
                     throw new InvalidOperationException($"Compiler.Entity/Object.Property: Failed to convert the value expression from " +
                         $"enumeration '{classProperty.PropertyInfo.PropertyType.FullName}' to type '{targetType?.GetUnderlyingType()}'. {classProperty}", ex);
+                }
+            }
+
+            // Auto-conversion Handling
+            if (GlobalConfiguration.Options.ConversionType == ConversionType.Automatic || dbField?.IsPrimary == true || dbField?.IsIdentity == true)
+            {
+                try
+                {
+                    expression = ConvertExpressionWithAutomaticConversion(expression, targetType?.GetUnderlyingType());
+                }
+                catch (Exception ex)
+                {
+                    throw new InvalidOperationException($"Compiler.Entity/Object.Property: Failed to automatically convert the value expression for " +
+                        $"property '{classProperty.GetMappedName()} ({classProperty.PropertyInfo.PropertyType.FullName})'. {classProperty}", ex);
                 }
             }
 
