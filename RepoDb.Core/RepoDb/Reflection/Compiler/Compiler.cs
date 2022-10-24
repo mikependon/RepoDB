@@ -505,6 +505,27 @@ namespace RepoDb.Reflection
             GetDateTimeTimeOfDayProperty().GetMethod;
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        internal static MethodInfo GetEnumParseMethod() =>
+            StaticType.Enum.GetMethod("Parse", new[] { StaticType.Type, StaticType.String, StaticType.Boolean });
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        internal static MethodInfo GetEnumGetNameMethod() =>
+            StaticType.Enum.GetMethod("GetName", new[] { StaticType.Type, StaticType.Object });
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        internal static MethodInfo GetEnumIsDefinedMethod() =>
+            StaticType.Enum.GetMethod("IsDefined", new[] { StaticType.Type, StaticType.Object });
+
+        /// <summary>
         ///
         /// </summary>
         /// <param name="expression"></param>
@@ -659,18 +680,17 @@ namespace RepoDb.Reflection
         internal static Expression ConvertExpressionToEnumExpressionForString(Expression expression,
             Type toEnumType)
         {
-            var method = StaticType.Enum.GetMethod("Parse", new[] { StaticType.Type, StaticType.String, StaticType.Boolean });
-            if (method == null)
+            var trueExpression = GetEnumParseExpression(expression, toEnumType, true);
+            if (GlobalConfiguration.Options.ConversionType == ConversionType.Automatic)
             {
-                throw new InvalidOperationException($"There is no enum 'Parse' method found between '{toEnumType.FullName}' and '{StaticType.String.FullName}'.");
+                var isDefinedExpression = GetEnumIsDefinedExpression(expression, toEnumType);
+                var falseExpression = ConvertExpressionToTypeExpression(Expression.Default(toEnumType), StaticType.Object);
+                return Expression.Condition(isDefinedExpression, trueExpression, falseExpression);
             }
-            var parameters = new Expression[]
+            else
             {
-                Expression.Constant(toEnumType),
-                expression,
-                Expression.Constant(true)
-            };
-            return Expression.Call(method, parameters);
+                return trueExpression;
+            }
         }
 
         /// <summary>
@@ -682,17 +702,15 @@ namespace RepoDb.Reflection
         internal static Expression ConvertExpressionToEnumExpressionForNonString(Expression expression,
             Type toEnumType)
         {
-            var method = StaticType.Enum.GetMethod("GetName", new[] { StaticType.Type, StaticType.Object });
-            if (method == null)
+            if (GlobalConfiguration.Options.ConversionType == ConversionType.Automatic)
             {
-                throw new InvalidOperationException($"There is no enum 'GetName' method found between '{toEnumType.FullName}' and '{StaticType.String.FullName}'.");
+                return Expression.Convert(expression, toEnumType);
             }
-            var parameters = new Expression[]
+            else
             {
-                Expression.Constant(toEnumType),
-                ConvertExpressionToTypeExpression(expression, StaticType.Object)
-            };
-            return ConvertExpressionToEnumExpressionForString(Expression.Call(method, parameters), toEnumType);
+                return ConvertExpressionToEnumExpressionForString(
+                    GetEnumGetNameExpression(expression, toEnumType), toEnumType);
+            }
         }
 
         /// <summary>
@@ -1038,6 +1056,60 @@ namespace RepoDb.Reflection
         #endregion
 
         #region Common
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <param name="enumType"></param>
+        /// <param name="ignoreCase"></param>
+        /// <returns></returns>
+        internal static Expression GetEnumParseExpression(Expression expression,
+            Type enumType,
+            bool ignoreCase)
+        {
+            var parameters = new Expression[]
+            {
+                Expression.Constant(enumType),
+                expression,
+                Expression.Constant(ignoreCase)
+            };
+            return Expression.Call(GetEnumParseMethod(), parameters);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <param name="enumType"></param>
+        /// <returns></returns>
+        internal static Expression GetEnumIsDefinedExpression(Expression expression,
+            Type enumType)
+        {
+            var parameters = new Expression[]
+            {
+                Expression.Constant(enumType),
+                ConvertExpressionToTypeExpression(expression, StaticType.Object)
+            };
+            return Expression.Call(GetEnumIsDefinedMethod(), parameters);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <param name="enumType"></param>
+        /// <returns></returns>
+        internal static Expression GetEnumGetNameExpression(Expression expression,
+            Type enumType)
+        {
+            var parameters = new Expression[]
+            {
+                Expression.Constant(enumType),
+                ConvertExpressionToTypeExpression(expression, StaticType.Object)
+            };
+            return Expression.Call(GetEnumGetNameMethod(), parameters);
+        }
 
         /// <summary>
         ///
