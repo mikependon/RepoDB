@@ -103,7 +103,7 @@ namespace RepoDb
         /// <param name="attributes">The list of <see cref="PropertyValueAttribute"/> object.</param>
         /// <remarks>The default behavior will be affected if the settings are not handled properly by the user (i.e.: setting the type <see cref="string"/> name attribute to something would affect all the objects properties with type <see cref="string"/>).</remarks>
         public TypeMapFluentDefinition<TType> PropertyValueAttributes<T>(IEnumerable<PropertyValueAttribute> attributes) =>
-            PropertyValueAttributes<T>(attributes);
+            PropertyValueAttributes<T>(attributes, false);
 
         /// <summary>
         /// Defines a mapping between a .NET CLR type and the list of <see cref="PropertyValueAttribute"/> object.
