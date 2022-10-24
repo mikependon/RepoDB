@@ -8,9 +8,9 @@
 	<PackageTags>orm hybrid-orm micro-orm sqlserver bulkoperations</PackageTags>
     <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.SqlServer.BulkOperations</RepositoryUrl>
     <PackageReleaseNotes>http://repodb.net/release/sqlserverbulk</PackageReleaseNotes>
-    <Version>1.13.0-alpha2</Version>
-    <FileVersion>1.13.0.2</FileVersion>
-    <AssemblyVersion>1.13.0.2</AssemblyVersion>
+    <Version>1.13.0-alpha3</Version>
+    <FileVersion>1.13.0.3</FileVersion>
+    <AssemblyVersion>1.13.0.3</AssemblyVersion>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
@@ -21,8 +21,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="RepoDb" Version="1.13.0-alpha2" />
-    <PackageReference Include="RepoDb.SqlServer" Version="1.13.0-alpha2" />
+    <PackageReference Include="RepoDb" Version="1.13.0-alpha3" />
+    <PackageReference Include="RepoDb.SqlServer" Version="1.13.0-alpha3" />
     <PackageReference Include="System.Linq.Async" Version="6.0.1" />
   </ItemGroup>
 
