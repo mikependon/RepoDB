@@ -3,9 +3,9 @@
 	<PropertyGroup>
 		<Title>RepoDb.PostgreSql.BulkOperations</Title>
 		<TargetFrameworks>netstandard2.0;net5.0;net6.0</TargetFrameworks>
-		<Version>0.0.12</Version>
-		<FileVersion>0.0.12</FileVersion>
-		<AssemblyVersion>0.0.12</AssemblyVersion>
+		<Version>0.0.1</Version>
+		<FileVersion>0.0.1</FileVersion>
+		<AssemblyVersion>0.0.1</AssemblyVersion>
 		<Description>An extension library that contains the official Bulk Operations of RepoDb for PostgreSQL.</Description>
 		<PackageTags>orm hybrid-orm micro-orm postgresql bulkoperations</PackageTags>
 		<RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.PostgreSql.BulkOperations</RepositoryUrl>
@@ -16,8 +16,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="RepoDb" Version="1.13.0-beta1" />
-		<PackageReference Include="RepoDb.PostgreSql" Version="1.13.0-beta1" />
+		<PackageReference Include="RepoDb" Version="0.0.1" />
+		<PackageReference Include="RepoDb.PostgreSql" Version="0.0.1" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -33,7 +33,7 @@
 	</ItemGroup>
 
 	<Target Name="CopyPackage" AfterTargets="Pack" Condition="'$(Configuration)'=='Release'">
-		<Copy SourceFiles="$(OutputPath)$(PackageId).$(PackageVersion).nupkg" DestinationFolder="$(SolutionDir)\..\..\RepoDb.NuGet\Packages" />
+		<Copy SourceFiles="$(OutputPath)$(PackageId).$(Version).nupkg" DestinationFolder="..\..\..\RepoDb.NuGet\Packages\$(Version)" />
 	</Target>
 
 </Project>
