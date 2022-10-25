@@ -1,35 +1,42 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-	<Title>RepoDb.MySql</Title>
-    <TargetFrameworks>netstandard2.0;net5.0;net6.0</TargetFrameworks>
-    <Version>1.13.0-alpha2</Version>
-    <AssemblyVersion>1.13.0.2</AssemblyVersion>
-    <FileVersion>1.13.0.2</FileVersion>
-    <Description>A hybrid .NET ORM library for MySQL (using MySql.Data).</Description>
-	<PackageTags>orm hybrid-orm micro-orm mysql</PackageTags>
-    <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.MySql</RepositoryUrl>
-    <PackageReleaseNotes>http://repodb.net/release/mysql</PackageReleaseNotes>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <PackageProjectUrl>https://repodb.net/tutorial/get-started-mysql</PackageProjectUrl>
-  </PropertyGroup>
+	<PropertyGroup>
+		<Title>RepoDb.MySql</Title>
+		<TargetFrameworks>netstandard2.0;net5.0;net6.0</TargetFrameworks>
+		<Version>1.13.0-beta1</Version>
+		<AssemblyVersion>1.13.0.4</AssemblyVersion>
+		<FileVersion>1.13.0.4</FileVersion>
+		<Description>A hybrid .NET ORM library for MySQL (using MySql.Data).</Description>
+		<PackageTags>orm hybrid-orm micro-orm mysql</PackageTags>
+		<RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.MySql</RepositoryUrl>
+		<PackageReleaseNotes>http://repodb.net/release/mysql</PackageReleaseNotes>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<PackageProjectUrl>https://repodb.net/tutorial/get-started-mysql</PackageProjectUrl>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Attributes\MySqlTypeMapAttribute.cs" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Remove="Attributes\MySqlTypeMapAttribute.cs" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="MySql.Data" Version="8.0.30" />
-    <PackageReference Include="RepoDb" Version="1.13.0-alpha2" />
-    <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="MySql.Data" Version="8.0.31" />
+		<PackageReference Include="RepoDb" Version="1.13.0-beta1" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Include="..\..\LICENSE.txt">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\LICENSE.txt">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
+	</ItemGroup>
+
+	<Target Name="CopyPackage" AfterTargets="Pack" Condition="'$(Configuration)'=='Release'">
+		<Copy SourceFiles="$(OutputPath)$(PackageId).$(PackageVersion).nupkg" DestinationFolder="$(SolutionDir)\..\RepoDb.NuGet\Packages" />
+	</Target>
 
 </Project>

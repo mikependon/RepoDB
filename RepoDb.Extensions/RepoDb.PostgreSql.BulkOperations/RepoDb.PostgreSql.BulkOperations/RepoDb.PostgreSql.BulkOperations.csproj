@@ -1,35 +1,39 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-	<Title>RepoDb.PostgreSql.BulkOperations</Title>
-    <TargetFrameworks>netstandard2.0;net5.0;net6.0</TargetFrameworks>
-    <Version>0.0.11</Version>
-    <FileVersion>0.0.11</FileVersion>
-    <AssemblyVersion>0.0.11</AssemblyVersion>
-    <Description>An extension library that contains the official Bulk Operations of RepoDb for PostgreSQL.</Description>
-	<PackageTags>orm hybrid-orm micro-orm postgresql bulkoperations</PackageTags>
-    <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.PostgreSql.BulkOperations</RepositoryUrl>
-    <PackageReleaseNotes>http://repodb.net/release/postgresqlbulk</PackageReleaseNotes>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <PackageProjectUrl>https://repodb.net/tutorial/get-started-postgresql</PackageProjectUrl>
-  </PropertyGroup>
+	<PropertyGroup>
+		<Title>RepoDb.PostgreSql.BulkOperations</Title>
+		<TargetFrameworks>netstandard2.0;net5.0;net6.0</TargetFrameworks>
+		<Version>0.0.12</Version>
+		<FileVersion>0.0.12</FileVersion>
+		<AssemblyVersion>0.0.12</AssemblyVersion>
+		<Description>An extension library that contains the official Bulk Operations of RepoDb for PostgreSQL.</Description>
+		<PackageTags>orm hybrid-orm micro-orm postgresql bulkoperations</PackageTags>
+		<RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.PostgreSql.BulkOperations</RepositoryUrl>
+		<PackageReleaseNotes>http://repodb.net/release/postgresqlbulk</PackageReleaseNotes>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<PackageProjectUrl>https://repodb.net/tutorial/get-started-postgresql</PackageProjectUrl>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="RepoDb" Version="1.13.0-alpha2" />
-    <PackageReference Include="RepoDb.PostgreSql" Version="1.13.0-alpha2" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="RepoDb" Version="1.13.0-beta1" />
+		<PackageReference Include="RepoDb.PostgreSql" Version="1.13.0-beta1" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Include="..\..\..\LICENSE.txt">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="..\..\..\LICENSE.txt">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
-    <ProjectReference Include="..\..\..\RepoDb.PostgreSql\RepoDb.PostgreSql\RepoDb.PostgreSql.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
+		<ProjectReference Include="..\..\..\RepoDb.PostgreSql\RepoDb.PostgreSql\RepoDb.PostgreSql.csproj" />
+	</ItemGroup>
+
+	<Target Name="CopyPackage" AfterTargets="Pack" Condition="'$(Configuration)'=='Release'">
+		<Copy SourceFiles="$(OutputPath)$(PackageId).$(PackageVersion).nupkg" DestinationFolder="$(SolutionDir)\..\..\RepoDb.NuGet\Packages" />
+	</Target>
 
 </Project>
