@@ -365,7 +365,7 @@ namespace RepoDb.StatementBuilders
             // Primary Key
             if (primaryField != null &&
                 primaryField.HasDefaultValue == false &&
-                primaryField != identityField)
+                !string.Equals(primaryField.Name, identityField.Name, StringComparison.OrdinalIgnoreCase))
             {
                 var isPresent = fields
                     .FirstOrDefault(f =>
@@ -443,7 +443,7 @@ namespace RepoDb.StatementBuilders
             // Primary Key
             if (primaryField != null &&
                 primaryField.HasDefaultValue == false &&
-                primaryField != identityField)
+                !string.Equals(primaryField.Name, identityField.Name, StringComparison.OrdinalIgnoreCase))
             {
                 var isPresent = fields
                     .FirstOrDefault(f =>
