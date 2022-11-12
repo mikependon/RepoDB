@@ -4,10 +4,10 @@
     {
         public const string RepoDB = "RepoDB";
 
-        public const string NHibernate = "NHibernate 5.3.9";
+        public const string NHibernate = "NHibernate 5.3.14";
 
-        public const string EFCore = "EFCore 5.0.8";
+        public const string EFCore = "EFCore 7.0.0";
 
-        public const string Dapper = "Dapper 2.0.90";
+        public const string Dapper = "Dapper 2.0.123";
     }
 }
