@@ -23,7 +23,7 @@ namespace RepoDb.Benchmarks.PostgreSql.Linq2db
         
         protected static RepoDbDB GetDb()
         {
-            var builder = new LinqToDbConnectionOptionsBuilder();
+            var builder = new LinqToDBConnectionOptionsBuilder();
             builder.UsePostgreSQL(DatabaseHelper.ConnectionString);
             
             return new RepoDbDB(builder.Build());
