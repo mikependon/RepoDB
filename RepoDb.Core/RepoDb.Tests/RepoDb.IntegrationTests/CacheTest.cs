@@ -7,6 +7,7 @@ using Microsoft.Data.SqlClient;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Dynamic;
+using System.Threading.Tasks;
 
 namespace RepoDb.IntegrationTests.Caches
 {
@@ -165,7 +166,7 @@ namespace RepoDb.IntegrationTests.Caches
         #region ExecuteQueryAsync
 
         [TestMethod]
-        public void TestSqlConnectionExecuteQueryAsyncCache()
+        public async Task TestSqlConnectionExecuteQueryAsyncCache()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -179,10 +180,10 @@ namespace RepoDb.IntegrationTests.Caches
                 entity.Id = Convert.ToInt32(connection.Insert(entity));
 
                 // Act
-                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable];",
+                var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable];",
                     cacheKey: cacheKey,
                     cacheItemExpiration: cacheItemExpiration,
-                    cache: cache).Result;
+                    cache: cache);
                 var item = cache.Get<IEnumerable<IdentityTable>>(cacheKey);
 
                 // Assert
@@ -193,7 +194,7 @@ namespace RepoDb.IntegrationTests.Caches
         }
 
         [TestMethod]
-        public void TestSqlConnectionExecuteQueryAsyncCacheAsDynamics()
+        public async Task TestSqlConnectionExecuteQueryAsyncCacheAsDynamics()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -207,10 +208,10 @@ namespace RepoDb.IntegrationTests.Caches
                 entity.Id = Convert.ToInt32(connection.Insert(entity));
 
                 // Act
-                var result = connection.ExecuteQueryAsync("SELECT * FROM [sc].[IdentityTable];",
+                var result = await connection.ExecuteQueryAsync("SELECT * FROM [sc].[IdentityTable];",
                     cacheKey: cacheKey,
                     cacheItemExpiration: cacheItemExpiration,
-                    cache: cache).Result;
+                    cache: cache);
                 var item = cache.Get<IEnumerable<dynamic>>(cacheKey);
 
                 // Assert
@@ -221,7 +222,7 @@ namespace RepoDb.IntegrationTests.Caches
         }
 
         [TestMethod]
-        public void TestSqlConnectionExecuteQueryAsyncCacheAsExpandoObject()
+        public async Task TestSqlConnectionExecuteQueryAsyncCacheAsExpandoObject()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -235,10 +236,10 @@ namespace RepoDb.IntegrationTests.Caches
                 entity.Id = Convert.ToInt32(connection.Insert(entity));
 
                 // Act
-                var result = connection.ExecuteQueryAsync<ExpandoObject>("SELECT * FROM [sc].[IdentityTable];",
+                var result = await connection.ExecuteQueryAsync<ExpandoObject>("SELECT * FROM [sc].[IdentityTable];",
                     cacheKey: cacheKey,
                     cacheItemExpiration: cacheItemExpiration,
-                    cache: cache).Result;
+                    cache: cache);
                 var item = cache.Get<IEnumerable<ExpandoObject>>(cacheKey);
 
                 // Assert
@@ -249,7 +250,7 @@ namespace RepoDb.IntegrationTests.Caches
         }
 
         [TestMethod]
-        public void TestSqlConnectionExecuteQueryAsyncCacheAsDictionaryStringObject()
+        public async Task TestSqlConnectionExecuteQueryAsyncCacheAsDictionaryStringObject()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -263,10 +264,10 @@ namespace RepoDb.IntegrationTests.Caches
                 entity.Id = Convert.ToInt32(connection.Insert(entity));
 
                 // Act
-                var result = connection.ExecuteQueryAsync<IDictionary<string, object>>("SELECT * FROM [sc].[IdentityTable];",
+                var result = await connection.ExecuteQueryAsync<IDictionary<string, object>>("SELECT * FROM [sc].[IdentityTable];",
                     cacheKey: cacheKey,
                     cacheItemExpiration: cacheItemExpiration,
-                    cache: cache).Result;
+                    cache: cache);
                 var item = cache.Get<IEnumerable<IDictionary<string, object>>>(cacheKey);
 
                 // Assert
@@ -309,7 +310,7 @@ namespace RepoDb.IntegrationTests.Caches
         #region ExecuteScalarAsync
 
         [TestMethod]
-        public void TestSqlConnectionExecuteScalarAsyncCache()
+        public async Task TestSqlConnectionExecuteScalarAsyncCache()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -319,10 +320,10 @@ namespace RepoDb.IntegrationTests.Caches
                 var cacheItemExpiration = 60;
 
                 // Act
-                var result = connection.ExecuteScalarAsync<DateTime>("SELECT GETUTCDATE();",
+                var result = await connection.ExecuteScalarAsync<DateTime>("SELECT GETUTCDATE();",
                     cacheKey: cacheKey,
                     cacheItemExpiration: cacheItemExpiration,
-                    cache: cache).Result;
+                    cache: cache);
                 var item = cache.Get<DateTime>(cacheKey);
 
                 // Assert
@@ -961,7 +962,7 @@ namespace RepoDb.IntegrationTests.Caches
         #region TEntity
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncCacheViaDynamics()
+        public async Task TestSqlConnectionQueryAsyncCacheViaDynamics()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -975,7 +976,7 @@ namespace RepoDb.IntegrationTests.Caches
                 entity.Id = Convert.ToInt32(connection.Insert(entity));
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(what: (object)null,
+                var result = await connection.QueryAsync<IdentityTable>(what: (object)null,
                     orderBy: (IEnumerable<OrderField>)null,
                     top: null,
                     hints: null,
@@ -985,7 +986,7 @@ namespace RepoDb.IntegrationTests.Caches
                     transaction: null,
                     cache: cache,
                     trace: null,
-                    statementBuilder: Helper.StatementBuilder).Result;
+                    statementBuilder: Helper.StatementBuilder);
 
                 var item = cache.Get<IEnumerable<IdentityTable>>(cacheKey);
 
@@ -997,7 +998,7 @@ namespace RepoDb.IntegrationTests.Caches
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncCacheViaQueryField()
+        public async Task TestSqlConnectionQueryAsyncCacheViaQueryField()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1011,7 +1012,7 @@ namespace RepoDb.IntegrationTests.Caches
                 entity.Id = Convert.ToInt32(connection.Insert(entity));
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(where: (QueryField)null,
+                var result = await connection.QueryAsync<IdentityTable>(where: (QueryField)null,
                     orderBy: null,
                     top: 0,
                     cacheKey: cacheKey,
@@ -1020,7 +1021,7 @@ namespace RepoDb.IntegrationTests.Caches
                     transaction: null,
                     cache: cache,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
                 var item = cache.Get<IEnumerable<IdentityTable>>(cacheKey);
 
                 // Assert
@@ -1031,7 +1032,7 @@ namespace RepoDb.IntegrationTests.Caches
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncCacheViaQueryFields()
+        public async Task TestSqlConnectionQueryAsyncCacheViaQueryFields()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1045,7 +1046,7 @@ namespace RepoDb.IntegrationTests.Caches
                 entity.Id = Convert.ToInt32(connection.Insert(entity));
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(where: (IEnumerable<QueryField>)null,
+                var result = await connection.QueryAsync<IdentityTable>(where: (IEnumerable<QueryField>)null,
                     orderBy: null,
                     top: 0,
                     cacheKey: cacheKey,
@@ -1054,7 +1055,7 @@ namespace RepoDb.IntegrationTests.Caches
                     transaction: null,
                     cache: cache,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
                 var item = cache.Get<IEnumerable<IdentityTable>>(cacheKey);
 
                 // Assert
@@ -1065,7 +1066,7 @@ namespace RepoDb.IntegrationTests.Caches
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncCacheViaExpression()
+        public async Task TestSqlConnectionQueryAsyncCacheViaExpression()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1079,7 +1080,7 @@ namespace RepoDb.IntegrationTests.Caches
                 entity.Id = Convert.ToInt32(connection.Insert(entity));
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(where: (Expression<Func<IdentityTable, bool>>)null,
+                var result = await connection.QueryAsync<IdentityTable>(where: (Expression<Func<IdentityTable, bool>>)null,
                     orderBy: null,
                     top: 0,
                     cacheKey: cacheKey,
@@ -1088,7 +1089,7 @@ namespace RepoDb.IntegrationTests.Caches
                     transaction: null,
                     cache: cache,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
                 var item = cache.Get<IEnumerable<IdentityTable>>(cacheKey);
 
                 // Assert
@@ -1099,7 +1100,7 @@ namespace RepoDb.IntegrationTests.Caches
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncCacheViaQueryGroup()
+        public async Task TestSqlConnectionQueryAsyncCacheViaQueryGroup()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1113,7 +1114,7 @@ namespace RepoDb.IntegrationTests.Caches
                 entity.Id = Convert.ToInt32(connection.Insert(entity));
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(where: (QueryGroup)null,
+                var result = await connection.QueryAsync<IdentityTable>(where: (QueryGroup)null,
                     orderBy: null,
                     top: 0,
                     cacheKey: cacheKey,
@@ -1122,7 +1123,7 @@ namespace RepoDb.IntegrationTests.Caches
                     transaction: null,
                     cache: cache,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
                 var item = cache.Get<IEnumerable<IdentityTable>>(cacheKey);
 
                 // Assert
@@ -1137,7 +1138,7 @@ namespace RepoDb.IntegrationTests.Caches
         #region Dynamics
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncCacheViaDynamicsAsDynamics()
+        public async Task TestSqlConnectionQueryAsyncCacheViaDynamicsAsDynamics()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1151,7 +1152,7 @@ namespace RepoDb.IntegrationTests.Caches
                 entity.Id = Convert.ToInt32(connection.Insert(entity));
 
                 // Act
-                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     what: (object)null,
                     orderBy: (IEnumerable<OrderField>)null,
                     top: null,
@@ -1162,7 +1163,7 @@ namespace RepoDb.IntegrationTests.Caches
                     transaction: null,
                     cache: cache,
                     trace: null,
-                    statementBuilder: Helper.StatementBuilder).Result;
+                    statementBuilder: Helper.StatementBuilder);
 
                 var item = cache.Get<IEnumerable<dynamic>>(cacheKey);
 
@@ -1174,7 +1175,7 @@ namespace RepoDb.IntegrationTests.Caches
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncCacheViaQueryFieldAsDynamics()
+        public async Task TestSqlConnectionQueryAsyncCacheViaQueryFieldAsDynamics()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1188,7 +1189,7 @@ namespace RepoDb.IntegrationTests.Caches
                 entity.Id = Convert.ToInt32(connection.Insert(entity));
 
                 // Act
-                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     where: (QueryGroup)null,
                     orderBy: null,
                     top: 0,
@@ -1199,7 +1200,7 @@ namespace RepoDb.IntegrationTests.Caches
                     transaction: null,
                     cache: cache,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
                 var item = cache.Get<IEnumerable<dynamic>>(cacheKey);
 
                 // Assert
@@ -1245,7 +1246,7 @@ namespace RepoDb.IntegrationTests.Caches
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncCacheViaQueryGroupAsDynamics()
+        public async Task TestSqlConnectionQueryAsyncCacheViaQueryGroupAsDynamics()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1259,7 +1260,7 @@ namespace RepoDb.IntegrationTests.Caches
                 entity.Id = Convert.ToInt32(connection.Insert(entity));
 
                 // Act
-                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     where: (QueryGroup)null,
                     orderBy: null,
                     top: 0,
@@ -1269,7 +1270,7 @@ namespace RepoDb.IntegrationTests.Caches
                     transaction: null,
                     cache: cache,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
                 var item = cache.Get<IEnumerable<dynamic>>(cacheKey);
 
                 // Assert
@@ -1284,7 +1285,7 @@ namespace RepoDb.IntegrationTests.Caches
         #region ExpandoObject
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncCacheViaDynamicsAsExpandoObject()
+        public async Task TestSqlConnectionQueryAsyncCacheViaDynamicsAsExpandoObject()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1298,7 +1299,7 @@ namespace RepoDb.IntegrationTests.Caches
                 entity.Id = Convert.ToInt32(connection.Insert(entity));
 
                 // Act
-                var result = connection.QueryAsync<ExpandoObject>(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.QueryAsync<ExpandoObject>(ClassMappedNameCache.Get<IdentityTable>(),
                     what: (object)null,
                     orderBy: (IEnumerable<OrderField>)null,
                     top: null,
@@ -1309,7 +1310,7 @@ namespace RepoDb.IntegrationTests.Caches
                     transaction: null,
                     cache: cache,
                     trace: null,
-                    statementBuilder: Helper.StatementBuilder).Result;
+                    statementBuilder: Helper.StatementBuilder);
 
                 var item = cache.Get<IEnumerable<ExpandoObject>>(cacheKey);
 
@@ -1321,7 +1322,7 @@ namespace RepoDb.IntegrationTests.Caches
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncCacheViaQueryFieldAsExpandoObject()
+        public async Task TestSqlConnectionQueryAsyncCacheViaQueryFieldAsExpandoObject()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1335,7 +1336,7 @@ namespace RepoDb.IntegrationTests.Caches
                 entity.Id = Convert.ToInt32(connection.Insert(entity));
 
                 // Act
-                var result = connection.QueryAsync<ExpandoObject>(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.QueryAsync<ExpandoObject>(ClassMappedNameCache.Get<IdentityTable>(),
                     where: (QueryGroup)null,
                     orderBy: null,
                     top: 0,
@@ -1346,7 +1347,7 @@ namespace RepoDb.IntegrationTests.Caches
                     transaction: null,
                     cache: cache,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
                 var item = cache.Get<IEnumerable<ExpandoObject>>(cacheKey);
 
                 // Assert
@@ -1357,7 +1358,7 @@ namespace RepoDb.IntegrationTests.Caches
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncCacheViaQueryFieldsAsExpandoObject()
+        public async Task TestSqlConnectionQueryAsyncCacheViaQueryFieldsAsExpandoObject()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1371,7 +1372,7 @@ namespace RepoDb.IntegrationTests.Caches
                 entity.Id = Convert.ToInt32(connection.Insert(entity));
 
                 // Act
-                var result = connection.QueryAsync<ExpandoObject>(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.QueryAsync<ExpandoObject>(ClassMappedNameCache.Get<IdentityTable>(),
                     where: (IEnumerable<QueryField>)null,
                     orderBy: null,
                     top: 0,
@@ -1381,7 +1382,7 @@ namespace RepoDb.IntegrationTests.Caches
                     transaction: null,
                     cache: cache,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
                 var item = cache.Get<IEnumerable<ExpandoObject>>(cacheKey);
 
                 // Assert
@@ -1392,7 +1393,7 @@ namespace RepoDb.IntegrationTests.Caches
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncCacheViaQueryGroupAsExpandoObject()
+        public async Task TestSqlConnectionQueryAsyncCacheViaQueryGroupAsExpandoObject()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1406,7 +1407,7 @@ namespace RepoDb.IntegrationTests.Caches
                 entity.Id = Convert.ToInt32(connection.Insert(entity));
 
                 // Act
-                var result = connection.QueryAsync<ExpandoObject>(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.QueryAsync<ExpandoObject>(ClassMappedNameCache.Get<IdentityTable>(),
                     where: (QueryGroup)null,
                     orderBy: null,
                     top: 0,
@@ -1416,7 +1417,7 @@ namespace RepoDb.IntegrationTests.Caches
                     transaction: null,
                     cache: cache,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
                 var item = cache.Get<IEnumerable<ExpandoObject>>(cacheKey);
 
                 // Assert
@@ -1431,7 +1432,7 @@ namespace RepoDb.IntegrationTests.Caches
         #region IDictionary<string, object>
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncCacheViaDynamicsAsDictionaryStringObject()
+        public async Task TestSqlConnectionQueryAsyncCacheViaDynamicsAsDictionaryStringObject()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1445,7 +1446,7 @@ namespace RepoDb.IntegrationTests.Caches
                 entity.Id = Convert.ToInt32(connection.Insert(entity));
 
                 // Act
-                var result = connection.QueryAsync<IDictionary<string, object>>(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.QueryAsync<IDictionary<string, object>>(ClassMappedNameCache.Get<IdentityTable>(),
                     what: (object)null,
                     orderBy: (IEnumerable<OrderField>)null,
                     top: null,
@@ -1456,7 +1457,7 @@ namespace RepoDb.IntegrationTests.Caches
                     transaction: null,
                     cache: cache,
                     trace: null,
-                    statementBuilder: Helper.StatementBuilder).Result;
+                    statementBuilder: Helper.StatementBuilder);
 
                 var item = cache.Get<IEnumerable<IDictionary<string, object>>>(cacheKey);
 
@@ -1468,7 +1469,7 @@ namespace RepoDb.IntegrationTests.Caches
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncCacheViaQueryFieldAsDictionaryStringObject()
+        public async Task TestSqlConnectionQueryAsyncCacheViaQueryFieldAsDictionaryStringObject()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1482,7 +1483,7 @@ namespace RepoDb.IntegrationTests.Caches
                 entity.Id = Convert.ToInt32(connection.Insert(entity));
 
                 // Act
-                var result = connection.QueryAsync<IDictionary<string, object>>(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.QueryAsync<IDictionary<string, object>>(ClassMappedNameCache.Get<IdentityTable>(),
                     where: (QueryGroup)null,
                     orderBy: null,
                     top: 0,
@@ -1493,7 +1494,7 @@ namespace RepoDb.IntegrationTests.Caches
                     transaction: null,
                     cache: cache,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
                 var item = cache.Get<IEnumerable<IDictionary<string, object>>>(cacheKey);
 
                 // Assert
@@ -1504,7 +1505,7 @@ namespace RepoDb.IntegrationTests.Caches
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncCacheViaQueryFieldsAsDictionaryStringObject()
+        public async Task TestSqlConnectionQueryAsyncCacheViaQueryFieldsAsDictionaryStringObject()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1518,7 +1519,7 @@ namespace RepoDb.IntegrationTests.Caches
                 entity.Id = Convert.ToInt32(connection.Insert(entity));
 
                 // Act
-                var result = connection.QueryAsync<IDictionary<string, object>>(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.QueryAsync<IDictionary<string, object>>(ClassMappedNameCache.Get<IdentityTable>(),
                     where: (IEnumerable<QueryField>)null,
                     orderBy: null,
                     top: 0,
@@ -1528,7 +1529,7 @@ namespace RepoDb.IntegrationTests.Caches
                     transaction: null,
                     cache: cache,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
                 var item = cache.Get<IEnumerable<IDictionary<string, object>>>(cacheKey);
 
                 // Assert
@@ -1539,7 +1540,7 @@ namespace RepoDb.IntegrationTests.Caches
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncCacheViaQueryGroupAsDictionaryStringObject()
+        public async Task TestSqlConnectionQueryAsyncCacheViaQueryGroupAsDictionaryStringObject()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1553,7 +1554,7 @@ namespace RepoDb.IntegrationTests.Caches
                 entity.Id = Convert.ToInt32(connection.Insert(entity));
 
                 // Act
-                var result = connection.QueryAsync<IDictionary<string, object>>(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.QueryAsync<IDictionary<string, object>>(ClassMappedNameCache.Get<IdentityTable>(),
                     where: (QueryGroup)null,
                     orderBy: null,
                     top: 0,
@@ -1563,7 +1564,7 @@ namespace RepoDb.IntegrationTests.Caches
                     transaction: null,
                     cache: cache,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
                 var item = cache.Get<IEnumerable<IDictionary<string, object>>>(cacheKey);
 
                 // Assert
@@ -1719,7 +1720,7 @@ namespace RepoDb.IntegrationTests.Caches
         #region QueryAllAsync
 
         [TestMethod]
-        public void TestSqlConnectionQueryAllAsyncCache()
+        public async Task TestSqlConnectionQueryAllAsyncCache()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1733,7 +1734,7 @@ namespace RepoDb.IntegrationTests.Caches
                 entity.Id = Convert.ToInt32(connection.Insert(entity));
 
                 // Act
-                var result = connection.QueryAllAsync<IdentityTable>(orderBy: null,
+                var result = await connection.QueryAllAsync<IdentityTable>(orderBy: null,
                     hints: null,
                     cacheKey: cacheKey,
                     cacheItemExpiration: cacheItemExpiration,
@@ -1741,7 +1742,7 @@ namespace RepoDb.IntegrationTests.Caches
                     transaction: null,
                     cache: cache,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
                 var item = cache.Get<IEnumerable<IdentityTable>>(cacheKey);
 
                 // Assert
@@ -1752,7 +1753,7 @@ namespace RepoDb.IntegrationTests.Caches
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAllAsyncCacheAsDynamics()
+        public async Task TestSqlConnectionQueryAllAsyncCacheAsDynamics()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1766,7 +1767,7 @@ namespace RepoDb.IntegrationTests.Caches
                 entity.Id = Convert.ToInt32(connection.Insert(entity));
 
                 // Act
-                var result = connection.QueryAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.QueryAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     orderBy: null,
                     hints: null,
                     cacheKey: cacheKey,
@@ -1775,7 +1776,7 @@ namespace RepoDb.IntegrationTests.Caches
                     transaction: null,
                     cache: cache,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
                 var item = cache.Get<IEnumerable<dynamic>>(cacheKey);
 
                 // Assert
@@ -1786,7 +1787,7 @@ namespace RepoDb.IntegrationTests.Caches
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAllAsyncCacheAsExpandoObject()
+        public async Task TestSqlConnectionQueryAllAsyncCacheAsExpandoObject()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1800,7 +1801,7 @@ namespace RepoDb.IntegrationTests.Caches
                 entity.Id = Convert.ToInt32(connection.Insert(entity));
 
                 // Act
-                var result = connection.QueryAllAsync<ExpandoObject>(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.QueryAllAsync<ExpandoObject>(ClassMappedNameCache.Get<IdentityTable>(),
                     orderBy: null,
                     hints: null,
                     cacheKey: cacheKey,
@@ -1809,7 +1810,7 @@ namespace RepoDb.IntegrationTests.Caches
                     transaction: null,
                     cache: cache,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
                 var item = cache.Get<IEnumerable<ExpandoObject>>(cacheKey);
 
                 // Assert
@@ -1820,7 +1821,7 @@ namespace RepoDb.IntegrationTests.Caches
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAllAsyncCacheAsDictionaryStringObject()
+        public async Task TestSqlConnectionQueryAllAsyncCacheAsDictionaryStringObject()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1834,7 +1835,7 @@ namespace RepoDb.IntegrationTests.Caches
                 entity.Id = Convert.ToInt32(connection.Insert(entity));
 
                 // Act
-                var result = connection.QueryAllAsync<IDictionary<string, object>>(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.QueryAllAsync<IDictionary<string, object>>(ClassMappedNameCache.Get<IdentityTable>(),
                     orderBy: null,
                     hints: null,
                     cacheKey: cacheKey,
@@ -1843,7 +1844,7 @@ namespace RepoDb.IntegrationTests.Caches
                     transaction: null,
                     cache: cache,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
                 var item = cache.Get<IEnumerable<IDictionary<string, object>>>(cacheKey);
 
                 // Assert

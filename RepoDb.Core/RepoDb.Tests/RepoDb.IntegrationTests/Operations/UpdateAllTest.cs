@@ -5,6 +5,7 @@ using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.IntegrationTests.Operations
 {
@@ -342,7 +343,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region UpdateAllAsync<TEntity>
 
         [TestMethod]
-        public void TestSqlConnectionUpdateAllAsyncViaDataEntitiesViaEntityViaTableName()
+        public async Task TestSqlConnectionUpdateAllAsyncViaDataEntitiesViaEntityViaTableName()
         {
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
@@ -361,8 +362,8 @@ namespace RepoDb.IntegrationTests.Operations
                 });
 
                 // Act
-                var affectedRows = connection.UpdateAllAsync<NonIdentityTable>(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    tables).Result;
+                var affectedRows = await connection.UpdateAllAsync<NonIdentityTable>(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    tables);
 
                 // Assert
                 Assert.AreEqual(tables.Count, affectedRows);
@@ -381,7 +382,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionUpdateAllAsyncViaDataEntitiesViaEntityTableNameWithFields()
+        public async Task TestSqlConnectionUpdateAllAsyncViaDataEntitiesViaEntityTableNameWithFields()
         {
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
@@ -400,9 +401,9 @@ namespace RepoDb.IntegrationTests.Operations
                 });
 
                 // Act
-                var affectedRows = connection.UpdateAllAsync<NonIdentityTable>(ClassMappedNameCache.Get<NonIdentityTable>(),
+                var affectedRows = await connection.UpdateAllAsync<NonIdentityTable>(ClassMappedNameCache.Get<NonIdentityTable>(),
                     tables,
-                    fields: Field.From(nameof(NonIdentityTable.Id), nameof(NonIdentityTable.ColumnBit), nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal))).Result;
+                    fields: Field.From(nameof(NonIdentityTable.Id), nameof(NonIdentityTable.ColumnBit), nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal)));
 
                 // Assert
                 Assert.AreEqual(tables.Count, affectedRows);
@@ -421,7 +422,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionUpdateAllAsyncViaDataEntities()
+        public async Task TestSqlConnectionUpdateAllAsyncViaDataEntities()
         {
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
@@ -440,7 +441,7 @@ namespace RepoDb.IntegrationTests.Operations
                 });
 
                 // Act
-                var affectedRows = connection.UpdateAllAsync(tables).Result;
+                var affectedRows = await connection.UpdateAllAsync(tables);
 
                 // Assert
                 Assert.AreEqual(tables.Count, affectedRows);
@@ -459,7 +460,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionUpdateAllAsyncViaDataEntitiesWithFields()
+        public async Task TestSqlConnectionUpdateAllAsyncViaDataEntitiesWithFields()
         {
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
@@ -478,8 +479,8 @@ namespace RepoDb.IntegrationTests.Operations
                 });
 
                 // Act
-                var affectedRows = connection.UpdateAllAsync(tables,
-                    fields: Field.From(nameof(NonIdentityTable.Id), nameof(NonIdentityTable.ColumnBit), nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal))).Result;
+                var affectedRows = await connection.UpdateAllAsync(tables,
+                    fields: Field.From(nameof(NonIdentityTable.Id), nameof(NonIdentityTable.ColumnBit), nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal)));
 
                 // Assert
                 Assert.AreEqual(tables.Count, affectedRows);
@@ -498,7 +499,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionUpdateAllAsyncViaDataEntitiesWithSingleBatch()
+        public async Task TestSqlConnectionUpdateAllAsyncViaDataEntitiesWithSingleBatch()
         {
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
@@ -517,7 +518,7 @@ namespace RepoDb.IntegrationTests.Operations
                 });
 
                 // Act
-                var affectedRows = connection.UpdateAllAsync<NonIdentityTable>(tables, 1).Result;
+                var affectedRows = await connection.UpdateAllAsync<NonIdentityTable>(tables, 1);
 
                 // Assert
                 Assert.AreEqual(tables.Count, affectedRows);
@@ -536,7 +537,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionUpdateAllAsyncViaDataEntitiesViaQualifiers()
+        public async Task TestSqlConnectionUpdateAllAsyncViaDataEntitiesViaQualifiers()
         {
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
@@ -555,8 +556,8 @@ namespace RepoDb.IntegrationTests.Operations
                 });
 
                 // Act
-                var affectedRows = connection.UpdateAllAsync<NonIdentityTable>(tables,
-                    qualifiers: Field.From(nameof(NonIdentityTable.ColumnFloat), nameof(NonIdentityTable.ColumnNVarChar))).Result;
+                var affectedRows = await connection.UpdateAllAsync<NonIdentityTable>(tables,
+                    qualifiers: Field.From(nameof(NonIdentityTable.ColumnFloat), nameof(NonIdentityTable.ColumnNVarChar)));
 
                 // Assert
                 Assert.AreEqual(tables.Count, affectedRows);
@@ -575,7 +576,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionUpdateAllAsyncViaDataEntitiesViaQualifiersWithSingleBatch()
+        public async Task TestSqlConnectionUpdateAllAsyncViaDataEntitiesViaQualifiersWithSingleBatch()
         {
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
@@ -594,8 +595,8 @@ namespace RepoDb.IntegrationTests.Operations
                 });
 
                 // Act
-                var affectedRows = connection.UpdateAllAsync<NonIdentityTable>(tables,
-                    qualifiers: Field.From(nameof(NonIdentityTable.ColumnFloat), nameof(NonIdentityTable.ColumnNVarChar)), 1).Result;
+                var affectedRows = await connection.UpdateAllAsync<NonIdentityTable>(tables,
+                    qualifiers: Field.From(nameof(NonIdentityTable.ColumnFloat), nameof(NonIdentityTable.ColumnNVarChar)), 1);
 
                 // Assert
                 Assert.AreEqual(tables.Count, affectedRows);
@@ -614,7 +615,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionUpdateAllAsyncViaDataEntitiesWithHints()
+        public async Task TestSqlConnectionUpdateAllAsyncViaDataEntitiesWithHints()
         {
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
@@ -633,8 +634,8 @@ namespace RepoDb.IntegrationTests.Operations
                 });
 
                 // Act
-                var affectedRows = connection.UpdateAllAsync<NonIdentityTable>(tables,
-                    hints: SqlServerTableHints.TabLock).Result;
+                var affectedRows = await connection.UpdateAllAsync<NonIdentityTable>(tables,
+                    hints: SqlServerTableHints.TabLock);
 
                 // Assert
                 Assert.AreEqual(tables.Count, affectedRows);
@@ -1100,7 +1101,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region UpdateAllAsync(TableName)
 
         [TestMethod]
-        public void TestSqlConnectionUpdateAllAsyncViaDynamicViaTableName()
+        public async Task TestSqlConnectionUpdateAllAsyncViaDynamicViaTableName()
         {
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
@@ -1124,8 +1125,8 @@ namespace RepoDb.IntegrationTests.Operations
                 }).AsList();
 
                 // Act
-                var affectedRows = connection.UpdateAllAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    items).Result;
+                var affectedRows = await connection.UpdateAllAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    items);
 
                 // Assert
                 Assert.AreEqual(tables.Count, affectedRows);
@@ -1144,7 +1145,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionUpdateAllAsyncViaDynamicTableNameWithFields()
+        public async Task TestSqlConnectionUpdateAllAsyncViaDynamicTableNameWithFields()
         {
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
@@ -1168,9 +1169,9 @@ namespace RepoDb.IntegrationTests.Operations
                 }).AsList();
 
                 // Act
-                var affectedRows = connection.UpdateAllAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
+                var affectedRows = await connection.UpdateAllAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
                     items,
-                    fields: Field.From(nameof(NonIdentityTable.Id), nameof(NonIdentityTable.ColumnBit), nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal))).Result;
+                    fields: Field.From(nameof(NonIdentityTable.Id), nameof(NonIdentityTable.ColumnBit), nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal)));
 
                 // Assert
                 Assert.AreEqual(tables.Count, affectedRows);
@@ -1189,7 +1190,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionUpdateAllAsyncViaExpandoObjectViaTableName()
+        public async Task TestSqlConnectionUpdateAllAsyncViaExpandoObjectViaTableName()
         {
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
@@ -1207,8 +1208,8 @@ namespace RepoDb.IntegrationTests.Operations
                 }
 
                 // Act
-                var affectedRows = connection.UpdateAllAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    items).Result;
+                var affectedRows = await connection.UpdateAllAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    items);
 
                 // Assert
                 Assert.AreEqual(tables.Count, affectedRows);
@@ -1228,7 +1229,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionUpdateAllAsyncViaExpandoObjectViaTableNameWithFields()
+        public async Task TestSqlConnectionUpdateAllAsyncViaExpandoObjectViaTableNameWithFields()
         {
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
@@ -1246,9 +1247,9 @@ namespace RepoDb.IntegrationTests.Operations
                 }
 
                 // Act
-                var affectedRows = connection.UpdateAllAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
+                var affectedRows = await connection.UpdateAllAsync<object>(ClassMappedNameCache.Get<NonIdentityTable>(),
                     items,
-                    fields: Field.From(nameof(NonIdentityTable.Id), nameof(NonIdentityTable.ColumnBit), nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal))).Result;
+                    fields: Field.From(nameof(NonIdentityTable.Id), nameof(NonIdentityTable.ColumnBit), nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal)));
 
                 // Assert
                 Assert.AreEqual(tables.Count, affectedRows);
@@ -1270,7 +1271,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionUpdateAllAsyncViaDataEntitiesViaTableName()
+        public async Task TestSqlConnectionUpdateAllAsyncViaDataEntitiesViaTableName()
         {
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
@@ -1294,8 +1295,8 @@ namespace RepoDb.IntegrationTests.Operations
                 }).AsList();
 
                 // Act
-                var affectedRows = connection.UpdateAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    items).Result;
+                var affectedRows = await connection.UpdateAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    items);
 
                 // Assert
                 Assert.AreEqual(tables.Count, affectedRows);
@@ -1314,7 +1315,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionUpdateAllAsyncViaDataEntitiesViaTableNameWithFields()
+        public async Task TestSqlConnectionUpdateAllAsyncViaDataEntitiesViaTableNameWithFields()
         {
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
@@ -1338,9 +1339,9 @@ namespace RepoDb.IntegrationTests.Operations
                 }).AsList();
 
                 // Act
-                var affectedRows = connection.UpdateAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
+                var affectedRows = await connection.UpdateAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
                     items,
-                    fields: Field.From(nameof(NonIdentityTable.Id), nameof(NonIdentityTable.ColumnBit), nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal))).Result;
+                    fields: Field.From(nameof(NonIdentityTable.Id), nameof(NonIdentityTable.ColumnBit), nameof(NonIdentityTable.ColumnInt), nameof(NonIdentityTable.ColumnDecimal)));
 
                 // Assert
                 Assert.AreEqual(tables.Count, affectedRows);
@@ -1359,7 +1360,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionUpdateAllAsyncViaDataEntitiesViaTableNameWithSingleBatch()
+        public async Task TestSqlConnectionUpdateAllAsyncViaDataEntitiesViaTableNameWithSingleBatch()
         {
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
@@ -1383,9 +1384,9 @@ namespace RepoDb.IntegrationTests.Operations
                 }).AsList();
 
                 // Act
-                var affectedRows = connection.UpdateAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
+                var affectedRows = await connection.UpdateAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
                     items,
-                    batchSize: 1).Result;
+                    batchSize: 1);
 
                 // Assert
                 Assert.AreEqual(tables.Count, affectedRows);
@@ -1404,7 +1405,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionUpdateAllAsyncViaDataEntitiesViaTableNameViaQualifiers()
+        public async Task TestSqlConnectionUpdateAllAsyncViaDataEntitiesViaTableNameViaQualifiers()
         {
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
@@ -1428,9 +1429,9 @@ namespace RepoDb.IntegrationTests.Operations
                 }).AsList();
 
                 // Act
-                var affectedRows = connection.UpdateAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
+                var affectedRows = await connection.UpdateAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
                     items,
-                    qualifiers: Field.From(nameof(NonIdentityTable.ColumnFloat), nameof(NonIdentityTable.ColumnNVarChar))).Result;
+                    qualifiers: Field.From(nameof(NonIdentityTable.ColumnFloat), nameof(NonIdentityTable.ColumnNVarChar)));
 
                 // Assert
                 Assert.AreEqual(tables.Count, affectedRows);
@@ -1449,7 +1450,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionUpdateAllAsyncViaDataEntitiesViaTableNameViaQualifiersWithSingleBatch()
+        public async Task TestSqlConnectionUpdateAllAsyncViaDataEntitiesViaTableNameViaQualifiersWithSingleBatch()
         {
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
@@ -1473,9 +1474,9 @@ namespace RepoDb.IntegrationTests.Operations
                 }).AsList();
 
                 // Act
-                var affectedRows = connection.UpdateAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
+                var affectedRows = await connection.UpdateAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
                     items,
-                    qualifiers: Field.From(nameof(NonIdentityTable.ColumnFloat), nameof(NonIdentityTable.ColumnNVarChar)), 1).Result;
+                    qualifiers: Field.From(nameof(NonIdentityTable.ColumnFloat), nameof(NonIdentityTable.ColumnNVarChar)), 1);
 
                 // Assert
                 Assert.AreEqual(tables.Count, affectedRows);
@@ -1494,7 +1495,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionUpdateAllAsyncViaDataEntitiesViaTableNameWithHints()
+        public async Task TestSqlConnectionUpdateAllAsyncViaDataEntitiesViaTableNameWithHints()
         {
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
@@ -1518,9 +1519,9 @@ namespace RepoDb.IntegrationTests.Operations
                 }).AsList();
 
                 // Act
-                var affectedRows = connection.UpdateAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
+                var affectedRows = await connection.UpdateAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
                     items,
-                    hints: SqlServerTableHints.TabLock).Result;
+                    hints: SqlServerTableHints.TabLock);
 
                 // Assert
                 Assert.AreEqual(tables.Count, affectedRows);

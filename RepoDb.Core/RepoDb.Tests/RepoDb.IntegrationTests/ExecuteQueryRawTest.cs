@@ -6,6 +6,7 @@ using System;
 using System.Data;
 using Microsoft.Data.SqlClient;
 using System.Linq;
+using System.Threading.Tasks;
 using RepoDb.Interfaces;
 using RepoDb.Options;
 
@@ -1145,13 +1146,13 @@ namespace RepoDb.IntegrationTests
         #region Async
 
         [TestMethod]
-        public void TestSqlConnectionExecuteQueryAsyncViaIDbDataParameter()
+        public async Task TestSqlConnectionExecuteQueryAsyncViaIDbDataParameter()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteQueryAsync<int>("SELECT 1 * @Value;",
-                    new { Value = new SqlParameter("_", 100) }).Result.FirstOrDefault();
+                var result = (await connection.ExecuteQueryAsync<int>("SELECT 1 * @Value;",
+                    new { Value = new SqlParameter("_", 100) })).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(100, result);
@@ -1159,13 +1160,13 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionExecuteQueryAsyncViaQueryFieldForIDbDataParameter()
+        public async Task TestSqlConnectionExecuteQueryAsyncViaQueryFieldForIDbDataParameter()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteQueryAsync<int>("SELECT 1 * @Value;",
-                    new QueryField("Value", new SqlParameter("_", 100))).Result.FirstOrDefault();
+                var result = (await connection.ExecuteQueryAsync<int>("SELECT 1 * @Value;",
+                    new QueryField("Value", new SqlParameter("_", 100)))).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(100, result);
@@ -1173,13 +1174,13 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionExecuteQueryAsyncViaQueryFieldsForIDbDataParameter()
+        public async Task TestSqlConnectionExecuteQueryAsyncViaQueryFieldsForIDbDataParameter()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteQueryAsync<int>("SELECT 1 * @Value;",
-                    new QueryField("Value", new SqlParameter("_", 100)).AsEnumerable()).Result.FirstOrDefault();
+                var result = (await connection.ExecuteQueryAsync<int>("SELECT 1 * @Value;",
+                    new QueryField("Value", new SqlParameter("_", 100)).AsEnumerable())).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(100, result);
@@ -1187,13 +1188,13 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionExecuteQueryAsyncViaQueryGroupsForIDbDataParameter()
+        public async Task TestSqlConnectionExecuteQueryAsyncViaQueryGroupsForIDbDataParameter()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteQueryAsync<int>("SELECT 1 * @Value;",
-                    new QueryGroup(new QueryField("Value", new SqlParameter("_", 100)))).Result.FirstOrDefault();
+                var result = (await connection.ExecuteQueryAsync<int>("SELECT 1 * @Value;",
+                    new QueryGroup(new QueryField("Value", new SqlParameter("_", 100))))).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(100, result);
@@ -1590,15 +1591,15 @@ namespace RepoDb.IntegrationTests
         #region Async
 
         [TestMethod]
-        public void TestSqlConnectionExecuteQueryMultipleAsyncViaIDbDataParameter()
+        public async Task TestSqlConnectionExecuteQueryMultipleAsyncViaIDbDataParameter()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                using (var result = connection.ExecuteQueryMultipleAsync("SELECT 1 * @Value;",
-                    new { Value = new SqlParameter("_", 100) }).Result)
+                using (var result = await connection.ExecuteQueryMultipleAsync("SELECT 1 * @Value;",
+                    new { Value = new SqlParameter("_", 100) }))
                 {
-                    var value = result.ExtractAsync<int>().Result.FirstOrDefault();
+                    var value = (await result.ExtractAsync<int>()).FirstOrDefault();
 
                     // Assert
                     Assert.AreEqual(100, value);
@@ -1607,15 +1608,15 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionExecuteQueryMultipleAsyncViaQueryFieldForIDbDataParameter()
+        public async Task TestSqlConnectionExecuteQueryMultipleAsyncViaQueryFieldForIDbDataParameter()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                using (var result = connection.ExecuteQueryMultipleAsync("SELECT 1 * @Value;",
-                    new QueryField("Value", new SqlParameter("_", 100))).Result)
+                using (var result = await connection.ExecuteQueryMultipleAsync("SELECT 1 * @Value;",
+                    new QueryField("Value", new SqlParameter("_", 100))))
                 {
-                    var value = result.ExtractAsync<int>().Result.FirstOrDefault();
+                    var value = (await result.ExtractAsync<int>()).FirstOrDefault();
 
                     // Assert
                     Assert.AreEqual(100, value);
@@ -1624,15 +1625,15 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionExecuteQueryMultipleAsyncViaQueryFieldsForIDbDataParameter()
+        public async Task TestSqlConnectionExecuteQueryMultipleAsyncViaQueryFieldsForIDbDataParameter()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                using (var result = connection.ExecuteQueryMultipleAsync("SELECT 1 * @Value;",
-                    new QueryField("Value", new SqlParameter("_", 100)).AsEnumerable()).Result)
+                using (var result = await connection.ExecuteQueryMultipleAsync("SELECT 1 * @Value;",
+                    new QueryField("Value", new SqlParameter("_", 100)).AsEnumerable()))
                 {
-                    var value = result.ExtractAsync<int>().Result.FirstOrDefault();
+                    var value = (await result.ExtractAsync<int>()).FirstOrDefault();
 
                     // Assert
                     Assert.AreEqual(100, value);
@@ -1641,15 +1642,15 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionExecuteQueryMultipleAsyncViaQueryGroupForIDbDataParameter()
+        public async Task TestSqlConnectionExecuteQueryMultipleAsyncViaQueryGroupForIDbDataParameter()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                using (var result = connection.ExecuteQueryMultipleAsync("SELECT 1 * @Value;",
-                    new QueryGroup(new QueryField("Value", new SqlParameter("_", 100)))).Result)
+                using (var result = await connection.ExecuteQueryMultipleAsync("SELECT 1 * @Value;",
+                    new QueryGroup(new QueryField("Value", new SqlParameter("_", 100)))))
                 {
-                    var value = result.ExtractAsync<int>().Result.FirstOrDefault();
+                    var value = (await result.ExtractAsync<int>()).FirstOrDefault();
 
                     // Assert
                     Assert.AreEqual(100, value);

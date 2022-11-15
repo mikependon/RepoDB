@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.IntegrationTests.Operations
 {
@@ -407,7 +408,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region QueryMultipleAsync<T1, T2>
 
         [TestMethod]
-        public void TestSqlConnectionQueryMultipleAsyncT2()
+        public async Task TestSqlConnectionQueryMultipleAsyncT2()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(2);
@@ -418,9 +419,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryMultipleAsync<IdentityTable, IdentityTable>(
+                var result = await connection.QueryMultipleAsync<IdentityTable, IdentityTable>(
                     where1: item => item.ColumnInt == 1,
-                    where2: item => item.ColumnInt == 2).Result;
+                    where2: item => item.ColumnInt == 2);
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(0), result.Item1.First());
@@ -433,7 +434,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region QueryMultipleAsync<T1, T2, T3>
 
         [TestMethod]
-        public void TestSqlConnectionQueryMultipleAsyncT3()
+        public async Task TestSqlConnectionQueryMultipleAsyncT3()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(3);
@@ -444,10 +445,10 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryMultipleAsync<IdentityTable, IdentityTable, IdentityTable>(
+                var result = await connection.QueryMultipleAsync<IdentityTable, IdentityTable, IdentityTable>(
                     where1: item => item.ColumnInt == 1,
                     where2: item => item.ColumnInt == 2,
-                    where3: item => item.ColumnInt == 3).Result;
+                    where3: item => item.ColumnInt == 3);
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(0), result.Item1.First());
@@ -461,7 +462,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region QueryMultipleAsync<T1, T2, T3, T4>
 
         [TestMethod]
-        public void TestSqlConnectionQueryMultipleAsyncT4()
+        public async Task TestSqlConnectionQueryMultipleAsyncT4()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(4);
@@ -472,11 +473,11 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryMultipleAsync<IdentityTable, IdentityTable, IdentityTable, IdentityTable>(
+                var result = await connection.QueryMultipleAsync<IdentityTable, IdentityTable, IdentityTable, IdentityTable>(
                     where1: item => item.ColumnInt == 1,
                     where2: item => item.ColumnInt == 2,
                     where3: item => item.ColumnInt == 3,
-                    where4: item => item.ColumnInt == 4).Result;
+                    where4: item => item.ColumnInt == 4);
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(0), result.Item1.First());
@@ -491,7 +492,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region QueryMultipleAsync<T1, T2, T3, T4, T5>
 
         [TestMethod]
-        public void TestSqlConnectionQueryMultipleAsyncT5()
+        public async Task TestSqlConnectionQueryMultipleAsyncT5()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(5);
@@ -502,12 +503,12 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryMultipleAsync<IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable>(
+                var result = await connection.QueryMultipleAsync<IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable>(
                     where1: item => item.ColumnInt == 1,
                     where2: item => item.ColumnInt == 2,
                     where3: item => item.ColumnInt == 3,
                     where4: item => item.ColumnInt == 4,
-                    where5: item => item.ColumnInt == 5).Result;
+                    where5: item => item.ColumnInt == 5);
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(0), result.Item1.First());
@@ -523,7 +524,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region QueryMultipleAsync<T1, T2, T3, T4, T5, T6>
 
         [TestMethod]
-        public void TestSqlConnectionQueryMultipleAsyncT6()
+        public async Task TestSqlConnectionQueryMultipleAsyncT6()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(6);
@@ -534,13 +535,13 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryMultipleAsync<IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable>(
+                var result = await connection.QueryMultipleAsync<IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable>(
                     where1: item => item.ColumnInt == 1,
                     where2: item => item.ColumnInt == 2,
                     where3: item => item.ColumnInt == 3,
                     where4: item => item.ColumnInt == 4,
                     where5: item => item.ColumnInt == 5,
-                    where6: item => item.ColumnInt == 6).Result;
+                    where6: item => item.ColumnInt == 6);
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(0), result.Item1.First());
@@ -557,7 +558,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region QueryMultipleAsync<T1, T2, T3, T4, T5, T6, T7>
 
         [TestMethod]
-        public void TestSqlConnectionQueryMultipleAsyncT7()
+        public async Task TestSqlConnectionQueryMultipleAsyncT7()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(7);
@@ -568,14 +569,14 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryMultipleAsync<IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable>(
+                var result = await connection.QueryMultipleAsync<IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable>(
                     where1: item => item.ColumnInt == 1,
                     where2: item => item.ColumnInt == 2,
                     where3: item => item.ColumnInt == 3,
                     where4: item => item.ColumnInt == 4,
                     where5: item => item.ColumnInt == 5,
                     where6: item => item.ColumnInt == 6,
-                    where7: item => item.ColumnInt == 7).Result;
+                    where7: item => item.ColumnInt == 7);
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(0), result.Item1.First());
@@ -597,7 +598,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region QueryMultipleAsync<T1, T2>
 
         [TestMethod]
-        public void TestSqlConnectionQueryMultipleAsyncWithExtraFieldsT2()
+        public async Task TestSqlConnectionQueryMultipleAsyncWithExtraFieldsT2()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(2);
@@ -608,9 +609,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryMultipleAsync<WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable>(
+                var result = await connection.QueryMultipleAsync<WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable>(
                     where1: item => item.ColumnInt == 1,
-                    where2: item => item.ColumnInt == 2).Result;
+                    where2: item => item.ColumnInt == 2);
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(0), result.Item1.First());
@@ -623,7 +624,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region QueryMultipleAsync<T1, T2, T3>
 
         [TestMethod]
-        public void TestSqlConnectionQueryMultipleAsyncWithExtraFieldsT3()
+        public async Task TestSqlConnectionQueryMultipleAsyncWithExtraFieldsT3()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(3);
@@ -634,10 +635,10 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryMultipleAsync<WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable>(
+                var result = await connection.QueryMultipleAsync<WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable>(
                     where1: item => item.ColumnInt == 1,
                     where2: item => item.ColumnInt == 2,
-                    where3: item => item.ColumnInt == 3).Result;
+                    where3: item => item.ColumnInt == 3);
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(0), result.Item1.First());
@@ -651,7 +652,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region QueryMultipleAsync<T1, T2, T3, T4>
 
         [TestMethod]
-        public void TestSqlConnectionQueryMultipleAsyncWithExtraFieldsT4()
+        public async Task TestSqlConnectionQueryMultipleAsyncWithExtraFieldsT4()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(4);
@@ -662,11 +663,11 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryMultipleAsync<WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable>(
+                var result = await connection.QueryMultipleAsync<WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable>(
                     where1: item => item.ColumnInt == 1,
                     where2: item => item.ColumnInt == 2,
                     where3: item => item.ColumnInt == 3,
-                    where4: item => item.ColumnInt == 4).Result;
+                    where4: item => item.ColumnInt == 4);
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(0), result.Item1.First());
@@ -681,7 +682,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region QueryMultipleAsync<T1, T2, T3, T4, T5>
 
         [TestMethod]
-        public void TestSqlConnectionQueryMultipleAsyncWithExtraFieldsT5()
+        public async Task TestSqlConnectionQueryMultipleAsyncWithExtraFieldsT5()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(5);
@@ -692,12 +693,12 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryMultipleAsync<WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable>(
+                var result = await connection.QueryMultipleAsync<WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable>(
                     where1: item => item.ColumnInt == 1,
                     where2: item => item.ColumnInt == 2,
                     where3: item => item.ColumnInt == 3,
                     where4: item => item.ColumnInt == 4,
-                    where5: item => item.ColumnInt == 5).Result;
+                    where5: item => item.ColumnInt == 5);
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(0), result.Item1.First());
@@ -713,7 +714,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region QueryMultipleAsync<T1, T2, T3, T4, T5, T6>
 
         [TestMethod]
-        public void TestSqlConnectionQueryMultipleAsyncWithExtraFieldsT6()
+        public async Task TestSqlConnectionQueryMultipleAsyncWithExtraFieldsT6()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(6);
@@ -724,13 +725,13 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryMultipleAsync<WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable>(
+                var result = await connection.QueryMultipleAsync<WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable>(
                     where1: item => item.ColumnInt == 1,
                     where2: item => item.ColumnInt == 2,
                     where3: item => item.ColumnInt == 3,
                     where4: item => item.ColumnInt == 4,
                     where5: item => item.ColumnInt == 5,
-                    where6: item => item.ColumnInt == 6).Result;
+                    where6: item => item.ColumnInt == 6);
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(0), result.Item1.First());
@@ -747,7 +748,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region QueryMultipleAsync<T1, T2, T3, T4, T5, T6, T7>
 
         [TestMethod]
-        public void TestSqlConnectionQueryMultipleAsyncWithExtraFieldsT7()
+        public async Task TestSqlConnectionQueryMultipleAsyncWithExtraFieldsT7()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(7);
@@ -758,14 +759,14 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryMultipleAsync<WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable>(
+                var result = await connection.QueryMultipleAsync<WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable, WithExtraFieldsIdentityTable>(
                     where1: item => item.ColumnInt == 1,
                     where2: item => item.ColumnInt == 2,
                     where3: item => item.ColumnInt == 3,
                     where4: item => item.ColumnInt == 4,
                     where5: item => item.ColumnInt == 5,
                     where6: item => item.ColumnInt == 6,
-                    where7: item => item.ColumnInt == 7).Result;
+                    where7: item => item.ColumnInt == 7);
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(0), result.Item1.First());

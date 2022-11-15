@@ -5,6 +5,7 @@ using RepoDb.IntegrationTests.Setup;
 using System;
 using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.IntegrationTests.Operations
 {
@@ -352,12 +353,12 @@ namespace RepoDb.IntegrationTests.Operations
         #region ExecuteNonQueryAsync
 
         [TestMethod]
-        public void TestSqlConnectionExecuteNonQueryAsyncWithNoAffectedTableRows()
+        public async Task TestSqlConnectionExecuteNonQueryAsyncWithNoAffectedTableRows()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteNonQueryAsync("SELECT * FROM (SELECT 1 * 100 AS Value) TMP;").Result;
+                var result = await connection.ExecuteNonQueryAsync("SELECT * FROM (SELECT 1 * 100 AS Value) TMP;");
 
                 // Assert
                 Assert.AreEqual(-1, result);
@@ -365,7 +366,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionExecuteNonQueryAsyncDeleteSingle()
+        public async Task TestSqlConnectionExecuteNonQueryAsyncDeleteSingle()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -376,7 +377,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE ColumnInt = 10;").Result;
+                var result = await connection.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE ColumnInt = 10;");
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -384,7 +385,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionExecuteNonQueryAsyncDeleteWithSingleParameter()
+        public async Task TestSqlConnectionExecuteNonQueryAsyncDeleteWithSingleParameter()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -395,8 +396,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE ColumnInt = @ColumnInt;",
-                    new { ColumnInt = 10 }).Result;
+                var result = await connection.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE ColumnInt = @ColumnInt;",
+                    new { ColumnInt = 10 });
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -404,7 +405,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionExecuteNonQueryAsyncDeleteWithMultipleParameters()
+        public async Task TestSqlConnectionExecuteNonQueryAsyncDeleteWithMultipleParameters()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -415,8 +416,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE ColumnInt = @ColumnInt AND ColumnBit = @ColumnBit;",
-                    new { ColumnInt = 10, ColumnBit = true }).Result;
+                var result = await connection.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable] WHERE ColumnInt = @ColumnInt AND ColumnBit = @ColumnBit;",
+                    new { ColumnInt = 10, ColumnBit = true });
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -424,7 +425,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionExecuteNonQueryAsyncDeleteAll()
+        public async Task TestSqlConnectionExecuteNonQueryAsyncDeleteAll()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -435,7 +436,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable];").Result;
+                var result = await connection.ExecuteNonQueryAsync("DELETE FROM [sc].[IdentityTable];");
 
                 // Assert
                 Assert.AreEqual(tables.Count, 10);
@@ -443,7 +444,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionExecuteNonQueryAsyncUpdateSingle()
+        public async Task TestSqlConnectionExecuteNonQueryAsyncUpdateSingle()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -454,7 +455,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteNonQueryAsync("UPDATE [sc].[IdentityTable] SET ColumnInt = 100 WHERE ColumnInt = 10;").Result;
+                var result = await connection.ExecuteNonQueryAsync("UPDATE [sc].[IdentityTable] SET ColumnInt = 100 WHERE ColumnInt = 10;");
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -462,7 +463,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionExecuteNonQueryAsyncUpdateWithSigleParameter()
+        public async Task TestSqlConnectionExecuteNonQueryAsyncUpdateWithSigleParameter()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -473,8 +474,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteNonQueryAsync("UPDATE [sc].[IdentityTable] SET ColumnInt = 100 WHERE ColumnInt = @ColumnInt;",
-                    new { ColumnInt = 10 }).Result;
+                var result = await connection.ExecuteNonQueryAsync("UPDATE [sc].[IdentityTable] SET ColumnInt = 100 WHERE ColumnInt = @ColumnInt;",
+                    new { ColumnInt = 10 });
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -482,7 +483,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionExecuteNonQueryAsyncUpdateWithMultipleParameters()
+        public async Task TestSqlConnectionExecuteNonQueryAsyncUpdateWithMultipleParameters()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -493,8 +494,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteNonQueryAsync("UPDATE [sc].[IdentityTable] SET ColumnInt = 100 WHERE ColumnInt = @ColumnInt AND ColumnBit = @ColumnBit;",
-                    new { ColumnInt = 10, ColumnBit = true }).Result;
+                var result = await connection.ExecuteNonQueryAsync("UPDATE [sc].[IdentityTable] SET ColumnInt = 100 WHERE ColumnInt = @ColumnInt AND ColumnBit = @ColumnBit;",
+                    new { ColumnInt = 10, ColumnBit = true });
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -502,7 +503,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionExecuteNonQueryAsyncUpdateAll()
+        public async Task TestSqlConnectionExecuteNonQueryAsyncUpdateAll()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -513,7 +514,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteNonQueryAsync("UPDATE [sc].[IdentityTable] SET ColumnInt = 100;").Result;
+                var result = await connection.ExecuteNonQueryAsync("UPDATE [sc].[IdentityTable] SET ColumnInt = 100;");
 
                 // Assert
                 Assert.AreEqual(tables.Count, result);
@@ -521,7 +522,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionExecuteNonQueryAsyncWithMultipleSqlStatementsWithoutParameter()
+        public async Task TestSqlConnectionExecuteNonQueryAsyncWithMultipleSqlStatementsWithoutParameter()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -532,9 +533,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteNonQueryAsync("UPDATE [sc].[IdentityTable] SET ColumnInt = 100 WHERE ColumnInt = 10;" +
+                var result = await connection.ExecuteNonQueryAsync("UPDATE [sc].[IdentityTable] SET ColumnInt = 100 WHERE ColumnInt = 10;" +
                     "UPDATE [sc].[IdentityTable] SET ColumnInt = 90 WHERE ColumnInt = 9;" +
-                    "DELETE FROM [sc].[IdentityTable] WHERE ColumnInt = 1;").Result;
+                    "DELETE FROM [sc].[IdentityTable] WHERE ColumnInt = 1;");
 
                 // Assert
                 Assert.AreEqual(3, result);
@@ -542,7 +543,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionExecuteNonQueryAsyncWithMultipleSqlStatementsWithParameters()
+        public async Task TestSqlConnectionExecuteNonQueryAsyncWithMultipleSqlStatementsWithParameters()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -553,10 +554,10 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteNonQueryAsync("UPDATE [sc].[IdentityTable] SET ColumnInt = 100 WHERE ColumnInt = @Value1;" +
+                var result = await connection.ExecuteNonQueryAsync("UPDATE [sc].[IdentityTable] SET ColumnInt = 100 WHERE ColumnInt = @Value1;" +
                     "UPDATE [sc].[IdentityTable] SET ColumnInt = 90 WHERE ColumnInt = @Value2;" +
                     "DELETE FROM [sc].[IdentityTable] WHERE ColumnInt = @Value3;",
-                    new { Value1 = 10, Value2 = 9, Value3 = 1 }).Result;
+                    new { Value1 = 10, Value2 = 9, Value3 = 1 });
 
                 // Assert
                 Assert.AreEqual(3, result);
@@ -564,7 +565,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionExecuteNonQueryAsyncByExecutingAStoredProcedureWithSingleParameter()
+        public async Task TestSqlConnectionExecuteNonQueryAsyncByExecutingAStoredProcedureWithSingleParameter()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -575,9 +576,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExecuteNonQueryAsync("[dbo].[sp_get_identity_table_by_id]",
+                var result = await connection.ExecuteNonQueryAsync("[dbo].[sp_get_identity_table_by_id]",
                     param: new { tables.Last().Id },
-                    commandType: CommandType.StoredProcedure).Result;
+                    commandType: CommandType.StoredProcedure);
 
                 // Assert
                 Assert.AreEqual(-1, result);
@@ -585,14 +586,14 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionExecuteNonQueryAsyncByExecutingAStoredProcedureWithMultipleParameters()
+        public async Task TestSqlConnectionExecuteNonQueryAsyncByExecutingAStoredProcedureWithMultipleParameters()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteNonQueryAsync("[dbo].[sp_multiply]",
+                var result = await connection.ExecuteNonQueryAsync("[dbo].[sp_multiply]",
                     param: new { Value1 = 100, Value2 = 200 },
-                    commandType: CommandType.StoredProcedure).Result;
+                    commandType: CommandType.StoredProcedure);
 
                 // Assert
                 Assert.AreEqual(-1, result);
@@ -600,7 +601,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionExecuteNonQueryAsyncByExecutingAStoredProcedureWithMultipleParametersAndWithOuputParameter()
+        public async Task TestSqlConnectionExecuteNonQueryAsyncByExecutingAStoredProcedureWithMultipleParametersAndWithOuputParameter()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -614,9 +615,9 @@ namespace RepoDb.IntegrationTests.Operations
                 };
 
                 // Act
-                var result = connection.ExecuteNonQueryAsync("[dbo].[sp_multiply_with_output]",
+                var result = await connection.ExecuteNonQueryAsync("[dbo].[sp_multiply_with_output]",
                     param: param,
-                    commandType: CommandType.StoredProcedure).Result;
+                    commandType: CommandType.StoredProcedure);
 
                 // Assert
                 Assert.AreEqual(-1, result);
@@ -624,23 +625,23 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnTestSqlConnectionExecuteNonQueryAsyncIfTheParametersAreNotDefined()
+        [TestMethod, ExpectedException(typeof(SqlException))]
+        public async Task ThrowExceptionOnTestSqlConnectionExecuteNonQueryAsyncIfTheParametersAreNotDefined()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result;
+                var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);");
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnTestSqlConnectionExecuteNonQueryAsyncIfThereAreSqlStatementProblems()
+        [TestMethod, ExpectedException(typeof(SqlException))]
+        public async Task ThrowExceptionOnTestSqlConnectionExecuteNonQueryAsyncIfThereAreSqlStatementProblems()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result;
+                var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);");
             }
         }
 

@@ -4,6 +4,7 @@ using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.IntegrationTests.Operations
 {
@@ -108,18 +109,18 @@ namespace RepoDb.IntegrationTests.Operations
         #region AverageAllAsync<TEntity>
 
         [TestMethod]
-        public void TestSqlConnectionAverageAllAsync()
+        public async Task TestSqlConnectionAverageAllAsync()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            await using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.AverageAllAsync<IdentityTable>(e => e.ColumnInt).Result;
+                var result = await connection.AverageAllAsync<IdentityTable>(e => e.ColumnInt);
 
                 // Assert
                 Assert.AreEqual(tables.Average(t => t.ColumnInt), Convert.ToDouble(result));
@@ -127,19 +128,19 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionAverageAllAsyncWithHints()
+        public async Task TestSqlConnectionAverageAllAsyncWithHints()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
 
-            using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
+            await using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.AverageAllAsync<IdentityTable>(e => e.ColumnInt,
-                    hints: SqlServerTableHints.NoLock).Result;
+                var result = await connection.AverageAllAsync<IdentityTable>(e => e.ColumnInt,
+                    hints: SqlServerTableHints.NoLock);
 
                 // Assert
                 Assert.AreEqual(tables.Average(t => t.ColumnInt), Convert.ToDouble(result));
@@ -147,7 +148,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionAverageAllAsyncTypedResult()
+        public async Task TestSqlConnectionAverageAllAsyncTypedResult()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -158,7 +159,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.AverageAllAsync<IdentityTable, double?>(e => e.ColumnInt).Result;
+                var result = await connection.AverageAllAsync<IdentityTable, double?>(e => e.ColumnInt);
 
                 // Assert
                 Assert.AreEqual(tables.Average(t => t.ColumnInt), result);
@@ -166,7 +167,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionAverageAllAsyncWithHintsTypedResult()
+        public async Task TestSqlConnectionAverageAllAsyncWithHintsTypedResult()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -177,8 +178,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.AverageAllAsync<IdentityTable, double?>(e => e.ColumnInt,
-                    hints: SqlServerTableHints.NoLock).Result;
+                var result = await connection.AverageAllAsync<IdentityTable, double?>(e => e.ColumnInt,
+                    hints: SqlServerTableHints.NoLock);
 
                 // Assert
                 Assert.AreEqual(tables.Average(t => t.ColumnInt), result);
@@ -276,7 +277,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region AverageAllAsync(TableName)
 
         [TestMethod]
-        public void TestSqlConnectionAverageAllAsyncViaTableName()
+        public async Task TestSqlConnectionAverageAllAsyncViaTableName()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -287,8 +288,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.AverageAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    new Field("ColumnInt")).Result;
+                var result = await connection.AverageAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"));
 
                 // Assert
                 Assert.AreEqual(tables.Average(t => t.ColumnInt), Convert.ToDouble(result));
@@ -296,7 +297,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionAverageAllAsyncViaTableNameWithHints()
+        public async Task TestSqlConnectionAverageAllAsyncViaTableNameWithHints()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -307,9 +308,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.AverageAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.AverageAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnInt"),
-                    hints: SqlServerTableHints.NoLock).Result;
+                    hints: SqlServerTableHints.NoLock);
 
                 // Assert
                 Assert.AreEqual(tables.Average(t => t.ColumnInt), Convert.ToDouble(result));
@@ -317,7 +318,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionAverageAllTypedResultAsyncViaTableName()
+        public async Task TestSqlConnectionAverageAllTypedResultAsyncViaTableName()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -328,8 +329,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.AverageAllAsync<double?>(ClassMappedNameCache.Get<IdentityTable>(),
-                    new Field("ColumnInt")).Result;
+                var result = await connection.AverageAllAsync<double?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"));
 
                 // Assert
                 Assert.AreEqual(tables.Average(t => t.ColumnInt), result);
@@ -337,7 +338,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionAverageAllTypedResultAsyncViaTableNameWithHints()
+        public async Task TestSqlConnectionAverageAllTypedResultAsyncViaTableNameWithHints()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -348,9 +349,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.AverageAllAsync<double?>(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.AverageAllAsync<double?>(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnInt"),
-                    hints: SqlServerTableHints.NoLock).Result;
+                    hints: SqlServerTableHints.NoLock);
 
                 // Assert
                 Assert.AreEqual(tables.Average(t => t.ColumnInt), result);

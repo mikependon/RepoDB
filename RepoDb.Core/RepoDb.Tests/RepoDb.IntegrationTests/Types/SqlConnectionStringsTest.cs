@@ -4,6 +4,7 @@ using RepoDb.IntegrationTests.Setup;
 using System;
 using Microsoft.Data.SqlClient;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.IntegrationTests.Types.Strings
 {
@@ -164,7 +165,7 @@ namespace RepoDb.IntegrationTests.Types.Strings
         }
 
         [TestMethod]
-        public void TestSqlConnectionStringsCrudAsync()
+        public async Task TestSqlConnectionStringsCrudAsync()
         {
             // Setup
             var text = Helper.GetUnicodeString();
@@ -183,11 +184,11 @@ namespace RepoDb.IntegrationTests.Types.Strings
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
-                var id = insertResult.Result;
+                var id = await insertResult;
 
                 // Act Query
-                var queryResult = connection.QueryAsync<StringsClass>(e => e.SessionId == (Guid)id);
-                var data = queryResult.Result.FirstOrDefault();
+                var queryResult = await connection.QueryAsync<StringsClass>(e => e.SessionId == (Guid)id);
+                var data = queryResult.FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -201,7 +202,7 @@ namespace RepoDb.IntegrationTests.Types.Strings
         }
 
         [TestMethod]
-        public void TestSqlConnectionStringsNullCrudAsync()
+        public async Task TestSqlConnectionStringsNullCrudAsync()
         {
             // Setup
             var entity = new StringsClass
@@ -219,11 +220,11 @@ namespace RepoDb.IntegrationTests.Types.Strings
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
-                var id = insertResult.Result;
+                var id = await insertResult;
 
                 // Act Query
-                var queryResult = connection.QueryAsync<StringsClass>(e => e.SessionId == (Guid)id);
-                var data = queryResult.Result.FirstOrDefault();
+                var queryResult = await connection.QueryAsync<StringsClass>(e => e.SessionId == (Guid)id);
+                var data = queryResult.FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -237,7 +238,7 @@ namespace RepoDb.IntegrationTests.Types.Strings
         }
 
         [TestMethod]
-        public void TestSqlConnectionStringsMappedCrudAsync()
+        public async Task TestSqlConnectionStringsMappedCrudAsync()
         {
             // Setup
             var text = Helper.GetUnicodeString();
@@ -256,11 +257,11 @@ namespace RepoDb.IntegrationTests.Types.Strings
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
-                var id = insertResult.Result;
+                var id = await insertResult;
 
                 // Act Query
-                var queryResult = connection.QueryAsync<StringsMapClass>(e => e.SessionId == (Guid)id);
-                var data = queryResult.Result.FirstOrDefault();
+                var queryResult = await connection.QueryAsync<StringsMapClass>(e => e.SessionId == (Guid)id);
+                var data = queryResult.FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -274,7 +275,7 @@ namespace RepoDb.IntegrationTests.Types.Strings
         }
 
         [TestMethod]
-        public void TestSqlConnectionStringsMappedNullCrudAsync()
+        public async Task TestSqlConnectionStringsMappedNullCrudAsync()
         {
             // Setup
             var entity = new StringsMapClass
@@ -292,11 +293,11 @@ namespace RepoDb.IntegrationTests.Types.Strings
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
-                var id = insertResult.Result;
+                var id = await insertResult;
 
                 // Act Query
-                var queryResult = connection.QueryAsync<StringsMapClass>(e => e.SessionId == (Guid)id);
-                var data = queryResult.Result.FirstOrDefault();
+                var queryResult = await connection.QueryAsync<StringsMapClass>(e => e.SessionId == (Guid)id);
+                var data = queryResult.FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -383,7 +384,7 @@ namespace RepoDb.IntegrationTests.Types.Strings
         }
 
         [TestMethod]
-        public void TestSqlConnectionStringsCrudViaAsyncViaTableName()
+        public async Task TestSqlConnectionStringsCrudViaAsyncViaTableName()
         {
             // Setup
             var text = Helper.GetUnicodeString();
@@ -402,11 +403,11 @@ namespace RepoDb.IntegrationTests.Types.Strings
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(ClassMappedNameCache.Get<StringsClass>(), entity);
-                var id = insertResult.Result;
+                var id = await insertResult;
 
                 // Act Query
-                var queryResult = connection.QueryAsync(ClassMappedNameCache.Get<StringsClass>(), new { SessionId = (Guid)id });
-                var data = queryResult.Result.FirstOrDefault();
+                var queryResult = await connection.QueryAsync(ClassMappedNameCache.Get<StringsClass>(), new { SessionId = (Guid)id });
+                var data = queryResult.FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -420,7 +421,7 @@ namespace RepoDb.IntegrationTests.Types.Strings
         }
 
         [TestMethod]
-        public void TestSqlConnectionStringsNullCrudViaAsyncViaTableName()
+        public async Task TestSqlConnectionStringsNullCrudViaAsyncViaTableName()
         {
             // Setup
             var entity = new
@@ -438,11 +439,11 @@ namespace RepoDb.IntegrationTests.Types.Strings
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(ClassMappedNameCache.Get<StringsClass>(), entity);
-                var id = insertResult.Result;
+                var id = await insertResult;
 
                 // Act Query
-                var queryResult = connection.QueryAsync(ClassMappedNameCache.Get<StringsClass>(), new { SessionId = (Guid)id });
-                var data = queryResult.Result.FirstOrDefault();
+                var queryResult = await connection.QueryAsync(ClassMappedNameCache.Get<StringsClass>(), new { SessionId = (Guid)id });
+                var data = queryResult.FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);

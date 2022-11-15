@@ -6,6 +6,7 @@ using RepoDb.IntegrationTests.Setup;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.IntegrationTests.Operations
 {
@@ -286,7 +287,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region InsertAllAsync<TEntity>
 
         [TestMethod]
-        public void TestSqlConnectionInsertAllAsyncForIdentityTableViaEntityTableName()
+        public async Task TestSqlConnectionInsertAllAsyncForIdentityTableViaEntityTableName()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -294,8 +295,8 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAllAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
-                    tables).Wait();
+                await connection.InsertAllAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                    tables);
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>().AsList();
@@ -311,7 +312,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionInsertAllAsyncForIdentityTableViaEntityTableNameWithFields()
+        public async Task TestSqlConnectionInsertAllAsyncForIdentityTableViaEntityTableNameWithFields()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -319,9 +320,9 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAllAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                await connection.InsertAllAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
                     tables,
-                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar))).Wait();
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar)));
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>().AsList();
@@ -338,7 +339,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionInsertAllAsyncForIdentityTable()
+        public async Task TestSqlConnectionInsertAllAsyncForIdentityTable()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -346,7 +347,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAllAsync<IdentityTable>(tables).Wait();
+                await connection.InsertAllAsync<IdentityTable>(tables);
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>().AsList();
@@ -362,7 +363,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionInsertAllAsyncForIdentityTableWithFields()
+        public async Task TestSqlConnectionInsertAllAsyncForIdentityTableWithFields()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -370,8 +371,8 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAllAsync<IdentityTable>(tables,
-                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar))).Wait();
+                await connection.InsertAllAsync<IdentityTable>(tables,
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar)));
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>().AsList();
@@ -388,7 +389,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionInsertAllAsyncWithSizePerBatchEqualsToOneForIdentityTable()
+        public async Task TestSqlConnectionInsertAllAsyncWithSizePerBatchEqualsToOneForIdentityTable()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -396,8 +397,8 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAllAsync<IdentityTable>(tables,
-                    1).Wait();
+                await connection.InsertAllAsync<IdentityTable>(tables,
+                    1);
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>().AsList();
@@ -413,7 +414,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionInsertAllAsyncForNonIdentityTable()
+        public async Task TestSqlConnectionInsertAllAsyncForNonIdentityTable()
         {
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
@@ -421,7 +422,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAllAsync<NonIdentityTable>(tables).Wait();
+                await connection.InsertAllAsync<NonIdentityTable>(tables);
 
                 // Act
                 var result = connection.QueryAll<NonIdentityTable>().AsList();
@@ -437,7 +438,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionInsertAllAsyncWithSizePerBatchEqualsToOneForNonIdentityTable()
+        public async Task TestSqlConnectionInsertAllAsyncWithSizePerBatchEqualsToOneForNonIdentityTable()
         {
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
@@ -445,8 +446,8 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAllAsync<NonIdentityTable>(tables,
-                    1).Wait();
+                await connection.InsertAllAsync<NonIdentityTable>(tables,
+                    1);
 
                 // Act
                 var result = connection.QueryAll<NonIdentityTable>().AsList();
@@ -462,7 +463,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionInsertAllAsyncForIdentityTableWithHints()
+        public async Task TestSqlConnectionInsertAllAsyncForIdentityTableWithHints()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -470,8 +471,8 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAllAsync<IdentityTable>(tables,
-                    hints: SqlServerTableHints.TabLock).Wait();
+                await connection.InsertAllAsync<IdentityTable>(tables,
+                    hints: SqlServerTableHints.TabLock);
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>().AsList();
@@ -491,7 +492,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region InsertAll<TEntity>(Extra Fields)
 
         [TestMethod]
-        public void TestSqlConnectionInsertAllAsyncWithExtraFields()
+        public async Task TestSqlConnectionInsertAllAsyncWithExtraFields()
         {
             // Setup
             var tables = Helper.CreateWithExtraFieldsIdentityTables(10);
@@ -499,7 +500,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAllAsync<WithExtraFieldsIdentityTable>(tables).Wait();
+                await connection.InsertAllAsync<WithExtraFieldsIdentityTable>(tables);
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>().AsList();
@@ -515,7 +516,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionInsertAllWithSizePerBatchEqualsToOneAsyncWithExtraFields()
+        public async Task TestSqlConnectionInsertAllWithSizePerBatchEqualsToOneAsyncWithExtraFields()
         {
             // Setup
             var tables = Helper.CreateWithExtraFieldsIdentityTables(10);
@@ -523,8 +524,8 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAllAsync<WithExtraFieldsIdentityTable>(tables,
-                    1).Wait();
+                await connection.InsertAllAsync<WithExtraFieldsIdentityTable>(tables,
+                    1);
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>().AsList();
@@ -951,7 +952,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region InsertAllAsync(TableName)
 
         [TestMethod]
-        public void TestSqlConnectionInsertAllAsyncForIdentityTableViaDynamicTableName()
+        public async Task TestSqlConnectionInsertAllAsyncForIdentityTableViaDynamicTableName()
         {
             // Setup
             var tables = Helper.CreateDynamicIdentityTables(10);
@@ -959,8 +960,8 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAllAsync<object>(ClassMappedNameCache.Get<IdentityTable>(),
-                    tables).Wait();
+                await connection.InsertAllAsync<object>(ClassMappedNameCache.Get<IdentityTable>(),
+                    tables);
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>().AsList();
@@ -976,7 +977,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionInsertAllAsyncForIdentityTableViaDynamicTableNameWithFields()
+        public async Task TestSqlConnectionInsertAllAsyncForIdentityTableViaDynamicTableNameWithFields()
         {
             // Setup
             var tables = Helper.CreateDynamicIdentityTables(10);
@@ -984,9 +985,9 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAllAsync<object>(ClassMappedNameCache.Get<IdentityTable>(),
+                await connection.InsertAllAsync<object>(ClassMappedNameCache.Get<IdentityTable>(),
                     tables,
-                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar))).Wait();
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar)));
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>().AsList();
@@ -1003,7 +1004,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionInsertAllAsyncForIdentityTableViaExpandoOjectTableName()
+        public async Task TestSqlConnectionInsertAllAsyncForIdentityTableViaExpandoOjectTableName()
         {
             // Setup
             var tables = Helper.CreateExpandoObjectIdentityTables(10);
@@ -1011,8 +1012,8 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAllAsync<object>(ClassMappedNameCache.Get<IdentityTable>(),
-                    tables).Wait();
+                await connection.InsertAllAsync<object>(ClassMappedNameCache.Get<IdentityTable>(),
+                    tables);
 
                 // Assert
                 tables.ForEach(table => Assert.IsTrue(((dynamic)table).Id > 0));
@@ -1032,7 +1033,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionInsertAllAsyncForIdentityTableViaExpandoOjectTableNameWithFields()
+        public async Task TestSqlConnectionInsertAllAsyncForIdentityTableViaExpandoOjectTableNameWithFields()
         {
             // Setup
             var tables = Helper.CreateDynamicIdentityTables(10);
@@ -1040,9 +1041,9 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAllAsync<object>(ClassMappedNameCache.Get<IdentityTable>(),
+                await connection.InsertAllAsync<object>(ClassMappedNameCache.Get<IdentityTable>(),
                     tables,
-                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar))).Wait();
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar)));
 
                 // Assert
                 tables.ForEach(table => Assert.IsTrue(((dynamic)table).Id > 0));
@@ -1063,7 +1064,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionInsertAllAsyncForIdentityTableViaTableName()
+        public async Task TestSqlConnectionInsertAllAsyncForIdentityTableViaTableName()
         {
             // Setup
             var tables = Helper.CreateDynamicIdentityTables(10);
@@ -1071,8 +1072,8 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    tables).Wait();
+                await connection.InsertAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    tables);
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>().AsList();
@@ -1088,7 +1089,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionInsertAllAsyncForIdentityTableViaTableNameWithFields()
+        public async Task TestSqlConnectionInsertAllAsyncForIdentityTableViaTableNameWithFields()
         {
             // Setup
             var tables = Helper.CreateDynamicIdentityTables(10);
@@ -1096,9 +1097,9 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                await connection.InsertAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     tables,
-                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar))).Wait();
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar)));
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>().AsList();
@@ -1115,7 +1116,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionInsertAllAsyncWithSizePerBatchEqualsToOneForIdentityTableViaTableName()
+        public async Task TestSqlConnectionInsertAllAsyncWithSizePerBatchEqualsToOneForIdentityTableViaTableName()
         {
             // Setup
             var tables = Helper.CreateDynamicIdentityTables(10);
@@ -1123,9 +1124,9 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                await connection.InsertAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     tables,
-                    1).Wait();
+                    1);
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>().AsList();
@@ -1141,7 +1142,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionInsertAllAsyncForIdentityTableViaTableNameWithLimitedColumns()
+        public async Task TestSqlConnectionInsertAllAsyncForIdentityTableViaTableNameWithLimitedColumns()
         {
             // Setup
             var tables = Helper.CreateDynamicIdentityTablesWithLimitedColumns(10);
@@ -1149,9 +1150,9 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                await connection.InsertAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     tables.Item1,
-                    fields: tables.Item2).Wait();
+                    fields: tables.Item2);
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>().AsList();
@@ -1167,7 +1168,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionInsertAllAsyncWithSizePerBatchEqualsToOneForIdentityTableViaTableNameWithLimitedColumns()
+        public async Task TestSqlConnectionInsertAllAsyncWithSizePerBatchEqualsToOneForIdentityTableViaTableNameWithLimitedColumns()
         {
             // Setup
             var tables = Helper.CreateDynamicIdentityTablesWithLimitedColumns(10);
@@ -1175,10 +1176,10 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                await connection.InsertAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     tables.Item1,
                     1,
-                    fields: tables.Item2).Wait();
+                    fields: tables.Item2);
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>().AsList();
@@ -1194,7 +1195,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionInsertAllAsyncForNonIdentityTableViaTableName()
+        public async Task TestSqlConnectionInsertAllAsyncForNonIdentityTableViaTableName()
         {
             // Setup
             var tables = Helper.CreateDynamicNonIdentityTables(10);
@@ -1202,8 +1203,8 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    tables).Wait();
+                await connection.InsertAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    tables);
 
                 // Act
                 var result = connection.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>()).AsList();
@@ -1219,7 +1220,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionInsertAllAsyncWithSizePerBatchEqualsToOneForNonIdentityTableViaTableName()
+        public async Task TestSqlConnectionInsertAllAsyncWithSizePerBatchEqualsToOneForNonIdentityTableViaTableName()
         {
             // Setup
             var tables = Helper.CreateDynamicNonIdentityTables(10);
@@ -1227,9 +1228,9 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
+                await connection.InsertAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
                     tables,
-                    1).Wait();
+                    1);
 
                 // Act
                 var result = connection.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>()).AsList();
@@ -1245,7 +1246,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionInsertAllAsyncForNonIdentityTableViaTableNameWithLimitedColumns()
+        public async Task TestSqlConnectionInsertAllAsyncForNonIdentityTableViaTableNameWithLimitedColumns()
         {
             // Setup
             var tables = Helper.CreateDynamicNonIdentityTablesWithLimitedColumns(10);
@@ -1253,9 +1254,9 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
+                await connection.InsertAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
                     tables.Item1,
-                    fields: tables.Item2).Wait();
+                    fields: tables.Item2);
 
                 // Act
                 var result = connection.QueryAll(ClassMappedNameCache.Get<NonIdentityTable>()).AsList();
@@ -1271,7 +1272,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionInsertAllAsyncWithSizePerBatchEqualsToOneForNonIdentityTableViaTableNameWithLimitedColumns()
+        public async Task TestSqlConnectionInsertAllAsyncWithSizePerBatchEqualsToOneForNonIdentityTableViaTableNameWithLimitedColumns()
         {
             // Setup
             var tables = Helper.CreateDynamicNonIdentityTablesWithLimitedColumns(10);
@@ -1279,10 +1280,10 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
+                await connection.InsertAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
                     tables.Item1,
                     1,
-                    fields: tables.Item2).Wait();
+                    fields: tables.Item2);
 
                 // Act
                 var result = connection.QueryAll<NonIdentityTable>().AsList();
@@ -1298,7 +1299,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionInsertAllAsyncForIdentityTableViaTableNameWithIncompleteProperties()
+        public async Task TestSqlConnectionInsertAllAsyncForIdentityTableViaTableNameWithIncompleteProperties()
         {
             // Setup
             var tables = new List<dynamic>
@@ -1311,8 +1312,8 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var insertAllResult = connection.InsertAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    tables).Result;
+                var insertAllResult = await connection.InsertAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    tables);
 
                 // Act
                 var result = connection.QueryAll(ClassMappedNameCache.Get<IdentityTable>()).AsList();
@@ -1328,7 +1329,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionInsertAllAsyncForIdentityTableViaTableNameWithHints()
+        public async Task TestSqlConnectionInsertAllAsyncForIdentityTableViaTableNameWithHints()
         {
             // Setup
             var tables = Helper.CreateDynamicIdentityTables(10);
@@ -1336,9 +1337,9 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.InsertAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                await connection.InsertAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     tables,
-                    hints: SqlServerTableHints.TabLock).Wait();
+                    hints: SqlServerTableHints.TabLock);
 
                 // Act
                 var result = connection.QueryAll<IdentityTable>().AsList();

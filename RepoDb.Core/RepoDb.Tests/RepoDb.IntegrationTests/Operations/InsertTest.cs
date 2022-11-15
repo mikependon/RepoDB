@@ -5,6 +5,7 @@ using RepoDb.IntegrationTests.Setup;
 using System;
 using System.Dynamic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.IntegrationTests.Operations
 {
@@ -219,7 +220,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region InsertAsync<TEntity>
 
         [TestMethod]
-        public void TestSqlConnectionInsertAsyncViaEntityTableName()
+        public async Task TestSqlConnectionInsertAsyncViaEntityTableName()
         {
             // Setup
             var table = Helper.CreateIdentityTable();
@@ -227,8 +228,8 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var id = connection.InsertAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
-                    table).Result;
+                var id = await connection.InsertAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                    table);
 
                 // Assert
                 Assert.IsTrue(table.Id > 0);
@@ -242,7 +243,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionInsertAsyncViaEntityTableNameWithFields()
+        public async Task TestSqlConnectionInsertAsyncViaEntityTableNameWithFields()
         {
             // Setup
             var table = Helper.CreateIdentityTable();
@@ -250,9 +251,9 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var id = connection.InsertAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                var id = await connection.InsertAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
                     table,
-                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar))).Result;
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar)));
 
                 // Assert
                 Assert.IsTrue(table.Id > 0);
@@ -267,7 +268,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionInsertAsync()
+        public async Task TestSqlConnectionInsertAsync()
         {
             // Setup
             var table = Helper.CreateIdentityTable();
@@ -275,7 +276,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var id = connection.InsertAsync<IdentityTable, long>(table).Result;
+                var id = await connection.InsertAsync<IdentityTable, long>(table);
 
                 // Assert
                 Assert.IsTrue(table.Id > 0);
@@ -289,7 +290,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionInsertAsyncViaWithFields()
+        public async Task TestSqlConnectionInsertAsyncViaWithFields()
         {
             // Setup
             var table = Helper.CreateIdentityTable();
@@ -297,8 +298,8 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var id = connection.InsertAsync<IdentityTable>(table,
-                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar))).Result;
+                var id = await connection.InsertAsync<IdentityTable>(table,
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar)));
 
                 // Assert
                 Assert.IsTrue(table.Id > 0);
@@ -335,7 +336,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionInsertAsyncForNonIdentityTable()
+        public async Task TestSqlConnectionInsertAsyncForNonIdentityTable()
         {
             // Setup
             var table = Helper.CreateNonIdentityTable();
@@ -343,7 +344,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var id = connection.InsertAsync<NonIdentityTable, Guid>(table).Result;
+                var id = await connection.InsertAsync<NonIdentityTable, Guid>(table);
 
                 // Assert
                 Assert.AreNotEqual(Guid.Empty, table.Id);
@@ -358,7 +359,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionInsertAsyncWithHints()
+        public async Task TestSqlConnectionInsertAsyncWithHints()
         {
             // Setup
             var table = Helper.CreateIdentityTable();
@@ -366,8 +367,8 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var id = connection.InsertAsync<IdentityTable, long>(table,
-                    hints: SqlServerTableHints.TabLock).Result;
+                var id = await connection.InsertAsync<IdentityTable, long>(table,
+                    hints: SqlServerTableHints.TabLock);
 
                 // Assert
                 Assert.IsTrue(table.Id > 0);
@@ -385,7 +386,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region InsertAsync<TEntity>(Extra Fields)
 
         [TestMethod]
-        public void TestSqlConnectionInsertAsyncWithExtraFields()
+        public async Task TestSqlConnectionInsertAsyncWithExtraFields()
         {
             // Setup
             var table = Helper.CreateWithExtraFieldsIdentityTable();
@@ -393,7 +394,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var id = connection.InsertAsync<WithExtraFieldsIdentityTable, long>(table).Result;
+                var id = await connection.InsertAsync<WithExtraFieldsIdentityTable, long>(table);
 
                 // Assert
                 Assert.IsTrue(table.Id > 0);
@@ -754,7 +755,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region InsertAsync(TableName)
 
         [TestMethod]
-        public void TestSqlConnectionInsertAsyncViaDynamicTableNameAsDynamic()
+        public async Task TestSqlConnectionInsertAsyncViaDynamicTableNameAsDynamic()
         {
             // Setup
             var table = Helper.CreateDynamicIdentityTable();
@@ -762,8 +763,8 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var id = connection.InsertAsync<dynamic, long>(ClassMappedNameCache.Get<IdentityTable>(),
-                    (object)table).Result;
+                var id = await connection.InsertAsync<dynamic, long>(ClassMappedNameCache.Get<IdentityTable>(),
+                    (object)table);
 
                 // Assert
                 Assert.IsTrue(id > 0);
@@ -777,7 +778,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionInsertAsyncViaDynamicTableNameAsDynamicWithFields()
+        public async Task TestSqlConnectionInsertAsyncViaDynamicTableNameAsDynamicWithFields()
         {
             // Setup
             var table = Helper.CreateDynamicIdentityTable();
@@ -785,9 +786,9 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var id = connection.InsertAsync<dynamic, long>(ClassMappedNameCache.Get<IdentityTable>(),
+                var id = await connection.InsertAsync<dynamic, long>(ClassMappedNameCache.Get<IdentityTable>(),
                     (object)table,
-                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar))).Result;
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar)));
 
                 // Assert
                 Assert.IsTrue(id > 0);
@@ -802,7 +803,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionInsertAsyncViaDynamicTableNameAsExpandoObject()
+        public async Task TestSqlConnectionInsertAsyncViaDynamicTableNameAsExpandoObject()
         {
             // Setup
             var table = Helper.CreateExpandoObjectIdentityTable();
@@ -810,8 +811,8 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var id = connection.InsertAsync<ExpandoObject, long>(ClassMappedNameCache.Get<IdentityTable>(),
-                    table).Result;
+                var id = await connection.InsertAsync<ExpandoObject, long>(ClassMappedNameCache.Get<IdentityTable>(),
+                    table);
 
                 // Assert
                 Assert.IsTrue(id > 0);
@@ -826,7 +827,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionInsertAsyncViaDynamicTableNameAsExpandoObjectWithFields()
+        public async Task TestSqlConnectionInsertAsyncViaDynamicTableNameAsExpandoObjectWithFields()
         {
             // Setup
             var table = Helper.CreateExpandoObjectIdentityTable();
@@ -834,9 +835,9 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var id = connection.InsertAsync<ExpandoObject, long>(ClassMappedNameCache.Get<IdentityTable>(),
+                var id = await connection.InsertAsync<ExpandoObject, long>(ClassMappedNameCache.Get<IdentityTable>(),
                     table,
-                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar))).Result;
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar)));
 
                 // Assert
                 Assert.IsTrue(id > 0);
@@ -853,7 +854,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionInsertAsyncViaDynamicTableName()
+        public async Task TestSqlConnectionInsertAsyncViaDynamicTableName()
         {
             // Setup
             var table = Helper.CreateDynamicIdentityTable();
@@ -861,8 +862,8 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var id = connection.InsertAsync<long>(ClassMappedNameCache.Get<IdentityTable>(),
-                    (object)table).Result;
+                var id = await connection.InsertAsync<long>(ClassMappedNameCache.Get<IdentityTable>(),
+                    (object)table);
 
                 // Assert
                 Assert.IsTrue(id > 0);
@@ -876,7 +877,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionInsertAsyncViaDynamicTableNameWithFields()
+        public async Task TestSqlConnectionInsertAsyncViaDynamicTableNameWithFields()
         {
             // Setup
             var table = Helper.CreateDynamicIdentityTable();
@@ -884,9 +885,9 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var id = connection.InsertAsync<long>(ClassMappedNameCache.Get<IdentityTable>(),
+                var id = await connection.InsertAsync<long>(ClassMappedNameCache.Get<IdentityTable>(),
                     (object)table,
-                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar))).Result;
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar)));
 
                 // Assert
                 Assert.IsTrue(id > 0);
@@ -901,7 +902,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionInsertAsyncViaExpandoObjectTableName()
+        public async Task TestSqlConnectionInsertAsyncViaExpandoObjectTableName()
         {
             // Setup
             var table = Helper.CreateExpandoObjectIdentityTable();
@@ -909,8 +910,8 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var id = connection.InsertAsync<long>(ClassMappedNameCache.Get<IdentityTable>(),
-                    table).Result;
+                var id = await connection.InsertAsync<long>(ClassMappedNameCache.Get<IdentityTable>(),
+                    table);
 
                 // Assert
                 Assert.IsTrue(id > 0);
@@ -925,7 +926,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionInsertAsyncViaExpandoObjectTableNameWithFields()
+        public async Task TestSqlConnectionInsertAsyncViaExpandoObjectTableNameWithFields()
         {
             // Setup
             var table = Helper.CreateExpandoObjectIdentityTable();
@@ -933,9 +934,9 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var id = connection.InsertAsync<long>(ClassMappedNameCache.Get<IdentityTable>(),
+                var id = await connection.InsertAsync<long>(ClassMappedNameCache.Get<IdentityTable>(),
                     table,
-                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar))).Result;
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar)));
 
                 // Assert
                 Assert.IsTrue(id > 0);
@@ -952,7 +953,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionInsertAsyncViaTableName()
+        public async Task TestSqlConnectionInsertAsyncViaTableName()
         {
             // Setup
             var table = Helper.CreateIdentityTable();
@@ -960,8 +961,8 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var id = connection.InsertAsync<long>(ClassMappedNameCache.Get<IdentityTable>(),
-                    table).Result;
+                var id = await connection.InsertAsync<long>(ClassMappedNameCache.Get<IdentityTable>(),
+                    table);
 
                 // Assert
                 Assert.IsTrue(id > 0);
@@ -975,7 +976,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionInsertAsyncViaTableNameWithFields()
+        public async Task TestSqlConnectionInsertAsyncViaTableNameWithFields()
         {
             // Setup
             var table = Helper.CreateIdentityTable();
@@ -983,9 +984,9 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var id = connection.InsertAsync<long>(ClassMappedNameCache.Get<IdentityTable>(),
+                var id = await connection.InsertAsync<long>(ClassMappedNameCache.Get<IdentityTable>(),
                     table,
-                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar))).Result;
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.RowGuid), nameof(IdentityTable.ColumnNVarChar)));
 
                 // Assert
                 Assert.IsTrue(id > 0);
@@ -1000,7 +1001,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionInsertAsyncViaTableNameForIdentityTable()
+        public async Task TestSqlConnectionInsertAsyncViaTableNameForIdentityTable()
         {
             // Setup
             var table = Helper.CreateIdentityTable();
@@ -1008,8 +1009,8 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var id = connection.InsertAsync<long>(ClassMappedNameCache.Get<IdentityTable>(),
-                    table).Result;
+                var id = await connection.InsertAsync<long>(ClassMappedNameCache.Get<IdentityTable>(),
+                    table);
 
                 // Assert
                 Assert.IsTrue(id > 0);
@@ -1023,7 +1024,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionInsertAsyncViaTableNameForNonIdentityTable()
+        public async Task TestSqlConnectionInsertAsyncViaTableNameForNonIdentityTable()
         {
             // Setup
             var table = Helper.CreateNonIdentityTable();
@@ -1031,8 +1032,8 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var id = connection.InsertAsync<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    table).Result;
+                var id = await connection.InsertAsync<Guid>(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    table);
 
                 // Assert
                 Assert.AreNotEqual(Guid.Empty, table.Id);
@@ -1046,7 +1047,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionInsertAsyncViaTableNameNameWithIncompleteProperties()
+        public async Task TestSqlConnectionInsertAsyncViaTableNameNameWithIncompleteProperties()
         {
             // Setup
             var table = new { RowGuid = Guid.NewGuid(), ColumnBit = true, ColumnInt = 1 };
@@ -1054,8 +1055,8 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var id = connection.InsertAsync<long>(ClassMappedNameCache.Get<IdentityTable>(),
-                    table).Result;
+                var id = await connection.InsertAsync<long>(ClassMappedNameCache.Get<IdentityTable>(),
+                    table);
 
                 // Assert
                 Assert.IsTrue(id > 0);
@@ -1069,7 +1070,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionInsertAsyncViaTableNameWithHints()
+        public async Task TestSqlConnectionInsertAsyncViaTableNameWithHints()
         {
             // Setup
             var table = Helper.CreateIdentityTable();
@@ -1077,9 +1078,9 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var id = connection.InsertAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                var id = await connection.InsertAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     table,
-                    hints: SqlServerTableHints.TabLock).Result;
+                    hints: SqlServerTableHints.TabLock);
 
                 // Assert
                 Assert.IsTrue(table.Id > 0);

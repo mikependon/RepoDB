@@ -5,6 +5,7 @@ using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.IntegrationTests.Operations
 {
@@ -295,7 +296,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region SumAsync<TEntity>
 
         [TestMethod]
-        public void TestSqlConnectionSumAsyncWithoutCondition()
+        public async Task TestSqlConnectionSumAsyncWithoutCondition()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -306,8 +307,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.SumAsync<IdentityTable>(e => e.ColumnInt,
-                    (object)null).Result;
+                var result = await connection.SumAsync<IdentityTable>(e => e.ColumnInt,
+                    (object)null);
 
                 // Assert
                 Assert.AreEqual(tables.Sum(t => t.ColumnInt), Convert.ToInt32(result));
@@ -315,7 +316,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionSumAsyncViaExpression()
+        public async Task TestSqlConnectionSumAsyncViaExpression()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -326,8 +327,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.SumAsync<IdentityTable>(e => e.ColumnInt,
-                    item => item.ColumnInt > 5 && item.ColumnInt <= 8).Result;
+                var result = await connection.SumAsync<IdentityTable>(e => e.ColumnInt,
+                    item => item.ColumnInt > 5 && item.ColumnInt <= 8);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Sum(t => t.ColumnInt), Convert.ToInt32(result));
@@ -335,7 +336,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionSumAsyncViaDynamic()
+        public async Task TestSqlConnectionSumAsyncViaDynamic()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -346,8 +347,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.SumAsync<IdentityTable>(e => e.ColumnInt,
-                    new { ColumnInt = 1 }).Result;
+                var result = await connection.SumAsync<IdentityTable>(e => e.ColumnInt,
+                    new { ColumnInt = 1 });
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt == 1).Sum(t => t.ColumnInt), Convert.ToInt32(result));
@@ -355,7 +356,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionSumAsyncViaQueryField()
+        public async Task TestSqlConnectionSumAsyncViaQueryField()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -367,8 +368,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.SumAsync<IdentityTable>(e => e.ColumnInt,
-                    field).Result;
+                var result = await connection.SumAsync<IdentityTable>(e => e.ColumnInt,
+                    field);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt > 5).Sum(t => t.ColumnInt), Convert.ToInt32(result));
@@ -376,7 +377,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionSumAsyncViaQueryFields()
+        public async Task TestSqlConnectionSumAsyncViaQueryFields()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -392,8 +393,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.SumAsync<IdentityTable>(e => e.ColumnInt,
-                    fields).Result;
+                var result = await connection.SumAsync<IdentityTable>(e => e.ColumnInt,
+                    fields);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Sum(t => t.ColumnInt), Convert.ToInt32(result));
@@ -401,7 +402,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionSumAsyncViaQueryGroup()
+        public async Task TestSqlConnectionSumAsyncViaQueryGroup()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -418,8 +419,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.SumAsync<IdentityTable>(e => e.ColumnInt,
-                    queryGroup).Result;
+                var result = await connection.SumAsync<IdentityTable>(e => e.ColumnInt,
+                    queryGroup);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Sum(t => t.ColumnInt), Convert.ToInt32(result));
@@ -427,7 +428,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionSumAsyncTypedResultWithoutCondition()
+        public async Task TestSqlConnectionSumAsyncTypedResultWithoutCondition()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -438,8 +439,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.SumAsync<IdentityTable, int?>(e => e.ColumnInt,
-                    (object)null).Result;
+                var result = await connection.SumAsync<IdentityTable, int?>(e => e.ColumnInt,
+                    (object)null);
 
                 // Assert
                 Assert.AreEqual(tables.Sum(t => t.ColumnInt), result);
@@ -447,7 +448,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionSumAsyncTypedResultViaExpression()
+        public async Task TestSqlConnectionSumAsyncTypedResultViaExpression()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -458,8 +459,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.SumAsync<IdentityTable, int?>(e => e.ColumnInt,
-                    item => item.ColumnInt > 5 && item.ColumnInt <= 8).Result;
+                var result = await connection.SumAsync<IdentityTable, int?>(e => e.ColumnInt,
+                    item => item.ColumnInt > 5 && item.ColumnInt <= 8);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Sum(t => t.ColumnInt), result);
@@ -467,7 +468,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionSumAsyncTypedResultViaDynamic()
+        public async Task TestSqlConnectionSumAsyncTypedResultViaDynamic()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -478,8 +479,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.SumAsync<IdentityTable, int?>(e => e.ColumnInt,
-                    new { ColumnInt = 1 }).Result;
+                var result = await connection.SumAsync<IdentityTable, int?>(e => e.ColumnInt,
+                    new { ColumnInt = 1 });
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt == 1).Sum(t => t.ColumnInt), result);
@@ -487,7 +488,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionSumAsyncTypedResultViaQueryField()
+        public async Task TestSqlConnectionSumAsyncTypedResultViaQueryField()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -499,8 +500,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.SumAsync<IdentityTable, int?>(e => e.ColumnInt,
-                    field).Result;
+                var result = await connection.SumAsync<IdentityTable, int?>(e => e.ColumnInt,
+                    field);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt > 5).Sum(t => t.ColumnInt), result);
@@ -508,7 +509,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionSumAsyncTypedResultViaQueryFields()
+        public async Task TestSqlConnectionSumAsyncTypedResultViaQueryFields()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -524,8 +525,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.SumAsync<IdentityTable, int?>(e => e.ColumnInt,
-                    fields).Result;
+                var result = await connection.SumAsync<IdentityTable, int?>(e => e.ColumnInt,
+                    fields);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Sum(t => t.ColumnInt), result);
@@ -533,7 +534,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionSumAsyncTypedResultViaQueryGroup()
+        public async Task TestSqlConnectionSumAsyncTypedResultViaQueryGroup()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -550,8 +551,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.SumAsync<IdentityTable, int?>(e => e.ColumnInt,
-                    queryGroup).Result;
+                var result = await connection.SumAsync<IdentityTable, int?>(e => e.ColumnInt,
+                    queryGroup);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Sum(t => t.ColumnInt), result);
@@ -801,7 +802,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region SumAsync(TableName)
 
         [TestMethod]
-        public void TestSqlConnectionSumAsyncViaTableNameWithoutCondition()
+        public async Task TestSqlConnectionSumAsyncViaTableNameWithoutCondition()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -812,9 +813,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.SumAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.SumAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnInt"),
-                    (object)null).Result;
+                    (object)null);
 
                 // Assert
                 Assert.AreEqual(tables.Sum(t => t.ColumnInt), Convert.ToInt32(result));
@@ -822,7 +823,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionSumAsyncViaTableNameViaDynamic()
+        public async Task TestSqlConnectionSumAsyncViaTableNameViaDynamic()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -833,9 +834,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.SumAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.SumAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnInt"),
-                    new { ColumnInt = 1 }).Result;
+                    new { ColumnInt = 1 });
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt == 1).Sum(t => t.ColumnInt), Convert.ToInt32(result));
@@ -843,7 +844,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionSumAsyncViaTableNameViaQueryField()
+        public async Task TestSqlConnectionSumAsyncViaTableNameViaQueryField()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -855,9 +856,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.SumAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.SumAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnInt"),
-                    field).Result;
+                    field);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt > 5).Sum(t => t.ColumnInt), Convert.ToInt32(result));
@@ -865,7 +866,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionSumAsyncViaTableNameViaQueryFields()
+        public async Task TestSqlConnectionSumAsyncViaTableNameViaQueryFields()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -881,9 +882,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.SumAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.SumAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnInt"),
-                    fields).Result;
+                    fields);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Sum(t => t.ColumnInt), Convert.ToInt32(result));
@@ -891,7 +892,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionSumAsyncViaTableNameViaQueryGroup()
+        public async Task TestSqlConnectionSumAsyncViaTableNameViaQueryGroup()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -908,9 +909,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.SumAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.SumAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnInt"),
-                    queryGroup).Result;
+                    queryGroup);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Sum(t => t.ColumnInt), Convert.ToInt32(result));
@@ -918,7 +919,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionSumAsyncTypedResultViaTableNameWithoutCondition()
+        public async Task TestSqlConnectionSumAsyncTypedResultViaTableNameWithoutCondition()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -929,9 +930,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.SumAsync<int?>(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.SumAsync<int?>(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnInt"),
-                    (object)null).Result;
+                    (object)null);
 
                 // Assert
                 Assert.AreEqual(tables.Sum(t => t.ColumnInt), result);
@@ -939,7 +940,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionSumAsyncTypedResultViaTableNameViaDynamic()
+        public async Task TestSqlConnectionSumAsyncTypedResultViaTableNameViaDynamic()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -950,9 +951,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.SumAsync<int?>(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.SumAsync<int?>(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnInt"),
-                    new { ColumnInt = 1 }).Result;
+                    new { ColumnInt = 1 });
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt == 1).Sum(t => t.ColumnInt), result);
@@ -960,7 +961,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionSumAsyncTypedResultViaTableNameViaQueryField()
+        public async Task TestSqlConnectionSumAsyncTypedResultViaTableNameViaQueryField()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -972,9 +973,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.SumAsync<int?>(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.SumAsync<int?>(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnInt"),
-                    field).Result;
+                    field);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt > 5).Sum(t => t.ColumnInt), result);
@@ -982,7 +983,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionSumAsyncTypedResultViaTableNameViaQueryFields()
+        public async Task TestSqlConnectionSumAsyncTypedResultViaTableNameViaQueryFields()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -998,9 +999,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.SumAsync<int?>(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.SumAsync<int?>(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnInt"),
-                    fields).Result;
+                    fields);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Sum(t => t.ColumnInt), result);
@@ -1008,7 +1009,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionSumAsyncTypedResultViaTableNameViaQueryGroup()
+        public async Task TestSqlConnectionSumAsyncTypedResultViaTableNameViaQueryGroup()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1025,9 +1026,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.SumAsync<int?>(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.SumAsync<int?>(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnInt"),
-                    queryGroup).Result;
+                    queryGroup);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Sum(t => t.ColumnInt), result);

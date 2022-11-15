@@ -4,6 +4,7 @@ using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.IntegrationTests.Types.Others
 {
@@ -146,7 +147,7 @@ namespace RepoDb.IntegrationTests.Types.Others
         }
 
         //[TestMethod]
-        //public void TestSqlConnectionOthersCrudAsync()
+        //public async Task TestSqlConnectionOthersCrudAsync()
         //{
         //    // Setup
         //    var entity = new OthersClass
@@ -162,11 +163,11 @@ namespace RepoDb.IntegrationTests.Types.Others
         //    {
         //        // Act Insert
         //        var insertResult = connection.InsertAsync(entity);
-        //        var id = insertResult.Result;
+        //        var id = insertResult;
         //
         //        // Act Query
         //        var queryResult = connection.QueryAsync<OthersClass>(e => e.SessionId == (Guid)id);
-        //        var data = queryResult.Result.FirstOrDefault();
+        //        var data = queryResult.FirstOrDefault();
         //
         //        // Assert
         //        Assert.IsNotNull(data);
@@ -178,7 +179,7 @@ namespace RepoDb.IntegrationTests.Types.Others
         //}
 
         [TestMethod]
-        public void TestSqlConnectionOthersNullCrudAsync()
+        public async Task TestSqlConnectionOthersNullCrudAsync()
         {
             // Setup
             var entity = new OthersClass
@@ -194,11 +195,11 @@ namespace RepoDb.IntegrationTests.Types.Others
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
-                var id = insertResult.Result;
+                var id = await insertResult;
 
                 // Act Query
-                var queryResult = connection.QueryAsync<OthersClass>(e => e.SessionId == (Guid)id);
-                var data = queryResult.Result.FirstOrDefault();
+                var queryResult = await connection.QueryAsync<OthersClass>(e => e.SessionId == (Guid)id);
+                var data = queryResult.FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -210,7 +211,7 @@ namespace RepoDb.IntegrationTests.Types.Others
         }
 
         //[TestMethod]
-        //public void TestSqlConnectionOthersMappedCrudAsync()
+        //public async Task TestSqlConnectionOthersMappedCrudAsync()
         //{
         //    // Setup
         //    var entity = new OthersMapClass
@@ -226,11 +227,11 @@ namespace RepoDb.IntegrationTests.Types.Others
         //    {
         //        // Act Insert
         //        var insertResult = connection.InsertAsync(entity);
-        //        var id = insertResult.Result;
+        //        var id = insertResult;
         //
         //        // Act Query
         //        var queryResult = connection.QueryAsync<OthersMapClass>(e => e.SessionId == (Guid)id);
-        //        var data = queryResult.Result.FirstOrDefault();
+        //        var data = queryResult.FirstOrDefault();
         //
         //        // Assert
         //        Assert.IsNotNull(data);
@@ -242,7 +243,7 @@ namespace RepoDb.IntegrationTests.Types.Others
         //}
 
         [TestMethod]
-        public void TestSqlConnectionOthersMappedNullCrudAsync()
+        public async Task TestSqlConnectionOthersMappedNullCrudAsync()
         {
             // Setup
             var entity = new OthersMapClass
@@ -258,11 +259,11 @@ namespace RepoDb.IntegrationTests.Types.Others
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
-                var id = insertResult.Result;
+                var id = await insertResult;
 
                 // Act Query
-                var queryResult = connection.QueryAsync<OthersMapClass>(e => e.SessionId == (Guid)id);
-                var data = queryResult.Result.FirstOrDefault();
+                var queryResult = await connection.QueryAsync<OthersMapClass>(e => e.SessionId == (Guid)id);
+                var data = queryResult.FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -338,7 +339,7 @@ namespace RepoDb.IntegrationTests.Types.Others
         }
 
         //[TestMethod]
-        //public void TestSqlConnectionOthersCrudViaAsyncViaTableName()
+        //public async Task TestSqlConnectionOthersCrudViaAsyncViaTableName()
         //{
         //    // Setup
         //    var entity = new
@@ -354,11 +355,11 @@ namespace RepoDb.IntegrationTests.Types.Others
         //    {
         //        // Act Insert
         //        var insertResult = connection.InsertAsync(ClassMappedNameCache.Get<OthersClass>(), entity);
-        //        var id = insertResult.Result;
+        //        var id = insertResult;
         //
         //        // Act Query
         //        var queryResult = connection.QueryAsync(ClassMappedNameCache.Get<OthersClass>(), new { SessionId = (Guid)id });
-        //        var data = queryResult.Result.FirstOrDefault();
+        //        var data = queryResult.FirstOrDefault();
         //
         //        // Assert
         //        Assert.IsNotNull(data);
@@ -370,7 +371,7 @@ namespace RepoDb.IntegrationTests.Types.Others
         //}
 
         [TestMethod]
-        public void TestSqlConnectionOthersNullCrudViaAsyncViaTableName()
+        public async Task TestSqlConnectionOthersNullCrudViaAsyncViaTableName()
         {
             // Setup
             var entity = new
@@ -386,11 +387,11 @@ namespace RepoDb.IntegrationTests.Types.Others
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(ClassMappedNameCache.Get<OthersClass>(), entity);
-                var id = insertResult.Result;
+                var id = await insertResult;
 
                 // Act Query
-                var queryResult = connection.QueryAsync(ClassMappedNameCache.Get<OthersClass>(), new { SessionId = (Guid)id });
-                var data = queryResult.Result.FirstOrDefault();
+                var queryResult = await connection.QueryAsync(ClassMappedNameCache.Get<OthersClass>(), new { SessionId = (Guid)id });
+                var data = queryResult.FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
