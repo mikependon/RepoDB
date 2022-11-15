@@ -5,6 +5,7 @@ using RepoDb.MySql.IntegrationTests.Setup;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.MySql.IntegrationTests.Operations
 {
@@ -110,7 +111,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestMySqlConnectionMergeAsyncForIdentityForEmptyTable()
+        public async Task TestMySqlConnectionMergeAsyncForIdentityForEmptyTable()
         {
             // Setup
             var table = Helper.CreateCompleteTables(1).First();
@@ -118,7 +119,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.MergeAsync<CompleteTable>(table).Result;
+                var result = await connection.MergeAsync<CompleteTable>(table);
                 var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
@@ -128,7 +129,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionMergeAsyncForIdentityForNonEmptyTable()
+        public async Task TestMySqlConnectionMergeAsyncForIdentityForNonEmptyTable()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -139,7 +140,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = connection.MergeAsync<CompleteTable>(table).Result;
+                var result = await connection.MergeAsync<CompleteTable>(table);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
@@ -154,7 +155,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionMergeAsyncForIdentityForNonEmptyTableWithQualifiers()
+        public async Task TestMySqlConnectionMergeAsyncForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -171,8 +172,8 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 table.ColumnChar = "C";
 
                 // Act
-                var result = connection.MergeAsync<CompleteTable>(table,
-                    qualifiers: qualifiers).Result;
+                var result = await connection.MergeAsync<CompleteTable>(table,
+                    qualifiers: qualifiers);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
@@ -411,7 +412,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestMySqlConnectionMergeAsyncViaTableNameForIdentityForEmptyTable()
+        public async Task TestMySqlConnectionMergeAsyncViaTableNameForIdentityForEmptyTable()
         {
             // Setup
             var table = Helper.CreateCompleteTables(1).First();
@@ -419,8 +420,8 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    table).Result;
+                var result = await connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    table);
                 var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
@@ -430,7 +431,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionMergeAsyncAsExpandoObjectViaTableNameForIdentityForEmptyTable()
+        public async Task TestMySqlConnectionMergeAsyncAsExpandoObjectViaTableNameForIdentityForEmptyTable()
         {
             // Setup
             var table = Helper.CreateCompleteTablesAsExpandoObjects(1).First();
@@ -438,8 +439,8 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    table).Result;
+                var result = await connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    table);
                 var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
@@ -450,7 +451,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionMergeAsyncViaTableNameForIdentityForNonEmptyTable()
+        public async Task TestMySqlConnectionMergeAsyncViaTableNameForIdentityForNonEmptyTable()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -461,8 +462,8 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    table).Result;
+                var result = await connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    table);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
@@ -477,7 +478,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionMergeAsyncAsExpandoObjectViaTableNameForIdentityForNonEmptyTable()
+        public async Task TestMySqlConnectionMergeAsyncAsExpandoObjectViaTableNameForIdentityForNonEmptyTable()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -489,8 +490,8 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 ((IDictionary<string, object>)entity)["Id"] = table.Id;
 
                 // Act
-                var result = connection.MergeAsync<long>(ClassMappedNameCache.Get<CompleteTable>(),
-                    entity).Result;
+                var result = await connection.MergeAsync<long>(ClassMappedNameCache.Get<CompleteTable>(),
+                    entity);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
@@ -506,7 +507,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionMergeAsyncViaTableNameForIdentityForNonEmptyTableWithQualifiers()
+        public async Task TestMySqlConnectionMergeAsyncViaTableNameForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -521,9 +522,9 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     table,
-                    qualifiers: qualifiers).Result;
+                    qualifiers: qualifiers);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
@@ -538,7 +539,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionMergeAsyncAsDynamicViaTableNameForIdentityForEmptyTable()
+        public async Task TestMySqlConnectionMergeAsyncAsDynamicViaTableNameForIdentityForEmptyTable()
         {
             // Setup
             var table = Helper.CreateCompleteTablesAsDynamics(1).First();
@@ -546,8 +547,8 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    (object)table).Result;
+                var result = await connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    (object)table);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
@@ -562,7 +563,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionMergeAsyncAsDynamicViaTableNameForIdentityForNonEmptyTable()
+        public async Task TestMySqlConnectionMergeAsyncAsDynamicViaTableNameForIdentityForNonEmptyTable()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -573,8 +574,8 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    table).Result;
+                var result = await connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    table);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
@@ -589,7 +590,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionMergeAsyncAsDynamicViaTableNameForIdentityForNonEmptyTableWithQualifiers()
+        public async Task TestMySqlConnectionMergeAsyncAsDynamicViaTableNameForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -604,9 +605,9 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     table,
-                    qualifiers: qualifiers).Result;
+                    qualifiers: qualifiers);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());

@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MySql.Data.MySqlClient;
 using RepoDb.MySql.IntegrationTests.Models;
 using RepoDb.MySql.IntegrationTests.Setup;
@@ -47,7 +48,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestMySqlConnectionTruncateAsyncWithoutExpression()
+        public async Task TestMySqlConnectionTruncateAsyncWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -55,7 +56,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.TruncateAsync<CompleteTable>().Result;
+                var result = await connection.TruncateAsync<CompleteTable>();
                 var countResult = connection.CountAll<CompleteTable>();
 
                 // Assert
@@ -93,7 +94,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestMySqlConnectionTruncateAsyncViaTableNameWithoutExpression()
+        public async Task TestMySqlConnectionTruncateAsyncViaTableNameWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -101,7 +102,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.TruncateAsync(ClassMappedNameCache.Get<CompleteTable>()).Result;
+                var result = await connection.TruncateAsync(ClassMappedNameCache.Get<CompleteTable>());
                 var countResult = connection.CountAll<CompleteTable>();
 
                 // Assert

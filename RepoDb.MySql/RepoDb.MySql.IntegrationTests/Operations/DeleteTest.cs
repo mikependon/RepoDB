@@ -4,6 +4,7 @@ using RepoDb.Enumerations;
 using RepoDb.MySql.IntegrationTests.Models;
 using RepoDb.MySql.IntegrationTests.Setup;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.MySql.IntegrationTests.Operations
 {
@@ -171,7 +172,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestMySqlConnectionDeleteAsyncWithoutExpression()
+        public async Task TestMySqlConnectionDeleteAsyncWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -179,7 +180,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.DeleteAsync<CompleteTable>((object)null).Result;
+                var result = await connection.DeleteAsync<CompleteTable>((object)null);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -187,7 +188,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionDeleteAsyncViaPrimaryKey()
+        public async Task TestMySqlConnectionDeleteAsyncViaPrimaryKey()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -195,7 +196,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.DeleteAsync<CompleteTable>(tables.First().Id).Result;
+                var result = await connection.DeleteAsync<CompleteTable>(tables.First().Id);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -203,7 +204,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionDeleteAsyncViaDataEntity()
+        public async Task TestMySqlConnectionDeleteAsyncViaDataEntity()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -211,7 +212,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.DeleteAsync<CompleteTable>(tables.First()).Result;
+                var result = await connection.DeleteAsync<CompleteTable>(tables.First());
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -219,7 +220,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionDeleteAsyncViaExpression()
+        public async Task TestMySqlConnectionDeleteAsyncViaExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -227,7 +228,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.DeleteAsync<CompleteTable>(e => e.Id == tables.First().Id).Result;
+                var result = await connection.DeleteAsync<CompleteTable>(e => e.Id == tables.First().Id);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -235,7 +236,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionDeleteAsyncViaDynamic()
+        public async Task TestMySqlConnectionDeleteAsyncViaDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -243,7 +244,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.DeleteAsync<CompleteTable>(new { Id = tables.First().Id }).Result;
+                var result = await connection.DeleteAsync<CompleteTable>(new { Id = tables.First().Id });
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -251,7 +252,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionDeleteAsyncViaQueryField()
+        public async Task TestMySqlConnectionDeleteAsyncViaQueryField()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -259,7 +260,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.DeleteAsync<CompleteTable>(new QueryField("Id", tables.First().Id)).Result;
+                var result = await connection.DeleteAsync<CompleteTable>(new QueryField("Id", tables.First().Id));
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -267,7 +268,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionDeleteAsyncViaQueryFields()
+        public async Task TestMySqlConnectionDeleteAsyncViaQueryFields()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -280,7 +281,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.DeleteAsync<CompleteTable>(queryFields).Result;
+                var result = await connection.DeleteAsync<CompleteTable>(queryFields);
 
                 // Assert
                 Assert.AreEqual(8, result);
@@ -288,7 +289,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionDeleteAsyncViaQueryGroup()
+        public async Task TestMySqlConnectionDeleteAsyncViaQueryGroup()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -302,7 +303,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.DeleteAsync<CompleteTable>(queryGroup).Result;
+                var result = await connection.DeleteAsync<CompleteTable>(queryGroup);
 
                 // Assert
                 Assert.AreEqual(8, result);
@@ -429,7 +430,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestMySqlConnectionDeleteAsyncViaTableNameWithoutExpression()
+        public async Task TestMySqlConnectionDeleteAsyncViaTableNameWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -437,7 +438,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), (object)null).Result;
+                var result = await connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), (object)null);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -445,7 +446,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionDeleteAsyncViaTableNameViaPrimaryKey()
+        public async Task TestMySqlConnectionDeleteAsyncViaTableNameViaPrimaryKey()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -453,7 +454,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.DeleteAsync<CompleteTable>(tables.First().Id).Result;
+                var result = await connection.DeleteAsync<CompleteTable>(tables.First().Id);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -461,7 +462,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionDeleteAsyncViaTableNameViaDynamic()
+        public async Task TestMySqlConnectionDeleteAsyncViaTableNameViaDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -469,7 +470,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), new { Id = tables.First().Id }).Result;
+                var result = await connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), new { Id = tables.First().Id });
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -477,7 +478,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionDeleteAsyncViaTableNameViaQueryField()
+        public async Task TestMySqlConnectionDeleteAsyncViaTableNameViaQueryField()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -485,7 +486,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), new QueryField("Id", tables.First().Id)).Result;
+                var result = await connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), new QueryField("Id", tables.First().Id));
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -493,7 +494,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionDeleteAsyncViaTableNameViaQueryFields()
+        public async Task TestMySqlConnectionDeleteAsyncViaTableNameViaQueryFields()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -506,7 +507,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), queryFields).Result;
+                var result = await connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), queryFields);
 
                 // Assert
                 Assert.AreEqual(8, result);
@@ -514,7 +515,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionDeleteAsyncViaTableNameViaQueryGroup()
+        public async Task TestMySqlConnectionDeleteAsyncViaTableNameViaQueryGroup()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -528,7 +529,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), queryGroup).Result;
+                var result = await connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), queryGroup);
 
                 // Assert
                 Assert.AreEqual(8, result);

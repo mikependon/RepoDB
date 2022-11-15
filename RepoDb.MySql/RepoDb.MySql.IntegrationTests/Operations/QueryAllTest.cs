@@ -5,6 +5,7 @@ using RepoDb.MySql.IntegrationTests.Models;
 using RepoDb.MySql.IntegrationTests.Setup;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.MySql.IntegrationTests.Operations
 {
@@ -79,8 +80,8 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionQueryAllAsyncWithHints()
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public async Task ThrowExceptionQueryAllAsyncWithHints()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -88,7 +89,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.QueryAllAsync<CompleteTable>(hints: "WhatEver").Wait();
+                await connection.QueryAllAsync<CompleteTable>(hints: "WhatEver");
             }
         }
 
@@ -137,7 +138,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestMySqlConnectionQueryAllAsyncViaTableName()
+        public async Task TestMySqlConnectionQueryAllAsyncViaTableName()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -145,7 +146,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var queryResult = connection.QueryAllAsync(ClassMappedNameCache.Get<CompleteTable>()).Result;
+                var queryResult = await connection.QueryAllAsync(ClassMappedNameCache.Get<CompleteTable>());
 
                 // Assert
                 tables.AsList().ForEach(table =>
@@ -153,8 +154,8 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionQueryAllAsyncViaTableNameWithHints()
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public async Task ThrowExceptionQueryAllAsyncViaTableNameWithHints()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -162,9 +163,9 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.QueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                await connection.QueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     (object)null,
-                    hints: "WhatEver").Wait();
+                    hints: "WhatEver");
             }
         }
 
