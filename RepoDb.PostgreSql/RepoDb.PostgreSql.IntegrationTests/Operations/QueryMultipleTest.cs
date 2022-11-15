@@ -5,6 +5,7 @@ using RepoDb.PostgreSql.IntegrationTests.Models;
 using RepoDb.PostgreSql.IntegrationTests.Setup;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.PostgreSql.IntegrationTests.Operations
 {
@@ -243,7 +244,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestPostgreSqlConnectionQueryMultipleAsyncForT2()
+        public async Task TestPostgreSqlConnectionQueryMultipleAsyncForT2()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -251,10 +252,10 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.QueryMultipleAsync<CompleteTable, CompleteTable>(e => e.Id > 0,
+                var result = await connection.QueryMultipleAsync<CompleteTable, CompleteTable>(e => e.Id > 0,
                     e => e.Id > 0,
                     top1: 1,
-                    top2: 2).Result;
+                    top2: 2);
 
                 // Assert
                 Assert.AreEqual(1, result.Item1.Count());
@@ -265,7 +266,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionQueryMultipleAsyncForT3()
+        public async Task TestPostgreSqlConnectionQueryMultipleAsyncForT3()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -273,12 +274,12 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.QueryMultipleAsync<CompleteTable, CompleteTable, CompleteTable>(e => e.Id > 0,
+                var result = await connection.QueryMultipleAsync<CompleteTable, CompleteTable, CompleteTable>(e => e.Id > 0,
                     e => e.Id > 0,
                     e => e.Id > 0,
                     top1: 1,
                     top2: 2,
-                    top3: 3).Result;
+                    top3: 3);
 
                 // Assert
                 Assert.AreEqual(1, result.Item1.Count());
@@ -291,7 +292,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionQueryMultipleAsyncForT4()
+        public async Task TestPostgreSqlConnectionQueryMultipleAsyncForT4()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -299,14 +300,14 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.QueryMultipleAsync<CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id > 0,
+                var result = await connection.QueryMultipleAsync<CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id > 0,
                     e => e.Id > 0,
                     e => e.Id > 0,
                     e => e.Id > 0,
                     top1: 1,
                     top2: 2,
                     top3: 3,
-                    top4: 4).Result;
+                    top4: 4);
 
                 // Assert
                 Assert.AreEqual(1, result.Item1.Count());
@@ -321,7 +322,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionQueryMultipleAsyncForT5()
+        public async Task TestPostgreSqlConnectionQueryMultipleAsyncForT5()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -329,7 +330,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.QueryMultipleAsync<CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id > 0,
+                var result = await connection.QueryMultipleAsync<CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id > 0,
                     e => e.Id > 0,
                     e => e.Id > 0,
                     e => e.Id > 0,
@@ -338,7 +339,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                     top2: 2,
                     top3: 3,
                     top4: 4,
-                    top5: 5).Result;
+                    top5: 5);
 
                 // Assert
                 Assert.AreEqual(1, result.Item1.Count());
@@ -355,7 +356,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionQueryMultipleAsyncForT6()
+        public async Task TestPostgreSqlConnectionQueryMultipleAsyncForT6()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -363,7 +364,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.QueryMultipleAsync<CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id > 0,
+                var result = await connection.QueryMultipleAsync<CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id > 0,
                     e => e.Id > 0,
                     e => e.Id > 0,
                     e => e.Id > 0,
@@ -374,7 +375,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                     top3: 3,
                     top4: 4,
                     top5: 5,
-                    top6: 6).Result;
+                    top6: 6);
 
                 // Assert
                 Assert.AreEqual(1, result.Item1.Count());
@@ -393,7 +394,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionQueryMultipleAsyncForT7()
+        public async Task TestPostgreSqlConnectionQueryMultipleAsyncForT7()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -401,7 +402,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.QueryMultipleAsync<CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id > 0,
+                var result = await connection.QueryMultipleAsync<CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable, CompleteTable>(e => e.Id > 0,
                     e => e.Id > 0,
                     e => e.Id > 0,
                     e => e.Id > 0,
@@ -414,7 +415,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                     top4: 4,
                     top5: 5,
                     top6: 6,
-                    top7: 7).Result;
+                    top7: 7);
 
                 // Assert
                 Assert.AreEqual(1, result.Item1.Count());
@@ -434,8 +435,8 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionQueryMultipleAsyncWithHints()
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public async Task ThrowExceptionQueryMultipleAsyncWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -443,12 +444,12 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.QueryMultipleAsync<CompleteTable, CompleteTable>(e => e.Id > 0,
+                await connection.QueryMultipleAsync<CompleteTable, CompleteTable>(e => e.Id > 0,
                     e => e.Id > 0,
                     top1: 1,
                     hints1: "WhatEver",
                     top2: 2,
-                    hints2: "WhatEver").Wait();
+                    hints2: "WhatEver");
             }
         }
 

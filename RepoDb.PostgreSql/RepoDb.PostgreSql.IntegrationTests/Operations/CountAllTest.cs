@@ -4,6 +4,7 @@ using RepoDb.PostgreSql.IntegrationTests.Models;
 using RepoDb.PostgreSql.IntegrationTests.Setup;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.PostgreSql.IntegrationTests.Operations
 {
@@ -61,7 +62,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestPostgreSqlConnectionCountAllAsync()
+        public async Task TestPostgreSqlConnectionCountAllAsync()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -69,15 +70,15 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.CountAllAsync<CompleteTable>().Result;
+                var result = await connection.CountAllAsync<CompleteTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnPostgreSqlConnectionCountAllAsyncWithHints()
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public async Task ThrowExceptionOnPostgreSqlConnectionCountAllAsyncWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -85,7 +86,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.CountAllAsync<CompleteTable>(hints: "WhatEver").Wait();
+                await connection.CountAllAsync<CompleteTable>(hints: "WhatEver");
             }
         }
 
@@ -132,7 +133,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestPostgreSqlConnectionCountAllAsyncViaTableName()
+        public async Task TestPostgreSqlConnectionCountAllAsyncViaTableName()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -140,15 +141,15 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.CountAllAsync(ClassMappedNameCache.Get<CompleteTable>()).Result;
+                var result = await connection.CountAllAsync(ClassMappedNameCache.Get<CompleteTable>());
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnPostgreSqlConnectionCountAllAsyncViaTableNameWithHints()
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public async Task ThrowExceptionOnPostgreSqlConnectionCountAllAsyncViaTableNameWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -156,8 +157,8 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.CountAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    hints: "WhatEver").Wait();
+                await connection.CountAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    hints: "WhatEver");
             }
         }
 

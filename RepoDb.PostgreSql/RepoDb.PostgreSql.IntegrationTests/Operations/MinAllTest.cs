@@ -4,6 +4,7 @@ using RepoDb.PostgreSql.IntegrationTests.Models;
 using RepoDb.PostgreSql.IntegrationTests.Setup;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.PostgreSql.IntegrationTests.Operations
 {
@@ -62,7 +63,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMinAllAsync()
+        public async Task TestPostgreSqlConnectionMinAllAsync()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -70,15 +71,15 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.MinAllAsync<CompleteTable>(e => e.ColumnInteger).Result;
+                var result = await connection.MinAllAsync<CompleteTable>(e => e.ColumnInteger);
 
                 // Assert
                 Assert.AreEqual(tables.Min(e => e.ColumnInteger), Convert.ToInt32(result));
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnPostgreSqlConnectionMinAllAsyncWithHints()
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public async Task ThrowExceptionOnPostgreSqlConnectionMinAllAsyncWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -86,8 +87,8 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.MinAllAsync<CompleteTable>(e => e.ColumnInteger,
-                    hints: "WhatEver").Wait();
+                await connection.MinAllAsync<CompleteTable>(e => e.ColumnInteger,
+                    hints: "WhatEver");
             }
         }
 
@@ -136,7 +137,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMinAllAsyncViaTableName()
+        public async Task TestPostgreSqlConnectionMinAllAsyncViaTableName()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -144,16 +145,16 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.MinAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    Field.Parse<CompleteTable>(e => e.ColumnInteger).First()).Result;
+                var result = await connection.MinAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    Field.Parse<CompleteTable>(e => e.ColumnInteger).First());
 
                 // Assert
                 Assert.AreEqual(tables.Min(e => e.ColumnInteger), Convert.ToInt32(result));
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnPostgreSqlConnectionMinAllAsyncViaTableNameWithHints()
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public async Task ThrowExceptionOnPostgreSqlConnectionMinAllAsyncViaTableNameWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -161,9 +162,9 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.MinAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                await connection.MinAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     Field.Parse<CompleteTable>(e => e.ColumnInteger).First(),
-                    hints: "WhatEver").Wait();
+                    hints: "WhatEver");
             }
         }
 

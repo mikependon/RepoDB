@@ -5,6 +5,7 @@ using RepoDb.PostgreSql.IntegrationTests.Setup;
 using RepoDb.PostgreSql.IntegrationTests.Models;
 using System.Linq;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace RepoDb.PostgreSql.IntegrationTests.Operations
 {
@@ -197,7 +198,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllAsyncForIdentityForEmptyTable()
+        public async Task TestPostgreSqlConnectionMergeAllAsyncForIdentityForEmptyTable()
         {
             // Setup
             var tables = Helper.CreateCompleteTables(10);
@@ -205,7 +206,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.MergeAllAsync<CompleteTable>(tables).Result;
+                var result = await connection.MergeAllAsync<CompleteTable>(tables);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
@@ -221,7 +222,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllAsyncForIdentityForNonEmptyTable()
+        public async Task TestPostgreSqlConnectionMergeAllAsyncForIdentityForNonEmptyTable()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
@@ -232,7 +233,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
 
                 // Act
-                var result = connection.MergeAllAsync<CompleteTable>(tables).Result;
+                var result = await connection.MergeAllAsync<CompleteTable>(tables);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
@@ -248,7 +249,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllAsyncForIdentityForNonEmptyTableWithQualifiers()
+        public async Task TestPostgreSqlConnectionMergeAllAsyncForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
@@ -263,8 +264,8 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
 
                 // Act
-                var result = connection.MergeAllAsync<CompleteTable>(tables,
-                    qualifiers).Result;
+                var result = await connection.MergeAllAsync<CompleteTable>(tables,
+                    qualifiers);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
@@ -280,7 +281,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllAsyncForNonIdentityForEmptyTable()
+        public async Task TestPostgreSqlConnectionMergeAllAsyncForNonIdentityForEmptyTable()
         {
             // Setup
             var tables = Helper.CreateNonIdentityCompleteTables(10);
@@ -288,7 +289,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.MergeAllAsync<NonIdentityCompleteTable>(tables).Result;
+                var result = await connection.MergeAllAsync<NonIdentityCompleteTable>(tables);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityCompleteTable>());
@@ -304,7 +305,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllAsyncForNonIdentityForNonEmptyTable()
+        public async Task TestPostgreSqlConnectionMergeAllAsyncForNonIdentityForNonEmptyTable()
         {
             // Setup
             var tables = Database.CreateNonIdentityCompleteTables(10).AsList();
@@ -315,7 +316,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 tables.ForEach(table => Helper.UpdateNonIdentityCompleteTableProperties(table));
 
                 // Act
-                var result = connection.MergeAllAsync<NonIdentityCompleteTable>(tables).Result;
+                var result = await connection.MergeAllAsync<NonIdentityCompleteTable>(tables);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityCompleteTable>());
@@ -330,7 +331,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllAsyncForNonIdentityForNonEmptyTableWithQualifiers()
+        public async Task TestPostgreSqlConnectionMergeAllAsyncForNonIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var tables = Database.CreateNonIdentityCompleteTables(10).AsList();
@@ -345,8 +346,8 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 tables.ForEach(table => Helper.UpdateNonIdentityCompleteTableProperties(table));
 
                 // Act
-                var result = connection.MergeAllAsync<NonIdentityCompleteTable>(tables,
-                    qualifiers).Result;
+                var result = await connection.MergeAllAsync<NonIdentityCompleteTable>(tables,
+                    qualifiers);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityCompleteTable>());
@@ -764,7 +765,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllViaTableNameAsyncForIdentityForEmptyTable()
+        public async Task TestPostgreSqlConnectionMergeAllViaTableNameAsyncForIdentityForEmptyTable()
         {
             // Setup
             var tables = Helper.CreateCompleteTables(10);
@@ -772,8 +773,8 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    tables).Result;
+                var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    tables);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
@@ -788,7 +789,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllAsyncAsExpandoObjectViaTableNameForIdentityForEmptyTable()
+        public async Task TestPostgreSqlConnectionMergeAllAsyncAsExpandoObjectViaTableNameForIdentityForEmptyTable()
         {
             // Setup
             var tables = Helper.CreateCompleteTablesAsExpandoObjects(10);
@@ -796,8 +797,8 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    tables).Result;
+                var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    tables);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
@@ -814,7 +815,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllViaTableNameAsyncForIdentityForNonEmptyTable()
+        public async Task TestPostgreSqlConnectionMergeAllViaTableNameAsyncForIdentityForNonEmptyTable()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
@@ -825,8 +826,8 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
 
                 // Act
-                var result = connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    tables).Result;
+                var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    tables);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
@@ -841,7 +842,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllAsyncAsExpandoObjectViaTableNameForIdentityForNonEmptyTable()
+        public async Task TestPostgreSqlConnectionMergeAllAsyncAsExpandoObjectViaTableNameForIdentityForNonEmptyTable()
         {
             // Setup
             var entities = Database.CreateCompleteTables(10).AsList();
@@ -853,8 +854,8 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 tables.ForEach(e => ((IDictionary<string, object>)e)["Id"] = entities[tables.IndexOf(e)].Id);
 
                 // Act
-                var result = connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    tables).Result;
+                var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    tables);
 
                 // Assert
                 Assert.AreEqual(entities.Count, connection.CountAll<CompleteTable>());
@@ -869,7 +870,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllViaTableNameAsyncForIdentityForNonEmptyTableWithQualifiers()
+        public async Task TestPostgreSqlConnectionMergeAllViaTableNameAsyncForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
@@ -884,9 +885,9 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
 
                 // Act
-                var result = connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     tables,
-                    qualifiers).Result;
+                    qualifiers);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
@@ -901,7 +902,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllAsyncAsDynamicsViaTableNameForIdentityForEmptyTable()
+        public async Task TestPostgreSqlConnectionMergeAllAsyncAsDynamicsViaTableNameForIdentityForEmptyTable()
         {
             // Setup
             var tables = Helper.CreateCompleteTablesAsDynamics(10);
@@ -909,8 +910,8 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    tables).Result;
+                var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    tables);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
@@ -925,7 +926,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllAsyncAsDynamicsViaTableNameForIdentityForNonEmptyTable()
+        public async Task TestPostgreSqlConnectionMergeAllAsyncAsDynamicsViaTableNameForIdentityForNonEmptyTable()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
@@ -936,8 +937,8 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
 
                 // Act
-                var result = connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    tables).Result;
+                var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    tables);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
@@ -952,7 +953,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllAsyncAsDynamicsViaTableNameForIdentityForNonEmptyTableWithQualifiers()
+        public async Task TestPostgreSqlConnectionMergeAllAsyncAsDynamicsViaTableNameForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10).AsList();
@@ -967,9 +968,9 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 tables.ForEach(table => Helper.UpdateCompleteTableProperties(table));
 
                 // Act
-                var result = connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     tables,
-                    qualifiers).Result;
+                    qualifiers);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());
@@ -984,7 +985,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllAsyncViaTableNameForNonIdentityForEmptyTable()
+        public async Task TestPostgreSqlConnectionMergeAllAsyncViaTableNameForNonIdentityForEmptyTable()
         {
             // Setup
             var tables = Helper.CreateNonIdentityCompleteTables(10);
@@ -992,8 +993,8 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
-                    tables).Result;
+                var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
+                    tables);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityCompleteTable>());
@@ -1008,7 +1009,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllAsyncViaTableNameForNonIdentityForNonEmptyTable()
+        public async Task TestPostgreSqlConnectionMergeAllAsyncViaTableNameForNonIdentityForNonEmptyTable()
         {
             // Setup
             var tables = Database.CreateNonIdentityCompleteTables(10).AsList();
@@ -1019,8 +1020,8 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 tables.ForEach(table => Helper.UpdateNonIdentityCompleteTableProperties(table));
 
                 // Act
-                var result = connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
-                    tables).Result;
+                var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
+                    tables);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityCompleteTable>());
@@ -1035,7 +1036,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllAsyncViaTableNameForNonIdentityForNonEmptyTableWithQualifiers()
+        public async Task TestPostgreSqlConnectionMergeAllAsyncViaTableNameForNonIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var tables = Database.CreateNonIdentityCompleteTables(10).AsList();
@@ -1050,9 +1051,9 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 tables.ForEach(table => Helper.UpdateNonIdentityCompleteTableProperties(table));
 
                 // Act
-                var result = connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
+                var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
                     tables,
-                    qualifiers).Result;
+                    qualifiers);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityCompleteTable>());
@@ -1067,7 +1068,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllAsyncAsDynamicsViaTableNameForNonIdentityForEmptyTable()
+        public async Task TestPostgreSqlConnectionMergeAllAsyncAsDynamicsViaTableNameForNonIdentityForEmptyTable()
         {
             // Setup
             var tables = Helper.CreateNonIdentityCompleteTablesAsDynamics(10);
@@ -1075,8 +1076,8 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
-                    tables).Result;
+                var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
+                    tables);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityCompleteTable>());
@@ -1091,7 +1092,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllAsyncAsDynamicsViaTableNameForNonIdentityForNonEmptyTable()
+        public async Task TestPostgreSqlConnectionMergeAllAsyncAsDynamicsViaTableNameForNonIdentityForNonEmptyTable()
         {
             // Setup
             var tables = Database.CreateNonIdentityCompleteTables(10).AsList();
@@ -1102,8 +1103,8 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 tables.ForEach(table => Helper.UpdateNonIdentityCompleteTableProperties(table));
 
                 // Act
-                var result = connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
-                    tables).Result;
+                var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
+                    tables);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityCompleteTable>());
@@ -1118,7 +1119,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionMergeAllAsyncAsDynamicsViaTableNameForNonIdentityForNonEmptyTableWithQualifiers()
+        public async Task TestPostgreSqlConnectionMergeAllAsyncAsDynamicsViaTableNameForNonIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var tables = Database.CreateNonIdentityCompleteTables(10).AsList();
@@ -1133,9 +1134,9 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 tables.ForEach(table => Helper.UpdateNonIdentityCompleteTableProperties(table));
 
                 // Act
-                var result = connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
+                var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
                     tables,
-                    qualifiers).Result;
+                    qualifiers);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<NonIdentityCompleteTable>());

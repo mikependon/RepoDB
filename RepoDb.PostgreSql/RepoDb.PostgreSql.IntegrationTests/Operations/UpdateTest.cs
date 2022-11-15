@@ -4,6 +4,7 @@ using RepoDb.PostgreSql.IntegrationTests.Models;
 using RepoDb.PostgreSql.IntegrationTests.Setup;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.PostgreSql.IntegrationTests.Operations
 {
@@ -193,7 +194,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestPostgreSqlConnectionUpdateAsyncViaDataEntity()
+        public async Task TestPostgreSqlConnectionUpdateAsyncViaDataEntity()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -204,7 +205,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = connection.UpdateAsync<CompleteTable>(table).Result;
+                var result = await connection.UpdateAsync<CompleteTable>(table);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -218,7 +219,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionUpdateAsyncViaExpression()
+        public async Task TestPostgreSqlConnectionUpdateAsyncViaExpression()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -229,7 +230,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = connection.UpdateAsync<CompleteTable>(table, e => e.Id == table.Id).Result;
+                var result = await connection.UpdateAsync<CompleteTable>(table, e => e.Id == table.Id);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -243,7 +244,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionUpdateAsyncViaDynamic()
+        public async Task TestPostgreSqlConnectionUpdateAsyncViaDynamic()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -254,7 +255,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = connection.UpdateAsync<CompleteTable>(table, new { table.Id }).Result;
+                var result = await connection.UpdateAsync<CompleteTable>(table, new { table.Id });
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -268,7 +269,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionUpdateAsyncViaQueryField()
+        public async Task TestPostgreSqlConnectionUpdateAsyncViaQueryField()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -279,7 +280,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = connection.UpdateAsync<CompleteTable>(table, new QueryField("Id", table.Id)).Result;
+                var result = await connection.UpdateAsync<CompleteTable>(table, new QueryField("Id", table.Id));
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -293,7 +294,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionUpdateAsyncViaQueryFields()
+        public async Task TestPostgreSqlConnectionUpdateAsyncViaQueryFields()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -309,7 +310,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = connection.UpdateAsync<CompleteTable>(table, queryFields).Result;
+                var result = await connection.UpdateAsync<CompleteTable>(table, queryFields);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -323,7 +324,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionUpdateAsyncViaQueryGroup()
+        public async Task TestPostgreSqlConnectionUpdateAsyncViaQueryGroup()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -340,7 +341,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = connection.UpdateAsync<CompleteTable>(table, queryGroup).Result;
+                var result = await connection.UpdateAsync<CompleteTable>(table, queryGroup);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -538,7 +539,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestPostgreSqlConnectionUpdateAsyncViaTableNameViaExpandoObject()
+        public async Task TestPostgreSqlConnectionUpdateAsyncViaTableNameViaExpandoObject()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -550,8 +551,8 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 ((IDictionary<string, object>)entity)["Id"] = table.Id;
 
                 // Act
-                var result = connection.UpdateAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    entity).Result;
+                var result = await connection.UpdateAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    entity);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -565,7 +566,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionUpdateAsyncViaTableNameViaDataEntity()
+        public async Task TestPostgreSqlConnectionUpdateAsyncViaTableNameViaDataEntity()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -576,7 +577,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = connection.UpdateAsync(ClassMappedNameCache.Get<CompleteTable>(), table).Result;
+                var result = await connection.UpdateAsync(ClassMappedNameCache.Get<CompleteTable>(), table);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -590,7 +591,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionUpdateAsyncViaTableNameViaDynamic()
+        public async Task TestPostgreSqlConnectionUpdateAsyncViaTableNameViaDynamic()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -601,7 +602,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = connection.UpdateAsync(ClassMappedNameCache.Get<CompleteTable>(), table, new { table.Id }).Result;
+                var result = await connection.UpdateAsync(ClassMappedNameCache.Get<CompleteTable>(), table, new { table.Id });
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -615,7 +616,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionUpdateAsyncViaTableNameViaQueryField()
+        public async Task TestPostgreSqlConnectionUpdateAsyncViaTableNameViaQueryField()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -626,7 +627,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = connection.UpdateAsync(ClassMappedNameCache.Get<CompleteTable>(), table, new QueryField("Id", table.Id)).Result;
+                var result = await connection.UpdateAsync(ClassMappedNameCache.Get<CompleteTable>(), table, new QueryField("Id", table.Id));
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -640,7 +641,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionUpdateAsyncViaTableNameViaQueryFields()
+        public async Task TestPostgreSqlConnectionUpdateAsyncViaTableNameViaQueryFields()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -656,7 +657,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = connection.UpdateAsync(ClassMappedNameCache.Get<CompleteTable>(), table, queryFields).Result;
+                var result = await connection.UpdateAsync(ClassMappedNameCache.Get<CompleteTable>(), table, queryFields);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -670,7 +671,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionUpdateAsyncViaTableNameViaQueryGroup()
+        public async Task TestPostgreSqlConnectionUpdateAsyncViaTableNameViaQueryGroup()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -687,7 +688,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = connection.UpdateAsync(ClassMappedNameCache.Get<CompleteTable>(), table, queryGroup).Result;
+                var result = await connection.UpdateAsync(ClassMappedNameCache.Get<CompleteTable>(), table, queryGroup);
 
                 // Assert
                 Assert.AreEqual(1, result);

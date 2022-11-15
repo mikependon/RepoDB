@@ -5,6 +5,7 @@ using RepoDb.PostgreSql.IntegrationTests.Models;
 using RepoDb.PostgreSql.IntegrationTests.Setup;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.PostgreSql.IntegrationTests.Operations
 {
@@ -59,7 +60,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestPostgreSqlConnectionUpdateAllAsync()
+        public async Task TestPostgreSqlConnectionUpdateAllAsync()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -70,7 +71,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 tables.AsList().ForEach(table => Helper.UpdateCompleteTableProperties(table));
 
                 // Act
-                var result = connection.UpdateAllAsync<CompleteTable>(tables).Result;
+                var result = await connection.UpdateAllAsync<CompleteTable>(tables);
 
                 // Assert
                 Assert.AreEqual(10, result);
@@ -151,7 +152,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestPostgreSqlConnectionUpdateAllAsyncViaTableName()
+        public async Task TestPostgreSqlConnectionUpdateAllAsyncViaTableName()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -162,7 +163,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 tables.AsList().ForEach(table => Helper.UpdateCompleteTableProperties(table));
 
                 // Act
-                var result = connection.UpdateAllAsync(ClassMappedNameCache.Get<CompleteTable>(), tables).Result;
+                var result = await connection.UpdateAllAsync(ClassMappedNameCache.Get<CompleteTable>(), tables);
 
                 // Assert
                 Assert.AreEqual(10, result);
@@ -177,7 +178,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionUpdateAllAsyncViaTableNameAsExpandoObjects()
+        public async Task TestPostgreSqlConnectionUpdateAllAsyncViaTableNameAsExpandoObjects()
         {
             // Setup
             var entities = Database.CreateCompleteTables(10).AsList();
@@ -189,8 +190,8 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
                 tables.ForEach(e => ((IDictionary<string, object>)e)["Id"] = entities[tables.IndexOf(e)].Id);
 
                 // Act
-                var result = connection.UpdateAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    tables).Result;
+                var result = await connection.UpdateAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    tables);
 
                 // Assert
                 Assert.AreEqual(10, result);

@@ -5,6 +5,7 @@ using RepoDb.PostgreSql.IntegrationTests.Models;
 using RepoDb.PostgreSql.IntegrationTests.Setup;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.PostgreSql.IntegrationTests.Operations
 {
@@ -130,7 +131,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestPostgreSqlConnectionBatchQueryAsyncFirstBatchAscending()
+        public async Task TestPostgreSqlConnectionBatchQueryAsyncFirstBatchAscending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -138,10 +139,10 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.BatchQueryAsync<CompleteTable>(0,
+                var result = await connection.BatchQueryAsync<CompleteTable>(0,
                     3,
                     OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null).Result;
+                    (object)null);
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(0), result.ElementAt(0));
@@ -150,7 +151,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionBatchQueryAsyncFirstBatchDescending()
+        public async Task TestPostgreSqlConnectionBatchQueryAsyncFirstBatchDescending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -158,10 +159,10 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.BatchQueryAsync<CompleteTable>(0,
+                var result = await connection.BatchQueryAsync<CompleteTable>(0,
                     3,
                     OrderField.Descending<CompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null).Result;
+                    (object)null);
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(9), result.ElementAt(0));
@@ -170,7 +171,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionBatchQueryAsyncThirdBatchAscending()
+        public async Task TestPostgreSqlConnectionBatchQueryAsyncThirdBatchAscending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -178,10 +179,10 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.BatchQueryAsync<CompleteTable>(2,
+                var result = await connection.BatchQueryAsync<CompleteTable>(2,
                     3,
                     OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null).Result;
+                    (object)null);
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(6), result.ElementAt(0));
@@ -190,7 +191,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionBatchQueryAsyncThirdBatchDescending()
+        public async Task TestPostgreSqlConnectionBatchQueryAsyncThirdBatchDescending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -198,10 +199,10 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.BatchQueryAsync<CompleteTable>(2,
+                var result = await connection.BatchQueryAsync<CompleteTable>(2,
                     3,
                     OrderField.Descending<CompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null).Result;
+                    (object)null);
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(3), result.ElementAt(0));
@@ -209,8 +210,8 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnPostgreSqlConnectionBatchQueryAsyncWithHints()
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public async Task ThrowExceptionOnPostgreSqlConnectionBatchQueryAsyncWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -218,11 +219,11 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.BatchQueryAsync<CompleteTable>(0,
+                await connection.BatchQueryAsync<CompleteTable>(0,
                     3,
                     OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
                     (object)null,
-                    hints: "WhatEver").Wait();
+                    hints: "WhatEver");
             }
         }
 
@@ -341,7 +342,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestPostgreSqlConnectionBatchQueryViaTableNameAsyncFirstBatchAscending()
+        public async Task TestPostgreSqlConnectionBatchQueryViaTableNameAsyncFirstBatchAscending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -349,11 +350,11 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.BatchQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     0,
                     3,
                     OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null).Result;
+                    (object)null);
 
                 // Assert
                 Helper.AssertMembersEquality(tables.ElementAt(0), result.ElementAt(0));
@@ -362,7 +363,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionBatchQueryViaTableNameAsyncFirstBatchDescending()
+        public async Task TestPostgreSqlConnectionBatchQueryViaTableNameAsyncFirstBatchDescending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -370,11 +371,11 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.BatchQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     0,
                     3,
                     OrderField.Descending<CompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null).Result;
+                    (object)null);
 
                 // Assert
                 Helper.AssertMembersEquality(tables.ElementAt(9), result.ElementAt(0));
@@ -383,7 +384,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionBatchQueryViaTableNameAsyncThirdBatchAscending()
+        public async Task TestPostgreSqlConnectionBatchQueryViaTableNameAsyncThirdBatchAscending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -391,11 +392,11 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.BatchQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     2,
                     3,
                     OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null).Result;
+                    (object)null);
 
                 // Assert
                 Helper.AssertMembersEquality(tables.ElementAt(6), result.ElementAt(0));
@@ -404,7 +405,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionBatchQueryViaTableNameAsyncThirdBatchDescending()
+        public async Task TestPostgreSqlConnectionBatchQueryViaTableNameAsyncThirdBatchDescending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -412,11 +413,11 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.BatchQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     2,
                     3,
                     OrderField.Descending<CompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null).Result;
+                    (object)null);
 
                 // Assert
                 Helper.AssertMembersEquality(tables.ElementAt(3), result.ElementAt(0));
@@ -424,8 +425,8 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnPostgreSqlConnectionBatchQueryAsyncViaTableNameWithHints()
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public async Task ThrowExceptionOnPostgreSqlConnectionBatchQueryAsyncViaTableNameWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -433,12 +434,12 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.BatchQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                await connection.BatchQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     0,
                     3,
                     OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
                     (object)null,
-                    hints: "WhatEver").Wait();
+                    hints: "WhatEver");
             }
         }
 
