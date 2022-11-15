@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace RepoDb.UnitTests.Interfaces
 {
@@ -313,7 +314,7 @@ namespace RepoDb.UnitTests.Interfaces
         #region Query
 
         [TestMethod]
-        public void TestDbConnectionQueryAsyncCachingWithoutExpression()
+        public async Task TestDbConnectionQueryAsyncCachingWithoutExpression()
         {
             // Prepare
             var cache = new Mock<ICache>();
@@ -321,7 +322,7 @@ namespace RepoDb.UnitTests.Interfaces
             var cacheItemExpiration = 60;
 
             // Act
-            new CacheDbConnection().QueryAsync<CacheEntity>(where: (QueryGroup)null,
+            await new CacheDbConnection().QueryAsync<CacheEntity>(where: (QueryGroup)null,
                 fields: null,
                 orderBy: null,
                 top: 0,
@@ -331,7 +332,7 @@ namespace RepoDb.UnitTests.Interfaces
                 commandTimeout: null,
                 transaction: null,
                 cache: cache.Object,
-                trace: null).Wait();
+                trace: null);
 
             // Assert
             cache.Verify(c => c.GetAsync<IEnumerable<CacheEntity>>(It.Is<string>(s => s == cacheKey),
@@ -345,7 +346,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionQueryAsyncCachingViaDynamics()
+        public async Task TestDbConnectionQueryAsyncCachingViaDynamics()
         {
             // Prepare
             var cache = new Mock<ICache>();
@@ -353,7 +354,7 @@ namespace RepoDb.UnitTests.Interfaces
             var cacheItemExpiration = 60;
 
             // Act
-            new CacheDbConnection().QueryAsync<CacheEntity>(what: null,
+            await new CacheDbConnection().QueryAsync<CacheEntity>(what: null,
                 fields: null,
                 orderBy: null,
                 top: null,
@@ -363,7 +364,7 @@ namespace RepoDb.UnitTests.Interfaces
                 commandTimeout: null,
                 transaction: null,
                 cache: cache.Object,
-                trace: null).Wait();
+                trace: null);
 
             // Assert
             cache.Verify(c => c.GetAsync<IEnumerable<CacheEntity>>(It.Is<string>(s => s == cacheKey),
@@ -377,7 +378,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionQueryAsyncCachingViaQueryField()
+        public async Task TestDbConnectionQueryAsyncCachingViaQueryField()
         {
             // Prepare
             var cache = new Mock<ICache>();
@@ -385,7 +386,7 @@ namespace RepoDb.UnitTests.Interfaces
             var cacheItemExpiration = 60;
 
             // Act
-            new CacheDbConnection().QueryAsync<CacheEntity>(where: (QueryField)null,
+            await new CacheDbConnection().QueryAsync<CacheEntity>(where: (QueryField)null,
                 fields: null,
                 orderBy: null,
                 top: 0,
@@ -395,7 +396,7 @@ namespace RepoDb.UnitTests.Interfaces
                 commandTimeout: null,
                 transaction: null,
                 cache: cache.Object,
-                trace: null).Wait();
+                trace: null);
 
             // Assert
             cache.Verify(c => c.GetAsync<IEnumerable<CacheEntity>>(It.Is<string>(s => s == cacheKey),
@@ -409,7 +410,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionQueryAsyncCachingViaQueryFields()
+        public async Task TestDbConnectionQueryAsyncCachingViaQueryFields()
         {
             // Prepare
             var cache = new Mock<ICache>();
@@ -417,7 +418,7 @@ namespace RepoDb.UnitTests.Interfaces
             var cacheItemExpiration = 60;
 
             // Act
-            new CacheDbConnection().QueryAsync<CacheEntity>(where: (IEnumerable<QueryField>)null,
+            await new CacheDbConnection().QueryAsync<CacheEntity>(where: (IEnumerable<QueryField>)null,
                 fields: null,
                 orderBy: null,
                 top: 0,
@@ -427,7 +428,7 @@ namespace RepoDb.UnitTests.Interfaces
                 commandTimeout: null,
                 transaction: null,
                 cache: cache.Object,
-                trace: null).Wait();
+                trace: null);
 
             // Assert
             cache.Verify(c => c.GetAsync<IEnumerable<CacheEntity>>(It.Is<string>(s => s == cacheKey),
@@ -441,7 +442,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionQueryAsyncCachingViaExpression()
+        public async Task TestDbConnectionQueryAsyncCachingViaExpression()
         {
             // Prepare
             var cache = new Mock<ICache>();
@@ -449,7 +450,7 @@ namespace RepoDb.UnitTests.Interfaces
             var cacheItemExpiration = 60;
 
             // Act
-            new CacheDbConnection().QueryAsync<CacheEntity>(where: (Expression<Func<CacheEntity, bool>>)null,
+            await new CacheDbConnection().QueryAsync<CacheEntity>(where: (Expression<Func<CacheEntity, bool>>)null,
                 fields: null,
                 orderBy: null,
                 top: 0,
@@ -459,7 +460,7 @@ namespace RepoDb.UnitTests.Interfaces
                 commandTimeout: null,
                 transaction: null,
                 cache: cache.Object,
-                trace: null).Wait();
+                trace: null);
 
             // Assert
             cache.Verify(c => c.GetAsync<IEnumerable<CacheEntity>>(It.Is<string>(s => s == cacheKey),
@@ -473,7 +474,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionQueryAsyncCachingViaQueryGroup()
+        public async Task TestDbConnectionQueryAsyncCachingViaQueryGroup()
         {
             // Prepare
             var cache = new Mock<ICache>();
@@ -481,7 +482,7 @@ namespace RepoDb.UnitTests.Interfaces
             var cacheItemExpiration = 60;
 
             // Act
-            new CacheDbConnection().QueryAsync<CacheEntity>(where: (QueryGroup)null,
+            await new CacheDbConnection().QueryAsync<CacheEntity>(where: (QueryGroup)null,
                 fields: null,
                 orderBy: null,
                 top: 0,
@@ -491,7 +492,7 @@ namespace RepoDb.UnitTests.Interfaces
                 commandTimeout: null,
                 transaction: null,
                 cache: cache.Object,
-                trace: null).Wait();
+                trace: null);
 
             // Assert
             cache.Verify(c => c.GetAsync<IEnumerable<CacheEntity>>(It.Is<string>(s => s == cacheKey),
@@ -509,7 +510,7 @@ namespace RepoDb.UnitTests.Interfaces
         #region QueryAll
 
         [TestMethod]
-        public void TestDbConnectionQueryAllAsyncCachingWithoutExpression()
+        public async Task TestDbConnectionQueryAllAsyncCachingWithoutExpression()
         {
             // Prepare
             var cache = new Mock<ICache>();
@@ -517,7 +518,7 @@ namespace RepoDb.UnitTests.Interfaces
             var cacheItemExpiration = 60;
 
             // Act
-            new CacheDbConnection().QueryAllAsync<CacheEntity>(fields: null,
+            await new CacheDbConnection().QueryAllAsync<CacheEntity>(fields: null,
                 orderBy: null,
                 hints: null,
                 cacheKey: cacheKey,
@@ -525,7 +526,7 @@ namespace RepoDb.UnitTests.Interfaces
                 commandTimeout: null,
                 transaction: null,
                 cache: cache.Object,
-                trace: null).Wait();
+                trace: null);
 
             // Assert
             cache.Verify(c => c.GetAsync<IEnumerable<CacheEntity>>(It.Is<string>(s => s == cacheKey),
@@ -539,7 +540,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionQueryAllAsyncCaching()
+        public async Task TestDbConnectionQueryAllAsyncCaching()
         {
             // Prepare
             var cache = new Mock<ICache>();
@@ -547,7 +548,7 @@ namespace RepoDb.UnitTests.Interfaces
             var cacheItemExpiration = 60;
 
             // Act
-            new CacheDbConnection().QueryAllAsync<CacheEntity>(fields: null,
+            await new CacheDbConnection().QueryAllAsync<CacheEntity>(fields: null,
                 orderBy: null,
                 hints: null,
                 cacheKey: cacheKey,
@@ -555,7 +556,7 @@ namespace RepoDb.UnitTests.Interfaces
                 commandTimeout: null,
                 transaction: null,
                 cache: cache.Object,
-                trace: null).Wait();
+                trace: null);
 
             // Assert
             cache.Verify(c => c.GetAsync<IEnumerable<CacheEntity>>(It.Is<string>(s => s == cacheKey),
@@ -569,7 +570,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionQueryAllAsyncCachingViaDynamics()
+        public async Task TestDbConnectionQueryAllAsyncCachingViaDynamics()
         {
             // Prepare
             var cache = new Mock<ICache>();
@@ -577,7 +578,7 @@ namespace RepoDb.UnitTests.Interfaces
             var cacheItemExpiration = 60;
 
             // Act
-            new CacheDbConnection().QueryAllAsync<CacheEntity>(fields: null,
+            await new CacheDbConnection().QueryAllAsync<CacheEntity>(fields: null,
                 orderBy: null,
                 hints: null,
                 cacheKey: cacheKey,
@@ -585,7 +586,7 @@ namespace RepoDb.UnitTests.Interfaces
                 commandTimeout: null,
                 transaction: null,
                 cache: cache.Object,
-                trace: null).Wait();
+                trace: null);
 
             // Assert
             cache.Verify(c => c.GetAsync<IEnumerable<CacheEntity>>(It.Is<string>(s => s == cacheKey),

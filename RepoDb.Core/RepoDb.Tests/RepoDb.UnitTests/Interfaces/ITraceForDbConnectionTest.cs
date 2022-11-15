@@ -112,16 +112,16 @@ namespace RepoDb.UnitTests.Interfaces
         #region AverageAsync
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeAverageAsync()
+        public async Task TestDbConnectionTraceForBeforeAverageAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.AverageAsync<TraceEntity>(trace: trace.Object,
+            await connection.AverageAsync<TraceEntity>(trace: trace.Object,
                 field: e => e.Id,
-                where: (object)null).Wait();
+                where: (object)null);
 
             // Assert
             trace.Verify(t =>
@@ -130,16 +130,16 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterAverageAsync()
+        public async Task TestDbConnectionTraceForAfterAverageAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.AverageAsync<TraceEntity>(trace: trace.Object,
+            await connection.AverageAsync<TraceEntity>(trace: trace.Object,
                 field: e => e.Id,
-                where: (object)null).Wait();
+                where: (object)null);
 
             // Assert
             trace.Verify(t =>
@@ -148,17 +148,17 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeAverageAsyncViaTableName()
+        public async Task TestDbConnectionTraceForBeforeAverageAsyncViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.AverageAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.AverageAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
                 where: (object)null,
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -167,17 +167,17 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterAverageAsyncViaTableName()
+        public async Task TestDbConnectionTraceForAfterAverageAsyncViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.AverageAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.AverageAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
                 where: (object)null,
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -264,15 +264,15 @@ namespace RepoDb.UnitTests.Interfaces
         #region AverageAllAsync
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeAverageAllAsync()
+        public async Task TestDbConnectionTraceForBeforeAverageAllAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.AverageAllAsync<TraceEntity>(trace: trace.Object,
-                field: e => e.Id).Wait();
+            await connection.AverageAllAsync<TraceEntity>(trace: trace.Object,
+                field: e => e.Id);
 
             // Assert
             trace.Verify(t =>
@@ -281,15 +281,15 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterAverageAllAsync()
+        public async Task TestDbConnectionTraceForAfterAverageAllAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.AverageAllAsync<TraceEntity>(trace: trace.Object,
-                field: e => e.Id).Wait();
+            await connection.AverageAllAsync<TraceEntity>(trace: trace.Object,
+                field: e => e.Id);
 
             // Assert
             trace.Verify(t =>
@@ -298,16 +298,16 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeAverageAllAsyncViaTableName()
+        public async Task TestDbConnectionTraceForBeforeAverageAllAsyncViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.AverageAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.AverageAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -316,16 +316,16 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterAverageAllAsyncViaTableName()
+        public async Task TestDbConnectionTraceForAfterAverageAllAsyncViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.AverageAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.AverageAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -384,18 +384,18 @@ namespace RepoDb.UnitTests.Interfaces
         #region BatchQueryAsync
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeBatchQueryAsync()
+        public async Task TestDbConnectionTraceForBeforeBatchQueryAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.BatchQueryAsync<TraceEntity>(0,
+            await connection.BatchQueryAsync<TraceEntity>(0,
                 10,
                 OrderField.Ascending<TraceEntity>(t => t.Id).AsEnumerable(),
                 where: (QueryGroup)null,
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -404,18 +404,18 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterBatchQueryAsync()
+        public async Task TestDbConnectionTraceForAfterBatchQueryAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.BatchQueryAsync<TraceEntity>(0,
+            await connection.BatchQueryAsync<TraceEntity>(0,
                 10,
                 OrderField.Ascending<TraceEntity>(t => t.Id).AsEnumerable(),
                 where: (QueryGroup)null,
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -468,7 +468,7 @@ namespace RepoDb.UnitTests.Interfaces
         //#region BulkInsertAsync
 
         //[TestMethod]
-        //public void TestDbConnectionTraceForBeforeBulkInsertAsync()
+        //public async Task TestDbConnectionTraceForBeforeBulkInsertAsync()
         //{
         //    // Prepare
         //    var trace = new Mock<ITrace>();
@@ -477,14 +477,14 @@ namespace RepoDb.UnitTests.Interfaces
 
         //    // Act
         //    connection.BulkInsertAsync<TraceEntity>(entities,
-        //        trace: trace.Object).Wait();
+        //        trace: trace.Object);
 
         //    // Assert
         //    trace.Verify(t => t.BeforeBulkInsert(It.IsAny<CancellableTraceLog>()), Times.Exactly(1));
         //}
 
         //[TestMethod]
-        //public void TestDbConnectionTraceForAfterBulkInsertAsync()
+        //public async Task TestDbConnectionTraceForAfterBulkInsertAsync()
         //{
         //    // Prepare
         //    var trace = new Mock<ITrace>();
@@ -493,7 +493,7 @@ namespace RepoDb.UnitTests.Interfaces
 
         //    // Act
         //    connection.BulkInsertAsync<TraceEntity>(entities,
-        //        trace: trace.Object).Wait();
+        //        trace: trace.Object);
 
         //    // Assert
         //    trace.Verify(t => t.AfterBulkInsert(It.IsAny<ResultTraceLog>()), Times.Exactly(1));
@@ -578,15 +578,15 @@ namespace RepoDb.UnitTests.Interfaces
         #region CountAsync
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeCountAsync()
+        public async Task TestDbConnectionTraceForBeforeCountAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.CountAsync<TraceEntity>(trace: trace.Object,
-                where: (object)null).Wait();
+            await connection.CountAsync<TraceEntity>(trace: trace.Object,
+                where: (object)null);
 
             // Assert
             trace.Verify(t =>
@@ -595,15 +595,15 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterCountAsync()
+        public async Task TestDbConnectionTraceForAfterCountAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.CountAsync<TraceEntity>(trace: trace.Object,
-                where: (object)null).Wait();
+            await connection.CountAsync<TraceEntity>(trace: trace.Object,
+                where: (object)null);
 
             // Assert
             trace.Verify(t =>
@@ -612,16 +612,16 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeCountAsyncViaTableName()
+        public async Task TestDbConnectionTraceForBeforeCountAsyncViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.CountAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.CountAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 where: (object)null,
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -630,16 +630,16 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterCountAsyncViaTableName()
+        public async Task TestDbConnectionTraceForAfterCountAsyncViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.CountAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.CountAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 where: (object)null,
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -722,14 +722,14 @@ namespace RepoDb.UnitTests.Interfaces
         #region CountAllAsync
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeCountAllAsync()
+        public async Task TestDbConnectionTraceForBeforeCountAllAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.CountAllAsync<TraceEntity>(trace: trace.Object).Wait();
+            await connection.CountAllAsync<TraceEntity>(trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -738,14 +738,14 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterCountAllAsync()
+        public async Task TestDbConnectionTraceForAfterCountAllAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.CountAllAsync<TraceEntity>(trace: trace.Object).Wait();
+            await connection.CountAllAsync<TraceEntity>(trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -754,15 +754,15 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeCountAllAsyncViaTableName()
+        public async Task TestDbConnectionTraceForBeforeCountAllAsyncViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.CountAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
-                trace: trace.Object).Wait();
+            await connection.CountAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -771,15 +771,15 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterCountAllAsyncViaTableName()
+        public async Task TestDbConnectionTraceForAfterCountAllAsyncViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.CountAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
-                trace: trace.Object).Wait();
+            await connection.CountAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -872,15 +872,15 @@ namespace RepoDb.UnitTests.Interfaces
         #region DeleteAsync
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeDeleteAsync()
+        public async Task TestDbConnectionTraceForBeforeDeleteAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.DeleteAsync<TraceEntity>(0,
-                trace: trace.Object).Wait();
+            await connection.DeleteAsync<TraceEntity>(0,
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -889,15 +889,15 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterDeleteAsync()
+        public async Task TestDbConnectionTraceForAfterDeleteAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.DeleteAsync<TraceEntity>(0,
-                trace: trace.Object).Wait();
+            await connection.DeleteAsync<TraceEntity>(0,
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -906,19 +906,19 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeDeleteAsyncViaTableName()
+        public async Task TestDbConnectionTraceForBeforeDeleteAsyncViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.DeleteAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.DeleteAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new
                 {
                     Id = 1
                 },
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -927,19 +927,19 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterDeleteAsyncViaTableName()
+        public async Task TestDbConnectionTraceForAfterDeleteAsyncViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
-            // Act
-            connection.DeleteAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            // Actawait 
+            await connection.DeleteAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new
                 {
                     Id = 1
                 },
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -1022,14 +1022,14 @@ namespace RepoDb.UnitTests.Interfaces
         #region DeleteAllAsync
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeDeleteAllAsync()
+        public async Task TestDbConnectionTraceForBeforeDeleteAllAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.DeleteAllAsync<TraceEntity>(trace: trace.Object).Wait();
+            await connection.DeleteAllAsync<TraceEntity>(trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -1038,14 +1038,14 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterDeleteAllAsync()
+        public async Task TestDbConnectionTraceForAfterDeleteAllAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.DeleteAllAsync<TraceEntity>(trace: trace.Object).Wait();
+            await connection.DeleteAllAsync<TraceEntity>(trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -1054,15 +1054,15 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeDeleteAllAsyncViaTableName()
+        public async Task TestDbConnectionTraceForBeforeDeleteAllAsyncViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.DeleteAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
-                trace: trace.Object).Wait();
+            await connection.DeleteAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -1071,15 +1071,15 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterDeleteAllAsyncViaTableName()
+        public async Task TestDbConnectionTraceForAfterDeleteAllAsyncViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.DeleteAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
-                trace: trace.Object).Wait();
+            await connection.DeleteAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -1166,15 +1166,15 @@ namespace RepoDb.UnitTests.Interfaces
         #region ExistsAsync
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeExistsAsync()
+        public async Task TestDbConnectionTraceForBeforeExistsAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.ExistsAsync<TraceEntity>(trace: trace.Object,
-                what: (object)null).Wait();
+            await connection.ExistsAsync<TraceEntity>(trace: trace.Object,
+                what: (object)null);
 
             // Assert
             trace.Verify(t =>
@@ -1183,15 +1183,15 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterExistsAsync()
+        public async Task TestDbConnectionTraceForAfterExistsAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.ExistsAsync<TraceEntity>(trace: trace.Object,
-                what: (object)null).Wait();
+            await connection.ExistsAsync<TraceEntity>(trace: trace.Object,
+                what: (object)null);
 
             // Assert
             trace.Verify(t =>
@@ -1200,16 +1200,16 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeExistsAsyncViaTableName()
+        public async Task TestDbConnectionTraceForBeforeExistsAsyncViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.ExistsAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.ExistsAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 what: (object)null,
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -1218,16 +1218,16 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterExistsAsyncViaTableName()
+        public async Task TestDbConnectionTraceForAfterExistsAsyncViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.ExistsAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.ExistsAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 what: (object)null,
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -1316,16 +1316,16 @@ namespace RepoDb.UnitTests.Interfaces
         #region InsertAsync
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeInsertAsync()
+        public async Task TestDbConnectionTraceForBeforeInsertAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.InsertAsync<TraceEntity>(
+            await connection.InsertAsync<TraceEntity>(
                 new TraceEntity { Name = "Name" },
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -1334,16 +1334,16 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterInsertAsync()
+        public async Task TestDbConnectionTraceForAfterInsertAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.InsertAsync<TraceEntity>(
+            await connection.InsertAsync<TraceEntity>(
                 new TraceEntity { Name = "Name" },
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -1352,16 +1352,16 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeInsertAsyncViaTableName()
+        public async Task TestDbConnectionTraceForBeforeInsertAsyncViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.InsertAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.InsertAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new { Name = "Name" },
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -1370,16 +1370,16 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterInsertAsyncViaTableName()
+        public async Task TestDbConnectionTraceForAfterInsertAsyncViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.InsertAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.InsertAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new { Name = "Name" },
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -1468,15 +1468,15 @@ namespace RepoDb.UnitTests.Interfaces
         #region InsertAllAsync
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeInsertAllAsync()
+        public async Task TestDbConnectionTraceForBeforeInsertAllAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.InsertAllAsync<TraceEntity>(new[] { new TraceEntity { Name = "Name" } },
-                trace: trace.Object).Wait();
+            await connection.InsertAllAsync<TraceEntity>(new[] { new TraceEntity { Name = "Name" } },
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -1485,15 +1485,15 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterInsertAllAsync()
+        public async Task TestDbConnectionTraceForAfterInsertAllAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.InsertAllAsync<TraceEntity>(new[] { new TraceEntity { Name = "Name" } },
-                trace: trace.Object).Wait();
+            await connection.InsertAllAsync<TraceEntity>(new[] { new TraceEntity { Name = "Name" } },
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -1502,17 +1502,17 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeInsertAllAsyncViaTableName()
+        public async Task TestDbConnectionTraceForBeforeInsertAllAsyncViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.InsertAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.InsertAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new[] { new { Name = "Name" } },
                 fields: Field.From("Name"),
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -1521,17 +1521,17 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterInsertAllAsyncViaTableName()
+        public async Task TestDbConnectionTraceForAfterInsertAllAsyncViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.InsertAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.InsertAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new[] { new { Name = "Name" } },
                 fields: Field.From("Name"),
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -1622,16 +1622,16 @@ namespace RepoDb.UnitTests.Interfaces
         #region MaxAsync
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeMaxAsync()
+        public async Task TestDbConnectionTraceForBeforeMaxAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MaxAsync<TraceEntity>(trace: trace.Object,
+            await connection.MaxAsync<TraceEntity>(trace: trace.Object,
                 field: e => e.Id,
-                where: (object)null).Wait();
+                where: (object)null);
 
             // Assert
             trace.Verify(t =>
@@ -1640,16 +1640,16 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterMaxAsync()
+        public async Task TestDbConnectionTraceForAfterMaxAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MaxAsync<TraceEntity>(trace: trace.Object,
+            await connection.MaxAsync<TraceEntity>(trace: trace.Object,
                 field: e => e.Id,
-                where: (object)null).Wait();
+                where: (object)null);
 
             // Assert
             trace.Verify(t =>
@@ -1658,17 +1658,17 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeMaxAsyncViaTableName()
+        public async Task TestDbConnectionTraceForBeforeMaxAsyncViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MaxAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.MaxAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
                 where: (object)null,
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -1677,17 +1677,17 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterMaxAsyncViaTableName()
+        public async Task TestDbConnectionTraceForAfterMaxAsyncViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MaxAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.MaxAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
                 where: (object)null,
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -1774,15 +1774,15 @@ namespace RepoDb.UnitTests.Interfaces
         #region MaxAllAsync
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeMaxAllAsync()
+        public async Task TestDbConnectionTraceForBeforeMaxAllAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MaxAllAsync<TraceEntity>(trace: trace.Object,
-                field: e => e.Id).Wait();
+            await connection.MaxAllAsync<TraceEntity>(trace: trace.Object,
+                field: e => e.Id);
 
             // Assert
             trace.Verify(t =>
@@ -1791,15 +1791,15 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterMaxAllAsync()
+        public async Task TestDbConnectionTraceForAfterMaxAllAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MaxAllAsync<TraceEntity>(trace: trace.Object,
-                field: e => e.Id).Wait();
+            await connection.MaxAllAsync<TraceEntity>(trace: trace.Object,
+                field: e => e.Id);
 
             // Assert
             trace.Verify(t =>
@@ -1808,16 +1808,16 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeMaxAllAsyncViaTableName()
+        public async Task TestDbConnectionTraceForBeforeMaxAllAsyncViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MaxAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.MaxAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -1826,16 +1826,16 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterMaxAllAsyncViaTableName()
+        public async Task TestDbConnectionTraceForAfterMaxAllAsyncViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MaxAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.MaxAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -1924,16 +1924,16 @@ namespace RepoDb.UnitTests.Interfaces
         #region MergeAsync
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeMergeAsync()
+        public async Task TestDbConnectionTraceForBeforeMergeAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MergeAsync<TraceEntity>(
+            await connection.MergeAsync<TraceEntity>(
                 new TraceEntity { Id = 1, Name = "Name" },
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -1942,16 +1942,16 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterMergeAsync()
+        public async Task TestDbConnectionTraceForAfterMergeAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MergeAsync<TraceEntity>(
+            await connection.MergeAsync<TraceEntity>(
                 new TraceEntity { Id = 1, Name = "Name" },
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -1960,16 +1960,16 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeMergeAsyncViaTableName()
+        public async Task TestDbConnectionTraceForBeforeMergeAsyncViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MergeAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.MergeAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new { Id = 1, Name = "Name" },
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -1978,16 +1978,16 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterMergeAsyncViaTableName()
+        public async Task TestDbConnectionTraceForAfterMergeAsyncViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MergeAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.MergeAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new { Id = 1, Name = "Name" },
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -2076,16 +2076,16 @@ namespace RepoDb.UnitTests.Interfaces
         #region MergeAllAsync
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeMergeAllAsync()
+        public async Task TestDbConnectionTraceForBeforeMergeAllAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MergeAllAsync<TraceEntity>(
+            await connection.MergeAllAsync<TraceEntity>(
                 new[] { new TraceEntity { Id = 1, Name = "Name" } },
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -2094,16 +2094,16 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterMergeAllAsync()
+        public async Task TestDbConnectionTraceForAfterMergeAllAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MergeAllAsync<TraceEntity>(
+            await connection.MergeAllAsync<TraceEntity>(
                 new[] { new TraceEntity { Id = 1, Name = "Name" } },
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -2112,16 +2112,16 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeMergeAllAsyncViaTableName()
+        public async Task TestDbConnectionTraceForBeforeMergeAllAsyncViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MergeAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.MergeAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new[] { new { Id = 1, Name = "Name" } },
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -2130,16 +2130,16 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterMergeAllAsyncViaTableName()
+        public async Task TestDbConnectionTraceForAfterMergeAllAsyncViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MergeAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.MergeAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new[] { new { Id = 1, Name = "Name" } },
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -2230,16 +2230,16 @@ namespace RepoDb.UnitTests.Interfaces
         #region MinAsync
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeMinAsync()
+        public async Task TestDbConnectionTraceForBeforeMinAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MinAsync<TraceEntity>(trace: trace.Object,
+            await connection.MinAsync<TraceEntity>(trace: trace.Object,
                 field: e => e.Id,
-                where: (object)null).Wait();
+                where: (object)null);
 
             // Assert
             trace.Verify(t =>
@@ -2248,16 +2248,16 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterMinAsync()
+        public async Task TestDbConnectionTraceForAfterMinAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MinAsync<TraceEntity>(trace: trace.Object,
+            await connection.MinAsync<TraceEntity>(trace: trace.Object,
                 field: e => e.Id,
-                where: (object)null).Wait();
+                where: (object)null);
 
             // Assert
             trace.Verify(t =>
@@ -2266,17 +2266,17 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeMinAsyncViaTableName()
+        public async Task TestDbConnectionTraceForBeforeMinAsyncViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MinAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.MinAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
                 where: (object)null,
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -2285,17 +2285,17 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterMinAsyncViaTableName()
+        public async Task TestDbConnectionTraceForAfterMinAsyncViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MinAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.MinAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
                 where: (object)null,
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -2382,15 +2382,15 @@ namespace RepoDb.UnitTests.Interfaces
         #region MinAllAsync
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeMinAllAsync()
+        public async Task TestDbConnectionTraceForBeforeMinAllAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MinAllAsync<TraceEntity>(trace: trace.Object,
-                field: e => e.Id).Wait();
+            await connection.MinAllAsync<TraceEntity>(trace: trace.Object,
+                field: e => e.Id);
 
             // Assert
             trace.Verify(t =>
@@ -2399,15 +2399,15 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterMinAllAsync()
+        public async Task TestDbConnectionTraceForAfterMinAllAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MinAllAsync<TraceEntity>(trace: trace.Object,
-                field: e => e.Id).Wait();
+            await connection.MinAllAsync<TraceEntity>(trace: trace.Object,
+                field: e => e.Id);
 
             // Assert
             trace.Verify(t =>
@@ -2416,16 +2416,16 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeMinAllAsyncViaTableName()
+        public async Task TestDbConnectionTraceForBeforeMinAllAsyncViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MinAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.MinAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -2434,16 +2434,16 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterMinAllAsyncViaTableName()
+        public async Task TestDbConnectionTraceForAfterMinAllAsyncViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MinAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.MinAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -2496,15 +2496,15 @@ namespace RepoDb.UnitTests.Interfaces
         #region QueryAsync
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeQueryAsync()
+        public async Task TestDbConnectionTraceForBeforeQueryAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.QueryAsync<TraceEntity>(te => te.Id == 1,
-                trace: trace.Object).Wait();
+            await connection.QueryAsync<TraceEntity>(te => te.Id == 1,
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -2513,15 +2513,15 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterQueryAsync()
+        public async Task TestDbConnectionTraceForAfterQueryAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.QueryAsync<TraceEntity>(te => te.Id == 1,
-                trace: trace.Object).Wait();
+            await connection.QueryAsync<TraceEntity>(te => te.Id == 1,
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -2572,14 +2572,14 @@ namespace RepoDb.UnitTests.Interfaces
         #region QueryAllAsync
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeQueryAllAsync()
+        public async Task TestDbConnectionTraceForBeforeQueryAllAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.QueryAllAsync<TraceEntity>(trace: trace.Object);
+            await connection.QueryAllAsync<TraceEntity>(trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -2588,14 +2588,14 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterQueryAllAsync()
+        public async Task TestDbConnectionTraceForAfterQueryAllAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.QueryAllAsync<TraceEntity>(trace: trace.Object);
+            await connection.QueryAllAsync<TraceEntity>(trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -2897,16 +2897,16 @@ namespace RepoDb.UnitTests.Interfaces
         #region T2
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeQueryMultipleAsyncForT2()
+        public async Task TestDbConnectionTraceForBeforeQueryMultipleAsyncForT2()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.QueryMultipleAsync<TraceEntity, TraceEntity>(te => te.Id == 1,
+            await connection.QueryMultipleAsync<TraceEntity, TraceEntity>(te => te.Id == 1,
                 te => te.Id == 1,
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -2915,16 +2915,16 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterQueryMultipleAsyncForT2()
+        public async Task TestDbConnectionTraceForAfterQueryMultipleAsyncForT2()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.QueryMultipleAsync<TraceEntity, TraceEntity>(te => te.Id == 1,
+            await connection.QueryMultipleAsync<TraceEntity, TraceEntity>(te => te.Id == 1,
                 te => te.Id == 1,
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -2937,17 +2937,17 @@ namespace RepoDb.UnitTests.Interfaces
         #region T3
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeQueryMultipleAsyncForT3()
+        public async Task TestDbConnectionTraceForBeforeQueryMultipleAsyncForT3()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
+            await connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -2956,17 +2956,17 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterQueryMultipleAsyncForT3()
+        public async Task TestDbConnectionTraceForAfterQueryMultipleAsyncForT3()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
+            await connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -2980,18 +2980,18 @@ namespace RepoDb.UnitTests.Interfaces
         #region T4
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeQueryMultipleAsyncForT4()
+        public async Task TestDbConnectionTraceForBeforeQueryMultipleAsyncForT4()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
+            await connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -3000,18 +3000,18 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterQueryMultipleAsyncForT4()
+        public async Task TestDbConnectionTraceForAfterQueryMultipleAsyncForT4()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
+            await connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -3026,19 +3026,19 @@ namespace RepoDb.UnitTests.Interfaces
         #region T5
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeQueryMultipleAsyncForT5()
+        public async Task TestDbConnectionTraceForBeforeQueryMultipleAsyncForT5()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
+            await connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -3047,19 +3047,19 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterQueryMultipleAsyncForT5()
+        public async Task TestDbConnectionTraceForAfterQueryMultipleAsyncForT5()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
+            await connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -3075,20 +3075,20 @@ namespace RepoDb.UnitTests.Interfaces
         #region T6
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeQueryMultipleAsyncForT6()
+        public async Task TestDbConnectionTraceForBeforeQueryMultipleAsyncForT6()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
+            await connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -3097,20 +3097,20 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterQueryMultipleAsyncForT6()
+        public async Task TestDbConnectionTraceForAfterQueryMultipleAsyncForT6()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
+            await connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -3127,21 +3127,21 @@ namespace RepoDb.UnitTests.Interfaces
         #region T7
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeQueryMultipleAsyncForT7()
+        public async Task TestDbConnectionTraceForBeforeQueryMultipleAsyncForT7()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
+            await connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -3150,21 +3150,21 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterQueryMultipleAsyncForT7()
+        public async Task TestDbConnectionTraceForAfterQueryMultipleAsyncForT7()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
+            await connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -3262,16 +3262,16 @@ namespace RepoDb.UnitTests.Interfaces
         #region SumAsync
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeSumAsync()
+        public async Task TestDbConnectionTraceForBeforeSumAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.SumAsync<TraceEntity>(trace: trace.Object,
+            await connection.SumAsync<TraceEntity>(trace: trace.Object,
                 field: e => e.Id,
-                where: (object)null).Wait();
+                where: (object)null);
 
             // Assert
             trace.Verify(t =>
@@ -3280,16 +3280,16 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterSumAsync()
+        public async Task TestDbConnectionTraceForAfterSumAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.SumAsync<TraceEntity>(trace: trace.Object,
+            await connection.SumAsync<TraceEntity>(trace: trace.Object,
                 field: e => e.Id,
-                where: (object)null).Wait();
+                where: (object)null);
 
             // Assert
             trace.Verify(t =>
@@ -3298,17 +3298,17 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeSumAsyncViaTableName()
+        public async Task TestDbConnectionTraceForBeforeSumAsyncViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.SumAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.SumAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
                 where: (object)null,
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -3317,17 +3317,17 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterSumAsyncViaTableName()
+        public async Task TestDbConnectionTraceForAfterSumAsyncViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.SumAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.SumAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
                 where: (object)null,
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -3414,15 +3414,15 @@ namespace RepoDb.UnitTests.Interfaces
         #region SumAllAsync
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeSumAllAsync()
+        public async Task TestDbConnectionTraceForBeforeSumAllAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.SumAllAsync<TraceEntity>(trace: trace.Object,
-                field: e => e.Id).Wait();
+            await connection.SumAllAsync<TraceEntity>(trace: trace.Object,
+                field: e => e.Id);
 
             // Assert
             trace.Verify(t =>
@@ -3431,15 +3431,15 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterSumAllAsync()
+        public async Task TestDbConnectionTraceForAfterSumAllAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.SumAllAsync<TraceEntity>(trace: trace.Object,
-                field: e => e.Id).Wait();
+            await connection.SumAllAsync<TraceEntity>(trace: trace.Object,
+                field: e => e.Id);
 
             // Assert
             trace.Verify(t =>
@@ -3448,16 +3448,16 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeSumAllAsyncViaTableName()
+        public async Task TestDbConnectionTraceForBeforeSumAllAsyncViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.SumAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.SumAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -3466,16 +3466,16 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterSumAllAsyncViaTableName()
+        public async Task TestDbConnectionTraceForAfterSumAllAsyncViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.SumAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.SumAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -3558,14 +3558,14 @@ namespace RepoDb.UnitTests.Interfaces
         #region TruncateAsync
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeTruncateAsync()
+        public async Task TestDbConnectionTraceForBeforeTruncateAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.TruncateAsync<TraceEntity>(trace: trace.Object).Wait();
+            await connection.TruncateAsync<TraceEntity>(trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -3574,14 +3574,14 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterTruncateAsync()
+        public async Task TestDbConnectionTraceForAfterTruncateAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.TruncateAsync<TraceEntity>(trace: trace.Object).Wait();
+            await connection.TruncateAsync<TraceEntity>(trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -3590,15 +3590,15 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeTruncateAsyncViaTableName()
+        public async Task TestDbConnectionTraceForBeforeTruncateAsyncViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.TruncateAsync(ClassMappedNameCache.Get<TraceEntity>(),
-                trace: trace.Object).Wait();
+            await connection.TruncateAsync(ClassMappedNameCache.Get<TraceEntity>(),
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -3607,15 +3607,15 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterTruncateAsyncViaTableName()
+        public async Task TestDbConnectionTraceForAfterTruncateAsyncViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.TruncateAsync(ClassMappedNameCache.Get<TraceEntity>(),
-                trace: trace.Object).Wait();
+            await connection.TruncateAsync(ClassMappedNameCache.Get<TraceEntity>(),
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -3728,21 +3728,21 @@ namespace RepoDb.UnitTests.Interfaces
         #region UpdateAsync
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeUpdateAsync()
+        public async Task TestDbConnectionTraceForBeforeUpdateAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.UpdateAsync<TraceEntity>(
+            await connection.UpdateAsync<TraceEntity>(
                 new TraceEntity
                 {
                     Id = 1,
                     Name = "Name"
                 },
                 what: 1,
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -3751,21 +3751,21 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterUpdateAsync()
+        public async Task TestDbConnectionTraceForAfterUpdateAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.UpdateAsync<TraceEntity>(
+            await connection.UpdateAsync<TraceEntity>(
                 new TraceEntity
                 {
                     Id = 1,
                     Name = "Name"
                 },
                 what: 1,
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -3774,14 +3774,14 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeUpdateAsyncViaTableName()
+        public async Task TestDbConnectionTraceForBeforeUpdateAsyncViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.UpdateAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.UpdateAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new
                 {
                     Name = "Name"
@@ -3790,7 +3790,7 @@ namespace RepoDb.UnitTests.Interfaces
                 {
                     Id = 1
                 },
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -3799,14 +3799,14 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterUpdateAsyncViaTableName()
+        public async Task TestDbConnectionTraceForAfterUpdateAsyncViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.UpdateAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.UpdateAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new
                 {
                     Name = "Name"
@@ -3815,7 +3815,7 @@ namespace RepoDb.UnitTests.Interfaces
                 {
                     Id = 1
                 },
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -3904,16 +3904,16 @@ namespace RepoDb.UnitTests.Interfaces
         #region UpdateAllAsync
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeUpdateAllAsync()
+        public async Task TestDbConnectionTraceForBeforeUpdateAllAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.UpdateAllAsync<TraceEntity>(
+            await connection.UpdateAllAsync<TraceEntity>(
                 new[] { new TraceEntity { Id = 1, Name = "Name" } },
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -3922,16 +3922,16 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterUpdateAllAsync()
+        public async Task TestDbConnectionTraceForAfterUpdateAllAsync()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.UpdateAllAsync<TraceEntity>(
+            await connection.UpdateAllAsync<TraceEntity>(
                 new[] { new TraceEntity { Id = 1, Name = "Name" } },
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -3940,16 +3940,16 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForBeforeUpdateAllAsyncViaTableName()
+        public async Task TestDbConnectionTraceForBeforeUpdateAllAsyncViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.UpdateAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.UpdateAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new[] { new { Id = 1, Name = "Name" } },
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>
@@ -3958,16 +3958,16 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceForAfterUpdateAllAsyncViaTableName()
+        public async Task TestDbConnectionTraceForAfterUpdateAllAsyncViaTableName()
         {
             // Prepare
             var trace = new Mock<ITrace>();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.UpdateAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.UpdateAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new[] { new { Id = 1, Name = "Name" } },
-                trace: trace.Object).Wait();
+                trace: trace.Object);
 
             // Assert
             trace.Verify(t =>

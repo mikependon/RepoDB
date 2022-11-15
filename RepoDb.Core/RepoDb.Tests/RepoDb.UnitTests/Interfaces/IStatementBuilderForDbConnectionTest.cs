@@ -5,6 +5,7 @@ using RepoDb.Enumerations;
 using RepoDb.Interfaces;
 using RepoDb.UnitTests.CustomObjects;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace RepoDb.UnitTests.Interfaces
 {
@@ -3369,7 +3370,7 @@ namespace RepoDb.UnitTests.Interfaces
         #region CreateAverage
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForAverageAsync()
+        public async Task TestDbConnectionStatementBuilderForAverageAsync()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -3377,7 +3378,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            connection.AverageAsync<StatementBuilderEntity>(e => e.Id,
+            await connection.AverageAsync<StatementBuilderEntity>(e => e.Id,
                 (object)null,
                 statementBuilder: statementBuilder.Object);
 
@@ -3393,7 +3394,7 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.AverageAsync<StatementBuilderEntity>(e => e.Id,
+            await connection.AverageAsync<StatementBuilderEntity>(e => e.Id,
                 (object)null,
                 statementBuilder: statementBuilderNever.Object);
 
@@ -3407,7 +3408,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForAverageAsyncViaTableName()
+        public async Task TestDbConnectionStatementBuilderForAverageAsyncViaTableName()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -3415,7 +3416,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            connection.AverageAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
+            await connection.AverageAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
                 new Field("Id"),
                 (object)null,
                 statementBuilder: statementBuilder.Object);
@@ -3432,7 +3433,7 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.AverageAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
+            await connection.AverageAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
                 new Field("Id"),
                 (object)null,
                 statementBuilder: statementBuilderNever.Object);
@@ -3447,7 +3448,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForAverageAsyncViaCrossCall()
+        public async Task TestDbConnectionStatementBuilderForAverageAsyncViaCrossCall()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -3455,7 +3456,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            connection.AverageAsync<StatementBuilderEntityForCrossCall>(e => e.Id,
+            await connection.AverageAsync<StatementBuilderEntityForCrossCall>(e => e.Id,
                 (object)null,
                 statementBuilder: statementBuilder.Object);
 
@@ -3471,7 +3472,7 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.AverageAsync(ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>(),
+            await connection.AverageAsync(ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>(),
                 new Field("Id", typeof(int)),
                 (object)null,
                 statementBuilder: statementBuilderNever.Object);
@@ -3490,7 +3491,7 @@ namespace RepoDb.UnitTests.Interfaces
         #region CreateAverageAll
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForAverageAllAsync()
+        public async Task TestDbConnectionStatementBuilderForAverageAllAsync()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -3498,7 +3499,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            connection.AverageAllAsync<StatementBuilderEntity>(e => e.Id,
+            await connection.AverageAllAsync<StatementBuilderEntity>(e => e.Id,
                 statementBuilder: statementBuilder.Object);
 
             // Assert
@@ -3512,7 +3513,7 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.AverageAllAsync<StatementBuilderEntity>(e => e.Id,
+            await connection.AverageAllAsync<StatementBuilderEntity>(e => e.Id,
                 statementBuilder: statementBuilderNever.Object);
 
             // Assert
@@ -3524,7 +3525,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForAverageAllAsyncViaTableName()
+        public async Task TestDbConnectionStatementBuilderForAverageAllAsyncViaTableName()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -3532,7 +3533,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            connection.AverageAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
+            await connection.AverageAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
                 new Field("Id"),
                 statementBuilder: statementBuilder.Object);
 
@@ -3547,7 +3548,7 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.AverageAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
+            await connection.AverageAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
                 new Field("Id"),
                 statementBuilder: statementBuilderNever.Object);
 
@@ -3560,7 +3561,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForAverageAllAsyncViaCrossCall()
+        public async Task TestDbConnectionStatementBuilderForAverageAllAsyncViaCrossCall()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -3568,7 +3569,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            connection.AverageAllAsync<StatementBuilderEntityForCrossCall>(e => e.Id,
+            await connection.AverageAllAsync<StatementBuilderEntityForCrossCall>(e => e.Id,
                 statementBuilder: statementBuilder.Object);
 
             // Assert
@@ -3582,7 +3583,7 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.AverageAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>(),
+            await connection.AverageAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>(),
                 new Field("Id", typeof(int)),
                 statementBuilder: statementBuilderNever.Object);
 
@@ -3599,7 +3600,7 @@ namespace RepoDb.UnitTests.Interfaces
         #region CreateBatchQueryAsync
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForBatchQueryAsync()
+        public async Task TestDbConnectionStatementBuilderForBatchQueryAsync()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -3607,11 +3608,11 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            connection.BatchQueryAsync<StatementBuilderEntity>(page: 0,
+            await connection.BatchQueryAsync<StatementBuilderEntity>(page: 0,
                 rowsPerBatch: 10,
                 orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                 where: (QueryGroup)null,
-                statementBuilder: statementBuilder.Object).Wait();
+                statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -3628,11 +3629,11 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.BatchQueryAsync<StatementBuilderEntity>(page: 0,
+            await connection.BatchQueryAsync<StatementBuilderEntity>(page: 0,
                 rowsPerBatch: 10,
                 orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                 where: (QueryGroup)null,
-                statementBuilder: statementBuilderNever.Object).Wait();
+                statementBuilder: statementBuilderNever.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -3651,7 +3652,7 @@ namespace RepoDb.UnitTests.Interfaces
         #region CreateCountAsync
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForCountAsync()
+        public async Task TestDbConnectionStatementBuilderForCountAsync()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -3659,8 +3660,8 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            connection.CountAsync<StatementBuilderEntity>((object)null,
-                statementBuilder: statementBuilder.Object).Wait();
+            await connection.CountAsync<StatementBuilderEntity>((object)null,
+                statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -3673,8 +3674,8 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.CountAsync<StatementBuilderEntity>((object)null,
-                statementBuilder: statementBuilderNever.Object).Wait();
+            await connection.CountAsync<StatementBuilderEntity>((object)null,
+                statementBuilder: statementBuilderNever.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -3685,7 +3686,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForCountAsyncViaTableName()
+        public async Task TestDbConnectionStatementBuilderForCountAsyncViaTableName()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -3693,9 +3694,9 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            connection.CountAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
+            await connection.CountAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
                 (object)null,
-                statementBuilder: statementBuilder.Object).Wait();
+                statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -3708,9 +3709,9 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.CountAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
+            await connection.CountAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
                 (object)null,
-                statementBuilder: statementBuilderNever.Object).Wait();
+                statementBuilder: statementBuilderNever.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -3721,7 +3722,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForCountAsyncViaCrossCall()
+        public async Task TestDbConnectionStatementBuilderForCountAsyncViaCrossCall()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -3729,8 +3730,8 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            connection.CountAsync<StatementBuilderEntityForCrossCall>((object)null,
-                statementBuilder: statementBuilder.Object).Wait();
+            await connection.CountAsync<StatementBuilderEntityForCrossCall>((object)null,
+                statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -3743,9 +3744,9 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.CountAsync(ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>(),
+            await connection.CountAsync(ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>(),
                 (object)null,
-                statementBuilder: statementBuilderNever.Object).Wait();
+                statementBuilder: statementBuilderNever.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -3760,7 +3761,7 @@ namespace RepoDb.UnitTests.Interfaces
         #region CreateCountAllAsync
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForCountAllAsync()
+        public async Task TestDbConnectionStatementBuilderForCountAllAsync()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -3768,7 +3769,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            connection.CountAllAsync<StatementBuilderEntity>(statementBuilder: statementBuilder.Object).Wait();
+            await connection.CountAllAsync<StatementBuilderEntity>(statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -3780,7 +3781,7 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.CountAllAsync<StatementBuilderEntity>(statementBuilder: statementBuilderNever.Object).Wait();
+            await connection.CountAllAsync<StatementBuilderEntity>(statementBuilder: statementBuilderNever.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -3790,7 +3791,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForCountAllAsyncViaTableName()
+        public async Task TestDbConnectionStatementBuilderForCountAllAsyncViaTableName()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -3798,8 +3799,8 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            connection.CountAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
-                statementBuilder: statementBuilder.Object).Wait();
+            await connection.CountAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
+                statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -3811,8 +3812,8 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.CountAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
-                statementBuilder: statementBuilderNever.Object).Wait();
+            await connection.CountAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
+                statementBuilder: statementBuilderNever.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -3822,7 +3823,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForCountAllAsyncViaCrossCall()
+        public async Task TestDbConnectionStatementBuilderForCountAllAsyncViaCrossCall()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -3830,7 +3831,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            connection.CountAllAsync<StatementBuilderEntityForCrossCall>(statementBuilder: statementBuilder.Object).Wait();
+            await connection.CountAllAsync<StatementBuilderEntityForCrossCall>(statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -3842,8 +3843,8 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.CountAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>(),
-                statementBuilder: statementBuilderNever.Object).Wait();
+            await connection.CountAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>(),
+                statementBuilder: statementBuilderNever.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -3857,7 +3858,7 @@ namespace RepoDb.UnitTests.Interfaces
         #region CreateDeleteAsync
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForDeleteAsync()
+        public async Task TestDbConnectionStatementBuilderForDeleteAsync()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -3865,8 +3866,8 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            connection.DeleteAsync<StatementBuilderEntity>(e => e.Id == 1,
-                statementBuilder: statementBuilder.Object).Wait();
+            await connection.DeleteAsync<StatementBuilderEntity>(e => e.Id == 1,
+                statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -3879,8 +3880,8 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.DeleteAsync<StatementBuilderEntity>(e => e.Id == 1,
-                statementBuilder: statementBuilderNever.Object).Wait();
+            await connection.DeleteAsync<StatementBuilderEntity>(e => e.Id == 1,
+                statementBuilder: statementBuilderNever.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -3891,7 +3892,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForDeleteAsyncViaTableName()
+        public async Task TestDbConnectionStatementBuilderForDeleteAsyncViaTableName()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -3899,12 +3900,12 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            connection.DeleteAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
+            await connection.DeleteAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
                 new
                 {
                     Id = 1
                 },
-                statementBuilder: statementBuilder.Object).Wait();
+                statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -3917,12 +3918,12 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.DeleteAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
+            await connection.DeleteAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
                 new
                 {
                     Id = 1
                 },
-                statementBuilder: statementBuilderNever.Object).Wait();
+                statementBuilder: statementBuilderNever.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -3933,7 +3934,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForDeleteAsyncViaCrossCall()
+        public async Task TestDbConnectionStatementBuilderForDeleteAsyncViaCrossCall()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -3941,8 +3942,8 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            connection.DeleteAsync<StatementBuilderEntityForCrossCall>(e => e.Id == 1,
-                statementBuilder: statementBuilder.Object).Wait();
+            await connection.DeleteAsync<StatementBuilderEntityForCrossCall>(e => e.Id == 1,
+                statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -3955,12 +3956,12 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.DeleteAsync(ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>(),
+            await connection.DeleteAsync(ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>(),
                 new
                 {
                     Id = 1
                 },
-                statementBuilder: statementBuilderNever.Object).Wait();
+                statementBuilder: statementBuilderNever.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -3975,7 +3976,7 @@ namespace RepoDb.UnitTests.Interfaces
         #region CreateDeleteAllAsync
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForDeleteAllAsync()
+        public async Task TestDbConnectionStatementBuilderForDeleteAllAsync()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -3983,7 +3984,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            connection.DeleteAllAsync<StatementBuilderEntity>(statementBuilder: statementBuilder.Object).Wait();
+            await connection.DeleteAllAsync<StatementBuilderEntity>(statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -3995,7 +3996,7 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.DeleteAllAsync<StatementBuilderEntity>(statementBuilder: statementBuilderNever.Object).Wait();
+            await connection.DeleteAllAsync<StatementBuilderEntity>(statementBuilder: statementBuilderNever.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -4005,7 +4006,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForDeleteAllAsyncViaTableName()
+        public async Task TestDbConnectionStatementBuilderForDeleteAllAsyncViaTableName()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -4013,8 +4014,8 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            connection.DeleteAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
-                statementBuilder: statementBuilder.Object).Wait();
+            await connection.DeleteAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
+                statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -4026,8 +4027,8 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.DeleteAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
-                statementBuilder: statementBuilderNever.Object).Wait();
+            await connection.DeleteAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
+                statementBuilder: statementBuilderNever.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -4037,7 +4038,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForDeleteAllAsyncViaCrossCall()
+        public async Task TestDbConnectionStatementBuilderForDeleteAllAsyncViaCrossCall()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -4045,7 +4046,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            connection.DeleteAllAsync<StatementBuilderEntityForCrossCall>(statementBuilder: statementBuilder.Object).Wait();
+            await connection.DeleteAllAsync<StatementBuilderEntityForCrossCall>(statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -4057,8 +4058,8 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.DeleteAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>(),
-                statementBuilder: statementBuilderNever.Object).Wait();
+           await connection.DeleteAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>(),
+                statementBuilder: statementBuilderNever.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -4072,7 +4073,7 @@ namespace RepoDb.UnitTests.Interfaces
         #region CreateExistsAsync
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForExistsAsync()
+        public async Task TestDbConnectionStatementBuilderForExistsAsync()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -4080,8 +4081,8 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            connection.ExistsAsync<StatementBuilderEntity>((object)null,
-                statementBuilder: statementBuilder.Object).Wait();
+            await connection.ExistsAsync<StatementBuilderEntity>((object)null,
+                statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -4094,8 +4095,8 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.ExistsAsync<StatementBuilderEntity>((object)null,
-                statementBuilder: statementBuilderNever.Object).Wait();
+            await connection.ExistsAsync<StatementBuilderEntity>((object)null,
+                statementBuilder: statementBuilderNever.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -4106,7 +4107,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForExistsAsyncViaTableName()
+        public async Task TestDbConnectionStatementBuilderForExistsAsyncViaTableName()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -4114,9 +4115,9 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            connection.ExistsAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
+            await connection.ExistsAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
                 (object)null,
-                statementBuilder: statementBuilder.Object).Wait();
+                statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -4129,9 +4130,9 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.ExistsAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
+            await connection.ExistsAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
                 (object)null,
-                statementBuilder: statementBuilderNever.Object).Wait();
+                statementBuilder: statementBuilderNever.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -4142,7 +4143,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForExistsAsyncViaCrossCall()
+        public async Task TestDbConnectionStatementBuilderForExistsAsyncViaCrossCall()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -4150,8 +4151,8 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            connection.ExistsAsync<StatementBuilderEntityForCrossCall>((object)null,
-                statementBuilder: statementBuilder.Object).Wait();
+            await connection.ExistsAsync<StatementBuilderEntityForCrossCall>((object)null,
+                statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -4164,9 +4165,9 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.ExistsAsync(ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>(),
+            await connection.ExistsAsync(ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>(),
                 (object)null,
-                statementBuilder: statementBuilderNever.Object).Wait();
+                statementBuilder: statementBuilderNever.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -4181,7 +4182,7 @@ namespace RepoDb.UnitTests.Interfaces
         #region CreateInsertAsync
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForInsertAsync()
+        public async Task TestDbConnectionStatementBuilderForInsertAsync()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -4190,12 +4191,12 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             InsertExecutionContextCache.Flush();
             CommandTextCache.Flush();
-            connection.InsertAsync<StatementBuilderEntity>(
+            await connection.InsertAsync<StatementBuilderEntity>(
                 new StatementBuilderEntity
                 {
                     Name = "Name"
                 },
-                statementBuilder: statementBuilder.Object).Wait();
+                statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -4210,12 +4211,12 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.InsertAsync<StatementBuilderEntity>(
+            await connection.InsertAsync<StatementBuilderEntity>(
                 new StatementBuilderEntity
                 {
                     Name = "Name"
                 },
-                statementBuilder: statementBuilderNever.Object).Wait();
+                statementBuilder: statementBuilderNever.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -4228,7 +4229,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForInsertAsyncForTableName()
+        public async Task TestDbConnectionStatementBuilderForInsertAsyncForTableName()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -4237,12 +4238,12 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             InsertExecutionContextCache.Flush();
             CommandTextCache.Flush();
-            connection.InsertAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
+            await connection.InsertAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
                 new
                 {
                     Name = "Name"
                 },
-                statementBuilder: statementBuilder.Object).Wait();
+                statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -4257,12 +4258,12 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.InsertAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
+            await connection.InsertAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
                 new
                 {
                     Name = "Name"
                 },
-                statementBuilder: statementBuilderNever.Object).Wait();
+                statementBuilder: statementBuilderNever.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -4275,7 +4276,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForInsertAsyncViaCrossCall()
+        public async Task TestDbConnectionStatementBuilderForInsertAsyncViaCrossCall()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -4284,12 +4285,12 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             InsertExecutionContextCache.Flush();
             CommandTextCache.Flush();
-            connection.InsertAsync<StatementBuilderEntityForCrossCall>(
+            await connection.InsertAsync<StatementBuilderEntityForCrossCall>(
                 new StatementBuilderEntityForCrossCall
                 {
                     Name = "Name"
                 },
-                statementBuilder: statementBuilder.Object).Wait();
+                statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -4304,13 +4305,13 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.InsertAsync(ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>(),
+            await connection.InsertAsync(ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>(),
                 new
                 {
                     Id = 1,
                     Name = "Name"
                 },
-                statementBuilder: statementBuilderNever.Object).Wait();
+                statementBuilder: statementBuilderNever.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -4327,7 +4328,7 @@ namespace RepoDb.UnitTests.Interfaces
         #region CreateInsertAllAsync
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForInsertAllAsync()
+        public async Task TestDbConnectionStatementBuilderForInsertAllAsync()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -4336,13 +4337,13 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             InsertAllExecutionContextCache.Flush();
             CommandTextCache.Flush();
-            connection.InsertAllAsync<StatementBuilderEntity>(new[]
+            await connection.InsertAllAsync<StatementBuilderEntity>(new[]
             {
                 new StatementBuilderEntity{ Name = "Name1" },
                 new StatementBuilderEntity{ Name = "Name2" },
                 new StatementBuilderEntity{ Name = "Name3" }
             },
-            statementBuilder: statementBuilder.Object).Wait();
+            statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -4358,13 +4359,13 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.InsertAllAsync<StatementBuilderEntity>(new[]
+            await connection.InsertAllAsync<StatementBuilderEntity>(new[]
             {
                 new StatementBuilderEntity{ Name = "Name1" },
                 new StatementBuilderEntity{ Name = "Name2" },
                 new StatementBuilderEntity{ Name = "Name3" }
             },
-            statementBuilder: statementBuilderNever.Object).Wait();
+            statementBuilder: statementBuilderNever.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -4378,7 +4379,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForInsertAllAsyncWithSizePerBatchEqualsToOne()
+        public async Task TestDbConnectionStatementBuilderForInsertAllAsyncWithSizePerBatchEqualsToOne()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -4387,12 +4388,12 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             InsertAllExecutionContextCache.Flush();
             CommandTextCache.Flush();
-            connection.InsertAllAsync<StatementBuilderEntity>(new[]
+            await connection.InsertAllAsync<StatementBuilderEntity>(new[]
             {
                 new StatementBuilderEntity{ Name = "Name" }
             },
             batchSize: 1,
-            statementBuilder: statementBuilder.Object).Wait();
+            statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -4407,12 +4408,12 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.InsertAllAsync<StatementBuilderEntity>(new[]
+            await connection.InsertAllAsync<StatementBuilderEntity>(new[]
             {
                 new StatementBuilderEntity{ Name = "Name" }
             },
             batchSize: 1,
-            statementBuilder: statementBuilderNever.Object).Wait();
+            statementBuilder: statementBuilderNever.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -4425,7 +4426,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForInsertAllAsyncForTableName()
+        public async Task TestDbConnectionStatementBuilderForInsertAllAsyncForTableName()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -4434,7 +4435,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             InsertAllExecutionContextCache.Flush();
             CommandTextCache.Flush();
-            connection.InsertAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
+            await connection.InsertAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
                 new[]
                 {
                     new { Name = "Name1" },
@@ -4442,7 +4443,7 @@ namespace RepoDb.UnitTests.Interfaces
                     new { Name = "Name3" }
                 },
                 fields: new[] { new Field("Id", typeof(int)), new Field("Name", typeof(string)) },
-                statementBuilder: statementBuilder.Object).Wait();
+                statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -4458,7 +4459,7 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.InsertAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
+            await connection.InsertAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
                 new[]
                 {
                     new { Name = "Name1" },
@@ -4466,7 +4467,7 @@ namespace RepoDb.UnitTests.Interfaces
                     new { Name = "Name3" }
                 },
                 fields: new[] { new Field("Id", typeof(int)), new Field("Name", typeof(string)) },
-                statementBuilder: statementBuilderNever.Object).Wait();
+                statementBuilder: statementBuilderNever.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -4480,7 +4481,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForInsertAllAsyncWithSizePerBatchEqualsToOneForTableName()
+        public async Task TestDbConnectionStatementBuilderForInsertAllAsyncWithSizePerBatchEqualsToOneForTableName()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -4489,14 +4490,14 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             InsertAllExecutionContextCache.Flush();
             CommandTextCache.Flush();
-            connection.InsertAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
+            await connection.InsertAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
                 new[]
                 {
                     new { Name = "Name" }
                 },
                 fields: new[] { new Field("Id", typeof(int)), new Field("Name", typeof(string)) },
                 batchSize: 1,
-                statementBuilder: statementBuilder.Object).Wait();
+                statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -4511,14 +4512,14 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.InsertAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
+            await connection.InsertAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
                 new[]
                 {
                     new { Name = "Name" }
                 },
                 fields: new[] { new Field("Id", typeof(int)), new Field("Name", typeof(string)) },
                 batchSize: 1,
-                statementBuilder: statementBuilderNever.Object).Wait();
+                statementBuilder: statementBuilderNever.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -4531,7 +4532,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForInsertAllAsyncViaCrossCall()
+        public async Task TestDbConnectionStatementBuilderForInsertAllAsyncViaCrossCall()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -4540,14 +4541,14 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             InsertAllExecutionContextCache.Flush();
             CommandTextCache.Flush();
-            connection.InsertAllAsync<StatementBuilderEntityForCrossCall>(
+            await connection.InsertAllAsync<StatementBuilderEntityForCrossCall>(
                 new[]
                 {
                     new StatementBuilderEntityForCrossCall { Name = "Name1" },
                     new StatementBuilderEntityForCrossCall { Name = "Name2" },
                     new StatementBuilderEntityForCrossCall { Name = "Name3" }
                 },
-                statementBuilder: statementBuilder.Object).Wait();
+                statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -4563,7 +4564,7 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.InsertAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>(),
+            await connection.InsertAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>(),
                 new[]
                 {
                     new { Name = "Name1" },
@@ -4571,7 +4572,7 @@ namespace RepoDb.UnitTests.Interfaces
                     new { Name = "Name3" }
                 },
                 fields: new[] { new Field("Id", typeof(int)), new Field("Name", typeof(string)) },
-                statementBuilder: statementBuilderNever.Object).Wait();
+                statementBuilder: statementBuilderNever.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -4585,7 +4586,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForInsertAllAsyncWithSizePerBatchEqualsToOneViaCrossCall()
+        public async Task TestDbConnectionStatementBuilderForInsertAllAsyncWithSizePerBatchEqualsToOneViaCrossCall()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -4594,13 +4595,13 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             InsertAllExecutionContextCache.Flush();
             CommandTextCache.Flush();
-            connection.InsertAllAsync<StatementBuilderEntityForCrossCall>(
+            await connection.InsertAllAsync<StatementBuilderEntityForCrossCall>(
                 new[]
                 {
                     new StatementBuilderEntityForCrossCall { Name = "Name" }
                 },
                 batchSize: 1,
-                statementBuilder: statementBuilder.Object).Wait();
+                statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -4615,14 +4616,14 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.InsertAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>(),
+            await connection.InsertAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>(),
                 new[]
                 {
                     new { Name = "Name" }
                 },
                 fields: new[] { new Field("Id", typeof(int)), new Field("Name", typeof(string)) },
                 batchSize: 1,
-                statementBuilder: statementBuilderNever.Object).Wait();
+                statementBuilder: statementBuilderNever.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -4639,7 +4640,7 @@ namespace RepoDb.UnitTests.Interfaces
         #region CreateMaxAsync
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForMaxAsync()
+        public async Task TestDbConnectionStatementBuilderForMaxAsync()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -4647,7 +4648,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            connection.MaxAsync<StatementBuilderEntity>(e => e.Id,
+            await connection.MaxAsync<StatementBuilderEntity>(e => e.Id,
                 (object)null,
                 statementBuilder: statementBuilder.Object);
 
@@ -4663,7 +4664,7 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.MaxAsync<StatementBuilderEntity>(e => e.Id,
+            await connection.MaxAsync<StatementBuilderEntity>(e => e.Id,
                 (object)null,
                 statementBuilder: statementBuilderNever.Object);
 
@@ -4677,7 +4678,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForMaxAsyncViaTableName()
+        public async Task TestDbConnectionStatementBuilderForMaxAsyncViaTableName()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -4685,7 +4686,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            connection.MaxAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
+            await connection.MaxAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
                 new Field("Id"),
                 (object)null,
                 statementBuilder: statementBuilder.Object);
@@ -4702,7 +4703,7 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.MaxAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
+            await connection.MaxAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
                 new Field("Id"),
                 (object)null,
                 statementBuilder: statementBuilderNever.Object);
@@ -4717,7 +4718,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForMaxAsyncViaCrossCall()
+        public async Task TestDbConnectionStatementBuilderForMaxAsyncViaCrossCall()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -4725,7 +4726,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            connection.MaxAsync<StatementBuilderEntityForCrossCall>(e => e.Id,
+            await connection.MaxAsync<StatementBuilderEntityForCrossCall>(e => e.Id,
                 (object)null,
                 statementBuilder: statementBuilder.Object);
 
@@ -4741,7 +4742,7 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.MaxAsync(ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>(),
+            await connection.MaxAsync(ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>(),
                 new Field("Id", typeof(int)),
                 (object)null,
                 statementBuilder: statementBuilderNever.Object);
@@ -4760,7 +4761,7 @@ namespace RepoDb.UnitTests.Interfaces
         #region CreateMaxAllAsync
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForMaxAllAsync()
+        public async Task TestDbConnectionStatementBuilderForMaxAllAsync()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -4768,7 +4769,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            connection.MaxAllAsync<StatementBuilderEntity>(e => e.Id,
+            await connection.MaxAllAsync<StatementBuilderEntity>(e => e.Id,
                 statementBuilder: statementBuilder.Object);
 
             // Assert
@@ -4782,7 +4783,7 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.MaxAllAsync<StatementBuilderEntity>(e => e.Id,
+            await connection.MaxAllAsync<StatementBuilderEntity>(e => e.Id,
                 statementBuilder: statementBuilderNever.Object);
 
             // Assert
@@ -4794,7 +4795,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForMaxAllAsyncViaTableName()
+        public async Task TestDbConnectionStatementBuilderForMaxAllAsyncViaTableName()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -4802,7 +4803,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            connection.MaxAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
+            await connection.MaxAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
                 new Field("Id"),
                 statementBuilder: statementBuilder.Object);
 
@@ -4817,7 +4818,7 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.MaxAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
+            await connection.MaxAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
                 new Field("Id"),
                 statementBuilder: statementBuilderNever.Object);
 
@@ -4830,7 +4831,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForMaxAllAsyncViaCrossCall()
+        public async Task TestDbConnectionStatementBuilderForMaxAllAsyncViaCrossCall()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -4838,7 +4839,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            connection.MaxAllAsync<StatementBuilderEntityForCrossCall>(e => e.Id,
+            await connection.MaxAllAsync<StatementBuilderEntityForCrossCall>(e => e.Id,
                 statementBuilder: statementBuilder.Object);
 
             // Assert
@@ -4852,7 +4853,7 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.MaxAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>(),
+            await connection.MaxAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>(),
                 new Field("Id", typeof(int)),
                 statementBuilder: statementBuilderNever.Object);
 
@@ -4869,7 +4870,7 @@ namespace RepoDb.UnitTests.Interfaces
         #region CreateMergeAsync
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForMergeAsync()
+        public async Task TestDbConnectionStatementBuilderForMergeAsync()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -4878,13 +4879,13 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             MergeExecutionContextCache.Flush();
             CommandTextCache.Flush();
-            connection.MergeAsync<StatementBuilderEntity>(
+            await connection.MergeAsync<StatementBuilderEntity>(
                 new StatementBuilderEntity
                 {
                     Name = "Name"
                 },
                 new Field(nameof(StatementBuilderEntity.Id)),
-                statementBuilder: statementBuilder.Object).Wait();
+                statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -4900,13 +4901,13 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.MergeAsync<StatementBuilderEntity>(
+            await connection.MergeAsync<StatementBuilderEntity>(
                 new StatementBuilderEntity
                 {
                     Name = "Name"
                 },
                 new Field(nameof(StatementBuilderEntity.Id)),
-                statementBuilder: statementBuilderNever.Object).Wait();
+                statementBuilder: statementBuilderNever.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -4920,7 +4921,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForMergeAsyncViaTableName()
+        public async Task TestDbConnectionStatementBuilderForMergeAsyncViaTableName()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -4929,13 +4930,13 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             MergeExecutionContextCache.Flush();
             CommandTextCache.Flush();
-            connection.MergeAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
+            await connection.MergeAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
                 new
                 {
                     Name = "Name"
                 },
                 new Field(nameof(StatementBuilderEntityForTableName.Id)),
-                statementBuilder: statementBuilder.Object).Wait();
+                statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -4951,13 +4952,13 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.MergeAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
+            await connection.MergeAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
                 new
                 {
                     Name = "Name"
                 },
                 new Field(nameof(StatementBuilderEntityForTableName.Id)),
-                statementBuilder: statementBuilderNever.Object).Wait();
+                statementBuilder: statementBuilderNever.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -4971,7 +4972,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForMergeAsyncViaCrossCall()
+        public async Task TestDbConnectionStatementBuilderForMergeAsyncViaCrossCall()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -4980,13 +4981,13 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             MergeExecutionContextCache.Flush();
             CommandTextCache.Flush();
-            connection.MergeAsync<StatementBuilderEntityForCrossCall>(
+            await connection.MergeAsync<StatementBuilderEntityForCrossCall>(
                 new StatementBuilderEntityForCrossCall
                 {
                     Name = "Name"
                 },
                 new Field(nameof(StatementBuilderEntityForCrossCall.Id)),
-                statementBuilder: statementBuilder.Object).Wait();
+                statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -5002,14 +5003,14 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.MergeAsync(ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>(),
+            await connection.MergeAsync(ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>(),
                 new
                 {
                     Id = 1,
                     Name = "Name"
                 },
                 new Field(nameof(StatementBuilderEntityForCrossCall.Id)),
-                statementBuilder: statementBuilderNever.Object).Wait();
+                statementBuilder: statementBuilderNever.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -5027,7 +5028,7 @@ namespace RepoDb.UnitTests.Interfaces
         #region CreateMergeAllAsync
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForMergeAllAsync()
+        public async Task TestDbConnectionStatementBuilderForMergeAllAsync()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -5036,7 +5037,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             MergeAllExecutionContextCache.Flush();
             CommandTextCache.Flush();
-            connection.MergeAllAsync<StatementBuilderEntity>(
+            await connection.MergeAllAsync<StatementBuilderEntity>(
                 new[]
                 {
                     new StatementBuilderEntity { Name = "Name1" },
@@ -5044,7 +5045,7 @@ namespace RepoDb.UnitTests.Interfaces
                     new StatementBuilderEntity { Name = "Name3" }
                 },
                 new Field(nameof(StatementBuilderEntity.Id)),
-                statementBuilder: statementBuilder.Object).Wait();
+                statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -5062,7 +5063,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             MergeAllExecutionContextCache.Flush();
-            connection.MergeAllAsync<StatementBuilderEntity>(
+            await connection.MergeAllAsync<StatementBuilderEntity>(
                 new[]
                 {
                     new StatementBuilderEntity { Name = "Name1" },
@@ -5070,7 +5071,7 @@ namespace RepoDb.UnitTests.Interfaces
                     new StatementBuilderEntity { Name = "Name3" }
                 },
                 new Field(nameof(StatementBuilderEntity.Id)),
-                statementBuilder: statementBuilderNever.Object).Wait();
+                statementBuilder: statementBuilderNever.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -5085,7 +5086,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForMergeAllAsyncWithSizePerBatchEqualsToOne()
+        public async Task TestDbConnectionStatementBuilderForMergeAllAsyncWithSizePerBatchEqualsToOne()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -5094,14 +5095,14 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             MergeAllExecutionContextCache.Flush();
             CommandTextCache.Flush();
-            connection.MergeAllAsync<StatementBuilderEntity>(
+            await connection.MergeAllAsync<StatementBuilderEntity>(
                 new[]
                 {
                     new StatementBuilderEntity { Name = "Name1" }
                 },
                 new Field(nameof(StatementBuilderEntity.Id)),
                 batchSize: 1,
-                statementBuilder: statementBuilder.Object).Wait();
+                statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -5117,14 +5118,14 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.MergeAllAsync<StatementBuilderEntity>(
+            await connection.MergeAllAsync<StatementBuilderEntity>(
                 new[]
                 {
                     new StatementBuilderEntity { Name = "Name1" }
                 },
                 new Field(nameof(StatementBuilderEntity.Id)),
                 batchSize: 1,
-                statementBuilder: statementBuilderNever.Object).Wait();
+                statementBuilder: statementBuilderNever.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -5138,7 +5139,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForMergeAllAsyncViaTableName()
+        public async Task TestDbConnectionStatementBuilderForMergeAllAsyncViaTableName()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -5147,7 +5148,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             MergeAllExecutionContextCache.Flush();
             CommandTextCache.Flush();
-            connection.MergeAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
+            await connection.MergeAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
                 new[]
                 {
                     new { Name = "Name1" },
@@ -5155,7 +5156,7 @@ namespace RepoDb.UnitTests.Interfaces
                     new { Name = "Name3" }
                 },
                 new Field(nameof(StatementBuilderEntityForTableName.Id)),
-                statementBuilder: statementBuilder.Object).Wait();
+                statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -5172,7 +5173,7 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.MergeAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
+            await connection.MergeAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
                 new[]
                 {
                     new { Name = "Name1" },
@@ -5180,7 +5181,7 @@ namespace RepoDb.UnitTests.Interfaces
                     new { Name = "Name3" }
                 },
                 new Field(nameof(StatementBuilderEntityForTableName.Id)),
-                statementBuilder: statementBuilderNever.Object).Wait();
+                statementBuilder: statementBuilderNever.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -5195,7 +5196,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForMergeAllAsyncWithSizePerBatchEqualsToOneViaTableName()
+        public async Task TestDbConnectionStatementBuilderForMergeAllAsyncWithSizePerBatchEqualsToOneViaTableName()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -5204,14 +5205,14 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             MergeAllExecutionContextCache.Flush();
             CommandTextCache.Flush();
-            connection.MergeAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
+            await connection.MergeAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
                 new[]
                 {
                     new { Name = "Name1" }
                 },
                 new Field(nameof(StatementBuilderEntityForTableName.Id)),
                 batchSize: 1,
-                statementBuilder: statementBuilder.Object).Wait();
+                statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -5227,14 +5228,14 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.MergeAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
+            await connection.MergeAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
                 new[]
                 {
                     new { Name = "Name1" }
                 },
                 new Field(nameof(StatementBuilderEntityForTableName.Id)),
                 batchSize: 1,
-                statementBuilder: statementBuilderNever.Object).Wait();
+                statementBuilder: statementBuilderNever.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -5248,7 +5249,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForMergeAllAsyncViaCrossCall()
+        public async Task TestDbConnectionStatementBuilderForMergeAllAsyncViaCrossCall()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -5257,7 +5258,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             MergeAllExecutionContextCache.Flush();
             CommandTextCache.Flush();
-            connection.MergeAllAsync<StatementBuilderEntityForCrossCall>(
+            await connection.MergeAllAsync<StatementBuilderEntityForCrossCall>(
                 new[]
                 {
                     new StatementBuilderEntityForCrossCall { Name = "Name1" },
@@ -5265,7 +5266,7 @@ namespace RepoDb.UnitTests.Interfaces
                     new StatementBuilderEntityForCrossCall { Name = "Name3" }
                 },
                 new Field(nameof(StatementBuilderEntityForCrossCall.Id)),
-                statementBuilder: statementBuilder.Object).Wait();
+                statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -5282,7 +5283,7 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.MergeAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>(),
+            await connection.MergeAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>(),
                 new[]
                 {
                     new { Id = 0, Name = "Name1" },
@@ -5291,7 +5292,7 @@ namespace RepoDb.UnitTests.Interfaces
                 },
                 new Field(nameof(StatementBuilderEntityForCrossCall.Id)),
                 fields: FieldCache.Get<StatementBuilderEntityForCrossCall>(),
-                statementBuilder: statementBuilderNever.Object).Wait();
+                statementBuilder: statementBuilderNever.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -5306,7 +5307,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForMergeAllAsyncWithSizePerBatchEqualsToOneViaCrossCall()
+        public async Task TestDbConnectionStatementBuilderForMergeAllAsyncWithSizePerBatchEqualsToOneViaCrossCall()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -5315,7 +5316,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             MergeAllExecutionContextCache.Flush();
             CommandTextCache.Flush();
-            connection.MergeAllAsync<StatementBuilderEntityForCrossCall>(
+            await connection.MergeAllAsync<StatementBuilderEntityForCrossCall>(
                 new[]
                 {
                     new StatementBuilderEntityForCrossCall { Name = "Name1" },
@@ -5324,7 +5325,7 @@ namespace RepoDb.UnitTests.Interfaces
                 },
                 new Field(nameof(StatementBuilderEntityForCrossCall.Id)),
                 batchSize: 1,
-                statementBuilder: statementBuilder.Object).Wait();
+                statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -5340,7 +5341,7 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.MergeAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>(),
+            await connection.MergeAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>(),
                 new[]
                 {
                     new { Id = 0, Name = "Name1" },
@@ -5350,7 +5351,7 @@ namespace RepoDb.UnitTests.Interfaces
                 new Field(nameof(StatementBuilderEntityForCrossCall.Id)),
                 batchSize: 1,
                 fields: FieldCache.Get<StatementBuilderEntityForCrossCall>(),
-                statementBuilder: statementBuilderNever.Object).Wait();
+                statementBuilder: statementBuilderNever.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -5368,7 +5369,7 @@ namespace RepoDb.UnitTests.Interfaces
         #region CreateMinAsync
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForMinAsync()
+        public async Task TestDbConnectionStatementBuilderForMinAsync()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -5376,7 +5377,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            connection.MinAsync<StatementBuilderEntity>(e => e.Id,
+            await connection.MinAsync<StatementBuilderEntity>(e => e.Id,
                 (object)null,
                 statementBuilder: statementBuilder.Object);
 
@@ -5392,7 +5393,7 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.MinAsync<StatementBuilderEntity>(e => e.Id,
+            await connection.MinAsync<StatementBuilderEntity>(e => e.Id,
                 (object)null,
                 statementBuilder: statementBuilderNever.Object);
 
@@ -5406,7 +5407,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForMinAsyncViaTableName()
+        public async Task TestDbConnectionStatementBuilderForMinAsyncViaTableName()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -5414,7 +5415,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            connection.MinAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
+            await connection.MinAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
                 new Field("Id"),
                 (object)null,
                 statementBuilder: statementBuilder.Object);
@@ -5431,7 +5432,7 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.MinAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
+            await connection.MinAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
                 new Field("Id"),
                 (object)null,
                 statementBuilder: statementBuilderNever.Object);
@@ -5446,7 +5447,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForMinAsyncViaCrossCall()
+        public async Task TestDbConnectionStatementBuilderForMinAsyncViaCrossCall()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -5454,7 +5455,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            connection.MinAsync<StatementBuilderEntityForCrossCall>(e => e.Id,
+            await connection.MinAsync<StatementBuilderEntityForCrossCall>(e => e.Id,
                 (object)null,
                 statementBuilder: statementBuilder.Object);
 
@@ -5470,7 +5471,7 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.MinAsync(ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>(),
+            await connection.MinAsync(ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>(),
                 new Field("Id", typeof(int)),
                 (object)null,
                 statementBuilder: statementBuilderNever.Object);
@@ -5489,7 +5490,7 @@ namespace RepoDb.UnitTests.Interfaces
         #region CreateMinAllAsync
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForMinAllAsync()
+        public async Task TestDbConnectionStatementBuilderForMinAllAsync()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -5497,7 +5498,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            connection.MinAllAsync<StatementBuilderEntity>(e => e.Id,
+            await connection.MinAllAsync<StatementBuilderEntity>(e => e.Id,
                 statementBuilder: statementBuilder.Object);
 
             // Assert
@@ -5511,7 +5512,7 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.MinAllAsync<StatementBuilderEntity>(e => e.Id,
+            await connection.MinAllAsync<StatementBuilderEntity>(e => e.Id,
                 statementBuilder: statementBuilderNever.Object);
 
             // Assert
@@ -5523,7 +5524,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForMinAllAsyncViaTableName()
+        public async Task TestDbConnectionStatementBuilderForMinAllAsyncViaTableName()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -5531,7 +5532,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            connection.MinAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
+            await connection.MinAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
                 new Field("Id"),
                 statementBuilder: statementBuilder.Object);
 
@@ -5546,7 +5547,7 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.MinAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
+            await connection.MinAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
                 new Field("Id"),
                 statementBuilder: statementBuilderNever.Object);
 
@@ -5559,7 +5560,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForMinAllAsyncViaCrossCall()
+        public async Task TestDbConnectionStatementBuilderForMinAllAsyncViaCrossCall()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -5567,7 +5568,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            connection.MinAllAsync<StatementBuilderEntityForCrossCall>(e => e.Id,
+            await connection.MinAllAsync<StatementBuilderEntityForCrossCall>(e => e.Id,
                 statementBuilder: statementBuilder.Object);
 
             // Assert
@@ -5581,7 +5582,7 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.MinAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>(),
+            await connection.MinAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>(),
                 new Field("Id", typeof(int)),
                 statementBuilder: statementBuilderNever.Object);
 
@@ -5598,7 +5599,7 @@ namespace RepoDb.UnitTests.Interfaces
         #region CreateQueryAsync
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForQueryAsync()
+        public async Task TestDbConnectionStatementBuilderForQueryAsync()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -5606,7 +5607,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            connection.QueryAsync<StatementBuilderEntity>(e => e.Id == 1, statementBuilder: statementBuilder.Object).Wait();
+            await connection.QueryAsync<StatementBuilderEntity>(e => e.Id == 1, statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -5622,7 +5623,7 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.QueryAsync<StatementBuilderEntity>(e => e.Id == 1, statementBuilder: statementBuilderNever.Object).Wait();
+            await connection.QueryAsync<StatementBuilderEntity>(e => e.Id == 1, statementBuilder: statementBuilderNever.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -5636,7 +5637,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForQueryAsyncForTableName()
+        public async Task TestDbConnectionStatementBuilderForQueryAsyncForTableName()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -5644,9 +5645,9 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            connection.QueryAsync(ClassMappedNameCache.Get<StatementBuilderEntity>(),
+            await connection.QueryAsync(ClassMappedNameCache.Get<StatementBuilderEntity>(),
                 new { Id = 1 },
-                statementBuilder: statementBuilder.Object).Wait();
+                statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -5662,9 +5663,9 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.QueryAsync(ClassMappedNameCache.Get<StatementBuilderEntity>(),
+            await connection.QueryAsync(ClassMappedNameCache.Get<StatementBuilderEntity>(),
                 new { Id = 1 },
-                statementBuilder: statementBuilder.Object).Wait();
+                statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -5678,7 +5679,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForQueryAsyncViaCrossCall()
+        public async Task TestDbConnectionStatementBuilderForQueryAsyncViaCrossCall()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -5686,7 +5687,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            connection.QueryAsync<StatementBuilderEntity>(e => e.Id == 1, statementBuilder: statementBuilder.Object).Wait();
+            await connection.QueryAsync<StatementBuilderEntity>(e => e.Id == 1, statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -5702,9 +5703,9 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.QueryAsync(ClassMappedNameCache.Get<StatementBuilderEntity>(),
+            await connection.QueryAsync(ClassMappedNameCache.Get<StatementBuilderEntity>(),
                 new { Id = 1 },
-                statementBuilder: statementBuilder.Object).Wait();
+                statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -5722,7 +5723,7 @@ namespace RepoDb.UnitTests.Interfaces
         #region CreateQueryAll
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForQueryAllAsync()
+        public async Task TestDbConnectionStatementBuilderForQueryAllAsync()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -5730,7 +5731,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            connection.QueryAllAsync<StatementBuilderEntity>(statementBuilder: statementBuilder.Object).Wait();
+            await connection.QueryAllAsync<StatementBuilderEntity>(statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -5744,7 +5745,7 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.QueryAllAsync<StatementBuilderEntity>(statementBuilder: statementBuilderNever.Object).Wait();
+            await connection.QueryAllAsync<StatementBuilderEntity>(statementBuilder: statementBuilderNever.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -5756,7 +5757,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForQueryAllAsyncForTableName()
+        public async Task TestDbConnectionStatementBuilderForQueryAllAsyncForTableName()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -5764,7 +5765,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            connection.QueryAllAsync(ClassMappedNameCache.Get<StatementBuilderEntity>(), statementBuilder: statementBuilder.Object).Wait();
+            await connection.QueryAllAsync(ClassMappedNameCache.Get<StatementBuilderEntity>(), statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -5778,7 +5779,7 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.QueryAllAsync(ClassMappedNameCache.Get<StatementBuilderEntity>(), statementBuilder: statementBuilder.Object).Wait();
+            await connection.QueryAllAsync(ClassMappedNameCache.Get<StatementBuilderEntity>(), statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -5790,7 +5791,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForQueryAllAsyncViaCrossCall()
+        public async Task TestDbConnectionStatementBuilderForQueryAllAsyncViaCrossCall()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -5798,7 +5799,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            connection.QueryAllAsync<StatementBuilderEntity>(statementBuilder: statementBuilder.Object).Wait();
+            await connection.QueryAllAsync<StatementBuilderEntity>(statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -5812,7 +5813,7 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.QueryAllAsync(ClassMappedNameCache.Get<StatementBuilderEntity>(), statementBuilder: statementBuilder.Object).Wait();
+            await connection.QueryAllAsync(ClassMappedNameCache.Get<StatementBuilderEntity>(), statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -5828,7 +5829,7 @@ namespace RepoDb.UnitTests.Interfaces
         #region CreateQueryAsync(Multple)
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForQueryMultipleAsync()
+        public async Task TestDbConnectionStatementBuilderForQueryMultipleAsync()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -5836,7 +5837,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            connection.QueryMultipleAsync<StatementBuilderEntityT1,
+            await connection.QueryMultipleAsync<StatementBuilderEntityT1,
                 StatementBuilderEntityT2,
                 StatementBuilderEntityT3,
                 StatementBuilderEntityT4,
@@ -5848,7 +5849,7 @@ namespace RepoDb.UnitTests.Interfaces
                 e => e.Id == 1,
                 e => e.Id == 1,
                 e => e.Id == 1,
-                e => e.Id == 1, statementBuilder: statementBuilder.Object).Wait();
+                e => e.Id == 1, statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -5912,7 +5913,7 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.QueryMultipleAsync<StatementBuilderEntityT1,
+            await connection.QueryMultipleAsync<StatementBuilderEntityT1,
                 StatementBuilderEntityT2,
                 StatementBuilderEntityT3,
                 StatementBuilderEntityT4,
@@ -5924,7 +5925,7 @@ namespace RepoDb.UnitTests.Interfaces
                 e => e.Id == 1,
                 e => e.Id == 1,
                 e => e.Id == 1,
-                e => e.Id == 1, statementBuilder: statementBuilderNever.Object).Wait();
+                e => e.Id == 1, statementBuilder: statementBuilderNever.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -5990,7 +5991,7 @@ namespace RepoDb.UnitTests.Interfaces
         #region CreateSumAsync
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForSumAsync()
+        public async Task TestDbConnectionStatementBuilderForSumAsync()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -5998,7 +5999,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            connection.SumAsync<StatementBuilderEntity>(e => e.Id,
+            await connection.SumAsync<StatementBuilderEntity>(e => e.Id,
                 (object)null,
                 statementBuilder: statementBuilder.Object);
 
@@ -6014,7 +6015,7 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.SumAsync<StatementBuilderEntity>(e => e.Id,
+            await connection.SumAsync<StatementBuilderEntity>(e => e.Id,
                 (object)null,
                 statementBuilder: statementBuilderNever.Object);
 
@@ -6028,7 +6029,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForSumAsyncViaTableName()
+        public async Task TestDbConnectionStatementBuilderForSumAsyncViaTableName()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -6036,7 +6037,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            connection.SumAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
+            await connection.SumAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
                 new Field("Id"),
                 (object)null,
                 statementBuilder: statementBuilder.Object);
@@ -6053,7 +6054,7 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.SumAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
+            await connection.SumAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
                 new Field("Id"),
                 (object)null,
                 statementBuilder: statementBuilderNever.Object);
@@ -6068,7 +6069,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForSumAsyncViaCrossCall()
+        public async Task TestDbConnectionStatementBuilderForSumAsyncViaCrossCall()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -6076,7 +6077,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            connection.SumAsync<StatementBuilderEntityForCrossCall>(e => e.Id,
+            await connection.SumAsync<StatementBuilderEntityForCrossCall>(e => e.Id,
                 (object)null,
                 statementBuilder: statementBuilder.Object);
 
@@ -6092,7 +6093,7 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.SumAsync(ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>(),
+            await connection.SumAsync(ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>(),
                 new Field("Id", typeof(int)),
                 (object)null,
                 statementBuilder: statementBuilderNever.Object);
@@ -6111,7 +6112,7 @@ namespace RepoDb.UnitTests.Interfaces
         #region CreateSumAllAsync
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForSumAllAsync()
+        public async Task TestDbConnectionStatementBuilderForSumAllAsync()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -6119,7 +6120,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            connection.SumAllAsync<StatementBuilderEntity>(e => e.Id,
+            await connection.SumAllAsync<StatementBuilderEntity>(e => e.Id,
                 statementBuilder: statementBuilder.Object);
 
             // Assert
@@ -6133,7 +6134,7 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.SumAllAsync<StatementBuilderEntity>(e => e.Id,
+            await connection.SumAllAsync<StatementBuilderEntity>(e => e.Id,
                 statementBuilder: statementBuilderNever.Object);
 
             // Assert
@@ -6145,7 +6146,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForSumAllAsyncViaTableName()
+        public async Task TestDbConnectionStatementBuilderForSumAllAsyncViaTableName()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -6153,7 +6154,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            connection.SumAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
+            await connection.SumAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
                 new Field("Id"),
                 statementBuilder: statementBuilder.Object);
 
@@ -6168,7 +6169,7 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.SumAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
+            await connection.SumAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
                 new Field("Id"),
                 statementBuilder: statementBuilderNever.Object);
 
@@ -6181,7 +6182,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForSumAllAsyncViaCrossCall()
+        public async Task TestDbConnectionStatementBuilderForSumAllAsyncViaCrossCall()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -6189,7 +6190,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            connection.SumAllAsync<StatementBuilderEntityForCrossCall>(e => e.Id,
+            await connection.SumAllAsync<StatementBuilderEntityForCrossCall>(e => e.Id,
                 statementBuilder: statementBuilder.Object);
 
             // Assert
@@ -6203,7 +6204,7 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.SumAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>(),
+            await connection.SumAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>(),
                 new Field("Id", typeof(int)),
                 statementBuilder: statementBuilderNever.Object);
 
@@ -6220,7 +6221,7 @@ namespace RepoDb.UnitTests.Interfaces
         #region CreateTruncateAsync
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForTruncateAsync()
+        public async Task TestDbConnectionStatementBuilderForTruncateAsync()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -6228,7 +6229,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            connection.TruncateAsync<StatementBuilderEntity>(statementBuilder: statementBuilder.Object).Wait();
+            await connection.TruncateAsync<StatementBuilderEntity>(statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -6239,7 +6240,7 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.TruncateAsync<StatementBuilderEntity>(statementBuilder: statementBuilderNever.Object).Wait();
+            await connection.TruncateAsync<StatementBuilderEntity>(statementBuilder: statementBuilderNever.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -6248,7 +6249,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForTruncateAsyncViaTableName()
+        public async Task TestDbConnectionStatementBuilderForTruncateAsyncViaTableName()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -6256,8 +6257,8 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            connection.TruncateAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
-                statementBuilder: statementBuilder.Object).Wait();
+            await connection.TruncateAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
+                statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -6268,8 +6269,8 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.TruncateAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
-                statementBuilder: statementBuilderNever.Object).Wait();
+            await connection.TruncateAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
+                statementBuilder: statementBuilderNever.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -6278,7 +6279,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForTruncateAsyncCrossCall()
+        public async Task TestDbConnectionStatementBuilderForTruncateAsyncCrossCall()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -6286,7 +6287,7 @@ namespace RepoDb.UnitTests.Interfaces
 
             // Act
             CommandTextCache.Flush();
-            connection.TruncateAsync<StatementBuilderEntityForCrossCall>(statementBuilder: statementBuilder.Object).Wait();
+            await connection.TruncateAsync<StatementBuilderEntityForCrossCall>(statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -6297,8 +6298,8 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.TruncateAsync(ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>(),
-                statementBuilder: statementBuilderNever.Object).Wait();
+            await connection.TruncateAsync(ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>(),
+                statementBuilder: statementBuilderNever.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -6311,7 +6312,7 @@ namespace RepoDb.UnitTests.Interfaces
         #region CreateUpdateAsync
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForUpdateAsync()
+        public async Task TestDbConnectionStatementBuilderForUpdateAsync()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -6320,9 +6321,9 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             UpdateExecutionContextCache.Flush();
             CommandTextCache.Flush();
-            connection.UpdateAsync<StatementBuilderEntity>(new StatementBuilderEntity { Name = "Update" },
+            await connection.UpdateAsync<StatementBuilderEntity>(new StatementBuilderEntity { Name = "Update" },
                 e => e.Id == 1,
-                statementBuilder: statementBuilder.Object).Wait();
+                statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -6338,9 +6339,9 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.UpdateAsync<StatementBuilderEntity>(new StatementBuilderEntity { Name = "Update" },
+            await connection.UpdateAsync<StatementBuilderEntity>(new StatementBuilderEntity { Name = "Update" },
                 e => e.Id == 1,
-                statementBuilder: statementBuilderNever.Object).Wait();
+                statementBuilder: statementBuilderNever.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -6354,7 +6355,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForUpdateAsyncViaTableName()
+        public async Task TestDbConnectionStatementBuilderForUpdateAsyncViaTableName()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -6363,7 +6364,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             UpdateExecutionContextCache.Flush();
             CommandTextCache.Flush();
-            connection.UpdateAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
+            await connection.UpdateAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
                 new
                 {
                     Name = "Update"
@@ -6372,7 +6373,7 @@ namespace RepoDb.UnitTests.Interfaces
                 {
                     Id = 1
                 },
-                statementBuilder: statementBuilder.Object).Wait();
+                statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -6388,7 +6389,7 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.UpdateAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
+            await connection.UpdateAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
                 new
                 {
                     Name = "Update"
@@ -6397,7 +6398,7 @@ namespace RepoDb.UnitTests.Interfaces
                 {
                     Id = 1
                 },
-                statementBuilder: statementBuilderNever.Object).Wait();
+                statementBuilder: statementBuilderNever.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -6411,7 +6412,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForUpdateAsyncViaCrossCall()
+        public async Task TestDbConnectionStatementBuilderForUpdateAsyncViaCrossCall()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -6420,9 +6421,9 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             UpdateExecutionContextCache.Flush();
             CommandTextCache.Flush();
-            connection.UpdateAsync<StatementBuilderEntityForCrossCall>(new StatementBuilderEntityForCrossCall { Name = "Update" },
+            await connection.UpdateAsync<StatementBuilderEntityForCrossCall>(new StatementBuilderEntityForCrossCall { Name = "Update" },
                 e => e.Id == 1,
-                statementBuilder: statementBuilder.Object).Wait();
+                statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -6438,7 +6439,7 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.UpdateAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
+            await connection.UpdateAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
                 new
                 {
                     Id = 1,
@@ -6448,7 +6449,7 @@ namespace RepoDb.UnitTests.Interfaces
                 {
                     Id = 1
                 },
-                statementBuilder: statementBuilderNever.Object).Wait();
+                statementBuilder: statementBuilderNever.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -6466,7 +6467,7 @@ namespace RepoDb.UnitTests.Interfaces
         #region CreateUpdateAllAsync
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForUpdateAllAsync()
+        public async Task TestDbConnectionStatementBuilderForUpdateAllAsync()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -6475,7 +6476,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             UpdateAllExecutionContextCache.Flush();
             CommandTextCache.Flush();
-            connection.UpdateAllAsync<StatementBuilderEntity>(
+            await connection.UpdateAllAsync<StatementBuilderEntity>(
                 new[]
                 {
                     new StatementBuilderEntity { Name = "Name1" },
@@ -6483,7 +6484,7 @@ namespace RepoDb.UnitTests.Interfaces
                     new StatementBuilderEntity { Name = "Name3" }
                 },
                 new Field(nameof(StatementBuilderEntity.Id)),
-                statementBuilder: statementBuilder.Object).Wait();
+                statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -6500,7 +6501,7 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.UpdateAllAsync<StatementBuilderEntity>(
+            await connection.UpdateAllAsync<StatementBuilderEntity>(
                 new[]
                 {
                     new StatementBuilderEntity { Name = "Name1" },
@@ -6508,7 +6509,7 @@ namespace RepoDb.UnitTests.Interfaces
                     new StatementBuilderEntity { Name = "Name3" }
                 },
                 new Field(nameof(StatementBuilderEntity.Id)),
-                statementBuilder: statementBuilderNever.Object).Wait();
+                statementBuilder: statementBuilderNever.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -6523,7 +6524,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForUpdateAllAsyncViaTableName()
+        public async Task TestDbConnectionStatementBuilderForUpdateAllAsyncViaTableName()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -6532,7 +6533,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             UpdateAllExecutionContextCache.Flush();
             CommandTextCache.Flush();
-            connection.UpdateAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
+            await connection.UpdateAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
                 new[]
                 {
                     new { Name = "Name1" },
@@ -6540,7 +6541,7 @@ namespace RepoDb.UnitTests.Interfaces
                     new { Name = "Name3" }
                 },
                 new Field(nameof(StatementBuilderEntityForTableName.Id)),
-                statementBuilder: statementBuilder.Object).Wait();
+                statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -6557,7 +6558,7 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.UpdateAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
+            await connection.UpdateAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForTableName>(),
                 new[]
                 {
                     new { Name = "Name1" },
@@ -6565,7 +6566,7 @@ namespace RepoDb.UnitTests.Interfaces
                     new { Name = "Name3" }
                 },
                 new Field(nameof(StatementBuilderEntityForTableName.Id)),
-                statementBuilder: statementBuilderNever.Object).Wait();
+                statementBuilder: statementBuilderNever.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
@@ -6580,7 +6581,7 @@ namespace RepoDb.UnitTests.Interfaces
         }
 
         [TestMethod]
-        public void TestDbConnectionStatementBuilderForUpdateAllAsyncViaCrossCall()
+        public async Task TestDbConnectionStatementBuilderForUpdateAllAsyncViaCrossCall()
         {
             // Prepare
             var statementBuilder = new Mock<IStatementBuilder>();
@@ -6589,7 +6590,7 @@ namespace RepoDb.UnitTests.Interfaces
             // Act
             UpdateAllExecutionContextCache.Flush();
             CommandTextCache.Flush();
-            connection.UpdateAllAsync<StatementBuilderEntityForCrossCall>(
+            await  connection.UpdateAllAsync<StatementBuilderEntityForCrossCall>(
                 new[]
                 {
                     new StatementBuilderEntityForCrossCall { Name = "Name1" },
@@ -6597,7 +6598,7 @@ namespace RepoDb.UnitTests.Interfaces
                     new StatementBuilderEntityForCrossCall { Name = "Name3" }
                 },
                 new Field(nameof(StatementBuilderEntityForCrossCall.Id)),
-                statementBuilder: statementBuilder.Object).Wait();
+                statementBuilder: statementBuilder.Object);
 
             // Assert
             statementBuilder.Verify(builder =>
@@ -6614,7 +6615,7 @@ namespace RepoDb.UnitTests.Interfaces
             var statementBuilderNever = new Mock<IStatementBuilder>();
 
             // Act
-            connection.UpdateAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>(),
+            await connection.UpdateAllAsync(ClassMappedNameCache.Get<StatementBuilderEntityForCrossCall>(),
                 new[]
                 {
                     new { Id = 0, Name = "Name1" },
@@ -6623,7 +6624,7 @@ namespace RepoDb.UnitTests.Interfaces
                 },
                 new Field(nameof(StatementBuilderEntityForCrossCall.Id)),
                 fields: FieldCache.Get<StatementBuilderEntityForCrossCall>(),
-                statementBuilder: statementBuilderNever.Object).Wait();
+                statementBuilder: statementBuilderNever.Object);
 
             // Assert
             statementBuilderNever.Verify(builder =>
