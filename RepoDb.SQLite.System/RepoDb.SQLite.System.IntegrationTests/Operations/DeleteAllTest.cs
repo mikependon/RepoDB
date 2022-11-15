@@ -3,6 +3,7 @@ using RepoDb.SQLite.System.IntegrationTests.Models;
 using RepoDb.SQLite.System.IntegrationTests.Setup;
 using System.Data.SQLite;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
 {
@@ -81,7 +82,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         #region Async
 
         [TestMethod]
-        public void TestSqLiteConnectionDeleteAllAsync()
+        public async Task TestSqLiteConnectionDeleteAllAsync()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -89,7 +90,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                var result = connection.DeleteAllAsync<SdsCompleteTable>().Result;
+                var result = await connection.DeleteAllAsync<SdsCompleteTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -97,7 +98,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionDeleteAllAsyncViaPrimaryKeys()
+        public async Task TestSqLiteConnectionDeleteAllAsyncViaPrimaryKeys()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -106,7 +107,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var primaryKeys = ClassExpression.GetEntitiesPropertyValues<SdsCompleteTable, object>(tables, e => e.Id);
 
                 // Act
-                var result = connection.DeleteAllAsync<SdsCompleteTable>(primaryKeys).Result;
+                var result = await connection.DeleteAllAsync<SdsCompleteTable>(primaryKeys);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -114,7 +115,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         }
 
         //[TestMethod]
-        //public void TestSqLiteConnectionDeleteAllAsyncViaPrimaryKeysBeyondLimits()
+        //public async Task TestSqLiteConnectionDeleteAllAsyncViaPrimaryKeysBeyondLimits()
         //{
         //    using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
         //    {
@@ -123,7 +124,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         //        var primaryKeys = ClassExpression.GetEntitiesPropertyValues<CompleteTable, object>(tables, e => e.Id);
 
         //        // Act
-        //        var result = connection.DeleteAllAsync<CompleteTable>(primaryKeys).Result;
+        //        var result = connection.DeleteAllAsync<CompleteTable>(primaryKeys);
 
         //        // Assert
         //        Assert.AreEqual(tables.Count(), result);
@@ -193,7 +194,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         #region Async
 
         [TestMethod]
-        public void TestSqLiteConnectionDeleteAllAsyncViaTableName()
+        public async Task TestSqLiteConnectionDeleteAllAsyncViaTableName()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -201,7 +202,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                var result = connection.DeleteAllAsync(ClassMappedNameCache.Get<SdsCompleteTable>()).Result;
+                var result = await connection.DeleteAllAsync(ClassMappedNameCache.Get<SdsCompleteTable>());
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -209,7 +210,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionDeleteAllAsyncViaTableNameViaPrimaryKeys()
+        public async Task TestSqLiteConnectionDeleteAllAsyncViaTableNameViaPrimaryKeys()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -218,7 +219,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var primaryKeys = ClassExpression.GetEntitiesPropertyValues<SdsCompleteTable, object>(tables, e => e.Id);
 
                 // Act
-                var result = connection.DeleteAllAsync(ClassMappedNameCache.Get<SdsCompleteTable>(), primaryKeys).Result;
+                var result = await connection.DeleteAllAsync(ClassMappedNameCache.Get<SdsCompleteTable>(), primaryKeys);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -226,7 +227,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         }
 
         //[TestMethod]
-        //public void TestSqLiteConnectionDeleteAllAsyncViaTableNameViaPrimaryKeysBeyondLimits()
+        //public async Task TestSqLiteConnectionDeleteAllAsyncViaTableNameViaPrimaryKeysBeyondLimits()
         //{
         //    using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
         //    {
@@ -235,7 +236,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         //        var primaryKeys = ClassExpression.GetEntitiesPropertyValues<CompleteTable, object>(tables, e => e.Id);
 
         //        // Act
-        //        var result = connection.DeleteAllAsync(ClassMappedNameCache.Get<CompleteTable>(), primaryKeys).Result;
+        //        var result = connection.DeleteAllAsync(ClassMappedNameCache.Get<CompleteTable>(), primaryKeys);
 
         //        // Assert
         //        Assert.AreEqual(tables.Count(), result);

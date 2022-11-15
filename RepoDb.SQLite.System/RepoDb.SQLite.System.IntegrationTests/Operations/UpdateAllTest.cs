@@ -4,6 +4,7 @@ using RepoDb.SQLite.System.IntegrationTests.Models;
 using RepoDb.SQLite.System.IntegrationTests.Setup;
 using System.Data.SQLite;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
 {
@@ -56,7 +57,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         #region Async
 
         [TestMethod]
-        public void TestSqLiteConnectionUpdateAllAsync()
+        public async Task TestSqLiteConnectionUpdateAllAsync()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -65,7 +66,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 tables.AsList().ForEach(table => Helper.UpdateSdsCompleteTableProperties(table));
 
                 // Act
-                var result = connection.UpdateAllAsync<SdsCompleteTable>(tables).Result;
+                var result = await connection.UpdateAllAsync<SdsCompleteTable>(tables);
 
                 // Assert
                 Assert.AreEqual(10, result);
@@ -141,7 +142,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         #region Async
 
         [TestMethod]
-        public void TestSqLiteConnectionUpdateAllAsyncViaTableName()
+        public async Task TestSqLiteConnectionUpdateAllAsyncViaTableName()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -150,7 +151,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 tables.AsList().ForEach(table => Helper.UpdateSdsCompleteTableProperties(table));
 
                 // Act
-                var result = connection.UpdateAllAsync(ClassMappedNameCache.Get<SdsCompleteTable>(), tables).Result;
+                var result = await connection.UpdateAllAsync(ClassMappedNameCache.Get<SdsCompleteTable>(), tables);
 
                 // Assert
                 Assert.AreEqual(10, result);
@@ -165,7 +166,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionUpdateAllAsyncAsExpandoObjectViaTableName()
+        public async Task TestSqLiteConnectionUpdateAllAsyncAsExpandoObjectViaTableName()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -174,8 +175,8 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Helper.CreateSdsCompleteTablesAsExpandoObjects(10);
 
                 // Act
-                var result = connection.UpdateAllAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
-                    tables).Result;
+                var result = await connection.UpdateAllAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
+                    tables);
 
                 // Assert
                 Assert.AreEqual(10, result);

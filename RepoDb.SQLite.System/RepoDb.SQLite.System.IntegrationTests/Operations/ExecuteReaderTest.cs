@@ -7,6 +7,7 @@ using System;
 using System.Data.Common;
 using System.Data.SQLite;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
 {
@@ -132,7 +133,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         #region Async
 
         [TestMethod]
-        public void TestSqLiteConnectionExecuteReaderAsync()
+        public async Task TestSqLiteConnectionExecuteReaderAsync()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -140,7 +141,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("SELECT Id, ColumnInt, ColumnDateTime FROM [SdsCompleteTable];").Result)
+                using (var reader = await connection.ExecuteReaderAsync("SELECT Id, ColumnInt, ColumnDateTime FROM [SdsCompleteTable];"))
                 {
                     while (reader.Read())
                     {
@@ -160,7 +161,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionExecuteReaderAsyncWithMultipleStatements()
+        public async Task TestSqLiteConnectionExecuteReaderAsyncWithMultipleStatements()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -168,7 +169,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("SELECT Id, ColumnInt, ColumnDateTime FROM [SdsCompleteTable]; SELECT Id, ColumnInt, ColumnDateTime FROM [SdsCompleteTable];").Result)
+                using (var reader = await connection.ExecuteReaderAsync("SELECT Id, ColumnInt, ColumnDateTime FROM [SdsCompleteTable]; SELECT Id, ColumnInt, ColumnDateTime FROM [SdsCompleteTable];"))
                 {
                     do
                     {
@@ -191,7 +192,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionExecuteReaderAsyncAsExtractedEntity()
+        public async Task TestSqLiteConnectionExecuteReaderAsyncAsExtractedEntity()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -199,7 +200,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM [SdsCompleteTable];").Result)
+                using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM [SdsCompleteTable];"))
                 {
                     // Act
                     var result = DataReader.ToEnumerable<SdsCompleteTable>((DbDataReader)reader).AsList();
@@ -211,7 +212,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionExecuteReaderAsyncAsExtractedDynamic()
+        public async Task TestSqLiteConnectionExecuteReaderAsyncAsExtractedDynamic()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -219,7 +220,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM [SdsCompleteTable];").Result)
+                using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM [SdsCompleteTable];"))
                 {
                     // Act
                     var result = DataReader.ToEnumerable((DbDataReader)reader).AsList();

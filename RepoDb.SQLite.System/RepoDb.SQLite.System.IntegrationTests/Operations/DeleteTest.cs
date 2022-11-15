@@ -4,6 +4,7 @@ using RepoDb.SQLite.System.IntegrationTests.Models;
 using RepoDb.SQLite.System.IntegrationTests.Setup;
 using System.Data.SQLite;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
 {
@@ -171,7 +172,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         #region Async
 
         [TestMethod]
-        public void TestSqLiteConnectionDeleteAsyncWithoutExpression()
+        public async Task TestSqLiteConnectionDeleteAsyncWithoutExpression()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -179,7 +180,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                var result = connection.DeleteAsync<SdsCompleteTable>((object)null).Result;
+                var result = await connection.DeleteAsync<SdsCompleteTable>((object)null);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -187,7 +188,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionDeleteAsyncViaPrimaryKey()
+        public async Task TestSqLiteConnectionDeleteAsyncViaPrimaryKey()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -195,7 +196,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                var result = connection.DeleteAsync<SdsCompleteTable>(tables.First().Id).Result;
+                var result = await connection.DeleteAsync<SdsCompleteTable>(tables.First().Id);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -203,7 +204,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionDeleteAsyncViaDataEntity()
+        public async Task TestSqLiteConnectionDeleteAsyncViaDataEntity()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -211,7 +212,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                var result = connection.DeleteAsync<SdsCompleteTable>(tables.First()).Result;
+                var result = await connection.DeleteAsync<SdsCompleteTable>(tables.First());
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -219,7 +220,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionDeleteAsyncViaExpression()
+        public async Task TestSqLiteConnectionDeleteAsyncViaExpression()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -227,7 +228,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                var result = connection.DeleteAsync<SdsCompleteTable>(e => e.Id == tables.First().Id).Result;
+                var result = await connection.DeleteAsync<SdsCompleteTable>(e => e.Id == tables.First().Id);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -235,7 +236,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionDeleteAsyncViaDynamic()
+        public async Task TestSqLiteConnectionDeleteAsyncViaDynamic()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -243,7 +244,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                var result = connection.DeleteAsync<SdsCompleteTable>(new { Id = tables.First().Id }).Result;
+                var result = await connection.DeleteAsync<SdsCompleteTable>(new { Id = tables.First().Id });
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -251,7 +252,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionDeleteAsyncViaQueryField()
+        public async Task TestSqLiteConnectionDeleteAsyncViaQueryField()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -259,7 +260,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                var result = connection.DeleteAsync<SdsCompleteTable>(new QueryField("Id", tables.First().Id)).Result;
+                var result = await connection.DeleteAsync<SdsCompleteTable>(new QueryField("Id", tables.First().Id));
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -267,7 +268,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionDeleteAsyncViaQueryFields()
+        public async Task TestSqLiteConnectionDeleteAsyncViaQueryFields()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -280,7 +281,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 };
 
                 // Act
-                var result = connection.DeleteAsync<SdsCompleteTable>(queryFields).Result;
+                var result = await connection.DeleteAsync<SdsCompleteTable>(queryFields);
 
                 // Assert
                 Assert.AreEqual(8, result);
@@ -288,7 +289,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionDeleteAsyncViaQueryGroup()
+        public async Task TestSqLiteConnectionDeleteAsyncViaQueryGroup()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -302,7 +303,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var queryGroup = new QueryGroup(queryFields);
 
                 // Act
-                var result = connection.DeleteAsync<SdsCompleteTable>(queryGroup).Result;
+                var result = await connection.DeleteAsync<SdsCompleteTable>(queryGroup);
 
                 // Assert
                 Assert.AreEqual(8, result);
@@ -429,7 +430,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         #region Async
 
         [TestMethod]
-        public void TestSqLiteConnectionDeleteAsyncViaTableNameWithoutExpression()
+        public async Task TestSqLiteConnectionDeleteAsyncViaTableNameWithoutExpression()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -437,7 +438,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                var result = connection.DeleteAsync(ClassMappedNameCache.Get<SdsCompleteTable>(), (object)null).Result;
+                var result = await connection.DeleteAsync(ClassMappedNameCache.Get<SdsCompleteTable>(), (object)null);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -445,7 +446,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionDeleteAsyncViaTableNameViaPrimaryKey()
+        public async Task TestSqLiteConnectionDeleteAsyncViaTableNameViaPrimaryKey()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -453,7 +454,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                var result = connection.DeleteAsync<SdsCompleteTable>(tables.First().Id).Result;
+                var result = await connection.DeleteAsync<SdsCompleteTable>(tables.First().Id);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -461,7 +462,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionDeleteAsyncViaTableNameViaDynamic()
+        public async Task TestSqLiteConnectionDeleteAsyncViaTableNameViaDynamic()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -469,7 +470,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                var result = connection.DeleteAsync(ClassMappedNameCache.Get<SdsCompleteTable>(), new { Id = tables.First().Id }).Result;
+                var result = await connection.DeleteAsync(ClassMappedNameCache.Get<SdsCompleteTable>(), new { Id = tables.First().Id });
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -477,7 +478,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionDeleteAsyncViaTableNameViaQueryField()
+        public async Task TestSqLiteConnectionDeleteAsyncViaTableNameViaQueryField()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -485,7 +486,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                var result = connection.DeleteAsync(ClassMappedNameCache.Get<SdsCompleteTable>(), new QueryField("Id", tables.First().Id)).Result;
+                var result = await connection.DeleteAsync(ClassMappedNameCache.Get<SdsCompleteTable>(), new QueryField("Id", tables.First().Id));
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -493,7 +494,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionDeleteAsyncViaTableNameViaQueryFields()
+        public async Task TestSqLiteConnectionDeleteAsyncViaTableNameViaQueryFields()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -506,7 +507,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 };
 
                 // Act
-                var result = connection.DeleteAsync(ClassMappedNameCache.Get<SdsCompleteTable>(), queryFields).Result;
+                var result = await connection.DeleteAsync(ClassMappedNameCache.Get<SdsCompleteTable>(), queryFields);
 
                 // Assert
                 Assert.AreEqual(8, result);
@@ -514,7 +515,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionDeleteAsyncViaTableNameViaQueryGroup()
+        public async Task TestSqLiteConnectionDeleteAsyncViaTableNameViaQueryGroup()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -528,7 +529,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var queryGroup = new QueryGroup(queryFields);
 
                 // Act
-                var result = connection.DeleteAsync(ClassMappedNameCache.Get<SdsCompleteTable>(), queryGroup).Result;
+                var result = await connection.DeleteAsync(ClassMappedNameCache.Get<SdsCompleteTable>(), queryGroup);
 
                 // Assert
                 Assert.AreEqual(8, result);

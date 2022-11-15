@@ -4,6 +4,7 @@ using RepoDb.SQLite.System.IntegrationTests.Setup;
 using System;
 using System.Data.SQLite;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
 {
@@ -62,7 +63,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         #region Async
 
         [TestMethod]
-        public void TestSqLiteConnectionMaxAllAsync()
+        public async Task TestSqLiteConnectionMaxAllAsync()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -70,15 +71,15 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                var result = connection.MaxAllAsync<SdsCompleteTable>(e => e.ColumnInt).Result;
+                var result = await connection.MaxAllAsync<SdsCompleteTable>(e => e.ColumnInt);
 
                 // Assert
                 Assert.AreEqual(tables.Max(e => e.ColumnInt), Convert.ToInt32(result));
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnSqLiteConnectionMaxAllAsyncWithHints()
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public async Task ThrowExceptionOnSqLiteConnectionMaxAllAsyncWithHints()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -86,8 +87,8 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                connection.MaxAllAsync<SdsCompleteTable>(e => e.ColumnInt,
-                    hints: "WhatEver").Wait();
+                await connection.MaxAllAsync<SdsCompleteTable>(e => e.ColumnInt,
+                    hints: "WhatEver");
             }
         }
 
@@ -136,7 +137,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         #region Async
 
         [TestMethod]
-        public void TestSqLiteConnectionMaxAllAsyncViaTableName()
+        public async Task TestSqLiteConnectionMaxAllAsyncViaTableName()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -144,16 +145,16 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                var result = connection.MaxAllAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
-                    Field.Parse<SdsCompleteTable>(e => e.ColumnInt).First()).Result;
+                var result = await connection.MaxAllAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
+                    Field.Parse<SdsCompleteTable>(e => e.ColumnInt).First());
 
                 // Assert
                 Assert.AreEqual(tables.Max(e => e.ColumnInt), Convert.ToInt32(result));
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnSqLiteConnectionMaxAllAsyncViaTableNameWithHints()
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public async Task ThrowExceptionOnSqLiteConnectionMaxAllAsyncViaTableNameWithHints()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -161,9 +162,9 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                connection.MaxAllAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
+                await connection.MaxAllAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
                     Field.Parse<SdsCompleteTable>(e => e.ColumnInt).First(),
-                    hints: "WhatEver").Wait();
+                    hints: "WhatEver");
             }
         }
 

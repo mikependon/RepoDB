@@ -2,6 +2,7 @@
 using RepoDb.SQLite.System.IntegrationTests.Setup;
 using System.Data.SQLite;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
 {
@@ -77,7 +78,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         #region Async
 
         [TestMethod]
-        public void TestSqLiteConnectionExecuteNonQueryAsync()
+        public async Task TestSqLiteConnectionExecuteNonQueryAsync()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -85,7 +86,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                var result = connection.ExecuteNonQueryAsync("DELETE FROM [SdsCompleteTable];").Result;
+                var result = await connection.ExecuteNonQueryAsync("DELETE FROM [SdsCompleteTable];");
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -93,7 +94,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionExecuteNonQueryAsyncWithParameters()
+        public async Task TestSqLiteConnectionExecuteNonQueryAsyncWithParameters()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -101,8 +102,8 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                var result = connection.ExecuteNonQueryAsync("DELETE FROM [SdsCompleteTable] WHERE Id = @Id;",
-                    new { tables.Last().Id }).Result;
+                var result = await connection.ExecuteNonQueryAsync("DELETE FROM [SdsCompleteTable] WHERE Id = @Id;",
+                    new { tables.Last().Id });
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -110,7 +111,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionExecuteNonQueryAsyncWithMultipleStatement()
+        public async Task TestSqLiteConnectionExecuteNonQueryAsyncWithMultipleStatement()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -118,7 +119,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                var result = connection.ExecuteNonQueryAsync("DELETE FROM [SdsCompleteTable]; VACUUM;").Result;
+                var result = await connection.ExecuteNonQueryAsync("DELETE FROM [SdsCompleteTable]; VACUUM;");
 
                 // Assert
                 Assert.AreEqual((tables.Count() * 2), result);
