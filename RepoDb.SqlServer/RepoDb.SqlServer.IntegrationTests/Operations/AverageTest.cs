@@ -5,6 +5,7 @@ using RepoDb.SqlServer.IntegrationTests.Models;
 using RepoDb.SqlServer.IntegrationTests.Setup;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.SqlServer.IntegrationTests.Operations
 {
@@ -105,7 +106,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestSqlServerConnectionAverageAsyncWithoutExpression()
+        public async Task TestSqlServerConnectionAverageAsyncWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -113,8 +114,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.AverageAsync<CompleteTable>(e => e.ColumnInt,
-                    (object)null).Result;
+                var result = await connection.AverageAsync<CompleteTable>(e => e.ColumnInt,
+                    (object)null);
 
                 // Assert
                 Assert.AreEqual(tables.Average(e => e.ColumnInt), Convert.ToDouble(result));
@@ -122,7 +123,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionAverageAsyncWithoutExpressionWithHints()
+        public async Task TestSqlServerConnectionAverageAsyncWithoutExpressionWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -130,9 +131,9 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.AverageAsync<CompleteTable>(e => e.ColumnInt,
+                var result = await connection.AverageAsync<CompleteTable>(e => e.ColumnInt,
                     (object)null,
-                    SqlServerTableHints.TabLock).Result;
+                    SqlServerTableHints.TabLock);
 
                 // Assert
                 Assert.AreEqual(tables.Average(e => e.ColumnInt), Convert.ToDouble(result));
@@ -140,7 +141,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionAverageAsyncWithExpression()
+        public async Task TestSqlServerConnectionAverageAsyncWithExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -149,8 +150,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             {
                 // Act
                 var ids = new[] { tables.First().Id, tables.Last().Id };
-                var result = connection.AverageAsync<CompleteTable>(e => e.ColumnInt,
-                    e => ids.Contains(e.Id)).Result;
+                var result = await connection.AverageAsync<CompleteTable>(e => e.ColumnInt,
+                    e => ids.Contains(e.Id));
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Average(e => e.ColumnInt), Convert.ToDouble(result));
@@ -158,7 +159,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionAverageAsyncWithExpressionWithHints()
+        public async Task TestSqlServerConnectionAverageAsyncWithExpressionWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -167,9 +168,9 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             {
                 // Act
                 var ids = new[] { tables.First().Id, tables.Last().Id };
-                var result = connection.AverageAsync<CompleteTable>(e => e.ColumnInt,
+                var result = await connection.AverageAsync<CompleteTable>(e => e.ColumnInt,
                     e => ids.Contains(e.Id),
-                    SqlServerTableHints.TabLock).Result;
+                    SqlServerTableHints.TabLock);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Average(e => e.ColumnInt), Convert.ToDouble(result));
@@ -265,7 +266,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestSqlServerConnectionAverageAsyncViaTableNameWithoutExpression()
+        public async Task TestSqlServerConnectionAverageAsyncViaTableNameWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -273,9 +274,9 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.AverageAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.AverageAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     Field.Parse<CompleteTable>(e => e.ColumnInt).First(),
-                    (object)null).Result;
+                    (object)null);
 
                 // Assert
                 Assert.AreEqual(tables.Average(e => e.ColumnInt), Convert.ToDouble(result));
@@ -283,7 +284,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionAverageAsyncViaTableNameWithoutExpressionWithHints()
+        public async Task TestSqlServerConnectionAverageAsyncViaTableNameWithoutExpressionWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -291,10 +292,10 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.AverageAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.AverageAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     Field.Parse<CompleteTable>(e => e.ColumnInt).First(),
                     (object)null,
-                    SqlServerTableHints.TabLock).Result;
+                    SqlServerTableHints.TabLock);
 
                 // Assert
                 Assert.AreEqual(tables.Average(e => e.ColumnInt), Convert.ToDouble(result));
@@ -302,7 +303,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionAverageAsyncViaTableNameWithExpression()
+        public async Task TestSqlServerConnectionAverageAsyncViaTableNameWithExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -311,9 +312,9 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             {
                 // Act
                 var ids = new[] { tables.First().Id, tables.Last().Id };
-                var result = connection.AverageAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.AverageAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     Field.Parse<CompleteTable>(e => e.ColumnInt).First(),
-                    new QueryField("Id", Operation.In, ids)).Result;
+                    new QueryField("Id", Operation.In, ids));
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Average(e => e.ColumnInt), Convert.ToDouble(result));
@@ -321,7 +322,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionAverageAsyncViaTableNameWithExpressionWithHints()
+        public async Task TestSqlServerConnectionAverageAsyncViaTableNameWithExpressionWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -330,10 +331,10 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             {
                 // Act
                 var ids = new[] { tables.First().Id, tables.Last().Id };
-                var result = connection.AverageAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.AverageAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     Field.Parse<CompleteTable>(e => e.ColumnInt).First(),
                     new QueryField("Id", Operation.In, ids),
-                    SqlServerTableHints.TabLock).Result;
+                    SqlServerTableHints.TabLock);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Average(e => e.ColumnInt), Convert.ToDouble(result));

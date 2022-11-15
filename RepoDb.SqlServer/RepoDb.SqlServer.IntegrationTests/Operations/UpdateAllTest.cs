@@ -4,6 +4,7 @@ using RepoDb.Extensions;
 using RepoDb.SqlServer.IntegrationTests.Models;
 using RepoDb.SqlServer.IntegrationTests.Setup;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.SqlServer.IntegrationTests.Operations
 {
@@ -58,7 +59,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestSqlServerConnectionUpdateAllAsync()
+        public async Task TestSqlServerConnectionUpdateAllAsync()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -69,7 +70,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 tables.AsList().ForEach(table => Helper.UpdateCompleteTableProperties(table));
 
                 // Act
-                var result = connection.UpdateAllAsync<CompleteTable>(tables).Result;
+                var result = await connection.UpdateAllAsync<CompleteTable>(tables);
 
                 // Assert
                 Assert.AreEqual(10, result);
@@ -150,7 +151,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestSqlServerConnectionUpdateAllAsyncViaTableName()
+        public async Task TestSqlServerConnectionUpdateAllAsyncViaTableName()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -161,8 +162,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 tables.AsList().ForEach(table => Helper.UpdateCompleteTableProperties(table));
 
                 // Act
-                var result = connection.UpdateAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    tables).Result;
+                var result = await connection.UpdateAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    tables);
 
                 // Assert
                 Assert.AreEqual(10, result);
@@ -177,7 +178,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionUpdateAllAsyncViaExpandoObjectTableName()
+        public async Task TestSqlServerConnectionUpdateAllAsyncViaExpandoObjectTableName()
         {
             // Setup
             Database.CreateCompleteTables(10);
@@ -188,8 +189,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 var tables = Helper.CreateCompleteTablesAsExpandoObjects(10);
 
                 // Act
-                var result = connection.UpdateAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    tables).Result;
+                var result = await connection.UpdateAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    tables);
 
                 // Assert
                 Assert.AreEqual(10, result);

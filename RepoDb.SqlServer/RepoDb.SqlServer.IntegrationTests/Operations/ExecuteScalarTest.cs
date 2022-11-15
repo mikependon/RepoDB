@@ -3,6 +3,7 @@ using Microsoft.Data.SqlClient;
 using RepoDb.SqlServer.IntegrationTests.Setup;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.SqlServer.IntegrationTests.Operations
 {
@@ -61,7 +62,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestSqlServerConnectionExecuteScalarAsync()
+        public async Task TestSqlServerConnectionExecuteScalarAsync()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -69,7 +70,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExecuteScalarAsync("SELECT COUNT(*) FROM \"CompleteTable\";").Result;
+                var result = await connection.ExecuteScalarAsync("SELECT COUNT(*) FROM \"CompleteTable\";");
 
                 // Assert
                 Assert.AreEqual(tables.Count(), Convert.ToInt32(result));
@@ -77,7 +78,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionExecuteScalarAsyncWithReturnType()
+        public async Task TestSqlServerConnectionExecuteScalarAsyncWithReturnType()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -85,7 +86,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM \"CompleteTable\";").Result;
+                var result = await connection.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM \"CompleteTable\";");
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);

@@ -4,6 +4,7 @@ using RepoDb.SqlServer.IntegrationTests.Models;
 using RepoDb.SqlServer.IntegrationTests.Setup;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.SqlServer.IntegrationTests.Operations
 {
@@ -109,7 +110,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncForIdentityForEmptyTable()
+        public async Task TestSqlConnectionMergeAsyncForIdentityForEmptyTable()
         {
             // Setup
             var table = Helper.CreateCompleteTables(1).First();
@@ -117,7 +118,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.MergeAsync<CompleteTable>(table).Result;
+                var result = await connection.MergeAsync<CompleteTable>(table);
                 var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
@@ -127,7 +128,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncForIdentityForNonEmptyTable()
+        public async Task TestSqlConnectionMergeAsyncForIdentityForNonEmptyTable()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -138,7 +139,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = connection.MergeAsync<CompleteTable>(table).Result;
+                var result = await connection.MergeAsync<CompleteTable>(table);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
@@ -153,7 +154,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncForIdentityForNonEmptyTableWithQualifiers()
+        public async Task TestSqlConnectionMergeAsyncForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -170,8 +171,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 table.ColumnChar = "C";
 
                 // Act
-                var result = connection.MergeAsync<CompleteTable>(table,
-                    qualifiers: qualifiers).Result;
+                var result = await connection.MergeAsync<CompleteTable>(table,
+                    qualifiers: qualifiers);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
@@ -409,7 +410,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncViaTableNameForIdentityForEmptyTable()
+        public async Task TestSqlConnectionMergeAsyncViaTableNameForIdentityForEmptyTable()
         {
             // Setup
             var table = Helper.CreateCompleteTables(1).First();
@@ -417,8 +418,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    table).Result;
+                var result = await connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    table);
                 var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
@@ -428,7 +429,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncViaTableNameForExpandoObjectIdentityForEmptyTable()
+        public async Task TestSqlConnectionMergeAsyncViaTableNameForExpandoObjectIdentityForEmptyTable()
         {
             // Setup
             var table = Helper.CreateCompleteTablesAsExpandoObjects(1).First();
@@ -436,8 +437,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    table).Result;
+                var result = await connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    table);
                 var queryResult = connection.Query<CompleteTable>(result);
 
                 // Assert
@@ -448,7 +449,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncViaTableNameForIdentityForNonEmptyTable()
+        public async Task TestSqlConnectionMergeAsyncViaTableNameForIdentityForNonEmptyTable()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -459,8 +460,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    table).Result;
+                var result = await connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    table);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
@@ -475,7 +476,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncViaTableNameForExpandoObjectIdentityForNonEmptyTable()
+        public async Task TestSqlConnectionMergeAsyncViaTableNameForExpandoObjectIdentityForNonEmptyTable()
         {
             // Setup
             Database.CreateCompleteTables(1).First();
@@ -487,8 +488,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 Helper.UpdateCompleteTableAsExpandoObjectProperties(table);
 
                 // Act
-                var result = connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    table).Result;
+                var result = await connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    table);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
@@ -502,7 +503,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             }
         }
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncViaTableNameForIdentityForNonEmptyTableWithQualifiers()
+        public async Task TestSqlConnectionMergeAsyncViaTableNameForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -517,9 +518,9 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     table,
-                    qualifiers: qualifiers).Result;
+                    qualifiers: qualifiers);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
@@ -534,7 +535,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncAsDynamicViaTableNameForIdentityForEmptyTable()
+        public async Task TestSqlConnectionMergeAsyncAsDynamicViaTableNameForIdentityForEmptyTable()
         {
             // Setup
             var table = Helper.CreateCompleteTablesAsDynamics(1).First();
@@ -542,8 +543,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    (object)table).Result;
+                var result = await connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    (object)table);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
@@ -558,7 +559,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncAsDynamicViaTableNameForIdentityForNonEmptyTable()
+        public async Task TestSqlConnectionMergeAsyncAsDynamicViaTableNameForIdentityForNonEmptyTable()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -569,8 +570,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    table).Result;
+                var result = await connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    table);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
@@ -585,7 +586,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionMergeAsyncAsDynamicViaTableNameForIdentityForNonEmptyTableWithQualifiers()
+        public async Task TestSqlConnectionMergeAsyncAsDynamicViaTableNameForIdentityForNonEmptyTableWithQualifiers()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -600,9 +601,9 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.MergeAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     table,
-                    qualifiers: qualifiers).Result;
+                    qualifiers: qualifiers);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());

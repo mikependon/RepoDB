@@ -4,6 +4,7 @@ using RepoDb.Enumerations;
 using RepoDb.SqlServer.IntegrationTests.Models;
 using RepoDb.SqlServer.IntegrationTests.Setup;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.SqlServer.IntegrationTests.Operations
 {
@@ -171,7 +172,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestSqlServerConnectionDeleteAsyncWithoutExpression()
+        public async Task TestSqlServerConnectionDeleteAsyncWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -179,7 +180,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.DeleteAsync<CompleteTable>((object)null).Result;
+                var result = await connection.DeleteAsync<CompleteTable>((object)null);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -187,7 +188,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionDeleteAsyncViaPrimaryKey()
+        public async Task TestSqlServerConnectionDeleteAsyncViaPrimaryKey()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -195,7 +196,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.DeleteAsync<CompleteTable>(tables.First().Id).Result;
+                var result = await connection.DeleteAsync<CompleteTable>(tables.First().Id);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -203,7 +204,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionDeleteAsyncViaDataEntity()
+        public async Task TestSqlServerConnectionDeleteAsyncViaDataEntity()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -211,7 +212,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.DeleteAsync<CompleteTable>(tables.First()).Result;
+                var result = await connection.DeleteAsync<CompleteTable>(tables.First());
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -219,7 +220,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionDeleteAsyncViaExpression()
+        public async Task TestSqlServerConnectionDeleteAsyncViaExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -227,7 +228,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.DeleteAsync<CompleteTable>(e => e.Id == tables.First().Id).Result;
+                var result = await connection.DeleteAsync<CompleteTable>(e => e.Id == tables.First().Id);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -235,7 +236,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionDeleteAsyncViaDynamic()
+        public async Task TestSqlServerConnectionDeleteAsyncViaDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -243,7 +244,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.DeleteAsync<CompleteTable>(new { Id = tables.First().Id }).Result;
+                var result = await connection.DeleteAsync<CompleteTable>(new { Id = tables.First().Id });
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -251,7 +252,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionDeleteAsyncViaQueryField()
+        public async Task TestSqlServerConnectionDeleteAsyncViaQueryField()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -259,7 +260,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.DeleteAsync<CompleteTable>(new QueryField("Id", tables.First().Id)).Result;
+                var result = await connection.DeleteAsync<CompleteTable>(new QueryField("Id", tables.First().Id));
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -267,7 +268,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionDeleteAsyncViaQueryFields()
+        public async Task TestSqlServerConnectionDeleteAsyncViaQueryFields()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -280,7 +281,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.DeleteAsync<CompleteTable>(queryFields).Result;
+                var result = await connection.DeleteAsync<CompleteTable>(queryFields);
 
                 // Assert
                 Assert.AreEqual(8, result);
@@ -288,7 +289,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionDeleteAsyncViaQueryGroup()
+        public async Task TestSqlServerConnectionDeleteAsyncViaQueryGroup()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -302,7 +303,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.DeleteAsync<CompleteTable>(queryGroup).Result;
+                var result = await connection.DeleteAsync<CompleteTable>(queryGroup);
 
                 // Assert
                 Assert.AreEqual(8, result);
@@ -429,7 +430,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestSqlServerConnectionDeleteAsyncViaTableNameWithoutExpression()
+        public async Task TestSqlServerConnectionDeleteAsyncViaTableNameWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -437,7 +438,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), (object)null).Result;
+                var result = await connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), (object)null);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -445,7 +446,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionDeleteAsyncViaTableNameViaPrimaryKey()
+        public async Task TestSqlServerConnectionDeleteAsyncViaTableNameViaPrimaryKey()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -453,7 +454,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.DeleteAsync<CompleteTable>(tables.First().Id).Result;
+                var result = await connection.DeleteAsync<CompleteTable>(tables.First().Id);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -461,7 +462,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionDeleteAsyncViaTableNameViaDynamic()
+        public async Task TestSqlServerConnectionDeleteAsyncViaTableNameViaDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -469,7 +470,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), new { Id = tables.First().Id }).Result;
+                var result = await connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), new { Id = tables.First().Id });
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -477,7 +478,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionDeleteAsyncViaTableNameViaQueryField()
+        public async Task TestSqlServerConnectionDeleteAsyncViaTableNameViaQueryField()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -485,7 +486,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), new QueryField("Id", tables.First().Id)).Result;
+                var result = await connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), new QueryField("Id", tables.First().Id));
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -493,7 +494,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionDeleteAsyncViaTableNameViaQueryFields()
+        public async Task TestSqlServerConnectionDeleteAsyncViaTableNameViaQueryFields()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -506,7 +507,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), queryFields).Result;
+                var result = await connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), queryFields);
 
                 // Assert
                 Assert.AreEqual(8, result);
@@ -514,7 +515,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionDeleteAsyncViaTableNameViaQueryGroup()
+        public async Task TestSqlServerConnectionDeleteAsyncViaTableNameViaQueryGroup()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -528,7 +529,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), queryGroup).Result;
+                var result = await connection.DeleteAsync(ClassMappedNameCache.Get<CompleteTable>(), queryGroup);
 
                 // Assert
                 Assert.AreEqual(8, result);

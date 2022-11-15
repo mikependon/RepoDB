@@ -5,6 +5,7 @@ using RepoDb.SqlServer.IntegrationTests.Models;
 using RepoDb.SqlServer.IntegrationTests.Setup;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.SqlServer.IntegrationTests.Operations
 {
@@ -158,7 +159,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestSqlServerConnectionExistsAsyncWithoutExpression()
+        public async Task TestSqlServerConnectionExistsAsyncWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -166,7 +167,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExistsAsync<CompleteTable>((object)null).Result;
+                var result = await connection.ExistsAsync<CompleteTable>((object)null);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -174,7 +175,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionExistsAsyncViaExpression()
+        public async Task TestSqlServerConnectionExistsAsyncViaExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -183,7 +184,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExistsAsync<CompleteTable>(e => ids.Contains(e.Id)).Result;
+                var result = await connection.ExistsAsync<CompleteTable>(e => ids.Contains(e.Id));
 
                 // Assert
                 Assert.IsTrue(result);
@@ -191,7 +192,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionExistsAsyncViaDynamic()
+        public async Task TestSqlServerConnectionExistsAsyncViaDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -199,7 +200,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExistsAsync<CompleteTable>(new { tables.First().Id }).Result;
+                var result = await connection.ExistsAsync<CompleteTable>(new { tables.First().Id });
 
                 // Assert
                 Assert.IsTrue(result);
@@ -207,7 +208,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionExistsAsyncViaQueryField()
+        public async Task TestSqlServerConnectionExistsAsyncViaQueryField()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -215,7 +216,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExistsAsync<CompleteTable>(new QueryField("Id", tables.First().Id)).Result;
+                var result = await connection.ExistsAsync<CompleteTable>(new QueryField("Id", tables.First().Id));
 
                 // Assert
                 Assert.IsTrue(result);
@@ -223,7 +224,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionExistsAsyncViaQueryFields()
+        public async Task TestSqlServerConnectionExistsAsyncViaQueryFields()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -236,7 +237,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExistsAsync<CompleteTable>(queryFields).Result;
+                var result = await connection.ExistsAsync<CompleteTable>(queryFields);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -244,7 +245,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionExistsAsyncViaQueryGroup()
+        public async Task TestSqlServerConnectionExistsAsyncViaQueryGroup()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -258,7 +259,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExistsAsync<CompleteTable>(queryGroup).Result;
+                var result = await connection.ExistsAsync<CompleteTable>(queryGroup);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -266,7 +267,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionExistsAsyncWithoutExpressionWithHints()
+        public async Task TestSqlServerConnectionExistsAsyncWithoutExpressionWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -274,8 +275,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExistsAsync<CompleteTable>((object)null,
-                    SqlServerTableHints.NoLock).Result;
+                var result = await connection.ExistsAsync<CompleteTable>((object)null,
+                    SqlServerTableHints.NoLock);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -409,7 +410,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestSqlServerConnectionExistsAsyncViaTableNameWithoutExpression()
+        public async Task TestSqlServerConnectionExistsAsyncViaTableNameWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -417,8 +418,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExistsAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    (object)null).Result;
+                var result = await connection.ExistsAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    (object)null);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -426,7 +427,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionExistsAsyncViaTableNameViaDynamic()
+        public async Task TestSqlServerConnectionExistsAsyncViaTableNameViaDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -434,8 +435,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExistsAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    new { tables.First().Id }).Result;
+                var result = await connection.ExistsAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    new { tables.First().Id });
 
                 // Assert
                 Assert.IsTrue(result);
@@ -443,7 +444,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionExistsAsyncViaTableNameViaQueryField()
+        public async Task TestSqlServerConnectionExistsAsyncViaTableNameViaQueryField()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -451,8 +452,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExistsAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    new QueryField("Id", tables.First().Id)).Result;
+                var result = await connection.ExistsAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    new QueryField("Id", tables.First().Id));
 
                 // Assert
                 Assert.IsTrue(result);
@@ -460,7 +461,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionExistsAsyncViaTableNameViaQueryFields()
+        public async Task TestSqlServerConnectionExistsAsyncViaTableNameViaQueryFields()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -473,8 +474,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExistsAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    queryFields).Result;
+                var result = await connection.ExistsAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    queryFields);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -482,7 +483,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionExistsAsyncViaTableNameViaQueryGroup()
+        public async Task TestSqlServerConnectionExistsAsyncViaTableNameViaQueryGroup()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -496,8 +497,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExistsAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    queryGroup).Result;
+                var result = await connection.ExistsAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    queryGroup);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -505,7 +506,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionExistsAsyncViaTableNameWithoutExpressionWithHints()
+        public async Task TestSqlServerConnectionExistsAsyncViaTableNameWithoutExpressionWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -513,9 +514,9 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExistsAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.ExistsAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     (object)null,
-                    SqlServerTableHints.NoLock).Result;
+                    SqlServerTableHints.NoLock);
 
                 // Assert
                 Assert.IsTrue(result);

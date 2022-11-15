@@ -3,6 +3,7 @@ using Microsoft.Data.SqlClient;
 using RepoDb.SqlServer.IntegrationTests.Models;
 using RepoDb.SqlServer.IntegrationTests.Setup;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.SqlServer.IntegrationTests.Operations
 {
@@ -192,7 +193,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestSqlServerConnectionUpdateAsyncViaDataEntity()
+        public async Task TestSqlServerConnectionUpdateAsyncViaDataEntity()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -203,7 +204,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = connection.UpdateAsync<CompleteTable>(table).Result;
+                var result = await connection.UpdateAsync<CompleteTable>(table);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -217,7 +218,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionUpdateAsyncViaExpression()
+        public async Task TestSqlServerConnectionUpdateAsyncViaExpression()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -228,7 +229,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = connection.UpdateAsync<CompleteTable>(table, e => e.Id == table.Id).Result;
+                var result = await connection.UpdateAsync<CompleteTable>(table, e => e.Id == table.Id);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -242,7 +243,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionUpdateAsyncViaDynamic()
+        public async Task TestSqlServerConnectionUpdateAsyncViaDynamic()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -253,7 +254,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = connection.UpdateAsync<CompleteTable>(table, new { table.Id }).Result;
+                var result = await connection.UpdateAsync<CompleteTable>(table, new { table.Id });
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -267,7 +268,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionUpdateAsyncViaQueryField()
+        public async Task TestSqlServerConnectionUpdateAsyncViaQueryField()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -278,7 +279,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = connection.UpdateAsync<CompleteTable>(table, new QueryField("Id", table.Id)).Result;
+                var result = await connection.UpdateAsync<CompleteTable>(table, new QueryField("Id", table.Id));
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -292,7 +293,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionUpdateAsyncViaQueryFields()
+        public async Task TestSqlServerConnectionUpdateAsyncViaQueryFields()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -308,7 +309,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = connection.UpdateAsync<CompleteTable>(table, queryFields).Result;
+                var result = await connection.UpdateAsync<CompleteTable>(table, queryFields);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -322,7 +323,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionUpdateAsyncViaQueryGroup()
+        public async Task TestSqlServerConnectionUpdateAsyncViaQueryGroup()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -339,7 +340,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = connection.UpdateAsync<CompleteTable>(table, queryGroup).Result;
+                var result = await connection.UpdateAsync<CompleteTable>(table, queryGroup);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -536,7 +537,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestSqlServerConnectionUpdateAsyncViaTableNameViaExpandoObject()
+        public async Task TestSqlServerConnectionUpdateAsyncViaTableNameViaExpandoObject()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -547,8 +548,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 var entity = Helper.CreateCompleteTablesAsExpandoObjects(1).First();
 
                 // Act
-                var result = connection.UpdateAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    entity).Result;
+                var result = await connection.UpdateAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    entity);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -562,7 +563,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionUpdateAsyncViaTableNameViaDataEntity()
+        public async Task TestSqlServerConnectionUpdateAsyncViaTableNameViaDataEntity()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -573,7 +574,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = connection.UpdateAsync(ClassMappedNameCache.Get<CompleteTable>(), table).Result;
+                var result = await connection.UpdateAsync(ClassMappedNameCache.Get<CompleteTable>(), table);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -587,7 +588,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionUpdateAsyncViaTableNameViaDynamic()
+        public async Task TestSqlServerConnectionUpdateAsyncViaTableNameViaDynamic()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -598,7 +599,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = connection.UpdateAsync(ClassMappedNameCache.Get<CompleteTable>(), table, new { table.Id }).Result;
+                var result = await connection.UpdateAsync(ClassMappedNameCache.Get<CompleteTable>(), table, new { table.Id });
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -612,7 +613,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionUpdateAsyncViaTableNameViaQueryField()
+        public async Task TestSqlServerConnectionUpdateAsyncViaTableNameViaQueryField()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -623,7 +624,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = connection.UpdateAsync(ClassMappedNameCache.Get<CompleteTable>(), table, new QueryField("Id", table.Id)).Result;
+                var result = await connection.UpdateAsync(ClassMappedNameCache.Get<CompleteTable>(), table, new QueryField("Id", table.Id));
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -637,7 +638,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionUpdateAsyncViaTableNameViaQueryFields()
+        public async Task TestSqlServerConnectionUpdateAsyncViaTableNameViaQueryFields()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -653,7 +654,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = connection.UpdateAsync(ClassMappedNameCache.Get<CompleteTable>(), table, queryFields).Result;
+                var result = await connection.UpdateAsync(ClassMappedNameCache.Get<CompleteTable>(), table, queryFields);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -667,7 +668,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionUpdateAsyncViaTableNameViaQueryGroup()
+        public async Task TestSqlServerConnectionUpdateAsyncViaTableNameViaQueryGroup()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -684,7 +685,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
                 Helper.UpdateCompleteTableProperties(table);
 
                 // Act
-                var result = connection.UpdateAsync(ClassMappedNameCache.Get<CompleteTable>(), table, queryGroup).Result;
+                var result = await connection.UpdateAsync(ClassMappedNameCache.Get<CompleteTable>(), table, queryGroup);
 
                 // Assert
                 Assert.AreEqual(1, result);

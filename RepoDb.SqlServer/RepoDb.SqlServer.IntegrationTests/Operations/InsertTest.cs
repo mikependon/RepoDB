@@ -4,6 +4,7 @@ using RepoDb.SqlServer.IntegrationTests.Models;
 using RepoDb.SqlServer.IntegrationTests.Setup;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.SqlServer.IntegrationTests.Operations
 {
@@ -81,7 +82,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestSqlConnectionInsertAsyncForIdentity()
+        public async Task TestSqlConnectionInsertAsyncForIdentity()
         {
             // Setup
             var table = Helper.CreateCompleteTables(1).First();
@@ -89,7 +90,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.InsertAsync<CompleteTable>(table).Result;
+                var result = await connection.InsertAsync<CompleteTable>(table);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
@@ -106,7 +107,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionInsertAsyncForNonIdentity()
+        public async Task TestSqlConnectionInsertAsyncForNonIdentity()
         {
             // Setup
             var table = Helper.CreateNonIdentityCompleteTables(1).First();
@@ -114,7 +115,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.InsertAsync<NonIdentityCompleteTable>(table).Result;
+                var result = await connection.InsertAsync<NonIdentityCompleteTable>(table);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<NonIdentityCompleteTable>());
@@ -293,7 +294,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestSqlConnectionInsertAsyncViaTableNameForIdentity()
+        public async Task TestSqlConnectionInsertAsyncViaTableNameForIdentity()
         {
             // Setup
             var table = Helper.CreateCompleteTables(1).First();
@@ -301,8 +302,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.InsertAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    table).Result;
+                var result = await connection.InsertAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    table);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
@@ -318,7 +319,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionInsertAsyncViaTableNameAsDynamicForIdentity()
+        public async Task TestSqlConnectionInsertAsyncViaTableNameAsDynamicForIdentity()
         {
             // Setup
             var table = Helper.CreateCompleteTablesAsDynamics(1).First();
@@ -326,8 +327,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.InsertAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    (object)table).Result;
+                var result = await connection.InsertAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    (object)table);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
@@ -343,7 +344,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionInsertAsyncViaTableNameAsExpandoObjectForIdentity()
+        public async Task TestSqlConnectionInsertAsyncViaTableNameAsExpandoObjectForIdentity()
         {
             // Setup
             var table = Helper.CreateCompleteTablesAsExpandoObjects(1).First();
@@ -351,8 +352,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.InsertAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    table).Result;
+                var result = await connection.InsertAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    table);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<CompleteTable>());
@@ -369,7 +370,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionInsertAsyncViaTableNameForNonIdentity()
+        public async Task TestSqlConnectionInsertAsyncViaTableNameForNonIdentity()
         {
             // Setup
             var table = Helper.CreateNonIdentityCompleteTables(1).First();
@@ -377,8 +378,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.InsertAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
-                    table).Result;
+                var result = await connection.InsertAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
+                    table);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<NonIdentityCompleteTable>());
@@ -394,7 +395,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionInsertAsyncViaTableNameAsDynamicForNonIdentity()
+        public async Task TestSqlConnectionInsertAsyncViaTableNameAsDynamicForNonIdentity()
         {
             // Setup
             var table = Helper.CreateNonIdentityCompleteTablesAsDynamics(1).First();
@@ -402,8 +403,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.InsertAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
-                    (object)table).Result;
+                var result = await connection.InsertAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
+                    (object)table);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<NonIdentityCompleteTable>());
@@ -419,7 +420,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionInsertAsyncViaTableNameAsExpandoObjectForNonIdentityTable()
+        public async Task TestSqlConnectionInsertAsyncViaTableNameAsExpandoObjectForNonIdentityTable()
         {
             // Setup
             var table = Helper.CreateNonIdentityCompleteTablesAsExpandoObjects(1).First();
@@ -427,8 +428,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.InsertAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
-                    table).Result;
+                var result = await connection.InsertAsync(ClassMappedNameCache.Get<NonIdentityCompleteTable>(),
+                    table);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<NonIdentityCompleteTable>());

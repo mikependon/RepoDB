@@ -5,6 +5,7 @@ using RepoDb.SqlServer.IntegrationTests.Models;
 using RepoDb.SqlServer.IntegrationTests.Setup;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.SqlServer.IntegrationTests.Operations
 {
@@ -134,7 +135,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestSqlServerConnectionBatchQueryAsyncFirstBatchAscending()
+        public async Task TestSqlServerConnectionBatchQueryAsyncFirstBatchAscending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -142,10 +143,10 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.BatchQueryAsync<CompleteTable>(0,
+                var result = await connection.BatchQueryAsync<CompleteTable>(0,
                     3,
                     OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null).Result;
+                    (object)null);
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(0), result.ElementAt(0));
@@ -154,7 +155,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionBatchQueryAsyncFirstBatchDescending()
+        public async Task TestSqlServerConnectionBatchQueryAsyncFirstBatchDescending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -162,10 +163,10 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.BatchQueryAsync<CompleteTable>(0,
+                var result = await connection.BatchQueryAsync<CompleteTable>(0,
                     3,
                     OrderField.Descending<CompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null).Result;
+                    (object)null);
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(9), result.ElementAt(0));
@@ -174,7 +175,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionBatchQueryAsyncThirdBatchAscending()
+        public async Task TestSqlServerConnectionBatchQueryAsyncThirdBatchAscending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -182,10 +183,10 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.BatchQueryAsync<CompleteTable>(2,
+                var result = await connection.BatchQueryAsync<CompleteTable>(2,
                     3,
                     OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null).Result;
+                    (object)null);
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(6), result.ElementAt(0));
@@ -194,7 +195,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionBatchQueryAsyncThirdBatchDescending()
+        public async Task TestSqlServerConnectionBatchQueryAsyncThirdBatchDescending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -202,10 +203,10 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.BatchQueryAsync<CompleteTable>(2,
+                var result = await connection.BatchQueryAsync<CompleteTable>(2,
                     3,
                     OrderField.Descending<CompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null).Result;
+                    (object)null);
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(3), result.ElementAt(0));
@@ -214,7 +215,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionBatchQueryAsyncFirstBatchAscendingWithHints()
+        public async Task TestSqlServerConnectionBatchQueryAsyncFirstBatchAscendingWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -222,11 +223,11 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.BatchQueryAsync<CompleteTable>(page: 0,
+                var result = await connection.BatchQueryAsync<CompleteTable>(page: 0,
                     rowsPerBatch: 3,
                     orderBy: OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
                     where: (object)null,
-                    hints: SqlServerTableHints.NoLock).Result;
+                    hints: SqlServerTableHints.NoLock);
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(0), result.ElementAt(0));
@@ -353,7 +354,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestSqlServerConnectionBatchQueryViaTableNameAsyncFirstBatchAscending()
+        public async Task TestSqlServerConnectionBatchQueryViaTableNameAsyncFirstBatchAscending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -361,11 +362,11 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.BatchQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     0,
                     3,
                     OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null).Result;
+                    (object)null);
 
                 // Assert
                 Helper.AssertMembersEquality(tables.ElementAt(0), result.ElementAt(0));
@@ -374,7 +375,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionBatchQueryViaTableNameAsyncFirstBatchDescending()
+        public async Task TestSqlServerConnectionBatchQueryViaTableNameAsyncFirstBatchDescending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -382,11 +383,11 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.BatchQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     0,
                     3,
                     OrderField.Descending<CompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null).Result;
+                    (object)null);
 
                 // Assert
                 Helper.AssertMembersEquality(tables.ElementAt(9), result.ElementAt(0));
@@ -395,7 +396,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionBatchQueryViaTableNameAsyncThirdBatchAscending()
+        public async Task TestSqlServerConnectionBatchQueryViaTableNameAsyncThirdBatchAscending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -403,11 +404,11 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.BatchQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     2,
                     3,
                     OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null).Result;
+                    (object)null);
 
                 // Assert
                 Helper.AssertMembersEquality(tables.ElementAt(6), result.ElementAt(0));
@@ -416,7 +417,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionBatchQueryViaTableNameAsyncThirdBatchDescending()
+        public async Task TestSqlServerConnectionBatchQueryViaTableNameAsyncThirdBatchDescending()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -424,11 +425,11 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.BatchQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     2,
                     3,
                     OrderField.Descending<CompleteTable>(c => c.Id).AsEnumerable(),
-                    (object)null).Result;
+                    (object)null);
 
                 // Assert
                 Helper.AssertMembersEquality(tables.ElementAt(3), result.ElementAt(0));
@@ -437,7 +438,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionBatchQueryViaTableNameAsyncFirstBatchAscendingWithHints()
+        public async Task TestSqlServerConnectionBatchQueryViaTableNameAsyncFirstBatchAscendingWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -445,12 +446,12 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.BatchQueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     0,
                     3,
                     OrderField.Ascending<CompleteTable>(c => c.Id).AsEnumerable(),
                     where: (object)null,
-                    hints: SqlServerTableHints.NoLock).Result;
+                    hints: SqlServerTableHints.NoLock);
 
                 // Assert
                 Helper.AssertMembersEquality(tables.ElementAt(0), result.ElementAt(0));

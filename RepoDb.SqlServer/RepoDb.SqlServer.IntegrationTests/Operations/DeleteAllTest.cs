@@ -3,6 +3,7 @@ using Microsoft.Data.SqlClient;
 using RepoDb.SqlServer.IntegrationTests.Models;
 using RepoDb.SqlServer.IntegrationTests.Setup;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.SqlServer.IntegrationTests.Operations
 {
@@ -81,7 +82,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestSqlServerConnectionDeleteAllAsync()
+        public async Task TestSqlServerConnectionDeleteAllAsync()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -89,7 +90,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.DeleteAllAsync<CompleteTable>().Result;
+                var result = await connection.DeleteAllAsync<CompleteTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -97,7 +98,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionDeleteAllAsyncViaPrimaryKeys()
+        public async Task TestSqlServerConnectionDeleteAllAsyncViaPrimaryKeys()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -106,7 +107,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act
-                var result = connection.DeleteAllAsync<CompleteTable>(primaryKeys).Result;
+                var result = await connection.DeleteAllAsync<CompleteTable>(primaryKeys);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -114,7 +115,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionDeleteAllAsyncViaPrimaryKeysBeyondLimits()
+        public async Task TestSqlServerConnectionDeleteAllAsyncViaPrimaryKeysBeyondLimits()
         {
             // Setup
             var tables = Database.CreateCompleteTables(5000);
@@ -123,7 +124,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act
-                var result = connection.DeleteAllAsync<CompleteTable>(primaryKeys).Result;
+                var result = await connection.DeleteAllAsync<CompleteTable>(primaryKeys);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -193,7 +194,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestSqlServerConnectionDeleteAllAsyncViaTableName()
+        public async Task TestSqlServerConnectionDeleteAllAsyncViaTableName()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -201,7 +202,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.DeleteAllAsync(ClassMappedNameCache.Get<CompleteTable>()).Result;
+                var result = await connection.DeleteAllAsync(ClassMappedNameCache.Get<CompleteTable>());
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -209,7 +210,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionDeleteAllAsyncViaTableNameViaPrimaryKeys()
+        public async Task TestSqlServerConnectionDeleteAllAsyncViaTableNameViaPrimaryKeys()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -218,7 +219,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act
-                var result = connection.DeleteAllAsync(ClassMappedNameCache.Get<CompleteTable>(), primaryKeys).Result;
+                var result = await connection.DeleteAllAsync(ClassMappedNameCache.Get<CompleteTable>(), primaryKeys);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -226,7 +227,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionDeleteAllAsyncViaTableNameViaPrimaryKeysBeyondLimits()
+        public async Task TestSqlServerConnectionDeleteAllAsyncViaTableNameViaPrimaryKeysBeyondLimits()
         {
             // Setup
             var tables = Database.CreateCompleteTables(5000);
@@ -235,7 +236,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act
-                var result = connection.DeleteAllAsync(ClassMappedNameCache.Get<CompleteTable>(), primaryKeys).Result;
+                var result = await connection.DeleteAllAsync(ClassMappedNameCache.Get<CompleteTable>(), primaryKeys);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
