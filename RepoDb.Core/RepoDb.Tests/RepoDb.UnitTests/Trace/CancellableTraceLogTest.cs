@@ -190,16 +190,16 @@ namespace RepoDb.UnitTests.Trace
                 .ExecuteNonQuery("", trace: new ErroneousCancellationTrace());
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnExecuteNonQueryAsyncCancelledOperation()
+        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        public async Task ThrowExceptionOnExecuteNonQueryAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
+            await connection
                 .ExecuteNonQueryAsync("", trace: new ErroneousCancellationTrace())
-                .Wait();
+                ;
         }
 
         #endregion
@@ -217,16 +217,16 @@ namespace RepoDb.UnitTests.Trace
                 .ExecuteQuery("", trace: new ErroneousCancellationTrace());
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnExecuteQueryAsyncCancelledOperation()
+        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        public async Task ThrowExceptionOnExecuteQueryAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
+            await connection
                 .ExecuteQueryAsync("", trace: new ErroneousCancellationTrace())
-                .Wait();
+                ;
         }
 
         #endregion
@@ -244,16 +244,16 @@ namespace RepoDb.UnitTests.Trace
                 .ExecuteScalar("", trace: new ErroneousCancellationTrace());
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnExecuteScalarAsyncCancelledOperation()
+        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        public async Task ThrowExceptionOnExecuteScalarAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
+            await connection
                 .ExecuteScalarAsync("", trace: new ErroneousCancellationTrace())
-                .Wait();
+                ;
         }
 
         #endregion
@@ -271,16 +271,16 @@ namespace RepoDb.UnitTests.Trace
                 .ExecuteQueryMultiple("", trace: new ErroneousCancellationTrace());
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionExecuteQueryMultipleAsyncCancelledOperation()
+        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        public async Task ThrowExceptionExecuteQueryMultipleAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
+            await connection
                 .ExecuteQueryMultipleAsync("", trace: new ErroneousCancellationTrace())
-                .Wait();
+                ;
         }
 
         #endregion
@@ -298,16 +298,16 @@ namespace RepoDb.UnitTests.Trace
                 .Average("", (Field)null, (object)null, trace: new ErroneousCancellationTrace());
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnAverageAsyncCancelledOperation()
+        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        public async Task ThrowExceptionOnAverageAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
+            await connection
                 .AverageAsync("", (Field)null, (object)null, trace: new ErroneousCancellationTrace())
-                .Wait();
+                ;
         }
 
         #endregion
@@ -325,16 +325,16 @@ namespace RepoDb.UnitTests.Trace
                 .AverageAll("", (Field)null, trace: new ErroneousCancellationTrace());
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnAverageAllAsyncCancelledOperation()
+        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        public async Task ThrowExceptionOnAverageAllAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
+            await connection
                 .AverageAllAsync("", (Field)null, trace: new ErroneousCancellationTrace())
-                .Wait();
+                ;
         }
 
         #endregion
@@ -352,16 +352,16 @@ namespace RepoDb.UnitTests.Trace
                 .BatchQuery("", 0, 100, null, (object)null, trace: new ErroneousCancellationTrace());
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnBatchQueryAsyncCancelledOperation()
+        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        public async Task ThrowExceptionOnBatchQueryAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
+            await connection
                 .BatchQueryAsync("", 0, 100, null, (object)null, trace: new ErroneousCancellationTrace())
-                .Wait();
+                ;
         }
 
         #endregion
@@ -379,16 +379,16 @@ namespace RepoDb.UnitTests.Trace
                 .Count("", (Field)null, trace: new ErroneousCancellationTrace());
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnCountAsyncCancelledOperation()
+        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        public async Task ThrowExceptionOnCountAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
+            await connection
                 .CountAsync("", (Field)null, trace: new ErroneousCancellationTrace())
-                .Wait();
+                ;
         }
 
         #endregion
@@ -406,16 +406,16 @@ namespace RepoDb.UnitTests.Trace
                 .CountAll("", trace: new ErroneousCancellationTrace());
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnCountAllAsyncCancelledOperation()
+        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        public async Task ThrowExceptionOnCountAllAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
+            await connection
                 .CountAllAsync("", trace: new ErroneousCancellationTrace())
-                .Wait();
+                ;
         }
 
         #endregion
@@ -433,16 +433,16 @@ namespace RepoDb.UnitTests.Trace
                 .Delete("", (Field)null, trace: new ErroneousCancellationTrace());
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnDeleteAsyncCancelledOperation()
+        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        public async Task ThrowExceptionOnDeleteAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
+            await connection
                 .DeleteAsync("", (Field)null, trace: new ErroneousCancellationTrace())
-                .Wait();
+                ;
         }
 
         #endregion
@@ -460,16 +460,16 @@ namespace RepoDb.UnitTests.Trace
                 .DeleteAll("", trace: new ErroneousCancellationTrace());
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnDeleteAllAsyncCancelledOperation()
+        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        public async Task ThrowExceptionOnDeleteAllAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
+            await connection
                 .DeleteAllAsync("", trace: new ErroneousCancellationTrace())
-                .Wait();
+                ;
         }
 
         #endregion
@@ -487,16 +487,16 @@ namespace RepoDb.UnitTests.Trace
                 .Exists("", (Field)null, trace: new ErroneousCancellationTrace());
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnExistsAsyncCancelledOperation()
+        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        public async Task ThrowExceptionOnExistsAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
+            await connection
                 .ExistsAsync("", (Field)null, trace: new ErroneousCancellationTrace())
-                .Wait();
+                ;
         }
 
         #endregion
@@ -514,16 +514,16 @@ namespace RepoDb.UnitTests.Trace
                 .Insert("", null, trace: new ErroneousCancellationTrace());
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnInsertAsyncCancelledOperation()
+        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        public async Task ThrowExceptionOnInsertAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
+            await connection
                 .InsertAsync("", null, trace: new ErroneousCancellationTrace())
-                .Wait();
+                ;
         }
 
         #endregion
@@ -561,8 +561,8 @@ namespace RepoDb.UnitTests.Trace
                 .InsertAll("", entities, trace: new ErroneousCancellationTrace());
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnInsertAllAsyncCancelledOperation()
+        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        public async Task ThrowExceptionOnInsertAllAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
@@ -574,13 +574,12 @@ namespace RepoDb.UnitTests.Trace
             };
 
             // Act
-            connection
-                .InsertAllAsync("", entities, trace: new ErroneousCancellationTrace())
-                .Wait();
+            await connection
+                .InsertAllAsync("", entities, trace: new ErroneousCancellationTrace());
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnInsertAllAsyncMultipleEntitiesCancelledOperation()
+        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        public async Task ThrowExceptionOnInsertAllAsyncMultipleEntitiesCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
@@ -592,9 +591,9 @@ namespace RepoDb.UnitTests.Trace
             };
 
             // Act
-            connection
+            await connection
                 .InsertAllAsync("", entities, trace: new ErroneousCancellationTrace())
-                .Wait();
+                ;
         }
 
         #endregion
@@ -612,16 +611,16 @@ namespace RepoDb.UnitTests.Trace
                 .Max("", (Field)null, (object)null, trace: new ErroneousCancellationTrace());
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnMaxAsyncCancelledOperation()
+        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        public async Task ThrowExceptionOnMaxAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
+            await connection
                 .MaxAsync("", (Field)null, (object)null, trace: new ErroneousCancellationTrace())
-                .Wait();
+                ;
         }
 
         #endregion
@@ -639,16 +638,16 @@ namespace RepoDb.UnitTests.Trace
                 .MaxAll("", (Field)null, trace: new ErroneousCancellationTrace());
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnMaxAllAsyncCancelledOperation()
+        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        public async Task ThrowExceptionOnMaxAllAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
+            await connection
                 .MaxAllAsync("", (Field)null, trace: new ErroneousCancellationTrace())
-                .Wait();
+                ;
         }
 
         #endregion
@@ -666,16 +665,16 @@ namespace RepoDb.UnitTests.Trace
                 .Merge("", new { Id = 1 }, (Field)null, trace: new ErroneousCancellationTrace());
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnMergeAsyncCancelledOperation()
+        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        public async Task ThrowExceptionOnMergeAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
+            await connection
                 .MergeAsync("", new { Id = 1 }, (Field)null, trace: new ErroneousCancellationTrace())
-                .Wait();
+                ;
         }
 
         #endregion
@@ -697,8 +696,8 @@ namespace RepoDb.UnitTests.Trace
                 .MergeAll("", entities, trace: new ErroneousCancellationTrace());
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnMergeAllAsyncCancelledOperation()
+        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        public async Task ThrowExceptionOnMergeAllAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
@@ -708,9 +707,9 @@ namespace RepoDb.UnitTests.Trace
             };
 
             // Act
-            connection
+            await connection
                 .MergeAllAsync("", entities, trace: new ErroneousCancellationTrace())
-                .Wait();
+                ;
         }
 
         [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
@@ -730,8 +729,8 @@ namespace RepoDb.UnitTests.Trace
                 .MergeAll("", entities, trace: new ErroneousCancellationTrace());
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnMergeAllMultipleEntitiesAsyncCancelledOperation()
+        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        public async Task ThrowExceptionOnMergeAllMultipleEntitiesAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
@@ -743,9 +742,9 @@ namespace RepoDb.UnitTests.Trace
             };
 
             // Act
-            connection
+            await connection
                 .MergeAllAsync("", entities, trace: new ErroneousCancellationTrace())
-                .Wait();
+                ;
         }
 
         #endregion
@@ -763,16 +762,16 @@ namespace RepoDb.UnitTests.Trace
                 .Min("", (Field)null, (object)null, trace: new ErroneousCancellationTrace());
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnMinAsyncCancelledOperation()
+        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        public async Task ThrowExceptionOnMinAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
+            await connection
                 .MinAsync("", (Field)null, (object)null, trace: new ErroneousCancellationTrace())
-                .Wait();
+                ;
         }
 
         #endregion
@@ -790,16 +789,16 @@ namespace RepoDb.UnitTests.Trace
                 .MinAll("", (Field)null, trace: new ErroneousCancellationTrace());
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnMinAllAsyncCancelledOperation()
+        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        public async Task ThrowExceptionOnMinAllAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
+            await connection
                 .MinAllAsync("", (Field)null, trace: new ErroneousCancellationTrace())
-                .Wait();
+                ;
         }
 
         #endregion
@@ -817,16 +816,16 @@ namespace RepoDb.UnitTests.Trace
                 .Query("", (QueryField)null, trace: new ErroneousCancellationTrace());
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnQueryAsyncCancelledOperation()
+        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        public async Task ThrowExceptionOnQueryAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
+            await connection
                 .QueryAsync("", (QueryField)null, trace: new ErroneousCancellationTrace())
-                .Wait();
+                ;
         }
 
         #endregion
@@ -844,16 +843,16 @@ namespace RepoDb.UnitTests.Trace
                 .QueryAll("", trace: new ErroneousCancellationTrace());
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnQueryAllAsyncCancelledOperation()
+        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        public async Task ThrowExceptionOnQueryAllAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
+            await connection
                 .QueryAllAsync("", trace: new ErroneousCancellationTrace())
-                .Wait();
+                ;
         }
 
         #endregion
@@ -875,18 +874,18 @@ namespace RepoDb.UnitTests.Trace
                     trace: new ErroneousCancellationTrace());
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnQueryMultipleForT2AsyncCancelledOperation()
+        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        public async Task ThrowExceptionOnQueryMultipleForT2AsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
+            await connection
                 .QueryMultipleAsync("", (QueryField)null,
                     "", (QueryField)null,
                     trace: new ErroneousCancellationTrace())
-                .Wait();
+                ;
         }
 
         #endregion
@@ -907,19 +906,19 @@ namespace RepoDb.UnitTests.Trace
                     trace: new ErroneousCancellationTrace());
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnQueryMultipleForT3AsyncCancelledOperation()
+        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        public async Task ThrowExceptionOnQueryMultipleForT3AsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
+            await connection
                 .QueryMultipleAsync("", (QueryField)null,
                     "", (QueryField)null,
                     "", (QueryField)null,
                     trace: new ErroneousCancellationTrace())
-                .Wait();
+                ;
         }
 
         #endregion
@@ -941,20 +940,20 @@ namespace RepoDb.UnitTests.Trace
                     trace: new ErroneousCancellationTrace());
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnQueryMultipleForT4AsyncCancelledOperation()
+        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        public async Task ThrowExceptionOnQueryMultipleForT4AsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
+            await connection
                 .QueryMultipleAsync("", (QueryField)null,
                     "", (QueryField)null,
                     "", (QueryField)null,
                     "", (QueryField)null,
                     trace: new ErroneousCancellationTrace())
-                .Wait();
+                ;
         }
 
         #endregion
@@ -977,21 +976,21 @@ namespace RepoDb.UnitTests.Trace
                     trace: new ErroneousCancellationTrace());
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnQueryMultipleForT5AsyncCancelledOperation()
+        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        public async Task ThrowExceptionOnQueryMultipleForT5AsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
+            await connection
                 .QueryMultipleAsync("", (QueryField)null,
                     "", (QueryField)null,
                     "", (QueryField)null,
                     "", (QueryField)null,
                     "", (QueryField)null,
                     trace: new ErroneousCancellationTrace())
-                .Wait();
+                ;
         }
 
         #endregion
@@ -1015,14 +1014,14 @@ namespace RepoDb.UnitTests.Trace
                     trace: new ErroneousCancellationTrace());
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnQueryMultipleForT6AsyncCancelledOperation()
+        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        public async Task ThrowExceptionOnQueryMultipleForT6AsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
+            await connection
                 .QueryMultipleAsync("", (QueryField)null,
                     "", (QueryField)null,
                     "", (QueryField)null,
@@ -1030,7 +1029,7 @@ namespace RepoDb.UnitTests.Trace
                     "", (QueryField)null,
                     "", (QueryField)null,
                     trace: new ErroneousCancellationTrace())
-                .Wait();
+                ;
         }
 
         #endregion
@@ -1055,14 +1054,14 @@ namespace RepoDb.UnitTests.Trace
                     trace: new ErroneousCancellationTrace());
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnQueryMultipleForT7AsyncCancelledOperation()
+        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        public async Task ThrowExceptionOnQueryMultipleForT7AsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
+            await connection
                 .QueryMultipleAsync("", (QueryField)null,
                     "", (QueryField)null,
                     "", (QueryField)null,
@@ -1071,7 +1070,7 @@ namespace RepoDb.UnitTests.Trace
                     "", (QueryField)null,
                     "", (QueryField)null,
                     trace: new ErroneousCancellationTrace())
-                .Wait();
+                ;
         }
 
         #endregion
@@ -1091,16 +1090,16 @@ namespace RepoDb.UnitTests.Trace
                 .Sum("", (Field)null, (object)null, trace: new ErroneousCancellationTrace());
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnSumAsyncCancelledOperation()
+        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        public async Task ThrowExceptionOnSumAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
+            await connection
                 .SumAsync("", (Field)null, (object)null, trace: new ErroneousCancellationTrace())
-                .Wait();
+                ;
         }
 
         #endregion
@@ -1118,16 +1117,16 @@ namespace RepoDb.UnitTests.Trace
                 .SumAll("", (Field)null, trace: new ErroneousCancellationTrace());
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnSumAllAsyncCancelledOperation()
+        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        public async Task ThrowExceptionOnSumAllAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
+            await connection
                 .SumAllAsync("", (Field)null, trace: new ErroneousCancellationTrace())
-                .Wait();
+                ;
         }
 
         #endregion
@@ -1145,16 +1144,16 @@ namespace RepoDb.UnitTests.Trace
                 .Truncate("", trace: new ErroneousCancellationTrace());
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnTruncateAsyncCancelledOperation()
+        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        public async Task ThrowExceptionOnTruncateAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
+            await connection
                 .TruncateAsync("", trace: new ErroneousCancellationTrace())
-                .Wait();
+                ;
         }
 
         #endregion
@@ -1172,16 +1171,16 @@ namespace RepoDb.UnitTests.Trace
                 .Update("", new { Id = 1 }, (Field)null, trace: new ErroneousCancellationTrace());
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnUpdateAsyncCancelledOperation()
+        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        public async Task ThrowExceptionOnUpdateAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
 
             // Act
-            connection
+            await connection
                 .UpdateAsync("", new { Id = 1 }, (Field)null, trace: new ErroneousCancellationTrace())
-                .Wait();
+                ;
         }
 
         #endregion
@@ -1203,8 +1202,8 @@ namespace RepoDb.UnitTests.Trace
                 .UpdateAll("", entities, trace: new ErroneousCancellationTrace());
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnUpdateAllAsyncCancelledOperation()
+        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        public async Task ThrowExceptionOnUpdateAllAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
@@ -1214,9 +1213,9 @@ namespace RepoDb.UnitTests.Trace
             };
 
             // Act
-            connection
+            await connection
                 .UpdateAllAsync("", entities, trace: new ErroneousCancellationTrace())
-                .Wait();
+                ;
         }
 
         [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
@@ -1236,8 +1235,8 @@ namespace RepoDb.UnitTests.Trace
                 .UpdateAll("", entities, trace: new ErroneousCancellationTrace());
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnUpdateAllMultipleEntitiesAsyncCancelledOperation()
+        [TestMethod, ExpectedException(typeof(CancelledExecutionException))]
+        public async Task ThrowExceptionOnUpdateAllMultipleEntitiesAsyncCancelledOperation()
         {
             // Prepare
             var connection = new TraceDbConnection();
@@ -1249,9 +1248,9 @@ namespace RepoDb.UnitTests.Trace
             };
 
             // Act
-            connection
+            await connection
                 .UpdateAllAsync("", entities, trace: new ErroneousCancellationTrace())
-                .Wait();
+                ;
         }
 
         #endregion
@@ -1279,16 +1278,16 @@ namespace RepoDb.UnitTests.Trace
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForExecuteNonQueryAsync()
+        public async Task TestDbConnectionTraceSilentCancellationForExecuteNonQueryAsync()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection
+            await connection
                 .ExecuteNonQueryAsync("", trace: trace)
-                .Wait();
+                ;
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -1316,16 +1315,16 @@ namespace RepoDb.UnitTests.Trace
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForExecuteQueryAsync()
+        public async Task TestDbConnectionTraceSilentCancellationForExecuteQueryAsync()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection
+            await connection
                 .ExecuteQueryAsync("", trace: trace)
-                .Wait();
+                ;
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -1353,16 +1352,16 @@ namespace RepoDb.UnitTests.Trace
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForExecuteScalarAsync()
+        public async Task TestDbConnectionTraceSilentCancellationForExecuteScalarAsync()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection
+            await connection
                 .ExecuteScalarAsync("", trace: trace)
-                .Wait();
+                ;
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -1390,16 +1389,16 @@ namespace RepoDb.UnitTests.Trace
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForExecuteQueryMultipleAsync()
+        public async Task TestDbConnectionTraceSilentCancellationForExecuteQueryMultipleAsync()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection
+            await connection
                 .ExecuteQueryMultipleAsync("", trace: trace)
-                .Wait();
+                ;
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -1453,16 +1452,16 @@ namespace RepoDb.UnitTests.Trace
         #region AverageAsync
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForAverageAsync()
+        public async Task TestDbConnectionTraceSilentCancellationForAverageAsync()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.AverageAsync<TraceEntity>(trace: trace,
+            await connection.AverageAsync<TraceEntity>(trace: trace,
                 field: e => e.Id,
-                where: (object)null).Wait();
+                where: (object)null);
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -1470,17 +1469,17 @@ namespace RepoDb.UnitTests.Trace
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForAverageAsyncViaTableName()
+        public async Task TestDbConnectionTraceSilentCancellationForAverageAsyncViaTableName()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.AverageAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.AverageAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
                 where: (object)null,
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -1533,15 +1532,15 @@ namespace RepoDb.UnitTests.Trace
         #region AverageAllAsync
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForAverageAllAsync()
+        public async Task TestDbConnectionTraceSilentCancellationForAverageAllAsync()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.AverageAllAsync<TraceEntity>(trace: trace,
-                field: e => e.Id).Wait();
+            await connection.AverageAllAsync<TraceEntity>(trace: trace,
+                field: e => e.Id);
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -1549,16 +1548,16 @@ namespace RepoDb.UnitTests.Trace
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForAverageAllAsyncViaTableName()
+        public async Task TestDbConnectionTraceSilentCancellationForAverageAllAsyncViaTableName()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.AverageAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.AverageAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -1597,18 +1596,18 @@ namespace RepoDb.UnitTests.Trace
         #region BatchQueryAsync
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForBatchQueryAsync()
+        public async Task TestDbConnectionTraceSilentCancellationForBatchQueryAsync()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.BatchQueryAsync<TraceEntity>(0,
+            await connection.BatchQueryAsync<TraceEntity>(0,
                 10,
                 OrderField.Ascending<TraceEntity>(t => t.Id).AsEnumerable(),
                 where: (QueryGroup)null,
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -1661,15 +1660,15 @@ namespace RepoDb.UnitTests.Trace
         #region CountAsync
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForCountAsync()
+        public async Task TestDbConnectionTraceSilentCancellationForCountAsync()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.CountAsync<TraceEntity>(trace: trace,
-                where: (object)null).Wait();
+            await connection.CountAsync<TraceEntity>(trace: trace,
+                where: (object)null);
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -1677,16 +1676,16 @@ namespace RepoDb.UnitTests.Trace
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForCountAsyncViaTableName()
+        public async Task TestDbConnectionTraceSilentCancellationForCountAsyncViaTableName()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.CountAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.CountAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 where: (object)null,
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -1737,14 +1736,14 @@ namespace RepoDb.UnitTests.Trace
         #region CountAllAsync
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForCountAllAsync()
+        public async Task TestDbConnectionTraceSilentCancellationForCountAllAsync()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.CountAllAsync<TraceEntity>(trace: trace).Wait();
+            await connection.CountAllAsync<TraceEntity>(trace: trace);
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -1752,15 +1751,15 @@ namespace RepoDb.UnitTests.Trace
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForCountAllAsyncViaTableName()
+        public async Task TestDbConnectionTraceSilentCancellationForCountAllAsyncViaTableName()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.CountAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
-                trace: trace).Wait();
+            await connection.CountAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+                trace: trace);
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -1816,15 +1815,15 @@ namespace RepoDb.UnitTests.Trace
         #region DeleteAsync
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForDeleteAsync()
+        public async Task TestDbConnectionTraceSilentCancellationForDeleteAsync()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.DeleteAsync<TraceEntity>(0,
-                trace: trace).Wait();
+            await connection.DeleteAsync<TraceEntity>(0,
+                trace: trace);
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -1832,19 +1831,19 @@ namespace RepoDb.UnitTests.Trace
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForDeleteAsyncViaTableName()
+        public async Task TestDbConnectionTraceSilentCancellationForDeleteAsyncViaTableName()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.DeleteAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.DeleteAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new
                 {
                     Id = 1
                 },
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -1895,14 +1894,14 @@ namespace RepoDb.UnitTests.Trace
         #region DeleteAllAsync
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForDeleteAllAsync()
+        public async Task TestDbConnectionTraceSilentCancellationForDeleteAllAsync()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.DeleteAllAsync<TraceEntity>(trace: trace).Wait();
+            await connection.DeleteAllAsync<TraceEntity>(trace: trace);
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -1910,15 +1909,15 @@ namespace RepoDb.UnitTests.Trace
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForDeleteAllAsyncViaTableName()
+        public async Task TestDbConnectionTraceSilentCancellationForDeleteAllAsyncViaTableName()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.DeleteAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
-                trace: trace).Wait();
+            await connection.DeleteAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+                trace: trace);
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -1971,15 +1970,15 @@ namespace RepoDb.UnitTests.Trace
         #region ExistsAsync
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForExistsAsync()
+        public async Task TestDbConnectionTraceSilentCancellationForExistsAsync()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.ExistsAsync<TraceEntity>(trace: trace,
-                what: (object)null).Wait();
+            await connection.ExistsAsync<TraceEntity>(trace: trace,
+                what: (object)null);
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -1987,16 +1986,16 @@ namespace RepoDb.UnitTests.Trace
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForExistsAsyncViaTableName()
+        public async Task TestDbConnectionTraceSilentCancellationForExistsAsyncViaTableName()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.ExistsAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.ExistsAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 what: (object)null,
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -2050,16 +2049,16 @@ namespace RepoDb.UnitTests.Trace
         #region InsertAsync
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForInsertAsync()
+        public async Task TestDbConnectionTraceSilentCancellationForInsertAsync()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.InsertAsync<TraceEntity>(
+            await connection.InsertAsync<TraceEntity>(
                 new TraceEntity { Name = "Name" },
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -2067,16 +2066,16 @@ namespace RepoDb.UnitTests.Trace
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForInsertAsyncViaTableName()
+        public async Task TestDbConnectionTraceSilentCancellationForInsertAsyncViaTableName()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.InsertAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.InsertAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new { Name = "Name" },
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -2130,15 +2129,15 @@ namespace RepoDb.UnitTests.Trace
         #region InsertAllAsync
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForInsertAllAsync()
+        public async Task TestDbConnectionTraceSilentCancellationForInsertAllAsync()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.InsertAllAsync<TraceEntity>(new[] { new TraceEntity { Name = "Name" } },
-                trace: trace).Wait();
+            await connection.InsertAllAsync<TraceEntity>(new[] { new TraceEntity { Name = "Name" } },
+                trace: trace);
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -2146,17 +2145,17 @@ namespace RepoDb.UnitTests.Trace
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForInsertAllAsyncViaTableName()
+        public async Task TestDbConnectionTraceSilentCancellationForInsertAllAsyncViaTableName()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.InsertAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.InsertAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new[] { new { Name = "Name" } },
                 fields: Field.From("Name"),
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -2211,16 +2210,16 @@ namespace RepoDb.UnitTests.Trace
         #region MaxAsync
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForMaxAsync()
+        public async Task TestDbConnectionTraceSilentCancellationForMaxAsync()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MaxAsync<TraceEntity>(trace: trace,
+            await connection.MaxAsync<TraceEntity>(trace: trace,
                 field: e => e.Id,
-                where: (object)null).Wait();
+                where: (object)null);
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -2228,17 +2227,17 @@ namespace RepoDb.UnitTests.Trace
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForMaxAsyncViaTableName()
+        public async Task TestDbConnectionTraceSilentCancellationForMaxAsyncViaTableName()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MaxAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.MaxAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
                 where: (object)null,
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -2291,15 +2290,15 @@ namespace RepoDb.UnitTests.Trace
         #region MaxAllAsync
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForMaxAllAsync()
+        public async Task TestDbConnectionTraceSilentCancellationForMaxAllAsync()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MaxAllAsync<TraceEntity>(trace: trace,
-                field: e => e.Id).Wait();
+            await connection.MaxAllAsync<TraceEntity>(trace: trace,
+                field: e => e.Id);
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -2307,16 +2306,16 @@ namespace RepoDb.UnitTests.Trace
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForMaxAllAsyncViaTableName()
+        public async Task TestDbConnectionTraceSilentCancellationForMaxAllAsyncViaTableName()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MaxAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.MaxAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -2370,16 +2369,16 @@ namespace RepoDb.UnitTests.Trace
         #region MergeAsync
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForMergeAsync()
+        public async Task TestDbConnectionTraceSilentCancellationForMergeAsync()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MergeAsync<TraceEntity>(
+            await connection.MergeAsync<TraceEntity>(
                 new TraceEntity { Id = 1, Name = "Name" },
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -2387,16 +2386,16 @@ namespace RepoDb.UnitTests.Trace
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForMergeAsyncViaTableName()
+        public async Task TestDbConnectionTraceSilentCancellationForMergeAsyncViaTableName()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MergeAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.MergeAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new { Id = 1, Name = "Name" },
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -2450,16 +2449,16 @@ namespace RepoDb.UnitTests.Trace
         #region MergeAllAsync
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForMergeAllAsync()
+        public async Task TestDbConnectionTraceSilentCancellationForMergeAllAsync()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MergeAllAsync<TraceEntity>(
+            await connection.MergeAllAsync<TraceEntity>(
                 new[] { new TraceEntity { Id = 1, Name = "Name" } },
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -2467,16 +2466,16 @@ namespace RepoDb.UnitTests.Trace
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForMergeAllAsyncViaTableName()
+        public async Task TestDbConnectionTraceSilentCancellationForMergeAllAsyncViaTableName()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MergeAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.MergeAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new[] { new { Id = 1, Name = "Name" } },
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -2531,16 +2530,16 @@ namespace RepoDb.UnitTests.Trace
         #region MinAsync
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForMinAsync()
+        public async Task TestDbConnectionTraceSilentCancellationForMinAsync()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MinAsync<TraceEntity>(trace: trace,
+            await connection.MinAsync<TraceEntity>(trace: trace,
                 field: e => e.Id,
-                where: (object)null).Wait();
+                where: (object)null);
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -2548,17 +2547,17 @@ namespace RepoDb.UnitTests.Trace
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForMinAsyncViaTableName()
+        public async Task TestDbConnectionTraceSilentCancellationForMinAsyncViaTableName()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MinAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.MinAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
                 where: (object)null,
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -2611,15 +2610,15 @@ namespace RepoDb.UnitTests.Trace
         #region MinAllAsync
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForMinAllAsync()
+        public async Task TestDbConnectionTraceSilentCancellationForMinAllAsync()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MinAllAsync<TraceEntity>(trace: trace,
-                field: e => e.Id).Wait();
+            await connection.MinAllAsync<TraceEntity>(trace: trace,
+                field: e => e.Id);
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -2627,16 +2626,16 @@ namespace RepoDb.UnitTests.Trace
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForMinAllAsyncViaTableName()
+        public async Task TestDbConnectionTraceSilentCancellationForMinAllAsyncViaTableName()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MinAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.MinAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -2672,15 +2671,15 @@ namespace RepoDb.UnitTests.Trace
         #region QueryAsync
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForQueryAsync()
+        public async Task TestDbConnectionTraceSilentCancellationForQueryAsync()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.QueryAsync<TraceEntity>(te => te.Id == 1,
-                trace: trace).Wait();
+            await connection.QueryAsync<TraceEntity>(te => te.Id == 1,
+                trace: trace);
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -2715,14 +2714,14 @@ namespace RepoDb.UnitTests.Trace
         #region QueryAllAsync
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForQueryAllAsync()
+        public async Task TestDbConnectionTraceSilentCancellationForQueryAllAsync()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.QueryAllAsync<TraceEntity>(trace: trace);
+            await connection.QueryAllAsync<TraceEntity>(trace: trace);
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -2885,16 +2884,16 @@ namespace RepoDb.UnitTests.Trace
         #region T2
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForQueryMultipleAsyncForT2()
+        public async Task TestDbConnectionTraceSilentCancellationForQueryMultipleAsyncForT2()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.QueryMultipleAsync<TraceEntity, TraceEntity>(te => te.Id == 1,
+            await connection.QueryMultipleAsync<TraceEntity, TraceEntity>(te => te.Id == 1,
                 te => te.Id == 1,
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -2906,17 +2905,17 @@ namespace RepoDb.UnitTests.Trace
         #region T3
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForQueryMultipleAsyncForT3()
+        public async Task TestDbConnectionTraceSilentCancellationForQueryMultipleAsyncForT3()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
+            await connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -2928,18 +2927,18 @@ namespace RepoDb.UnitTests.Trace
         #region T4
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForQueryMultipleAsyncForT4()
+        public async Task TestDbConnectionTraceSilentCancellationForQueryMultipleAsyncForT4()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
+            await connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -2951,19 +2950,19 @@ namespace RepoDb.UnitTests.Trace
         #region T5
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForQueryMultipleAsyncForT5()
+        public async Task TestDbConnectionTraceSilentCancellationForQueryMultipleAsyncForT5()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
+            await connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -2975,20 +2974,20 @@ namespace RepoDb.UnitTests.Trace
         #region T6
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForQueryMultipleAsyncForT6()
+        public async Task TestDbConnectionTraceSilentCancellationForQueryMultipleAsyncForT6()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
+            await connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -3000,21 +2999,21 @@ namespace RepoDb.UnitTests.Trace
         #region T7
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForQueryMultipleAsyncForT7()
+        public async Task TestDbConnectionTraceSilentCancellationForQueryMultipleAsyncForT7()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
+            await connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -3071,16 +3070,16 @@ namespace RepoDb.UnitTests.Trace
         #region SumAsync
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForSumAsync()
+        public async Task TestDbConnectionTraceSilentCancellationForSumAsync()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.SumAsync<TraceEntity>(trace: trace,
+            await connection.SumAsync<TraceEntity>(trace: trace,
                 field: e => e.Id,
-                where: (object)null).Wait();
+                where: (object)null);
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -3088,17 +3087,17 @@ namespace RepoDb.UnitTests.Trace
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForSumAsyncViaTableName()
+        public async Task TestDbConnectionTraceSilentCancellationForSumAsyncViaTableName()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.SumAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.SumAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
                 where: (object)null,
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -3151,15 +3150,15 @@ namespace RepoDb.UnitTests.Trace
         #region SumAllAsync
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForSumAllAsync()
+        public async Task TestDbConnectionTraceSilentCancellationForSumAllAsync()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.SumAllAsync<TraceEntity>(trace: trace,
-                field: e => e.Id).Wait();
+            await connection.SumAllAsync<TraceEntity>(trace: trace,
+                field: e => e.Id);
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -3167,16 +3166,16 @@ namespace RepoDb.UnitTests.Trace
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForSumAllAsyncViaTableName()
+        public async Task TestDbConnectionTraceSilentCancellationForSumAllAsyncViaTableName()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.SumAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.SumAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -3227,14 +3226,14 @@ namespace RepoDb.UnitTests.Trace
         #region TruncateAsync
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForTruncateAsync()
+        public async Task TestDbConnectionTraceSilentCancellationForTruncateAsync()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.TruncateAsync<TraceEntity>(trace: trace).Wait();
+            await connection.TruncateAsync<TraceEntity>(trace: trace);
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -3242,15 +3241,15 @@ namespace RepoDb.UnitTests.Trace
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForTruncateAsyncViaTableName()
+        public async Task TestDbConnectionTraceSilentCancellationForTruncateAsyncViaTableName()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.TruncateAsync(ClassMappedNameCache.Get<TraceEntity>(),
-                trace: trace).Wait();
+            await connection.TruncateAsync(ClassMappedNameCache.Get<TraceEntity>(),
+                trace: trace);
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -3316,21 +3315,21 @@ namespace RepoDb.UnitTests.Trace
         #region UpdateAsync
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForUpdateAsync()
+        public async Task TestDbConnectionTraceSilentCancellationForUpdateAsync()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.UpdateAsync<TraceEntity>(
+            await connection.UpdateAsync<TraceEntity>(
                 new TraceEntity
                 {
                     Id = 1,
                     Name = "Name"
                 },
                 what: 1,
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -3338,14 +3337,14 @@ namespace RepoDb.UnitTests.Trace
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForUpdateAsyncViaTableName()
+        public async Task TestDbConnectionTraceSilentCancellationForUpdateAsyncViaTableName()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.UpdateAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.UpdateAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new
                 {
                     Name = "Name"
@@ -3354,7 +3353,7 @@ namespace RepoDb.UnitTests.Trace
                 {
                     Id = 1
                 },
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -3408,16 +3407,16 @@ namespace RepoDb.UnitTests.Trace
         #region UpdateAllAsync
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForUpdateAllAsync()
+        public async Task TestDbConnectionTraceSilentCancellationForUpdateAllAsync()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.UpdateAllAsync<TraceEntity>(
+            await connection.UpdateAllAsync<TraceEntity>(
                 new[] { new TraceEntity { Id = 1, Name = "Name" } },
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -3425,16 +3424,16 @@ namespace RepoDb.UnitTests.Trace
         }
 
         [TestMethod]
-        public void TestDbConnectionTraceSilentCancellationForUpdateAllAsyncViaTableName()
+        public async Task TestDbConnectionTraceSilentCancellationForUpdateAllAsyncViaTableName()
         {
             // Prepare
             var trace = new SilentCancellationTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.UpdateAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.UpdateAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new[] { new { Id = 1, Name = "Name" } },
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.AreEqual(1, trace.BeforeExecutionInvocationCount);
@@ -3467,16 +3466,16 @@ namespace RepoDb.UnitTests.Trace
         }
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForExecuteNonQueryAsync()
+        public async Task TestDbConnectionTracePropertiesForExecuteNonQueryAsync()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection
+            await connection
                 .ExecuteNonQueryAsync("", trace: trace)
-                .Wait();
+                ;
 
             // Assert
             Assert.IsTrue(trace.IsValid);
@@ -3502,16 +3501,16 @@ namespace RepoDb.UnitTests.Trace
         }
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForExecuteQueryAsync()
+        public async Task TestDbConnectionTracePropertiesForExecuteQueryAsync()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection
+            await connection
                 .ExecuteQueryAsync("", trace: trace)
-                .Wait();
+                ;
 
             // Assert
             Assert.IsTrue(trace.IsValid);
@@ -3537,16 +3536,16 @@ namespace RepoDb.UnitTests.Trace
         }
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForExecuteScalarAsync()
+        public async Task TestDbConnectionTracePropertiesForExecuteScalarAsync()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection
+            await connection
                 .ExecuteScalarAsync("", trace: trace)
-                .Wait();
+                ;
 
             // Assert
             Assert.IsTrue(trace.IsValid);
@@ -3572,16 +3571,16 @@ namespace RepoDb.UnitTests.Trace
         }
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForExecuteQueryMultipleAsync()
+        public async Task TestDbConnectionTracePropertiesForExecuteQueryMultipleAsync()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection
+            await connection
                 .ExecuteQueryMultipleAsync("", trace: trace)
-                .Wait();
+                ;
 
             // Assert
             Assert.IsTrue(trace.IsValid);
@@ -3632,33 +3631,33 @@ namespace RepoDb.UnitTests.Trace
         #region AverageAsync
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForAverageAsync()
+        public async Task TestDbConnectionTracePropertiesForAverageAsync()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.AverageAsync<TraceEntity>(trace: trace,
+            await connection.AverageAsync<TraceEntity>(trace: trace,
                 field: e => e.Id,
-                where: (object)null).Wait();
+                where: (object)null);
 
             // Assert
             Assert.IsTrue(trace.IsValid);
         }
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForAverageAsyncViaTableName()
+        public async Task TestDbConnectionTracePropertiesForAverageAsyncViaTableName()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.AverageAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.AverageAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
                 where: (object)null,
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.IsTrue(trace.IsValid);
@@ -3708,31 +3707,31 @@ namespace RepoDb.UnitTests.Trace
         #region AverageAllAsync
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForAverageAllAsync()
+        public async Task TestDbConnectionTracePropertiesForAverageAllAsync()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.AverageAllAsync<TraceEntity>(trace: trace,
-                field: e => e.Id).Wait();
+            await connection.AverageAllAsync<TraceEntity>(trace: trace,
+                field: e => e.Id);
 
             // Assert
             Assert.IsTrue(trace.IsValid);
         }
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForAverageAllAsyncViaTableName()
+        public async Task TestDbConnectionTracePropertiesForAverageAllAsyncViaTableName()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.AverageAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.AverageAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.IsTrue(trace.IsValid);
@@ -3769,18 +3768,18 @@ namespace RepoDb.UnitTests.Trace
         #region BatchQueryAsync
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForBatchQueryAsync()
+        public async Task TestDbConnectionTracePropertiesForBatchQueryAsync()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.BatchQueryAsync<TraceEntity>(0,
+            await connection.BatchQueryAsync<TraceEntity>(0,
                 10,
                 OrderField.Ascending<TraceEntity>(t => t.Id).AsEnumerable(),
                 where: (QueryGroup)null,
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.IsTrue(trace.IsValid);
@@ -3830,31 +3829,31 @@ namespace RepoDb.UnitTests.Trace
         #region CountAsync
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForCountAsync()
+        public async Task TestDbConnectionTracePropertiesForCountAsync()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.CountAsync<TraceEntity>(trace: trace,
-                where: (object)null).Wait();
+            await connection.CountAsync<TraceEntity>(trace: trace,
+                where: (object)null);
 
             // Assert
             Assert.IsTrue(trace.IsValid);
         }
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForCountAsyncViaTableName()
+        public async Task TestDbConnectionTracePropertiesForCountAsyncViaTableName()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.CountAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.CountAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 where: (object)null,
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.IsTrue(trace.IsValid);
@@ -3902,29 +3901,29 @@ namespace RepoDb.UnitTests.Trace
         #region CountAllAsync
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForCountAllAsync()
+        public async Task TestDbConnectionTracePropertiesForCountAllAsync()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.CountAllAsync<TraceEntity>(trace: trace).Wait();
+            await connection.CountAllAsync<TraceEntity>(trace: trace);
 
             // Assert
             Assert.IsTrue(trace.IsValid);
         }
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForCountAllAsyncViaTableName()
+        public async Task TestDbConnectionTracePropertiesForCountAllAsyncViaTableName()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.CountAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
-                trace: trace).Wait();
+            await connection.CountAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+                trace: trace);
 
             // Assert
             Assert.IsTrue(trace.IsValid);
@@ -3977,34 +3976,34 @@ namespace RepoDb.UnitTests.Trace
         #region DeleteAsync
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForDeleteAsync()
+        public async Task TestDbConnectionTracePropertiesForDeleteAsync()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.DeleteAsync<TraceEntity>(0,
-                trace: trace).Wait();
+            await connection.DeleteAsync<TraceEntity>(0,
+                trace: trace);
 
             // Assert
             Assert.IsTrue(trace.IsValid);
         }
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForDeleteAsyncViaTableName()
+        public async Task TestDbConnectionTracePropertiesForDeleteAsyncViaTableName()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.DeleteAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.DeleteAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new
                 {
                     Id = 1
                 },
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.IsTrue(trace.IsValid);
@@ -4052,29 +4051,29 @@ namespace RepoDb.UnitTests.Trace
         #region DeleteAllAsync
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForDeleteAllAsync()
+        public async Task TestDbConnectionTracePropertiesForDeleteAllAsync()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.DeleteAllAsync<TraceEntity>(trace: trace).Wait();
+            await connection.DeleteAllAsync<TraceEntity>(trace: trace);
 
             // Assert
             Assert.IsTrue(trace.IsValid);
         }
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForDeleteAllAsyncViaTableName()
+        public async Task TestDbConnectionTracePropertiesForDeleteAllAsyncViaTableName()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.DeleteAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
-                trace: trace).Wait();
+            await connection.DeleteAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+                trace: trace);
 
             // Assert
             Assert.IsTrue(trace.IsValid);
@@ -4124,31 +4123,31 @@ namespace RepoDb.UnitTests.Trace
         #region ExistsAsync
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForExistsAsync()
+        public async Task TestDbConnectionTracePropertiesForExistsAsync()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.ExistsAsync<TraceEntity>(trace: trace,
-                what: (object)null).Wait();
+            await connection.ExistsAsync<TraceEntity>(trace: trace,
+                what: (object)null);
 
             // Assert
             Assert.IsTrue(trace.IsValid);
         }
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForExistsAsyncViaTableName()
+        public async Task TestDbConnectionTracePropertiesForExistsAsyncViaTableName()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.ExistsAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.ExistsAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 what: (object)null,
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.IsTrue(trace.IsValid);
@@ -4199,32 +4198,32 @@ namespace RepoDb.UnitTests.Trace
         #region InsertAsync
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForInsertAsync()
+        public async Task TestDbConnectionTracePropertiesForInsertAsync()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.InsertAsync<TraceEntity>(
+            await connection.InsertAsync<TraceEntity>(
                 new TraceEntity { Name = "Name" },
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.IsTrue(trace.IsValid);
         }
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForInsertAsyncViaTableName()
+        public async Task TestDbConnectionTracePropertiesForInsertAsyncViaTableName()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.InsertAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.InsertAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new { Name = "Name" },
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.IsTrue(trace.IsValid);
@@ -4275,32 +4274,32 @@ namespace RepoDb.UnitTests.Trace
         #region InsertAllAsync
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForInsertAllAsync()
+        public async Task TestDbConnectionTracePropertiesForInsertAllAsync()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.InsertAllAsync<TraceEntity>(new[] { new TraceEntity { Name = "Name" } },
-                trace: trace).Wait();
+            await connection.InsertAllAsync<TraceEntity>(new[] { new TraceEntity { Name = "Name" } },
+                trace: trace);
 
             // Assert
             Assert.IsTrue(trace.IsValid);
         }
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForInsertAllAsyncViaTableName()
+        public async Task TestDbConnectionTracePropertiesForInsertAllAsyncViaTableName()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.InsertAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.InsertAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new[] { new { Name = "Name" } },
                 fields: Field.From("Name"),
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.IsTrue(trace.IsValid);
@@ -4352,33 +4351,33 @@ namespace RepoDb.UnitTests.Trace
         #region MaxAsync
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForMaxAsync()
+        public async Task TestDbConnectionTracePropertiesForMaxAsync()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MaxAsync<TraceEntity>(trace: trace,
+            await connection.MaxAsync<TraceEntity>(trace: trace,
                 field: e => e.Id,
-                where: (object)null).Wait();
+                where: (object)null);
 
             // Assert
             Assert.IsTrue(trace.IsValid);
         }
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForMaxAsyncViaTableName()
+        public async Task TestDbConnectionTracePropertiesForMaxAsyncViaTableName()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MaxAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.MaxAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
                 where: (object)null,
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.IsTrue(trace.IsValid);
@@ -4428,31 +4427,31 @@ namespace RepoDb.UnitTests.Trace
         #region MaxAllAsync
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForMaxAllAsync()
+        public async Task TestDbConnectionTracePropertiesForMaxAllAsync()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MaxAllAsync<TraceEntity>(trace: trace,
-                field: e => e.Id).Wait();
+            await connection.MaxAllAsync<TraceEntity>(trace: trace,
+                field: e => e.Id);
 
             // Assert
             Assert.IsTrue(trace.IsValid);
         }
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForMaxAllAsyncViaTableName()
+        public async Task TestDbConnectionTracePropertiesForMaxAllAsyncViaTableName()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MaxAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.MaxAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.IsTrue(trace.IsValid);
@@ -4503,32 +4502,32 @@ namespace RepoDb.UnitTests.Trace
         #region MergeAsync
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForMergeAsync()
+        public async Task TestDbConnectionTracePropertiesForMergeAsync()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MergeAsync<TraceEntity>(
+            await connection.MergeAsync<TraceEntity>(
                 new TraceEntity { Id = 1, Name = "Name" },
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.IsTrue(trace.IsValid);
         }
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForMergeAsyncViaTableName()
+        public async Task TestDbConnectionTracePropertiesForMergeAsyncViaTableName()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MergeAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.MergeAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new { Id = 1, Name = "Name" },
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.IsTrue(trace.IsValid);
@@ -4579,32 +4578,32 @@ namespace RepoDb.UnitTests.Trace
         #region MergeAllAsync
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForMergeAllAsync()
+        public async Task TestDbConnectionTracePropertiesForMergeAllAsync()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MergeAllAsync<TraceEntity>(
+            await connection.MergeAllAsync<TraceEntity>(
                 new[] { new TraceEntity { Id = 1, Name = "Name" } },
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.IsTrue(trace.IsValid);
         }
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForMergeAllAsyncViaTableName()
+        public async Task TestDbConnectionTracePropertiesForMergeAllAsyncViaTableName()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MergeAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.MergeAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new[] { new { Id = 1, Name = "Name" } },
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.IsTrue(trace.IsValid);
@@ -4656,33 +4655,33 @@ namespace RepoDb.UnitTests.Trace
         #region MinAsync
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForMinAsync()
+        public async Task TestDbConnectionTracePropertiesForMinAsync()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MinAsync<TraceEntity>(trace: trace,
+            await connection.MinAsync<TraceEntity>(trace: trace,
                 field: e => e.Id,
-                where: (object)null).Wait();
+                where: (object)null);
 
             // Assert
             Assert.IsTrue(trace.IsValid);
         }
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForMinAsyncViaTableName()
+        public async Task TestDbConnectionTracePropertiesForMinAsyncViaTableName()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MinAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.MinAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
                 where: (object)null,
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.IsTrue(trace.IsValid);
@@ -4732,31 +4731,31 @@ namespace RepoDb.UnitTests.Trace
         #region MinAllAsync
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForMinAllAsync()
+        public async Task TestDbConnectionTracePropertiesForMinAllAsync()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MinAllAsync<TraceEntity>(trace: trace,
-                field: e => e.Id).Wait();
+            await connection.MinAllAsync<TraceEntity>(trace: trace,
+                field: e => e.Id);
 
             // Assert
             Assert.IsTrue(trace.IsValid);
         }
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForMinAllAsyncViaTableName()
+        public async Task TestDbConnectionTracePropertiesForMinAllAsyncViaTableName()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.MinAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.MinAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.IsTrue(trace.IsValid);
@@ -4790,15 +4789,15 @@ namespace RepoDb.UnitTests.Trace
         #region QueryAsync
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForQueryAsync()
+        public async Task TestDbConnectionTracePropertiesForQueryAsync()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.QueryAsync<TraceEntity>(te => te.Id == 1,
-                trace: trace).Wait();
+            await connection.QueryAsync<TraceEntity>(te => te.Id == 1,
+                trace: trace);
 
             // Assert
             Assert.IsTrue(trace.IsValid);
@@ -4831,14 +4830,14 @@ namespace RepoDb.UnitTests.Trace
         #region QueryAllAsync
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForQueryAllAsync()
+        public async Task TestDbConnectionTracePropertiesForQueryAllAsync()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.QueryAllAsync<TraceEntity>(trace: trace);
+            await connection.QueryAllAsync<TraceEntity>(trace: trace);
 
             // Assert
             Assert.IsTrue(trace.IsValid);
@@ -4994,16 +4993,16 @@ namespace RepoDb.UnitTests.Trace
         #region T2
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForQueryMultipleAsyncForT2()
+        public async Task TestDbConnectionTracePropertiesForQueryMultipleAsyncForT2()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.QueryMultipleAsync<TraceEntity, TraceEntity>(te => te.Id == 1,
+            await connection.QueryMultipleAsync<TraceEntity, TraceEntity>(te => te.Id == 1,
                 te => te.Id == 1,
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.IsTrue(trace.IsValid);
@@ -5014,17 +5013,17 @@ namespace RepoDb.UnitTests.Trace
         #region T3
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForQueryMultipleAsyncForT3()
+        public async Task TestDbConnectionTracePropertiesForQueryMultipleAsyncForT3()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
+            await connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.IsTrue(trace.IsValid);
@@ -5035,18 +5034,18 @@ namespace RepoDb.UnitTests.Trace
         #region T4
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForQueryMultipleAsyncForT4()
+        public async Task TestDbConnectionTracePropertiesForQueryMultipleAsyncForT4()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
+            await connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.IsTrue(trace.IsValid);
@@ -5057,19 +5056,19 @@ namespace RepoDb.UnitTests.Trace
         #region T5
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForQueryMultipleAsyncForT5()
+        public async Task TestDbConnectionTracePropertiesForQueryMultipleAsyncForT5()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
+            await connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.IsTrue(trace.IsValid);
@@ -5080,20 +5079,20 @@ namespace RepoDb.UnitTests.Trace
         #region T6
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForQueryMultipleAsyncForT6()
+        public async Task TestDbConnectionTracePropertiesForQueryMultipleAsyncForT6()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
+            await connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.IsTrue(trace.IsValid);
@@ -5104,21 +5103,21 @@ namespace RepoDb.UnitTests.Trace
         #region T7
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForQueryMultipleAsyncForT7()
+        public async Task TestDbConnectionTracePropertiesForQueryMultipleAsyncForT7()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
+            await connection.QueryMultipleAsync<TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity, TraceEntity>(te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
                 te => te.Id == 1,
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.IsTrue(trace.IsValid);
@@ -5172,33 +5171,33 @@ namespace RepoDb.UnitTests.Trace
         #region SumAsync
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForSumAsync()
+        public async Task TestDbConnectionTracePropertiesForSumAsync()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.SumAsync<TraceEntity>(trace: trace,
+            await connection.SumAsync<TraceEntity>(trace: trace,
                 field: e => e.Id,
-                where: (object)null).Wait();
+                where: (object)null);
 
             // Assert
             Assert.IsTrue(trace.IsValid);
         }
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForSumAsyncViaTableName()
+        public async Task TestDbConnectionTracePropertiesForSumAsyncViaTableName()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.SumAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.SumAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
                 where: (object)null,
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.IsTrue(trace.IsValid);
@@ -5248,31 +5247,31 @@ namespace RepoDb.UnitTests.Trace
         #region SumAllAsync
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForSumAllAsync()
+        public async Task TestDbConnectionTracePropertiesForSumAllAsync()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.SumAllAsync<TraceEntity>(trace: trace,
-                field: e => e.Id).Wait();
+            await connection.SumAllAsync<TraceEntity>(trace: trace,
+                field: e => e.Id);
 
             // Assert
             Assert.IsTrue(trace.IsValid);
         }
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForSumAllAsyncViaTableName()
+        public async Task TestDbConnectionTracePropertiesForSumAllAsyncViaTableName()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.SumAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.SumAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 field: new Field("Id"),
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.IsTrue(trace.IsValid);
@@ -5320,29 +5319,29 @@ namespace RepoDb.UnitTests.Trace
         #region TruncateAsync
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForTruncateAsync()
+        public async Task TestDbConnectionTracePropertiesForTruncateAsync()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.TruncateAsync<TraceEntity>(trace: trace).Wait();
+            await connection.TruncateAsync<TraceEntity>(trace: trace);
 
             // Assert
             Assert.IsTrue(trace.IsValid);
         }
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForTruncateAsyncViaTableName()
+        public async Task TestDbConnectionTracePropertiesForTruncateAsyncViaTableName()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.TruncateAsync(ClassMappedNameCache.Get<TraceEntity>(),
-                trace: trace).Wait();
+            await connection.TruncateAsync(ClassMappedNameCache.Get<TraceEntity>(),
+                trace: trace);
 
             // Assert
             Assert.IsTrue(trace.IsValid);
@@ -5405,35 +5404,35 @@ namespace RepoDb.UnitTests.Trace
         #region UpdateAsync
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForUpdateAsync()
+        public async Task TestDbConnectionTracePropertiesForUpdateAsync()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.UpdateAsync<TraceEntity>(
+            await connection.UpdateAsync<TraceEntity>(
                 new TraceEntity
                 {
                     Id = 1,
                     Name = "Name"
                 },
                 what: 1,
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.IsTrue(trace.IsValid);
         }
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForUpdateAsyncViaTableName()
+        public async Task TestDbConnectionTracePropertiesForUpdateAsyncViaTableName()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.UpdateAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.UpdateAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new
                 {
                     Name = "Name"
@@ -5442,7 +5441,7 @@ namespace RepoDb.UnitTests.Trace
                 {
                     Id = 1
                 },
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.IsTrue(trace.IsValid);
@@ -5493,32 +5492,32 @@ namespace RepoDb.UnitTests.Trace
         #region UpdateAllAsync
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForUpdateAllAsync()
+        public async Task TestDbConnectionTracePropertiesForUpdateAllAsync()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.UpdateAllAsync<TraceEntity>(
+            await connection.UpdateAllAsync<TraceEntity>(
                 new[] { new TraceEntity { Id = 1, Name = "Name" } },
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.IsTrue(trace.IsValid);
         }
 
         [TestMethod]
-        public void TestDbConnectionTracePropertiesForUpdateAllAsyncViaTableName()
+        public async Task TestDbConnectionTracePropertiesForUpdateAllAsyncViaTableName()
         {
             // Prepare
             var trace = new PropertyValidatorTrace();
             var connection = new TraceDbConnection();
 
             // Act
-            connection.UpdateAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
+            await connection.UpdateAllAsync(ClassMappedNameCache.Get<TraceEntity>(),
                 new[] { new { Id = 1, Name = "Name" } },
-                trace: trace).Wait();
+                trace: trace);
 
             // Assert
             Assert.IsTrue(trace.IsValid);

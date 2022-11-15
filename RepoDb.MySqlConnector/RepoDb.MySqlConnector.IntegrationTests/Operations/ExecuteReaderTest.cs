@@ -6,6 +6,7 @@ using RepoDb.MySqlConnector.IntegrationTests.Models;
 using RepoDb.MySqlConnector.IntegrationTests.Setup;
 using System.Data.Common;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.MySqlConnector.IntegrationTests.Operations
 {
@@ -131,7 +132,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestMySqlConnectionExecuteReaderAsync()
+        public async Task TestMySqlConnectionExecuteReaderAsync()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -139,7 +140,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("SELECT Id, ColumnInt, ColumnDateTime FROM `CompleteTable`;").Result)
+                using (var reader = await connection.ExecuteReaderAsync("SELECT Id, ColumnInt, ColumnDateTime FROM `CompleteTable`;"))
                 {
                     while (reader.Read())
                     {
@@ -159,7 +160,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionExecuteReaderAsyncWithMultipleStatements()
+        public async Task TestMySqlConnectionExecuteReaderAsyncWithMultipleStatements()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -167,7 +168,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("SELECT Id, ColumnInt, ColumnDateTime FROM `CompleteTable`; SELECT Id, ColumnInt, ColumnDateTime FROM `CompleteTable`;").Result)
+                using (var reader = await connection.ExecuteReaderAsync("SELECT Id, ColumnInt, ColumnDateTime FROM `CompleteTable`; SELECT Id, ColumnInt, ColumnDateTime FROM `CompleteTable`;"))
                 {
                     do
                     {
@@ -190,7 +191,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionExecuteReaderAsyncAsExtractedEntity()
+        public async Task TestMySqlConnectionExecuteReaderAsyncAsExtractedEntity()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -198,7 +199,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM `CompleteTable`;").Result)
+                using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM `CompleteTable`;"))
                 {
                     // Act
                     var result = DataReader.ToEnumerable<CompleteTable>((DbDataReader)reader).AsList();
@@ -210,7 +211,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionExecuteReaderAsyncAsExtractedDynamic()
+        public async Task TestMySqlConnectionExecuteReaderAsyncAsExtractedDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -218,7 +219,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM `CompleteTable`;").Result)
+                using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM `CompleteTable`;"))
                 {
                     // Act
                     var result = DataReader.ToEnumerable((DbDataReader)reader).AsList();

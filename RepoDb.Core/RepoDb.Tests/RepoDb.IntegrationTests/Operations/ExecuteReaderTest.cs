@@ -7,6 +7,7 @@ using System;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.IntegrationTests.Operations
 {
@@ -201,7 +202,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region ExecuteReaderAsync
 
         [TestMethod]
-        public void TestSqlConnectionExecuteReaderAsync()
+        public async Task TestSqlConnectionExecuteReaderAsync()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -212,7 +213,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM [sc].[IdentityTable];").Result)
+                using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM [sc].[IdentityTable];"))
                 {
                     // Act
                     var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader).AsList();
@@ -225,7 +226,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionExecuteReaderAsyncWithParameters()
+        public async Task TestSqlConnectionExecuteReaderAsyncWithParameters()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -236,8 +237,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM [sc].[IdentityTable] WHERE ColumnInt BETWEEN @From AND @To;",
-                    new { From = 3, To = 4 }).Result)
+                using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM [sc].[IdentityTable] WHERE ColumnInt BETWEEN @From AND @To;",
+                    new { From = 3, To = 4 }))
                 {
                     // Act
                     var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader).AsList();
@@ -250,7 +251,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionExecuteReaderAsyncWithArrayParameters()
+        public async Task TestSqlConnectionExecuteReaderAsyncWithArrayParameters()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -261,8 +262,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM [sc].[IdentityTable] WHERE ColumnInt IN (@ColumnInt);",
-                    new { ColumnInt = new[] { 5, 6, 7 } }).Result)
+                using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM [sc].[IdentityTable] WHERE ColumnInt IN (@ColumnInt);",
+                    new { ColumnInt = new[] { 5, 6, 7 } }))
                 {
                     // Act
                     var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader).AsList();
@@ -275,7 +276,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionExecuteReaderAsyncWithTopParameters()
+        public async Task TestSqlConnectionExecuteReaderAsyncWithTopParameters()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -286,7 +287,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("SELECT TOP (@Top) * FROM [sc].[IdentityTable];", new { Top = 2 }).Result)
+                using (var reader = await connection.ExecuteReaderAsync("SELECT TOP (@Top) * FROM [sc].[IdentityTable];", new { Top = 2 }))
                 {
                     // Act
                     var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader).AsList();
@@ -299,7 +300,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionExecuteReaderAsyncWithStoredProcedure()
+        public async Task TestSqlConnectionExecuteReaderAsyncWithStoredProcedure()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -310,7 +311,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("[dbo].[sp_get_identity_tables]", commandType: CommandType.StoredProcedure).Result)
+                using (var reader = await connection.ExecuteReaderAsync("[dbo].[sp_get_identity_tables]", commandType: CommandType.StoredProcedure))
                 {
                     // Act
                     var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader).AsList();
@@ -323,7 +324,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionExecuteReaderAsyncWithStoredProcedureWithParameter()
+        public async Task TestSqlConnectionExecuteReaderAsyncWithStoredProcedureWithParameter()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -334,9 +335,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("[dbo].[sp_get_identity_table_by_id]",
+                using (var reader = await connection.ExecuteReaderAsync("[dbo].[sp_get_identity_table_by_id]",
                     param: new { tables.Last().Id },
-                    commandType: CommandType.StoredProcedure).Result)
+                    commandType: CommandType.StoredProcedure))
                 {
                     // Act
                     var result = Reflection.DataReader.ToEnumerable<IdentityTable>((DbDataReader)reader).AsList();
@@ -348,23 +349,23 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnTestSqlConnectionExecuteReaderAsyncIfTheParametersAreNotDefined()
+        [TestMethod, ExpectedException(typeof(SqlException))]
+        public async Task ThrowExceptionOnTestSqlConnectionExecuteReaderAsyncIfTheParametersAreNotDefined()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result;
+                var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT * FROM [sc].[IdentityTable] WHERE (Id = @Id);");
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnTestSqlConnectionExecuteReaderAsyncIfThereAreSqlStatementProblems()
+        [TestMethod, ExpectedException(typeof(SqlException))]
+        public async Task ThrowExceptionOnTestSqlConnectionExecuteReaderAsyncIfThereAreSqlStatementProblems()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteQueryAsync<IdentityTable>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);").Result;
+                var result = await connection.ExecuteQueryAsync<IdentityTable>("SELECT FROM [sc].[IdentityTable] WHERE (Id = @Id);");
             }
         }
 

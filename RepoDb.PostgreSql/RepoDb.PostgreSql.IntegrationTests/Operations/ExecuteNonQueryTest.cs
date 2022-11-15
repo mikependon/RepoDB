@@ -2,6 +2,7 @@
 using Npgsql;
 using RepoDb.PostgreSql.IntegrationTests.Setup;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.PostgreSql.IntegrationTests.Operations
 {
@@ -77,7 +78,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExecuteNonQueryAsync()
+        public async Task TestPostgreSqlConnectionExecuteNonQueryAsync()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -85,7 +86,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExecuteNonQueryAsync("DELETE FROM \"CompleteTable\";").Result;
+                var result = await connection.ExecuteNonQueryAsync("DELETE FROM \"CompleteTable\";");
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -93,7 +94,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExecuteNonQueryAsyncWithParameters()
+        public async Task TestPostgreSqlConnectionExecuteNonQueryAsyncWithParameters()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -101,8 +102,8 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExecuteNonQueryAsync("DELETE FROM \"CompleteTable\" WHERE \"Id\" = @Id;",
-                    new { tables.Last().Id }).Result;
+                var result = await connection.ExecuteNonQueryAsync("DELETE FROM \"CompleteTable\" WHERE \"Id\" = @Id;",
+                    new { tables.Last().Id });
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -110,7 +111,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExecuteNonQueryAsyncWithMultipleStatement()
+        public async Task TestPostgreSqlConnectionExecuteNonQueryAsyncWithMultipleStatement()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -118,7 +119,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExecuteNonQueryAsync("DELETE FROM \"CompleteTable\"; DELETE FROM \"CompleteTable\";").Result;
+                var result = await connection.ExecuteNonQueryAsync("DELETE FROM \"CompleteTable\"; DELETE FROM \"CompleteTable\";");
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);

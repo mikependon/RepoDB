@@ -5,6 +5,7 @@ using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.SqlServer.IntegrationTests
 {
@@ -76,10 +77,10 @@ namespace RepoDb.SqlServer.IntegrationTests
         #region Async
 
         [TestMethod]
-        public void TestExecuteQueryAsyncForAnonymous() =>
-            TestExecuteQueryAsyncForAnonymousTrigger(CreateIdentityTableTypeDef());
+        public async Task TestExecuteQueryAsyncForAnonymous() =>
+            await TestExecuteQueryAsyncForAnonymousTrigger(CreateIdentityTableTypeDef());
 
-        private void TestExecuteQueryAsyncForAnonymousTrigger<TAnonymous>(TAnonymous typeDef)
+        private async Task TestExecuteQueryAsyncForAnonymousTrigger<TAnonymous>(TAnonymous typeDef)
             where TAnonymous : class
         {
             // Setup
@@ -91,7 +92,7 @@ namespace RepoDb.SqlServer.IntegrationTests
                 connection.InsertAll<IdentityTable>(tables);
 
                 // Act
-                var result = connection.ExecuteQueryAsync<TAnonymous>("SELECT * FROM [sc].[IdentityTable];").Result;
+                var result = await connection.ExecuteQueryAsync<TAnonymous>("SELECT * FROM [sc].[IdentityTable];");
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -135,10 +136,10 @@ namespace RepoDb.SqlServer.IntegrationTests
         #region Async
 
         [TestMethod]
-        public void TestQueryAsyncForAnonymous() =>
-            TestQueryAsyncForAnonymousTrigger(CreateIdentityTableTypeDef());
+        public async Task TestQueryAsyncForAnonymous() =>
+            await TestQueryAsyncForAnonymousTrigger(CreateIdentityTableTypeDef());
 
-        private void TestQueryAsyncForAnonymousTrigger<TAnonymous>(TAnonymous typeDef)
+        private async Task TestQueryAsyncForAnonymousTrigger<TAnonymous>(TAnonymous typeDef)
             where TAnonymous : class
         {
             // Setup
@@ -150,8 +151,8 @@ namespace RepoDb.SqlServer.IntegrationTests
                 connection.InsertAll<IdentityTable>(tables);
 
                 // Act
-                var result = connection.QueryAsync<TAnonymous>("[sc].[IdentityTable]",
-                    what: (object)null).Result;
+                var result = await connection.QueryAsync<TAnonymous>("[sc].[IdentityTable]",
+                    what: (object)null);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -194,10 +195,10 @@ namespace RepoDb.SqlServer.IntegrationTests
         #region Async
 
         [TestMethod]
-        public void TestQueryAllAsyncForAnonymous() =>
-            TestQueryAllAsyncForAnonymousTrigger(CreateIdentityTableTypeDef());
+        public async Task TestQueryAllAsyncForAnonymous() =>
+            await TestQueryAllAsyncForAnonymousTrigger(CreateIdentityTableTypeDef());
 
-        private void TestQueryAllAsyncForAnonymousTrigger<TAnonymous>(TAnonymous typeDef)
+        private async Task TestQueryAllAsyncForAnonymousTrigger<TAnonymous>(TAnonymous typeDef)
             where TAnonymous : class
         {
             // Setup
@@ -209,7 +210,7 @@ namespace RepoDb.SqlServer.IntegrationTests
                 connection.InsertAll<IdentityTable>(tables);
 
                 // Act
-                var result = connection.QueryAllAsync<TAnonymous>("[sc].[IdentityTable]").Result;
+                var result = await connection.QueryAllAsync<TAnonymous>("[sc].[IdentityTable]");
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());

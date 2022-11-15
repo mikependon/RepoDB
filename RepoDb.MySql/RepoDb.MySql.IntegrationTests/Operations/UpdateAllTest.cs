@@ -5,6 +5,7 @@ using RepoDb.MySql.IntegrationTests.Models;
 using RepoDb.MySql.IntegrationTests.Setup;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.MySql.IntegrationTests.Operations
 {
@@ -59,7 +60,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestMySqlConnectionUpdateAllAsync()
+        public async Task TestMySqlConnectionUpdateAllAsync()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -70,7 +71,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 tables.AsList().ForEach(table => Helper.UpdateCompleteTableProperties(table));
 
                 // Act
-                var result = connection.UpdateAllAsync<CompleteTable>(tables).Result;
+                var result = await connection.UpdateAllAsync<CompleteTable>(tables);
 
                 // Assert
                 Assert.AreEqual(10, result);
@@ -151,7 +152,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestMySqlConnectionUpdateAllAsyncViaTableName()
+        public async Task TestMySqlConnectionUpdateAllAsyncViaTableName()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -162,7 +163,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 tables.AsList().ForEach(table => Helper.UpdateCompleteTableProperties(table));
 
                 // Act
-                var result = connection.UpdateAllAsync(ClassMappedNameCache.Get<CompleteTable>(), tables).Result;
+                var result = await connection.UpdateAllAsync(ClassMappedNameCache.Get<CompleteTable>(), tables);
 
                 // Assert
                 Assert.AreEqual(10, result);
@@ -177,7 +178,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionUpdateAllAsyncViaTableNameAsExpandoObjects()
+        public async Task TestMySqlConnectionUpdateAllAsyncViaTableNameAsExpandoObjects()
         {
             // Setup
             var entities = Database.CreateCompleteTables(10).AsList();
@@ -189,8 +190,8 @@ namespace RepoDb.MySql.IntegrationTests.Operations
                 tables.ForEach(e => ((IDictionary<string, object>)e)["Id"] = entities[tables.IndexOf(e)].Id);
 
                 // Act
-                var result = connection.UpdateAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    tables).Result;
+                var result = await connection.UpdateAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    tables);
 
                 // Assert
                 Assert.AreEqual(10, result);

@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Data.SqlClient;
 using RepoDb.SqlServer.IntegrationTests.Models;
 using RepoDb.SqlServer.IntegrationTests.Setup;
@@ -47,7 +48,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestSqlServerConnectionTruncateAsyncWithoutExpression()
+        public async Task TestSqlServerConnectionTruncateAsyncWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -55,7 +56,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.TruncateAsync<CompleteTable>().Result;
+                var result = await connection.TruncateAsync<CompleteTable>();
                 var countResult = connection.CountAll<CompleteTable>();
 
                 // Assert
@@ -93,7 +94,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestSqlServerConnectionTruncateAsyncViaTableNameWithoutExpression()
+        public async Task TestSqlServerConnectionTruncateAsyncViaTableNameWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -101,7 +102,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.TruncateAsync(ClassMappedNameCache.Get<CompleteTable>()).Result;
+                var result = await connection.TruncateAsync(ClassMappedNameCache.Get<CompleteTable>());
                 var countResult = connection.CountAll<CompleteTable>();
 
                 // Assert

@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.IntegrationTests.Operations
 {
@@ -196,7 +197,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region DeleteAllAsync<TEntity>
 
         [TestMethod]
-        public void TestSqlConnectionDeleteAllAsyncViaEntityTableNameWithEntities()
+        public async Task TestSqlConnectionDeleteAllAsyncViaEntityTableNameWithEntities()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -207,8 +208,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.DeleteAllAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
-                    tables).Result;
+                var result = await connection.DeleteAllAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                    tables);
 
                 // Assert
                 Assert.AreEqual(10, result);
@@ -217,7 +218,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionDeleteAllAsyncViaEntityTableNameWithPrimaryKeys()
+        public async Task TestSqlConnectionDeleteAllAsyncViaEntityTableNameWithPrimaryKeys()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -229,8 +230,8 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var keys = new object[] { tables.First().Id, tables.Last().Id };
-                var result = connection.DeleteAllAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
-                    keys).Result;
+                var result = await connection.DeleteAllAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                    keys);
 
                 // Assert
                 Assert.AreEqual(2, result);
@@ -239,7 +240,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionDeleteAllAsyncViaEntityTableNameWithPrimaryKeysAsType()
+        public async Task TestSqlConnectionDeleteAllAsyncViaEntityTableNameWithPrimaryKeysAsType()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -251,8 +252,8 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var keys = tables.Select(e => e.Id);
-                var result = connection.DeleteAllAsync<IdentityTable, long>(ClassMappedNameCache.Get<IdentityTable>(),
-                    keys).Result;
+                var result = await connection.DeleteAllAsync<IdentityTable, long>(ClassMappedNameCache.Get<IdentityTable>(),
+                    keys);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result);
@@ -261,7 +262,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionDeleteAllAsync()
+        public async Task TestSqlConnectionDeleteAllAsync()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -272,7 +273,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.DeleteAllAsync<IdentityTable>().Result;
+                var result = await connection.DeleteAllAsync<IdentityTable>();
 
                 // Assert
                 Assert.AreEqual(10, result);
@@ -281,7 +282,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionDeleteAllAsyncWithHints()
+        public async Task TestSqlConnectionDeleteAllAsyncWithHints()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -292,7 +293,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.DeleteAllAsync<IdentityTable>(hints: SqlServerTableHints.TabLock).Result;
+                var result = await connection.DeleteAllAsync<IdentityTable>(hints: SqlServerTableHints.TabLock);
 
                 // Assert
                 Assert.AreEqual(10, result);
@@ -301,7 +302,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionDeleteAllAsyncWithEntities()
+        public async Task TestSqlConnectionDeleteAllAsyncWithEntities()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -312,7 +313,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.DeleteAllAsync<IdentityTable>(tables).Result;
+                var result = await connection.DeleteAllAsync<IdentityTable>(tables);
 
                 // Assert
                 Assert.AreEqual(10, result);
@@ -322,7 +323,7 @@ namespace RepoDb.IntegrationTests.Operations
 
 
         [TestMethod]
-        public void TestSqlConnectionDeleteAllAsyncWithDifferentGeneric()
+        public async Task TestSqlConnectionDeleteAllAsyncWithDifferentGeneric()
         {
             // Setup
             var tables = Helper.CreateNonMappedIdentityTable(10);
@@ -333,7 +334,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(ClassMappedNameCache.Get<IdentityTable>(), tables);
 
                 // Act
-                var result = connection.DeleteAllAsync(ClassMappedNameCache.Get<IdentityTable>(), tables).Result;
+                var result = await connection.DeleteAllAsync(ClassMappedNameCache.Get<IdentityTable>(), tables);
 
                 // Assert
                 Assert.AreEqual(10, result);
@@ -343,7 +344,7 @@ namespace RepoDb.IntegrationTests.Operations
 
 
         [TestMethod]
-        public void TestSqlConnectionDeleteAllAsyncWithPrimaryKeys()
+        public async Task TestSqlConnectionDeleteAllAsyncWithPrimaryKeys()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -355,7 +356,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var keys = new object[] { tables.First().Id, tables.Last().Id };
-                var result = connection.DeleteAllAsync<IdentityTable>(keys).Result;
+                var result = await connection.DeleteAllAsync<IdentityTable>(keys);
 
                 // Assert
                 Assert.AreEqual(2, result);
@@ -456,7 +457,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region DeleteAllAsync(TableName)
 
         [TestMethod]
-        public void TestSqlConnectionDeleteAllAsyncViaTableName()
+        public async Task TestSqlConnectionDeleteAllAsyncViaTableName()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -467,7 +468,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.DeleteAllAsync(ClassMappedNameCache.Get<IdentityTable>()).Result;
+                var result = await connection.DeleteAllAsync(ClassMappedNameCache.Get<IdentityTable>());
 
                 // Assert
                 Assert.AreEqual(10, result);
@@ -476,7 +477,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionDeleteAllAsyncViaTableNameWithHints()
+        public async Task TestSqlConnectionDeleteAllAsyncViaTableNameWithHints()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -487,8 +488,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.DeleteAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    hints: SqlServerTableHints.TabLock).Result;
+                var result = await connection.DeleteAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    hints: SqlServerTableHints.TabLock);
 
                 // Assert
                 Assert.AreEqual(10, result);
@@ -497,7 +498,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionDeleteAllAsyncViaTableNameWithEntities()
+        public async Task TestSqlConnectionDeleteAllAsyncViaTableNameWithEntities()
         {
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
@@ -508,8 +509,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.DeleteAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    tables.Select(e => (object)e.Id)).Result;
+                var result = await connection.DeleteAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    tables.Select(e => (object)e.Id));
 
                 // Assert
                 Assert.AreEqual(10, result);
@@ -518,7 +519,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionDeleteAllAsyncViaTableNameWithPrimaryKeys()
+        public async Task TestSqlConnectionDeleteAllAsyncViaTableNameWithPrimaryKeys()
         {
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
@@ -530,8 +531,8 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var keys = new object[] { tables.First().Id, tables.Last().Id };
-                var result = connection.DeleteAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    keys).Result;
+                var result = await connection.DeleteAllAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    keys);
 
                 // Assert
                 Assert.AreEqual(2, result);

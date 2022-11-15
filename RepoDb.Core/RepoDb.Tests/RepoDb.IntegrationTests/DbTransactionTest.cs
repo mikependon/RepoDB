@@ -5,6 +5,7 @@ using RepoDb.IntegrationTests.Setup;
 using Microsoft.Data.SqlClient;
 using System.Linq;
 using System.Transactions;
+using System.Threading.Tasks;
 
 namespace RepoDb.IntegrationTests
 {
@@ -53,7 +54,7 @@ namespace RepoDb.IntegrationTests
         #region BatchQueryAsync
 
         [TestMethod]
-        public void TestDbTransactionForBatchQueryAsync()
+        public async Task TestDbTransactionForBatchQueryAsync()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -61,7 +62,7 @@ namespace RepoDb.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.BatchQueryAsync<IdentityTable>(0, 10, OrderField.Parse(new { Id = Order.Ascending }), it => it.Id != 0, transaction: transaction).Wait();
+                    await connection.BatchQueryAsync<IdentityTable>(0, 10, OrderField.Parse(new { Id = Order.Ascending }), it => it.Id != 0, transaction: transaction);
                 }
             }
         }
@@ -93,7 +94,7 @@ namespace RepoDb.IntegrationTests
         #region CountAsync
 
         [TestMethod]
-        public void TestDbTransactionForCountAsync()
+        public async Task TestDbTransactionForCountAsync()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -101,7 +102,7 @@ namespace RepoDb.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.CountAsync<IdentityTable>(it => it.Id != 0, transaction: transaction).Wait();
+                    await connection.CountAsync<IdentityTable>(it => it.Id != 0, transaction: transaction);
                 }
             }
         }
@@ -133,7 +134,7 @@ namespace RepoDb.IntegrationTests
         #region CountAllAsync
 
         [TestMethod]
-        public void TestDbTransactionForCountAllAsync()
+        public async Task TestDbTransactionForCountAllAsync()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -141,7 +142,7 @@ namespace RepoDb.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.CountAllAsync<IdentityTable>(transaction: transaction).Wait();
+                    await connection.CountAllAsync<IdentityTable>(transaction: transaction);
                 }
             }
         }
@@ -211,7 +212,7 @@ namespace RepoDb.IntegrationTests
         #region DeleteAsync
 
         [TestMethod]
-        public void TestDbTransactionForDeleteAsyncAsCommitted()
+        public async Task TestDbTransactionForDeleteAsyncAsCommitted()
         {
             // Setup
             var entity = Helper.CreateIdentityTable();
@@ -225,7 +226,7 @@ namespace RepoDb.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.DeleteAsync<IdentityTable>(entity, transaction: transaction).Wait();
+                    await connection.DeleteAsync<IdentityTable>(entity, transaction: transaction);
 
                     // Act
                     transaction.Commit();
@@ -237,7 +238,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestDbTransactionForDeleteAsyncAsRolledBack()
+        public async Task TestDbTransactionForDeleteAsyncAsRolledBack()
         {
             // Setup
             var entity = Helper.CreateIdentityTable();
@@ -251,7 +252,7 @@ namespace RepoDb.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.DeleteAsync<IdentityTable>(entity, transaction: transaction).Wait();
+                    await connection.DeleteAsync<IdentityTable>(entity, transaction: transaction);
 
                     // Act
                     transaction.Rollback();
@@ -327,7 +328,7 @@ namespace RepoDb.IntegrationTests
         #region DeleteAllAsync
 
         [TestMethod]
-        public void TestDbTransactionForDeleteAllAsyncAsCommitted()
+        public async Task TestDbTransactionForDeleteAllAsyncAsCommitted()
         {
             // Setup
             var entities = Helper.CreateIdentityTables(10);
@@ -341,7 +342,7 @@ namespace RepoDb.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.DeleteAllAsync<IdentityTable>(transaction: transaction).Wait();
+                    await connection.DeleteAllAsync<IdentityTable>(transaction: transaction);
 
                     // Act
                     transaction.Commit();
@@ -353,7 +354,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestDbTransactionForDeleteAllAsyncAsRolledBack()
+        public async Task TestDbTransactionForDeleteAllAsyncAsRolledBack()
         {
             // Setup
             var entities = Helper.CreateIdentityTables(10);
@@ -367,7 +368,7 @@ namespace RepoDb.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.DeleteAllAsync<IdentityTable>(transaction: transaction).Wait();
+                    await connection.DeleteAllAsync<IdentityTable>(transaction: transaction);
 
                     // Act
                     transaction.Rollback();
@@ -437,7 +438,7 @@ namespace RepoDb.IntegrationTests
         #region InsertAsync
 
         [TestMethod]
-        public void TestDbTransactionForInsertAsyncAsCommitted()
+        public async Task TestDbTransactionForInsertAsyncAsCommitted()
         {
             // Setup
             var entity = Helper.CreateIdentityTable();
@@ -448,7 +449,7 @@ namespace RepoDb.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.InsertAsync<IdentityTable>(entity, transaction: transaction).Wait();
+                    await connection.InsertAsync<IdentityTable>(entity, transaction: transaction);
 
                     // Act
                     transaction.Commit();
@@ -460,7 +461,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestDbTransactionForInsertAsyncAsRolledBack()
+        public async Task TestDbTransactionForInsertAsyncAsRolledBack()
         {
             // Setup
             var entity = Helper.CreateIdentityTable();
@@ -471,7 +472,7 @@ namespace RepoDb.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.InsertAsync<IdentityTable>(entity, transaction: transaction).Wait();
+                    await connection.InsertAsync<IdentityTable>(entity, transaction: transaction);
 
                     // Act
                     transaction.Rollback();
@@ -541,7 +542,7 @@ namespace RepoDb.IntegrationTests
         #region InsertAllAsync
 
         [TestMethod]
-        public void TestDbTransactionForInsertAllAsyncAsCommitted()
+        public async Task TestDbTransactionForInsertAllAsyncAsCommitted()
         {
             // Setup
             var entities = Helper.CreateIdentityTables(10);
@@ -552,7 +553,7 @@ namespace RepoDb.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.InsertAllAsync<IdentityTable>(entities, transaction: transaction).Wait();
+                    await connection.InsertAllAsync<IdentityTable>(entities, transaction: transaction);
 
                     // Act
                     transaction.Commit();
@@ -564,7 +565,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestDbTransactionForInsertAllAsyncAsRolledBack()
+        public async Task TestDbTransactionForInsertAllAsyncAsRolledBack()
         {
             // Setup
             var entities = Helper.CreateIdentityTables(10);
@@ -575,7 +576,7 @@ namespace RepoDb.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.InsertAllAsync<IdentityTable>(entities, transaction: transaction).Wait();
+                    await connection.InsertAllAsync<IdentityTable>(entities, transaction: transaction);
 
                     // Act
                     transaction.Rollback();
@@ -645,7 +646,7 @@ namespace RepoDb.IntegrationTests
         #region MergeAsync
 
         [TestMethod]
-        public void TestDbTransactionForMergeAsyncAsCommitted()
+        public async Task TestDbTransactionForMergeAsyncAsCommitted()
         {
             // Setup
             var entity = Helper.CreateIdentityTable();
@@ -656,7 +657,7 @@ namespace RepoDb.IntegrationTests
                 var transaction = connection.EnsureOpen().BeginTransaction();
 
                 // Act
-                connection.MergeAsync<IdentityTable>(entity, transaction: transaction).Wait();
+                await connection.MergeAsync<IdentityTable>(entity, transaction: transaction);
 
                 // Act
                 transaction.Commit();
@@ -667,7 +668,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestDbTransactionForMergeAsyncAsRolledBack()
+        public async Task TestDbTransactionForMergeAsyncAsRolledBack()
         {
             // Setup
             var entity = Helper.CreateIdentityTable();
@@ -678,7 +679,7 @@ namespace RepoDb.IntegrationTests
                 var transaction = connection.EnsureOpen().BeginTransaction();
 
                 // Act
-                connection.MergeAsync<IdentityTable>(entity, transaction: transaction).Wait();
+                await connection.MergeAsync<IdentityTable>(entity, transaction: transaction);
 
                 // Act
                 transaction.Rollback();
@@ -747,7 +748,7 @@ namespace RepoDb.IntegrationTests
         #region MergeAllAsync
 
         [TestMethod]
-        public void TestDbTransactionForMergeAllAsyncAsCommitted()
+        public async Task TestDbTransactionForMergeAllAsyncAsCommitted()
         {
             // Setup
             var entities = Helper.CreateIdentityTables(10);
@@ -758,7 +759,7 @@ namespace RepoDb.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.MergeAllAsync<IdentityTable>(entities, transaction: transaction).Wait();
+                    await connection.MergeAllAsync<IdentityTable>(entities, transaction: transaction);
 
                     // Act
                     transaction.Commit();
@@ -770,7 +771,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestDbTransactionForMergeAllAsyncAsRolledBack()
+        public async Task TestDbTransactionForMergeAllAsyncAsRolledBack()
         {
             // Setup
             var entities = Helper.CreateIdentityTables(10);
@@ -781,7 +782,7 @@ namespace RepoDb.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.MergeAllAsync<IdentityTable>(entities, transaction: transaction).Wait();
+                    await connection.MergeAllAsync<IdentityTable>(entities, transaction: transaction);
 
                     // Act
                     transaction.Rollback();
@@ -819,7 +820,7 @@ namespace RepoDb.IntegrationTests
         #region QueryAsync
 
         [TestMethod]
-        public void TestDbTransactionForQueryAsync()
+        public async Task TestDbTransactionForQueryAsync()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -827,7 +828,7 @@ namespace RepoDb.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.QueryAsync<IdentityTable>(it => it.Id != 0, transaction: transaction).Wait();
+                    await connection.QueryAsync<IdentityTable>(it => it.Id != 0, transaction: transaction);
                 }
             }
         }
@@ -859,7 +860,7 @@ namespace RepoDb.IntegrationTests
         #region QueryAllAsync
 
         [TestMethod]
-        public void TestDbTransactionForQueryAllAsync()
+        public async Task TestDbTransactionForQueryAllAsync()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -867,7 +868,7 @@ namespace RepoDb.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.QueryAllAsync<IdentityTable>(transaction: transaction).Wait();
+                    await connection.QueryAllAsync<IdentityTable>(transaction: transaction);
                 }
             }
         }
@@ -996,7 +997,7 @@ namespace RepoDb.IntegrationTests
         #region QueryMultipleAsync
 
         [TestMethod]
-        public void TestDbTransactionForQueryMultipleAsyncT2()
+        public async Task TestDbTransactionForQueryMultipleAsyncT2()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1004,15 +1005,15 @@ namespace RepoDb.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.QueryMultipleAsync<IdentityTable, IdentityTable>(it => it.Id != 0,
+                    await connection.QueryMultipleAsync<IdentityTable, IdentityTable>(it => it.Id != 0,
                         it => it.Id != 0,
-                        transaction: transaction).Wait();
+                        transaction: transaction);
                 }
             }
         }
 
         [TestMethod]
-        public void TestDbTransactionForQueryMultipleAsyncT3()
+        public async Task TestDbTransactionForQueryMultipleAsyncT3()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1020,16 +1021,16 @@ namespace RepoDb.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.QueryMultipleAsync<IdentityTable, IdentityTable, IdentityTable>(it => it.Id != 0,
+                    await connection.QueryMultipleAsync<IdentityTable, IdentityTable, IdentityTable>(it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
-                        transaction: transaction).Wait();
+                        transaction: transaction);
                 }
             }
         }
 
         [TestMethod]
-        public void TestDbTransactionForQueryMultipleAsyncT4()
+        public async Task TestDbTransactionForQueryMultipleAsyncT4()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1037,17 +1038,17 @@ namespace RepoDb.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.QueryMultipleAsync<IdentityTable, IdentityTable, IdentityTable, IdentityTable>(it => it.Id != 0,
+                    await connection.QueryMultipleAsync<IdentityTable, IdentityTable, IdentityTable, IdentityTable>(it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
-                        transaction: transaction).Wait();
+                        transaction: transaction);
                 }
             }
         }
 
         [TestMethod]
-        public void TestDbTransactionForQueryMultipleAsyncT5()
+        public async Task TestDbTransactionForQueryMultipleAsyncT5()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1055,18 +1056,18 @@ namespace RepoDb.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.QueryMultipleAsync<IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable>(it => it.Id != 0,
+                    await connection.QueryMultipleAsync<IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable>(it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
-                        transaction: transaction).Wait();
+                        transaction: transaction);
                 }
             }
         }
 
         [TestMethod]
-        public void TestDbTransactionForQueryMultipleAsyncT6()
+        public async Task TestDbTransactionForQueryMultipleAsyncT6()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1074,19 +1075,19 @@ namespace RepoDb.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.QueryMultipleAsync<IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable>(it => it.Id != 0,
+                    await connection.QueryMultipleAsync<IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable>(it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
-                        transaction: transaction).Wait();
+                        transaction: transaction);
                 }
             }
         }
 
         [TestMethod]
-        public void TestDbTransactionForQueryMultipleAsyncT7()
+        public async Task TestDbTransactionForQueryMultipleAsyncT7()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1094,14 +1095,14 @@ namespace RepoDb.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.QueryMultipleAsync<IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable>(it => it.Id != 0,
+                    await connection.QueryMultipleAsync<IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable, IdentityTable>(it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
-                        transaction: transaction).Wait();
+                        transaction: transaction);
                 }
             }
         }
@@ -1133,7 +1134,7 @@ namespace RepoDb.IntegrationTests
         #region TruncateAsync
 
         [TestMethod]
-        public void TestDbTransactionForTruncateAsync()
+        public async Task TestDbTransactionForTruncateAsync()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1141,7 +1142,7 @@ namespace RepoDb.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.TruncateAsync<IdentityTable>(transaction: transaction).Wait();
+                    await connection.TruncateAsync<IdentityTable>(transaction: transaction);
                 }
             }
         }
@@ -1221,7 +1222,7 @@ namespace RepoDb.IntegrationTests
         #region UpdateAsync
 
         [TestMethod]
-        public void TestDbTransactionForUpdateAsyncAsCommitted()
+        public async Task TestDbTransactionForUpdateAsyncAsCommitted()
         {
             // Setup
             var entity = Helper.CreateIdentityTable();
@@ -1237,7 +1238,7 @@ namespace RepoDb.IntegrationTests
                     entity.ColumnBit = false;
 
                     // Act
-                    connection.UpdateAsync<IdentityTable>(entity, transaction: transaction).Wait();
+                    await connection.UpdateAsync<IdentityTable>(entity, transaction: transaction);
 
                     // Act
                     transaction.Commit();
@@ -1252,7 +1253,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestDbTransactionForUpdateAsyncAsRolledBack()
+        public async Task TestDbTransactionForUpdateAsyncAsRolledBack()
         {
             // Setup
             var entity = Helper.CreateIdentityTable();
@@ -1268,7 +1269,7 @@ namespace RepoDb.IntegrationTests
                     entity.ColumnBit = false;
 
                     // Act
-                    connection.UpdateAsync<IdentityTable>(entity, transaction: transaction).Wait();
+                    await connection.UpdateAsync<IdentityTable>(entity, transaction: transaction);
 
                     // Act
                     transaction.Rollback();
@@ -1357,7 +1358,7 @@ namespace RepoDb.IntegrationTests
         #region UpdateAllAsync
 
         [TestMethod]
-        public void TestDbTransactionForUpdateAllAsyncAsCommitted()
+        public async Task TestDbTransactionForUpdateAllAsyncAsCommitted()
         {
             // Setup
             var entities = Helper.CreateIdentityTables(10);
@@ -1373,7 +1374,7 @@ namespace RepoDb.IntegrationTests
                     entities.ForEach(entity => entity.ColumnBit = false);
 
                     // Act
-                    connection.UpdateAllAsync<IdentityTable>(entities, transaction: transaction).Wait();
+                    await connection.UpdateAllAsync<IdentityTable>(entities, transaction: transaction);
 
                     // Act
                     transaction.Commit();
@@ -1388,7 +1389,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestDbTransactionForUpdateAllAsyncAsRolledBack()
+        public async Task TestDbTransactionForUpdateAllAsyncAsRolledBack()
         {
             // Setup
             var entities = Helper.CreateIdentityTables(10);
@@ -1404,7 +1405,7 @@ namespace RepoDb.IntegrationTests
                     entities.ForEach(entity => entity.ColumnBit = false);
 
                     // Act
-                    connection.UpdateAllAsync<IdentityTable>(entities, transaction: transaction).Wait();
+                    await connection.UpdateAllAsync<IdentityTable>(entities, transaction: transaction);
 
                     // Act
                     transaction.Rollback();
@@ -1451,17 +1452,17 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestTransactionForInsertAllAsync()
+        public async Task TestTransactionForInsertAllAsync()
         {
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var transaction = new TransactionScope())
+            using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
                 using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
                 {
                     // Act
-                    connection.InsertAllAsync<IdentityTable>(entities).Wait();
+                    await connection.InsertAllAsync<IdentityTable>(entities);
 
                     // Assert
                     Assert.AreEqual(entities.Count, connection.CountAll<IdentityTable>());
@@ -1482,7 +1483,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var transaction = new TransactionScope())
+            using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
                 using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
                 {
@@ -1499,17 +1500,17 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestTransactionScopeForMergeAllAsync()
+        public async Task TestTransactionScopeForMergeAllAsync()
         {
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var transaction = new TransactionScope())
+            using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
                 using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
                 {
                     // Act
-                    connection.MergeAllAsync<IdentityTable>(entities).Wait();
+                    await connection.MergeAllAsync<IdentityTable>(entities);
 
                     // Assert
                     Assert.AreEqual(entities.Count, connection.CountAll<IdentityTable>());
@@ -1530,7 +1531,7 @@ namespace RepoDb.IntegrationTests
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var transaction = new TransactionScope())
+            using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
                 using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
                 {
@@ -1556,12 +1557,12 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestTransactionScopeForUpdateAllAsync()
+        public async Task TestTransactionScopeForUpdateAllAsync()
         {
             // Setup
             var entities = Helper.CreateIdentityTables(10);
 
-            using (var transaction = new TransactionScope())
+            using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
                 using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
                 {
@@ -1572,7 +1573,7 @@ namespace RepoDb.IntegrationTests
                     entities.ForEach(entity => entity.ColumnBit = false);
 
                     // Act
-                    connection.UpdateAllAsync<IdentityTable>(entities).Wait();
+                    await connection.UpdateAllAsync<IdentityTable>(entities);
 
                     // Act
                     var queryResult = connection.QueryAll<IdentityTable>();

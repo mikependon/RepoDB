@@ -7,6 +7,7 @@ using RepoDb.IntegrationTests.Setup;
 using System;
 using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.SqlServer.IntegrationTests
 {
@@ -139,7 +140,7 @@ namespace RepoDb.SqlServer.IntegrationTests
         #region Async
 
         [TestMethod]
-        public void TestExecuteQueryAsyncForTableValuedParameter()
+        public async Task TestExecuteQueryAsyncForTableValuedParameter()
         {
             // Setup
             var dataTable = CreateIdentityTableType(10);
@@ -147,8 +148,8 @@ namespace RepoDb.SqlServer.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var tables = connection.ExecuteQueryAsync<IdentityTable>("EXEC [sp_identity_table_type] @Table = @Table;",
-                    new { Table = dataTable }).Result?.AsList();
+                var tables = (await connection.ExecuteQueryAsync<IdentityTable>("EXEC [sp_identity_table_type] @Table = @Table;",
+                    new { Table = dataTable }))?.AsList();
 
                 // Assert
                 Assert.AreEqual(dataTable.Rows.Count, tables.Count);
@@ -163,7 +164,7 @@ namespace RepoDb.SqlServer.IntegrationTests
         }
 
         [TestMethod]
-        public void TestExecuteNonQueryAsyncForTableValuedParameter()
+        public async Task TestExecuteNonQueryAsyncForTableValuedParameter()
         {
             // Setup
             var dataTable = CreateIdentityTableType(10);
@@ -171,8 +172,8 @@ namespace RepoDb.SqlServer.IntegrationTests
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.ExecuteNonQueryAsync("EXEC [sp_identity_table_type] @Table = @Table;",
-                    new { Table = dataTable }).Result;
+                var result = await connection.ExecuteNonQueryAsync("EXEC [sp_identity_table_type] @Table = @Table;",
+                    new { Table = dataTable });
 
                 // Assert
                 Assert.AreEqual(dataTable.Rows.Count, result);

@@ -3,6 +3,7 @@ using RepoDb.SQLite.System.IntegrationTests.Setup;
 using System;
 using System.Data.SQLite;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
 {
@@ -61,7 +62,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         #region Async
 
         [TestMethod]
-        public void TestSqLiteConnectionExecuteScalarAsync()
+        public async Task TestSqLiteConnectionExecuteScalarAsync()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -69,7 +70,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                var result = connection.ExecuteScalarAsync("SELECT COUNT(*) FROM [SdsCompleteTable];").Result;
+                var result = await connection.ExecuteScalarAsync("SELECT COUNT(*) FROM [SdsCompleteTable];");
 
                 // Assert
                 Assert.AreEqual(tables.Count(), Convert.ToInt32(result));
@@ -77,7 +78,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionExecuteScalarAsyncWithReturnType()
+        public async Task TestSqLiteConnectionExecuteScalarAsyncWithReturnType()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -85,7 +86,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                var result = connection.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM [SdsCompleteTable];").Result;
+                var result = await connection.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM [SdsCompleteTable];");
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);

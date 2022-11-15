@@ -5,6 +5,7 @@ using RepoDb.Sqlite.Microsoft.IntegrationTests.Models;
 using RepoDb.Sqlite.Microsoft.IntegrationTests.Setup;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
 {
@@ -66,7 +67,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         #region Async
 
         [TestMethod]
-        public void TestSqLiteConnectionExecuteQueryAsync()
+        public async Task TestSqLiteConnectionExecuteQueryAsync()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -74,7 +75,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                var result = connection.ExecuteQueryAsync<MdsCompleteTable>("SELECT * FROM [MdsCompleteTable];").Result;
+                var result = await connection.ExecuteQueryAsync<MdsCompleteTable>("SELECT * FROM [MdsCompleteTable];");
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result.Count());
@@ -83,7 +84,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionExecuteQueryAsyncWithParameters()
+        public async Task TestSqLiteConnectionExecuteQueryAsyncWithParameters()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -91,8 +92,8 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                var result = connection.ExecuteQueryAsync<MdsCompleteTable>("SELECT * FROM [MdsCompleteTable] WHERE Id = @Id;",
-                    new { tables.Last().Id }).Result;
+                var result = await connection.ExecuteQueryAsync<MdsCompleteTable>("SELECT * FROM [MdsCompleteTable] WHERE Id = @Id;",
+                    new { tables.Last().Id });
 
                 // Assert
                 Assert.AreEqual(1, result.Count());

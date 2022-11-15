@@ -4,6 +4,7 @@ using RepoDb.MySql.IntegrationTests.Models;
 using RepoDb.MySql.IntegrationTests.Setup;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.MySql.IntegrationTests.Operations
 {
@@ -61,7 +62,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestMySqlConnectionCountAllAsync()
+        public async Task TestMySqlConnectionCountAllAsync()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -69,15 +70,15 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.CountAllAsync<CompleteTable>().Result;
+                var result = await connection.CountAllAsync<CompleteTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnMySqlConnectionCountAllAsyncWithHints()
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public async Task ThrowExceptionOnMySqlConnectionCountAllAsyncWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -85,7 +86,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.CountAllAsync<CompleteTable>(hints: "WhatEver").Wait();
+                await connection.CountAllAsync<CompleteTable>(hints: "WhatEver");
             }
         }
 
@@ -132,7 +133,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestMySqlConnectionCountAllAsyncViaTableName()
+        public async Task TestMySqlConnectionCountAllAsyncViaTableName()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -140,15 +141,15 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.CountAllAsync(ClassMappedNameCache.Get<CompleteTable>()).Result;
+                var result = await connection.CountAllAsync(ClassMappedNameCache.Get<CompleteTable>());
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnMySqlConnectionCountAllAsyncViaTableNameWithHints()
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public async Task ThrowExceptionOnMySqlConnectionCountAllAsyncViaTableNameWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -156,8 +157,8 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.CountAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    hints: "WhatEver").Wait();
+                await connection.CountAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    hints: "WhatEver");
             }
         }
 

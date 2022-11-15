@@ -7,6 +7,7 @@ using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.IntegrationTests.Operations
 {
@@ -1050,7 +1051,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region BatchQueryAsync<TEntity>
 
         [TestMethod]
-        public void TestSqlConnectionBatchQueryAsyncViaEntityTableNameFirstBatchInAscendingOrder()
+        public async Task TestSqlConnectionBatchQueryAsyncViaEntityTableNameFirstBatchInAscendingOrder()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1061,7 +1062,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.BatchQueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
                     page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
@@ -1069,7 +1070,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
 
                 // Assert (0, 3)
                 Helper.AssertPropertiesEquality(tables.ElementAt(0), result.ElementAt(0));
@@ -1078,7 +1079,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionBatchQueryAsyncViaEntityTableNameFirstBatchInDescendingOrder()
+        public async Task TestSqlConnectionBatchQueryAsyncViaEntityTableNameFirstBatchInDescendingOrder()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1089,14 +1090,14 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.BatchQueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
                     page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Descending }),
                     where: (object)null,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
 
                 // Assert (9, 6)
                 Helper.AssertPropertiesEquality(tables.ElementAt(9), result.ElementAt(0));
@@ -1105,7 +1106,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionBatchQueryAsyncViaEntityTableNameSecondBatchInAscendingOrder()
+        public async Task TestSqlConnectionBatchQueryAsyncViaEntityTableNameSecondBatchInAscendingOrder()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1116,7 +1117,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.BatchQueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
                     page: 1,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
@@ -1124,7 +1125,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
 
                 // Assert (4, 7)
                 Helper.AssertPropertiesEquality(tables.ElementAt(4), result.ElementAt(0));
@@ -1133,7 +1134,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionBatchQueryAsyncViaEntityTableNameSecondBatchInDescendingOrder()
+        public async Task TestSqlConnectionBatchQueryAsyncViaEntityTableNameSecondBatchInDescendingOrder()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1144,7 +1145,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.BatchQueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
                     page: 1,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Descending }),
@@ -1152,7 +1153,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
 
                 // Assert (5, 2)
                 Helper.AssertPropertiesEquality(tables.ElementAt(5), result.ElementAt(0));
@@ -1161,7 +1162,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionBatchQueryAsyncViaEntityTableNameWithWhereForFirstBatchInAscendingOrder()
+        public async Task TestSqlConnectionBatchQueryAsyncViaEntityTableNameWithWhereForFirstBatchInAscendingOrder()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(20);
@@ -1172,7 +1173,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.BatchQueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
                     page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
@@ -1180,7 +1181,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
 
                 // Assert (10, 13)
                 Helper.AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
@@ -1189,7 +1190,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionBatchQueryAsyncViaEntityTableNameWithWhereForFirstBatchInDescendingOrder()
+        public async Task TestSqlConnectionBatchQueryAsyncViaEntityTableNameWithWhereForFirstBatchInDescendingOrder()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(20);
@@ -1200,7 +1201,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.BatchQueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
                     page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Descending }),
@@ -1208,7 +1209,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
 
                 // Assert (9, 6)
                 Helper.AssertPropertiesEquality(tables.ElementAt(9), result.ElementAt(0));
@@ -1217,7 +1218,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionBatchQueryAsyncViaEntityTableNameWithWhereForSecondBatchInAscendingOrder()
+        public async Task TestSqlConnectionBatchQueryAsyncViaEntityTableNameWithWhereForSecondBatchInAscendingOrder()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(20);
@@ -1228,7 +1229,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.BatchQueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
                     page: 1,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
@@ -1236,7 +1237,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
 
                 // Assert (14, 17)
                 Helper.AssertPropertiesEquality(tables.ElementAt(14), result.ElementAt(0));
@@ -1245,7 +1246,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionBatchQueryAsyncViaEntityTableNameWithWhereForSecondBatchInDescendingOrder()
+        public async Task TestSqlConnectionBatchQueryAsyncViaEntityTableNameWithWhereForSecondBatchInDescendingOrder()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(20);
@@ -1256,7 +1257,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.BatchQueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
                     page: 1,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Descending }),
@@ -1264,7 +1265,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
 
                 // Assert (15, 12)
                 Helper.AssertPropertiesEquality(tables.ElementAt(15), result.ElementAt(0));
@@ -1273,7 +1274,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionBatchQueryAsyncViaEntityTableNameWithFields()
+        public async Task TestSqlConnectionBatchQueryAsyncViaEntityTableNameWithFields()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1284,7 +1285,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync<IdentityTable>(tableName: ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.BatchQueryAsync<IdentityTable>(tableName: ClassMappedNameCache.Get<IdentityTable>(),
                     page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
@@ -1293,7 +1294,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
 
                 // Assert (2)
                 Assert.AreEqual(tables.ElementAt(2).ColumnNVarChar, result.ElementAt(0).ColumnNVarChar);
@@ -1301,7 +1302,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionBatchQueryAsyncViaEntityTableNameViaDynamic()
+        public async Task TestSqlConnectionBatchQueryAsyncViaEntityTableNameViaDynamic()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1312,7 +1313,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.BatchQueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
                     page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
@@ -1320,7 +1321,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
 
                 // Assert (3, 6)
                 Helper.AssertPropertiesEquality(tables.ElementAt(2), result.ElementAt(0));
@@ -1328,7 +1329,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionBatchQueryAsyncViaEntityTableNameViaQueryField()
+        public async Task TestSqlConnectionBatchQueryAsyncViaEntityTableNameViaQueryField()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1340,7 +1341,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.BatchQueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
                     page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
@@ -1348,7 +1349,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
 
                 // Assert (3, 6)
                 Helper.AssertPropertiesEquality(tables.ElementAt(3), result.ElementAt(0));
@@ -1357,7 +1358,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionBatchQueryAsyncViaEntityTableNameViaQueryFields()
+        public async Task TestSqlConnectionBatchQueryAsyncViaEntityTableNameViaQueryFields()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(20);
@@ -1373,7 +1374,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.BatchQueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
                     page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
@@ -1381,7 +1382,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
 
                 // Assert (10, 13)
                 Helper.AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
@@ -1390,7 +1391,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionBatchQueryAsyncViaEntityTableNameViaQueryGroup()
+        public async Task TestSqlConnectionBatchQueryAsyncViaEntityTableNameViaQueryGroup()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(20);
@@ -1407,7 +1408,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.BatchQueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
                     page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
@@ -1415,7 +1416,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
 
                 // Assert (10, 13)
                 Helper.AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
@@ -1424,7 +1425,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionBatchQueryAsyncFirstBatchInAscendingOrder()
+        public async Task TestSqlConnectionBatchQueryAsyncFirstBatchInAscendingOrder()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1435,7 +1436,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync<IdentityTable>(
+                var result = await connection.BatchQueryAsync<IdentityTable>(
                     page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
@@ -1443,7 +1444,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
 
                 // Assert (0, 3)
                 Helper.AssertPropertiesEquality(tables.ElementAt(0), result.ElementAt(0));
@@ -1452,7 +1453,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionBatchQueryAsyncFirstBatchInDescendingOrder()
+        public async Task TestSqlConnectionBatchQueryAsyncFirstBatchInDescendingOrder()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1463,14 +1464,14 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync<IdentityTable>(
+                var result = await connection.BatchQueryAsync<IdentityTable>(
                     page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Descending }),
                     where: (object)null,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
 
                 // Assert (9, 6)
                 Helper.AssertPropertiesEquality(tables.ElementAt(9), result.ElementAt(0));
@@ -1479,7 +1480,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionBatchQueryAsyncSecondBatchInAscendingOrder()
+        public async Task TestSqlConnectionBatchQueryAsyncSecondBatchInAscendingOrder()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1490,7 +1491,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync<IdentityTable>(
+                var result = await connection.BatchQueryAsync<IdentityTable>(
                     page: 1,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
@@ -1498,7 +1499,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
 
                 // Assert (4, 7)
                 Helper.AssertPropertiesEquality(tables.ElementAt(4), result.ElementAt(0));
@@ -1507,7 +1508,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionBatchQueryAsyncSecondBatchInDescendingOrder()
+        public async Task TestSqlConnectionBatchQueryAsyncSecondBatchInDescendingOrder()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1518,7 +1519,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync<IdentityTable>(
+                var result = await connection.BatchQueryAsync<IdentityTable>(
                     page: 1,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Descending }),
@@ -1526,7 +1527,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
 
                 // Assert (5, 2)
                 Helper.AssertPropertiesEquality(tables.ElementAt(5), result.ElementAt(0));
@@ -1535,7 +1536,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionBatchQueryAsyncWithWhereForFirstBatchInAscendingOrder()
+        public async Task TestSqlConnectionBatchQueryAsyncWithWhereForFirstBatchInAscendingOrder()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(20);
@@ -1546,7 +1547,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync<IdentityTable>(
+                var result = await connection.BatchQueryAsync<IdentityTable>(
                     page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
@@ -1554,7 +1555,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
 
                 // Assert (10, 13)
                 Helper.AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
@@ -1563,7 +1564,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionBatchQueryAsyncWithWhereForFirstBatchInDescendingOrder()
+        public async Task TestSqlConnectionBatchQueryAsyncWithWhereForFirstBatchInDescendingOrder()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(20);
@@ -1574,7 +1575,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync<IdentityTable>(
+                var result = await connection.BatchQueryAsync<IdentityTable>(
                     page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Descending }),
@@ -1582,7 +1583,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
 
                 // Assert (9, 6)
                 Helper.AssertPropertiesEquality(tables.ElementAt(9), result.ElementAt(0));
@@ -1591,7 +1592,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionBatchQueryAsyncWithWhereForSecondBatchInAscendingOrder()
+        public async Task TestSqlConnectionBatchQueryAsyncWithWhereForSecondBatchInAscendingOrder()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(20);
@@ -1602,7 +1603,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync<IdentityTable>(
+                var result = await connection.BatchQueryAsync<IdentityTable>(
                     page: 1,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
@@ -1610,7 +1611,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
 
                 // Assert (14, 17)
                 Helper.AssertPropertiesEquality(tables.ElementAt(14), result.ElementAt(0));
@@ -1619,7 +1620,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionBatchQueryAsyncWithWhereForSecondBatchInDescendingOrder()
+        public async Task TestSqlConnectionBatchQueryAsyncWithWhereForSecondBatchInDescendingOrder()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(20);
@@ -1630,7 +1631,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync<IdentityTable>(
+                var result = await connection.BatchQueryAsync<IdentityTable>(
                     page: 1,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Descending }),
@@ -1638,7 +1639,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
 
                 // Assert (15, 12)
                 Helper.AssertPropertiesEquality(tables.ElementAt(15), result.ElementAt(0));
@@ -1647,7 +1648,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionBatchQueryAsyncWithFields()
+        public async Task TestSqlConnectionBatchQueryAsyncWithFields()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1658,7 +1659,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync<IdentityTable>(page: 0,
+                var result = await connection.BatchQueryAsync<IdentityTable>(page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
                     where: new { ColumnInt = 3 },
@@ -1666,7 +1667,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
 
                 // Assert (2)
                 Assert.AreEqual(tables.ElementAt(2).ColumnNVarChar, result.ElementAt(0).ColumnNVarChar);
@@ -1674,7 +1675,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionBatchQueryAsyncViaDynamic()
+        public async Task TestSqlConnectionBatchQueryAsyncViaDynamic()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1685,7 +1686,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync<IdentityTable>(
+                var result = await connection.BatchQueryAsync<IdentityTable>(
                     page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
@@ -1693,7 +1694,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
 
                 // Assert (3, 6)
                 Helper.AssertPropertiesEquality(tables.ElementAt(2), result.ElementAt(0));
@@ -1701,7 +1702,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionBatchQueryAsyncViaQueryField()
+        public async Task TestSqlConnectionBatchQueryAsyncViaQueryField()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1713,7 +1714,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync<IdentityTable>(
+                var result = await connection.BatchQueryAsync<IdentityTable>(
                     page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
@@ -1721,7 +1722,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
 
                 // Assert (3, 6)
                 Helper.AssertPropertiesEquality(tables.ElementAt(3), result.ElementAt(0));
@@ -1730,7 +1731,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionBatchQueryAsyncViaQueryFields()
+        public async Task TestSqlConnectionBatchQueryAsyncViaQueryFields()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(20);
@@ -1746,7 +1747,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync<IdentityTable>(
+                var result = await connection.BatchQueryAsync<IdentityTable>(
                     page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
@@ -1754,7 +1755,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
 
                 // Assert (10, 13)
                 Helper.AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
@@ -1763,7 +1764,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionBatchQueryAsyncViaQueryGroup()
+        public async Task TestSqlConnectionBatchQueryAsyncViaQueryGroup()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(20);
@@ -1780,7 +1781,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync<IdentityTable>(
+                var result = await connection.BatchQueryAsync<IdentityTable>(
                     page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
@@ -1788,7 +1789,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
 
                 // Assert (10, 13)
                 Helper.AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
@@ -1796,8 +1797,8 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnSqlConnectionBatchQueryAsyncWithInvalidOrderFields()
+        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
+        public async Task ThrowExceptionOnSqlConnectionBatchQueryAsyncWithInvalidOrderFields()
         {
             // Setup
             var orderBy = new OrderField("InvalidColumn", Order.Descending);
@@ -1805,14 +1806,14 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.BatchQueryAsync<IdentityTable>(page: 0,
+                var result = await connection.BatchQueryAsync<IdentityTable>(page: 0,
                     rowsPerBatch: 10,
                     orderBy: orderBy.AsEnumerable(),
                     where: (object)null,
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
             }
         }
 
@@ -1822,7 +1823,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region BatchQueryAsync<TEntity>(Extra Fields)
 
         [TestMethod]
-        public void TestSqlConnectionBatchQueryAsyncViaEntityTableNameWithExtraFieldsViaDynamic()
+        public async Task TestSqlConnectionBatchQueryAsyncViaEntityTableNameWithExtraFieldsViaDynamic()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1833,7 +1834,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync<WithExtraFieldsIdentityTable>(ClassMappedNameCache.Get<WithExtraFieldsIdentityTable>(),
+                var result = await connection.BatchQueryAsync<WithExtraFieldsIdentityTable>(ClassMappedNameCache.Get<WithExtraFieldsIdentityTable>(),
                     page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
@@ -1841,7 +1842,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
 
                 // Assert (2)
                 Helper.AssertPropertiesEquality(tables.ElementAt(2), result.ElementAt(0));
@@ -1849,7 +1850,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionBatchQueryAsyncViaEntityTableNameWithExtraFieldsViaQueryField()
+        public async Task TestSqlConnectionBatchQueryAsyncViaEntityTableNameWithExtraFieldsViaQueryField()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1861,7 +1862,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync<WithExtraFieldsIdentityTable>(ClassMappedNameCache.Get<WithExtraFieldsIdentityTable>(),
+                var result = await connection.BatchQueryAsync<WithExtraFieldsIdentityTable>(ClassMappedNameCache.Get<WithExtraFieldsIdentityTable>(),
                     page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
@@ -1869,7 +1870,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
 
                 // Assert (3, 6)
                 Helper.AssertPropertiesEquality(tables.ElementAt(3), result.ElementAt(0));
@@ -1878,7 +1879,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionBatchQueryAsyncViaEntityTableNameWithExtraFieldsViaQueryFields()
+        public async Task TestSqlConnectionBatchQueryAsyncViaEntityTableNameWithExtraFieldsViaQueryFields()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(20);
@@ -1894,7 +1895,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync<WithExtraFieldsIdentityTable>(ClassMappedNameCache.Get<WithExtraFieldsIdentityTable>(),
+                var result = await connection.BatchQueryAsync<WithExtraFieldsIdentityTable>(ClassMappedNameCache.Get<WithExtraFieldsIdentityTable>(),
                     page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
@@ -1902,7 +1903,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
 
                 // Assert (10, 13)
                 Helper.AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
@@ -1911,7 +1912,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionBatchQueryAsyncViaEntityTableNameWithExtraFieldsViaQueryGroup()
+        public async Task TestSqlConnectionBatchQueryAsyncViaEntityTableNameWithExtraFieldsViaQueryGroup()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(20);
@@ -1928,7 +1929,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync<WithExtraFieldsIdentityTable>(ClassMappedNameCache.Get<WithExtraFieldsIdentityTable>(),
+                var result = await connection.BatchQueryAsync<WithExtraFieldsIdentityTable>(ClassMappedNameCache.Get<WithExtraFieldsIdentityTable>(),
                     page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
@@ -1936,7 +1937,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
 
                 // Assert (10, 13)
                 Helper.AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
@@ -1945,7 +1946,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionBatchQueryAsyncWithExtraFieldsViaDynamic()
+        public async Task TestSqlConnectionBatchQueryAsyncWithExtraFieldsViaDynamic()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1956,7 +1957,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync<WithExtraFieldsIdentityTable>(
+                var result = await connection.BatchQueryAsync<WithExtraFieldsIdentityTable>(
                     page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
@@ -1964,7 +1965,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
 
                 // Assert (2)
                 Helper.AssertPropertiesEquality(tables.ElementAt(2), result.ElementAt(0));
@@ -1972,7 +1973,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionBatchQueryAsyncWithExtraFieldsViaQueryField()
+        public async Task TestSqlConnectionBatchQueryAsyncWithExtraFieldsViaQueryField()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1984,7 +1985,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync<WithExtraFieldsIdentityTable>(
+                var result = await connection.BatchQueryAsync<WithExtraFieldsIdentityTable>(
                     page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
@@ -1992,7 +1993,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
 
                 // Assert (3, 6)
                 Helper.AssertPropertiesEquality(tables.ElementAt(3), result.ElementAt(0));
@@ -2001,7 +2002,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionBatchQueryAsyncWithExtraFieldsViaQueryFields()
+        public async Task TestSqlConnectionBatchQueryAsyncWithExtraFieldsViaQueryFields()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(20);
@@ -2017,7 +2018,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync<WithExtraFieldsIdentityTable>(
+                var result = await connection.BatchQueryAsync<WithExtraFieldsIdentityTable>(
                     page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
@@ -2025,7 +2026,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
 
                 // Assert (10, 13)
                 Helper.AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
@@ -2034,7 +2035,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionBatchQueryAsyncWithExtraFieldsViaQueryGroup()
+        public async Task TestSqlConnectionBatchQueryAsyncWithExtraFieldsViaQueryGroup()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(20);
@@ -2051,7 +2052,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync<WithExtraFieldsIdentityTable>(
+                var result = await connection.BatchQueryAsync<WithExtraFieldsIdentityTable>(
                     page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
@@ -2059,7 +2060,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
 
                 // Assert (10, 13)
                 Helper.AssertPropertiesEquality(tables.ElementAt(10), result.ElementAt(0));
@@ -2460,7 +2461,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region BatchQueryAsync(TableName)
 
         [TestMethod]
-        public void TestSqlConnectionBatchQueryAsyncViaTableNameFirstBatchInAscendingOrder()
+        public async Task TestSqlConnectionBatchQueryAsyncViaTableNameFirstBatchInAscendingOrder()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -2471,7 +2472,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
@@ -2479,7 +2480,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
 
                 // Assert (0, 3)
                 Helper.AssertMembersEquality(tables.ElementAt(0), result.ElementAt(0));
@@ -2488,7 +2489,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionBatchQueryAsyncViaTableNameFirstBatchInDescendingOrder()
+        public async Task TestSqlConnectionBatchQueryAsyncViaTableNameFirstBatchInDescendingOrder()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -2499,7 +2500,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Descending }),
@@ -2507,7 +2508,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
 
                 // Assert (9, 6)
                 Helper.AssertMembersEquality(tables.ElementAt(9), result.ElementAt(0));
@@ -2516,7 +2517,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionBatchQueryAsyncViaTableNameSecondBatchInAscendingOrder()
+        public async Task TestSqlConnectionBatchQueryAsyncViaTableNameSecondBatchInAscendingOrder()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -2527,7 +2528,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     page: 1,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
@@ -2535,7 +2536,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
 
                 // Assert (4, 7)
                 Helper.AssertMembersEquality(tables.ElementAt(4), result.ElementAt(0));
@@ -2544,7 +2545,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionBatchQueryAsyncViaTableNameSecondBatchInDescendingOrder()
+        public async Task TestSqlConnectionBatchQueryAsyncViaTableNameSecondBatchInDescendingOrder()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -2555,7 +2556,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     page: 1,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Descending }),
@@ -2563,7 +2564,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
 
                 // Assert (5, 2)
                 Helper.AssertMembersEquality(tables.ElementAt(5), result.ElementAt(0));
@@ -2572,7 +2573,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionBatchQueryAsyncViaTableNameWithWhereForFirstBatchInAscendingOrder()
+        public async Task TestSqlConnectionBatchQueryAsyncViaTableNameWithWhereForFirstBatchInAscendingOrder()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(20);
@@ -2583,7 +2584,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
@@ -2595,7 +2596,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
 
                 // Assert (10, 13)
                 Helper.AssertMembersEquality(tables.ElementAt(10), result.ElementAt(0));
@@ -2604,7 +2605,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionBatchQueryAsyncViaTableNameWithWhereForFirstBatchInDescendingOrder()
+        public async Task TestSqlConnectionBatchQueryAsyncViaTableNameWithWhereForFirstBatchInDescendingOrder()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(20);
@@ -2615,7 +2616,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Descending }),
@@ -2627,7 +2628,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
 
                 // Assert (9, 6)
                 Helper.AssertMembersEquality(tables.ElementAt(9), result.ElementAt(0));
@@ -2636,7 +2637,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionBatchQueryAsyncViaTableNameWithWhereForSecondBatchInAscendingOrder()
+        public async Task TestSqlConnectionBatchQueryAsyncViaTableNameWithWhereForSecondBatchInAscendingOrder()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(20);
@@ -2647,7 +2648,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     page: 1,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
@@ -2659,7 +2660,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
 
                 // Assert (14, 17)
                 Helper.AssertMembersEquality(tables.ElementAt(14), result.ElementAt(0));
@@ -2668,7 +2669,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionBatchQueryAsyncViaTableNameWithWhereForSecondBatchInDescendingOrder()
+        public async Task TestSqlConnectionBatchQueryAsyncViaTableNameWithWhereForSecondBatchInDescendingOrder()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(20);
@@ -2679,7 +2680,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     page: 1,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Descending }),
@@ -2691,7 +2692,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
 
                 // Assert (15, 12)
                 Helper.AssertMembersEquality(tables.ElementAt(15), result.ElementAt(0));
@@ -2700,7 +2701,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionBatchQueryAsyncViaTableNameViaDynamic()
+        public async Task TestSqlConnectionBatchQueryAsyncViaTableNameViaDynamic()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -2711,7 +2712,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
@@ -2719,7 +2720,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
 
                 // Assert (2)
                 Helper.AssertMembersEquality(tables.ElementAt(2), result.ElementAt(0));
@@ -2727,7 +2728,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionBatchQueryAsyncViaTableNameViaQueryField()
+        public async Task TestSqlConnectionBatchQueryAsyncViaTableNameViaQueryField()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -2739,7 +2740,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
@@ -2747,7 +2748,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
 
                 // Assert (3, 6)
                 Helper.AssertMembersEquality(tables.ElementAt(3), result.ElementAt(0));
@@ -2756,7 +2757,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionBatchQueryAsyncViaTableNameViaQueryFields()
+        public async Task TestSqlConnectionBatchQueryAsyncViaTableNameViaQueryFields()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(20);
@@ -2772,7 +2773,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
@@ -2780,7 +2781,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
 
                 // Assert (10, 13)
                 Helper.AssertMembersEquality(tables.ElementAt(10), result.ElementAt(0));
@@ -2789,7 +2790,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionBatchQueryAsyncViaTableNameViaQueryGroup()
+        public async Task TestSqlConnectionBatchQueryAsyncViaTableNameViaQueryGroup()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(20);
@@ -2806,7 +2807,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.BatchQueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     page: 0,
                     rowsPerBatch: 4,
                     orderBy: OrderField.Parse(new { Id = Order.Ascending }),
@@ -2814,7 +2815,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
 
                 // Assert (10, 13)
                 Helper.AssertMembersEquality(tables.ElementAt(10), result.ElementAt(0));
@@ -2822,8 +2823,8 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnSqlConnectionBatchQueryAsyncViaTableNameWithInvalidOrderFields()
+        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
+        public async Task ThrowExceptionOnSqlConnectionBatchQueryAsyncViaTableNameWithInvalidOrderFields()
         {
             // Setup
             var orderBy = new OrderField("InvalidColumn", Order.Descending);
@@ -2831,7 +2832,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.BatchQueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.BatchQueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
                     page: 0,
                     rowsPerBatch: 10,
                     orderBy: orderBy.AsEnumerable(),
@@ -2839,7 +2840,7 @@ namespace RepoDb.IntegrationTests.Operations
                     commandTimeout: 0,
                     transaction: null,
                     trace: null,
-                    statementBuilder: null).Result;
+                    statementBuilder: null);
             }
         }
 

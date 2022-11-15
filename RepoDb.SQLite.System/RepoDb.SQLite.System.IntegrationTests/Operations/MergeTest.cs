@@ -3,6 +3,7 @@ using RepoDb.SQLite.System.IntegrationTests.Models;
 using RepoDb.SQLite.System.IntegrationTests.Setup;
 using System.Data.SQLite;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
 {
@@ -110,7 +111,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         #region Async
 
         [TestMethod]
-        public void TestSQLiteConnectionMergeAsyncForIdentityForEmptyTable()
+        public async Task TestSQLiteConnectionMergeAsyncForIdentityForEmptyTable()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringMDS))
             {
@@ -118,7 +119,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var table = Database.CreateSdsCompleteTables(1, connection).First();
 
                 // Act
-                var result = connection.MergeAsync<SdsCompleteTable>(table).Result;
+                var result = await connection.MergeAsync<SdsCompleteTable>(table);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<SdsCompleteTable>());
@@ -133,7 +134,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         }
 
         [TestMethod]
-        public void TestSQLiteConnectionMergeAsyncForIdentityForNonEmptyTable()
+        public async Task TestSQLiteConnectionMergeAsyncForIdentityForNonEmptyTable()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringMDS))
             {
@@ -144,7 +145,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 Helper.UpdateSdsCompleteTableProperties(table);
 
                 // Act
-                var result = connection.MergeAsync<SdsCompleteTable>(table).Result;
+                var result = await connection.MergeAsync<SdsCompleteTable>(table);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<SdsCompleteTable>());
@@ -159,7 +160,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         }
 
         [TestMethod]
-        public void TestSQLiteConnectionMergeAsyncForIdentityForNonEmptyTableWithQualifiers()
+        public async Task TestSQLiteConnectionMergeAsyncForIdentityForNonEmptyTableWithQualifiers()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringMDS))
             {
@@ -174,8 +175,8 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 table.ColumnChar = "C";
 
                 // Act
-                var result = connection.MergeAsync<SdsCompleteTable>(table,
-                    qualifiers: qualifiers).Result;
+                var result = await connection.MergeAsync<SdsCompleteTable>(table,
+                    qualifiers: qualifiers);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<SdsCompleteTable>());
@@ -417,7 +418,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         #region Async
 
         [TestMethod]
-        public void TestSQLiteConnectionMergeAsyncViaTableNameForIdentityForEmptyTable()
+        public async Task TestSQLiteConnectionMergeAsyncViaTableNameForIdentityForEmptyTable()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringMDS))
             {
@@ -425,8 +426,8 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var table = Database.CreateSdsCompleteTables(1, connection).First();
 
                 // Act
-                var result = connection.MergeAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
-                    table).Result;
+                var result = await connection.MergeAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
+                    table);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<SdsCompleteTable>());
@@ -440,7 +441,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         }
 
         [TestMethod]
-        public void TestSQLiteConnectionMergeAsyncViaTableNameForIdentityForNonEmptyTable()
+        public async Task TestSQLiteConnectionMergeAsyncViaTableNameForIdentityForNonEmptyTable()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringMDS))
             {
@@ -449,8 +450,8 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 Helper.UpdateSdsCompleteTableProperties(table);
 
                 // Act
-                var result = connection.MergeAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
-                    table).Result;
+                var result = await connection.MergeAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
+                    table);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<SdsCompleteTable>());
@@ -465,7 +466,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         }
 
         [TestMethod]
-        public void TestSQLiteConnectionMergeAsyncViaTableNameForIdentityForNonEmptyTableWithQualifiers()
+        public async Task TestSQLiteConnectionMergeAsyncViaTableNameForIdentityForNonEmptyTableWithQualifiers()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringMDS))
             {
@@ -478,9 +479,9 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 Helper.UpdateSdsCompleteTableProperties(table);
 
                 // Act
-                var result = connection.MergeAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
+                var result = await connection.MergeAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
                     table,
-                    qualifiers: qualifiers).Result;
+                    qualifiers: qualifiers);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<SdsCompleteTable>());
@@ -495,7 +496,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         }
 
         [TestMethod]
-        public void TestSQLiteConnectionMergeAsyncAsDynamicViaTableNameForIdentityForEmptyTable()
+        public async Task TestSQLiteConnectionMergeAsyncAsDynamicViaTableNameForIdentityForEmptyTable()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringMDS))
             {
@@ -506,8 +507,8 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var table = Helper.CreateSdsCompleteTablesAsDynamics(1).First();
 
                 // Act
-                var result = connection.MergeAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
-                    (object)table).Result;
+                var result = await connection.MergeAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
+                    (object)table);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<SdsCompleteTable>());
@@ -522,7 +523,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         }
 
         [TestMethod]
-        public void TestSQLiteConnectionMergeAsyncAsDynamicViaTableNameForIdentityForNonEmptyTable()
+        public async Task TestSQLiteConnectionMergeAsyncAsDynamicViaTableNameForIdentityForNonEmptyTable()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringMDS))
             {
@@ -531,8 +532,8 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 Helper.UpdateSdsCompleteTableProperties(table);
 
                 // Act
-                var result = connection.MergeAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
-                    table).Result;
+                var result = await connection.MergeAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
+                    table);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<SdsCompleteTable>());
@@ -547,7 +548,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         }
 
         [TestMethod]
-        public void TestSQLiteConnectionMergeAsyncAsDynamicViaTableNameForIdentityForNonEmptyTableWithQualifiers()
+        public async Task TestSQLiteConnectionMergeAsyncAsDynamicViaTableNameForIdentityForNonEmptyTableWithQualifiers()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringMDS))
             {
@@ -560,9 +561,9 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 };
 
                 // Act
-                var result = connection.MergeAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
+                var result = await connection.MergeAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
                     table,
-                    qualifiers: qualifiers).Result;
+                    qualifiers: qualifiers);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<SdsCompleteTable>());
@@ -577,7 +578,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         }
 
         [TestMethod]
-        public void TestSQLiteConnectionMergeAsyncViaTableNameAsExpandoObjectForIdentityForEmptyTable()
+        public async Task TestSQLiteConnectionMergeAsyncViaTableNameAsExpandoObjectForIdentityForEmptyTable()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringMDS))
             {
@@ -586,8 +587,8 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var table = Helper.CreateSdsCompleteTablesAsExpandoObjects(1).First();
 
                 // Act
-                var result = connection.MergeAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
-                    table).Result;
+                var result = await connection.MergeAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
+                    table);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<SdsCompleteTable>());
@@ -603,7 +604,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         }
 
         [TestMethod]
-        public void TestSQLiteConnectionMergeAsyncViaTableNameAsExpandoObjectForIdentityForNonEmptyTable()
+        public async Task TestSQLiteConnectionMergeAsyncViaTableNameAsExpandoObjectForIdentityForNonEmptyTable()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringMDS))
             {
@@ -612,8 +613,8 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var table = Helper.CreateSdsCompleteTablesAsExpandoObjects(1).First();
 
                 // Act
-                var result = connection.MergeAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
-                    table).Result;
+                var result = await connection.MergeAsync(ClassMappedNameCache.Get<SdsCompleteTable>(),
+                    table);
 
                 // Assert
                 Assert.AreEqual(1, connection.CountAll<SdsCompleteTable>());

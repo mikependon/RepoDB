@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Sqlite.Microsoft.IntegrationTests.Models;
 using RepoDb.Sqlite.Microsoft.IntegrationTests.Setup;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
 {
@@ -90,7 +91,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         #region Async
 
         [TestMethod]
-        public void TestSqLiteConnectionInsertAllAsyncForIdentity()
+        public async Task TestSqLiteConnectionInsertAllAsyncForIdentity()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -101,7 +102,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Helper.CreateMdsCompleteTables(10);
 
                 // Act
-                var result = connection.InsertAllAsync<MdsCompleteTable>(tables).Result;
+                var result = await connection.InsertAllAsync<MdsCompleteTable>(tables);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<MdsCompleteTable>());
@@ -120,7 +121,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionInsertAllAsyncForNonIdentity()
+        public async Task TestSqLiteConnectionInsertAllAsyncForNonIdentity()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -131,7 +132,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Helper.CreateMdsNonIdentityCompleteTables(10);
 
                 // Act
-                var result = connection.InsertAllAsync<MdsNonIdentityCompleteTable>(tables).Result;
+                var result = await connection.InsertAllAsync<MdsNonIdentityCompleteTable>(tables);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<MdsNonIdentityCompleteTable>());
@@ -342,7 +343,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         #region Async
 
         [TestMethod]
-        public void TestSqLiteConnectionInsertAllViaTableNameAsyncForIdentity()
+        public async Task TestSqLiteConnectionInsertAllViaTableNameAsyncForIdentity()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -353,8 +354,8 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Helper.CreateMdsCompleteTables(10);
 
                 // Act
-                var result = connection.InsertAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
-                    tables).Result;
+                var result = await connection.InsertAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                    tables);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<MdsCompleteTable>());
@@ -372,7 +373,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionInsertAllViaTableNameAsyncAsExpandoObjectForIdentity()
+        public async Task TestSqLiteConnectionInsertAllViaTableNameAsyncAsExpandoObjectForIdentity()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -383,8 +384,8 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Helper.CreateMdsCompleteTablesAsExpandoObjects(10);
 
                 // Act
-                var result = connection.InsertAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
-                    tables).Result;
+                var result = await connection.InsertAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                    tables);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<MdsCompleteTable>());
@@ -403,7 +404,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionInsertAllAsyncViaTableNameAsDynamicsForIdentity()
+        public async Task TestSqLiteConnectionInsertAllAsyncViaTableNameAsDynamicsForIdentity()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -414,8 +415,8 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Helper.CreateMdsCompleteTablesAsDynamics(10);
 
                 // Act
-                var result = connection.InsertAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
-                    tables).Result;
+                var result = await connection.InsertAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                    tables);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<MdsCompleteTable>());
@@ -433,7 +434,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionInsertAllViaTableNameAsyncForNonIdentity()
+        public async Task TestSqLiteConnectionInsertAllViaTableNameAsyncForNonIdentity()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -444,8 +445,8 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Helper.CreateMdsNonIdentityCompleteTables(10);
 
                 // Act
-                var result = connection.InsertAllAsync(ClassMappedNameCache.Get<MdsNonIdentityCompleteTable>(),
-                    tables).Result;
+                var result = await connection.InsertAllAsync(ClassMappedNameCache.Get<MdsNonIdentityCompleteTable>(),
+                    tables);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<MdsNonIdentityCompleteTable>());
@@ -463,7 +464,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionInsertAllAsyncViaTableNameAsExpandoObjectForNonIdentity()
+        public async Task TestSqLiteConnectionInsertAllAsyncViaTableNameAsExpandoObjectForNonIdentity()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -474,8 +475,8 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Helper.CreateMdsNonIdentityCompleteTablesAsExpandoObjects(10);
 
                 // Act
-                var result = connection.InsertAllAsync(ClassMappedNameCache.Get<MdsNonIdentityCompleteTable>(),
-                    tables).Result;
+                var result = await connection.InsertAllAsync(ClassMappedNameCache.Get<MdsNonIdentityCompleteTable>(),
+                    tables);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<MdsNonIdentityCompleteTable>());
@@ -493,7 +494,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionInsertAllAsyncViaTableNameAsDynamicsForNonIdentity()
+        public async Task TestSqLiteConnectionInsertAllAsyncViaTableNameAsDynamicsForNonIdentity()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -504,8 +505,8 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Helper.CreateMdsNonIdentityCompleteTablesAsDynamics(10);
 
                 // Act
-                var result = connection.InsertAllAsync(ClassMappedNameCache.Get<MdsNonIdentityCompleteTable>(),
-                    tables).Result;
+                var result = await connection.InsertAllAsync(ClassMappedNameCache.Get<MdsNonIdentityCompleteTable>(),
+                    tables);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<MdsNonIdentityCompleteTable>());

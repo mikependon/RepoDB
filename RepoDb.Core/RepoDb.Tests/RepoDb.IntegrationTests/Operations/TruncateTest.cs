@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
@@ -50,7 +51,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region TruncateAsync<TEntity>
 
         [TestMethod]
-        public void TestSqlConnectionTruncateAsync()
+        public async Task TestSqlConnectionTruncateAsync()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -62,7 +63,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var task = connection.TruncateAsync<IdentityTable>();
-                task.Wait();
+                await task;
 
                 // Act
                 var result = connection.CountAll<IdentityTable>();
@@ -103,7 +104,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region TruncateAsync(TableName)
 
         [TestMethod]
-        public void TestSqlConnectionTruncateAsyncViaTableName()
+        public async Task TestSqlConnectionTruncateAsyncViaTableName()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -115,7 +116,7 @@ namespace RepoDb.IntegrationTests.Operations
 
                 // Act
                 var task = connection.TruncateAsync(ClassMappedNameCache.Get<IdentityTable>());
-                task.Wait();
+                await task;
 
                 // Act
                 var result = connection.CountAll<IdentityTable>();

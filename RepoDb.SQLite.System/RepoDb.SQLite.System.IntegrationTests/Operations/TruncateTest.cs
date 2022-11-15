@@ -2,6 +2,7 @@
 using RepoDb.SQLite.System.IntegrationTests.Models;
 using RepoDb.SQLite.System.IntegrationTests.Setup;
 using System.Data.SQLite;
+using System.Threading.Tasks;
 
 namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
 {
@@ -47,7 +48,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         #region Async
 
         [TestMethod]
-        public void TestSqLiteConnectionTruncateAsyncWithoutExpression()
+        public async Task TestSqLiteConnectionTruncateAsyncWithoutExpression()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -55,7 +56,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                var result = connection.TruncateAsync<SdsCompleteTable>().Result;
+                var result = await connection.TruncateAsync<SdsCompleteTable>();
                 var countResult = connection.CountAll<SdsCompleteTable>();
 
                 // Assert
@@ -93,7 +94,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         #region Async
 
         [TestMethod]
-        public void TestSqLiteConnectionTruncateAsyncViaTableNameWithoutExpression()
+        public async Task TestSqLiteConnectionTruncateAsyncViaTableNameWithoutExpression()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -101,7 +102,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                var result = connection.TruncateAsync(ClassMappedNameCache.Get<SdsCompleteTable>()).Result;
+                var result = await connection.TruncateAsync(ClassMappedNameCache.Get<SdsCompleteTable>());
                 var countResult = connection.CountAll<SdsCompleteTable>();
 
                 // Assert

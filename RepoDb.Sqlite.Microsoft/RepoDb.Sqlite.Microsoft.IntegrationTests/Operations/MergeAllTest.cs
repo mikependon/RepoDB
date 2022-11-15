@@ -4,6 +4,7 @@ using RepoDb.Extensions;
 using RepoDb.Sqlite.Microsoft.IntegrationTests.Models;
 using RepoDb.Sqlite.Microsoft.IntegrationTests.Setup;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
 {
@@ -199,7 +200,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         #region Async
 
         [TestMethod]
-        public void TestSqLiteConnectionMergeAllAsyncForIdentityForEmptyTable()
+        public async Task TestSqLiteConnectionMergeAllAsyncForIdentityForEmptyTable()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -210,7 +211,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Helper.CreateMdsCompleteTables(10);
 
                 // Act
-                var result = connection.MergeAllAsync<MdsCompleteTable>(tables).Result;
+                var result = await connection.MergeAllAsync<MdsCompleteTable>(tables);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<MdsCompleteTable>());
@@ -226,7 +227,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionMergeAllAsyncForIdentityForNonEmptyTable()
+        public async Task TestSqLiteConnectionMergeAllAsyncForIdentityForNonEmptyTable()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -237,7 +238,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 tables.ForEach(table => Helper.UpdateMdsCompleteTableProperties(table));
 
                 // Act
-                var result = connection.MergeAllAsync<MdsCompleteTable>(tables).Result;
+                var result = await connection.MergeAllAsync<MdsCompleteTable>(tables);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<MdsCompleteTable>());
@@ -252,7 +253,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionMergeAllAsyncForIdentityForNonEmptyTableWithQualifiers()
+        public async Task TestSqLiteConnectionMergeAllAsyncForIdentityForNonEmptyTableWithQualifiers()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -267,8 +268,8 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 tables.ForEach(table => Helper.UpdateMdsCompleteTableProperties(table));
 
                 // Act
-                var result = connection.MergeAllAsync<MdsCompleteTable>(tables,
-                    qualifiers).Result;
+                var result = await connection.MergeAllAsync<MdsCompleteTable>(tables,
+                    qualifiers);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<MdsCompleteTable>());
@@ -283,7 +284,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionMergeAllAsyncForNonIdentityForEmptyTable()
+        public async Task TestSqLiteConnectionMergeAllAsyncForNonIdentityForEmptyTable()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -294,7 +295,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Helper.CreateMdsNonIdentityCompleteTables(10);
 
                 // Act
-                var result = connection.MergeAllAsync<MdsNonIdentityCompleteTable>(tables).Result;
+                var result = await connection.MergeAllAsync<MdsNonIdentityCompleteTable>(tables);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<MdsNonIdentityCompleteTable>());
@@ -309,7 +310,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionMergeAllAsyncForNonIdentityForNonEmptyTable()
+        public async Task TestSqLiteConnectionMergeAllAsyncForNonIdentityForNonEmptyTable()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -320,7 +321,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 tables.ForEach(table => Helper.UpdateMdsNonIdentityCompleteTableProperties(table));
 
                 // Act
-                var result = connection.MergeAllAsync<MdsNonIdentityCompleteTable>(tables).Result;
+                var result = await connection.MergeAllAsync<MdsNonIdentityCompleteTable>(tables);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<MdsNonIdentityCompleteTable>());
@@ -335,7 +336,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionMergeAllAsyncForNonIdentityForNonEmptyTableWithQualifiers()
+        public async Task TestSqLiteConnectionMergeAllAsyncForNonIdentityForNonEmptyTableWithQualifiers()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -350,8 +351,8 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 tables.ForEach(table => Helper.UpdateMdsNonIdentityCompleteTableProperties(table));
 
                 // Act
-                var result = connection.MergeAllAsync<MdsNonIdentityCompleteTable>(tables,
-                    qualifiers).Result;
+                var result = await connection.MergeAllAsync<MdsNonIdentityCompleteTable>(tables,
+                    qualifiers);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<MdsNonIdentityCompleteTable>());
@@ -772,7 +773,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         #region Async
 
         [TestMethod]
-        public void TestSqLiteConnectionMergeAllViaTableNameAsyncForIdentityForEmptyTable()
+        public async Task TestSqLiteConnectionMergeAllViaTableNameAsyncForIdentityForEmptyTable()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -783,8 +784,8 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Helper.CreateMdsCompleteTables(10);
 
                 // Act
-                var result = connection.MergeAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
-                    tables).Result;
+                var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                    tables);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<MdsCompleteTable>());
@@ -800,7 +801,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionMergeAllAsyncAsExpandoObjectViaTableNameForIdentityForEmptyTable()
+        public async Task TestSqLiteConnectionMergeAllAsyncAsExpandoObjectViaTableNameForIdentityForEmptyTable()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -811,8 +812,8 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Helper.CreateMdsCompleteTablesAsExpandoObjects(10);
 
                 // Act
-                var result = connection.MergeAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
-                    tables).Result;
+                var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                    tables);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<MdsCompleteTable>());
@@ -829,7 +830,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionMergeAllViaTableNameAsyncForIdentityForNonEmptyTable()
+        public async Task TestSqLiteConnectionMergeAllViaTableNameAsyncForIdentityForNonEmptyTable()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -840,8 +841,8 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 tables.ForEach(table => Helper.UpdateMdsCompleteTableProperties(table));
 
                 // Act
-                var result = connection.MergeAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
-                    tables).Result;
+                var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                    tables);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<MdsCompleteTable>());
@@ -856,7 +857,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionMergeAllAsyncAsExpandoObjectViaTableNameForIdentityForNonEmptyTable()
+        public async Task TestSqLiteConnectionMergeAllAsyncAsExpandoObjectViaTableNameForIdentityForNonEmptyTable()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -867,8 +868,8 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Helper.CreateMdsCompleteTablesAsExpandoObjects(10);
 
                 // Act
-                var result = connection.MergeAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
-                    tables).Result;
+                var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                    tables);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<MdsCompleteTable>());
@@ -884,7 +885,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionMergeAllViaTableNameAsyncForIdentityForNonEmptyTableWithQualifiers()
+        public async Task TestSqLiteConnectionMergeAllViaTableNameAsyncForIdentityForNonEmptyTableWithQualifiers()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -899,9 +900,9 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 tables.ForEach(table => Helper.UpdateMdsCompleteTableProperties(table));
 
                 // Act
-                var result = connection.MergeAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
                     tables,
-                    qualifiers).Result;
+                    qualifiers);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<MdsCompleteTable>());
@@ -916,7 +917,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionMergeAllAsyncAsDynamicsViaTableNameForIdentityForEmptyTable()
+        public async Task TestSqLiteConnectionMergeAllAsyncAsDynamicsViaTableNameForIdentityForEmptyTable()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -927,8 +928,8 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Helper.CreateMdsCompleteTablesAsDynamics(10);
 
                 // Act
-                var result = connection.MergeAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
-                    tables).Result;
+                var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                    tables);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<MdsCompleteTable>());
@@ -943,7 +944,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionMergeAllAsyncAsDynamicsViaTableNameForIdentityForNonEmptyTable()
+        public async Task TestSqLiteConnectionMergeAllAsyncAsDynamicsViaTableNameForIdentityForNonEmptyTable()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -952,8 +953,8 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 tables.ForEach(table => Helper.UpdateMdsCompleteTableProperties(table));
 
                 // Act
-                var result = connection.MergeAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
-                    tables).Result;
+                var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                    tables);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<MdsCompleteTable>());
@@ -968,7 +969,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionMergeAllAsyncAsDynamicsViaTableNameForIdentityForNonEmptyTableWithQualifiers()
+        public async Task TestSqLiteConnectionMergeAllAsyncAsDynamicsViaTableNameForIdentityForNonEmptyTableWithQualifiers()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -981,9 +982,9 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 tables.ForEach(table => Helper.UpdateMdsCompleteTableProperties(table));
 
                 // Act
-                var result = connection.MergeAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
                     tables,
-                    qualifiers).Result;
+                    qualifiers);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<MdsCompleteTable>());
@@ -998,7 +999,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionMergeAllAsyncViaTableNameForNonIdentityForEmptyTable()
+        public async Task TestSqLiteConnectionMergeAllAsyncViaTableNameForNonIdentityForEmptyTable()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -1009,8 +1010,8 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Helper.CreateMdsNonIdentityCompleteTables(10);
 
                 // Act
-                var result = connection.MergeAllAsync(ClassMappedNameCache.Get<MdsNonIdentityCompleteTable>(),
-                    tables).Result;
+                var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<MdsNonIdentityCompleteTable>(),
+                    tables);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<MdsNonIdentityCompleteTable>());
@@ -1025,7 +1026,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionMergeAllAsyncViaTableNameForNonIdentityForNonEmptyTable()
+        public async Task TestSqLiteConnectionMergeAllAsyncViaTableNameForNonIdentityForNonEmptyTable()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -1036,8 +1037,8 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 tables.ForEach(table => Helper.UpdateMdsNonIdentityCompleteTableProperties(table));
 
                 // Act
-                var result = connection.MergeAllAsync(ClassMappedNameCache.Get<MdsNonIdentityCompleteTable>(),
-                    tables).Result;
+                var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<MdsNonIdentityCompleteTable>(),
+                    tables);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<MdsNonIdentityCompleteTable>());
@@ -1052,7 +1053,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionMergeAllAsyncViaTableNameForNonIdentityForNonEmptyTableWithQualifiers()
+        public async Task TestSqLiteConnectionMergeAllAsyncViaTableNameForNonIdentityForNonEmptyTableWithQualifiers()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -1067,9 +1068,9 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 tables.ForEach(table => Helper.UpdateMdsNonIdentityCompleteTableProperties(table));
 
                 // Act
-                var result = connection.MergeAllAsync(ClassMappedNameCache.Get<MdsNonIdentityCompleteTable>(),
+                var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<MdsNonIdentityCompleteTable>(),
                     tables,
-                    qualifiers).Result;
+                    qualifiers);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<MdsNonIdentityCompleteTable>());
@@ -1084,7 +1085,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionMergeAllAsyncAsDynamicsViaTableNameForNonIdentityForEmptyTable()
+        public async Task TestSqLiteConnectionMergeAllAsyncAsDynamicsViaTableNameForNonIdentityForEmptyTable()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -1095,8 +1096,8 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Helper.CreateMdsNonIdentityCompleteTablesAsDynamics(10);
 
                 // Act
-                var result = connection.MergeAllAsync(ClassMappedNameCache.Get<MdsNonIdentityCompleteTable>(),
-                    tables).Result;
+                var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<MdsNonIdentityCompleteTable>(),
+                    tables);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<MdsNonIdentityCompleteTable>());
@@ -1111,7 +1112,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionMergeAllAsyncAsDynamicsViaTableNameForNonIdentityForNonEmptyTable()
+        public async Task TestSqLiteConnectionMergeAllAsyncAsDynamicsViaTableNameForNonIdentityForNonEmptyTable()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -1120,8 +1121,8 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 tables.ForEach(table => Helper.UpdateMdsNonIdentityCompleteTableProperties(table));
 
                 // Act
-                var result = connection.MergeAllAsync(ClassMappedNameCache.Get<MdsNonIdentityCompleteTable>(),
-                    tables).Result;
+                var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<MdsNonIdentityCompleteTable>(),
+                    tables);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<MdsNonIdentityCompleteTable>());
@@ -1136,7 +1137,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionMergeAllAsyncAsDynamicsViaTableNameForNonIdentityForNonEmptyTableWithQualifiers()
+        public async Task TestSqLiteConnectionMergeAllAsyncAsDynamicsViaTableNameForNonIdentityForNonEmptyTableWithQualifiers()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -1149,9 +1150,9 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 tables.ForEach(table => Helper.UpdateMdsNonIdentityCompleteTableProperties(table));
 
                 // Act
-                var result = connection.MergeAllAsync(ClassMappedNameCache.Get<MdsNonIdentityCompleteTable>(),
+                var result = await connection.MergeAllAsync(ClassMappedNameCache.Get<MdsNonIdentityCompleteTable>(),
                     tables,
-                    qualifiers).Result;
+                    qualifiers);
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<MdsNonIdentityCompleteTable>());

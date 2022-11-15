@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.IntegrationTests;
 using RepoDb.IntegrationTests.Setup;
+using System.Threading.Tasks;
 
 namespace RepoDb.SqlServer.IntegrationTests
 {
@@ -22,7 +23,7 @@ namespace RepoDb.SqlServer.IntegrationTests
         }
 
         [TestMethod]
-        public void TestBatchExecutionForInsertAll()
+        public async Task TestBatchExecutionForInsertAll()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -33,11 +34,11 @@ namespace RepoDb.SqlServer.IntegrationTests
                     {
                         var identityTables = Helper.CreateIdentityTables(i);
                         connection.InsertAll(identityTables);
-                        connection.InsertAllAsync(identityTables).Wait();
+                        await connection.InsertAllAsync(identityTables);
                         connection.UpdateAll(identityTables);
-                        connection.UpdateAllAsync(identityTables).Wait();
+                        await connection.UpdateAllAsync(identityTables);
                         connection.MergeAll(identityTables);
-                        connection.MergeAllAsync(identityTables).Wait();
+                        await connection.MergeAllAsync(identityTables);
                     }
                     catch
                     {
@@ -50,7 +51,7 @@ namespace RepoDb.SqlServer.IntegrationTests
         }
 
         [TestMethod]
-        public void TestBatchExecutionForUpdateAll()
+        public async Task TestBatchExecutionForUpdateAll()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -62,7 +63,7 @@ namespace RepoDb.SqlServer.IntegrationTests
                         var identityTables = Helper.CreateIdentityTables(i);
                         connection.InsertAll(identityTables);
                         connection.UpdateAll(identityTables);
-                        connection.UpdateAllAsync(identityTables).Wait();
+                        await connection.UpdateAllAsync(identityTables);
                     }
                     catch
                     {
@@ -75,7 +76,7 @@ namespace RepoDb.SqlServer.IntegrationTests
         }
 
         [TestMethod]
-        public void TestBatchExecutionForMergeAllEmptyTable()
+        public async Task TestBatchExecutionForMergeAllEmptyTable()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -86,7 +87,7 @@ namespace RepoDb.SqlServer.IntegrationTests
                     {
                         var identityTables = Helper.CreateIdentityTables(i);
                         connection.MergeAll(identityTables);
-                        connection.MergeAllAsync(identityTables).Wait();
+                        await connection.MergeAllAsync(identityTables);
                     }
                     catch
                     {
@@ -99,7 +100,7 @@ namespace RepoDb.SqlServer.IntegrationTests
         }
 
         [TestMethod]
-        public void TestBatchExecutionForMergeAllNonEmptyTable()
+        public async Task TestBatchExecutionForMergeAllNonEmptyTable()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -111,7 +112,7 @@ namespace RepoDb.SqlServer.IntegrationTests
                         var identityTables = Helper.CreateIdentityTables(i);
                         connection.InsertAll(identityTables);
                         connection.MergeAll(identityTables);
-                        connection.MergeAllAsync(identityTables).Wait();
+                        await connection.MergeAllAsync(identityTables);
                     }
                     catch
                     {

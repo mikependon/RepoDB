@@ -5,6 +5,7 @@ using System;
 using Microsoft.Data.SqlClient;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace RepoDb.IntegrationTests.Types.Bytes
 {
@@ -151,7 +152,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
         }
 
         [TestMethod]
-        public void TestSqlConnectionBytesCrudAsync()
+        public async Task TestSqlConnectionBytesCrudAsync()
         {
             // Setup
             var text = "RepoDb"; // Helper.GetAssemblyDescription();
@@ -169,11 +170,11 @@ namespace RepoDb.IntegrationTests.Types.Bytes
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
-                var id = insertResult.Result;
+                var id = await insertResult;
 
                 // Act Query
-                var queryResult = connection.QueryAsync<BytesClass>(e => e.SessionId == (Guid)id);
-                var data = queryResult.Result.FirstOrDefault();
+                var queryResult = await connection.QueryAsync<BytesClass>(e => e.SessionId == (Guid)id);
+                var data = queryResult.FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -185,7 +186,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
         }
 
         [TestMethod]
-        public void TestSqlConnectionBytesNullCrudAsync()
+        public async Task TestSqlConnectionBytesNullCrudAsync()
         {
             // Setup
             var entity = new BytesClass
@@ -201,11 +202,11 @@ namespace RepoDb.IntegrationTests.Types.Bytes
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
-                var id = insertResult.Result;
+                var id = await insertResult;
 
                 // Act Query
-                var queryResult = connection.QueryAsync<BytesClass>(e => e.SessionId == (Guid)id);
-                var data = queryResult.Result.FirstOrDefault();
+                var queryResult = await connection.QueryAsync<BytesClass>(e => e.SessionId == (Guid)id);
+                var data = queryResult.FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -217,7 +218,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
         }
 
         [TestMethod]
-        public void TestSqlConnectionBytesMappedCrudAsync()
+        public async Task TestSqlConnectionBytesMappedCrudAsync()
         {
             // Setup
             var text = "RepoDb"; // Helper.GetAssemblyDescription();
@@ -235,11 +236,11 @@ namespace RepoDb.IntegrationTests.Types.Bytes
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
-                var id = insertResult.Result;
+                var id = await insertResult;
 
                 // Act Query
-                var queryResult = connection.QueryAsync<BytesMapClass>(e => e.SessionId == (Guid)id);
-                var data = queryResult.Result.FirstOrDefault();
+                var queryResult = await connection.QueryAsync<BytesMapClass>(e => e.SessionId == (Guid)id);
+                var data = queryResult.FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -251,7 +252,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
         }
 
         [TestMethod]
-        public void TestSqlConnectionBytesMappedNullCrudAsync()
+        public async Task TestSqlConnectionBytesMappedNullCrudAsync()
         {
             // Setup
             var entity = new BytesMapClass
@@ -267,11 +268,11 @@ namespace RepoDb.IntegrationTests.Types.Bytes
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(entity);
-                var id = insertResult.Result;
+                var id = await insertResult;
 
                 // Act Query
-                var queryResult = connection.QueryAsync<BytesMapClass>(e => e.SessionId == (Guid)id);
-                var data = queryResult.Result.FirstOrDefault();
+                var queryResult = await connection.QueryAsync<BytesMapClass>(e => e.SessionId == (Guid)id);
+                var data = queryResult.FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -349,7 +350,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
         }
 
         [TestMethod]
-        public void TestSqlConnectionBytesCrudViaAsyncViaTableName()
+        public async Task TestSqlConnectionBytesCrudViaAsyncViaTableName()
         {
             // Setup
             var text = "RepoDb"; // Helper.GetAssemblyDescription();
@@ -367,11 +368,11 @@ namespace RepoDb.IntegrationTests.Types.Bytes
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(ClassMappedNameCache.Get<BytesClass>(), entity);
-                var id = insertResult.Result;
+                var id = await insertResult;
 
                 // Act Query
-                var queryResult = connection.QueryAsync(ClassMappedNameCache.Get<BytesClass>(), new { SessionId = (Guid)id });
-                var data = queryResult.Result.FirstOrDefault();
+                var queryResult = await connection.QueryAsync(ClassMappedNameCache.Get<BytesClass>(), new { SessionId = (Guid)id });
+                var data = queryResult.FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);
@@ -383,7 +384,7 @@ namespace RepoDb.IntegrationTests.Types.Bytes
         }
 
         [TestMethod]
-        public void TestSqlConnectionBytesNullCrudViaAsyncViaTableName()
+        public async Task TestSqlConnectionBytesNullCrudViaAsyncViaTableName()
         {
             // Setup
             var entity = new
@@ -399,11 +400,11 @@ namespace RepoDb.IntegrationTests.Types.Bytes
             {
                 // Act Insert
                 var insertResult = connection.InsertAsync(ClassMappedNameCache.Get<BytesClass>(), entity);
-                var id = insertResult.Result;
+                var id = await insertResult;
 
                 // Act Query
-                var queryResult = connection.QueryAsync(ClassMappedNameCache.Get<BytesClass>(), new { SessionId = (Guid)id });
-                var data = queryResult.Result.FirstOrDefault();
+                var queryResult = await connection.QueryAsync(ClassMappedNameCache.Get<BytesClass>(), new { SessionId = (Guid)id });
+                var data =  queryResult.FirstOrDefault();
 
                 // Assert
                 Assert.IsNotNull(data);

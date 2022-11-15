@@ -5,6 +5,7 @@ using RepoDb.Sqlite.Microsoft.IntegrationTests.Models;
 using RepoDb.Sqlite.Microsoft.IntegrationTests.Setup;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
 {
@@ -155,7 +156,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         #region Async
 
         [TestMethod]
-        public void TestSqLiteConnectionExistsAsyncWithoutExpression()
+        public async Task TestSqLiteConnectionExistsAsyncWithoutExpression()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -163,7 +164,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                var result = connection.ExistsAsync<MdsCompleteTable>((object)null).Result;
+                var result = await connection.ExistsAsync<MdsCompleteTable>((object)null);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -171,7 +172,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionExistsAsyncViaExpression()
+        public async Task TestSqLiteConnectionExistsAsyncViaExpression()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -180,7 +181,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var ids = new[] { tables.First().Id, tables.Last().Id };
 
                 // Act
-                var result = connection.ExistsAsync<MdsCompleteTable>(e => ids.Contains(e.Id)).Result;
+                var result = await connection.ExistsAsync<MdsCompleteTable>(e => ids.Contains(e.Id));
 
                 // Assert
                 Assert.IsTrue(result);
@@ -188,7 +189,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionExistsAsyncViaDynamic()
+        public async Task TestSqLiteConnectionExistsAsyncViaDynamic()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -196,7 +197,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                var result = connection.ExistsAsync<MdsCompleteTable>(new { tables.First().Id }).Result;
+                var result = await connection.ExistsAsync<MdsCompleteTable>(new { tables.First().Id });
 
                 // Assert
                 Assert.IsTrue(result);
@@ -204,7 +205,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionExistsAsyncViaQueryField()
+        public async Task TestSqLiteConnectionExistsAsyncViaQueryField()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -212,7 +213,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                var result = connection.ExistsAsync<MdsCompleteTable>(new QueryField("Id", tables.First().Id)).Result;
+                var result = await connection.ExistsAsync<MdsCompleteTable>(new QueryField("Id", tables.First().Id));
 
                 // Assert
                 Assert.IsTrue(result);
@@ -220,7 +221,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionExistsAsyncViaQueryFields()
+        public async Task TestSqLiteConnectionExistsAsyncViaQueryFields()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -233,7 +234,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 };
 
                 // Act
-                var result = connection.ExistsAsync<MdsCompleteTable>(queryFields).Result;
+                var result = await connection.ExistsAsync<MdsCompleteTable>(queryFields);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -241,7 +242,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionExistsAsyncViaQueryGroup()
+        public async Task TestSqLiteConnectionExistsAsyncViaQueryGroup()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -255,15 +256,15 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var queryGroup = new QueryGroup(queryFields);
 
                 // Act
-                var result = connection.ExistsAsync<MdsCompleteTable>(queryGroup).Result;
+                var result = await connection.ExistsAsync<MdsCompleteTable>(queryGroup);
 
                 // Assert
                 Assert.IsTrue(result);
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnSqLiteConnectionExistsAsyncWithHints()
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public async Task ThrowExceptionOnSqLiteConnectionExistsAsyncWithHints()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -271,8 +272,8 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                connection.ExistsAsync<MdsCompleteTable>((object)null,
-                    hints: "WhatEver").Wait();
+                await connection.ExistsAsync<MdsCompleteTable>((object)null,
+                    hints: "WhatEver");
             }
         }
 
@@ -400,7 +401,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         #region Async
 
         [TestMethod]
-        public void TestSqLiteConnectionExistsAsyncViaTableNameWithoutExpression()
+        public async Task TestSqLiteConnectionExistsAsyncViaTableNameWithoutExpression()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -408,8 +409,8 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                var result = connection.ExistsAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
-                    (object)null).Result;
+                var result = await connection.ExistsAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                    (object)null);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -417,7 +418,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionExistsAsyncViaTableNameViaDynamic()
+        public async Task TestSqLiteConnectionExistsAsyncViaTableNameViaDynamic()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -425,8 +426,8 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                var result = connection.ExistsAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
-                    new { tables.First().Id }).Result;
+                var result = await connection.ExistsAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                    new { tables.First().Id });
 
                 // Assert
                 Assert.IsTrue(result);
@@ -434,7 +435,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionExistsAsyncViaTableNameViaQueryField()
+        public async Task TestSqLiteConnectionExistsAsyncViaTableNameViaQueryField()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -442,8 +443,8 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                var result = connection.ExistsAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
-                    new QueryField("Id", tables.First().Id)).Result;
+                var result = await connection.ExistsAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                    new QueryField("Id", tables.First().Id));
 
                 // Assert
                 Assert.IsTrue(result);
@@ -451,7 +452,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionExistsAsyncViaTableNameViaQueryFields()
+        public async Task TestSqLiteConnectionExistsAsyncViaTableNameViaQueryFields()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -464,8 +465,8 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 };
 
                 // Act
-                var result = connection.ExistsAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
-                    queryFields).Result;
+                var result = await connection.ExistsAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                    queryFields);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -473,7 +474,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionExistsAsyncViaTableNameViaQueryGroup()
+        public async Task TestSqLiteConnectionExistsAsyncViaTableNameViaQueryGroup()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -487,16 +488,16 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var queryGroup = new QueryGroup(queryFields);
 
                 // Act
-                var result = connection.ExistsAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
-                    queryGroup).Result;
+                var result = await connection.ExistsAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                    queryGroup);
 
                 // Assert
                 Assert.IsTrue(result);
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnSqLiteConnectionExistsAsyncViaTableNameWithHints()
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public async Task ThrowExceptionOnSqLiteConnectionExistsAsyncViaTableNameWithHints()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -504,9 +505,9 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                connection.ExistsAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                await connection.ExistsAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
                     (object)null,
-                    hints: "WhatEver").Wait();
+                    hints: "WhatEver");
             }
         }
 

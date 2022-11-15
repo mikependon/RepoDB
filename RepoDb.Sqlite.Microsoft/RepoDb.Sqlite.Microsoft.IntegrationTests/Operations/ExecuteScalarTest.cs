@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Sqlite.Microsoft.IntegrationTests.Setup;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
 {
@@ -61,7 +62,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         #region Async
 
         [TestMethod]
-        public void TestSqLiteConnectionExecuteScalarAsync()
+        public async Task TestSqLiteConnectionExecuteScalarAsync()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -69,7 +70,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                var result = connection.ExecuteScalarAsync("SELECT COUNT(*) FROM [MdsCompleteTable];").Result;
+                var result = await connection.ExecuteScalarAsync("SELECT COUNT(*) FROM [MdsCompleteTable];");
 
                 // Assert
                 Assert.AreEqual(tables.Count(), Convert.ToInt32(result));
@@ -77,7 +78,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionExecuteScalarAsyncWithReturnType()
+        public async Task TestSqLiteConnectionExecuteScalarAsyncWithReturnType()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -85,7 +86,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                var result = connection.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM [MdsCompleteTable];").Result;
+                var result = await connection.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM [MdsCompleteTable];");
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);

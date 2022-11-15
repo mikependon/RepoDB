@@ -3,6 +3,7 @@ using RepoDb.SQLite.System.IntegrationTests.Models;
 using RepoDb.SQLite.System.IntegrationTests.Setup;
 using System.Data.SQLite;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
 {
@@ -180,7 +181,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         #region Async
 
         [TestMethod]
-        public void TestSqLiteConnectionUpdateAsyncViaDataEntity()
+        public async Task TestSqLiteConnectionUpdateAsyncViaDataEntity()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -189,7 +190,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 Helper.UpdateSdsCompleteTableProperties(table);
 
                 // Act
-                var result = connection.UpdateAsync<SdsCompleteTable>(table).Result;
+                var result = await connection.UpdateAsync<SdsCompleteTable>(table);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -203,7 +204,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionUpdateAsyncViaExpression()
+        public async Task TestSqLiteConnectionUpdateAsyncViaExpression()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -212,7 +213,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 Helper.UpdateSdsCompleteTableProperties(table);
 
                 // Act
-                var result = connection.UpdateAsync<SdsCompleteTable>(table, e => e.Id == table.Id).Result;
+                var result = await connection.UpdateAsync<SdsCompleteTable>(table, e => e.Id == table.Id);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -226,7 +227,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionUpdateAsyncViaDynamic()
+        public async Task TestSqLiteConnectionUpdateAsyncViaDynamic()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -235,7 +236,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 Helper.UpdateSdsCompleteTableProperties(table);
 
                 // Act
-                var result = connection.UpdateAsync<SdsCompleteTable>(table, new { table.Id }).Result;
+                var result = await connection.UpdateAsync<SdsCompleteTable>(table, new { table.Id });
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -249,7 +250,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionUpdateAsyncViaQueryField()
+        public async Task TestSqLiteConnectionUpdateAsyncViaQueryField()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -258,7 +259,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 Helper.UpdateSdsCompleteTableProperties(table);
 
                 // Act
-                var result = connection.UpdateAsync<SdsCompleteTable>(table, new QueryField("Id", table.Id)).Result;
+                var result = await connection.UpdateAsync<SdsCompleteTable>(table, new QueryField("Id", table.Id));
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -272,7 +273,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionUpdateAsyncViaQueryFields()
+        public async Task TestSqLiteConnectionUpdateAsyncViaQueryFields()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -286,7 +287,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 Helper.UpdateSdsCompleteTableProperties(table);
 
                 // Act
-                var result = connection.UpdateAsync<SdsCompleteTable>(table, queryFields).Result;
+                var result = await connection.UpdateAsync<SdsCompleteTable>(table, queryFields);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -300,7 +301,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionUpdateAsyncViaQueryGroup()
+        public async Task TestSqLiteConnectionUpdateAsyncViaQueryGroup()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -315,7 +316,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 Helper.UpdateSdsCompleteTableProperties(table);
 
                 // Act
-                var result = connection.UpdateAsync<SdsCompleteTable>(table, queryGroup).Result;
+                var result = await connection.UpdateAsync<SdsCompleteTable>(table, queryGroup);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -491,7 +492,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         #region Async
 
         [TestMethod]
-        public void TestSqLiteConnectionUpdateAsyncViaTableNameAsExpandoObjectViaDataEntity()
+        public async Task TestSqLiteConnectionUpdateAsyncViaTableNameAsExpandoObjectViaDataEntity()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -500,8 +501,8 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var table = Helper.CreateSdsCompleteTablesAsExpandoObjects(1).First();
 
                 // Act
-                var result = DbConnectionExtension.UpdateAsync(connection, ClassMappedNameCache.Get<SdsCompleteTable>(),
-                    table).Result;
+                var result = await DbConnectionExtension.UpdateAsync(connection, ClassMappedNameCache.Get<SdsCompleteTable>(),
+                    table);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -515,7 +516,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionUpdateAsyncViaTableNameViaDataEntity()
+        public async Task TestSqLiteConnectionUpdateAsyncViaTableNameViaDataEntity()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -524,7 +525,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 Helper.UpdateSdsCompleteTableProperties(table);
 
                 // Act
-                var result = connection.UpdateAsync(ClassMappedNameCache.Get<SdsCompleteTable>(), table).Result;
+                var result = await connection.UpdateAsync(ClassMappedNameCache.Get<SdsCompleteTable>(), table);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -538,7 +539,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionUpdateAsyncViaTableNameViaDynamic()
+        public async Task TestSqLiteConnectionUpdateAsyncViaTableNameViaDynamic()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -547,7 +548,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 Helper.UpdateSdsCompleteTableProperties(table);
 
                 // Act
-                var result = connection.UpdateAsync(ClassMappedNameCache.Get<SdsCompleteTable>(), table, new { table.Id }).Result;
+                var result = await connection.UpdateAsync(ClassMappedNameCache.Get<SdsCompleteTable>(), table, new { table.Id });
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -561,7 +562,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionUpdateAsyncViaTableNameViaQueryField()
+        public async Task TestSqLiteConnectionUpdateAsyncViaTableNameViaQueryField()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -570,7 +571,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 Helper.UpdateSdsCompleteTableProperties(table);
 
                 // Act
-                var result = connection.UpdateAsync(ClassMappedNameCache.Get<SdsCompleteTable>(), table, new QueryField("Id", table.Id)).Result;
+                var result = await connection.UpdateAsync(ClassMappedNameCache.Get<SdsCompleteTable>(), table, new QueryField("Id", table.Id));
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -584,7 +585,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionUpdateAsyncViaTableNameViaQueryFields()
+        public async Task TestSqLiteConnectionUpdateAsyncViaTableNameViaQueryFields()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -598,7 +599,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 Helper.UpdateSdsCompleteTableProperties(table);
 
                 // Act
-                var result = connection.UpdateAsync(ClassMappedNameCache.Get<SdsCompleteTable>(), table, queryFields).Result;
+                var result = await connection.UpdateAsync(ClassMappedNameCache.Get<SdsCompleteTable>(), table, queryFields);
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -612,7 +613,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionUpdateAsyncViaTableNameViaQueryGroup()
+        public async Task TestSqLiteConnectionUpdateAsyncViaTableNameViaQueryGroup()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -627,7 +628,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 Helper.UpdateSdsCompleteTableProperties(table);
 
                 // Act
-                var result = connection.UpdateAsync(ClassMappedNameCache.Get<SdsCompleteTable>(), table, queryGroup).Result;
+                var result = await connection.UpdateAsync(ClassMappedNameCache.Get<SdsCompleteTable>(), table, queryGroup);
 
                 // Assert
                 Assert.AreEqual(1, result);

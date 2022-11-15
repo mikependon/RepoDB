@@ -3,6 +3,7 @@ using MySqlConnector;
 using RepoDb.MySqlConnector.IntegrationTests.Models;
 using RepoDb.MySqlConnector.IntegrationTests.Setup;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.MySqlConnector.IntegrationTests.Operations
 {
@@ -81,7 +82,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestMySqlConnectionDeleteAllAsync()
+        public async Task TestMySqlConnectionDeleteAllAsync()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -89,7 +90,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.DeleteAllAsync<CompleteTable>().Result;
+                var result = await connection.DeleteAllAsync<CompleteTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -97,7 +98,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionDeleteAllAsyncViaPrimaryKeys()
+        public async Task TestMySqlConnectionDeleteAllAsyncViaPrimaryKeys()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -106,7 +107,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act
-                var result = connection.DeleteAllAsync<CompleteTable>(primaryKeys).Result;
+                var result = await connection.DeleteAllAsync<CompleteTable>(primaryKeys);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -114,7 +115,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionDeleteAllAsyncViaPrimaryKeysBeyondLimits()
+        public async Task TestMySqlConnectionDeleteAllAsyncViaPrimaryKeysBeyondLimits()
         {
             // Setup
             var tables = Database.CreateCompleteTables(5000);
@@ -123,7 +124,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act
-                var result = connection.DeleteAllAsync<CompleteTable>(primaryKeys).Result;
+                var result = await connection.DeleteAllAsync<CompleteTable>(primaryKeys);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -193,7 +194,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestMySqlConnectionDeleteAllAsyncViaTableName()
+        public async Task TestMySqlConnectionDeleteAllAsyncViaTableName()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -201,7 +202,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.DeleteAllAsync(ClassMappedNameCache.Get<CompleteTable>()).Result;
+                var result = await connection.DeleteAllAsync(ClassMappedNameCache.Get<CompleteTable>());
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -209,7 +210,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionDeleteAllAsyncViaTableNameViaPrimaryKeys()
+        public async Task TestMySqlConnectionDeleteAllAsyncViaTableNameViaPrimaryKeys()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -218,7 +219,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act
-                var result = connection.DeleteAllAsync(ClassMappedNameCache.Get<CompleteTable>(), primaryKeys).Result;
+                var result = await connection.DeleteAllAsync(ClassMappedNameCache.Get<CompleteTable>(), primaryKeys);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -226,7 +227,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionDeleteAllAsyncViaTableNameViaPrimaryKeysBeyondLimits()
+        public async Task TestMySqlConnectionDeleteAllAsyncViaTableNameViaPrimaryKeysBeyondLimits()
         {
             // Setup
             var tables = Database.CreateCompleteTables(5000);
@@ -235,7 +236,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString).EnsureOpen())
             {
                 // Act
-                var result = connection.DeleteAllAsync(ClassMappedNameCache.Get<CompleteTable>(), primaryKeys).Result;
+                var result = await connection.DeleteAllAsync(ClassMappedNameCache.Get<CompleteTable>(), primaryKeys);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);

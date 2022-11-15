@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.SQLite;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.SQLite.System.IntegrationTests.Models;
 using RepoDb.SQLite.System.IntegrationTests.Setup;
@@ -104,7 +105,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
         #region Async
 
         [TestMethod]
-        public void TestDbHelperGetFieldsAsync()
+        public async Task TestDbHelperGetFieldsAsync()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -113,7 +114,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                var fields = helper.GetFieldsAsync(connection, "SdsCompleteTable", null).Result;
+                var fields = await helper.GetFieldsAsync(connection, "SdsCompleteTable", null);
 
                 // Assert
                 using (var reader = connection.ExecuteReader("pragma table_info([SdsCompleteTable]);"))
@@ -138,7 +139,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
         }
 
         [TestMethod]
-        public void TestDbHelperGetFieldsAsyncPrimary()
+        public async Task TestDbHelperGetFieldsAsyncPrimary()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -147,7 +148,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                var fields = helper.GetFieldsAsync(connection, "SdsCompleteTable", null).Result;
+                var fields = await helper.GetFieldsAsync(connection, "SdsCompleteTable", null);
                 var primary = fields.FirstOrDefault(f => f.IsPrimary == true);
 
                 // Assert
@@ -157,7 +158,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
         }
 
         [TestMethod]
-        public void TestDbHelperGetFieldsAsyncIdentity()
+        public async Task TestDbHelperGetFieldsAsyncIdentity()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -166,7 +167,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                var fields = helper.GetFieldsAsync(connection, "SdsCompleteTable", null).Result;
+                var fields = await helper.GetFieldsAsync(connection, "SdsCompleteTable", null);
                 var primary = fields.FirstOrDefault(f => f.IsIdentity == true);
 
                 // Assert
@@ -215,7 +216,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
         #region Async
 
         [TestMethod]
-        public void TestDbHelperGetScopeIdentityAsync()
+        public async Task TestDbHelperGetScopeIdentityAsync()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -234,7 +235,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
                 Assert.IsTrue(table.Id > 0);
 
                 // Act
-                var result = helper.GetScopeIdentityAsync(connection, null).Result;
+                var result = await helper.GetScopeIdentityAsync(connection, null);
 
                 // Assert
                 Assert.AreEqual(insertResult, result);

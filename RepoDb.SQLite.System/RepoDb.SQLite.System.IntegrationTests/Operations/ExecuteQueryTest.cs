@@ -5,6 +5,7 @@ using RepoDb.SQLite.System.IntegrationTests.Setup;
 using System;
 using System.Data.SQLite;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
 {
@@ -66,7 +67,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         #region Async
 
         [TestMethod]
-        public void TestSqLiteConnectionExecuteQueryAsync()
+        public async Task TestSqLiteConnectionExecuteQueryAsync()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -74,7 +75,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                var result = connection.ExecuteQueryAsync<SdsCompleteTable>("SELECT * FROM [SdsCompleteTable];").Result;
+                var result = await connection.ExecuteQueryAsync<SdsCompleteTable>("SELECT * FROM [SdsCompleteTable];");
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result.Count());
@@ -83,7 +84,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionExecuteQueryAsyncWithParameters()
+        public async Task TestSqLiteConnectionExecuteQueryAsyncWithParameters()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -91,8 +92,8 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsCompleteTables(10, connection);
 
                 // Act
-                var result = connection.ExecuteQueryAsync<SdsCompleteTable>("SELECT * FROM [SdsCompleteTable] WHERE Id = @Id;",
-                    new { tables.Last().Id }).Result;
+                var result = await connection.ExecuteQueryAsync<SdsCompleteTable>("SELECT * FROM [SdsCompleteTable] WHERE Id = @Id;",
+                    new { tables.Last().Id });
 
                 // Assert
                 Assert.AreEqual(1, result.Count());

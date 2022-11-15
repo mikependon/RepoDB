@@ -5,6 +5,7 @@ using RepoDb.SQLite.System.IntegrationTests.Setup;
 using System;
 using System.Data.SQLite;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
 {
@@ -79,7 +80,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         #region Async
 
         [TestMethod]
-        public void TestSQLiteConnectionQueryAsyncListContains()
+        public async Task TestSQLiteConnectionQueryAsyncListContains()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringMDS))
             {
@@ -88,7 +89,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var ids = tables.Select(e => e.Id).AsList();
 
                 // Act
-                var result = connection.QueryAsync<SdsNonIdentityCompleteTable>(e => ids.Contains(e.Id)).Result;
+                var result = await connection.QueryAsync<SdsNonIdentityCompleteTable>(e => ids.Contains(e.Id));
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -98,7 +99,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
         }
 
         [TestMethod]
-        public void TestSQLiteConnectionQueryAsyncEmptyList()
+        public async Task TestSQLiteConnectionQueryAsyncEmptyList()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringMDS))
             {
@@ -106,7 +107,7 @@ namespace RepoDb.SQLite.System.IntegrationTests.Operations.SDS
                 var tables = Database.CreateSdsNonIdentityCompleteTables(10, connection).AsList();
 
                 // Act
-                var result = connection.QueryAsync<SdsNonIdentityCompleteTable>(e => Enumerable.Empty<Guid>().Contains(e.Id)).Result;
+                var result = await connection.QueryAsync<SdsNonIdentityCompleteTable>(e => Enumerable.Empty<Guid>().Contains(e.Id));
 
                 // Assert
                 Assert.AreEqual(0, result.Count());

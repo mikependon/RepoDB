@@ -4,6 +4,7 @@ using RepoDb.SqlServer.IntegrationTests.Models;
 using RepoDb.SqlServer.IntegrationTests.Setup;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.SqlServer.IntegrationTests.Operations
 {
@@ -64,7 +65,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestSqlServerConnectionCountAllAsync()
+        public async Task TestSqlServerConnectionCountAllAsync()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -72,7 +73,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.CountAllAsync<CompleteTable>().Result;
+                var result = await connection.CountAllAsync<CompleteTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -80,7 +81,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionCountAllAsyncWithHints()
+        public async Task TestSqlServerConnectionCountAllAsyncWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -88,7 +89,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.CountAllAsync<CompleteTable>(SqlServerTableHints.NoLock).Result;
+                var result = await connection.CountAllAsync<CompleteTable>(SqlServerTableHints.NoLock);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -141,7 +142,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestSqlServerConnectionCountAllAsyncViaTableName()
+        public async Task TestSqlServerConnectionCountAllAsyncViaTableName()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -149,7 +150,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.CountAllAsync(ClassMappedNameCache.Get<CompleteTable>()).Result;
+                var result = await connection.CountAllAsync(ClassMappedNameCache.Get<CompleteTable>());
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -157,7 +158,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionCountAllAsyncViaTableNameWithHints()
+        public async Task TestSqlServerConnectionCountAllAsyncViaTableNameWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -165,8 +166,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.CountAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    SqlServerTableHints.NoLock).Result;
+                var result = await connection.CountAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    SqlServerTableHints.NoLock);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);

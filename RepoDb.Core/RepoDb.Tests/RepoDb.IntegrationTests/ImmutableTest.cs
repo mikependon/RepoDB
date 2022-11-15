@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Data.SqlClient;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Extensions;
 using RepoDb.IntegrationTests.Models;
@@ -1701,7 +1702,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionExecuteQueryAsyncForImmutableWithMatchedCtorArguments()
+        public async Task TestSqlConnectionExecuteQueryAsyncForImmutableWithMatchedCtorArguments()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1710,7 +1711,7 @@ namespace RepoDb.IntegrationTests
                 var sql = "SELECT 1 AS [Id], @Value AS [Value];";
 
                 // Act
-                var queryResult = connection.ExecuteQueryAsync<ImmutableWithMatchedCtorArguments>(sql, param).Result.FirstOrDefault();
+                var queryResult = (await connection.ExecuteQueryAsync<ImmutableWithMatchedCtorArguments>(sql, param)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(1, queryResult.Id);
@@ -1757,7 +1758,7 @@ namespace RepoDb.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlConnectionExecuteQueryAsyncForImmutableWithMatchedCtorArgumentsFromMultipleCtors()
+        public async Task TestSqlConnectionExecuteQueryAsyncForImmutableWithMatchedCtorArgumentsFromMultipleCtors()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1766,7 +1767,7 @@ namespace RepoDb.IntegrationTests
                 var sql = "SELECT 1 AS [Id], @Value AS [Value];";
 
                 // Act
-                var queryResult = connection.ExecuteQueryAsync<ImmutableWithMatchedCtorArgumentsFromMultipleCtors>(sql, param).Result.FirstOrDefault();
+                var queryResult = (await connection.ExecuteQueryAsync<ImmutableWithMatchedCtorArgumentsFromMultipleCtors>(sql, param)).FirstOrDefault();
 
                 // Assert
                 Assert.AreEqual(1, queryResult.Id);
@@ -1811,8 +1812,8 @@ namespace RepoDb.IntegrationTests
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnSqlConnectionExecuteQueryAsyncForImmutableWithUnmatchedCtorArgumentsFromMultipleCtors()
+        [TestMethod, ExpectedException(typeof(MissingMemberException))]
+        public async Task ThrowExceptionOnSqlConnectionExecuteQueryAsyncForImmutableWithUnmatchedCtorArgumentsFromMultipleCtors()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -1821,7 +1822,7 @@ namespace RepoDb.IntegrationTests
                 var sql = "SELECT 1 AS [Id], @Value AS [Value];";
 
                 // Act
-                connection.ExecuteQueryAsync<ImmutableWithUnmatchedCtorArgumentsFromMultipleCtors>(sql, param).Wait();
+                await connection.ExecuteQueryAsync<ImmutableWithUnmatchedCtorArgumentsFromMultipleCtors>(sql, param);
             }
         }
 

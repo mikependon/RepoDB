@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Npgsql;
 using RepoDb.PostgreSql.IntegrationTests.Models;
 using RepoDb.PostgreSql.IntegrationTests.Setup;
@@ -47,7 +48,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestPostgreSqlConnectionTruncateAsyncWithoutExpression()
+        public async Task TestPostgreSqlConnectionTruncateAsyncWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -55,7 +56,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.TruncateAsync<CompleteTable>().Result;
+                var result = await connection.TruncateAsync<CompleteTable>();
                 var countResult = connection.CountAll<CompleteTable>();
 
                 // Assert
@@ -93,7 +94,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestPostgreSqlConnectionTruncateAsyncViaTableNameWithoutExpression()
+        public async Task TestPostgreSqlConnectionTruncateAsyncViaTableNameWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -101,7 +102,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.TruncateAsync(ClassMappedNameCache.Get<CompleteTable>()).Result;
+                var result = await connection.TruncateAsync(ClassMappedNameCache.Get<CompleteTable>());
                 var countResult = connection.CountAll<CompleteTable>();
 
                 // Assert

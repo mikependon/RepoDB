@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Sqlite.Microsoft.IntegrationTests.Setup;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
 {
@@ -77,7 +78,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         #region Async
 
         [TestMethod]
-        public void TestSqLiteConnectionExecuteNonQueryAsync()
+        public async Task TestSqLiteConnectionExecuteNonQueryAsync()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -85,7 +86,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                var result = connection.ExecuteNonQueryAsync("DELETE FROM [MdsCompleteTable];").Result;
+                var result = await connection.ExecuteNonQueryAsync("DELETE FROM [MdsCompleteTable];");
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -93,7 +94,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionExecuteNonQueryAsyncWithParameters()
+        public async Task TestSqLiteConnectionExecuteNonQueryAsyncWithParameters()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -101,8 +102,8 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                var result = connection.ExecuteNonQueryAsync("DELETE FROM [MdsCompleteTable] WHERE Id = @Id;",
-                    new { tables.Last().Id }).Result;
+                var result = await connection.ExecuteNonQueryAsync("DELETE FROM [MdsCompleteTable] WHERE Id = @Id;",
+                    new { tables.Last().Id });
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -110,7 +111,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionExecuteNonQueryAsyncWithMultipleStatement()
+        public async Task TestSqLiteConnectionExecuteNonQueryAsyncWithMultipleStatement()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -118,7 +119,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                var result = connection.ExecuteNonQueryAsync("DELETE FROM [MdsCompleteTable]; VACUUM;").Result;
+                var result = await connection.ExecuteNonQueryAsync("DELETE FROM [MdsCompleteTable]; VACUUM;");
 
                 // Assert
                 Assert.AreEqual((tables.Count() * 2), result);

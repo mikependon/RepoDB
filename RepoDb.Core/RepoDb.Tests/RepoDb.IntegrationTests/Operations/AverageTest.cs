@@ -5,6 +5,7 @@ using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.IntegrationTests.Operations
 {
@@ -295,7 +296,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region AverageAsync<TEntity>
 
         [TestMethod]
-        public void TestSqlConnectionAverageAsyncWithoutCondition()
+        public async Task TestSqlConnectionAverageAsyncWithoutCondition()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -306,8 +307,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.AverageAsync<IdentityTable>(e => e.ColumnInt,
-                    (object)null).Result;
+                var result = await connection.AverageAsync<IdentityTable>(e => e.ColumnInt,
+                    (object)null);
 
                 // Assert
                 Assert.AreEqual(tables.Average(t => t.ColumnInt), Convert.ToDouble(result));
@@ -315,7 +316,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionAverageAsyncViaExpression()
+        public async Task TestSqlConnectionAverageAsyncViaExpression()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -326,8 +327,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.AverageAsync<IdentityTable>(e => e.ColumnInt,
-                    item => item.ColumnInt > 5 && item.ColumnInt <= 8).Result;
+                var result = await connection.AverageAsync<IdentityTable>(e => e.ColumnInt,
+                    item => item.ColumnInt > 5 && item.ColumnInt <= 8);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Average(t => t.ColumnInt), Convert.ToDouble(result));
@@ -335,7 +336,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionAverageAsyncViaDynamic()
+        public async Task TestSqlConnectionAverageAsyncViaDynamic()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -346,8 +347,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.AverageAsync<IdentityTable>(e => e.ColumnInt,
-                    new { ColumnInt = 1 }).Result;
+                var result = await connection.AverageAsync<IdentityTable>(e => e.ColumnInt,
+                    new { ColumnInt = 1 });
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt == 1).Average(t => t.ColumnInt), Convert.ToDouble(result));
@@ -355,7 +356,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionAverageAsyncViaQueryField()
+        public async Task TestSqlConnectionAverageAsyncViaQueryField()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -367,8 +368,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.AverageAsync<IdentityTable>(e => e.ColumnInt,
-                    field).Result;
+                var result = await connection.AverageAsync<IdentityTable>(e => e.ColumnInt,
+                    field);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt > 5).Average(t => t.ColumnInt), Convert.ToDouble(result));
@@ -376,7 +377,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionAverageAsyncViaQueryFields()
+        public async Task TestSqlConnectionAverageAsyncViaQueryFields()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -392,8 +393,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.AverageAsync<IdentityTable>(e => e.ColumnInt,
-                    fields).Result;
+                var result = await connection.AverageAsync<IdentityTable>(e => e.ColumnInt,
+                    fields);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Average(t => t.ColumnInt), Convert.ToDouble(result));
@@ -401,7 +402,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionAverageAsyncViaQueryGroup()
+        public async Task TestSqlConnectionAverageAsyncViaQueryGroup()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -418,8 +419,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.AverageAsync<IdentityTable>(e => e.ColumnInt,
-                    queryGroup).Result;
+                var result = await connection.AverageAsync<IdentityTable>(e => e.ColumnInt,
+                    queryGroup);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Average(t => t.ColumnInt), Convert.ToDouble(result));
@@ -427,7 +428,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionAverageAsyncTypedResultWithoutCondition()
+        public async Task TestSqlConnectionAverageAsyncTypedResultWithoutCondition()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -438,8 +439,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.AverageAsync<IdentityTable, double?>(e => e.ColumnInt,
-                    (object)null).Result;
+                var result = await connection.AverageAsync<IdentityTable, double?>(e => e.ColumnInt,
+                    (object)null);
 
                 // Assert
                 Assert.AreEqual(tables.Average(t => t.ColumnInt), result);
@@ -447,7 +448,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionAverageAsyncTypedResultViaExpression()
+        public async Task TestSqlConnectionAverageAsyncTypedResultViaExpression()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -458,8 +459,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.AverageAsync<IdentityTable, double?>(e => e.ColumnInt,
-                    item => item.ColumnInt > 5 && item.ColumnInt <= 8).Result;
+                var result = await connection.AverageAsync<IdentityTable, double?>(e => e.ColumnInt,
+                    item => item.ColumnInt > 5 && item.ColumnInt <= 8);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Average(t => t.ColumnInt), result);
@@ -467,7 +468,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionAverageAsyncTypedResultViaDynamic()
+        public async Task TestSqlConnectionAverageAsyncTypedResultViaDynamic()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -478,8 +479,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.AverageAsync<IdentityTable, double?>(e => e.ColumnInt,
-                    new { ColumnInt = 1 }).Result;
+                var result = await connection.AverageAsync<IdentityTable, double?>(e => e.ColumnInt,
+                    new { ColumnInt = 1 });
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt == 1).Average(t => t.ColumnInt), result);
@@ -487,7 +488,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionAverageAsyncTypedResultViaQueryField()
+        public async Task TestSqlConnectionAverageAsyncTypedResultViaQueryField()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -499,8 +500,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.AverageAsync<IdentityTable, double?>(e => e.ColumnInt,
-                    field).Result;
+                var result = await connection.AverageAsync<IdentityTable, double?>(e => e.ColumnInt,
+                    field);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt > 5).Average(t => t.ColumnInt), result);
@@ -508,7 +509,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionAverageAsyncTypedResultViaQueryFields()
+        public async Task TestSqlConnectionAverageAsyncTypedResultViaQueryFields()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -524,8 +525,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.AverageAsync<IdentityTable, double?>(e => e.ColumnInt,
-                    fields).Result;
+                var result = await connection.AverageAsync<IdentityTable, double?>(e => e.ColumnInt,
+                    fields);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Average(t => t.ColumnInt), result);
@@ -533,7 +534,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionAverageAsyncTypedResultViaQueryGroup()
+        public async Task TestSqlConnectionAverageAsyncTypedResultViaQueryGroup()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -550,8 +551,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.AverageAsync<IdentityTable, double?>(e => e.ColumnInt,
-                    queryGroup).Result;
+                var result = await connection.AverageAsync<IdentityTable, double?>(e => e.ColumnInt,
+                    queryGroup);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Average(t => t.ColumnInt), result);
@@ -801,7 +802,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region AverageAsync(TableName)
 
         [TestMethod]
-        public void TestSqlConnectionAverageAsyncViaTableNameWithoutCondition()
+        public async Task TestSqlConnectionAverageAsyncViaTableNameWithoutCondition()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -812,9 +813,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.AverageAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.AverageAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnInt"),
-                    (object)null).Result;
+                    (object)null);
 
                 // Assert
                 Assert.AreEqual(tables.Average(t => t.ColumnInt), Convert.ToDouble(result));
@@ -822,7 +823,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionAverageAsyncViaTableNameViaDynamic()
+        public async Task TestSqlConnectionAverageAsyncViaTableNameViaDynamic()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -833,9 +834,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.AverageAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.AverageAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnInt"),
-                    new { ColumnInt = 1 }).Result;
+                    new { ColumnInt = 1 });
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt == 1).Average(t => t.ColumnInt), Convert.ToDouble(result));
@@ -843,7 +844,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionAverageAsyncViaTableNameViaQueryField()
+        public async Task TestSqlConnectionAverageAsyncViaTableNameViaQueryField()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -855,9 +856,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.AverageAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.AverageAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnInt"),
-                    field).Result;
+                    field);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt > 5).Average(t => t.ColumnInt), Convert.ToDouble(result));
@@ -865,7 +866,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionAverageAsyncViaTableNameViaQueryFields()
+        public async Task TestSqlConnectionAverageAsyncViaTableNameViaQueryFields()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -881,9 +882,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.AverageAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.AverageAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnInt"),
-                    fields).Result;
+                    fields);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Average(t => t.ColumnInt), Convert.ToDouble(result));
@@ -891,7 +892,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionAverageAsyncViaTableNameViaQueryGroup()
+        public async Task TestSqlConnectionAverageAsyncViaTableNameViaQueryGroup()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -908,9 +909,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.AverageAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.AverageAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnInt"),
-                    queryGroup).Result;
+                    queryGroup);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Average(t => t.ColumnInt), Convert.ToDouble(result));
@@ -918,7 +919,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionAverageAsyncTypedResultViaTableNameWithoutCondition()
+        public async Task TestSqlConnectionAverageAsyncTypedResultViaTableNameWithoutCondition()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -929,9 +930,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.AverageAsync<double?>(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.AverageAsync<double?>(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnInt"),
-                    (object)null).Result;
+                    (object)null);
 
                 // Assert
                 Assert.AreEqual(tables.Average(t => t.ColumnInt), result);
@@ -939,7 +940,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionAverageAsyncTypedResultViaTableNameViaDynamic()
+        public async Task TestSqlConnectionAverageAsyncTypedResultViaTableNameViaDynamic()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -950,9 +951,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.AverageAsync<double?>(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.AverageAsync<double?>(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnInt"),
-                    new { ColumnInt = 1 }).Result;
+                    new { ColumnInt = 1 });
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt == 1).Average(t => t.ColumnInt), result);
@@ -960,7 +961,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionAverageAsyncTypedResultViaTableNameViaQueryField()
+        public async Task TestSqlConnectionAverageAsyncTypedResultViaTableNameViaQueryField()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -972,9 +973,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.AverageAsync<double?>(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.AverageAsync<double?>(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnInt"),
-                    field).Result;
+                    field);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt > 5).Average(t => t.ColumnInt), result);
@@ -982,7 +983,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionAverageAsyncTypedResultViaTableNameViaQueryFields()
+        public async Task TestSqlConnectionAverageAsyncTypedResultViaTableNameViaQueryFields()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -998,9 +999,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.AverageAsync<double?>(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.AverageAsync<double?>(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnInt"),
-                    fields).Result;
+                    fields);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Average(t => t.ColumnInt), result);
@@ -1008,7 +1009,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionAverageAsyncTypedResultViaTableNameViaQueryGroup()
+        public async Task TestSqlConnectionAverageAsyncTypedResultViaTableNameViaQueryGroup()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1025,9 +1026,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.AverageAsync<double?>(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.AverageAsync<double?>(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnInt"),
-                    queryGroup).Result;
+                    queryGroup);
 
                 // Assert
                 Assert.AreEqual(tables.Where(t => t.ColumnInt > 5 && t.ColumnInt <= 8).Average(t => t.ColumnInt), result);

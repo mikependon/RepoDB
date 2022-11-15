@@ -6,6 +6,7 @@ using RepoDb.SqlServer.IntegrationTests.Models;
 using RepoDb.SqlServer.IntegrationTests.Setup;
 using System.Data.Common;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.SqlServer.IntegrationTests.Operations
 {
@@ -131,7 +132,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestSqlServerConnectionExecuteReaderAsync()
+        public async Task TestSqlServerConnectionExecuteReaderAsync()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -139,7 +140,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("SELECT \"Id\", \"ColumnInt\", \"ColumnDate\" FROM \"CompleteTable\";").Result)
+                using (var reader = await connection.ExecuteReaderAsync("SELECT \"Id\", \"ColumnInt\", \"ColumnDate\" FROM \"CompleteTable\";"))
                 {
                     while (reader.Read())
                     {
@@ -159,7 +160,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionExecuteReaderAsyncWithMultipleStatements()
+        public async Task TestSqlServerConnectionExecuteReaderAsyncWithMultipleStatements()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -167,7 +168,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("SELECT \"Id\", \"ColumnInt\", \"ColumnDate\" FROM \"CompleteTable\"; SELECT \"Id\", \"ColumnInt\", \"ColumnDate\" FROM \"CompleteTable\";").Result)
+                using (var reader = await connection.ExecuteReaderAsync("SELECT \"Id\", \"ColumnInt\", \"ColumnDate\" FROM \"CompleteTable\"; SELECT \"Id\", \"ColumnInt\", \"ColumnDate\" FROM \"CompleteTable\";"))
                 {
                     do
                     {
@@ -190,7 +191,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionExecuteReaderAsyncAsExtractedEntity()
+        public async Task TestSqlServerConnectionExecuteReaderAsyncAsExtractedEntity()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -198,7 +199,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM \"CompleteTable\";").Result)
+                using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM \"CompleteTable\";"))
                 {
                     // Act
                     var result = DataReader.ToEnumerable<CompleteTable>((DbDataReader)reader).AsList();
@@ -210,7 +211,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionExecuteReaderAsyncAsExtractedDynamic()
+        public async Task TestSqlServerConnectionExecuteReaderAsyncAsExtractedDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -218,7 +219,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM \"CompleteTable\";").Result)
+                using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM \"CompleteTable\";"))
                 {
                     // Act
                     var result = DataReader.ToEnumerable((DbDataReader)reader).AsList();

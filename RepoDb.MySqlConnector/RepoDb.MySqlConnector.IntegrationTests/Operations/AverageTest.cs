@@ -5,6 +5,7 @@ using RepoDb.MySqlConnector.IntegrationTests.Models;
 using RepoDb.MySqlConnector.IntegrationTests.Setup;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.MySqlConnector.IntegrationTests.Operations
 {
@@ -83,7 +84,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestMySqlConnectionAverageAsyncWithoutExpression()
+        public async Task TestMySqlConnectionAverageAsyncWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -91,8 +92,8 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.AverageAsync<CompleteTable>(e => e.ColumnInt,
-                    (object)null).Result;
+                var result = await connection.AverageAsync<CompleteTable>(e => e.ColumnInt,
+                    (object)null);
 
                 // Assert
                 Assert.AreEqual(tables.Average(e => e.ColumnInt), Convert.ToDouble(result));
@@ -100,7 +101,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionAverageAsyncWithExpression()
+        public async Task TestMySqlConnectionAverageAsyncWithExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -109,16 +110,16 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             {
                 // Act
                 var ids = new[] { tables.First().Id, tables.Last().Id };
-                var result = connection.AverageAsync<CompleteTable>(e => e.ColumnInt,
-                    e => ids.Contains(e.Id)).Result;
+                var result = await connection.AverageAsync<CompleteTable>(e => e.ColumnInt,
+                    e => ids.Contains(e.Id));
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Average(e => e.ColumnInt), Convert.ToDouble(result));
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void TestMySqlConnectionAverageAsyncWithHints()
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public async Task TestMySqlConnectionAverageAsyncWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -126,9 +127,9 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.AverageAsync<CompleteTable>(e => e.ColumnInt,
+                await connection.AverageAsync<CompleteTable>(e => e.ColumnInt,
                     (object)null,
-                    hints: "WhatEver").Wait();
+                    hints: "WhatEver");
             }
         }
 
@@ -198,7 +199,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestMySqlConnectionAverageAsyncViaTableNameWithoutExpression()
+        public async Task TestMySqlConnectionAverageAsyncViaTableNameWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -206,9 +207,9 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.AverageAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.AverageAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     Field.Parse<CompleteTable>(e => e.ColumnInt).First(),
-                    (object)null).Result;
+                    (object)null);
 
                 // Assert
                 Assert.AreEqual(tables.Average(e => e.ColumnInt), Convert.ToDouble(result));
@@ -216,7 +217,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionAverageAsyncViaTableNameWithExpression()
+        public async Task TestMySqlConnectionAverageAsyncViaTableNameWithExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -225,17 +226,17 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             {
                 // Act
                 var ids = new[] { tables.First().Id, tables.Last().Id };
-                var result = connection.AverageAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.AverageAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     Field.Parse<CompleteTable>(e => e.ColumnInt).First(),
-                    new QueryField("Id", Operation.In, ids)).Result;
+                    new QueryField("Id", Operation.In, ids));
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Average(e => e.ColumnInt), Convert.ToDouble(result));
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void TestMySqlConnectionAverageAsyncViaTableNameWithHints()
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public async Task TestMySqlConnectionAverageAsyncViaTableNameWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -243,10 +244,10 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.AverageAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                await connection.AverageAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     Field.Parse<CompleteTable>(e => e.ColumnInt).First(),
                     (object)null,
-                    hints: "WhatEver").Wait();
+                    hints: "WhatEver");
             }
         }
 

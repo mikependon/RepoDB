@@ -4,6 +4,7 @@ using RepoDb.Extensions;
 using RepoDb.SqlServer.IntegrationTests.Models;
 using RepoDb.SqlServer.IntegrationTests.Setup;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.SqlServer.IntegrationTests.Operations
 {
@@ -147,7 +148,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestSqlServerConnectionQueryAllAsyncViaTableName()
+        public async Task TestSqlServerConnectionQueryAllAsyncViaTableName()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -155,7 +156,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var queryResult = connection.QueryAllAsync(ClassMappedNameCache.Get<CompleteTable>()).Result;
+                var queryResult = await connection.QueryAllAsync(ClassMappedNameCache.Get<CompleteTable>());
 
                 // Assert
                 tables.AsList().ForEach(table =>
@@ -164,7 +165,7 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlServerConnectionQueryAllAsyncViaTableNameWithHints()
+        public async Task TestSqlServerConnectionQueryAllAsyncViaTableNameWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -172,8 +173,8 @@ namespace RepoDb.SqlServer.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionString))
             {
                 // Act
-                var queryResult = connection.QueryAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    hints: SqlServerTableHints.NoLock).Result;
+                var queryResult = await connection.QueryAllAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    hints: SqlServerTableHints.NoLock);
 
                 // Assert
                 tables.AsList().ForEach(table =>

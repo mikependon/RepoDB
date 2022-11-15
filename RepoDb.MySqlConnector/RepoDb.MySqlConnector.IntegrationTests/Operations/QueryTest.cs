@@ -5,6 +5,7 @@ using RepoDb.MySqlConnector.IntegrationTests.Models;
 using RepoDb.MySqlConnector.IntegrationTests.Setup;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.MySqlConnector.IntegrationTests.Operations
 {
@@ -172,7 +173,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestMySqlConnectionQueryAsyncViaPrimaryKey()
+        public async Task TestMySqlConnectionQueryAsyncViaPrimaryKey()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -180,7 +181,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.QueryAsync<CompleteTable>(table.Id).Result.First();
+                var result = (await connection.QueryAsync<CompleteTable>(table.Id)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, result);
@@ -188,7 +189,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionQueryAsyncViaExpression()
+        public async Task TestMySqlConnectionQueryAsyncViaExpression()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -196,7 +197,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.QueryAsync<CompleteTable>(e => e.Id == table.Id).Result.First();
+                var result = (await connection.QueryAsync<CompleteTable>(e => e.Id == table.Id)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, result);
@@ -204,7 +205,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionQueryAsyncViaDynamic()
+        public async Task TestMySqlConnectionQueryAsyncViaDynamic()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -212,7 +213,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.QueryAsync<CompleteTable>(new { table.Id }).Result.First();
+                var result = (await connection.QueryAsync<CompleteTable>(new { table.Id })).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, result);
@@ -220,7 +221,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionQueryAsyncViaQueryField()
+        public async Task TestMySqlConnectionQueryAsyncViaQueryField()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -228,7 +229,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.QueryAsync<CompleteTable>(new QueryField("Id", table.Id)).Result.First();
+                var result = (await connection.QueryAsync<CompleteTable>(new QueryField("Id", table.Id))).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, result);
@@ -236,7 +237,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionQueryAsyncViaQueryFields()
+        public async Task TestMySqlConnectionQueryAsyncViaQueryFields()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -249,7 +250,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.QueryAsync<CompleteTable>(queryFields).Result.First();
+                var result = (await connection.QueryAsync<CompleteTable>(queryFields)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, result);
@@ -257,7 +258,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionQueryAsyncViaQueryGroup()
+        public async Task TestMySqlConnectionQueryAsyncViaQueryGroup()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -271,7 +272,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.QueryAsync<CompleteTable>(queryGroup).Result.First();
+                var result = (await connection.QueryAsync<CompleteTable>(queryGroup)).First();
 
                 // Assert
                 Helper.AssertPropertiesEquality(table, result);
@@ -279,7 +280,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionQueryAsyncWithTop()
+        public async Task TestMySqlConnectionQueryAsyncWithTop()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -287,8 +288,8 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.QueryAsync<CompleteTable>((object)null,
-                    top: 2).Result;
+                var result = await connection.QueryAsync<CompleteTable>((object)null,
+                    top: 2);
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -296,8 +297,8 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionQueryAsyncWithHints()
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public async Task ThrowExceptionQueryAsyncWithHints()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -305,8 +306,8 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.QueryAsync<CompleteTable>((object)null,
-                    hints: "WhatEver").Wait();
+                await connection.QueryAsync<CompleteTable>((object)null,
+                    hints: "WhatEver");
             }
         }
 
@@ -448,7 +449,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestMySqlConnectionQueryAsyncViaTableNameViaPrimaryKey()
+        public async Task TestMySqlConnectionQueryAsyncViaTableNameViaPrimaryKey()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -456,7 +457,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.QueryAsync(ClassMappedNameCache.Get<CompleteTable>(), table.Id).Result.First();
+                var result = (await connection.QueryAsync(ClassMappedNameCache.Get<CompleteTable>(), table.Id)).First();
 
                 // Assert
                 Helper.AssertMembersEquality(table, result);
@@ -464,7 +465,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionQueryAsyncViaTableNameViaDynamic()
+        public async Task TestMySqlConnectionQueryAsyncViaTableNameViaDynamic()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -472,7 +473,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.QueryAsync(ClassMappedNameCache.Get<CompleteTable>(), new { table.Id }).Result.First();
+                var result = (await connection.QueryAsync(ClassMappedNameCache.Get<CompleteTable>(), new { table.Id })).First();
 
                 // Assert
                 Helper.AssertMembersEquality(table, result);
@@ -480,7 +481,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionQueryAsyncViaTableNameViaQueryField()
+        public async Task TestMySqlConnectionQueryAsyncViaTableNameViaQueryField()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -488,7 +489,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.QueryAsync(ClassMappedNameCache.Get<CompleteTable>(), new QueryField("Id", table.Id)).Result.First();
+                var result = (await connection.QueryAsync(ClassMappedNameCache.Get<CompleteTable>(), new QueryField("Id", table.Id))).First();
 
                 // Assert
                 Helper.AssertMembersEquality(table, result);
@@ -496,7 +497,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionQueryAsyncViaTableNameViaQueryFields()
+        public async Task TestMySqlConnectionQueryAsyncViaTableNameViaQueryFields()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -509,7 +510,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.QueryAsync(ClassMappedNameCache.Get<CompleteTable>(), queryFields).Result.First();
+                var result = (await connection.QueryAsync(ClassMappedNameCache.Get<CompleteTable>(), queryFields)).First();
 
                 // Assert
                 Helper.AssertMembersEquality(table, result);
@@ -517,7 +518,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionQueryAsyncViaTableNameViaQueryGroup()
+        public async Task TestMySqlConnectionQueryAsyncViaTableNameViaQueryGroup()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -531,7 +532,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.QueryAsync(ClassMappedNameCache.Get<CompleteTable>(), queryGroup).Result.First();
+                var result = (await connection.QueryAsync(ClassMappedNameCache.Get<CompleteTable>(), queryGroup)).First();
 
                 // Assert
                 Helper.AssertMembersEquality(table, result);
@@ -539,7 +540,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionQueryAsyncViaTableNameWithTop()
+        public async Task TestMySqlConnectionQueryAsyncViaTableNameWithTop()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -547,9 +548,9 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.QueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.QueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     (object)null,
-                    top: 2).Result;
+                    top: 2);
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -557,8 +558,8 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionQueryAsyncViaTableNameWithHints()
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public async Task ThrowExceptionQueryAsyncViaTableNameWithHints()
         {
             // Setup
             var table = Database.CreateCompleteTables(1).First();
@@ -566,9 +567,9 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.QueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                await connection.QueryAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     (object)null,
-                    hints: "WhatEver").Wait();
+                    hints: "WhatEver");
             }
         }
 

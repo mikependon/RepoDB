@@ -4,6 +4,7 @@ using RepoDb.IntegrationTests.Models;
 using RepoDb.IntegrationTests.Setup;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.IntegrationTests.Operations
 {
@@ -108,7 +109,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region SumAllAsync<TEntity>
 
         [TestMethod]
-        public void TestSqlConnectionSumAllAsync()
+        public async Task TestSqlConnectionSumAllAsync()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -119,7 +120,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.SumAllAsync<IdentityTable>(e => e.ColumnInt).Result;
+                var result = await connection.SumAllAsync<IdentityTable>(e => e.ColumnInt);
 
                 // Assert
                 Assert.AreEqual(tables.Sum(t => t.ColumnInt), Convert.ToInt32(result));
@@ -127,7 +128,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionSumAllAsyncWithHints()
+        public async Task TestSqlConnectionSumAllAsyncWithHints()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -138,8 +139,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.SumAllAsync<IdentityTable>(e => e.ColumnInt,
-                    hints: SqlServerTableHints.NoLock).Result;
+                var result = await connection.SumAllAsync<IdentityTable>(e => e.ColumnInt,
+                    hints: SqlServerTableHints.NoLock);
 
                 // Assert
                 Assert.AreEqual(tables.Sum(t => t.ColumnInt), Convert.ToInt32(result));
@@ -147,7 +148,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionSumAllAsyncTypedResult()
+        public async Task TestSqlConnectionSumAllAsyncTypedResult()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -158,7 +159,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.SumAllAsync<IdentityTable, int?>(e => e.ColumnInt).Result;
+                var result = await connection.SumAllAsync<IdentityTable, int?>(e => e.ColumnInt);
 
                 // Assert
                 Assert.AreEqual(tables.Sum(t => t.ColumnInt), result);
@@ -166,7 +167,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionSumAllAsyncWithHintsTypedResult()
+        public async Task TestSqlConnectionSumAllAsyncWithHintsTypedResult()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -177,8 +178,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.SumAllAsync<IdentityTable, int?>(e => e.ColumnInt,
-                    hints: SqlServerTableHints.NoLock).Result;
+                var result = await connection.SumAllAsync<IdentityTable, int?>(e => e.ColumnInt,
+                    hints: SqlServerTableHints.NoLock);
 
                 // Assert
                 Assert.AreEqual(tables.Sum(t => t.ColumnInt), result);
@@ -276,7 +277,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region SumAllAsync(TableName)
 
         [TestMethod]
-        public void TestSqlConnectionSumAllAsyncViaTableName()
+        public async Task TestSqlConnectionSumAllAsyncViaTableName()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -287,8 +288,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.SumAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    new Field("ColumnInt")).Result;
+                var result = await connection.SumAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"));
 
                 // Assert
                 Assert.AreEqual(tables.Sum(t => t.ColumnInt), Convert.ToInt32(result));
@@ -296,7 +297,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionSumAllAsyncViaTableNameWithHints()
+        public async Task TestSqlConnectionSumAllAsyncViaTableNameWithHints()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -307,9 +308,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.SumAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.SumAllAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnInt"),
-                    hints: SqlServerTableHints.NoLock).Result;
+                    hints: SqlServerTableHints.NoLock);
 
                 // Assert
                 Assert.AreEqual(tables.Sum(t => t.ColumnInt), Convert.ToInt32(result));
@@ -317,7 +318,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionSumAllTypedResultAsyncViaTableName()
+        public async Task TestSqlConnectionSumAllTypedResultAsyncViaTableName()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -328,8 +329,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.SumAllAsync<int?>(ClassMappedNameCache.Get<IdentityTable>(),
-                    new Field("ColumnInt")).Result;
+                var result = await connection.SumAllAsync<int?>(ClassMappedNameCache.Get<IdentityTable>(),
+                    new Field("ColumnInt"));
 
                 // Assert
                 Assert.AreEqual(tables.Sum(t => t.ColumnInt), result);
@@ -337,7 +338,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionSumAllTypedResultAsyncViaTableNameWithHints()
+        public async Task TestSqlConnectionSumAllTypedResultAsyncViaTableNameWithHints()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -348,9 +349,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.SumAllAsync<int?>(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.SumAllAsync<int?>(ClassMappedNameCache.Get<IdentityTable>(),
                     new Field("ColumnInt"),
-                    hints: SqlServerTableHints.NoLock).Result;
+                    hints: SqlServerTableHints.NoLock);
 
                 // Assert
                 Assert.AreEqual(tables.Sum(t => t.ColumnInt), result);

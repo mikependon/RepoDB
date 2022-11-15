@@ -5,6 +5,7 @@ using RepoDb.MySqlConnector.IntegrationTests.Models;
 using RepoDb.MySqlConnector.IntegrationTests.Setup;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.MySqlConnector.IntegrationTests.Operations
 {
@@ -119,7 +120,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestMySqlConnectionExecuteQueryMultipleAsync()
+        public async Task TestMySqlConnectionExecuteQueryMultipleAsync()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -127,8 +128,8 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var extractor = connection.ExecuteQueryMultipleAsync(@"SELECT * FROM `CompleteTable`;
-                    SELECT * FROM `CompleteTable`;").Result)
+                using (var extractor = await connection.ExecuteQueryMultipleAsync(@"SELECT * FROM `CompleteTable`;
+                    SELECT * FROM `CompleteTable`;"))
                 {
                     var list = new List<IEnumerable<CompleteTable>>();
 
@@ -147,7 +148,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionExecuteQueryMultipleAsyncWithParameters()
+        public async Task TestMySqlConnectionExecuteQueryMultipleAsyncWithParameters()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -155,13 +156,13 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var extractor = connection.ExecuteQueryMultipleAsync(@"SELECT * FROM `CompleteTable` WHERE Id = @Id1;
+                using (var extractor = await connection.ExecuteQueryMultipleAsync(@"SELECT * FROM `CompleteTable` WHERE Id = @Id1;
                     SELECT * FROM `CompleteTable` WHERE Id = @Id2;",
                     new
                     {
                         Id1 = tables.First().Id,
                         Id2 = tables.Last().Id
-                    }).Result)
+                    }))
                 {
                     var list = new List<IEnumerable<CompleteTable>>();
 
@@ -179,7 +180,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionExecuteQueryMultipleAsyncWithSharedParameters()
+        public async Task TestMySqlConnectionExecuteQueryMultipleAsyncWithSharedParameters()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -187,9 +188,9 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var extractor = connection.ExecuteQueryMultipleAsync(@"SELECT * FROM `CompleteTable` WHERE Id = @Id;
+                using (var extractor = await connection.ExecuteQueryMultipleAsync(@"SELECT * FROM `CompleteTable` WHERE Id = @Id;
                     SELECT * FROM `CompleteTable` WHERE Id = @Id;",
-                    new { Id = tables.Last().Id }).Result)
+                    new { Id = tables.Last().Id }))
                 {
                     var list = new List<IEnumerable<CompleteTable>>();
 

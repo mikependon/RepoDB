@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.IntegrationTests.Operations
 {
@@ -1299,7 +1300,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region QueryAsync<TEntity>
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncWithEntityTableNameWithTypeResult()
+        public async Task TestSqlConnectionQueryAsyncWithEntityTableNameWithTypeResult()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1310,9 +1311,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<string>(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.QueryAsync<string>(ClassMappedNameCache.Get<IdentityTable>(),
                     (object)null,
-                    fields: Field.Parse<IdentityTable>(e => e.ColumnNVarChar)).Result;
+                    fields: Field.Parse<IdentityTable>(e => e.ColumnNVarChar));
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -1321,7 +1322,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncWithEntityTableName()
+        public async Task TestSqlConnectionQueryAsyncWithEntityTableName()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1332,8 +1333,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
-                    (object)null).Result;
+                var result = await connection.QueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                    (object)null);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -1346,7 +1347,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncWithEntityTableNameWithFields()
+        public async Task TestSqlConnectionQueryAsyncWithEntityTableNameWithFields()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1357,9 +1358,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.QueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
                     (object)null,
-                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.ColumnNVarChar))).Result;
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.ColumnNVarChar)));
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -1372,7 +1373,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncWithEntityTableNameAsDynamic()
+        public async Task TestSqlConnectionQueryAsyncWithEntityTableNameAsDynamic()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1383,9 +1384,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<dynamic>(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.QueryAsync<dynamic>(ClassMappedNameCache.Get<IdentityTable>(),
                     (object)null,
-                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.ColumnNVarChar))).Result;
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.ColumnNVarChar)));
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -1398,7 +1399,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncWithEntityTableNameAsExpandoObject()
+        public async Task TestSqlConnectionQueryAsyncWithEntityTableNameAsExpandoObject()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1409,9 +1410,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<ExpandoObject>(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.QueryAsync<ExpandoObject>(ClassMappedNameCache.Get<IdentityTable>(),
                     (object)null,
-                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.ColumnNVarChar))).Result;
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.ColumnNVarChar)));
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -1424,7 +1425,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncWithEntityTableNameAsDictionaryStringObject()
+        public async Task TestSqlConnectionQueryAsyncWithEntityTableNameAsDictionaryStringObject()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1435,9 +1436,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IDictionary<string, object>>(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.QueryAsync<IDictionary<string, object>>(ClassMappedNameCache.Get<IdentityTable>(),
                     (object)null,
-                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.ColumnNVarChar))).Result;
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.ColumnNVarChar)));
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -1450,7 +1451,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsync()
+        public async Task TestSqlConnectionQueryAsync()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1461,7 +1462,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>((object)null).Result;
+                var result = await connection.QueryAsync<IdentityTable>((object)null);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -1474,7 +1475,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncWithFields()
+        public async Task TestSqlConnectionQueryAsyncWithFields()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1485,8 +1486,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>((object)null,
-                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.ColumnNVarChar))).Result;
+                var result = await connection.QueryAsync<IdentityTable>((object)null,
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.ColumnNVarChar)));
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -1499,7 +1500,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncWithEmptyQueryFields()
+        public async Task TestSqlConnectionQueryAsyncWithEmptyQueryFields()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1510,7 +1511,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(Enumerable.Empty<QueryField>()).Result;
+                var result = await connection.QueryAsync<IdentityTable>(Enumerable.Empty<QueryField>());
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -1523,7 +1524,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncWithTop()
+        public async Task TestSqlConnectionQueryAsyncWithTop()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1535,8 +1536,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(what: null,
-                    top: top).Result;
+                var result = await connection.QueryAsync<IdentityTable>(what: null,
+                    top: top);
 
                 // Assert
                 Assert.AreEqual(top, result.Count());
@@ -1549,7 +1550,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncWithOrderBy()
+        public async Task TestSqlConnectionQueryAsyncWithOrderBy()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1561,8 +1562,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(what: null,
-                    orderBy: orderBy.AsEnumerable()).Result;
+                var result = await connection.QueryAsync<IdentityTable>(what: null,
+                    orderBy: orderBy.AsEnumerable());
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.First(), result.Last());
@@ -1571,7 +1572,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncWithOrderByAndTop()
+        public async Task TestSqlConnectionQueryAsyncWithOrderByAndTop()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1584,9 +1585,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(what: null,
+                var result = await connection.QueryAsync<IdentityTable>(what: null,
                     top: top,
-                    orderBy: orderBy.AsEnumerable()).Result;
+                    orderBy: orderBy.AsEnumerable());
 
                 // Assert
                 Assert.AreEqual(result.Count(), top);
@@ -1596,7 +1597,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaPrimaryKey()
+        public async Task TestSqlConnectionQueryAsyncViaPrimaryKey()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1608,7 +1609,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(last.Id).Result;
+                var result = await connection.QueryAsync<IdentityTable>(last.Id);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -1617,7 +1618,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaDynamic()
+        public async Task TestSqlConnectionQueryAsyncViaDynamic()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1629,7 +1630,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(new { last.Id }).Result;
+                var result = await connection.QueryAsync<IdentityTable>(new { last.Id });
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -1638,7 +1639,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaExpression()
+        public async Task TestSqlConnectionQueryAsyncViaExpression()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1650,7 +1651,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(c => c.Id == last.Id).Result;
+                var result = await connection.QueryAsync<IdentityTable>(c => c.Id == last.Id);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -1659,7 +1660,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaExpressionWithNullValue()
+        public async Task TestSqlConnectionQueryAsyncViaExpressionWithNullValue()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1671,7 +1672,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(c => c.ColumnNVarChar == null).Result;
+                var result = await connection.QueryAsync<IdentityTable>(c => c.ColumnNVarChar == null);
 
                 // Assert
                 Assert.AreEqual(0, result.Count());
@@ -1679,7 +1680,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaQueryField()
+        public async Task TestSqlConnectionQueryAsyncViaQueryField()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1691,7 +1692,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(new QueryField(nameof(IdentityTable.Id), last.Id)).Result;
+                var result = await connection.QueryAsync<IdentityTable>(new QueryField(nameof(IdentityTable.Id), last.Id));
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -1700,7 +1701,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaQueryFields()
+        public async Task TestSqlConnectionQueryAsyncViaQueryFields()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1716,7 +1717,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(fields).Result;
+                var result = await connection.QueryAsync<IdentityTable>(fields);
 
                 // Assert
                 Assert.AreEqual(4, result.Count());
@@ -1729,7 +1730,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaQueryFieldsWithTop()
+        public async Task TestSqlConnectionQueryAsyncViaQueryFieldsWithTop()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1746,7 +1747,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(fields, top: top).Result;
+                var result = await connection.QueryAsync<IdentityTable>(fields, top: top);
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -1759,7 +1760,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaQueryFieldsWithOrderBy()
+        public async Task TestSqlConnectionQueryAsyncViaQueryFieldsWithOrderBy()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1776,7 +1777,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(fields, orderBy: orderBy.AsEnumerable()).Result;
+                var result = await connection.QueryAsync<IdentityTable>(fields, orderBy: orderBy.AsEnumerable());
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(7), result.First());
@@ -1785,7 +1786,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaQueryFieldsWithOrderByAndTop()
+        public async Task TestSqlConnectionQueryAsyncViaQueryFieldsWithOrderByAndTop()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1803,7 +1804,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(fields, orderBy: orderBy.AsEnumerable(), top: top).Result;
+                var result = await connection.QueryAsync<IdentityTable>(fields, orderBy: orderBy.AsEnumerable(), top: top);
 
                 // Assert
                 Assert.AreEqual(top, result.Count());
@@ -1813,7 +1814,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaQueryGroup()
+        public async Task TestSqlConnectionQueryAsyncViaQueryGroup()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1831,7 +1832,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(queryGroup).Result;
+                var result = await connection.QueryAsync<IdentityTable>(queryGroup);
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -1844,7 +1845,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaQueryGroupWithTop()
+        public async Task TestSqlConnectionQueryAsyncViaQueryGroupWithTop()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1862,7 +1863,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(queryGroup, top: top).Result;
+                var result = await connection.QueryAsync<IdentityTable>(queryGroup, top: top);
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -1875,7 +1876,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaQueryGroupWithOrderBy()
+        public async Task TestSqlConnectionQueryAsyncViaQueryGroupWithOrderBy()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1893,7 +1894,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(queryGroup, orderBy: orderBy.AsEnumerable()).Result;
+                var result = await connection.QueryAsync<IdentityTable>(queryGroup, orderBy: orderBy.AsEnumerable());
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(7), result.First());
@@ -1902,7 +1903,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaQueryGroupWithOrderByAndTop()
+        public async Task TestSqlConnectionQueryAsyncViaQueryGroupWithOrderByAndTop()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1921,7 +1922,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(queryGroup, orderBy: orderBy.AsEnumerable(), top: top).Result;
+                var result = await connection.QueryAsync<IdentityTable>(queryGroup, orderBy: orderBy.AsEnumerable(), top: top);
 
                 // Assert
                 Assert.AreEqual(top, result.Count());
@@ -1931,7 +1932,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncWithTypeResultViaIDbDataParameter()
+        public async Task TestSqlConnectionQueryAsyncWithTypeResultViaIDbDataParameter()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1942,8 +1943,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(new { Id = new SqlParameter("_", 1) },
-                    fields: Field.Parse<IdentityTable>(e => e.ColumnNVarChar)).Result;
+                var result = await connection.QueryAsync<IdentityTable>(new { Id = new SqlParameter("_", 1) },
+                    fields: Field.Parse<IdentityTable>(e => e.ColumnNVarChar));
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -1951,7 +1952,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncWithTypeResultViaQueryFieldForIDbDataParameter()
+        public async Task TestSqlConnectionQueryAsyncWithTypeResultViaQueryFieldForIDbDataParameter()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1962,8 +1963,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(new QueryField("Id", new SqlParameter("_", 1)),
-                    fields: Field.Parse<IdentityTable>(e => e.ColumnNVarChar)).Result;
+                var result = await connection.QueryAsync<IdentityTable>(new QueryField("Id", new SqlParameter("_", 1)),
+                    fields: Field.Parse<IdentityTable>(e => e.ColumnNVarChar));
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -1971,7 +1972,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncWithTypeResultViaQueryFieldsForIDbDataParameter()
+        public async Task TestSqlConnectionQueryAsyncWithTypeResultViaQueryFieldsForIDbDataParameter()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -1982,8 +1983,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(new QueryField("Id", new SqlParameter("_", 1)).AsEnumerable(),
-                    fields: Field.Parse<IdentityTable>(e => e.ColumnNVarChar)).Result;
+                var result = await connection.QueryAsync<IdentityTable>(new QueryField("Id", new SqlParameter("_", 1)).AsEnumerable(),
+                    fields: Field.Parse<IdentityTable>(e => e.ColumnNVarChar));
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -1991,7 +1992,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncWithTypeResultViaQueryGroupForIDbDataParameter()
+        public async Task TestSqlConnectionQueryAsyncWithTypeResultViaQueryGroupForIDbDataParameter()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -2002,16 +2003,16 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(new QueryGroup(new QueryField("Id", new SqlParameter("_", 1))),
-                    fields: Field.Parse<IdentityTable>(e => e.ColumnNVarChar)).Result;
+                var result = await connection.QueryAsync<IdentityTable>(new QueryGroup(new QueryField("Id", new SqlParameter("_", 1))),
+                    fields: Field.Parse<IdentityTable>(e => e.ColumnNVarChar));
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnSqlConnectionQueryAsyncWithInvalidOrderFields()
+        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
+        public async Task ThrowExceptionOnSqlConnectionQueryAsyncWithInvalidOrderFields()
         {
             // Setup
             var orderBy = new OrderField("InvalidColumn", Order.Descending);
@@ -2019,7 +2020,7 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(what: null, orderBy: orderBy.AsEnumerable()).Result;
+                var result = await connection.QueryAsync<IdentityTable>(what: null, orderBy: orderBy.AsEnumerable());
             }
         }
 
@@ -2028,7 +2029,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region QueryAsync<TEntity>(Extra Fields)
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncWithExtraFields()
+        public async Task TestSqlConnectionQueryAsyncWithExtraFields()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -2039,7 +2040,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<WithExtraFieldsIdentityTable>((object)null).Result;
+                var result = await connection.QueryAsync<WithExtraFieldsIdentityTable>((object)null);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -2056,7 +2057,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region QueryAsync<TEntity>(Array.Contains, String.Contains, String.StartsWith, String.EndsWith)
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaExpressionWithArrayContains()
+        public async Task TestSqlConnectionQueryAsyncViaExpressionWithArrayContains()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -2068,7 +2069,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(c => values.Contains(c.ColumnNVarChar)).Result;
+                var result = await connection.QueryAsync<IdentityTable>(c => values.Contains(c.ColumnNVarChar));
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -2078,7 +2079,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaExpressionWithStringContains()
+        public async Task TestSqlConnectionQueryAsyncViaExpressionWithStringContains()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -2089,7 +2090,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.Contains("9")).Result;
+                var result = await connection.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.Contains("9"));
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -2098,7 +2099,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaExpressionWithStringStartsWith()
+        public async Task TestSqlConnectionQueryAsyncViaExpressionWithStringStartsWith()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -2109,7 +2110,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.Contains("NVAR")).Result;
+                var result = await connection.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.Contains("NVAR"));
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result.Count());
@@ -2118,7 +2119,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaExpressionWithStringEndsWith()
+        public async Task TestSqlConnectionQueryAsyncViaExpressionWithStringEndsWith()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -2129,7 +2130,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.EndsWith("9")).Result;
+                var result = await connection.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.EndsWith("9"));
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -2138,7 +2139,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaExpressionWithArrayContainsAndStringContains()
+        public async Task TestSqlConnectionQueryAsyncViaExpressionWithArrayContainsAndStringContains()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -2150,7 +2151,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(c => values.Contains(c.ColumnNVarChar) || c.ColumnNVarChar.Contains("4")).Result;
+                var result = await connection.QueryAsync<IdentityTable>(c => values.Contains(c.ColumnNVarChar) || c.ColumnNVarChar.Contains("4"));
 
                 // Assert
                 Assert.AreEqual(3, result.Count());
@@ -2159,7 +2160,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaExpressionWithArrayContainsAndStringStartsWith()
+        public async Task TestSqlConnectionQueryAsyncViaExpressionWithArrayContainsAndStringStartsWith()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -2171,7 +2172,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(c => values.Contains(c.ColumnNVarChar) || c.ColumnNVarChar.StartsWith("NVAR")).Result;
+                var result = await connection.QueryAsync<IdentityTable>(c => values.Contains(c.ColumnNVarChar) || c.ColumnNVarChar.StartsWith("NVAR"));
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result.Count());
@@ -2180,7 +2181,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaExpressionWithArrayContainsAndStringEndsWith()
+        public async Task TestSqlConnectionQueryAsyncViaExpressionWithArrayContainsAndStringEndsWith()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -2192,7 +2193,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(c => values.Contains(c.ColumnNVarChar) || c.ColumnNVarChar.EndsWith("4")).Result;
+                var result = await connection.QueryAsync<IdentityTable>(c => values.Contains(c.ColumnNVarChar) || c.ColumnNVarChar.EndsWith("4"));
 
                 // Assert
                 Assert.AreEqual(3, result.Count());
@@ -2201,7 +2202,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaExpressionWithArrayContainsAsBooleanTrue()
+        public async Task TestSqlConnectionQueryAsyncViaExpressionWithArrayContainsAsBooleanTrue()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -2213,7 +2214,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(c => values.Contains(c.ColumnNVarChar) == true).Result;
+                var result = await connection.QueryAsync<IdentityTable>(c => values.Contains(c.ColumnNVarChar) == true);
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -2222,7 +2223,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaExpressionWithArrayContainsAsBooleanFalse()
+        public async Task TestSqlConnectionQueryAsyncViaExpressionWithArrayContainsAsBooleanFalse()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -2234,7 +2235,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(c => values.Contains(c.ColumnNVarChar) == false).Result;
+                var result = await connection.QueryAsync<IdentityTable>(c => values.Contains(c.ColumnNVarChar) == false);
 
                 // Assert
                 Assert.AreEqual(8, result.Count());
@@ -2243,7 +2244,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaExpressionWithArrayContainsAsBooleanNotEqualsToFalse()
+        public async Task TestSqlConnectionQueryAsyncViaExpressionWithArrayContainsAsBooleanNotEqualsToFalse()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -2255,7 +2256,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(c => values.Contains(c.ColumnNVarChar) != false).Result;
+                var result = await connection.QueryAsync<IdentityTable>(c => values.Contains(c.ColumnNVarChar) != false);
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -2264,7 +2265,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaExpressionWithArrayContainsAsUnaryFalse()
+        public async Task TestSqlConnectionQueryAsyncViaExpressionWithArrayContainsAsUnaryFalse()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -2276,7 +2277,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(c => !values.Contains(c.ColumnNVarChar)).Result;
+                var result = await connection.QueryAsync<IdentityTable>(c => !values.Contains(c.ColumnNVarChar));
 
                 // Assert
                 Assert.AreEqual(8, result.Count());
@@ -2285,7 +2286,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaExpressionWithStringContainsAndStartsWith()
+        public async Task TestSqlConnectionQueryAsyncViaExpressionWithStringContainsAndStartsWith()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -2296,7 +2297,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.Contains("9") || c.ColumnNVarChar.StartsWith("NVAR")).Result;
+                var result = await connection.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.Contains("9") || c.ColumnNVarChar.StartsWith("NVAR"));
 
                 // Assert
                 Assert.AreEqual(10, result.Count());
@@ -2305,7 +2306,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaExpressionWithStringContainsAndEndsWith()
+        public async Task TestSqlConnectionQueryAsyncViaExpressionWithStringContainsAndEndsWith()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -2316,7 +2317,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.Contains("9") || c.ColumnNVarChar.EndsWith("8")).Result;
+                var result = await connection.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.Contains("9") || c.ColumnNVarChar.EndsWith("8"));
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -2325,7 +2326,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaExpressionWithStringContainsAsBooleanTrue()
+        public async Task TestSqlConnectionQueryAsyncViaExpressionWithStringContainsAsBooleanTrue()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -2336,7 +2337,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.Contains("9") == true).Result;
+                var result = await connection.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.Contains("9") == true);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -2345,7 +2346,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaExpressionWithStringContainsAsBooleanFalse()
+        public async Task TestSqlConnectionQueryAsyncViaExpressionWithStringContainsAsBooleanFalse()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -2356,7 +2357,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.Contains("9") == false).Result;
+                var result = await connection.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.Contains("9") == false);
 
                 // Assert
                 Assert.AreEqual(9, result.Count());
@@ -2365,7 +2366,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaExpressionWithStringContainsAsBooleanNotEqualsToFalse()
+        public async Task TestSqlConnectionQueryAsyncViaExpressionWithStringContainsAsBooleanNotEqualsToFalse()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -2376,7 +2377,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.Contains("9") != false).Result;
+                var result = await connection.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.Contains("9") != false);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -2385,7 +2386,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaExpressionWithStringContainsAsUnaryFalse()
+        public async Task TestSqlConnectionQueryAsyncViaExpressionWithStringContainsAsUnaryFalse()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -2396,7 +2397,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(c => !c.ColumnNVarChar.Contains("9")).Result;
+                var result = await connection.QueryAsync<IdentityTable>(c => !c.ColumnNVarChar.Contains("9"));
 
                 // Assert
                 Assert.AreEqual(9, result.Count());
@@ -2405,7 +2406,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaExpressionWithStringStartsWithAsBooleanTrue()
+        public async Task TestSqlConnectionQueryAsyncViaExpressionWithStringStartsWithAsBooleanTrue()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -2416,7 +2417,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.StartsWith("NVAR") == true).Result;
+                var result = await connection.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.StartsWith("NVAR") == true);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result.Count());
@@ -2425,7 +2426,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaExpressionWithStringStartsWithAsBooleanFalse()
+        public async Task TestSqlConnectionQueryAsyncViaExpressionWithStringStartsWithAsBooleanFalse()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -2436,7 +2437,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.StartsWith("NVAR") == false).Result;
+                var result = await connection.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.StartsWith("NVAR") == false);
 
                 // Assert
                 Assert.AreEqual(0, result.Count());
@@ -2444,7 +2445,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaExpressionWithStringStartsWithAsBooleanNotEqualsToFalse()
+        public async Task TestSqlConnectionQueryAsyncViaExpressionWithStringStartsWithAsBooleanNotEqualsToFalse()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -2455,7 +2456,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.StartsWith("NVAR") != false).Result;
+                var result = await connection.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.StartsWith("NVAR") != false);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result.Count());
@@ -2464,7 +2465,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaExpressionWithStringStartsWithAsUnaryFalse()
+        public async Task TestSqlConnectionQueryAsyncViaExpressionWithStringStartsWithAsUnaryFalse()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -2475,7 +2476,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(c => !c.ColumnNVarChar.StartsWith("NVAR")).Result;
+                var result = await connection.QueryAsync<IdentityTable>(c => !c.ColumnNVarChar.StartsWith("NVAR"));
 
                 // Assert
                 Assert.AreEqual(0, result.Count());
@@ -2483,7 +2484,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaExpressionWithStringEndsWithAsBooleanTrue()
+        public async Task TestSqlConnectionQueryAsyncViaExpressionWithStringEndsWithAsBooleanTrue()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -2494,7 +2495,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.EndsWith("9") == true).Result;
+                var result = await connection.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.EndsWith("9") == true);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -2503,7 +2504,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaExpressionWithStringEndsWithAsBooleanFalse()
+        public async Task TestSqlConnectionQueryAsyncViaExpressionWithStringEndsWithAsBooleanFalse()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -2514,7 +2515,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.EndsWith("9") == false).Result;
+                var result = await connection.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.EndsWith("9") == false);
 
                 // Assert
                 Assert.AreEqual(9, result.Count());
@@ -2523,7 +2524,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaExpressionWithStringEndsWithAsBooleanNotEqualsToFalse()
+        public async Task TestSqlConnectionQueryAsyncViaExpressionWithStringEndsWithAsBooleanNotEqualsToFalse()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -2534,7 +2535,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.EndsWith("9") != false).Result;
+                var result = await connection.QueryAsync<IdentityTable>(c => c.ColumnNVarChar.EndsWith("9") != false);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -2543,7 +2544,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaExpressionWithStringEndsWithAsUnaryFalse()
+        public async Task TestSqlConnectionQueryAsyncViaExpressionWithStringEndsWithAsUnaryFalse()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -2554,7 +2555,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(c => !c.ColumnNVarChar.EndsWith("9")).Result;
+                var result = await connection.QueryAsync<IdentityTable>(c => !c.ColumnNVarChar.EndsWith("9"));
 
                 // Assert
                 Assert.AreEqual(9, result.Count());
@@ -3129,7 +3130,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region QueryAsync(TableName)
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaDynamicTableName()
+        public async Task TestSqlConnectionQueryAsyncViaDynamicTableName()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -3140,8 +3141,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<dynamic>(ClassMappedNameCache.Get<IdentityTable>(),
-                    (object)null).Result;
+                var result = await connection.QueryAsync<dynamic>(ClassMappedNameCache.Get<IdentityTable>(),
+                    (object)null);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -3161,7 +3162,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaDynamicTableNameWithFields()
+        public async Task TestSqlConnectionQueryAsyncViaDynamicTableNameWithFields()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -3172,9 +3173,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync<dynamic>(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.QueryAsync<dynamic>(ClassMappedNameCache.Get<IdentityTable>(),
                     (object)null,
-                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.ColumnNVarChar))).Result;
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.ColumnNVarChar)));
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -3187,7 +3188,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaTableName()
+        public async Task TestSqlConnectionQueryAsyncViaTableName()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -3198,8 +3199,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    (object)null).Result;
+                var result = await connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    (object)null);
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -3219,7 +3220,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaTableNameWithFields()
+        public async Task TestSqlConnectionQueryAsyncViaTableNameWithFields()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -3230,9 +3231,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     (object)null,
-                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.ColumnNVarChar))).Result;
+                    fields: Field.From(nameof(IdentityTable.Id), nameof(IdentityTable.ColumnNVarChar)));
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -3245,7 +3246,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaTableNameAndWithFewFields()
+        public async Task TestSqlConnectionQueryAsyncViaTableNameAndWithFewFields()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -3256,9 +3257,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     (object)null,
-                    Field.From(new[] { "Id", "RowGuid", "ColumnFloat" })).Result;
+                    Field.From(new[] { "Id", "RowGuid", "ColumnFloat" }));
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -3273,7 +3274,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaTableNameWithTop()
+        public async Task TestSqlConnectionQueryAsyncViaTableNameWithTop()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -3285,9 +3286,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     what: null,
-                    top: top).Result;
+                    top: top);
 
                 // Assert
                 Assert.AreEqual(top, result.Count());
@@ -3300,7 +3301,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaTableNameWithOrderBy()
+        public async Task TestSqlConnectionQueryAsyncViaTableNameWithOrderBy()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -3312,9 +3313,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     what: null,
-                    orderBy: orderBy.AsEnumerable()).Result;
+                    orderBy: orderBy.AsEnumerable());
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.First(), result.Last());
@@ -3323,7 +3324,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaTableNameWithOrderByAndTop()
+        public async Task TestSqlConnectionQueryAsyncViaTableNameWithOrderByAndTop()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -3336,10 +3337,10 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     what: null,
                     top: top,
-                    orderBy: orderBy.AsEnumerable()).Result;
+                    orderBy: orderBy.AsEnumerable());
 
                 // Assert
                 Assert.AreEqual(result.Count(), top);
@@ -3349,7 +3350,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaTableNameViaPrimaryKey()
+        public async Task TestSqlConnectionQueryAsyncViaTableNameViaPrimaryKey()
         {
             // Setup
             var tables = Helper.CreateNonIdentityTables(10);
@@ -3361,8 +3362,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
-                    last.Id).Result;
+                var result = await connection.QueryAsync(ClassMappedNameCache.Get<NonIdentityTable>(),
+                    last.Id);
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -3371,7 +3372,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaTableNameViaDynamic()
+        public async Task TestSqlConnectionQueryAsyncViaTableNameViaDynamic()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -3383,8 +3384,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    new { last.Id }).Result;
+                var result = await connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    new { last.Id });
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -3393,7 +3394,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaTableNameViaQueryField()
+        public async Task TestSqlConnectionQueryAsyncViaTableNameViaQueryField()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -3405,8 +3406,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    new QueryField(nameof(IdentityTable.Id), last.Id)).Result;
+                var result = await connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    new QueryField(nameof(IdentityTable.Id), last.Id));
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
@@ -3415,7 +3416,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaTableNameViaQueryFields()
+        public async Task TestSqlConnectionQueryAsyncViaTableNameViaQueryFields()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -3431,8 +3432,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    fields).Result;
+                var result = await connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    fields);
 
                 // Assert
                 Assert.AreEqual(4, result.Count());
@@ -3445,7 +3446,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaTableNameViaQueryFieldsWithTop()
+        public async Task TestSqlConnectionQueryAsyncViaTableNameViaQueryFieldsWithTop()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -3462,9 +3463,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     fields,
-                    top: top).Result;
+                    top: top);
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -3477,7 +3478,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaTableNameViaQueryFieldsWithOrderBy()
+        public async Task TestSqlConnectionQueryAsyncViaTableNameViaQueryFieldsWithOrderBy()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -3494,9 +3495,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     fields,
-                    orderBy: orderBy.AsEnumerable()).Result;
+                    orderBy: orderBy.AsEnumerable());
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(7), result.First());
@@ -3505,7 +3506,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaTableNameViaQueryFieldsWithOrderByAndTop()
+        public async Task TestSqlConnectionQueryAsyncViaTableNameViaQueryFieldsWithOrderByAndTop()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -3523,9 +3524,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     fields,
-                    orderBy: orderBy.AsEnumerable(), top: top).Result;
+                    orderBy: orderBy.AsEnumerable(), top: top);
 
                 // Assert
                 Assert.AreEqual(top, result.Count());
@@ -3535,7 +3536,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaTableNameViaQueryGroup()
+        public async Task TestSqlConnectionQueryAsyncViaTableNameViaQueryGroup()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -3553,8 +3554,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    queryGroup).Result;
+                var result = await connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    queryGroup);
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -3567,7 +3568,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaTableNameViaQueryGroupWithTop()
+        public async Task TestSqlConnectionQueryAsyncViaTableNameViaQueryGroupWithTop()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -3585,9 +3586,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     queryGroup,
-                    top: top).Result;
+                    top: top);
 
                 // Assert
                 Assert.AreEqual(2, result.Count());
@@ -3600,7 +3601,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaTableNameViaQueryGroupWithOrderBy()
+        public async Task TestSqlConnectionQueryAsyncViaTableNameViaQueryGroupWithOrderBy()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -3618,9 +3619,9 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     queryGroup,
-                    orderBy: orderBy.AsEnumerable()).Result;
+                    orderBy: orderBy.AsEnumerable());
 
                 // Assert
                 Helper.AssertPropertiesEquality(tables.ElementAt(7), result.First());
@@ -3629,7 +3630,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionQueryAsyncViaTableNameViaQueryGroupWithOrderByAndTop()
+        public async Task TestSqlConnectionQueryAsyncViaTableNameViaQueryGroupWithOrderByAndTop()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -3648,10 +3649,10 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.QueryAsync(ClassMappedNameCache.Get<IdentityTable>(),
                     queryGroup,
                     orderBy: orderBy.AsEnumerable(),
-                    top: top).Result;
+                    top: top);
 
                 // Assert
                 Assert.AreEqual(top, result.Count());
@@ -3660,19 +3661,19 @@ namespace RepoDb.IntegrationTests.Operations
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnSqlConnectionQueryAsyncViaTableNameIfThereIsNoKeyField()
+        [TestMethod, ExpectedException(typeof(KeyFieldNotFoundException))]
+        public async Task ThrowExceptionOnSqlConnectionQueryAsyncViaTableNameIfThereIsNoKeyField()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                connection.QueryAsync(ClassMappedNameCache.Get<NonKeyedTable>(),
-                    1).Wait();
+                await connection.QueryAsync(ClassMappedNameCache.Get<NonKeyedTable>(),
+                    1);
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnSqlConnectionQueryAsyncViaTableNameWithInvalidOrderFields()
+        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
+        public async Task ThrowExceptionOnSqlConnectionQueryAsyncViaTableNameWithInvalidOrderFields()
         {
             // Setup
             var orderBy = new OrderField("InvalidColumn", Order.Descending);
@@ -3680,9 +3681,9 @@ namespace RepoDb.IntegrationTests.Operations
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
                 // Act
-                var result = connection.QueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
+                var result = await connection.QueryAsync<IdentityTable>(ClassMappedNameCache.Get<IdentityTable>(),
                     what: null,
-                    orderBy: orderBy.AsEnumerable()).Result;
+                    orderBy: orderBy.AsEnumerable());
             }
         }
 

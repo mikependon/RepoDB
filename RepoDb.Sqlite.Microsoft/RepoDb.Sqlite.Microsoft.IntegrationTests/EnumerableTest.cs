@@ -5,6 +5,7 @@ using RepoDb.Sqlite.Microsoft.IntegrationTests.Models;
 using RepoDb.Sqlite.Microsoft.IntegrationTests.Setup;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
 {
@@ -75,7 +76,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         #region Async
 
         [TestMethod]
-        public void TestSqLiteConnectionQueryAsyncListContains()
+        public async Task TestSqLiteConnectionQueryAsyncListContains()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -84,7 +85,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var ids = tables.Select(e => e.Id).AsList();
 
                 // Act
-                var result = connection.QueryAsync<MdsNonIdentityCompleteTable>(e => ids.Contains(e.Id)).Result;
+                var result = await connection.QueryAsync<MdsNonIdentityCompleteTable>(e => ids.Contains(e.Id));
 
                 // Assert
                 Assert.AreEqual(tables.Count, result.Count());
@@ -94,7 +95,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionQueryAsyncEmptyList()
+        public async Task TestSqLiteConnectionQueryAsyncEmptyList()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -102,7 +103,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsNonIdentityCompleteTables(10, connection).AsList();
 
                 // Act
-                var result = connection.QueryAsync<MdsNonIdentityCompleteTable>(e => Enumerable.Empty<Guid>().Contains(e.Id)).Result;
+                var result = await connection.QueryAsync<MdsNonIdentityCompleteTable>(e => Enumerable.Empty<Guid>().Contains(e.Id));
 
                 // Assert
                 Assert.AreEqual(0, result.Count());

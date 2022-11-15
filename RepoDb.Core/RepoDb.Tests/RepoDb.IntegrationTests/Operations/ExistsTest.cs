@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Enumerations;
 using RepoDb.IntegrationTests.Models;
@@ -155,7 +156,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region ExistsAsync<TEntity>
 
         [TestMethod]
-        public void TestSqlConnectionExistsAsyncWithoutCondition()
+        public async Task TestSqlConnectionExistsAsyncWithoutCondition()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -166,7 +167,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExistsAsync<IdentityTable>((object)null).Result;
+                var result = await connection.ExistsAsync<IdentityTable>((object)null);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -174,7 +175,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionExistsAsyncViaExpression()
+        public async Task TestSqlConnectionExistsAsyncViaExpression()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -185,7 +186,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExistsAsync<IdentityTable>(item => item.ColumnInt >= 2 && item.ColumnInt <= 8).Result;
+                var result = await connection.ExistsAsync<IdentityTable>(item => item.ColumnInt >= 2 && item.ColumnInt <= 8);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -193,7 +194,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionExistsAsyncViaDynamic()
+        public async Task TestSqlConnectionExistsAsyncViaDynamic()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -204,7 +205,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExistsAsync<IdentityTable>(new { ColumnInt = 1 }).Result;
+                var result = await connection.ExistsAsync<IdentityTable>(new { ColumnInt = 1 });
 
                 // Assert
                 Assert.IsTrue(result);
@@ -212,7 +213,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionExistsAsyncViaQueryField()
+        public async Task TestSqlConnectionExistsAsyncViaQueryField()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -224,7 +225,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExistsAsync<IdentityTable>(field).Result;
+                var result = await connection.ExistsAsync<IdentityTable>(field);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -232,7 +233,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionExistsAsyncViaQueryFields()
+        public async Task TestSqlConnectionExistsAsyncViaQueryFields()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -248,7 +249,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExistsAsync<IdentityTable>(fields).Result;
+                var result = await connection.ExistsAsync<IdentityTable>(fields);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -256,7 +257,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionExistsAsyncViaQueryGroup()
+        public async Task TestSqlConnectionExistsAsyncViaQueryGroup()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -273,7 +274,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExistsAsync<IdentityTable>(queryGroup).Result;
+                var result = await connection.ExistsAsync<IdentityTable>(queryGroup);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -401,7 +402,7 @@ namespace RepoDb.IntegrationTests.Operations
         #region ExistsAsync(TableName)
 
         [TestMethod]
-        public void TestSqlConnectionExistsViaAsyncViaTableNameWithoutCondition()
+        public async Task TestSqlConnectionExistsViaAsyncViaTableNameWithoutCondition()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -412,8 +413,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExistsAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    (object)null).Result;
+                var result = await connection.ExistsAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    (object)null);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -421,7 +422,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionExistsViaAsyncViaTableNameViaDynamic()
+        public async Task TestSqlConnectionExistsViaAsyncViaTableNameViaDynamic()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -432,7 +433,7 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExistsAsync<IdentityTable>(new { ColumnInt = 1 }).Result;
+                var result = await connection.ExistsAsync<IdentityTable>(new { ColumnInt = 1 });
 
                 // Assert
                 Assert.IsTrue(result);
@@ -440,7 +441,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionExistsViaAsyncViaTableNameViaQueryField()
+        public async Task TestSqlConnectionExistsViaAsyncViaTableNameViaQueryField()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -452,8 +453,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExistsAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    field).Result;
+                var result = await connection.ExistsAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    field);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -461,7 +462,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionExistsViaAsyncViaTableNameViaQueryFields()
+        public async Task TestSqlConnectionExistsViaAsyncViaTableNameViaQueryFields()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -477,8 +478,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExistsAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    fields).Result;
+                var result = await connection.ExistsAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    fields);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -486,7 +487,7 @@ namespace RepoDb.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestSqlConnectionExistsViaAsyncViaTableNameViaQueryGroup()
+        public async Task TestSqlConnectionExistsViaAsyncViaTableNameViaQueryGroup()
         {
             // Setup
             var tables = Helper.CreateIdentityTables(10);
@@ -503,8 +504,8 @@ namespace RepoDb.IntegrationTests.Operations
                 connection.InsertAll(tables);
 
                 // Act
-                var result = connection.ExistsAsync(ClassMappedNameCache.Get<IdentityTable>(),
-                    queryGroup).Result;
+                var result = await connection.ExistsAsync(ClassMappedNameCache.Get<IdentityTable>(),
+                    queryGroup);
 
                 // Assert
                 Assert.IsTrue(result);

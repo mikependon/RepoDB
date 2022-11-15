@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Data.SqlClient;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.IntegrationTests;
 using RepoDb.IntegrationTests.Models;
@@ -106,7 +107,7 @@ namespace RepoDb.SqlServer.IntegrationTests
         #region Async
 
         [TestMethod]
-        public void TestDbHelperGetFieldsAsync()
+        public async Task TestDbHelperGetFieldsAsync()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -115,7 +116,7 @@ namespace RepoDb.SqlServer.IntegrationTests
                 var helper = connection.GetDbHelper();
 
                 // Act
-                var fields = helper.GetFieldsAsync(connection, "[sc].[IdentityTable]", null).Result;
+                var fields = await helper.GetFieldsAsync(connection, "[sc].[IdentityTable]", null);
 
                 // Assert
                 using (var reader = connection.ExecuteReader("SELECT name FROM sys.columns WHERE object_id = OBJECT_ID(@TableName);",
@@ -141,7 +142,7 @@ namespace RepoDb.SqlServer.IntegrationTests
         }
 
         [TestMethod]
-        public void TestDbHelperGetFieldsAsyncPrimary()
+        public async Task TestDbHelperGetFieldsAsyncPrimary()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -150,7 +151,7 @@ namespace RepoDb.SqlServer.IntegrationTests
                 var helper = connection.GetDbHelper();
 
                 // Act
-                var fields = helper.GetFieldsAsync(connection, "[NonIdentityTable]", null).Result;
+                var fields = await helper.GetFieldsAsync(connection, "[NonIdentityTable]", null);
                 var primary = fields.FirstOrDefault(f => f.IsPrimary == true);
 
                 // Assert
@@ -160,7 +161,7 @@ namespace RepoDb.SqlServer.IntegrationTests
         }
 
         [TestMethod]
-        public void TestDbHelperGetFieldsAsyncIdentity()
+        public async Task TestDbHelperGetFieldsAsyncIdentity()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -169,7 +170,7 @@ namespace RepoDb.SqlServer.IntegrationTests
                 var helper = connection.GetDbHelper();
 
                 // Act
-                var fields = helper.GetFieldsAsync(connection, "[sc].[IdentityTable]", null).Result;
+                var fields = await helper.GetFieldsAsync(connection, "[sc].[IdentityTable]", null);
                 var primary = fields.FirstOrDefault(f => f.IsIdentity == true);
 
                 // Assert
@@ -215,7 +216,7 @@ namespace RepoDb.SqlServer.IntegrationTests
         #region Async
 
         [TestMethod]
-        public void TestDbHelperGetScopeIdentityAsync()
+        public async Task TestDbHelperGetScopeIdentityAsync()
         {
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb))
             {
@@ -231,7 +232,7 @@ namespace RepoDb.SqlServer.IntegrationTests
                 Assert.IsTrue(table.Id > 0);
 
                 // Act
-                var result = helper.GetScopeIdentityAsync(connection, null).Result;
+                var result = await helper.GetScopeIdentityAsync(connection, null);
 
                 // Assert
                 Assert.AreEqual(insertResult, Convert.ToInt64(result));

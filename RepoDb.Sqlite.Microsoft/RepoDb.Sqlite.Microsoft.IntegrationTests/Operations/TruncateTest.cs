@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.Sqlite;
+﻿using System.Threading.Tasks;
+using Microsoft.Data.Sqlite;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Sqlite.Microsoft.IntegrationTests.Models;
 using RepoDb.Sqlite.Microsoft.IntegrationTests.Setup;
@@ -47,7 +48,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         #region Async
 
         [TestMethod]
-        public void TestSqLiteConnectionTruncateAsyncWithoutExpression()
+        public async Task TestSqLiteConnectionTruncateAsyncWithoutExpression()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -55,7 +56,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                var result = connection.TruncateAsync<MdsCompleteTable>().Result;
+                var result = await connection.TruncateAsync<MdsCompleteTable>();
                 var countResult = connection.CountAll<MdsCompleteTable>();
 
                 // Assert
@@ -93,7 +94,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         #region Async
 
         [TestMethod]
-        public void TestSqLiteConnectionTruncateAsyncViaTableNameWithoutExpression()
+        public async Task TestSqLiteConnectionTruncateAsyncViaTableNameWithoutExpression()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -101,7 +102,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                var result = connection.TruncateAsync(ClassMappedNameCache.Get<MdsCompleteTable>()).Result;
+                var result = await connection.TruncateAsync(ClassMappedNameCache.Get<MdsCompleteTable>());
                 var countResult = connection.CountAll<MdsCompleteTable>();
 
                 // Assert

@@ -6,6 +6,7 @@ using RepoDb.PostgreSql.IntegrationTests.Models;
 using RepoDb.PostgreSql.IntegrationTests.Setup;
 using System.Data.Common;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.PostgreSql.IntegrationTests.Operations
 {
@@ -131,7 +132,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExecuteReaderAsync()
+        public async Task TestPostgreSqlConnectionExecuteReaderAsync()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -139,7 +140,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("SELECT \"Id\", \"ColumnInteger\", \"ColumnDate\" FROM \"CompleteTable\";").Result)
+                using (var reader = await connection.ExecuteReaderAsync("SELECT \"Id\", \"ColumnInteger\", \"ColumnDate\" FROM \"CompleteTable\";"))
                 {
                     while (reader.Read())
                     {
@@ -159,7 +160,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExecuteReaderAsyncWithMultipleStatements()
+        public async Task TestPostgreSqlConnectionExecuteReaderAsyncWithMultipleStatements()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -167,7 +168,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("SELECT \"Id\", \"ColumnInteger\", \"ColumnDate\" FROM \"CompleteTable\"; SELECT \"Id\", \"ColumnInteger\", \"ColumnDate\" FROM \"CompleteTable\";").Result)
+                using (var reader = await connection.ExecuteReaderAsync("SELECT \"Id\", \"ColumnInteger\", \"ColumnDate\" FROM \"CompleteTable\"; SELECT \"Id\", \"ColumnInteger\", \"ColumnDate\" FROM \"CompleteTable\";"))
                 {
                     do
                     {
@@ -190,7 +191,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExecuteReaderAsyncAsExtractedEntity()
+        public async Task TestPostgreSqlConnectionExecuteReaderAsyncAsExtractedEntity()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -198,7 +199,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM \"CompleteTable\";").Result)
+                using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM \"CompleteTable\";"))
                 {
                     // Act
                     var result = DataReader.ToEnumerable<CompleteTable>((DbDataReader)reader).AsList();
@@ -210,7 +211,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestPostgreSqlConnectionExecuteReaderAsyncAsExtractedDynamic()
+        public async Task TestPostgreSqlConnectionExecuteReaderAsyncAsExtractedDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -218,7 +219,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Operations
             using (var connection = new NpgsqlConnection(Database.ConnectionString))
             {
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM \"CompleteTable\";").Result)
+                using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM \"CompleteTable\";"))
                 {
                     // Act
                     var result = DataReader.ToEnumerable((DbDataReader)reader).AsList();

@@ -4,6 +4,7 @@ using RepoDb.SQLite.System.IntegrationTests.Models;
 using RepoDb.SQLite.System.IntegrationTests.Setup;
 using System.Data.SQLite;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Transactions;
 
 namespace RepoDb.SQLite.System.IntegrationTests
@@ -74,7 +75,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
         #region BatchQueryAsync
 
         [TestMethod]
-        public void TestSqlTransactionForBatchQueryAsync()
+        public async Task TestSqlTransactionForBatchQueryAsync()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -85,7 +86,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.BatchQueryAsync<SdsCompleteTable>(0, 10, OrderField.Parse(new { Id = Order.Ascending }), it => it.Id != 0, transaction: transaction).Wait();
+                    await connection.BatchQueryAsync<SdsCompleteTable>(0, 10, OrderField.Parse(new { Id = Order.Ascending }), it => it.Id != 0, transaction: transaction);
                 }
             }
         }
@@ -120,7 +121,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
         #region CountAsync
 
         [TestMethod]
-        public void TestSqlTransactionForCountAsync()
+        public async Task TestSqlTransactionForCountAsync()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -131,7 +132,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.CountAsync<SdsCompleteTable>(it => it.Id != 0, transaction: transaction).Wait();
+                    await connection.CountAsync<SdsCompleteTable>(it => it.Id != 0, transaction: transaction);
                 }
             }
         }
@@ -166,7 +167,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
         #region CountAllAsync
 
         [TestMethod]
-        public void TestSqlTransactionForCountAllAsync()
+        public async Task TestSqlTransactionForCountAllAsync()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -177,7 +178,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.CountAllAsync<SdsCompleteTable>(transaction: transaction).Wait();
+                    await connection.CountAllAsync<SdsCompleteTable>(transaction: transaction);
                 }
             }
         }
@@ -253,7 +254,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
         #region DeleteAsync
 
         [TestMethod]
-        public void TestSqlTransactionForDeleteAsyncAsCommitted()
+        public async Task TestSqlTransactionForDeleteAsyncAsCommitted()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -270,7 +271,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.DeleteAsync<SdsCompleteTable>(entity, transaction: transaction).Wait();
+                    await connection.DeleteAsync<SdsCompleteTable>(entity, transaction: transaction);
 
                     // Act
                     transaction.Commit();
@@ -282,7 +283,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlTransactionForDeleteAsyncAsRolledBack()
+        public async Task TestSqlTransactionForDeleteAsyncAsRolledBack()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -299,7 +300,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.DeleteAsync<SdsCompleteTable>(entity, transaction: transaction).Wait();
+                    await connection.DeleteAsync<SdsCompleteTable>(entity, transaction: transaction);
 
                     // Act
                     transaction.Rollback();
@@ -381,7 +382,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
         #region DeleteAllAsync
 
         [TestMethod]
-        public void TestSqlTransactionForDeleteAllAsyncAsCommitted()
+        public async Task TestSqlTransactionForDeleteAllAsyncAsCommitted()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -398,7 +399,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.DeleteAllAsync<SdsCompleteTable>(transaction: transaction).Wait();
+                    await connection.DeleteAllAsync<SdsCompleteTable>(transaction: transaction);
 
                     // Act
                     transaction.Commit();
@@ -410,7 +411,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlTransactionForDeleteAllAsyncAsRolledBack()
+        public async Task TestSqlTransactionForDeleteAllAsyncAsRolledBack()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -427,7 +428,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.DeleteAllAsync<SdsCompleteTable>(transaction: transaction).Wait();
+                    await connection.DeleteAllAsync<SdsCompleteTable>(transaction: transaction);
 
                     // Act
                     transaction.Rollback();
@@ -503,7 +504,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
         #region InsertAsync
 
         [TestMethod]
-        public void TestSqlTransactionForInsertAsyncAsCommitted()
+        public async Task TestSqlTransactionForInsertAsyncAsCommitted()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -517,7 +518,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.InsertAsync<SdsCompleteTable>(entity, transaction: transaction).Wait();
+                    await connection.InsertAsync<SdsCompleteTable>(entity, transaction: transaction);
 
                     // Act
                     transaction.Commit();
@@ -529,7 +530,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlTransactionForInsertAsyncAsRolledBack()
+        public async Task TestSqlTransactionForInsertAsyncAsRolledBack()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -543,7 +544,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.InsertAsync<SdsCompleteTable>(entity, transaction: transaction).Wait();
+                    await connection.InsertAsync<SdsCompleteTable>(entity, transaction: transaction);
 
                     // Act
                     transaction.Rollback();
@@ -619,7 +620,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
         #region InsertAllAsync
 
         [TestMethod]
-        public void TestSqlTransactionForInsertAllAsyncAsCommitted()
+        public async Task TestSqlTransactionForInsertAllAsyncAsCommitted()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -633,7 +634,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.InsertAllAsync<SdsCompleteTable>(entities, transaction: transaction).Wait();
+                    await connection.InsertAllAsync<SdsCompleteTable>(entities, transaction: transaction);
 
                     // Act
                     transaction.Commit();
@@ -645,7 +646,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlTransactionForInsertAllAsyncAsRolledBack()
+        public async Task TestSqlTransactionForInsertAllAsyncAsRolledBack()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -659,7 +660,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.InsertAllAsync<SdsCompleteTable>(entities, transaction: transaction).Wait();
+                    await connection.InsertAllAsync<SdsCompleteTable>(entities, transaction: transaction);
 
                     // Act
                     transaction.Rollback();
@@ -735,7 +736,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
         #region MergeAsync
 
         [TestMethod]
-        public void TestSqlTransactionForMergeAsyncAsCommitted()
+        public async Task TestSqlTransactionForMergeAsyncAsCommitted()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -749,7 +750,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
                 var transaction = connection.EnsureOpen().BeginTransaction();
 
                 // Act
-                connection.MergeAsync<SdsCompleteTable>(entity, transaction: transaction).Wait();
+                await connection.MergeAsync<SdsCompleteTable>(entity, transaction: transaction);
 
                 // Act
                 transaction.Commit();
@@ -760,7 +761,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlTransactionForMergeAsyncAsRolledBack()
+        public async Task TestSqlTransactionForMergeAsyncAsRolledBack()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -774,7 +775,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
                 var transaction = connection.EnsureOpen().BeginTransaction();
 
                 // Act
-                connection.MergeAsync<SdsCompleteTable>(entity, transaction: transaction).Wait();
+                await connection.MergeAsync<SdsCompleteTable>(entity, transaction: transaction);
 
                 // Act
                 transaction.Rollback();
@@ -849,7 +850,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
         #region MergeAllAsync
 
         [TestMethod]
-        public void TestSqlTransactionForMergeAllAsyncAsCommitted()
+        public async Task TestSqlTransactionForMergeAllAsyncAsCommitted()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -863,7 +864,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.MergeAllAsync<SdsCompleteTable>(entities, transaction: transaction).Wait();
+                    await connection.MergeAllAsync<SdsCompleteTable>(entities, transaction: transaction);
 
                     // Act
                     transaction.Commit();
@@ -875,7 +876,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlTransactionForMergeAllAsyncAsRolledBack()
+        public async Task TestSqlTransactionForMergeAllAsyncAsRolledBack()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -889,7 +890,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.MergeAllAsync<SdsCompleteTable>(entities, transaction: transaction).Wait();
+                    await connection.MergeAllAsync<SdsCompleteTable>(entities, transaction: transaction);
 
                     // Act
                     transaction.Rollback();
@@ -930,7 +931,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
         #region QueryAsync
 
         [TestMethod]
-        public void TestSqlTransactionForQueryAsync()
+        public async Task TestSqlTransactionForQueryAsync()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -941,7 +942,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.QueryAsync<SdsCompleteTable>(it => it.Id != 0, transaction: transaction).Wait();
+                    await connection.QueryAsync<SdsCompleteTable>(it => it.Id != 0, transaction: transaction);
                 }
             }
         }
@@ -976,7 +977,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
         #region QueryAllAsync
 
         [TestMethod]
-        public void TestSqlTransactionForQueryAllAsync()
+        public async Task TestSqlTransactionForQueryAllAsync()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -987,7 +988,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.QueryAllAsync<SdsCompleteTable>(transaction: transaction).Wait();
+                    await connection.QueryAllAsync<SdsCompleteTable>(transaction: transaction);
                 }
             }
         }
@@ -1134,7 +1135,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
         #region QueryMultipleAsync
 
         [TestMethod]
-        public void TestSqlTransactionForQueryMultipleAsyncT2()
+        public async Task TestSqlTransactionForQueryMultipleAsyncT2()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -1145,15 +1146,15 @@ namespace RepoDb.SQLite.System.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.QueryMultipleAsync<SdsCompleteTable, SdsCompleteTable>(it => it.Id != 0,
+                    await connection.QueryMultipleAsync<SdsCompleteTable, SdsCompleteTable>(it => it.Id != 0,
                         it => it.Id != 0,
-                        transaction: transaction).Wait();
+                        transaction: transaction);
                 }
             }
         }
 
         [TestMethod]
-        public void TestSqlTransactionForQueryMultipleAsyncT3()
+        public async Task TestSqlTransactionForQueryMultipleAsyncT3()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -1164,16 +1165,16 @@ namespace RepoDb.SQLite.System.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.QueryMultipleAsync<SdsCompleteTable, SdsCompleteTable, SdsCompleteTable>(it => it.Id != 0,
+                    await connection.QueryMultipleAsync<SdsCompleteTable, SdsCompleteTable, SdsCompleteTable>(it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
-                        transaction: transaction).Wait();
+                        transaction: transaction);
                 }
             }
         }
 
         [TestMethod]
-        public void TestSqlTransactionForQueryMultipleAsyncT4()
+        public async Task TestSqlTransactionForQueryMultipleAsyncT4()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -1184,17 +1185,17 @@ namespace RepoDb.SQLite.System.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.QueryMultipleAsync<SdsCompleteTable, SdsCompleteTable, SdsCompleteTable, SdsCompleteTable>(it => it.Id != 0,
+                    await connection.QueryMultipleAsync<SdsCompleteTable, SdsCompleteTable, SdsCompleteTable, SdsCompleteTable>(it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
-                        transaction: transaction).Wait();
+                        transaction: transaction);
                 }
             }
         }
 
         [TestMethod]
-        public void TestSqlTransactionForQueryMultipleAsyncT5()
+        public async Task TestSqlTransactionForQueryMultipleAsyncT5()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -1205,18 +1206,18 @@ namespace RepoDb.SQLite.System.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.QueryMultipleAsync<SdsCompleteTable, SdsCompleteTable, SdsCompleteTable, SdsCompleteTable, SdsCompleteTable>(it => it.Id != 0,
+                    await connection.QueryMultipleAsync<SdsCompleteTable, SdsCompleteTable, SdsCompleteTable, SdsCompleteTable, SdsCompleteTable>(it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
-                        transaction: transaction).Wait();
+                        transaction: transaction);
                 }
             }
         }
 
         [TestMethod]
-        public void TestSqlTransactionForQueryMultipleAsyncT6()
+        public async Task TestSqlTransactionForQueryMultipleAsyncT6()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -1227,19 +1228,19 @@ namespace RepoDb.SQLite.System.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.QueryMultipleAsync<SdsCompleteTable, SdsCompleteTable, SdsCompleteTable, SdsCompleteTable, SdsCompleteTable, SdsCompleteTable>(it => it.Id != 0,
+                    await connection.QueryMultipleAsync<SdsCompleteTable, SdsCompleteTable, SdsCompleteTable, SdsCompleteTable, SdsCompleteTable, SdsCompleteTable>(it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
-                        transaction: transaction).Wait();
+                        transaction: transaction);
                 }
             }
         }
 
         [TestMethod]
-        public void TestSqlTransactionForQueryMultipleAsyncT7()
+        public async Task TestSqlTransactionForQueryMultipleAsyncT7()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -1250,14 +1251,14 @@ namespace RepoDb.SQLite.System.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.QueryMultipleAsync<SdsCompleteTable, SdsCompleteTable, SdsCompleteTable, SdsCompleteTable, SdsCompleteTable, SdsCompleteTable, SdsCompleteTable>(it => it.Id != 0,
+                    await connection.QueryMultipleAsync<SdsCompleteTable, SdsCompleteTable, SdsCompleteTable, SdsCompleteTable, SdsCompleteTable, SdsCompleteTable, SdsCompleteTable>(it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
-                        transaction: transaction).Wait();
+                        transaction: transaction);
                 }
             }
         }
@@ -1297,7 +1298,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
         //#region TruncateAsync
 
         //[TestMethod]
-        //public void TestSqlTransactionForTruncateAsync()
+        //public async Task TestSqlTransactionForTruncateAsync()
         //{
         //    using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
         //    {
@@ -1308,7 +1309,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
         //        using (var transaction = connection.EnsureOpen().BeginTransaction())
         //        {
         //            // Act
-        //            connection.TruncateAsync<CompleteTable>(transaction: transaction).Wait();
+        //            connection.TruncateAsync<CompleteTable>(transaction: transaction);
         //        }
         //    }
         //}
@@ -1394,7 +1395,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
         #region UpdateAsync
 
         [TestMethod]
-        public void TestSqlTransactionForUpdateAsyncAsCommitted()
+        public async Task TestSqlTransactionForUpdateAsyncAsCommitted()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -1413,7 +1414,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
                     entity.ColumnBoolean = false;
 
                     // Act
-                    connection.UpdateAsync<SdsCompleteTable>(entity, transaction: transaction).Wait();
+                    await connection.UpdateAsync<SdsCompleteTable>(entity, transaction: transaction);
 
                     // Act
                     transaction.Commit();
@@ -1428,7 +1429,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlTransactionForUpdateAsyncAsRolledBack()
+        public async Task TestSqlTransactionForUpdateAsyncAsRolledBack()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -1447,7 +1448,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
                     entity.ColumnBoolean = false;
 
                     // Act
-                    connection.UpdateAsync<SdsCompleteTable>(entity, transaction: transaction).Wait();
+                    await connection.UpdateAsync<SdsCompleteTable>(entity, transaction: transaction);
 
                     // Act
                     transaction.Rollback();
@@ -1542,7 +1543,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
         #region UpdateAllAsync
 
         [TestMethod]
-        public void TestSqlTransactionForUpdateAllAsyncAsCommitted()
+        public async Task TestSqlTransactionForUpdateAllAsyncAsCommitted()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -1561,7 +1562,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
                     entities.ForEach(entity => entity.ColumnBoolean = false);
 
                     // Act
-                    connection.UpdateAllAsync<SdsCompleteTable>(entities, transaction: transaction).Wait();
+                    await connection.UpdateAllAsync<SdsCompleteTable>(entities, transaction: transaction);
 
                     // Act
                     transaction.Commit();
@@ -1576,7 +1577,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlTransactionForUpdateAllAsyncAsRolledBack()
+        public async Task TestSqlTransactionForUpdateAllAsyncAsRolledBack()
         {
             using (var connection = new SQLiteConnection(Database.ConnectionStringSDS))
             {
@@ -1595,7 +1596,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
                     entities.ForEach(entity => entity.ColumnBoolean = false);
 
                     // Act
-                    connection.UpdateAllAsync<SdsCompleteTable>(entities, transaction: transaction).Wait();
+                    await connection.UpdateAllAsync<SdsCompleteTable>(entities, transaction: transaction);
 
                     // Act
                     transaction.Rollback();
@@ -1645,7 +1646,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
         }
 
         [TestMethod]
-        public void TestTransactionForInsertAllAsync()
+        public async Task TestTransactionForInsertAllAsync()
         {
             // Setup
             var entities = Helper.CreateSdsCompleteTables(10);
@@ -1658,7 +1659,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
                     Database.CreateSdsCompleteTable(connection);
 
                     // Act
-                    connection.InsertAllAsync<SdsCompleteTable>(entities).Wait();
+                    await connection.InsertAllAsync<SdsCompleteTable>(entities);
 
                     // Assert
                     Assert.AreEqual(entities.Count, connection.CountAll<SdsCompleteTable>());
@@ -1699,7 +1700,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
         }
 
         [TestMethod]
-        public void TestTransactionScopeForMergeAllAsync()
+        public async Task TestTransactionScopeForMergeAllAsync()
         {
             // Setup
             var entities = Helper.CreateSdsCompleteTables(10);
@@ -1712,7 +1713,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
                     Database.CreateSdsCompleteTable(connection);
 
                     // Act
-                    connection.MergeAllAsync<SdsCompleteTable>(entities).Wait();
+                    await connection.MergeAllAsync<SdsCompleteTable>(entities);
 
                     // Assert
                     Assert.AreEqual(entities.Count, connection.CountAll<SdsCompleteTable>());
@@ -1762,7 +1763,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
         }
 
         [TestMethod]
-        public void TestTransactionScopeForUpdateAllAsync()
+        public async Task TestTransactionScopeForUpdateAllAsync()
         {
             // Setup
             var entities = Helper.CreateSdsCompleteTables(10);
@@ -1781,7 +1782,7 @@ namespace RepoDb.SQLite.System.IntegrationTests
                     entities.ForEach(entity => entity.ColumnBoolean = false);
 
                     // Act
-                    connection.UpdateAllAsync<SdsCompleteTable>(entities).Wait();
+                    await connection.UpdateAllAsync<SdsCompleteTable>(entities);
 
                     // Act
                     var queryResult = connection.QueryAll<SdsCompleteTable>();
