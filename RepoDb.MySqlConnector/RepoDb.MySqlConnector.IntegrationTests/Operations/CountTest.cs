@@ -5,6 +5,7 @@ using RepoDb.MySqlConnector.IntegrationTests.Models;
 using RepoDb.MySqlConnector.IntegrationTests.Setup;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.MySqlConnector.IntegrationTests.Operations
 {
@@ -155,7 +156,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestMySqlConnectionCountAsyncWithoutExpression()
+        public async Task TestMySqlConnectionCountAsyncWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -163,7 +164,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.CountAsync<CompleteTable>((object)null).Result;
+                var result = await connection.CountAsync<CompleteTable>((object)null);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -171,7 +172,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionCountAsyncViaExpression()
+        public async Task TestMySqlConnectionCountAsyncViaExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -180,7 +181,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.CountAsync<CompleteTable>(e => ids.Contains(e.Id)).Result;
+                var result = await connection.CountAsync<CompleteTable>(e => ids.Contains(e.Id));
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Count(), result);
@@ -188,7 +189,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionCountAsyncViaDynamic()
+        public async Task TestMySqlConnectionCountAsyncViaDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -196,7 +197,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.CountAsync<CompleteTable>(new { tables.First().Id }).Result;
+                var result = await connection.CountAsync<CompleteTable>(new { tables.First().Id });
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Count(), result);
@@ -204,7 +205,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionCountAsyncViaQueryField()
+        public async Task TestMySqlConnectionCountAsyncViaQueryField()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -212,7 +213,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.CountAsync<CompleteTable>(new QueryField("Id", tables.First().Id)).Result;
+                var result = await connection.CountAsync<CompleteTable>(new QueryField("Id", tables.First().Id));
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Count(), result);
@@ -220,7 +221,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionCountAsyncViaQueryFields()
+        public async Task TestMySqlConnectionCountAsyncViaQueryFields()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -233,7 +234,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.CountAsync<CompleteTable>(queryFields).Result;
+                var result = await connection.CountAsync<CompleteTable>(queryFields);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Count(), result);
@@ -241,7 +242,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionCountAsyncViaQueryGroup()
+        public async Task TestMySqlConnectionCountAsyncViaQueryGroup()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -255,15 +256,15 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.CountAsync<CompleteTable>(queryGroup).Result;
+                var result = await connection.CountAsync<CompleteTable>(queryGroup);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Count(), result);
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnMySqlConnectionCountAsyncWithHints()
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public async Task ThrowExceptionOnMySqlConnectionCountAsyncWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -271,8 +272,8 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.CountAsync<CompleteTable>((object)null,
-                    hints: "WhatEver").Wait();
+                await connection.CountAsync<CompleteTable>((object)null,
+                    hints: "WhatEver");
             }
         }
 
@@ -400,7 +401,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestMySqlConnectionCountAsyncViaTableNameWithoutExpression()
+        public async Task TestMySqlConnectionCountAsyncViaTableNameWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -408,8 +409,8 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.CountAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    (object)null).Result;
+                var result = await connection.CountAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    (object)null);
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -417,7 +418,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionCountAsyncViaTableNameViaDynamic()
+        public async Task TestMySqlConnectionCountAsyncViaTableNameViaDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -425,8 +426,8 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.CountAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    new { tables.First().Id }).Result;
+                var result = await connection.CountAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    new { tables.First().Id });
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Count(), result);
@@ -434,7 +435,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionCountAsyncViaTableNameViaQueryField()
+        public async Task TestMySqlConnectionCountAsyncViaTableNameViaQueryField()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -442,8 +443,8 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.CountAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    new QueryField("Id", tables.First().Id)).Result;
+                var result = await connection.CountAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    new QueryField("Id", tables.First().Id));
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Count(), result);
@@ -451,7 +452,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionCountAsyncViaTableNameViaQueryFields()
+        public async Task TestMySqlConnectionCountAsyncViaTableNameViaQueryFields()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -464,8 +465,8 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.CountAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    queryFields).Result;
+                var result = await connection.CountAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    queryFields);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Count(), result);
@@ -473,7 +474,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionCountAsyncViaTableNameViaQueryGroup()
+        public async Task TestMySqlConnectionCountAsyncViaTableNameViaQueryGroup()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -487,16 +488,16 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.CountAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    queryGroup).Result;
+                var result = await connection.CountAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    queryGroup);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Count(), result);
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnMySqlConnectionCountAsyncViaTableNameWithHints()
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public async Task ThrowExceptionOnMySqlConnectionCountAsyncViaTableNameWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -504,9 +505,9 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.CountAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                await connection.CountAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     (object)null,
-                    hints: "WhatEver").Wait();
+                    hints: "WhatEver");
             }
         }
 

@@ -2,6 +2,7 @@
 using MySqlConnector;
 using RepoDb.MySqlConnector.IntegrationTests.Setup;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.MySqlConnector.IntegrationTests.Operations
 {
@@ -77,7 +78,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestMySqlConnectionExecuteNonQueryAsync()
+        public async Task TestMySqlConnectionExecuteNonQueryAsync()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -85,7 +86,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExecuteNonQueryAsync("DELETE FROM `CompleteTable`;").Result;
+                var result = await connection.ExecuteNonQueryAsync("DELETE FROM `CompleteTable`;");
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
@@ -93,7 +94,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionExecuteNonQueryAsyncWithParameters()
+        public async Task TestMySqlConnectionExecuteNonQueryAsyncWithParameters()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -101,8 +102,8 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExecuteNonQueryAsync("DELETE FROM `CompleteTable` WHERE Id = @Id;",
-                    new { tables.Last().Id }).Result;
+                var result = await connection.ExecuteNonQueryAsync("DELETE FROM `CompleteTable` WHERE Id = @Id;",
+                    new { tables.Last().Id });
 
                 // Assert
                 Assert.AreEqual(1, result);
@@ -110,7 +111,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionExecuteNonQueryAsyncWithMultipleStatement()
+        public async Task TestMySqlConnectionExecuteNonQueryAsyncWithMultipleStatement()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -118,7 +119,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExecuteNonQueryAsync("DELETE FROM `CompleteTable`; DELETE FROM `CompleteTable`;").Result;
+                var result = await connection.ExecuteNonQueryAsync("DELETE FROM `CompleteTable`; DELETE FROM `CompleteTable`;");
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);

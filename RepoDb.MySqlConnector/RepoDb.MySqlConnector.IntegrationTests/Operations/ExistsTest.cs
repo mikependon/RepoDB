@@ -5,6 +5,7 @@ using RepoDb.MySqlConnector.IntegrationTests.Models;
 using RepoDb.MySqlConnector.IntegrationTests.Setup;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.MySqlConnector.IntegrationTests.Operations
 {
@@ -155,7 +156,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestMySqlConnectionExistsAsyncWithoutExpression()
+        public async Task TestMySqlConnectionExistsAsyncWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -163,7 +164,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExistsAsync<CompleteTable>((object)null).Result;
+                var result = await connection.ExistsAsync<CompleteTable>((object)null);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -171,7 +172,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionExistsAsyncViaExpression()
+        public async Task TestMySqlConnectionExistsAsyncViaExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -180,7 +181,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExistsAsync<CompleteTable>(e => ids.Contains(e.Id)).Result;
+                var result = await connection.ExistsAsync<CompleteTable>(e => ids.Contains(e.Id));
 
                 // Assert
                 Assert.IsTrue(result);
@@ -188,7 +189,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionExistsAsyncViaDynamic()
+        public async Task TestMySqlConnectionExistsAsyncViaDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -196,7 +197,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExistsAsync<CompleteTable>(new { tables.First().Id }).Result;
+                var result = await connection.ExistsAsync<CompleteTable>(new { tables.First().Id });
 
                 // Assert
                 Assert.IsTrue(result);
@@ -204,7 +205,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionExistsAsyncViaQueryField()
+        public async Task TestMySqlConnectionExistsAsyncViaQueryField()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -212,7 +213,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExistsAsync<CompleteTable>(new QueryField("Id", tables.First().Id)).Result;
+                var result = await connection.ExistsAsync<CompleteTable>(new QueryField("Id", tables.First().Id));
 
                 // Assert
                 Assert.IsTrue(result);
@@ -220,7 +221,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionExistsAsyncViaQueryFields()
+        public async Task TestMySqlConnectionExistsAsyncViaQueryFields()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -233,7 +234,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExistsAsync<CompleteTable>(queryFields).Result;
+                var result = await connection.ExistsAsync<CompleteTable>(queryFields);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -241,7 +242,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionExistsAsyncViaQueryGroup()
+        public async Task TestMySqlConnectionExistsAsyncViaQueryGroup()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -255,15 +256,15 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExistsAsync<CompleteTable>(queryGroup).Result;
+                var result = await connection.ExistsAsync<CompleteTable>(queryGroup);
 
                 // Assert
                 Assert.IsTrue(result);
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnMySqlConnectionExistsAsyncWithHints()
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public async Task ThrowExceptionOnMySqlConnectionExistsAsyncWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -271,8 +272,8 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.ExistsAsync<CompleteTable>((object)null,
-                    hints: "WhatEver").Wait();
+                await connection.ExistsAsync<CompleteTable>((object)null,
+                    hints: "WhatEver");
             }
         }
 
@@ -400,7 +401,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestMySqlConnectionExistsAsyncViaTableNameWithoutExpression()
+        public async Task TestMySqlConnectionExistsAsyncViaTableNameWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -408,8 +409,8 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExistsAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    (object)null).Result;
+                var result = await connection.ExistsAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    (object)null);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -417,7 +418,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionExistsAsyncViaTableNameViaDynamic()
+        public async Task TestMySqlConnectionExistsAsyncViaTableNameViaDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -425,8 +426,8 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExistsAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    new { tables.First().Id }).Result;
+                var result = await connection.ExistsAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    new { tables.First().Id });
 
                 // Assert
                 Assert.IsTrue(result);
@@ -434,7 +435,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionExistsAsyncViaTableNameViaQueryField()
+        public async Task TestMySqlConnectionExistsAsyncViaTableNameViaQueryField()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -442,8 +443,8 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExistsAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    new QueryField("Id", tables.First().Id)).Result;
+                var result = await connection.ExistsAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    new QueryField("Id", tables.First().Id));
 
                 // Assert
                 Assert.IsTrue(result);
@@ -451,7 +452,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionExistsAsyncViaTableNameViaQueryFields()
+        public async Task TasktMySqlConnectionExistsAsyncViaTableNameViaQueryFields()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -464,8 +465,8 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExistsAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    queryFields).Result;
+                var result = await connection.ExistsAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    queryFields);
 
                 // Assert
                 Assert.IsTrue(result);
@@ -473,7 +474,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionExistsAsyncViaTableNameViaQueryGroup()
+        public async Task TestMySqlConnectionExistsAsyncViaTableNameViaQueryGroup()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -487,16 +488,16 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExistsAsync(ClassMappedNameCache.Get<CompleteTable>(),
-                    queryGroup).Result;
+                var result = await connection.ExistsAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                    queryGroup);
 
                 // Assert
                 Assert.IsTrue(result);
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnMySqlConnectionExistsAsyncViaTableNameWithHints()
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public async Task ThrowExceptionOnMySqlConnectionExistsAsyncViaTableNameWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -504,9 +505,9 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.ExistsAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                await connection.ExistsAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     (object)null,
-                    hints: "WhatEver").Wait();
+                    hints: "WhatEver");
             }
         }
 

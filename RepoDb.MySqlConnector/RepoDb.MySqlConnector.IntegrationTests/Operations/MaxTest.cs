@@ -5,6 +5,7 @@ using RepoDb.MySqlConnector.IntegrationTests.Models;
 using RepoDb.MySqlConnector.IntegrationTests.Setup;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.MySqlConnector.IntegrationTests.Operations
 {
@@ -162,7 +163,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestMySqlConnectionMaxAsyncWithoutExpression()
+        public async Task TestMySqlConnectionMaxAsyncWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -170,8 +171,8 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.MaxAsync<CompleteTable>(e => e.ColumnInt,
-                    (object)null).Result;
+                var result = await connection.MaxAsync<CompleteTable>(e => e.ColumnInt,
+                    (object)null);
 
                 // Assert
                 Assert.AreEqual(tables.Max(e => e.ColumnInt), Convert.ToInt32(result));
@@ -179,7 +180,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionMaxAsyncViaExpression()
+        public async Task TestMySqlConnectionMaxAsyncViaExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -188,8 +189,8 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.MaxAsync<CompleteTable>(e => e.ColumnInt,
-                    e => ids.Contains(e.Id)).Result;
+                var result = await connection.MaxAsync<CompleteTable>(e => e.ColumnInt,
+                    e => ids.Contains(e.Id));
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Max(e => e.ColumnInt), Convert.ToInt32(result));
@@ -197,7 +198,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionMaxAsyncViaDynamic()
+        public async Task TestMySqlConnectionMaxAsyncViaDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -205,8 +206,8 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.MaxAsync<CompleteTable>(e => e.ColumnInt,
-                    new { tables.First().Id }).Result;
+                var result = await connection.MaxAsync<CompleteTable>(e => e.ColumnInt,
+                    new { tables.First().Id });
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Max(e => e.ColumnInt), Convert.ToInt32(result));
@@ -214,7 +215,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionMaxAsyncViaQueryField()
+        public async Task TestMySqlConnectionMaxAsyncViaQueryField()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -222,8 +223,8 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.MaxAsync<CompleteTable>(e => e.ColumnInt,
-                    new QueryField("Id", tables.First().Id)).Result;
+                var result = await connection.MaxAsync<CompleteTable>(e => e.ColumnInt,
+                    new QueryField("Id", tables.First().Id));
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Max(e => e.ColumnInt), Convert.ToInt32(result));
@@ -231,7 +232,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionMaxAsyncViaQueryFields()
+        public async Task TestMySqlConnectionMaxAsyncViaQueryFields()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -244,8 +245,8 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.MaxAsync<CompleteTable>(e => e.ColumnInt,
-                    queryFields).Result;
+                var result = await connection.MaxAsync<CompleteTable>(e => e.ColumnInt,
+                    queryFields);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Max(e => e.ColumnInt), Convert.ToInt32(result));
@@ -253,7 +254,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionMaxAsyncViaQueryGroup()
+        public async Task TestMySqlConnectionMaxAsyncViaQueryGroup()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -267,16 +268,16 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.MaxAsync<CompleteTable>(e => e.ColumnInt,
-                    queryGroup).Result;
+                var result = await connection.MaxAsync<CompleteTable>(e => e.ColumnInt,
+                    queryGroup);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Max(e => e.ColumnInt), Convert.ToInt32(result));
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnMySqlConnectionMaxAsyncWithHints()
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public async Task ThrowExceptionOnMySqlConnectionMaxAsyncWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -284,9 +285,9 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.MaxAsync<CompleteTable>(e => e.ColumnInt,
+                await connection.MaxAsync<CompleteTable>(e => e.ColumnInt,
                     (object)null,
-                    hints: "WhatEver").Wait();
+                    hints: "WhatEver");
             }
         }
 
@@ -420,7 +421,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestMySqlConnectionMaxAsyncViaTableNameWithoutExpression()
+        public async Task TestMySqlConnectionMaxAsyncViaTableNameWithoutExpression()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -428,9 +429,9 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.MaxAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.MaxAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
-                    (object)null).Result;
+                    (object)null);
 
                 // Assert
                 Assert.AreEqual(tables.Max(e => e.ColumnInt), Convert.ToInt32(result));
@@ -438,7 +439,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionMaxAsyncViaTableNameViaDynamic()
+        public async Task TestMySqlConnectionMaxAsyncViaTableNameViaDynamic()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -446,9 +447,9 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.MaxAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.MaxAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
-                    new { tables.First().Id }).Result;
+                    new { tables.First().Id });
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Max(e => e.ColumnInt), Convert.ToInt32(result));
@@ -456,7 +457,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionMaxAsyncViaTableNameViaQueryField()
+        public async Task TestMySqlConnectionMaxAsyncViaTableNameViaQueryField()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -464,9 +465,9 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.MaxAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.MaxAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
-                    new QueryField("Id", tables.First().Id)).Result;
+                    new QueryField("Id", tables.First().Id));
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Max(e => e.ColumnInt), Convert.ToInt32(result));
@@ -474,7 +475,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionMaxAsyncViaTableNameViaQueryFields()
+        public async Task TestMySqlConnectionMaxAsyncViaTableNameViaQueryFields()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -487,9 +488,9 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.MaxAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.MaxAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
-                    queryFields).Result;
+                    queryFields);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Max(e => e.ColumnInt), Convert.ToInt32(result));
@@ -497,7 +498,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionMaxAsyncViaTableNameViaQueryGroup()
+        public async Task TestMySqlConnectionMaxAsyncViaTableNameViaQueryGroup()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -511,17 +512,17 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.MaxAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                var result = await connection.MaxAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
-                    queryGroup).Result;
+                    queryGroup);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Max(e => e.ColumnInt), Convert.ToInt32(result));
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnMySqlConnectionMaxAsyncViaTableNameWithHints()
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public async Task ThrowExceptionOnMySqlConnectionMaxAsyncViaTableNameWithHints()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -529,10 +530,10 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                connection.MaxAsync(ClassMappedNameCache.Get<CompleteTable>(),
+                await connection.MaxAsync(ClassMappedNameCache.Get<CompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
                     (object)null,
-                    hints: "WhatEver").Wait();
+                    hints: "WhatEver");
             }
         }
 

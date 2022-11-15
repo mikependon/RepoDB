@@ -4,6 +4,7 @@ using RepoDb.Extensions;
 using RepoDb.MySqlConnector.IntegrationTests.Models;
 using RepoDb.MySqlConnector.IntegrationTests.Setup;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.MySqlConnector.IntegrationTests.Operations
 {
@@ -65,7 +66,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         #region Async
 
         [TestMethod]
-        public void TestMySqlConnectionExecuteQueryAsync()
+        public async Task TestMySqlConnectionExecuteQueryAsync()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -73,7 +74,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExecuteQueryAsync<CompleteTable>("SELECT * FROM `CompleteTable`;").Result;
+                var result = await connection.ExecuteQueryAsync<CompleteTable>("SELECT * FROM `CompleteTable`;");
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result.Count());
@@ -82,7 +83,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
         }
 
         [TestMethod]
-        public void TestMySqlConnectionExecuteQueryAsyncWithParameters()
+        public async Task TestMySqlConnectionExecuteQueryAsyncWithParameters()
         {
             // Setup
             var tables = Database.CreateCompleteTables(10);
@@ -90,8 +91,8 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = connection.ExecuteQueryAsync<CompleteTable>("SELECT * FROM `CompleteTable` WHERE Id = @Id;",
-                    new { tables.Last().Id }).Result;
+                var result = await connection.ExecuteQueryAsync<CompleteTable>("SELECT * FROM `CompleteTable` WHERE Id = @Id;",
+                    new { tables.Last().Id });
 
                 // Assert
                 Assert.AreEqual(1, result.Count());
