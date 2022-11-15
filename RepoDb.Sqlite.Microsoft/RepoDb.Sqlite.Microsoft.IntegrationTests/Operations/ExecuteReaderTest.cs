@@ -7,6 +7,7 @@ using RepoDb.Sqlite.Microsoft.IntegrationTests.Setup;
 using System;
 using System.Data.Common;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
 {
@@ -132,7 +133,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         #region Async
 
         [TestMethod]
-        public void TestSqLiteConnectionExecuteReaderAsync()
+        public async Task TestSqLiteConnectionExecuteReaderAsync()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -140,7 +141,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("SELECT Id, ColumnInt, ColumnDateTime FROM [MdsCompleteTable];").Result)
+                using (var reader = await connection.ExecuteReaderAsync("SELECT Id, ColumnInt, ColumnDateTime FROM [MdsCompleteTable];"))
                 {
                     while (reader.Read())
                     {
@@ -160,7 +161,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionExecuteReaderAsyncWithMultipleStatements()
+        public async Task TestSqLiteConnectionExecuteReaderAsyncWithMultipleStatements()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -168,7 +169,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("SELECT Id, ColumnInt, ColumnDateTime FROM [MdsCompleteTable]; SELECT Id, ColumnInt, ColumnDateTime FROM [MdsCompleteTable];").Result)
+                using (var reader = await connection.ExecuteReaderAsync("SELECT Id, ColumnInt, ColumnDateTime FROM [MdsCompleteTable]; SELECT Id, ColumnInt, ColumnDateTime FROM [MdsCompleteTable];"))
                 {
                     do
                     {
@@ -191,7 +192,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionExecuteReaderAsyncAsExtractedEntity()
+        public async Task TestSqLiteConnectionExecuteReaderAsyncAsExtractedEntity()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -199,7 +200,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("SELECT * FROM [MdsCompleteTable];").Result)
+                using (var reader = await connection.ExecuteReaderAsync("SELECT * FROM [MdsCompleteTable];"))
                 {
                     // Act
                     var result = DataReader.ToEnumerable<MdsCompleteTable>((DbDataReader)reader).AsList();
@@ -211,7 +212,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionExecuteReaderAsyncAsExtractedDynamic()
+        public async Task TestSqLiteConnectionExecuteReaderAsyncAsExtractedDynamic()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -219,7 +220,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                using (var reader = connection.ExecuteReaderAsync("SELECT *, 'MDS' AS MDS FROM [MdsCompleteTable];").Result)
+                using (var reader = await connection.ExecuteReaderAsync("SELECT *, 'MDS' AS MDS FROM [MdsCompleteTable];"))
                 {
                     // Act
                     var result = DataReader.ToEnumerable((DbDataReader)reader).AsList();

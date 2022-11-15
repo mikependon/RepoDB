@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Sqlite.Microsoft.IntegrationTests.Models;
@@ -104,7 +105,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         #region Async
 
         [TestMethod]
-        public void TestDbHelperGetFieldsAsync()
+        public async Task TestDbHelperGetFieldsAsync()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -113,7 +114,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                var fields = helper.GetFieldsAsync(connection, "MdsCompleteTable", null).Result;
+                var fields = await helper.GetFieldsAsync(connection, "MdsCompleteTable", null);
 
                 // Assert
                 using (var reader = connection.ExecuteReader("pragma table_info([MdsCompleteTable]);"))
@@ -138,7 +139,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         }
 
         [TestMethod]
-        public void TestDbHelperGetFieldsAsyncPrimary()
+        public async Task TestDbHelperGetFieldsAsyncPrimary()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -147,7 +148,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                var fields = helper.GetFieldsAsync(connection, "MdsCompleteTable", null).Result;
+                var fields = await helper.GetFieldsAsync(connection, "MdsCompleteTable", null);
                 var primary = fields.FirstOrDefault(f => f.IsPrimary == true);
 
                 // Assert
@@ -157,7 +158,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         }
 
         [TestMethod]
-        public void TestDbHelperGetFieldsAsyncIdentity()
+        public async Task TestDbHelperGetFieldsAsyncIdentity()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -166,7 +167,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                var fields = helper.GetFieldsAsync(connection, "MdsCompleteTable", null).Result;
+                var fields = await helper.GetFieldsAsync(connection, "MdsCompleteTable", null);
                 var primary = fields.FirstOrDefault(f => f.IsIdentity == true);
 
                 // Assert
@@ -215,7 +216,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         #region Async
 
         [TestMethod]
-        public void TestDbHelperGetScopeIdentityAsync()
+        public async Task TestDbHelperGetScopeIdentityAsync()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -234,7 +235,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 Assert.IsTrue(table.Id > 0);
 
                 // Act
-                var result = helper.GetScopeIdentityAsync(connection, null).Result;
+                var result = await helper.GetScopeIdentityAsync(connection, null);
 
                 // Assert
                 Assert.AreEqual(insertResult, result);

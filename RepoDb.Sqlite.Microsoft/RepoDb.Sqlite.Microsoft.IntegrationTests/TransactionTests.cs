@@ -4,6 +4,7 @@ using RepoDb.Enumerations;
 using RepoDb.Sqlite.Microsoft.IntegrationTests.Models;
 using RepoDb.Sqlite.Microsoft.IntegrationTests.Setup;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Transactions;
 
 namespace RepoDb.Sqlite.Microsoft.IntegrationTests
@@ -74,7 +75,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         #region BatchQueryAsync
 
         [TestMethod]
-        public void TestSqlTransactionForBatchQueryAsync()
+        public async Task TestSqlTransactionForBatchQueryAsync()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -85,7 +86,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.BatchQueryAsync<MdsCompleteTable>(0, 10, OrderField.Parse(new { Id = Order.Ascending }), it => it.Id != 0, transaction: transaction).Wait();
+                    await connection.BatchQueryAsync<MdsCompleteTable>(0, 10, OrderField.Parse(new { Id = Order.Ascending }), it => it.Id != 0, transaction: transaction);
                 }
             }
         }
@@ -120,7 +121,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         #region CountAsync
 
         [TestMethod]
-        public void TestSqlTransactionForCountAsync()
+        public async Task TestSqlTransactionForCountAsync()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -131,7 +132,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.CountAsync<MdsCompleteTable>(it => it.Id != 0, transaction: transaction).Wait();
+                    await connection.CountAsync<MdsCompleteTable>(it => it.Id != 0, transaction: transaction);
                 }
             }
         }
@@ -166,7 +167,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         #region CountAllAsync
 
         [TestMethod]
-        public void TestSqlTransactionForCountAllAsync()
+        public async Task TestSqlTransactionForCountAllAsync()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -177,7 +178,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.CountAllAsync<MdsCompleteTable>(transaction: transaction).Wait();
+                    await connection.CountAllAsync<MdsCompleteTable>(transaction: transaction);
                 }
             }
         }
@@ -253,7 +254,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         #region DeleteAsync
 
         [TestMethod]
-        public void TestSqlTransactionForDeleteAsyncAsCommitted()
+        public async Task TestSqlTransactionForDeleteAsyncAsCommitted()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -270,7 +271,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.DeleteAsync<MdsCompleteTable>(entity, transaction: transaction).Wait();
+                    await connection.DeleteAsync<MdsCompleteTable>(entity, transaction: transaction);
 
                     // Act
                     transaction.Commit();
@@ -282,7 +283,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlTransactionForDeleteAsyncAsRolledBack()
+        public async Task TestSqlTransactionForDeleteAsyncAsRolledBack()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -299,7 +300,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.DeleteAsync<MdsCompleteTable>(entity, transaction: transaction).Wait();
+                    await connection.DeleteAsync<MdsCompleteTable>(entity, transaction: transaction);
 
                     // Act
                     transaction.Rollback();
@@ -381,7 +382,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         #region DeleteAllAsync
 
         [TestMethod]
-        public void TestSqlTransactionForDeleteAllAsyncAsCommitted()
+        public async Task TestSqlTransactionForDeleteAllAsyncAsCommitted()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -398,7 +399,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.DeleteAllAsync<MdsCompleteTable>(transaction: transaction).Wait();
+                    await connection.DeleteAllAsync<MdsCompleteTable>(transaction: transaction);
 
                     // Act
                     transaction.Commit();
@@ -410,7 +411,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlTransactionForDeleteAllAsyncAsRolledBack()
+        public async Task TestSqlTransactionForDeleteAllAsyncAsRolledBack()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -427,7 +428,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.DeleteAllAsync<MdsCompleteTable>(transaction: transaction).Wait();
+                    await connection.DeleteAllAsync<MdsCompleteTable>(transaction: transaction);
 
                     // Act
                     transaction.Rollback();
@@ -503,7 +504,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         #region InsertAsync
 
         [TestMethod]
-        public void TestSqlTransactionForInsertAsyncAsCommitted()
+        public async Task TestSqlTransactionForInsertAsyncAsCommitted()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -517,7 +518,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.InsertAsync<MdsCompleteTable>(entity, transaction: transaction).Wait();
+                    await connection.InsertAsync<MdsCompleteTable>(entity, transaction: transaction);
 
                     // Act
                     transaction.Commit();
@@ -529,7 +530,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlTransactionForInsertAsyncAsRolledBack()
+        public async Task TestSqlTransactionForInsertAsyncAsRolledBack()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -543,7 +544,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.InsertAsync<MdsCompleteTable>(entity, transaction: transaction).Wait();
+                    await connection.InsertAsync<MdsCompleteTable>(entity, transaction: transaction);
 
                     // Act
                     transaction.Rollback();
@@ -619,7 +620,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         #region InsertAllAsync
 
         [TestMethod]
-        public void TestSqlTransactionForInsertAllAsyncAsCommitted()
+        public async Task TestSqlTransactionForInsertAllAsyncAsCommitted()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -633,7 +634,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.InsertAllAsync<MdsCompleteTable>(entities, transaction: transaction).Wait();
+                    await connection.InsertAllAsync<MdsCompleteTable>(entities, transaction: transaction);
 
                     // Act
                     transaction.Commit();
@@ -645,7 +646,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlTransactionForInsertAllAsyncAsRolledBack()
+        public async Task TestSqlTransactionForInsertAllAsyncAsRolledBack()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -659,7 +660,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.InsertAllAsync<MdsCompleteTable>(entities, transaction: transaction).Wait();
+                    await connection.InsertAllAsync<MdsCompleteTable>(entities, transaction: transaction);
 
                     // Act
                     transaction.Rollback();
@@ -735,7 +736,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         #region MergeAsync
 
         [TestMethod]
-        public void TestSqlTransactionForMergeAsyncAsCommitted()
+        public async Task TestSqlTransactionForMergeAsyncAsCommitted()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -749,7 +750,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 var transaction = connection.EnsureOpen().BeginTransaction();
 
                 // Act
-                connection.MergeAsync<MdsCompleteTable>(entity, transaction: transaction).Wait();
+                await connection.MergeAsync<MdsCompleteTable>(entity, transaction: transaction);
 
                 // Act
                 transaction.Commit();
@@ -760,7 +761,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlTransactionForMergeAsyncAsRolledBack()
+        public async Task TestSqlTransactionForMergeAsyncAsRolledBack()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -774,7 +775,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 var transaction = connection.EnsureOpen().BeginTransaction();
 
                 // Act
-                connection.MergeAsync<MdsCompleteTable>(entity, transaction: transaction).Wait();
+                await connection.MergeAsync<MdsCompleteTable>(entity, transaction: transaction);
 
                 // Act
                 transaction.Rollback();
@@ -849,7 +850,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         #region MergeAllAsync
 
         [TestMethod]
-        public void TestSqlTransactionForMergeAllAsyncAsCommitted()
+        public async Task TestSqlTransactionForMergeAllAsyncAsCommitted()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -863,7 +864,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.MergeAllAsync<MdsCompleteTable>(entities, transaction: transaction).Wait();
+                    await connection.MergeAllAsync<MdsCompleteTable>(entities, transaction: transaction);
 
                     // Act
                     transaction.Commit();
@@ -875,7 +876,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlTransactionForMergeAllAsyncAsRolledBack()
+        public async Task TestSqlTransactionForMergeAllAsyncAsRolledBack()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -889,7 +890,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.MergeAllAsync<MdsCompleteTable>(entities, transaction: transaction).Wait();
+                    await connection.MergeAllAsync<MdsCompleteTable>(entities, transaction: transaction);
 
                     // Act
                     transaction.Rollback();
@@ -930,7 +931,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         #region QueryAsync
 
         [TestMethod]
-        public void TestSqlTransactionForQueryAsync()
+        public async Task TestSqlTransactionForQueryAsync()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -941,7 +942,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.QueryAsync<MdsCompleteTable>(it => it.Id != 0, transaction: transaction).Wait();
+                    await connection.QueryAsync<MdsCompleteTable>(it => it.Id != 0, transaction: transaction);
                 }
             }
         }
@@ -976,7 +977,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         #region QueryAllAsync
 
         [TestMethod]
-        public void TestSqlTransactionForQueryAllAsync()
+        public async Task TestSqlTransactionForQueryAllAsync()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -987,7 +988,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.QueryAllAsync<MdsCompleteTable>(transaction: transaction).Wait();
+                    await connection.QueryAllAsync<MdsCompleteTable>(transaction: transaction);
                 }
             }
         }
@@ -1134,7 +1135,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         #region QueryMultipleAsync
 
         [TestMethod]
-        public void TestSqlTransactionForQueryMultipleAsyncT2()
+        public async Task TestSqlTransactionForQueryMultipleAsyncT2()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -1145,15 +1146,15 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.QueryMultipleAsync<MdsCompleteTable, MdsCompleteTable>(it => it.Id != 0,
+                    await connection.QueryMultipleAsync<MdsCompleteTable, MdsCompleteTable>(it => it.Id != 0,
                         it => it.Id != 0,
-                        transaction: transaction).Wait();
+                        transaction: transaction);
                 }
             }
         }
 
         [TestMethod]
-        public void TestSqlTransactionForQueryMultipleAsyncT3()
+        public async Task TestSqlTransactionForQueryMultipleAsyncT3()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -1164,16 +1165,16 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.QueryMultipleAsync<MdsCompleteTable, MdsCompleteTable, MdsCompleteTable>(it => it.Id != 0,
+                    await connection.QueryMultipleAsync<MdsCompleteTable, MdsCompleteTable, MdsCompleteTable>(it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
-                        transaction: transaction).Wait();
+                        transaction: transaction);
                 }
             }
         }
 
         [TestMethod]
-        public void TestSqlTransactionForQueryMultipleAsyncT4()
+        public async Task TestSqlTransactionForQueryMultipleAsyncT4()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -1184,17 +1185,17 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.QueryMultipleAsync<MdsCompleteTable, MdsCompleteTable, MdsCompleteTable, MdsCompleteTable>(it => it.Id != 0,
+                    await connection.QueryMultipleAsync<MdsCompleteTable, MdsCompleteTable, MdsCompleteTable, MdsCompleteTable>(it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
-                        transaction: transaction).Wait();
+                        transaction: transaction);
                 }
             }
         }
 
         [TestMethod]
-        public void TestSqlTransactionForQueryMultipleAsyncT5()
+        public async Task TestSqlTransactionForQueryMultipleAsyncT5()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -1205,18 +1206,18 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.QueryMultipleAsync<MdsCompleteTable, MdsCompleteTable, MdsCompleteTable, MdsCompleteTable, MdsCompleteTable>(it => it.Id != 0,
+                    await connection.QueryMultipleAsync<MdsCompleteTable, MdsCompleteTable, MdsCompleteTable, MdsCompleteTable, MdsCompleteTable>(it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
-                        transaction: transaction).Wait();
+                        transaction: transaction);
                 }
             }
         }
 
         [TestMethod]
-        public void TestSqlTransactionForQueryMultipleAsyncT6()
+        public async Task TestSqlTransactionForQueryMultipleAsyncT6()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -1227,19 +1228,19 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.QueryMultipleAsync<MdsCompleteTable, MdsCompleteTable, MdsCompleteTable, MdsCompleteTable, MdsCompleteTable, MdsCompleteTable>(it => it.Id != 0,
+                    await connection.QueryMultipleAsync<MdsCompleteTable, MdsCompleteTable, MdsCompleteTable, MdsCompleteTable, MdsCompleteTable, MdsCompleteTable>(it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
-                        transaction: transaction).Wait();
+                        transaction: transaction);
                 }
             }
         }
 
         [TestMethod]
-        public void TestSqlTransactionForQueryMultipleAsyncT7()
+        public async Task TestSqlTransactionForQueryMultipleAsyncT7()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -1250,14 +1251,14 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                 using (var transaction = connection.EnsureOpen().BeginTransaction())
                 {
                     // Act
-                    connection.QueryMultipleAsync<MdsCompleteTable, MdsCompleteTable, MdsCompleteTable, MdsCompleteTable, MdsCompleteTable, MdsCompleteTable, MdsCompleteTable>(it => it.Id != 0,
+                    await connection.QueryMultipleAsync<MdsCompleteTable, MdsCompleteTable, MdsCompleteTable, MdsCompleteTable, MdsCompleteTable, MdsCompleteTable, MdsCompleteTable>(it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
                         it => it.Id != 0,
-                        transaction: transaction).Wait();
+                        transaction: transaction);
                 }
             }
         }
@@ -1297,7 +1298,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         //#region TruncateAsync
 
         //[TestMethod]
-        //public void TestSqlTransactionForTruncateAsync()
+        //public async Task TestSqlTransactionForTruncateAsync()
         //{
         //    using (var connection = new SqliteConnection(Database.ConnectionString))
         //    {
@@ -1308,7 +1309,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         //        using (var transaction = connection.EnsureOpen().BeginTransaction())
         //        {
         //            // Act
-        //            connection.TruncateAsync<CompleteTable>(transaction: transaction).Wait();
+        //            connection.TruncateAsync<CompleteTable>(transaction: transaction);
         //        }
         //    }
         //}
@@ -1394,7 +1395,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         #region UpdateAsync
 
         [TestMethod]
-        public void TestSqlTransactionForUpdateAsyncAsCommitted()
+        public async Task TestSqlTransactionForUpdateAsyncAsCommitted()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -1413,7 +1414,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                     entity.ColumnBoolean = "false";
 
                     // Act
-                    connection.UpdateAsync<MdsCompleteTable>(entity, transaction: transaction).Wait();
+                    await connection.UpdateAsync<MdsCompleteTable>(entity, transaction: transaction);
 
                     // Act
                     transaction.Commit();
@@ -1428,7 +1429,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlTransactionForUpdateAsyncAsRolledBack()
+        public async Task TestSqlTransactionForUpdateAsyncAsRolledBack()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -1447,7 +1448,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                     entity.ColumnBoolean = "false";
 
                     // Act
-                    connection.UpdateAsync<MdsCompleteTable>(entity, transaction: transaction).Wait();
+                    await connection.UpdateAsync<MdsCompleteTable>(entity, transaction: transaction);
 
                     // Act
                     transaction.Rollback();
@@ -1542,7 +1543,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         #region UpdateAllAsync
 
         [TestMethod]
-        public void TestSqlTransactionForUpdateAllAsyncAsCommitted()
+        public async Task TestSqlTransactionForUpdateAllAsyncAsCommitted()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -1561,7 +1562,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                     entities.ForEach(entity => entity.ColumnBoolean = "false");
 
                     // Act
-                    connection.UpdateAllAsync<MdsCompleteTable>(entities, transaction: transaction).Wait();
+                    await connection.UpdateAllAsync<MdsCompleteTable>(entities, transaction: transaction);
 
                     // Act
                     transaction.Commit();
@@ -1576,7 +1577,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         }
 
         [TestMethod]
-        public void TestSqlTransactionForUpdateAllAsyncAsRolledBack()
+        public async Task TestSqlTransactionForUpdateAllAsyncAsRolledBack()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -1595,7 +1596,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                     entities.ForEach(entity => entity.ColumnBoolean = "false");
 
                     // Act
-                    connection.UpdateAllAsync<MdsCompleteTable>(entities, transaction: transaction).Wait();
+                    await connection.UpdateAllAsync<MdsCompleteTable>(entities, transaction: transaction);
 
                     // Act
                     transaction.Rollback();
@@ -1645,7 +1646,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         }
 
         [TestMethod]
-        public void TestTransactionForInsertAllAsync()
+        public async Task TestTransactionForInsertAllAsync()
         {
             // Setup
             var entities = Helper.CreateMdsCompleteTables(10);
@@ -1658,7 +1659,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                     Database.CreateMdsCompleteTable(connection);
 
                     // Act
-                    connection.InsertAllAsync<MdsCompleteTable>(entities).Wait();
+                    await connection.InsertAllAsync<MdsCompleteTable>(entities);
 
                     // Assert
                     Assert.AreEqual(entities.Count, connection.CountAll<MdsCompleteTable>());
@@ -1699,7 +1700,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         }
 
         [TestMethod]
-        public void TestTransactionScopeForMergeAllAsync()
+        public async Task TestTransactionScopeForMergeAllAsync()
         {
             // Setup
             var entities = Helper.CreateMdsCompleteTables(10);
@@ -1712,7 +1713,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                     Database.CreateMdsCompleteTable(connection);
 
                     // Act
-                    connection.MergeAllAsync<MdsCompleteTable>(entities).Wait();
+                    await connection.MergeAllAsync<MdsCompleteTable>(entities);
 
                     // Assert
                     Assert.AreEqual(entities.Count, connection.CountAll<MdsCompleteTable>());
@@ -1762,7 +1763,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
         }
 
         [TestMethod]
-        public void TestTransactionScopeForUpdateAllAsync()
+        public async Task TestTransactionScopeForUpdateAllAsync()
         {
             // Setup
             var entities = Helper.CreateMdsCompleteTables(10);
@@ -1781,7 +1782,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests
                     entities.ForEach(entity => entity.ColumnBoolean = "false");
 
                     // Act
-                    connection.UpdateAllAsync<MdsCompleteTable>(entities).Wait();
+                    await connection.UpdateAllAsync<MdsCompleteTable>(entities);
 
                     // Act
                     var queryResult = connection.QueryAll<MdsCompleteTable>();

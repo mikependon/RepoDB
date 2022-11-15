@@ -5,6 +5,7 @@ using RepoDb.Sqlite.Microsoft.IntegrationTests.Models;
 using RepoDb.Sqlite.Microsoft.IntegrationTests.Setup;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
 {
@@ -79,8 +80,8 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionQueryAllAsyncWithHints()
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public async Task ThrowExceptionQueryAllAsyncWithHints()
         {
             // Setup
             var table = Database.CreateMdsCompleteTables(1).First();
@@ -88,7 +89,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
                 // Act
-                connection.QueryAllAsync<MdsCompleteTable>(hints: "WhatEver").Wait();
+                await connection.QueryAllAsync<MdsCompleteTable>(hints: "WhatEver");
             }
         }
 
@@ -137,7 +138,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         #region Async
 
         [TestMethod]
-        public void TestSqLiteConnectionQueryAllAsyncViaTableName()
+        public async Task TestSqLiteConnectionQueryAllAsyncViaTableName()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -145,7 +146,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                var queryResult = connection.QueryAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>()).Result;
+                var queryResult = await connection.QueryAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>());
 
                 // Assert
                 tables.AsList().ForEach(table =>
@@ -153,8 +154,8 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionQueryAllAsyncViaTableNameWithHints()
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public async Task ThrowExceptionQueryAllAsyncViaTableNameWithHints()
         {
             // Setup
             var table = Database.CreateMdsCompleteTables(1).First();
@@ -162,9 +163,9 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
                 // Act
-                connection.QueryAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                await connection.QueryAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
                     (object)null,
-                    hints: "WhatEver").Wait();
+                    hints: "WhatEver");
             }
         }
 

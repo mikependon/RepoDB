@@ -4,6 +4,7 @@ using RepoDb.Extensions;
 using RepoDb.Sqlite.Microsoft.IntegrationTests.Models;
 using RepoDb.Sqlite.Microsoft.IntegrationTests.Setup;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
 {
@@ -56,7 +57,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         #region Async
 
         [TestMethod]
-        public void TestSqLiteConnectionUpdateAllAsync()
+        public async Task TestSqLiteConnectionUpdateAllAsync()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -65,7 +66,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 tables.AsList().ForEach(table => Helper.UpdateMdsCompleteTableProperties(table));
 
                 // Act
-                var result = connection.UpdateAllAsync<MdsCompleteTable>(tables).Result;
+                var result = await connection.UpdateAllAsync<MdsCompleteTable>(tables);
 
                 // Assert
                 Assert.AreEqual(10, result);
@@ -141,7 +142,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         #region Async
 
         [TestMethod]
-        public void TestSqLiteConnectionUpdateAllAsyncViaTableName()
+        public async Task TestSqLiteConnectionUpdateAllAsyncViaTableName()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -150,7 +151,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 tables.AsList().ForEach(table => Helper.UpdateMdsCompleteTableProperties(table));
 
                 // Act
-                var result = connection.UpdateAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>(), tables).Result;
+                var result = await connection.UpdateAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>(), tables);
 
                 // Assert
                 Assert.AreEqual(10, result);
@@ -165,7 +166,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionUpdateAllAsyncAsExpandoObjectViaTableName()
+        public async Task TestSqLiteConnectionUpdateAllAsyncAsExpandoObjectViaTableName()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -174,8 +175,8 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Helper.CreateMdsCompleteTablesAsExpandoObjects(10);
 
                 // Act
-                var result = connection.UpdateAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
-                    tables).Result;
+                var result = await connection.UpdateAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                    tables);
 
                 // Assert
                 Assert.AreEqual(10, result);

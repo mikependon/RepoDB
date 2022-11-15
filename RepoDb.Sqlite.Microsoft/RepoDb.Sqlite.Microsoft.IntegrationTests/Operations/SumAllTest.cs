@@ -4,6 +4,7 @@ using RepoDb.Sqlite.Microsoft.IntegrationTests.Models;
 using RepoDb.Sqlite.Microsoft.IntegrationTests.Setup;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
 {
@@ -62,7 +63,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         #region Async
 
         [TestMethod]
-        public void TestSqLiteConnectionSumAllAsync()
+        public async Task TestSqLiteConnectionSumAllAsync()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -70,15 +71,15 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                var result = connection.SumAllAsync<MdsCompleteTable>(e => e.ColumnInt).Result;
+                var result = await connection.SumAllAsync<MdsCompleteTable>(e => e.ColumnInt);
 
                 // Assert
                 Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result));
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnSqLiteConnectionSumAllAsyncWithHints()
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public async Task ThrowExceptionOnSqLiteConnectionSumAllAsyncWithHints()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -86,8 +87,8 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                connection.SumAllAsync<MdsCompleteTable>(e => e.ColumnInt,
-                    hints: "WhatEver").Wait();
+                await connection.SumAllAsync<MdsCompleteTable>(e => e.ColumnInt,
+                    hints: "WhatEver");
             }
         }
 
@@ -136,7 +137,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         #region Async
 
         [TestMethod]
-        public void TestSqLiteConnectionSumAllAsyncViaTableName()
+        public async Task TestSqLiteConnectionSumAllAsyncViaTableName()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -144,16 +145,16 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                var result = connection.SumAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
-                    Field.Parse<MdsCompleteTable>(e => e.ColumnInt).First()).Result;
+                var result = await connection.SumAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                    Field.Parse<MdsCompleteTable>(e => e.ColumnInt).First());
 
                 // Assert
                 Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result));
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnSqLiteConnectionSumAllAsyncViaTableNameWithHints()
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public async Task ThrowExceptionOnSqLiteConnectionSumAllAsyncViaTableNameWithHints()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -161,9 +162,9 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                connection.SumAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                await connection.SumAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
                     Field.Parse<MdsCompleteTable>(e => e.ColumnInt).First(),
-                    hints: "WhatEver").Wait();
+                    hints: "WhatEver");
             }
         }
 

@@ -6,6 +6,7 @@ using RepoDb.Sqlite.Microsoft.IntegrationTests.Setup;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
 {
@@ -120,7 +121,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         #region Async
 
         [TestMethod]
-        public void TestSqLiteConnectionExecuteQueryMultipleAsync()
+        public async Task TestSqLiteConnectionExecuteQueryMultipleAsync()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -128,8 +129,8 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                using (var extractor = connection.ExecuteQueryMultipleAsync(@"SELECT * FROM [MdsCompleteTable];
-                    SELECT * FROM [MdsCompleteTable];").Result)
+                using (var extractor = await connection.ExecuteQueryMultipleAsync(@"SELECT * FROM [MdsCompleteTable];
+                    SELECT * FROM [MdsCompleteTable];"))
                 {
                     var list = new List<IEnumerable<MdsCompleteTable>>();
 
@@ -148,7 +149,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionExecuteQueryMultipleAsyncWithParameters()
+        public async Task TestSqLiteConnectionExecuteQueryMultipleAsyncWithParameters()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -156,13 +157,13 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                using (var extractor = connection.ExecuteQueryMultipleAsync(@"SELECT * FROM [MdsCompleteTable] WHERE Id = @Id1;
+                using (var extractor = await connection.ExecuteQueryMultipleAsync(@"SELECT * FROM [MdsCompleteTable] WHERE Id = @Id1;
                     SELECT * FROM [MdsCompleteTable] WHERE Id = @Id2;",
                     new
                     {
                         Id1 = tables.First().Id,
                         Id2 = tables.Last().Id
-                    }).Result)
+                    }))
                 {
                     var list = new List<IEnumerable<MdsCompleteTable>>();
 
@@ -180,7 +181,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionExecuteQueryMultipleAsyncWithSharedParameters()
+        public async Task TestSqLiteConnectionExecuteQueryMultipleAsyncWithSharedParameters()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -188,9 +189,9 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                using (var extractor = connection.ExecuteQueryMultipleAsync(@"SELECT * FROM [MdsCompleteTable] WHERE Id = @Id;
+                using (var extractor = await connection.ExecuteQueryMultipleAsync(@"SELECT * FROM [MdsCompleteTable] WHERE Id = @Id;
                     SELECT * FROM [MdsCompleteTable] WHERE Id = @Id;",
-                    new { Id = tables.Last().Id }).Result)
+                    new { Id = tables.Last().Id }))
                 {
                     var list = new List<IEnumerable<MdsCompleteTable>>();
 

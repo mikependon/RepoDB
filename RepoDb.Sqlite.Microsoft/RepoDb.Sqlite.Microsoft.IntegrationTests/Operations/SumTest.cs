@@ -5,6 +5,7 @@ using RepoDb.Sqlite.Microsoft.IntegrationTests.Models;
 using RepoDb.Sqlite.Microsoft.IntegrationTests.Setup;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
 {
@@ -162,7 +163,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         #region Async
 
         [TestMethod]
-        public void TestSqLiteConnectionSumAsyncWithoutExpression()
+        public async Task TestSqLiteConnectionSumAsyncWithoutExpression()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -170,8 +171,8 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                var result = connection.SumAsync<MdsCompleteTable>(e => e.ColumnInt,
-                    (object)null).Result;
+                var result = await connection.SumAsync<MdsCompleteTable>(e => e.ColumnInt,
+                    (object)null);
 
                 // Assert
                 Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result));
@@ -179,7 +180,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionSumAsyncViaExpression()
+        public async Task TestSqLiteConnectionSumAsyncViaExpression()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -188,8 +189,8 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var ids = new[] { tables.First().Id, tables.Last().Id };
 
                 // Act
-                var result = connection.SumAsync<MdsCompleteTable>(e => e.ColumnInt,
-                    e => ids.Contains(e.Id)).Result;
+                var result = await connection.SumAsync<MdsCompleteTable>(e => e.ColumnInt,
+                    e => ids.Contains(e.Id));
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => ids.Contains(e.Id)).Sum(e => e.ColumnInt), Convert.ToInt32(result));
@@ -197,7 +198,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionSumAsyncViaDynamic()
+        public async Task TestSqLiteConnectionSumAsyncViaDynamic()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -205,8 +206,8 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                var result = connection.SumAsync<MdsCompleteTable>(e => e.ColumnInt,
-                    new { tables.First().Id }).Result;
+                var result = await connection.SumAsync<MdsCompleteTable>(e => e.ColumnInt,
+                    new { tables.First().Id });
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Sum(e => e.ColumnInt), Convert.ToInt32(result));
@@ -214,7 +215,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionSumAsyncViaQueryField()
+        public async Task TestSqLiteConnectionSumAsyncViaQueryField()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -222,8 +223,8 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                var result = connection.SumAsync<MdsCompleteTable>(e => e.ColumnInt,
-                    new QueryField("Id", tables.First().Id)).Result;
+                var result = await connection.SumAsync<MdsCompleteTable>(e => e.ColumnInt,
+                    new QueryField("Id", tables.First().Id));
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Sum(e => e.ColumnInt), Convert.ToInt32(result));
@@ -231,7 +232,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionSumAsyncViaQueryFields()
+        public async Task TestSqLiteConnectionSumAsyncViaQueryFields()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -244,8 +245,8 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 };
 
                 // Act
-                var result = connection.SumAsync<MdsCompleteTable>(e => e.ColumnInt,
-                    queryFields).Result;
+                var result = await connection.SumAsync<MdsCompleteTable>(e => e.ColumnInt,
+                    queryFields);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Sum(e => e.ColumnInt), Convert.ToInt32(result));
@@ -253,7 +254,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionSumAsyncViaQueryGroup()
+        public async Task TestSqLiteConnectionSumAsyncViaQueryGroup()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -267,16 +268,16 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var queryGroup = new QueryGroup(queryFields);
 
                 // Act
-                var result = connection.SumAsync<MdsCompleteTable>(e => e.ColumnInt,
-                    queryGroup).Result;
+                var result = await connection.SumAsync<MdsCompleteTable>(e => e.ColumnInt,
+                    queryGroup);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Sum(e => e.ColumnInt), Convert.ToInt32(result));
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnSqLiteConnectionSumAsyncWithHints()
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public async Task ThrowExceptionOnSqLiteConnectionSumAsyncWithHints()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -284,9 +285,9 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                connection.SumAsync<MdsCompleteTable>(e => e.ColumnInt,
+                await connection.SumAsync<MdsCompleteTable>(e => e.ColumnInt,
                     (object)null,
-                    hints: "WhatEver").Wait();
+                    hints: "WhatEver");
             }
         }
 
@@ -420,7 +421,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         #region Async
 
         [TestMethod]
-        public void TestSqLiteConnectionSumAsyncViaTableNameWithoutExpression()
+        public async Task TestSqLiteConnectionSumAsyncViaTableNameWithoutExpression()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -428,9 +429,9 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                var result = connection.SumAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                var result = await connection.SumAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
-                    (object)null).Result;
+                    (object)null);
 
                 // Assert
                 Assert.AreEqual(tables.Sum(e => e.ColumnInt), Convert.ToInt32(result));
@@ -438,7 +439,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionSumAsyncViaTableNameViaDynamic()
+        public async Task TestSqLiteConnectionSumAsyncViaTableNameViaDynamic()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -446,9 +447,9 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                var result = connection.SumAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                var result = await connection.SumAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
-                    new { tables.First().Id }).Result;
+                    new { tables.First().Id });
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Sum(e => e.ColumnInt), Convert.ToInt32(result));
@@ -456,7 +457,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionSumAsyncViaTableNameViaQueryField()
+        public async Task TestSqLiteConnectionSumAsyncViaTableNameViaQueryField()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -464,9 +465,9 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                var result = connection.SumAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                var result = await connection.SumAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
-                    new QueryField("Id", tables.First().Id)).Result;
+                    new QueryField("Id", tables.First().Id));
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id == tables.First().Id).Sum(e => e.ColumnInt), Convert.ToInt32(result));
@@ -474,7 +475,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionSumAsyncViaTableNameViaQueryFields()
+        public async Task TestSqLiteConnectionSumAsyncViaTableNameViaQueryFields()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -487,9 +488,9 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 };
 
                 // Act
-                var result = connection.SumAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                var result = await connection.SumAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
-                    queryFields).Result;
+                    queryFields);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Sum(e => e.ColumnInt), Convert.ToInt32(result));
@@ -497,7 +498,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         }
 
         [TestMethod]
-        public void TestSqLiteConnectionSumAsyncViaTableNameViaQueryGroup()
+        public async Task TestSqLiteConnectionSumAsyncViaTableNameViaQueryGroup()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -511,17 +512,17 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var queryGroup = new QueryGroup(queryFields);
 
                 // Act
-                var result = connection.SumAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                var result = await connection.SumAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
-                    queryGroup).Result;
+                    queryGroup);
 
                 // Assert
                 Assert.AreEqual(tables.Where(e => e.Id > tables.First().Id && e.Id < tables.Last().Id).Sum(e => e.ColumnInt), Convert.ToInt32(result));
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnSqLiteConnectionSumAsyncViaTableNameWithHints()
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public async Task ThrowExceptionOnSqLiteConnectionSumAsyncViaTableNameWithHints()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -529,10 +530,10 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                connection.SumAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                await connection.SumAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
                     new Field("ColumnInt", typeof(int)),
                     (object)null,
-                    hints: "WhatEver").Wait();
+                    hints: "WhatEver");
             }
         }
 

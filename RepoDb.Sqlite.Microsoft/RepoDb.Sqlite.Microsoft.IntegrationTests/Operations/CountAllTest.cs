@@ -4,6 +4,7 @@ using RepoDb.Sqlite.Microsoft.IntegrationTests.Models;
 using RepoDb.Sqlite.Microsoft.IntegrationTests.Setup;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
 {
@@ -61,7 +62,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         #region Async
 
         [TestMethod]
-        public void TestSqLiteConnectionCountAllAsync()
+        public async Task TestSqLiteConnectionCountAllAsync()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -69,15 +70,15 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                var result = connection.CountAllAsync<MdsCompleteTable>().Result;
+                var result = await connection.CountAllAsync<MdsCompleteTable>();
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnSqLiteConnectionCountAllAsyncWithHints()
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public async Task ThrowExceptionOnSqLiteConnectionCountAllAsyncWithHints()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -85,7 +86,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                connection.CountAllAsync<MdsCompleteTable>(hints: "WhatEver").Wait();
+                await connection.CountAllAsync<MdsCompleteTable>(hints: "WhatEver");
             }
         }
 
@@ -132,7 +133,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         #region Async
 
         [TestMethod]
-        public void TestSqLiteConnectionCountAllAsyncViaTableName()
+        public async Task TestSqLiteConnectionCountAllAsyncViaTableName()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -140,15 +141,15 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                var result = connection.CountAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>()).Result;
+                var result = await connection.CountAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>());
 
                 // Assert
                 Assert.AreEqual(tables.Count(), result);
             }
         }
 
-        [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void ThrowExceptionOnSqLiteConnectionCountAllAsyncViaTableNameWithHints()
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public async Task ThrowExceptionOnSqLiteConnectionCountAllAsyncViaTableNameWithHints()
         {
             using (var connection = new SqliteConnection(Database.ConnectionStringMDS))
             {
@@ -156,8 +157,8 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
                 var tables = Database.CreateMdsCompleteTables(10, connection);
 
                 // Act
-                connection.CountAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
-                    hints: "WhatEver").Wait();
+                await connection.CountAllAsync(ClassMappedNameCache.Get<MdsCompleteTable>(),
+                    hints: "WhatEver");
             }
         }
 
