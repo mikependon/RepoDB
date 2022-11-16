@@ -197,17 +197,17 @@ namespace RepoDb.SqlServer.IntegrationTests
                 var helper = connection.GetDbHelper();
 
                 // Act
-                var insertResult = connection.Insert<IdentityTable>(table);
+                var insertResult = connection.Insert<IdentityTable, long>(table);
 
                 // Assert
-                Assert.IsTrue(Convert.ToInt64(insertResult) > 0);
+                Assert.IsTrue(insertResult > 0);
                 Assert.IsTrue(table.Id > 0);
 
                 // Act
-                var result = helper.GetScopeIdentity(connection, null);
+                var result = helper.GetScopeIdentity<long>(connection, null);
 
                 // Assert
-                Assert.AreEqual(insertResult, Convert.ToInt64(result));
+                Assert.AreEqual(insertResult, result);
             }
         }
 
@@ -225,17 +225,17 @@ namespace RepoDb.SqlServer.IntegrationTests
                 var helper = connection.GetDbHelper();
 
                 // Act
-                var insertResult = connection.Insert<IdentityTable>(table);
+                var insertResult = connection.Insert<IdentityTable, long>(table);
 
                 // Assert
-                Assert.IsTrue(Convert.ToInt64(insertResult) > 0);
+                Assert.IsTrue(insertResult > 0);
                 Assert.IsTrue(table.Id > 0);
 
                 // Act
-                var result = await helper.GetScopeIdentityAsync(connection, null);
+                var result = await helper.GetScopeIdentityAsync<long>(connection, null);
 
                 // Assert
-                Assert.AreEqual(insertResult, Convert.ToInt64(result));
+                Assert.AreEqual(insertResult, result);
             }
         }
 
