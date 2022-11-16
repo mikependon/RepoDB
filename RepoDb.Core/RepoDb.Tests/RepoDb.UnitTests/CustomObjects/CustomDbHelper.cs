@@ -34,17 +34,17 @@ namespace RepoDb.UnitTests.CustomObjects
             });
         }
 
-        public object GetScopeIdentity(IDbConnection connection,
+        public T GetScopeIdentity<T>(IDbConnection connection,
             IDbTransaction transaction = null)
         {
-            return 0;
+            return default;
         }
 
-        public Task<object> GetScopeIdentityAsync(IDbConnection connection,
+        public Task<T> GetScopeIdentityAsync<T>(IDbConnection connection,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
-            return Task.FromResult((object)0);
+            return Task.FromResult<T>(default);
         }
     }
 
