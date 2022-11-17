@@ -81,9 +81,9 @@ namespace RepoDb
         {
             if (string.IsNullOrWhiteSpace(name))
             {
-                throw new NullReferenceException("The field name must be null or empty.");
+                throw new NullReferenceException("The field name must not be null or empty.");
             }
-            return From(new[] { name });
+            yield return new Field(name);
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace RepoDb
             }
             if (fields.Any(field => string.IsNullOrWhiteSpace(field)))
             {
-                throw new NullReferenceException("The field name must be null or empty.");
+                throw new NullReferenceException("The field name must not be null or empty.");
             }
             foreach (var field in fields)
             {
