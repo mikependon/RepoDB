@@ -843,20 +843,31 @@ namespace RepoDb.Extensions
         private static DbField GetDbField(string fieldName,
             IEnumerable<DbField> dbFields)
         {
-            if (string.IsNullOrWhiteSpace(fieldName))
+            if (dbFields.IsNullOrEmpty()) return null;
+            
+            var fieldNameSpan = fieldName.AsSpan();
+            
+            if (fieldNameSpan.IsEmpty || fieldNameSpan.IsWhiteSpace())
             {
                 return null;
             }
-
-            var index = fieldName.IndexOf("_In_", StringComparison.OrdinalIgnoreCase);
+            
+            var index = fieldNameSpan.IndexOf("_In_".AsSpan(), StringComparison.OrdinalIgnoreCase);
 
             if (index >= 0)
             {
-                fieldName = fieldName.Substring(0, index);
+                fieldNameSpan = fieldNameSpan.Slice(0, index);
             }
 
-            return dbFields?.FirstOrDefault(df =>
-                string.Equals(df.Name, fieldName, StringComparison.OrdinalIgnoreCase));
+            foreach (var dbField in dbFields)
+            {
+                if (dbField.Name.AsSpan().Equals(fieldNameSpan, StringComparison.OrdinalIgnoreCase))
+                {
+                    return dbField;
+                }
+            }
+            
+            return null;
         }
 
         /// <summary>
