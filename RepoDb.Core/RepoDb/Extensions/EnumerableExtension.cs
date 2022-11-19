@@ -94,17 +94,22 @@ namespace RepoDb.Extensions
 
 #if NETSTANDARD2_0
         /// <summary>
-        /// 
+        /// CCreates a new <see cref="HashSet{T}"/> from an <see cref="IEnumerable{T}"/>.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="source"></param>
-        /// <param name="comparer"></param>
-        /// <returns></returns>
-        internal static HashSet<T> ToHashSet<T>(this IEnumerable<T> source,
-            IEqualityComparer<T> comparer)
-        {
-            return new(source, comparer);
-        }
+        /// <typeparam name="T">The type of the elements.</typeparam>
+        /// <param name="source">The actual enumerable instance.</param>
+        /// <param name="comparer">An <see cref="IEqualityComparer{T}"/> to compare keys.</param>
+        /// <returns>The created <see cref="HashSet{T}"/> object.</returns>
+        internal static HashSet<T> ToHashSet<T>(this IEnumerable<T> source, IEqualityComparer<T> comparer) => 
+            new(source, comparer);
+
+        /// <summary>
+        /// Creates a new <see cref="HashSet{T}"/> from an <see cref="IEnumerable{T}"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements=.</typeparam>
+        /// <param name="source">The actual enumerable instance.</param>
+        /// <returns>The created <see cref="HashSet{T}"/> object.</returns>
+        internal static HashSet<T> ToHashSet<T>(this IEnumerable<T> source) => new(source);
 #endif
     }
 }

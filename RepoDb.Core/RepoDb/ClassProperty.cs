@@ -130,7 +130,7 @@ namespace RepoDb
                 return identityAttribute;
             }
             isIdentityAttributeWasSet = true;
-            return identityAttribute = PropertyInfo.GetCustomAttribute(StaticType.IdentityAttribute) as IdentityAttribute;
+            return identityAttribute = PropertyInfo.GetCustomAttribute<IdentityAttribute>();
         }
 
         /*
@@ -150,7 +150,7 @@ namespace RepoDb
                 return typeMapAttribute;
             }
             isTypeMapAttributeWasSet = true;
-            return typeMapAttribute = PropertyInfo.GetCustomAttribute(StaticType.TypeMapAttribute) as TypeMapAttribute;
+            return typeMapAttribute = PropertyInfo.GetCustomAttribute<TypeMapAttribute>();
         }
 
         /*
@@ -170,8 +170,8 @@ namespace RepoDb
                 return propertyValueAttribute;
             }
             isDbTypeAttributeWasSet = true;
-            return propertyValueAttribute = (PropertyInfo.GetCustomAttribute(StaticType.DbTypeAttribute) ??
-                PropertyInfo.GetCustomAttribute(StaticType.TypeMapAttribute)) as DbTypeAttribute ??
+            return propertyValueAttribute = (PropertyInfo.GetCustomAttribute<DbTypeAttribute>() ??
+                PropertyInfo.GetCustomAttribute<TypeMapAttribute>()) ??
                 (GetPropertyValueAttributes()
                     .Where(
                         e => string.Equals(nameof(IDbDataParameter.ParameterName), e.PropertyName, StringComparison.OrdinalIgnoreCase))
@@ -195,7 +195,7 @@ namespace RepoDb
                 return propertyHandlerAttribute;
             }
             isPropertyHandlerAttributeWasSet = true;
-            return propertyHandlerAttribute = PropertyInfo.GetCustomAttribute(StaticType.PropertyHandlerAttribute) as PropertyHandlerAttribute;
+            return propertyHandlerAttribute = PropertyInfo.GetCustomAttribute<PropertyHandlerAttribute>();
         }
 
         /*

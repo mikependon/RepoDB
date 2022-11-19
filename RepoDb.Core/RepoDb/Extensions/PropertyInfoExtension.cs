@@ -24,20 +24,7 @@ namespace RepoDb.Extensions
         /// <returns>The custom attribute.</returns>
         public static T GetCustomAttribute<T>(this PropertyInfo property)
             where T : Attribute =>
-            (T)GetCustomAttribute(property, typeof(T));
-
-        /// <summary>
-        /// Gets a custom attribute defined on the property.
-        /// </summary>
-        /// <param name="property">The property of where the custom attribute is defined.</param>
-        /// <param name="type">The custom attribute that is defined into the property.</param>
-        /// <returns>The custom attribute.</returns>
-        public static Attribute GetCustomAttribute(this PropertyInfo property,
-            Type type)
-        {
-            var attributes = property.GetCustomAttributes(type, false).WithType<Attribute>();
-            return attributes?.FirstOrDefault(a => a.GetType() == type);
-        }
+            property.GetCustomAttribute<T>(false);
 
         /// <summary>
         /// Gets the mapped name of the property.
@@ -56,9 +43,9 @@ namespace RepoDb.Extensions
         internal static string GetMappedName(this PropertyInfo property,
             Type declaringType)
         {
-            var mappedName = ((MapAttribute)GetCustomAttribute(property, StaticType.MapAttribute))?.Name ??
-                ((ColumnAttribute)GetCustomAttribute(property, StaticType.ColumnAttribute))?.Name ??
-                ((NameAttribute)GetCustomAttribute(property, StaticType.NameAttribute))?.Name;
+            var mappedName = GetCustomAttribute<MapAttribute>(property)?.Name ??
+                GetCustomAttribute<ColumnAttribute>(property)?.Name ??
+                GetCustomAttribute<NameAttribute>(property)?.Name;
 
             return mappedName ??
                 PropertyMapper.Get(declaringType, property) ??
@@ -220,11 +207,8 @@ namespace RepoDb.Extensions
             Type declaringType)
         {
             var customAttributes = property?
-                .GetCustomAttributes()?
-                .Where(e =>
-                    StaticType.PropertyValueAttribute.IsAssignableFrom(e.GetType()))
-                .Select(e =>
-                    (PropertyValueAttribute)e);
+                .GetCustomAttributes<PropertyValueAttribute>()
+                .ToHashSet();
 
             var mappedAttributes = PropertyValueAttributeMapper
                 .Get((declaringType ?? property?.DeclaringType), property)?
