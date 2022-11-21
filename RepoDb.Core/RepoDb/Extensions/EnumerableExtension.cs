@@ -20,6 +20,7 @@ namespace RepoDb.Extensions
         public static IEnumerable<IEnumerable<T>> Split<T>(this IEnumerable<T> value,
             int sizePerSplit)
         {
+#if NETSTANDARD2_0
             var count = value?.Count() ?? 0;
             if (sizePerSplit == 0 || count <= sizePerSplit)
             {
@@ -40,6 +41,9 @@ namespace RepoDb.Extensions
                 }
                 return array;
             }
+#else
+            return value.Chunk(sizePerSplit);
+#endif
         }
 
         /// <summary>
