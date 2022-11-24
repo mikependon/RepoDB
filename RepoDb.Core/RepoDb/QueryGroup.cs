@@ -15,6 +15,7 @@ namespace RepoDb
     {
         private bool isFixed = false;
         private int? hashCode = null;
+        private List<QueryField> traversedQueryFields;
 
         #region Constructors
 
@@ -495,12 +496,12 @@ namespace RepoDb
         /// <summary>
         /// Gets the list of child <see cref="QueryField"/> objects.
         /// </summary>
-        public IEnumerable<QueryField> QueryFields { get; }
+        public IReadOnlyList<QueryField> QueryFields { get; }
 
         /// <summary>
         /// Gets the list of child <see cref="QueryGroup"/> objects.
         /// </summary>
-        public IEnumerable<QueryGroup> QueryGroups { get; }
+        public IReadOnlyList<QueryGroup> QueryGroups { get; }
 
         /// <summary>
         /// Gets the value whether the grouping is in opposite field-value state.
@@ -560,7 +561,7 @@ namespace RepoDb
         /// </summary>
         private void ForceIsFixedVariables()
         {
-            if (QueryGroups?.Any() == true)
+            if (QueryGroups?.Count > 0)
             {
                 foreach (var queryGroup in QueryGroups)
                 {
@@ -590,7 +591,7 @@ namespace RepoDb
         /// </summary>
         private void ResetQueryGroups()
         {
-            if (QueryGroups?.Any() != true)
+            if (QueryGroups is null || QueryGroups.Count == 0)
             {
                 return;
             }
@@ -710,8 +711,7 @@ namespace RepoDb
             var separator = string.Concat(" ", conjunction, " ");
 
             // Check the instance fields
-            var queryFields = QueryFields.AsList();
-            if (queryFields?.Count > 0)
+            if (QueryFields?.Count > 0)
             {
                 var fields = QueryFields
                     .Select(qf =>
@@ -720,8 +720,7 @@ namespace RepoDb
             }
 
             // Check the instance groups
-            var queryGroups = QueryGroups.AsList();
-            if (queryGroups?.Count > 0)
+            if (QueryGroups?.Count > 0)
             {
                 var groups = QueryGroups
                     .Select(qg =>
@@ -740,6 +739,16 @@ namespace RepoDb
         /// <returns>An enumerable list of <see cref="QueryField"/> objects.</returns>
         public IEnumerable<QueryField> GetFields(bool traverse)
         {
+            if (!traverse)
+            {
+                return QueryFields;
+            }
+
+            if (traversedQueryFields is not null)
+            {
+                return traversedQueryFields;
+            }
+
             // Variables
             var explore = (Action<QueryGroup>)null;
             var queryFields = new List<QueryField>();
@@ -748,13 +757,13 @@ namespace RepoDb
             explore = queryGroup =>
             {
                 // Check child fields
-                if (queryGroup.QueryFields?.Any() == true)
+                if (queryGroup.QueryFields?.Count > 0)
                 {
                     queryFields.AddRange(queryGroup.QueryFields);
                 }
 
                 // Check child groups
-                if (traverse == true && queryGroup.QueryGroups?.Any() == true)
+                if (queryGroup.QueryGroups?.Count > 0)
                 {
                     foreach (var qg in queryGroup.QueryGroups)
                     {
@@ -767,7 +776,7 @@ namespace RepoDb
             explore(this);
 
             // Return the value
-            return queryFields;
+            return traversedQueryFields = queryFields;
         }
 
         #endregion
@@ -798,7 +807,7 @@ namespace RepoDb
             }
 
             // Iterates the child query groups
-            if (QueryGroups?.Any() == true)
+            if (QueryGroups?.Count > 0)
             {
                 foreach (var queryGroup in QueryGroups)
                 {
