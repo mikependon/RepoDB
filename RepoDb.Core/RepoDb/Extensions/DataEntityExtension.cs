@@ -93,7 +93,7 @@ namespace RepoDb.Extensions
         {
             if (tableName.IsOpenQuoted(dbSetting))
             {
-                var index = tableName.IndexOf(string.Concat(dbSetting.ClosingQuote, CharConstant.Period));
+                var index = tableName.IndexOf(string.Concat(dbSetting.ClosingQuote, StringConstant.Period), StringComparison.OrdinalIgnoreCase);
                 if (index >= 0)
                 {
                     return tableName.Substring(0, index + 1);
@@ -132,7 +132,7 @@ namespace RepoDb.Extensions
         {
             if (tableName.IsOpenQuoted(dbSetting))
             {
-                var index = tableName.IndexOf(string.Concat(dbSetting.ClosingQuote, CharConstant.Period));
+                var index = tableName.IndexOf(string.Concat(dbSetting.ClosingQuote, StringConstant.Period), StringComparison.OrdinalIgnoreCase);
                 if (index >= 0 && tableName.Length > index + 2)
                 {
                     return tableName.Substring(index + 2);
