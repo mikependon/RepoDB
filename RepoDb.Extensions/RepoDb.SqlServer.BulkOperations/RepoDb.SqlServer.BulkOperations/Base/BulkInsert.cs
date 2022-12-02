@@ -64,7 +64,7 @@ namespace RepoDb
                 // Variables needed
                 var identityDbField = dbFields?.FirstOrDefault(dbField => dbField.IsIdentity);
                 var entityType = entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity);
-                var entityFields = entityType.IsDictionaryStringObject() ?
+                var entityFields = TypeCache.Get(entityType).IsDictionaryStringObject() ?
                     GetDictionaryStringObjectFields(entities?.FirstOrDefault() as IDictionary<string, object>) :
                     FieldCache.Get(entityType);
                 var fields = dbFields?.Select(dbField => dbField.AsField());
@@ -474,7 +474,7 @@ namespace RepoDb
                 // Variables needed
                 var identityDbField = dbFields?.FirstOrDefault(dbField => dbField.IsIdentity);
                 var entityType = firstEntity.GetType();
-                var entityFields = entityType.IsDictionaryStringObject() ?
+                var entityFields = TypeCache.Get(entityType).IsDictionaryStringObject() ?
                     GetDictionaryStringObjectFields(firstEntity as IDictionary<string, object>) :
                     FieldCache.Get(entityType);
                 var fields = dbFields?.Select(dbField => dbField.AsField());

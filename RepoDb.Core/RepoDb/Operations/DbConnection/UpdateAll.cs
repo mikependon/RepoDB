@@ -405,7 +405,7 @@ namespace RepoDb
                     GetEntityType<TEntity>(entities));
                 qualifiers = key.AsEnumerable();
             }
-            if (GetEntityType<TEntity>(entities).IsDictionaryStringObject())
+            if (TypeCache.Get(GetEntityType(entities)).IsDictionaryStringObject())
             {
                 return UpdateAllInternalBase<IDictionary<string, object>>(connection: connection,
                     tableName: tableName,
@@ -852,7 +852,7 @@ namespace RepoDb
                     GetEntityType<TEntity>(entities), cancellationToken);
                 qualifiers = key.AsEnumerable();
             }
-            if (GetEntityType<TEntity>(entities).IsDictionaryStringObject())
+            if (TypeCache.Get(GetEntityType(entities)).IsDictionaryStringObject())
             {
                 return await UpdateAllAsyncInternalBase<IDictionary<string, object>>(connection: connection,
                     tableName: tableName,

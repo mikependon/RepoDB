@@ -489,7 +489,7 @@ namespace RepoDb
             var typeOfResult = typeof(TResult);
 
             // Identify
-            if (typeOfResult.IsDictionaryStringObject() || typeOfResult.IsObjectType())
+            if (TypeCache.Get(typeOfResult).IsDictionaryStringObject() || typeOfResult.IsObjectType())
             {
                 return ExecuteQueryInternalForDictionaryStringObject<TResult>(connection: connection,
                     commandText: commandText,
@@ -793,7 +793,7 @@ namespace RepoDb
             var typeOfResult = typeof(TResult);
 
             // Identify
-            if (typeOfResult.IsDictionaryStringObject() || typeOfResult.IsObjectType())
+            if (TypeCache.Get(typeOfResult).IsDictionaryStringObject() || typeOfResult.IsObjectType())
             {
                 return await ExecuteQueryAsyncInternalForDictionaryStringObject<TResult>(connection: connection,
                    commandText: commandText,
@@ -2406,7 +2406,7 @@ namespace RepoDb
         internal static Field GetAndGuardPrimaryKeyOrIdentityKey(Type entityType,
             IEnumerable<DbField> dbFields) =>
             entityType == null ? null :
-            entityType.IsDictionaryStringObject() ?
+                TypeCache.Get(entityType).IsDictionaryStringObject() ?
                 GetAndGuardPrimaryKeyOrIdentityKeyForDictionaryStringObject(entityType, dbFields) :
                 GetAndGuardPrimaryKeyOrIdentityKeyForEntity(entityType, dbFields);
 
@@ -2839,7 +2839,7 @@ namespace RepoDb
             where TEntity : class
         {
             var type = entity?.GetType() ?? typeof(TEntity);
-            return type.IsDictionaryStringObject() ? ToQueryGroup(field, (IDictionary<string, object>)entity) :
+            return TypeCache.Get(type).IsDictionaryStringObject() ? ToQueryGroup(field, (IDictionary<string, object>)entity) :
                 ToQueryGroup(PropertyCache.Get<TEntity>(field, true) ?? PropertyCache.Get(type, field, true), entity);
         }
 
@@ -3029,7 +3029,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static IEnumerable<Field> GetQualifiedFields<TEntity>(IEnumerable<Field> fields)
             where TEntity : class =>
-            (fields ?? (typeof(TEntity).IsDictionaryStringObject() == false ? FieldCache.Get<TEntity>() : null)).AsList();
+            (fields ?? (TypeCache.Get(typeof(TEntity)).IsDictionaryStringObject() == false ? FieldCache.Get<TEntity>() : null)).AsList();
 
         /// <summary>
         ///
