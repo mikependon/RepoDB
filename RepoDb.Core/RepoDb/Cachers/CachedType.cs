@@ -11,6 +11,7 @@ public class CachedType
     private readonly Lazy<bool> lazyIsAnonymousType = new(() => value.IsAnonymousType());
     private readonly Lazy<bool> lazyIsClassType = new(() => value.IsClassType());
     private readonly Lazy<bool> lazyIsDictionaryStringObject = new(() => value.IsDictionaryStringObject());
+    private readonly Lazy<bool> lazyIsNullable = new(() => value.IsNullable());
 
     public CachedType(Type type) => value = type;
 
@@ -21,4 +22,6 @@ public class CachedType
     public bool IsClassType() => lazyIsClassType.Value;
     
     public bool IsDictionaryStringObject() => lazyIsDictionaryStringObject.Value;
+    
+    public bool IsNullable() => lazyIsNullable.Value;
 }

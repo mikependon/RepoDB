@@ -15,12 +15,14 @@ public static class TypeCache
             return nullCachedType;
         }
 
-        if (cache.TryGetValue(type, out var result) == false)
+        if (cache.TryGetValue(type, out var result))
         {
-            result = new CachedType(type);
-            cache.TryAdd(type, result);
+            return result;
         }
-            
+        
+        result = new CachedType(type);
+        cache.TryAdd(type, result);
+
         return result;
     }
 }

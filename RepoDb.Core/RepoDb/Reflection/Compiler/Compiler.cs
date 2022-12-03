@@ -748,7 +748,7 @@ namespace RepoDb.Reflection
             var falseExpression = (Expression)null;
 
             // Ensure (Ref/Nullable)
-            if (expression.Type.IsNullable())
+            if (TypeCache.Get(expression.Type).IsNullable())
             {
                 // Check
                 isNullExpression = Expression.Equal(Expression.Constant(null), expression);
@@ -780,20 +780,21 @@ namespace RepoDb.Reflection
             var falseExpression = expression;
 
             // Ensure (Ref/Nullable)
-            if (expression.Type.IsNullable())
+            var cachedType = TypeCache.Get(expression.Type);
+            if (cachedType.IsNullable())
             {
                 isNullExpression = Expression.Equal(Expression.Constant(null), expression);
                 trueExpression = GetNullableTypeExpression(toType);
             }
 
             // Casting
-            if (TypeCache.Get(expression.Type).GetUnderlyingType() != TypeCache.Get(toType).GetUnderlyingType())
+            if (cachedType.GetUnderlyingType() != TypeCache.Get(toType).GetUnderlyingType())
             {
                 falseExpression = ConvertExpressionToTypeExpression(expression, toType);
             }
 
             // Nullable
-            if (expression.Type.IsNullable())
+            if (cachedType.IsNullable())
             {
                 falseExpression = ConvertExpressionToNullableExpression(falseExpression, toType);
             }
@@ -836,7 +837,7 @@ namespace RepoDb.Reflection
             {
                 var nullableType = StaticType.Nullable.MakeGenericType(targetNullableType);
                 var constructor = nullableType.GetConstructor(new[] { targetNullableType });
-                expression = expression.Type.IsNullable() ? expression :
+                expression = TypeCache.Get(expression.Type).IsNullable() ? expression :
                     Expression.New(constructor, ConvertExpressionToTypeExpression(expression, targetNullableType));
             }
 
