@@ -187,8 +187,8 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static MethodInfo GetSystemConvertToTypeMethod(Type fromType,
             Type toType) =>
-            StaticType.Convert.GetMethod(string.Concat("To", toType.GetUnderlyingType().Name),
-                new[] { fromType.GetUnderlyingType() });
+            StaticType.Convert.GetMethod(string.Concat("To", TypeCache.Get(toType).GetUnderlyingType().Name),
+                new[] { TypeCache.Get(fromType).GetUnderlyingType() });
 
         /// <summary>
         ///
@@ -197,7 +197,7 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static MethodInfo GetSystemConvertChangeTypeMethod(Type conversionType) =>
             StaticType.Convert.GetMethod("ChangeType",
-                new[] { StaticType.Object, conversionType.GetUnderlyingType() });
+                new[] { StaticType.Object, TypeCache.Get(conversionType).GetUnderlyingType() });
 
         /// <summary>
         ///
@@ -425,7 +425,7 @@ namespace RepoDb.Reflection
             if (value == null && readerField?.Type != null)
             {
                 value = PropertyHandlerCache
-                    .Get<object>(readerField.Type.GetUnderlyingType());
+                    .Get<object>(TypeCache.Get(readerField.Type).GetUnderlyingType());
             }
             return value;
         }
@@ -534,7 +534,7 @@ namespace RepoDb.Reflection
         {
             if (Nullable.GetUnderlyingType(expression.Type) != null)
             {
-                var underlyingType = expression.Type.GetUnderlyingType();
+                var underlyingType = TypeCache.Get(expression.Type).GetUnderlyingType();
                 var method = expression.Type.GetMethod("GetValueOrDefault", new Type[] { underlyingType });
                 return Expression.Call(expression, method, Expression.Default(underlyingType));
             }
@@ -613,7 +613,7 @@ namespace RepoDb.Reflection
         internal static Expression ConvertExpressionToSystemConvertExpression(Expression expression,
             Type toType)
         {
-            if (expression.Type.GetUnderlyingType() == toType)
+            if (TypeCache.Get(expression.Type).GetUnderlyingType() == toType)
             {
                 return expression;
             }
@@ -639,7 +639,7 @@ namespace RepoDb.Reflection
                 return Expression.Call(methodInfo, new Expression[]
                 {
                     ConvertExpressionToTypeExpression(expression, StaticType.Object),
-                    Expression.Constant(toType.GetUnderlyingType())
+                    Expression.Constant(TypeCache.Get(toType).GetUnderlyingType())
                 });
             }
 
@@ -722,7 +722,8 @@ namespace RepoDb.Reflection
         internal static Expression ConvertEnumExpressionToTypeExpression(Expression expression,
             Type toType)
         {
-            if (toType.GetUnderlyingType() == StaticType.String || toType.GetUnderlyingType() == StaticType.Boolean)
+            var underlyingType = TypeCache.Get(toType).GetUnderlyingType();
+            if (underlyingType == StaticType.String || underlyingType == StaticType.Boolean)
             {
                 return ConvertEnumExpressionToTypeExpressionForString(expression);
             }
@@ -786,7 +787,7 @@ namespace RepoDb.Reflection
             }
 
             // Casting
-            if (expression.Type.GetUnderlyingType() != toType.GetUnderlyingType())
+            if (TypeCache.Get(expression.Type).GetUnderlyingType() != TypeCache.Get(toType).GetUnderlyingType())
             {
                 falseExpression = ConvertExpressionToTypeExpression(expression, toType);
             }

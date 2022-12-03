@@ -2726,7 +2726,7 @@ namespace RepoDb
             }
             else
             {
-                var type = typeof(T).GetUnderlyingType();
+                var type = TypeCache.Get(typeof(T)).GetUnderlyingType();
                 if (type.IsAnonymousType() || type == StaticType.Object)
                 {
                     return QueryGroup.Parse(what, false);

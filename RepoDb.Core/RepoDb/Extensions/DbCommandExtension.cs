@@ -250,7 +250,7 @@ namespace RepoDb.Extensions
             DbType? dbType,
             Type fallbackType)
         {
-            var valueType = (value?.GetType() ?? classProperty?.PropertyInfo.PropertyType).GetUnderlyingType();
+            var valueType = TypeCache.Get(value?.GetType() ?? classProperty?.PropertyInfo.PropertyType).GetUnderlyingType();
 
             if (valueType?.IsEnum == true)
             {
@@ -305,7 +305,7 @@ namespace RepoDb.Extensions
             Type fallbackType)
         {
             // DbType
-            valueType ??= (dbField?.Type.GetUnderlyingType() ?? fallbackType);
+            valueType ??= TypeCache.Get(dbField?.Type).GetUnderlyingType() ?? fallbackType;
             dbType ??= classProperty?.GetDbType() ?? (dbField?.Type ?? fallbackType ?? valueType)?.GetDbType();
 
             // Create the parameter
@@ -722,7 +722,7 @@ namespace RepoDb.Extensions
                 value = propertyHandlerSetMethod
                     .Invoke(propertyHandler, new[] { value,
                         PropertyHandlerSetOptions.Create(parameter,classProperty) });
-                valueType = propertyHandlerSetMethod.ReturnType.GetUnderlyingType();
+                valueType = TypeCache.Get(propertyHandlerSetMethod.ReturnType).GetUnderlyingType();
             }
 
             return propertyHandler;
@@ -803,7 +803,7 @@ namespace RepoDb.Extensions
         {
             if (valueType != null && dbField != null && IsAutomaticConversion(dbField))
             {
-                var dbFieldType = dbField.Type.GetUnderlyingType();
+                var dbFieldType = TypeCache.Get(dbField.Type).GetUnderlyingType();
 
                 if (dbFieldType != valueType)
                 {

@@ -18,7 +18,7 @@ namespace RepoDb.Extensions
         /// <param name="type">The target type.</param>
         /// <returns>The instance of the <see cref="DbType"/> object.</returns>
         public static IEnumerable<PropertyValueAttribute> GetPropertyValueAttributes(this Type type) =>
-            type != null ? PropertyValueAttributeMapper.Get(type.GetUnderlyingType()) : null;
+            type != null ? PropertyValueAttributeMapper.Get(TypeCache.Get(type).GetUnderlyingType()) : null;
 
         /// <summary>
         /// Gets the corresponding <see cref="DbType"/> object.
@@ -26,7 +26,7 @@ namespace RepoDb.Extensions
         /// <param name="type">The target type.</param>
         /// <returns>The instance of the <see cref="DbType"/> object.</returns>
         public static DbType? GetDbType(this Type type) =>
-            type != null ? TypeMapCache.Get(type.GetUnderlyingType()) : null;
+            type != null ? TypeMapCache.Get(TypeCache.Get(type).GetUnderlyingType()) : null;
 
         /// <summary>
         /// Returns the instance of <see cref="ConstructorInfo"/> with the most argument.
