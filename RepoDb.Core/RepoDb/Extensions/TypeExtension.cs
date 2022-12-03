@@ -89,7 +89,7 @@ namespace RepoDb.Extensions
         {
             var cachedType = TypeCache.Get(type);
             
-            return (cachedType.IsClassType() || IsAnonymousType(type)) &&
+            return (cachedType.IsClassType() || cachedType.IsAnonymousType()) &&
                    IsQueryObjectType(type) != true &&
                    cachedType.IsDictionaryStringObject() != true &&
                    GetEnumerableClassProperties(type).Any() != true;

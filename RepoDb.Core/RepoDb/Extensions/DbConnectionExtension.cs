@@ -2517,7 +2517,8 @@ namespace RepoDb
             if (queryGroup == null)
             {
                 var whatType = what.GetType();
-                if (TypeCache.Get(whatType).IsClassType() || whatType.IsAnonymousType())
+                var cachedType = TypeCache.Get(whatType);
+                if (cachedType.IsClassType() || cachedType.IsAnonymousType())
                 {
                     var field = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction, whatType);
                     queryGroup = WhatToQueryGroup<T>(field, what);
@@ -2555,7 +2556,8 @@ namespace RepoDb
             if (queryGroup == null)
             {
                 var whatType = what.GetType();
-                if (TypeCache.Get(whatType).IsClassType() || whatType.IsAnonymousType())
+                var cachedType = TypeCache.Get(whatType);
+                if (cachedType.IsClassType() || cachedType.IsAnonymousType())
                 {
                     var field = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction, whatType, cancellationToken);
                     queryGroup = WhatToQueryGroup<T>(field, what);
@@ -2727,7 +2729,7 @@ namespace RepoDb
             else
             {
                 var type = TypeCache.Get(typeof(T)).GetUnderlyingType();
-                if (type.IsAnonymousType() || type == StaticType.Object)
+                if (TypeCache.Get(type).IsAnonymousType() || type == StaticType.Object)
                 {
                     return QueryGroup.Parse(what, false);
                 }

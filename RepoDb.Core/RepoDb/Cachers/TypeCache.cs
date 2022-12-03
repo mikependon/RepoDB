@@ -10,8 +10,17 @@ public static class TypeCache
 
     public static CachedType Get(Type type)
     {
-        return type is null 
-            ? nullCachedType 
-            : cache.GetOrAdd(type, new CachedType(type));
+        if (type is null)
+        {
+            return nullCachedType;
+        }
+
+        if (cache.TryGetValue(type, out var result) == false)
+        {
+            result = new CachedType(type);
+            cache.TryAdd(type, result);
+        }
+            
+        return result;
     }
 }
