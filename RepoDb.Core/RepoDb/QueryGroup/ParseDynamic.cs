@@ -34,7 +34,7 @@ namespace RepoDb
             var type = TypeCache.Get(obj.GetType()).GetUnderlyingType();
 
             // Filter the type
-            if (type.IsClassType() == false)
+            if (TypeCache.Get(type).IsClassType() == false)
             {
                 if (throwException == true)
                 {

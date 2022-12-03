@@ -2517,7 +2517,7 @@ namespace RepoDb
             if (queryGroup == null)
             {
                 var whatType = what.GetType();
-                if (whatType.IsClassType() || whatType.IsAnonymousType())
+                if (TypeCache.Get(whatType).IsClassType() || whatType.IsAnonymousType())
                 {
                     var field = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction, whatType);
                     queryGroup = WhatToQueryGroup<T>(field, what);
@@ -2555,7 +2555,7 @@ namespace RepoDb
             if (queryGroup == null)
             {
                 var whatType = what.GetType();
-                if (whatType.IsClassType() || whatType.IsAnonymousType())
+                if (TypeCache.Get(whatType).IsClassType() || whatType.IsAnonymousType())
                 {
                     var field = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction, whatType, cancellationToken);
                     queryGroup = WhatToQueryGroup<T>(field, what);
@@ -2689,7 +2689,7 @@ namespace RepoDb
             {
                 throw new KeyFieldNotFoundException($"No primary key and identity key found at the type '{type.FullName}'.");
             }
-            if (type.IsClassType())
+            if (TypeCache.Get(type).IsClassType())
             {
                 var classProperty = PropertyCache.Get(typeof(T), field, true);
                 return new QueryGroup(classProperty?.PropertyInfo.AsQueryField(what));
@@ -2751,7 +2751,7 @@ namespace RepoDb
                 return null;
             }
             var type = obj.GetType();
-            if (type.IsClassType())
+            if (TypeCache.Get(type).IsClassType())
             {
                 return QueryGroup.Parse(obj, true);
             }
@@ -2777,7 +2777,7 @@ namespace RepoDb
             if (dbField != null)
             {
                 var type = entity.GetType();
-                if (type.IsClassType())
+                if (TypeCache.Get(type).IsClassType())
                 {
                     var properties = PropertyCache.Get(type) ?? type.GetClassProperties();
                     var property = properties?
@@ -3018,7 +3018,7 @@ namespace RepoDb
             where TEntity : class
         {
             var typeOfEntity = entity?.GetType() ?? typeof(TEntity);
-            return typeOfEntity.IsClassType() == false ? Field.Parse(entity) : FieldCache.Get(typeOfEntity);
+            return TypeCache.Get(typeOfEntity).IsClassType() == false ? Field.Parse(entity) : FieldCache.Get(typeOfEntity);
         }
 
         /// <summary>

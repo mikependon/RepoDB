@@ -427,7 +427,7 @@ namespace RepoDb.Extensions
 
             // Variables
             var entityClassProperties = entityType != null ? PropertyCache.Get(entityType) : default;
-            var paramClassProperties = type.IsClassType() ? PropertyCache.Get(type) : type.GetClassProperties();
+            var paramClassProperties = TypeCache.Get(type).IsClassType() ? PropertyCache.Get(type) : type.GetClassProperties();
 
             // Skip
             if (propertiesToSkip != null)

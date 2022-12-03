@@ -85,11 +85,15 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="type">The current type.</param>
         /// <returns>Returns true if the current type is a plain class type.</returns>
-        internal static bool IsPlainType(this Type type) =>
-            (IsClassType(type) || IsAnonymousType(type)) &&
-            IsQueryObjectType(type) != true &&
-            IsDictionaryStringObject(type) != true &&
-            GetEnumerableClassProperties(type).Any() != true;
+        internal static bool IsPlainType(this Type type)
+        {
+            var cachedType = TypeCache.Get(type);
+            
+            return (cachedType.IsClassType() || IsAnonymousType(type)) &&
+                   IsQueryObjectType(type) != true &&
+                   cachedType.IsDictionaryStringObject() != true &&
+                   GetEnumerableClassProperties(type).Any() != true;
+        }
 
         /// <summary>
         /// Checks whether the current type is of type <see cref="QueryField"/> or <see cref="QueryGroup"/>.
