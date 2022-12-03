@@ -134,7 +134,7 @@ namespace RepoDb.Extensions
         /// <returns>A list of <see cref="ClassProperty"/> objects.</returns>
         public static IEnumerable<ClassProperty> GetClassProperties(this Type type)
         {
-            foreach (var property in type.GetProperties())
+            foreach (var property in TypeCache.Get(type).GetProperties())
             {
                 yield return new ClassProperty(type, property);
             }
@@ -261,7 +261,7 @@ namespace RepoDb.Extensions
         /// <returns>An instance of <see cref="PropertyInfo"/> object.</returns>
         public static PropertyInfo GetProperty(Type type,
             string propertyName) =>
-            type
+            TypeCache.Get(type)
                 .GetProperties()
                 .FirstOrDefault(p =>
                     string.Equals(p.Name, propertyName, StringComparison.OrdinalIgnoreCase) ||

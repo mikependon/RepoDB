@@ -150,8 +150,11 @@ namespace RepoDb
             {
                 throw new NullReferenceException("The 'obj' must not be null.");
             }
-            var list = new List<OrderField>();
-            foreach (var property in obj.GetType().GetProperties())
+
+            var properties = TypeCache.Get(obj.GetType()).GetProperties();
+            var list = new List<OrderField>(properties.Length);
+            
+            foreach (var property in properties)
             {
                 if (property.PropertyType != typeof(Order))
                 {

@@ -133,7 +133,7 @@ namespace RepoDb
         {
             if (type != null)
             {
-                foreach (var property in type.GetProperties())
+                foreach (var property in TypeCache.Get(type).GetProperties())
                 {
                     yield return property.AsField();
                 }

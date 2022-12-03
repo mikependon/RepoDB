@@ -3307,7 +3307,7 @@ namespace RepoDb
             var commandArrayParametersText = (CommandArrayParametersText)null;
 
             // CommandArrayParameters
-            foreach (var property in param.GetType().GetProperties())
+            foreach (var property in TypeCache.Get(param.GetType()).GetProperties())
             {
                 var propertyHandler = PropertyHandlerCache.Get<object>(property.DeclaringType, property);
                 if (propertyHandler != null ||
