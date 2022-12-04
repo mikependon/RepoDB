@@ -6,26 +6,35 @@ namespace RepoDb;
 
 public class CachedType
 {
-    private static Type value;
+    private readonly Lazy<PropertyInfo[]> lazyGetProperties;
+    private readonly Lazy<Type> lazyGetUnderlyingType;
+    private readonly Lazy<bool> lazyIsAnonymousType;
+    private readonly Lazy<bool> lazyIsClassType;
+    private readonly Lazy<bool> lazyIsDictionaryStringObject;
+    private readonly Lazy<bool> lazyIsNullable;
 
-    private readonly Lazy<PropertyInfo[]> lazyGetProperties = new(() => value.GetProperties());
-    private readonly Lazy<Type> lazyGetUnderlyingType = new(() => value.GetUnderlyingType());
-    private readonly Lazy<bool> lazyIsAnonymousType = new(() => value.IsAnonymousType());
-    private readonly Lazy<bool> lazyIsClassType = new(() => value.IsClassType());
-    private readonly Lazy<bool> lazyIsDictionaryStringObject = new(() => value.IsDictionaryStringObject());
-    private readonly Lazy<bool> lazyIsNullable = new(() => value.IsNullable());
+    public CachedType(Type type)
+    {
+        lazyGetUnderlyingType = new Lazy<Type>(() => type?.GetUnderlyingType());
+        
+        if (type is null) return;
 
-    public CachedType(Type type) => value = type;
+        lazyGetProperties = new Lazy<PropertyInfo[]>(type.GetProperties);
+        lazyIsAnonymousType = new Lazy<bool>(type.IsAnonymousType);
+        lazyIsClassType = new Lazy<bool>(type.IsClassType);
+        lazyIsDictionaryStringObject = new Lazy<bool>(type.IsDictionaryStringObject);
+        lazyIsNullable = new Lazy<bool>(type.IsNullable);
+    }
 
     public PropertyInfo[] GetProperties() => lazyGetProperties.Value;
-    
+
     public Type GetUnderlyingType() => lazyGetUnderlyingType.Value;
-    
+
     public bool IsAnonymousType() => lazyIsAnonymousType.Value;
 
     public bool IsClassType() => lazyIsClassType.Value;
-    
+
     public bool IsDictionaryStringObject() => lazyIsDictionaryStringObject.Value;
-    
+
     public bool IsNullable() => lazyIsNullable.Value;
 }
