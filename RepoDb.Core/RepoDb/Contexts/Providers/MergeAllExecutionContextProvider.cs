@@ -229,7 +229,7 @@ namespace RepoDb.Contexts.Providers
         private static MergeAllExecutionContext CreateInternal(Type entityType,
             IDbConnection connection,
             IEnumerable<object> entities,
-            IEnumerable<DbField> dbFields,
+            DbFieldCollection dbFields,
             string tableName,
             IEnumerable<Field> qualifiers,
             int batchSize,
@@ -242,11 +242,11 @@ namespace RepoDb.Contexts.Providers
             // Check the fields
             if (fields?.Any() != true)
             {
-                fields = dbFields?.AsFields();
+                fields = dbFields?.GetAsFields();
             }
 
             // Filter the actual properties for input fields
-            inputFields = dbFields?
+            inputFields = dbFields?.GetItems()
                 .Where(dbField =>
                     fields.FirstOrDefault(field =>
                         string.Equals(field.Name.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)

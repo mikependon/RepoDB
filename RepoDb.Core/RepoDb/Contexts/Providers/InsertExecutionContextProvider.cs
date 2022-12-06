@@ -159,13 +159,13 @@ namespace RepoDb.Contexts.Providers
         /// <returns></returns>
         private static InsertExecutionContext CreateInternal(Type entityType,
             IDbConnection connection,
-            IEnumerable<DbField> dbFields,
+            DbFieldCollection dbFields,
             string tableName,
             IEnumerable<Field> fields,
             string commandText)
         {
             var dbSetting = connection.GetDbSetting();
-            var inputFields = dbFields?
+            var inputFields = dbFields?.GetItems()
                 .Where(dbField =>
                     dbField.IsIdentity == false)
                 .Where(dbField =>

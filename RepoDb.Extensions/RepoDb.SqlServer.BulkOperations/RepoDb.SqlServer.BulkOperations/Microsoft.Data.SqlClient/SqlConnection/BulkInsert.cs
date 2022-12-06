@@ -45,7 +45,6 @@ namespace RepoDb
             return BulkInsertInternal<TEntity>(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entities: entities,
-                dbFields: null,
                 mappings: mappings,
                 options: options,
                 hints: hints,
@@ -88,7 +87,6 @@ namespace RepoDb
             return BulkInsertInternal(connection: connection,
                 tableName: tableName,
                 entities: entities,
-                dbFields: null,
                 mappings: mappings,
                 options: options,
                 hints: hints,
@@ -123,7 +121,6 @@ namespace RepoDb
             return BulkInsertInternal(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 reader: reader,
-                dbFields: null,
                 mappings: mappings,
                 options: options,
                 bulkCopyTimeout: bulkCopyTimeout,
@@ -159,7 +156,6 @@ namespace RepoDb
             return BulkInsertInternal(connection: connection,
                 tableName: tableName,
                 reader: reader,
-                dbFields: null,
                 mappings: mappings,
                 options: options,
                 bulkCopyTimeout: bulkCopyTimeout,
@@ -200,7 +196,6 @@ namespace RepoDb
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 dataTable: dataTable,
                 rowState: rowState,
-                dbFields: null,
                 mappings: mappings,
                 options: options,
                 hints: hints,
@@ -244,7 +239,6 @@ namespace RepoDb
                 tableName: tableName,
                 dataTable: dataTable,
                 rowState: rowState,
-                dbFields: null,
                 mappings: mappings,
                 options: options,
                 hints: hints,
@@ -291,7 +285,6 @@ namespace RepoDb
             return BulkInsertAsyncInternal(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entities: entities,
-                dbFields: null,
                 mappings: mappings,
                 options: options,
                 hints: hints,
@@ -337,7 +330,6 @@ namespace RepoDb
             return BulkInsertAsyncInternal(connection: connection,
                 tableName: tableName,
                 entities: entities,
-                dbFields: null,
                 mappings: mappings,
                 options: options,
                 hints: hints,
@@ -375,7 +367,6 @@ namespace RepoDb
             return await BulkInsertAsyncInternal(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 reader: reader,
-                dbFields: null,
                 mappings: mappings,
                 options: options,
                 bulkCopyTimeout: bulkCopyTimeout,
@@ -416,7 +407,6 @@ namespace RepoDb
             return BulkInsertAsyncInternal(connection: connection,
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 entities: entities,
-                dbFields: null,
                 mappings: mappings,
                 options: options,
                 hints: hints,
@@ -462,7 +452,6 @@ namespace RepoDb
             return BulkInsertAsyncInternal(connection: connection,
                 tableName: tableName,
                 entities: entities,
-                dbFields: null,
                 mappings: mappings,
                 options: options,
                 hints: hints,
@@ -504,7 +493,6 @@ namespace RepoDb
             return BulkInsertAsyncInternal(connection: connection,
                 tableName: tableName,
                 reader: reader,
-                dbFields: null,
                 mappings: mappings,
                 options: options,
                 bulkCopyTimeout: bulkCopyTimeout,
@@ -548,7 +536,6 @@ namespace RepoDb
                 tableName: ClassMappedNameCache.Get<TEntity>(),
                 dataTable: dataTable,
                 rowState: rowState,
-                dbFields: null,
                 mappings: mappings,
                 options: options,
                 hints: hints,
@@ -595,7 +582,6 @@ namespace RepoDb
                 tableName: tableName,
                 dataTable: dataTable,
                 rowState: rowState,
-                dbFields: null,
                 mappings: mappings,
                 options: options,
                 hints: hints,
@@ -618,7 +604,6 @@ namespace RepoDb
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="entities"></param>
-        /// <param name="dbFields"></param>
         /// <param name="mappings"></param>
         /// <param name="options"></param>
         /// <param name="hints"></param>
@@ -631,7 +616,6 @@ namespace RepoDb
         internal static int BulkInsertInternal<TEntity>(SqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
-            IEnumerable<DbField> dbFields = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions? options = null,
             string hints = null,
@@ -644,7 +628,6 @@ namespace RepoDb
             BulkInsertInternalBase(connection,
                 tableName,
                 entities,
-                dbFields,
                 mappings,
                 options.GetValueOrDefault(),
                 hints,
@@ -660,7 +643,6 @@ namespace RepoDb
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="reader"></param>
-        /// <param name="dbFields"></param>
         /// <param name="mappings"></param>
         /// <param name="options"></param>
         /// <param name="bulkCopyTimeout"></param>
@@ -670,7 +652,6 @@ namespace RepoDb
         internal static int BulkInsertInternal(SqlConnection connection,
             string tableName,
             DbDataReader reader,
-            IEnumerable<DbField> dbFields = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions? options = null,
             int? bulkCopyTimeout = null,
@@ -679,7 +660,6 @@ namespace RepoDb
             BulkInsertInternalBase(connection,
                 tableName,
                 reader,
-                dbFields,
                 mappings,
                 options.GetValueOrDefault(),
                 bulkCopyTimeout,
@@ -693,7 +673,6 @@ namespace RepoDb
         /// <param name="tableName">The target table for bulk-insert operation.</param>
         /// <param name="dataTable">The <see cref="DataTable"/> object to be used in the bulk-insert operation.</param>
         /// <param name="rowState">The state of the rows to be copied to the destination.</param>
-        /// <param name="dbFields">The list of <see cref="DbField"/> objects.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="hints">The table hints to be used. This argument will only be used if the 'isReturnIdentity' argument is 'true'.</param>
@@ -707,7 +686,6 @@ namespace RepoDb
             string tableName,
             DataTable dataTable,
             DataRowState? rowState = null,
-            IEnumerable<DbField> dbFields = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions? options = null,
             string hints = null,
@@ -720,7 +698,6 @@ namespace RepoDb
                 tableName,
                 dataTable,
                 rowState,
-                dbFields,
                 mappings,
                 options.GetValueOrDefault(),
                 hints,
@@ -741,7 +718,6 @@ namespace RepoDb
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="entities"></param>
-        /// <param name="dbFields"></param>
         /// <param name="mappings"></param>
         /// <param name="options"></param>
         /// <param name="hints"></param>
@@ -755,7 +731,6 @@ namespace RepoDb
         internal static Task<int> BulkInsertAsyncInternal<TEntity>(SqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
-            IEnumerable<DbField> dbFields = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions? options = null,
             string hints = null,
@@ -769,7 +744,6 @@ namespace RepoDb
             BulkInsertAsyncInternalBase(connection,
                 tableName,
                 entities,
-                dbFields,
                 mappings,
                 options.GetValueOrDefault(),
                 hints,
@@ -786,7 +760,6 @@ namespace RepoDb
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="reader"></param>
-        /// <param name="dbFields"></param>
         /// <param name="mappings"></param>
         /// <param name="options"></param>
         /// <param name="bulkCopyTimeout"></param>
@@ -797,7 +770,6 @@ namespace RepoDb
         internal static Task<int> BulkInsertAsyncInternal(SqlConnection connection,
             string tableName,
             DbDataReader reader,
-            IEnumerable<DbField> dbFields = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions? options = null,
             int? bulkCopyTimeout = null,
@@ -807,7 +779,6 @@ namespace RepoDb
             BulkInsertAsyncInternalBase(connection,
                 tableName,
                 reader,
-                dbFields,
                 mappings,
                 options.GetValueOrDefault(),
                 bulkCopyTimeout,
@@ -822,7 +793,6 @@ namespace RepoDb
         /// <param name="tableName">The target table for bulk-insert operation.</param>
         /// <param name="dataTable">The <see cref="DataTable"/> object to be used in the bulk-insert operation.</param>
         /// <param name="rowState">The state of the rows to be copied to the destination.</param>
-        /// <param name="dbFields">The list of <see cref="DbField"/> objects.</param>
         /// <param name="mappings">The list of the columns to be used for mappings. If this parameter is not set, then all columns will be used for mapping.</param>
         /// <param name="options">The bulk-copy options to be used.</param>
         /// <param name="hints">The table hints to be used. This argument will only be used if the 'isReturnIdentity' argument is 'true'.</param>
@@ -837,7 +807,6 @@ namespace RepoDb
             string tableName,
             DataTable dataTable,
             DataRowState? rowState = null,
-            IEnumerable<DbField> dbFields = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions? options = null,
             string hints = null,
@@ -851,7 +820,6 @@ namespace RepoDb
                 tableName,
                 dataTable,
                 rowState,
-                dbFields,
                 mappings,
                 options.GetValueOrDefault(),
                 hints,
@@ -869,7 +837,6 @@ namespace RepoDb
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="entities"></param>
-        /// <param name="dbFields"></param>
         /// <param name="mappings"></param>
         /// <param name="options"></param>
         /// <param name="hints"></param>
@@ -883,7 +850,6 @@ namespace RepoDb
         internal static async Task<int> BulkInsertAsyncInternal<TEntity>(SqlConnection connection,
             string tableName,
             IAsyncEnumerable<TEntity> entities,
-            IEnumerable<DbField> dbFields = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions? options = null,
             string hints = null,
@@ -900,7 +866,6 @@ namespace RepoDb
             return await BulkInsertAsyncInternalBase(connection,
                 tableName,
                 loadedEntities,
-                dbFields,
                 mappings,
                 options.GetValueOrDefault(),
                 hints,

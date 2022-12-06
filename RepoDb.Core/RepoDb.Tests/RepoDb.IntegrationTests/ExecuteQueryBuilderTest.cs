@@ -806,8 +806,8 @@ namespace RepoDb.IntegrationTests
                 var sql = builder.CreateInsert(
                     ClassMappedNameCache.Get<IdentityTable>(),
                     fields: fields,
-                    primaryField: dbFields.FirstOrDefault(e => e.IsPrimary),
-                    identityField: dbFields.FirstOrDefault(e => e.IsIdentity));
+                    primaryField: dbFields.GetPrimary(),
+                    identityField: dbFields.GetIdentity());
 
                 // Act
                 var id = connection.ExecuteScalar(sql, table);
@@ -908,9 +908,9 @@ namespace RepoDb.IntegrationTests
                 var sql = builder.CreateMerge(
                     ClassMappedNameCache.Get<IdentityTable>(),
                     fields: fields,
-                    qualifiers: fields.Where(f => dbFields.FirstOrDefault(df => (df.IsPrimary || df.IsIdentity) && df.Name == f.Name) != null),
-                    primaryField: dbFields.FirstOrDefault(e => e.IsPrimary),
-                    identityField: dbFields.FirstOrDefault(e => e.IsIdentity));
+                    qualifiers: fields.Where(f => dbFields.GetItems().FirstOrDefault(df => (df.IsPrimary || df.IsIdentity) && df.Name == f.Name) != null),
+                    primaryField: dbFields.GetPrimary(),
+                    identityField: dbFields.GetIdentity());
 
                 // Act
                 var affectedRow = connection.ExecuteNonQuery(sql, table);
@@ -1213,8 +1213,8 @@ namespace RepoDb.IntegrationTests
                     ClassMappedNameCache.Get<IdentityTable>(),
                     fields: fields,
                     where: where,
-                    primaryField: dbFields.FirstOrDefault(e => e.IsPrimary),
-                    identityField: dbFields.FirstOrDefault(e => e.IsIdentity));
+                    primaryField: dbFields.GetPrimary(),
+                    identityField: dbFields.GetIdentity());
 
                 // Act
                 var affectedRow = connection.ExecuteNonQuery(sql, table);

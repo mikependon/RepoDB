@@ -64,9 +64,9 @@ namespace RepoDb
                 // Variables needed
                 var readerFields = Enumerable.Range(0, reader.FieldCount)
                     .Select((index) => reader.GetName(index));
-                var fields = dbFields?.Select(dbField => dbField.AsField());
-                var primaryDbField = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
-                var identityDbField = dbFields?.FirstOrDefault(dbField => dbField.IsIdentity);
+                var fields = dbFields?.GetAsFields();
+                var primaryDbField = dbFields?.GetPrimary();
+                var identityDbField = dbFields?.GetIdentity();
                 var primaryOrIdentityDbField = (primaryDbField ?? identityDbField);
 
                 // Validate the primary keys
@@ -229,9 +229,9 @@ namespace RepoDb
                 // Variables needed
                 var tableFields = Enumerable.Range(0, dataTable.Columns.Count)
                     .Select((index) => dataTable.Columns[index].ColumnName);
-                var fields = dbFields?.Select(dbField => dbField.AsField());
-                var primaryDbField = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
-                var identityDbField = dbFields?.FirstOrDefault(dbField => dbField.IsIdentity);
+                var fields = dbFields?.GetAsFields();
+                var primaryDbField = dbFields?.GetPrimary();
+                var identityDbField = dbFields?.GetIdentity();
                 var primaryOrIdentityDbField = (primaryDbField ?? identityDbField);
 
                 // Validate the primary keys
@@ -398,9 +398,9 @@ namespace RepoDb
                 // Variables needed
                 var readerFields = Enumerable.Range(0, reader.FieldCount)
                     .Select(index => reader.GetName(index));
-                var fields = dbFields?.Select(dbField => dbField.AsField());
-                var primaryDbField = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
-                var identityDbField = dbFields?.FirstOrDefault(dbField => dbField.IsIdentity);
+                var fields = dbFields?.GetAsFields();
+                var primaryDbField = dbFields?.GetPrimary();
+                var identityDbField = dbFields?.GetIdentity();
                 var primaryOrIdentityDbField = primaryDbField ?? identityDbField;
 
                 // Validate the primary keys
@@ -564,9 +564,9 @@ namespace RepoDb
                 // Variables needed
                 var tableFields = Enumerable.Range(0, dataTable.Columns.Count)
                     .Select((index) => dataTable.Columns[index].ColumnName);
-                var fields = dbFields?.Select(dbField => dbField.AsField());
-                var primaryDbField = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
-                var identityDbField = dbFields?.FirstOrDefault(dbField => dbField.IsIdentity);
+                var fields = dbFields?.GetAsFields();
+                var primaryDbField = dbFields?.GetPrimary();
+                var identityDbField = dbFields?.GetIdentity();
                 var primaryOrIdentityDbField = primaryDbField ?? identityDbField;
 
                 // Validate the primary keys

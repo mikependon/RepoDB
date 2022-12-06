@@ -169,13 +169,13 @@ namespace RepoDb.Contexts.Providers
         /// <returns></returns>
         private static MergeExecutionContext CreateInternal(Type entityType,
             IDbConnection connection,
-            IEnumerable<DbField> dbFields,
+            DbFieldCollection dbFields,
             string tableName,
             IEnumerable<Field> fields,
             string commandText)
         {
             var dbSetting = connection.GetDbSetting();
-            var inputFields = dbFields?
+            var inputFields = dbFields?.GetItems()
                 .Where(dbField =>
                     fields.FirstOrDefault(field =>
                         string.Equals(field.Name.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)

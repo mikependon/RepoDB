@@ -144,7 +144,7 @@ namespace RepoDb
         {
             // Ensure the fields
             fields = GetQualifiedFields<TEntity>(fields) ??
-                DbFieldCache.Get(connection, tableName, transaction)?.AsFields();
+                DbFieldCache.Get(connection, tableName, transaction)?.GetAsFields();
 
             // Return
             return QueryAllInternalBase<TEntity>(connection: connection,
@@ -303,7 +303,7 @@ namespace RepoDb
         {
             // Ensure the fields
             fields = GetQualifiedFields<TEntity>(fields) ??
-                (await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken))?.AsFields();
+                (await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken))?.GetAsFields();
 
             // Return
             return await QueryAllAsyncInternalBase<TEntity>(connection: connection,

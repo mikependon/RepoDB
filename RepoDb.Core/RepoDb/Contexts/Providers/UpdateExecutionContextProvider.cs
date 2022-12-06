@@ -170,7 +170,7 @@ namespace RepoDb.Contexts.Providers
         private static UpdateExecutionContext CreateInternal(Type entityType,
             IDbConnection connection,
             string tableName,
-            IEnumerable<DbField> dbFields,
+            DbFieldCollection dbFields,
             IEnumerable<Field> fields,
             string commandText)
         {
@@ -178,7 +178,7 @@ namespace RepoDb.Contexts.Providers
             var inputFields = new List<DbField>();
 
             // Filter the actual properties for input fields
-            inputFields = dbFields?
+            inputFields = dbFields?.GetItems()
                 .Where(dbField => dbField.IsIdentity == false)
                 .Where(dbField =>
                     fields.FirstOrDefault(field => string.Equals(field.Name.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
