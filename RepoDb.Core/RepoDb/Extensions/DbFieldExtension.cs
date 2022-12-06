@@ -37,6 +37,23 @@ namespace RepoDb.Extensions
                 yield return dbField.AsField();
             }
         }
+
+        /// <summary>
+        /// Converts the list of <see cref="DbField"/> objects into an <see cref="IReadOnlyList{T}"/> of <see cref="Field"/> objects.
+        /// </summary>
+        /// <param name="dbFields">The <see cref="DbField"/> to be converted.</param>
+        /// <returns>An <see cref="IEnumerable{T}"/> list of <see cref="Field"/> object.</returns>
+        public static IEnumerable<Field> AsFields(this IReadOnlyList<DbField> dbFields)
+        {
+            var result = new List<Field>(dbFields.Count);
+
+            foreach (var dbField in dbFields)
+            {
+                result.Add(dbField.AsField());
+            }
+
+            return result;
+        }
     }
 }
 
