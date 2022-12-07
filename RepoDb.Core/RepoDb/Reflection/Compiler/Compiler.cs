@@ -384,7 +384,7 @@ namespace RepoDb.Reflection
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         internal static IEnumerable<DataReaderField> GetDataReaderFields(DbDataReader reader,
-            IEnumerable<DbField> dbFields,
+            DbFieldCollection dbFields,
             IDbSetting dbSetting)
         {
             return Enumerable.Range(0, reader.FieldCount)
@@ -394,7 +394,7 @@ namespace RepoDb.Reflection
                     Name = name,
                     Ordinal = ordinal,
                     Type = reader.GetFieldType(ordinal) ?? StaticType.Object,
-                    DbField = dbFields?.FirstOrDefault(dbField => string.Equals(dbField.Name.AsUnquoted(true, dbSetting), name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase))
+                    DbField = dbFields?.GetByUnquotedName(name.AsUnquoted(true, dbSetting))
                 });
         }
 

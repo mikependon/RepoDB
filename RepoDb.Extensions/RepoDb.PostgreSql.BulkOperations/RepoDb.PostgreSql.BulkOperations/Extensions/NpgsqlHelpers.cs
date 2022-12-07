@@ -29,7 +29,7 @@ namespace RepoDb
         /// <param name="includeIdentity"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        internal static IEnumerable<ClassProperty> GetMatchedProperties(IEnumerable<DbField> dbFields,
+        internal static IEnumerable<ClassProperty> GetMatchedProperties(DbFieldCollection dbFields,
             IEnumerable<ClassProperty> properties,
             bool includePrimary,
             bool includeIdentity,
@@ -38,13 +38,11 @@ namespace RepoDb
             var matchedProperties = properties?
                 .Where(property =>
                 {
-                    var dbField = dbFields?.FirstOrDefault(dbField =>
-                        string.Equals(property.GetMappedName().AsUnquoted(true, dbSetting),
-                            dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase));
+                    var dbField = dbFields?.GetByUnquotedName(property.GetMappedName().AsUnquoted(true, dbSetting));
 
                     return (dbField != null && dbField.IsPrimary == false && dbField.IsIdentity == false) ||
-                        (includePrimary && dbField?.IsPrimary == true) ||
-                        (includeIdentity && dbField?.IsIdentity == true);
+                           (includePrimary && dbField?.IsPrimary == true) ||
+                           (includeIdentity && dbField?.IsIdentity == true);
                 });
 
             if (matchedProperties?.Any() != true)
@@ -70,7 +68,7 @@ namespace RepoDb
         /// <returns></returns>
         private static NpgsqlBulkInsertMapItem GetMapping(string sourceName,
             string destinationName,
-            IEnumerable<DbField> dbFields,
+            DbFieldCollection dbFields,
             bool includePrimary,
             bool includeIdentity,
             Type alternativeType,
@@ -111,14 +109,13 @@ namespace RepoDb
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         private static DbField GetMappingDbField(string name,
-            IEnumerable<DbField> dbFields,
+            DbFieldCollection dbFields,
             bool includePrimary,
             bool includeIdentity,
             IDbSetting dbSetting)
         {
             // Get
-            var dbField = dbFields?.First(df => string.Equals(name.AsUnquoted(true, dbSetting),
-                df.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase));
+            var dbField = dbFields?.GetByUnquotedName(name.AsUnquoted(true, dbSetting));
 
             // Check
             if (dbField == null)
@@ -147,7 +144,7 @@ namespace RepoDb
         /// <param name="includeIdentity"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        private static IEnumerable<NpgsqlBulkInsertMapItem> GetMappings(IEnumerable<DbField> dbFields,
+        private static IEnumerable<NpgsqlBulkInsertMapItem> GetMappings(DbFieldCollection dbFields,
             IEnumerable<ClassProperty> properties,
             bool includePrimary,
             bool includeIdentity,
@@ -187,7 +184,7 @@ namespace RepoDb
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         private static IEnumerable<NpgsqlBulkInsertMapItem> GetMappings(IDictionary<string, object> dictionary,
-            IEnumerable<DbField> dbFields,
+            DbFieldCollection dbFields,
             bool includePrimary,
             bool includeIdentity,
             IDbSetting dbSetting)
@@ -220,7 +217,7 @@ namespace RepoDb
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         private static IEnumerable<NpgsqlBulkInsertMapItem> GetMappings(DataTable table,
-            IEnumerable<DbField> dbFields,
+            DbFieldCollection dbFields,
             bool includePrimary,
             bool includeIdentity,
             IDbSetting dbSetting)
@@ -253,7 +250,7 @@ namespace RepoDb
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         private static IEnumerable<NpgsqlBulkInsertMapItem> GetMappings(DbDataReader reader,
-            IEnumerable<DbField> dbFields,
+            DbFieldCollection dbFields,
             bool includePrimary,
             bool includeIdentity,
             IDbSetting dbSetting)
@@ -363,7 +360,7 @@ namespace RepoDb
         /// <param name="dbSetting"></param>
         private static void SetIdentities<TEntity>(Type entityType,
             IEnumerable<TEntity> entities,
-            IEnumerable<DbField> dbFields,
+            DbFieldCollection dbFields,
             IEnumerable<IdentityResult> identityResults,
             IDbSetting dbSetting)
             where TEntity : class
@@ -388,7 +385,7 @@ namespace RepoDb
         /// <param name="identityResults"></param>
         /// <param name="dbSetting"></param>
         private static void SetEntityIdentities<TEntity>(IEnumerable<TEntity> entities,
-            IEnumerable<DbField> dbFields,
+            DbFieldCollection dbFields,
             IEnumerable<IdentityResult> identityResults,
             IDbSetting dbSetting)
             where TEntity : class =>
@@ -443,11 +440,11 @@ namespace RepoDb
         /// <param name="identityResults"></param>
         /// <param name="dbSetting"></param>
         private static void SetDictionaryIdentities(IEnumerable<IDictionary<string, object>> entities,
-            IEnumerable<DbField> dbFields,
+            DbFieldCollection dbFields,
             IEnumerable<IdentityResult> identityResults,
             IDbSetting dbSetting)
         {
-            var identityField = dbFields?.FirstOrDefault(dbField => dbField.IsIdentity).AsField();
+            var identityField = dbFields?.GetIdentity().AsField();
 
             if (identityField == null)
             {
@@ -474,11 +471,11 @@ namespace RepoDb
         /// <param name="identityResults"></param>
         /// <param name="dbSetting"></param>
         private static void SetDataTableIdentities(DataTable table,
-            IEnumerable<DbField> dbFields,
+            DbFieldCollection dbFields,
             IEnumerable<IdentityResult> identityResults,
             IDbSetting dbSetting)
         {
-            var identityField = dbFields?.FirstOrDefault(dbField => dbField.IsIdentity).AsField();
+            var identityField = dbFields?.GetIdentity().AsField();
             if (identityField == null)
             {
                 return;
@@ -509,7 +506,7 @@ namespace RepoDb
         /// <param name="dbFields"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        private static Field GetEntityIdentityField<TEntity>(IEnumerable<DbField> dbFields,
+        private static Field GetEntityIdentityField<TEntity>(DbFieldCollection dbFields,
             IDbSetting dbSetting)
             where TEntity : class
         {
@@ -534,11 +531,11 @@ namespace RepoDb
         /// <param name="dbFields"></param>
         /// <param name="dbSetting"></param>
         /// <returns></returns>
-        private static ClassProperty GetEntityIdentityProperty<TEntity>(IEnumerable<DbField> dbFields,
+        private static ClassProperty GetEntityIdentityProperty<TEntity>(DbFieldCollection dbFields,
             IDbSetting dbSetting)
             where TEntity : class
         {
-            var identityDbField = dbFields?.FirstOrDefault(dbField => dbField.IsIdentity);
+            var identityDbField = dbFields?.GetIdentity();
             ClassProperty property = null;
 
             if (identityDbField != null)
@@ -586,8 +583,8 @@ namespace RepoDb
         /// </summary>
         /// <param name="dbFields"></param>
         /// <returns></returns>
-        private static bool IsPrimaryAnIdentity(IEnumerable<DbField> dbFields) =>
-            IsPrimaryAnIdentity(dbFields?.FirstOrDefault(dbField => dbField.IsPrimary));
+        private static bool IsPrimaryAnIdentity(DbFieldCollection dbFields) =>
+            IsPrimaryAnIdentity(dbFields?.GetPrimary());
 
         /// <summary>
         /// 

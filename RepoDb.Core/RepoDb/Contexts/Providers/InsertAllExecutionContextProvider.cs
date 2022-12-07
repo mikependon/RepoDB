@@ -208,7 +208,7 @@ namespace RepoDb.Contexts.Providers
         private static InsertAllExecutionContext CreateInternal(Type entityType,
             IDbConnection connection,
             string tableName,
-            IEnumerable<DbField> dbFields,
+            DbFieldCollection dbFields,
             int batchSize,
             IEnumerable<Field> fields,
             string commandText)
@@ -217,7 +217,7 @@ namespace RepoDb.Contexts.Providers
             var inputFields = (IEnumerable<DbField>)null;
 
             // Filter the actual properties for input fields
-            inputFields = dbFields?
+            inputFields = dbFields?.GetItems()
                 .Where(dbField =>
                     dbField.IsIdentity == false)
                 .Where(dbField =>

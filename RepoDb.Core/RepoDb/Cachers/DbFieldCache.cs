@@ -1,8 +1,6 @@
 ﻿using RepoDb.Exceptions;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,7 +11,7 @@ namespace RepoDb
     /// </summary>
     public static class DbFieldCache
     {
-        private static readonly ConcurrentDictionary<long, IEnumerable<DbField>> cache = new();
+        private static readonly ConcurrentDictionary<long, DbFieldCollection> cache = new();
 
         #region Helpers
 
@@ -29,9 +27,9 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="dbFields">The list of <see cref="DbField"/> objects to be validated.</param>
         private static void ValidateDbFields(string tableName,
-            IEnumerable<DbField> dbFields)
+            DbFieldCollection dbFields)
         {
-            if (dbFields?.Any() != true)
+            if (dbFields is null || dbFields.IsEmpty())
             {
                 throw new MissingFieldsException($"There are no database fields found for table '{tableName}'. Make sure that the target table '{tableName}' is present in the database and/or at least a single field is available.");
             }
@@ -50,7 +48,7 @@ namespace RepoDb
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <returns>The cached field definitions of the entity.</returns>
-        public static IEnumerable<DbField> Get(IDbConnection connection,
+        public static DbFieldCollection Get(IDbConnection connection,
             string tableName,
             IDbTransaction transaction) =>
             Get(connection, tableName, transaction, true);
@@ -63,7 +61,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <param name="enableValidation">Enables the validation after retrieving the database fields.</param>
         /// <returns>The cached field definitions of the entity.</returns>
-        public static IEnumerable<DbField> Get(IDbConnection connection,
+        public static DbFieldCollection Get(IDbConnection connection,
             string tableName,
             IDbTransaction transaction,
             bool enableValidation) =>
@@ -78,7 +76,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <param name="enableValidation">Enables the validation after retrieving the database fields.</param>
         /// <returns>The cached field definitions of the entity.</returns>
-        internal static IEnumerable<DbField> GetInternal<TDbConnection>(TDbConnection connection,
+        internal static DbFieldCollection GetInternal<TDbConnection>(TDbConnection connection,
             string tableName,
             IDbTransaction transaction,
             bool enableValidation)
@@ -103,9 +101,10 @@ namespace RepoDb
             if (cache.TryGetValue(key, out var result) == false)
             {
                 // Get from DB
-                result = connection
+                result = new DbFieldCollection(connection
                     .GetDbHelper()
-                    .GetFields(connection, tableName, transaction);
+                    .GetFields(connection, tableName, transaction),
+                    connection.GetDbSetting());
 
                 // Validate
                 if (enableValidation)
@@ -133,7 +132,7 @@ namespace RepoDb
         /// <param name="transaction">The transaction object that is currently in used.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The cached field definitions of the entity.</returns>
-        public static Task<IEnumerable<DbField>> GetAsync(IDbConnection connection,
+        public static Task<DbFieldCollection> GetAsync(IDbConnection connection,
             string tableName,
             IDbTransaction transaction,
             CancellationToken cancellationToken = default) =>
@@ -148,7 +147,7 @@ namespace RepoDb
         /// <param name="enableValidation">Enables the validation after retrieving the database fields.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The cached field definitions of the entity.</returns>
-        public static Task<IEnumerable<DbField>> GetAsync(IDbConnection connection,
+        public static Task<DbFieldCollection> GetAsync(IDbConnection connection,
             string tableName,
             IDbTransaction transaction,
             bool enableValidation,
@@ -165,7 +164,7 @@ namespace RepoDb
         /// <param name="enableValidation">Enables the validation after retrieving the database fields.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> object to be used during the asynchronous operation.</param>
         /// <returns>The cached field definitions of the entity.</returns>
-        internal static async Task<IEnumerable<DbField>> GetAsyncInternal<TDbConnection>(TDbConnection connection,
+        internal static async Task<DbFieldCollection> GetAsyncInternal<TDbConnection>(TDbConnection connection,
             string tableName,
             IDbTransaction transaction,
             bool enableValidation,
@@ -191,9 +190,10 @@ namespace RepoDb
             if (cache.TryGetValue(key, out var result) == false)
             {
                 // Get from DB
-                result = await connection
+                result = new DbFieldCollection(await connection
                     .GetDbHelper()
-                    .GetFieldsAsync(connection, tableName, transaction, cancellationToken);
+                    .GetFieldsAsync(connection, tableName, transaction, cancellationToken),
+                    connection.GetDbSetting());
 
                 // Validate
                 if (enableValidation)

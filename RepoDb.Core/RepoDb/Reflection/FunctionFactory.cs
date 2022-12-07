@@ -22,7 +22,7 @@ namespace RepoDb.Reflection
         /// <param name="dbSetting">The instance of <see cref="IDbSetting"/> object to be used.</param>
         /// <returns></returns>
         public static Func<DbDataReader, TResult> CompileDataReaderToType<TResult>(DbDataReader reader,
-            IEnumerable<DbField> dbFields = null,
+            DbFieldCollection dbFields = null,
             IDbSetting dbSetting = null) =>
             Compiler.CompileDataReaderToType<TResult>(reader, dbFields, dbSetting);
 
@@ -38,7 +38,7 @@ namespace RepoDb.Reflection
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         public static Func<DbDataReader, ExpandoObject> CompileDataReaderToExpandoObject(DbDataReader reader,
-            IEnumerable<DbField> dbFields = null,
+            DbFieldCollection dbFields = null,
             IDbSetting dbSetting = null) =>
             Compiler.CompileDataReaderToExpandoObject(reader, dbFields, dbSetting);
 
@@ -175,7 +175,7 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         public static Action<DbCommand, object> GetPlainTypeToDbParametersCompiledFunction(Type paramType,
             Type entityType,
-            IEnumerable<DbField> dbFields = null) =>
+            DbFieldCollection dbFields = null) =>
             Compiler.GetPlainTypeToDbParametersCompiledFunction(paramType, entityType, dbFields);
 
         #endregion

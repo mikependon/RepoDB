@@ -2217,7 +2217,7 @@ namespace RepoDb
             var type = entity?.GetType() ?? typeof(TEntity);
             var isDictionaryType = type.IsDictionaryStringObject();
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var primary = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
+            var primary = dbFields?.GetPrimary();
             var properties = (IEnumerable<ClassProperty>)null;
             var primaryKey = (ClassProperty)null;
 
@@ -2470,7 +2470,7 @@ namespace RepoDb
             var type = entity?.GetType() ?? typeof(TEntity);
             var isDictionaryType = type.IsDictionaryStringObject();
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
-            var primary = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
+            var primary = dbFields?.GetPrimary();
             var properties = (IEnumerable<ClassProperty>)null;
             var primaryKey = (ClassProperty)null;
 
