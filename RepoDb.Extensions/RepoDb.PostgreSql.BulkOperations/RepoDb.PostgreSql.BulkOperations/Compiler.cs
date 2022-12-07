@@ -47,7 +47,7 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         internal static Action<NpgsqlBinaryImporter, TEntity> GetNpgsqlBinaryImporterWriteFunc<TEntity>(string tableName,
-            IEnumerable<DbField> dbFields,
+            DbFieldCollection dbFields,
             IEnumerable<ClassProperty> properties,
             Type entityType,
             BulkImportIdentityBehavior identityBehavior,
@@ -87,14 +87,14 @@ namespace RepoDb.PostgreSql.BulkOperations
             /// <param name="dbSetting"></param>
             /// <returns></returns>
             public static Action<NpgsqlBinaryImporter, TEntity> Get(string tableName,
-                IEnumerable<DbField> dbFields,
+                DbFieldCollection dbFields,
                 IEnumerable<ClassProperty> properties,
                 Type entityType,
                 BulkImportIdentityBehavior identityBehavior,
                 IDbSetting dbSetting = null)
             {
                 var includeIdentity = (identityBehavior == BulkImportIdentityBehavior.KeepIdentity);
-                var primaryDbField = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
+                var primaryDbField = dbFields?.GetPrimary();
                 var isPrimaryAnIdentity = primaryDbField?.IsIdentity == true;
                 var includePrimary = isPrimaryAnIdentity == false ||
                     (isPrimaryAnIdentity && identityBehavior == BulkImportIdentityBehavior.KeepIdentity);
@@ -218,7 +218,7 @@ namespace RepoDb.PostgreSql.BulkOperations
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         internal static Func<NpgsqlBinaryImporter, TEntity, CancellationToken, Task> GetNpgsqlBinaryImporterWriteAsyncFunc<TEntity>(string tableName,
-            IEnumerable<DbField> dbFields,
+            DbFieldCollection dbFields,
             IEnumerable<ClassProperty> properties,
             Type entityType,
             BulkImportIdentityBehavior identityBehavior,
@@ -259,14 +259,14 @@ namespace RepoDb.PostgreSql.BulkOperations
             /// <param name="dbSetting"></param>
             /// <returns></returns>
             public static Func<NpgsqlBinaryImporter, TEntity, CancellationToken, Task> Get(string tableName,
-                IEnumerable<DbField> dbFields,
+                DbFieldCollection dbFields,
                 IEnumerable<ClassProperty> properties,
                 Type entityType,
                 BulkImportIdentityBehavior identityBehavior,
                 IDbSetting dbSetting = null)
             {
                 var includeIdentity = (identityBehavior == BulkImportIdentityBehavior.KeepIdentity);
-                var primaryDbField = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
+                var primaryDbField = dbFields?.GetPrimary();
                 var isPrimaryAnIdentity = primaryDbField?.IsIdentity == true;
                 var includePrimary = isPrimaryAnIdentity == false ||
                     (isPrimaryAnIdentity && identityBehavior == BulkImportIdentityBehavior.KeepIdentity);

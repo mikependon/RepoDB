@@ -38,7 +38,7 @@ namespace RepoDb
             var identityBehavior = BulkImportIdentityBehavior.Unspecified;
             var dbSetting = connection.GetDbSetting();
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var primaryKey = dbFields.FirstOrDefault(dbField => dbField.IsPrimary);
+            var primaryKey = dbFields.GetPrimary();
             var pseudoTableName = tableName;
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null;
 
@@ -74,7 +74,7 @@ namespace RepoDb
                 () =>
                     GetDeleteByKeyCommandText(pseudoTableName,
                         tableName,
-                        dbFields.FirstOrDefault(dbField => dbField.IsPrimary)?.AsField(),
+                        dbFields.GetPrimary()?.AsField(),
                         dbSetting),
 
                 // setIdentities
@@ -121,7 +121,7 @@ namespace RepoDb
             var identityBehavior = BulkImportIdentityBehavior.Unspecified;
             var dbSetting = connection.GetDbSetting();
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
-            var primaryKey = dbFields.FirstOrDefault(dbField => dbField.IsPrimary);
+            var primaryKey = dbFields.GetPrimary();
             var pseudoTableName = tableName;
             IEnumerable<NpgsqlBulkInsertMapItem> mappings = null;
 
@@ -158,7 +158,7 @@ namespace RepoDb
                 () =>
                     GetDeleteByKeyCommandText(pseudoTableName,
                         tableName,
-                        dbFields.FirstOrDefault(dbField => dbField.IsPrimary)?.AsField(),
+                        dbFields.GetPrimary()?.AsField(),
                         dbSetting),
 
                 // setIdentities
