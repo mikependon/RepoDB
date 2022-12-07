@@ -1097,14 +1097,13 @@ namespace RepoDb
         /// <param name="dbFields"></param>
         /// <param name="dbSetting"></param>
         private static void ValidateOrderFieldsInternal(IEnumerable<OrderField> orderFields,
-            IEnumerable<DbField> dbFields,
+            DbFieldCollection dbFields,
             IDbSetting dbSetting)
         {
-            var unmatchesOrderFields = dbFields?.Any() == true ?
+            var unmatchesOrderFields = dbFields?.IsEmpty() == false ?
                 orderFields
                     .Where(of =>
-                        dbFields.FirstOrDefault(df =>
-                            string.Equals(df.Name.AsUnquoted(true, dbSetting), of.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) == null) : null;
+                        dbFields.GetByUnquotedName(of.Name.AsUnquoted(true, dbSetting)) == null) : null;
             if (unmatchesOrderFields?.Any() == true)
             {
                 throw new MissingFieldsException($"The order fields '{unmatchesOrderFields.Select(of => of.Name).Join(", ")}' are not present from the actual table.");
@@ -1163,14 +1162,13 @@ namespace RepoDb
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         private static IEnumerable<Field> GetTargetFieldsInternal(IEnumerable<Field> fields,
-            IEnumerable<DbField> dbFields,
+            DbFieldCollection dbFields,
             IDbSetting dbSetting)
         {
-            return dbFields?.Any() == true ?
+            return dbFields?.IsEmpty() == false ?
                 fields
                     .Where(f =>
-                        dbFields.FirstOrDefault(df =>
-                            string.Equals(df.Name.AsUnquoted(true, dbSetting), f.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null) :
+                        dbFields.GetByUnquotedName(f.Name.AsUnquoted(true, dbSetting)) != null) :
                 fields;
         }
 
@@ -1205,7 +1203,7 @@ namespace RepoDb
         /// <param name="dbFields"></param>
         /// <returns></returns>
         private static DbField GetPrimaryField(BaseRequest request,
-            IEnumerable<DbField> dbFields)
+            DbFieldCollection dbFields)
         {
             var primaryField = GetPrimaryField(request.Type, dbFields);
 
@@ -1261,7 +1259,7 @@ namespace RepoDb
         /// <param name="dbFields"></param>
         /// <returns></returns>
         private static DbField GetIdentityField(BaseRequest request,
-            IEnumerable<DbField> dbFields)
+            DbFieldCollection dbFields)
         {
             var identityField = GetIdentityField(request.Type, dbFields);
 
@@ -1293,9 +1291,9 @@ namespace RepoDb
         /// <param name="dbFields"></param>
         /// <returns></returns>
         private static Field GetPrimaryField(Type type,
-            IEnumerable<DbField> dbFields) =>
+            DbFieldCollection dbFields) =>
             (type != null && type.IsObjectType() == false ? PrimaryCache.Get(type) : null)?.AsField() ??
-                dbFields?.FirstOrDefault(f => f.IsPrimary)?.AsField();
+                dbFields?.GetPrimary()?.AsField();
 
         /// <summary>
         /// 
@@ -1304,9 +1302,9 @@ namespace RepoDb
         /// <param name="dbFields"></param>
         /// <returns></returns>
         private static Field GetIdentityField(Type type,
-            IEnumerable<DbField> dbFields) =>
+            DbFieldCollection dbFields) =>
             (type != null && type.IsObjectType() == false ? IdentityCache.Get(type) : null)?.AsField() ??
-                dbFields?.FirstOrDefault(f => f.IsIdentity)?.AsField();
+                dbFields?.GetIdentity()?.AsField();
 
         /// <summary>
         ///

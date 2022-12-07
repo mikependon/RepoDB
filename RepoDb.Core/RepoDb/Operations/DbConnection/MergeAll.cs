@@ -1524,7 +1524,7 @@ namespace RepoDb
             // Variables needed
             var type = GetEntityType<TEntity>(entities);
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var primary = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
+            var primary = dbFields?.GetPrimary();
             var properties = (IEnumerable<ClassProperty>)null;
             var primaryKey = (ClassProperty)null;
 
@@ -1914,7 +1914,7 @@ namespace RepoDb
             // Variables needed
             var type = GetEntityType<TEntity>(entities);
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
-            var primary = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary);
+            var primary = dbFields?.GetPrimary();
             var properties = (IEnumerable<ClassProperty>)null;
             var primaryKey = (ClassProperty)null;
 

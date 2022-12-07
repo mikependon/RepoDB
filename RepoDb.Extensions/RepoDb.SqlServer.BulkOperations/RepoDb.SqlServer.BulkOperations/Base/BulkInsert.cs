@@ -22,7 +22,6 @@ namespace RepoDb
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="entities"></param>
-        /// <param name="dbFields"></param>
         /// <param name="mappings"></param>
         /// <param name="options"></param>
         /// <param name="hints"></param>
@@ -35,7 +34,6 @@ namespace RepoDb
         private static int BulkInsertInternalBase<TEntity>(SqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
-            IEnumerable<DbField> dbFields = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = default,
             string hints = null,
@@ -59,15 +57,15 @@ namespace RepoDb
             try
             {
                 // Get the DB Fields
-                dbFields ??= DbFieldCache.Get(connection, tableName, transaction, true);
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction, true);
 
                 // Variables needed
-                var identityDbField = dbFields?.FirstOrDefault(dbField => dbField.IsIdentity);
+                var identityDbField = dbFields?.GetIdentity();
                 var entityType = entities?.FirstOrDefault()?.GetType() ?? typeof(TEntity);
                 var entityFields = TypeCache.Get(entityType).IsDictionaryStringObject() ?
                     GetDictionaryStringObjectFields(entities?.FirstOrDefault() as IDictionary<string, object>) :
                     FieldCache.Get(entityType);
-                var fields = dbFields?.Select(dbField => dbField.AsField());
+                var fields = dbFields?.GetAsFields();
 
                 // Filter the fields (based on mappings)
                 if (mappings?.Any() == true)
@@ -176,7 +174,6 @@ namespace RepoDb
         internal static int BulkInsertInternalBase(SqlConnection connection,
             string tableName,
             DbDataReader reader,
-            IEnumerable<DbField> dbFields = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = default,
             int? bulkCopyTimeout = null,
@@ -198,13 +195,13 @@ namespace RepoDb
             try
             {
                 // Get the DB Fields
-                dbFields ??= DbFieldCache.Get(connection, tableName, transaction, true);
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction, true);
 
                 // Variables needed
                 var readerFields = Enumerable
                     .Range(0, reader.FieldCount)
                     .Select(index => reader.GetName(index));
-                var fields = dbFields?.Select(dbField => dbField.AsField());
+                var fields = dbFields?.GetAsFields();
 
                 // Filter the fields (based on mappings)
                 if (mappings?.Any() == true)
@@ -268,7 +265,6 @@ namespace RepoDb
         /// <param name="tableName"></param>
         /// <param name="dataTable"></param>
         /// <param name="rowState"></param>
-        /// <param name="dbFields"></param>
         /// <param name="mappings"></param>
         /// <param name="options"></param>
         /// <param name="hints"></param>
@@ -282,7 +278,6 @@ namespace RepoDb
             string tableName,
             DataTable dataTable,
             DataRowState? rowState = null,
-            IEnumerable<DbField> dbFields = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = default,
             string hints = null,
@@ -308,13 +303,13 @@ namespace RepoDb
             try
             {
                 // Get the DB Fields
-                dbFields ??= DbFieldCache.Get(connection, tableName, transaction, true);
+                var dbFields = DbFieldCache.Get(connection, tableName, transaction, true);
 
                 // Variables needed
-                var identityDbField = dbFields?.FirstOrDefault(dbField => dbField.IsIdentity);
+                var identityDbField = dbFields?.GetIdentity();
                 var tableFields = GetDataColumns(dataTable)
                     .Select(column => column.ColumnName);
-                var fields = dbFields?.Select(dbField => dbField.AsField());
+                var fields = dbFields?.GetAsFields();
 
                 // Filter the fields (based on mappings)
                 if (mappings?.Any() == true)
@@ -426,7 +421,6 @@ namespace RepoDb
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="entities"></param>
-        /// <param name="dbFields"></param>
         /// <param name="mappings"></param>
         /// <param name="options"></param>
         /// <param name="hints"></param>
@@ -440,7 +434,6 @@ namespace RepoDb
         private static async Task<int> BulkInsertAsyncInternalBase<TEntity>(SqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
-            IEnumerable<DbField> dbFields = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = default,
             string hints = null,
@@ -469,15 +462,15 @@ namespace RepoDb
             try
             {
                 // Get the DB Fields
-                dbFields ??= await DbFieldCache.GetAsync(connection, tableName, transaction, true, cancellationToken: cancellationToken);
+                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, true, cancellationToken: cancellationToken);
 
                 // Variables needed
-                var identityDbField = dbFields?.FirstOrDefault(dbField => dbField.IsIdentity);
+                var identityDbField = dbFields?.GetIdentity();
                 var entityType = firstEntity.GetType();
                 var entityFields = TypeCache.Get(entityType).IsDictionaryStringObject() ?
                     GetDictionaryStringObjectFields(firstEntity as IDictionary<string, object>) :
                     FieldCache.Get(entityType);
-                var fields = dbFields?.Select(dbField => dbField.AsField());
+                var fields = dbFields?.GetAsFields();
 
                 // Filter the fields (based on mappings)
                 if (mappings?.Any() == true)
@@ -575,7 +568,6 @@ namespace RepoDb
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="reader"></param>
-        /// <param name="dbFields"></param>
         /// <param name="mappings"></param>
         /// <param name="options"></param>
         /// <param name="bulkCopyTimeout"></param>
@@ -586,7 +578,6 @@ namespace RepoDb
         internal static async Task<int> BulkInsertAsyncInternalBase(SqlConnection connection,
             string tableName,
             DbDataReader reader,
-            IEnumerable<DbField> dbFields = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = default,
             int? bulkCopyTimeout = null,
@@ -609,13 +600,13 @@ namespace RepoDb
             try
             {
                 // Get the DB Fields
-                dbFields ??= await DbFieldCache.GetAsync(connection, tableName, transaction, true, cancellationToken);
+                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, true, cancellationToken);
 
                 // Variables needed
                 var readerFields = Enumerable
                     .Range(0, reader.FieldCount)
                     .Select(index => reader.GetName(index));
-                var fields = dbFields?.Select(dbField => dbField.AsField());
+                var fields = dbFields?.GetAsFields();
 
                 // Filter the fields (based on mappings)
                 if (mappings?.Any() == true)
@@ -680,7 +671,6 @@ namespace RepoDb
         /// <param name="tableName"></param>
         /// <param name="dataTable"></param>
         /// <param name="rowState"></param>
-        /// <param name="dbFields"></param>
         /// <param name="mappings"></param>
         /// <param name="options"></param>
         /// <param name="hints"></param>
@@ -695,7 +685,6 @@ namespace RepoDb
             string tableName,
             DataTable dataTable,
             DataRowState? rowState = null,
-            IEnumerable<DbField> dbFields = null,
             IEnumerable<BulkInsertMapItem> mappings = null,
             SqlBulkCopyOptions options = default,
             string hints = null,
@@ -722,13 +711,13 @@ namespace RepoDb
             try
             {
                 // Get the DB Fields
-                dbFields ??= await DbFieldCache.GetAsync(connection, tableName, transaction, true, cancellationToken);
+                var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, true, cancellationToken);
 
                 // Variables needed
-                var identityDbField = dbFields?.FirstOrDefault(dbField => dbField.IsIdentity);
+                var identityDbField = dbFields?.GetIdentity();
                 var tableFields = GetDataColumns(dataTable)
                     .Select(column => column.ColumnName);
-                var fields = dbFields?.Select(dbField => dbField.AsField());
+                var fields = dbFields?.GetAsFields();
 
                 // Filter the fields (based on mappings)
                 if (mappings?.Any() == true)

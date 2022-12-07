@@ -1286,7 +1286,7 @@ namespace RepoDb
             IDbTransaction transaction,
             ITrace trace,
             Type entityType,
-            IEnumerable<DbField> dbFields,
+            DbFieldCollection dbFields,
             bool skipCommandArrayParametersCheck,
             Func<DbCommand, TraceResult> beforeExecutionCallback = null)
         {
@@ -1418,7 +1418,7 @@ namespace RepoDb
             ITrace trace,
             CancellationToken cancellationToken,
             Type entityType,
-            IEnumerable<DbField> dbFields,
+            DbFieldCollection dbFields,
             bool skipCommandArrayParametersCheck,
             Func<DbCommand, CancellationToken, Task<TraceResult>> beforeExecutionCallbackAsync = null)
         {
@@ -1550,7 +1550,7 @@ namespace RepoDb
             IDbTransaction transaction,
             ITrace trace,
             Type entityType,
-            IEnumerable<DbField> dbFields,
+            DbFieldCollection dbFields,
             bool skipCommandArrayParametersCheck)
         {
             using var command = CreateDbCommandForExecution(connection: connection,
@@ -1658,7 +1658,7 @@ namespace RepoDb
             ITrace trace,
             CancellationToken cancellationToken,
             Type entityType,
-            IEnumerable<DbField> dbFields,
+            DbFieldCollection dbFields,
             bool skipCommandArrayParametersCheck)
         {
             using var command = await CreateDbCommandForExecutionAsync(connection: connection,
@@ -1893,7 +1893,7 @@ namespace RepoDb
             ICache cache,
             ITrace trace,
             Type entityType,
-            IEnumerable<DbField> dbFields,
+            DbFieldCollection dbFields,
             bool skipCommandArrayParametersCheck)
         {
             // Get Cache
@@ -2037,7 +2037,7 @@ namespace RepoDb
             ITrace trace,
             CancellationToken cancellationToken,
             Type entityType,
-            IEnumerable<DbField> dbFields,
+            DbFieldCollection dbFields,
             bool skipCommandArrayParametersCheck)
         {
             // Get Cache
@@ -2320,7 +2320,7 @@ namespace RepoDb
             IDbTransaction transaction)
         {
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
-            var dbField = dbFields?.FirstOrDefault(df => df.IsPrimary == true) ?? dbFields?.FirstOrDefault(df => df.IsIdentity == true);
+            var dbField = dbFields?.GetPrimary() ?? dbFields?.GetIdentity();
             return GetAndGuardPrimaryKeyOrIdentityKey(tableName, dbField);
         }
 
@@ -2373,7 +2373,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
         {
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
-            var dbField = dbFields?.FirstOrDefault(df => df.IsPrimary == true) ?? dbFields?.FirstOrDefault(df => df.IsIdentity == true);
+            var dbField = dbFields?.GetPrimary() ?? dbFields?.GetIdentity();
             return GetAndGuardPrimaryKeyOrIdentityKey(tableName, dbField);
         }
 
@@ -2404,7 +2404,7 @@ namespace RepoDb
         /// <param name="dbFields"></param>
         /// <returns></returns>
         internal static Field GetAndGuardPrimaryKeyOrIdentityKey(Type entityType,
-            IEnumerable<DbField> dbFields) =>
+            DbFieldCollection dbFields) =>
             entityType == null ? null :
                 TypeCache.Get(entityType).IsDictionaryStringObject() ?
                 GetAndGuardPrimaryKeyOrIdentityKeyForDictionaryStringObject(entityType, dbFields) :
@@ -2417,12 +2417,12 @@ namespace RepoDb
         /// <param name="dbFields"></param>
         /// <returns></returns>
         internal static Field GetAndGuardPrimaryKeyOrIdentityKeyForDictionaryStringObject(Type type,
-            IEnumerable<DbField> dbFields)
+            DbFieldCollection dbFields)
         {
             // Primary/Identity
-            var dbField = dbFields?.FirstOrDefault(df => df.IsPrimary == true) ??
-                dbFields?.FirstOrDefault(df => df.IsPrimary == true) ??
-                dbFields?.FirstOrDefault(df => df.Name == "Id");
+            var dbField = dbFields?.GetPrimary() ??
+                dbFields?.GetIdentity() ??
+                dbFields?.GetByName("Id");
 
             // Return
             if (dbField == null)
@@ -2441,7 +2441,7 @@ namespace RepoDb
         /// <param name="dbFields"></param>
         /// <returns></returns>
         internal static Field GetAndGuardPrimaryKeyOrIdentityKeyForEntity(Type type,
-            IEnumerable<DbField> dbFields)
+            DbFieldCollection dbFields)
         {
             // Properties
             var properties = PropertyCache.Get(type) ?? type.GetClassProperties();
@@ -2450,7 +2450,7 @@ namespace RepoDb
             // Primary
             if (property == null)
             {
-                var dbField = dbFields?.FirstOrDefault(df => df.IsPrimary == true);
+                var dbField = dbFields?.GetPrimary();
                 property = properties?.FirstOrDefault(p =>
                      string.Equals(p.GetMappedName(), dbField?.Name, StringComparison.OrdinalIgnoreCase)) ??
                      PrimaryCache.Get(type);
@@ -2459,7 +2459,7 @@ namespace RepoDb
             // Identity
             if (property == null)
             {
-                var dbField = dbFields?.FirstOrDefault(df => df.IsIdentity == true);
+                var dbField = dbFields?.GetIdentity();
                 property = properties?.FirstOrDefault(p =>
                      string.Equals(p.GetMappedName(), dbField?.Name, StringComparison.OrdinalIgnoreCase)) ??
                      PrimaryCache.Get(type);
@@ -2937,7 +2937,7 @@ namespace RepoDb
         internal static void WhereToCommandParameters(DbCommand command,
             QueryGroup where,
             Type entityType,
-            IEnumerable<DbField> dbFields) =>
+            DbFieldCollection dbFields) =>
             DbCommandExtension.CreateParameters(command, where, null, entityType, dbFields);
 
         /// <summary>
@@ -3100,7 +3100,7 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             Type entityType = null,
-            IEnumerable<DbField> dbFields = null,
+            DbFieldCollection dbFields = null,
             bool skipCommandArrayParametersCheck = true)
         {
             // Validate
@@ -3143,7 +3143,7 @@ namespace RepoDb
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default,
             Type entityType = null,
-            IEnumerable<DbField> dbFields = null,
+            DbFieldCollection dbFields = null,
             bool skipCommandArrayParametersCheck = true)
         {
             // Validate
@@ -3184,7 +3184,7 @@ namespace RepoDb
             int? commandTimeout = null,
             IDbTransaction transaction = null,
             Type entityType = null,
-            IEnumerable<DbField> dbFields = null,
+            DbFieldCollection dbFields = null,
             bool skipCommandArrayParametersCheck = true)
         {
             // Command

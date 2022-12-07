@@ -41,7 +41,7 @@ namespace RepoDb
         private static int PseudoBasedBinaryImport(this NpgsqlConnection connection,
             string tableName,
             int? bulkCopyTimeout,
-            IEnumerable<DbField> dbFields,
+            DbFieldCollection dbFields,
             Func<string> getPseudoTableName,
             Func<IEnumerable<NpgsqlBulkInsertMapItem>> getMappings,
             Func<string, int> binaryImport,
@@ -91,7 +91,7 @@ namespace RepoDb
                 if (isBinaryBulkInsert == false && withPseudoTable)
                 {
                     qualifiers = qualifiers?.Any() == true ? qualifiers :
-                        dbFields?.FirstOrDefault(dbField => dbField.IsPrimary).AsField().AsEnumerable();
+                        dbFields?.GetPrimary().AsField().AsEnumerable();
 
                     CreatePseudoTableIndex(connection,
                         pseudoTableName,
@@ -155,7 +155,7 @@ namespace RepoDb
         private static async Task<int> PseudoBasedBinaryImportAsync(this NpgsqlConnection connection,
             string tableName,
             int? bulkCopyTimeout,
-            IEnumerable<DbField> dbFields,
+            DbFieldCollection dbFields,
             Func<string> getPseudoTableName,
             Func<IEnumerable<NpgsqlBulkInsertMapItem>> getMappings,
             Func<string, Task<int>> binaryImportAsync,
@@ -208,7 +208,7 @@ namespace RepoDb
                 if (isBinaryBulkInsert == false && withPseudoTable)
                 {
                     qualifiers = qualifiers?.Any() == true ? qualifiers :
-                        dbFields?.FirstOrDefault(dbField => dbField.IsPrimary).AsField().AsEnumerable();
+                        dbFields?.GetPrimary().AsField().AsEnumerable();
 
                     await CreatePseudoTableIndexAsync(connection,
                         pseudoTableName,
@@ -232,7 +232,7 @@ namespace RepoDb
                         setIdentities?.Invoke(identityResults);
                     }
 
-                    result = identityResults.Count();
+                    result = identityResults.Count;
                 }
 
                 // Return

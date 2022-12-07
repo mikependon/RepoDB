@@ -49,7 +49,7 @@ namespace RepoDb
         /// <param name="dbSetting">The instance of <see cref="IDbSetting"/> object to be used.</param>
         /// <returns></returns>
         internal static Func<DbDataReader, TResult> GetDataReaderToTypeCompiledFunction<TResult>(DbDataReader reader,
-            IEnumerable<DbField> dbFields = null,
+            DbFieldCollection dbFields = null,
             IDbSetting dbSetting = null) =>
             DataReaderToTypeCache<TResult>.Get(reader, dbFields, dbSetting);
 
@@ -71,7 +71,7 @@ namespace RepoDb
             /// <param name="dbSetting">The instance of <see cref="IDbSetting"/> object to be used.</param>
             /// <returns></returns>
             internal static Func<DbDataReader, TResult> Get(DbDataReader reader,
-                IEnumerable<DbField> dbFields = null,
+                DbFieldCollection dbFields = null,
                 IDbSetting dbSetting = null)
             {
                 var key = GetKey(reader);
@@ -106,7 +106,7 @@ namespace RepoDb
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         internal static Func<DbDataReader, dynamic> GetDataReaderToExpandoObjectCompileFunction(DbDataReader reader,
-            IEnumerable<DbField> dbFields = null,
+            DbFieldCollection dbFields = null,
             IDbSetting dbSetting = null) =>
             DataReaderToExpandoObjectCache.Get(reader, dbFields, dbSetting);
 
@@ -127,7 +127,7 @@ namespace RepoDb
             /// <param name="dbSetting"></param>
             /// <returns></returns>
             internal static Func<DbDataReader, dynamic> Get(DbDataReader reader,
-                IEnumerable<DbField> dbFields = null,
+                DbFieldCollection dbFields = null,
                 IDbSetting dbSetting = null)
             {
                 var key = GetKey(reader);
@@ -476,7 +476,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static Action<DbCommand, object> GetPlainTypeToDbParametersCompiledFunction(Type paramType,
             Type entityType,
-            IEnumerable<DbField> dbFields = null) =>
+            DbFieldCollection dbFields = null) =>
             PlainTypeToDbParametersCompiledFunctionCache.Get(paramType, entityType, dbFields);
 
         #region PlainTypeToDbParametersCompiledFunctionCache
@@ -497,7 +497,7 @@ namespace RepoDb
             /// <returns></returns>
             internal static Action<DbCommand, object> Get(Type paramType,
                 Type entityType,
-                IEnumerable<DbField> dbFields = null)
+                DbFieldCollection dbFields = null)
             {
                 if (paramType == null)
                 {

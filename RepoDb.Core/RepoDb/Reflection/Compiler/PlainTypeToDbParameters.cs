@@ -21,7 +21,7 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static Action<DbCommand, object> GetPlainTypeToDbParametersCompiledFunction(Type paramType,
             Type entityType,
-            IEnumerable<DbField> dbFields = null)
+            DbFieldCollection dbFields = null)
         {
             var commandParameterExpression = Expression.Parameter(StaticType.DbCommand, "command");
             var entityParameterExpression = Expression.Parameter(StaticType.Object, "entity");
@@ -32,16 +32,17 @@ namespace RepoDb.Reflection
             // Iterate
             foreach (var paramProperty in PropertyCache.Get(paramType))
             {
+                var mappedParamPropertyName = paramProperty.GetMappedName();
+                
                 // Ensure it matches to atleast one param
                 var entityProperty = PropertyCache.Get(entityType)?.FirstOrDefault(e =>
-                    string.Equals(e.GetMappedName(), paramProperty.GetMappedName(), StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(e.GetMappedName(), mappedParamPropertyName, StringComparison.OrdinalIgnoreCase) ||
                     string.Equals(e.PropertyInfo.Name, paramProperty.PropertyInfo.Name, StringComparison.OrdinalIgnoreCase));
 
                 // Variables
-                var dbField = dbFields?.FirstOrDefault(df =>
-                    string.Equals(df.Name, paramProperty.GetMappedName(), StringComparison.OrdinalIgnoreCase));
+                var dbField = dbFields?.GetByName(mappedParamPropertyName);
                 var targetProperty = (entityProperty ?? paramProperty);
-                var parameterName = paramProperty.GetMappedName(); // There is a purpose of why it is not 'targetProperty'
+                var parameterName = mappedParamPropertyName; // There is a purpose of why it is not 'targetProperty'
                 var valueExpression = (Expression)Expression.Property(entityExpression, paramProperty.PropertyInfo);
 
                 // Add the value itself

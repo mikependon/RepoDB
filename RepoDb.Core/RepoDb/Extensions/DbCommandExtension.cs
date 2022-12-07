@@ -188,7 +188,7 @@ namespace RepoDb.Extensions
             object param,
             HashSet<string> propertiesToSkip,
             Type entityType,
-            IEnumerable<DbField> dbFields = null)
+            DbFieldCollection dbFields = null)
         {
             // Check
             if (param == null)
@@ -415,7 +415,7 @@ namespace RepoDb.Extensions
             object param,
             HashSet<string> propertiesToSkip,
             Type entityType,
-            IEnumerable<DbField> dbFields = null)
+            DbFieldCollection dbFields = null)
         {
             var type = param.GetType();
 
@@ -471,7 +471,7 @@ namespace RepoDb.Extensions
         private static void CreateParameters(IDbCommand command,
             IDictionary<string, object> dictionary,
             HashSet<string> propertiesToSkip,
-            IEnumerable<DbField> dbFields = null)
+            DbFieldCollection dbFields = null)
         {
             var kvps = dictionary.Where(kvp =>
                 propertiesToSkip?.Contains(kvp.Key) != true);
@@ -516,7 +516,7 @@ namespace RepoDb.Extensions
             QueryGroup queryGroup,
             HashSet<string> propertiesToSkip,
             Type entityType,
-            IEnumerable<DbField> dbFields = null)
+            DbFieldCollection dbFields = null)
         {
             if (queryGroup == null)
             {
@@ -537,7 +537,7 @@ namespace RepoDb.Extensions
             IEnumerable<QueryField> queryFields,
             HashSet<string> propertiesToSkip,
             Type entityType,
-            IEnumerable<DbField> dbFields = null)
+            DbFieldCollection dbFields = null)
         {
             if (queryFields == null)
             {
@@ -580,7 +580,7 @@ namespace RepoDb.Extensions
             QueryField queryField,
             HashSet<string> propertiesToSkip,
             Type entityType,
-            IEnumerable<DbField> dbFields = null)
+            DbFieldCollection dbFields = null)
         {
             if (queryField == null)
             {
@@ -841,9 +841,9 @@ namespace RepoDb.Extensions
         /// <param name="dbFields"></param>
         /// <returns></returns>
         private static DbField GetDbField(string fieldName,
-            IEnumerable<DbField> dbFields)
+            DbFieldCollection dbFields)
         {
-            if (dbFields.IsNullOrEmpty()) return null;
+            if (dbFields is null || dbFields.IsEmpty()) return null;
             
             var fieldNameSpan = fieldName.AsSpan();
             
@@ -858,16 +858,8 @@ namespace RepoDb.Extensions
             {
                 fieldNameSpan = fieldNameSpan.Slice(0, index);
             }
-
-            foreach (var dbField in dbFields)
-            {
-                if (dbField.Name.AsSpan().Equals(fieldNameSpan, StringComparison.OrdinalIgnoreCase))
-                {
-                    return dbField;
-                }
-            }
             
-            return null;
+            return dbFields.GetByName(fieldNameSpan.ToString());
         }
 
         /// <summary>

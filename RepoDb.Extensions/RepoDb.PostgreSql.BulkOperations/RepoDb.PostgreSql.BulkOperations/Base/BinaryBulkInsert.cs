@@ -96,7 +96,7 @@ namespace RepoDb
                     GetInsertCommandText(pseudoTableName,
                         tableName,
                         mappings.Select(mapping => new Field(mapping.DestinationColumn)),
-                        dbFields.FirstOrDefault(dbField => dbField.IsIdentity)?.AsField(),
+                        dbFields.GetIdentity()?.AsField(),
                         identityBehavior,
                         dbSetting),
 
@@ -188,7 +188,7 @@ namespace RepoDb
                     GetInsertCommandText(pseudoTableName,
                         tableName,
                         mappings.Select(mapping => new Field(mapping.DestinationColumn)),
-                        dbFields.FirstOrDefault(dbField => dbField.IsIdentity)?.AsField(),
+                        dbFields.GetIdentity()?.AsField(),
                         identityBehavior,
                         dbSetting),
 
@@ -278,7 +278,7 @@ namespace RepoDb
                     GetInsertCommandText(pseudoTableName,
                         tableName,
                         mappings.Select(mapping => new Field(mapping.DestinationColumn)),
-                        dbFields.FirstOrDefault(dbField => dbField.IsIdentity)?.AsField(),
+                        dbFields.GetIdentity()?.AsField(),
                         identityBehavior,
                         dbSetting),
 
@@ -383,7 +383,7 @@ namespace RepoDb
                     GetInsertCommandText(pseudoTableName,
                         tableName,
                         mappings.Select(mapping => new Field(mapping.DestinationColumn)),
-                        dbFields.FirstOrDefault(dbField => dbField.IsIdentity)?.AsField(),
+                        dbFields.GetIdentity()?.AsField(),
                         identityBehavior,
                         dbSetting),
 
@@ -479,7 +479,7 @@ namespace RepoDb
                     GetInsertCommandText(pseudoTableName,
                         tableName,
                         mappings.Select(mapping => new Field(mapping.DestinationColumn)),
-                        dbFields.FirstOrDefault(dbField => dbField.IsIdentity)?.AsField(),
+                        dbFields.GetIdentity()?.AsField(),
                         identityBehavior,
                         dbSetting),
 
@@ -566,7 +566,7 @@ namespace RepoDb
                     GetInsertCommandText(pseudoTableName,
                         tableName,
                         mappings.Select(mapping => new Field(mapping.DestinationColumn)),
-                        dbFields.FirstOrDefault(dbField => dbField.IsIdentity)?.AsField(),
+                        dbFields.GetIdentity()?.AsField(),
                         identityBehavior,
                         dbSetting),
 

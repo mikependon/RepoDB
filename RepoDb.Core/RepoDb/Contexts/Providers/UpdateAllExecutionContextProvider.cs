@@ -100,7 +100,6 @@ namespace RepoDb.Contexts.Providers
                 tableName,
                 entities,
                 dbFields,
-                qualifiers,
                 batchSize,
                 fields,
                 commandText);
@@ -166,7 +165,6 @@ namespace RepoDb.Contexts.Providers
                 tableName,
                 entities,
                 dbFields,
-                qualifiers,
                 batchSize,
                 fields,
                 commandText);
@@ -195,8 +193,7 @@ namespace RepoDb.Contexts.Providers
             IDbConnection connection,
             string tableName,
             IEnumerable<object> entities,
-            IEnumerable<DbField> dbFields,
-            IEnumerable<Field> qualifiers,
+            DbFieldCollection dbFields,
             int batchSize,
             IEnumerable<Field> fields,
             string commandText)
@@ -205,16 +202,8 @@ namespace RepoDb.Contexts.Providers
             var dbSetting = connection.GetDbSetting();
             var inputFields = new List<DbField>();
 
-            // Check the qualifiers
-            if (qualifiers?.Any() != true)
-            {
-                var key = dbFields?.FirstOrDefault(dbField => dbField.IsPrimary == true) ??
-                    dbFields?.FirstOrDefault(dbField => dbField.IsIdentity == true);
-                qualifiers = key?.AsField().AsEnumerable();
-            }
-
             // Filter the actual properties for input fields
-            inputFields = dbFields?
+            inputFields = dbFields?.GetItems()
                 .Where(dbField =>
                     fields.FirstOrDefault(field => string.Equals(field.Name.AsUnquoted(true, dbSetting), dbField.Name.AsUnquoted(true, dbSetting), StringComparison.OrdinalIgnoreCase)) != null)
                 .AsList();

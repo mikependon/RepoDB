@@ -20,7 +20,7 @@ namespace RepoDb.Contexts.Providers
         /// <param name="dbFields"></param>
         /// <returns></returns>
         public static Field GetTargetReturnColumnAsField(Type entityType,
-            IEnumerable<DbField> dbFields)
+            DbFieldCollection dbFields)
         {
             var primaryField = GetPrimaryAsReturnKeyField(entityType, dbFields);
             var identityField = GetIdentityAsReturnKeyField(entityType, dbFields);
@@ -48,9 +48,9 @@ namespace RepoDb.Contexts.Providers
         /// <returns></returns>
         /// <exception cref="InvalidOperationException"></exception>
         private static Field GetPrimaryAsReturnKeyField(Type entityType,
-            IEnumerable<DbField> dbFields) =>
+            DbFieldCollection dbFields) =>
             PrimaryCache.Get(entityType)?.AsField() ??
-                dbFields?.FirstOrDefault(f => f.IsPrimary)?.AsField();
+                dbFields?.GetPrimary()?.AsField();
 
         /// <summary>
         /// 
@@ -60,9 +60,9 @@ namespace RepoDb.Contexts.Providers
         /// <returns></returns>
         /// <exception cref="InvalidOperationException"></exception>
         private static Field GetIdentityAsReturnKeyField(Type entityType,
-            IEnumerable<DbField> dbFields) =>
+            DbFieldCollection dbFields) =>
             IdentityCache.Get(entityType)?.AsField() ??
-                dbFields?.FirstOrDefault(f => f.IsIdentity)?.AsField();
+                dbFields?.GetIdentity()?.AsField();
 
         #endregion
     }

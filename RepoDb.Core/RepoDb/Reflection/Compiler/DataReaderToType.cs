@@ -19,7 +19,7 @@ namespace RepoDb.Reflection
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         internal static Func<DbDataReader, TResult> CompileDataReaderToType<TResult>(DbDataReader reader,
-            IEnumerable<DbField> dbFields,
+            DbFieldCollection dbFields,
             IDbSetting dbSetting)
         {
             var typeOfResult = typeof(TResult);
@@ -80,7 +80,7 @@ namespace RepoDb.Reflection
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         internal static Func<DbDataReader, TResult> CompileDataReaderToDataEntity<TResult>(DbDataReader reader,
-            IEnumerable<DbField> dbFields,
+            DbFieldCollection dbFields,
             IDbSetting dbSetting)
         {
             var readerParameterExpression = Expression.Parameter(StaticType.DbDataReader, "reader");
