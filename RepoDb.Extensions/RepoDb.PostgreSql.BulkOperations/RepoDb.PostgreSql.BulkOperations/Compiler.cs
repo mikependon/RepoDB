@@ -448,7 +448,7 @@ namespace RepoDb.PostgreSql.BulkOperations
             var propertyExpression = (Expression)Expression.Property(entityExpression, mapping.SourceColumn);
 
             // Enum
-            if (classProperty.PropertyInfo.PropertyType.GetUnderlyingType().IsEnum)
+            if (TypeCache.Get(classProperty.PropertyInfo.PropertyType).GetUnderlyingType().IsEnum)
             {
                 propertyExpression = GetEntityPropertyExpressionForEnum(propertyExpression, mapping.NpgsqlDbType);
             }
@@ -475,9 +475,9 @@ namespace RepoDb.PostgreSql.BulkOperations
                 _ => propertyExpression
             };
 
-            if (propertyExpression.Type.IsNullable())
+            if (TypeCache.Get(propertyExpression.Type).IsNullable())
             {
-                var underlyingType = expression.Type.GetUnderlyingType();
+                var underlyingType = TypeCache.Get(expression.Type).GetUnderlyingType();
                 var nullableType = underlyingType.IsValueType ?
                     typeof(Nullable<>).MakeGenericType(underlyingType) : underlyingType;
                 var testExpression = Expression.Equal(Expression.Constant(null), propertyExpression);
@@ -509,9 +509,10 @@ namespace RepoDb.PostgreSql.BulkOperations
         private static Expression ConvertEnumExpressionToIntBasedType(Expression propertyExpression,
             Type intBasedType)
         {
-            var typeExpression = Expression.Constant(propertyExpression.Type.GetUnderlyingType());
+            var cachedType = TypeCache.Get(propertyExpression.Type);
+            var typeExpression = Expression.Constant(cachedType.GetUnderlyingType());
             var nameExpression = Expression.Call(GetEnumGetNameMethod(),
-                Expression.Constant(propertyExpression.Type.GetUnderlyingType()),
+                Expression.Constant(cachedType.GetUnderlyingType()),
                 Expression.Convert(propertyExpression, typeof(object)));
             var ignoreCaseExpression = Expression.Constant(true);
             var valueExpression = Expression.Call(GetEnumParseMethod(), typeExpression, nameExpression, ignoreCaseExpression);
