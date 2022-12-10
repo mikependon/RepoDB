@@ -4,7 +4,7 @@
     {
         public const string RepoDB = "RepoDB";
 
-        public const string NHibernate = "NHibernate 5.3.14";
+        public const string NHibernate = "NHibernate 5.4.0";
 
         public const string EFCore = "EFCore 7.0.0";
 
