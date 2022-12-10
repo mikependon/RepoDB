@@ -489,7 +489,7 @@ namespace RepoDb
             var typeOfResult = typeof(TResult);
 
             // Identify
-            if (typeOfResult.IsDictionaryStringObject() || typeOfResult.IsObjectType())
+            if (TypeCache.Get(typeOfResult).IsDictionaryStringObject() || typeOfResult.IsObjectType())
             {
                 return ExecuteQueryInternalForDictionaryStringObject<TResult>(connection: connection,
                     commandText: commandText,
@@ -793,7 +793,7 @@ namespace RepoDb
             var typeOfResult = typeof(TResult);
 
             // Identify
-            if (typeOfResult.IsDictionaryStringObject() || typeOfResult.IsObjectType())
+            if (TypeCache.Get(typeOfResult).IsDictionaryStringObject() || typeOfResult.IsObjectType())
             {
                 return await ExecuteQueryAsyncInternalForDictionaryStringObject<TResult>(connection: connection,
                    commandText: commandText,
@@ -2406,7 +2406,7 @@ namespace RepoDb
         internal static Field GetAndGuardPrimaryKeyOrIdentityKey(Type entityType,
             DbFieldCollection dbFields) =>
             entityType == null ? null :
-            entityType.IsDictionaryStringObject() ?
+                TypeCache.Get(entityType).IsDictionaryStringObject() ?
                 GetAndGuardPrimaryKeyOrIdentityKeyForDictionaryStringObject(entityType, dbFields) :
                 GetAndGuardPrimaryKeyOrIdentityKeyForEntity(entityType, dbFields);
 
@@ -2517,7 +2517,8 @@ namespace RepoDb
             if (queryGroup == null)
             {
                 var whatType = what.GetType();
-                if (whatType.IsClassType() || whatType.IsAnonymousType())
+                var cachedType = TypeCache.Get(whatType);
+                if (cachedType.IsClassType() || cachedType.IsAnonymousType())
                 {
                     var field = GetAndGuardPrimaryKeyOrIdentityKey(connection, tableName, transaction, whatType);
                     queryGroup = WhatToQueryGroup<T>(field, what);
@@ -2555,7 +2556,8 @@ namespace RepoDb
             if (queryGroup == null)
             {
                 var whatType = what.GetType();
-                if (whatType.IsClassType() || whatType.IsAnonymousType())
+                var cachedType = TypeCache.Get(whatType);
+                if (cachedType.IsClassType() || cachedType.IsAnonymousType())
                 {
                     var field = await GetAndGuardPrimaryKeyOrIdentityKeyAsync(connection, tableName, transaction, whatType, cancellationToken);
                     queryGroup = WhatToQueryGroup<T>(field, what);
@@ -2689,7 +2691,7 @@ namespace RepoDb
             {
                 throw new KeyFieldNotFoundException($"No primary key and identity key found at the type '{type.FullName}'.");
             }
-            if (type.IsClassType())
+            if (TypeCache.Get(type).IsClassType())
             {
                 var classProperty = PropertyCache.Get(typeof(T), field, true);
                 return new QueryGroup(classProperty?.PropertyInfo.AsQueryField(what));
@@ -2726,8 +2728,8 @@ namespace RepoDb
             }
             else
             {
-                var type = typeof(T).GetUnderlyingType();
-                if (type.IsAnonymousType() || type == StaticType.Object)
+                var type = TypeCache.Get(typeof(T)).GetUnderlyingType();
+                if (TypeCache.Get(type).IsAnonymousType() || type == StaticType.Object)
                 {
                     return QueryGroup.Parse(what, false);
                 }
@@ -2751,7 +2753,7 @@ namespace RepoDb
                 return null;
             }
             var type = obj.GetType();
-            if (type.IsClassType())
+            if (TypeCache.Get(type).IsClassType())
             {
                 return QueryGroup.Parse(obj, true);
             }
@@ -2777,7 +2779,7 @@ namespace RepoDb
             if (dbField != null)
             {
                 var type = entity.GetType();
-                if (type.IsClassType())
+                if (TypeCache.Get(type).IsClassType())
                 {
                     var properties = PropertyCache.Get(type) ?? type.GetClassProperties();
                     var property = properties?
@@ -2839,7 +2841,7 @@ namespace RepoDb
             where TEntity : class
         {
             var type = entity?.GetType() ?? typeof(TEntity);
-            return type.IsDictionaryStringObject() ? ToQueryGroup(field, (IDictionary<string, object>)entity) :
+            return TypeCache.Get(type).IsDictionaryStringObject() ? ToQueryGroup(field, (IDictionary<string, object>)entity) :
                 ToQueryGroup(PropertyCache.Get<TEntity>(field, true) ?? PropertyCache.Get(type, field, true), entity);
         }
 
@@ -3018,7 +3020,7 @@ namespace RepoDb
             where TEntity : class
         {
             var typeOfEntity = entity?.GetType() ?? typeof(TEntity);
-            return typeOfEntity.IsClassType() == false ? Field.Parse(entity) : FieldCache.Get(typeOfEntity);
+            return TypeCache.Get(typeOfEntity).IsClassType() == false ? Field.Parse(entity) : FieldCache.Get(typeOfEntity);
         }
 
         /// <summary>
@@ -3029,7 +3031,7 @@ namespace RepoDb
         /// <returns></returns>
         internal static IEnumerable<Field> GetQualifiedFields<TEntity>(IEnumerable<Field> fields)
             where TEntity : class =>
-            (fields ?? (typeof(TEntity).IsDictionaryStringObject() == false ? FieldCache.Get<TEntity>() : null)).AsList();
+            (fields ?? (TypeCache.Get(typeof(TEntity)).IsDictionaryStringObject() == false ? FieldCache.Get<TEntity>() : null)).AsList();
 
         /// <summary>
         ///
@@ -3305,7 +3307,7 @@ namespace RepoDb
             var commandArrayParametersText = (CommandArrayParametersText)null;
 
             // CommandArrayParameters
-            foreach (var property in param.GetType().GetProperties())
+            foreach (var property in TypeCache.Get(param.GetType()).GetProperties())
             {
                 var propertyHandler = PropertyHandlerCache.Get<object>(property.DeclaringType, property);
                 if (propertyHandler != null ||

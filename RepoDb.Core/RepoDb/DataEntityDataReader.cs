@@ -102,7 +102,7 @@ namespace RepoDb
             EntityType = entityType == StaticType.Object ?
                 (entities.FirstOrDefault()?.GetType() ?? entityType) :
                 entityType;
-            isDictionaryStringObject = EntityType.IsDictionaryStringObject();
+            isDictionaryStringObject = TypeCache.Get(EntityType).IsDictionaryStringObject();
 
             // Properties
             Connection = connection;

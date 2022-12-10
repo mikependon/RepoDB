@@ -712,7 +712,7 @@ namespace RepoDb
             // Return the result
             if (setting.IsUseUpsert == false)
             {
-                if (GetEntityType<TEntity>(entity).IsDictionaryStringObject() == true)
+                if (TypeCache.Get(GetEntityType(entity)).IsDictionaryStringObject() == true)
                 {
                     return MergeInternalBase<IDictionary<string, object>, TResult>(connection: connection,
                         tableName: tableName,
@@ -743,7 +743,7 @@ namespace RepoDb
             }
             else
             {
-                if (GetEntityType<TEntity>(entity).IsDictionaryStringObject() == true)
+                if (TypeCache.Get(GetEntityType(entity)).IsDictionaryStringObject() == true)
                 {
                     return UpsertInternalBase<IDictionary<string, object>, TResult>(connection: connection,
                         tableName: tableName,
@@ -1520,7 +1520,7 @@ namespace RepoDb
             // Return the result
             if (setting.IsUseUpsert == false)
             {
-                if (GetEntityType<TEntity>(entity).IsDictionaryStringObject() == true)
+                if (TypeCache.Get(GetEntityType(entity)).IsDictionaryStringObject() == true)
                 {
                     return MergeAsyncInternalBase<IDictionary<string, object>, TResult>(connection: connection,
                         tableName: tableName,
@@ -1553,7 +1553,7 @@ namespace RepoDb
             }
             else
             {
-                if (GetEntityType<TEntity>(entity).IsDictionaryStringObject() == true)
+                if (TypeCache.Get(GetEntityType(entity)).IsDictionaryStringObject() == true)
                 {
                     return UpsertAsyncInternalBase<IDictionary<string, object>, TResult>(connection: connection,
                         tableName: tableName,
@@ -2215,7 +2215,7 @@ namespace RepoDb
         {
             // Variables needed
             var type = entity?.GetType() ?? typeof(TEntity);
-            var isDictionaryType = type.IsDictionaryStringObject();
+            var isDictionaryType = TypeCache.Get(type).IsDictionaryStringObject();
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var primary = dbFields?.GetPrimary();
             var properties = (IEnumerable<ClassProperty>)null;
@@ -2468,7 +2468,7 @@ namespace RepoDb
         {
             // Variables needed
             var type = entity?.GetType() ?? typeof(TEntity);
-            var isDictionaryType = type.IsDictionaryStringObject();
+            var isDictionaryType = TypeCache.Get(type).IsDictionaryStringObject();
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
             var primary = dbFields?.GetPrimary();
             var properties = (IEnumerable<ClassProperty>)null;

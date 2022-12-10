@@ -43,7 +43,7 @@ namespace RepoDb
             where TEntity : class
         {
             var entityType = entities?.First()?.GetType() ?? typeof(TEntity); // Solving the anonymous types
-            var isDictionary = entityType.IsDictionaryStringObject();
+            var isDictionary = TypeCache.Get(entityType).IsDictionaryStringObject();
             var dbSetting = connection.GetDbSetting();
             var dbFields = DbFieldCache.Get(connection, tableName, transaction);
             var pseudoTableName = tableName;
@@ -329,7 +329,7 @@ namespace RepoDb
             where TEntity : class
         {
             var entityType = entities?.First()?.GetType() ?? typeof(TEntity); // Solving the anonymous types
-            var isDictionary = entityType.IsDictionaryStringObject();
+            var isDictionary = TypeCache.Get(entityType).IsDictionaryStringObject();
             var dbSetting = connection.GetDbSetting();
             var dbFields = await DbFieldCache.GetAsync(connection, tableName, transaction, cancellationToken);
             var pseudoTableName = tableName;

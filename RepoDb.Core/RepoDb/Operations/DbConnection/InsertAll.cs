@@ -130,7 +130,7 @@ namespace RepoDb
             IStatementBuilder statementBuilder = null)
             where TEntity : class
         {
-            if (GetEntityType<TEntity>(entities).IsDictionaryStringObject())
+            if (TypeCache.Get(GetEntityType(entities)).IsDictionaryStringObject())
             {
                 return InsertAllInternalBase<IDictionary<string, object>>(connection: connection,
                     tableName: tableName,
@@ -283,7 +283,7 @@ namespace RepoDb
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
-            if (GetEntityType<TEntity>(entities).IsDictionaryStringObject())
+            if (TypeCache.Get(GetEntityType(entities)).IsDictionaryStringObject())
             {
                 return InsertAllAsyncInternalBase<IDictionary<string, object>>(connection: connection,
                     tableName: tableName,

@@ -67,7 +67,7 @@ namespace RepoDb
 
                 // Variables needed
                 var entityType = entities.FirstOrDefault()?.GetType() ?? typeof(TEntity);
-                var entityFields = entityType.IsDictionaryStringObject() ?
+                var entityFields = TypeCache.Get(entityType).IsDictionaryStringObject() ?
                     GetDictionaryStringObjectFields(entities.FirstOrDefault() as IDictionary<string, object>) :
                     FieldCache.Get(entityType);
                 var fields = dbFields?.GetAsFields();
@@ -166,7 +166,7 @@ namespace RepoDb
                     isReturnIdentity.GetValueOrDefault());
 
                 // Identity if the identity is to return
-                if (hasOrderingColumn != true || entityType.IsAnonymousType())
+                if (hasOrderingColumn != true || TypeCache.Get(entityType).IsAnonymousType())
                 {
                     result = connection.ExecuteNonQuery(sql, commandTimeout: bulkCopyTimeout, transaction: transaction);
                 }
@@ -609,7 +609,7 @@ namespace RepoDb
 
                 // Variables needed
                 var entityType = entities.FirstOrDefault()?.GetType() ?? typeof(TEntity);
-                var entityFields = entityType.IsDictionaryStringObject() ?
+                var entityFields = TypeCache.Get(entityType).IsDictionaryStringObject() ?
                     GetDictionaryStringObjectFields(entities.FirstOrDefault() as IDictionary<string, object>) :
                     FieldCache.Get(entityType);
                 var fields = dbFields?.GetAsFields();
@@ -709,7 +709,7 @@ namespace RepoDb
                     isReturnIdentity.GetValueOrDefault());
 
                 // Identity if the identity is to return
-                if (hasOrderingColumn != true || entityType.IsAnonymousType())
+                if (hasOrderingColumn != true || TypeCache.Get(entityType).IsAnonymousType())
                 {
                     result = await connection.ExecuteNonQueryAsync(sql, commandTimeout: bulkCopyTimeout,
                         transaction: transaction, cancellationToken: cancellationToken);

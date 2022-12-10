@@ -50,7 +50,7 @@ namespace RepoDb.Reflection
             // Assign the Parameter.Value into DataEntity.Property
             var value = Expression.Property(parameter, dbParameterValueProperty);
             var propertyAssignment = Expression.Call(entityParameterExpression, property,
-                Expression.Convert(value, field.Type?.GetUnderlyingType()));
+                Expression.Convert(value, TypeCache.Get(field.Type)?.GetUnderlyingType()));
 
             // Return function
             return Expression.Lambda<Action<TEntity, DbCommand>>(

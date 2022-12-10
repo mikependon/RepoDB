@@ -143,7 +143,7 @@ namespace RepoDb.Extensions
         /// <param name="property">The instance of <see cref="PropertyInfo"/> object to be converted.</param>
         /// <returns>The converted instance of <see cref="Field"/> object.</returns>
         public static Field AsField(this PropertyInfo property) =>
-            new(PropertyMappedNameCache.Get(property), property.PropertyType.GetUnderlyingType());
+            new(PropertyMappedNameCache.Get(property), TypeCache.Get(property.PropertyType).GetUnderlyingType());
 
         /// <summary>
         /// Converts an enumerable of <see cref="PropertyInfo"/> objects into an enumerable array of <see cref="Field"/>.

@@ -196,7 +196,7 @@ namespace RepoDb
                     dbFields,
                     includePrimary,
                     includeIdentity,
-                    kvp.Value?.GetType().GetUnderlyingType(),
+                    TypeCache.Get(kvp.Value?.GetType()).GetUnderlyingType(),
                     null,
                     dbSetting);
 
@@ -229,7 +229,7 @@ namespace RepoDb
                     dbFields,
                     includePrimary,
                     includeIdentity,
-                    column.DataType.GetUnderlyingType(),
+                    TypeCache.Get(column.DataType).GetUnderlyingType(),
                     null,
                     dbSetting);
 
@@ -263,7 +263,7 @@ namespace RepoDb
                     dbFields,
                     includePrimary,
                     includeIdentity,
-                    reader.GetFieldType(i).GetUnderlyingType(),
+                    TypeCache.Get(reader.GetFieldType(i)).GetUnderlyingType(),
                     null,
                     dbSetting);
 
@@ -365,7 +365,7 @@ namespace RepoDb
             IDbSetting dbSetting)
             where TEntity : class
         {
-            if (entityType.IsDictionaryStringObject())
+            if (TypeCache.Get(entityType).IsDictionaryStringObject())
             {
                 var dictionaries = entities.Select(item => item as IDictionary<string, object>);
                 SetDictionaryIdentities(dictionaries, dbFields, identityResults, dbSetting);
@@ -409,7 +409,7 @@ namespace RepoDb
             }
 
             var entityType = (entities?.FirstOrDefault().GetType() ?? typeof(TEntity));
-            if (entityType?.IsClassType() != true)
+            if (TypeCache.Get(entityType).IsClassType() != true)
             {
                 return;
             }

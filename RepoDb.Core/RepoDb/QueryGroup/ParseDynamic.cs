@@ -31,10 +31,10 @@ namespace RepoDb
             }
 
             // Type of the object
-            var type = obj.GetType().GetUnderlyingType();
+            var type = TypeCache.Get(obj.GetType()).GetUnderlyingType();
 
             // Filter the type
-            if (type.IsClassType() == false)
+            if (TypeCache.Get(type).IsClassType() == false)
             {
                 if (throwException == true)
                 {
@@ -47,10 +47,11 @@ namespace RepoDb
             }
 
             // Declare variables
-            var queryFields = new List<QueryField>();
+            var properties = TypeCache.Get(type).GetProperties();
+            var queryFields = new List<QueryField>(properties.Length);
 
             // Iterate every property
-            foreach (var property in type.GetProperties())
+            foreach (var property in properties)
             {
                 queryFields.Add(
                     new QueryField(property.AsField(), Enumerations.Operation.Equal, property.GetValue(obj), null));

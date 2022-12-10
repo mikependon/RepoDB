@@ -25,7 +25,7 @@ namespace RepoDb.Reflection
             var typeOfResult = typeof(TResult);
 
             // EntityModel/Class
-            if (typeOfResult.IsClassType())
+            if (TypeCache.Get(typeOfResult).IsClassType())
             {
                 return CompileDataReaderToDataEntity<TResult>(reader, dbFields, dbSetting);
             }

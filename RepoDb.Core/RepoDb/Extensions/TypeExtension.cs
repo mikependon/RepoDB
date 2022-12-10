@@ -18,7 +18,7 @@ namespace RepoDb.Extensions
         /// <param name="type">The target type.</param>
         /// <returns>The instance of the <see cref="DbType"/> object.</returns>
         public static IEnumerable<PropertyValueAttribute> GetPropertyValueAttributes(this Type type) =>
-            type != null ? PropertyValueAttributeMapper.Get(type.GetUnderlyingType()) : null;
+            type != null ? PropertyValueAttributeMapper.Get(TypeCache.Get(type).GetUnderlyingType()) : null;
 
         /// <summary>
         /// Gets the corresponding <see cref="DbType"/> object.
@@ -26,7 +26,7 @@ namespace RepoDb.Extensions
         /// <param name="type">The target type.</param>
         /// <returns>The instance of the <see cref="DbType"/> object.</returns>
         public static DbType? GetDbType(this Type type) =>
-            type != null ? TypeMapCache.Get(type.GetUnderlyingType()) : null;
+            type != null ? TypeMapCache.Get(TypeCache.Get(type).GetUnderlyingType()) : null;
 
         /// <summary>
         /// Returns the instance of <see cref="ConstructorInfo"/> with the most argument.
@@ -85,11 +85,15 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="type">The current type.</param>
         /// <returns>Returns true if the current type is a plain class type.</returns>
-        internal static bool IsPlainType(this Type type) =>
-            (IsClassType(type) || IsAnonymousType(type)) &&
-            IsQueryObjectType(type) != true &&
-            IsDictionaryStringObject(type) != true &&
-            GetEnumerableClassProperties(type).Any() != true;
+        internal static bool IsPlainType(this Type type)
+        {
+            var cachedType = TypeCache.Get(type);
+            
+            return (cachedType.IsClassType() || cachedType.IsAnonymousType()) &&
+                   IsQueryObjectType(type) != true &&
+                   cachedType.IsDictionaryStringObject() != true &&
+                   GetEnumerableClassProperties(type).Any() != true;
+        }
 
         /// <summary>
         /// Checks whether the current type is of type <see cref="QueryField"/> or <see cref="QueryGroup"/>.
@@ -130,7 +134,7 @@ namespace RepoDb.Extensions
         /// <returns>A list of <see cref="ClassProperty"/> objects.</returns>
         public static IEnumerable<ClassProperty> GetClassProperties(this Type type)
         {
-            foreach (var property in type.GetProperties())
+            foreach (var property in TypeCache.Get(type).GetProperties())
             {
                 yield return new ClassProperty(type, property);
             }
@@ -257,7 +261,7 @@ namespace RepoDb.Extensions
         /// <returns>An instance of <see cref="PropertyInfo"/> object.</returns>
         public static PropertyInfo GetProperty(Type type,
             string propertyName) =>
-            type
+            TypeCache.Get(type)
                 .GetProperties()
                 .FirstOrDefault(p =>
                     string.Equals(p.Name, propertyName, StringComparison.OrdinalIgnoreCase) ||

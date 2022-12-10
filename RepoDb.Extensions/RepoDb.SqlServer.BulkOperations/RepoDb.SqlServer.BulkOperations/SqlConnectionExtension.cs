@@ -38,7 +38,7 @@ namespace RepoDb
             var list = entities.AsList();
             var result = 0;
 
-            if (entityType.IsDictionaryStringObject())
+            if (TypeCache.Get(entityType).IsDictionaryStringObject())
             {
                 while (reader.Read())
                 {
@@ -86,7 +86,7 @@ namespace RepoDb
             var list = entities.AsList();
             var result = 0;
 
-            if (entityType.IsDictionaryStringObject())
+            if (TypeCache.Get(entityType).IsDictionaryStringObject())
             {
                 while (await reader.ReadAsync(cancellationToken))
                 {

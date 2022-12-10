@@ -55,13 +55,13 @@ namespace RepoDb.Reflection
             var toTypeMethod = StaticType
                 .Converter
                 .GetMethod("ToType", new[] { StaticType.Object })
-                .MakeGenericMethod(targetType.GetUnderlyingType());
+                .MakeGenericMethod(TypeCache.Get(targetType).GetUnderlyingType());
 
             // Conversion (if needed)
             var valueExpression = ConvertExpressionToTypeExpression(Expression.Call(toTypeMethod, valueParameter), targetType);
 
             // Property Handler
-            if (entityType.IsClassType())
+            if (TypeCache.Get(entityType).IsClassType())
             {
                 var classProperty = PropertyCache.Get(entityType, property, true);
                 valueExpression = ConvertExpressionToPropertyHandlerSetExpression(valueExpression,

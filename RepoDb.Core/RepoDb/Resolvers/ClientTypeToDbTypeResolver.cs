@@ -31,7 +31,7 @@ namespace RepoDb.Resolvers
                 return null;
             }
 
-            type = type.GetUnderlyingType();
+            type = TypeCache.Get(type).GetUnderlyingType();
 
             if (type == StaticType.Int64)
             {

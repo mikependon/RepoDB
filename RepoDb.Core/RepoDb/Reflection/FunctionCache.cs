@@ -201,7 +201,7 @@ namespace RepoDb
                 var key = GetKey(entityType, cacheKey, inputFields, outputFields);
                 if (cache.TryGetValue(key, out var func) == false)
                 {
-                    if (entityType.IsDictionaryStringObject())
+                    if (TypeCache.Get(entityType).IsDictionaryStringObject())
                     {
                         func = FunctionFactory.CompileDictionaryStringObjectDbParameterSetter(entityType, inputFields, dbSetting);
                     }
@@ -298,7 +298,7 @@ namespace RepoDb
                 var key = GetKey(entityType, cacheKey, inputFields, outputFields, batchSize);
                 if (cache.TryGetValue(key, out var func) == false)
                 {
-                    if (entityType.IsDictionaryStringObject())
+                    if (TypeCache.Get(entityType).IsDictionaryStringObject())
                     {
                         func = FunctionFactory.CompileDictionaryStringObjectListDbParameterSetter(entityType,
                             inputFields,
@@ -447,7 +447,7 @@ namespace RepoDb
                 var key = (long)type.GetHashCode() + field.GetHashCode();
                 if (cache.TryGetValue(key, out var func) == false)
                 {
-                    if (type.IsDictionaryStringObject())
+                    if (TypeCache.Get(type).IsDictionaryStringObject())
                     {
                         func = FunctionFactory.CompileDictionaryStringObjectItemSetter(type, field);
                     }

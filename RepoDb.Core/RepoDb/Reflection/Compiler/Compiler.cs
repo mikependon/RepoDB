@@ -187,8 +187,8 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static MethodInfo GetSystemConvertToTypeMethod(Type fromType,
             Type toType) =>
-            StaticType.Convert.GetMethod(string.Concat("To", toType.GetUnderlyingType().Name),
-                new[] { fromType.GetUnderlyingType() });
+            StaticType.Convert.GetMethod(string.Concat("To", TypeCache.Get(toType).GetUnderlyingType().Name),
+                new[] { TypeCache.Get(fromType).GetUnderlyingType() });
 
         /// <summary>
         ///
@@ -197,7 +197,7 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static MethodInfo GetSystemConvertChangeTypeMethod(Type conversionType) =>
             StaticType.Convert.GetMethod("ChangeType",
-                new[] { StaticType.Object, conversionType.GetUnderlyingType() });
+                new[] { StaticType.Object, TypeCache.Get(conversionType).GetUnderlyingType() });
 
         /// <summary>
         ///
@@ -425,7 +425,7 @@ namespace RepoDb.Reflection
             if (value == null && readerField?.Type != null)
             {
                 value = PropertyHandlerCache
-                    .Get<object>(readerField.Type.GetUnderlyingType());
+                    .Get<object>(TypeCache.Get(readerField.Type).GetUnderlyingType());
             }
             return value;
         }
@@ -534,7 +534,7 @@ namespace RepoDb.Reflection
         {
             if (Nullable.GetUnderlyingType(expression.Type) != null)
             {
-                var underlyingType = expression.Type.GetUnderlyingType();
+                var underlyingType = TypeCache.Get(expression.Type).GetUnderlyingType();
                 var method = expression.Type.GetMethod("GetValueOrDefault", new Type[] { underlyingType });
                 return Expression.Call(expression, method, Expression.Default(underlyingType));
             }
@@ -613,7 +613,7 @@ namespace RepoDb.Reflection
         internal static Expression ConvertExpressionToSystemConvertExpression(Expression expression,
             Type toType)
         {
-            if (expression.Type.GetUnderlyingType() == toType)
+            if (TypeCache.Get(expression.Type).GetUnderlyingType() == toType)
             {
                 return expression;
             }
@@ -639,7 +639,7 @@ namespace RepoDb.Reflection
                 return Expression.Call(methodInfo, new Expression[]
                 {
                     ConvertExpressionToTypeExpression(expression, StaticType.Object),
-                    Expression.Constant(toType.GetUnderlyingType())
+                    Expression.Constant(TypeCache.Get(toType).GetUnderlyingType())
                 });
             }
 
@@ -722,7 +722,8 @@ namespace RepoDb.Reflection
         internal static Expression ConvertEnumExpressionToTypeExpression(Expression expression,
             Type toType)
         {
-            if (toType.GetUnderlyingType() == StaticType.String || toType.GetUnderlyingType() == StaticType.Boolean)
+            var underlyingType = TypeCache.Get(toType).GetUnderlyingType();
+            if (underlyingType == StaticType.String || underlyingType == StaticType.Boolean)
             {
                 return ConvertEnumExpressionToTypeExpressionForString(expression);
             }
@@ -747,7 +748,7 @@ namespace RepoDb.Reflection
             var falseExpression = (Expression)null;
 
             // Ensure (Ref/Nullable)
-            if (expression.Type.IsNullable())
+            if (TypeCache.Get(expression.Type).IsNullable())
             {
                 // Check
                 isNullExpression = Expression.Equal(Expression.Constant(null), expression);
@@ -779,20 +780,21 @@ namespace RepoDb.Reflection
             var falseExpression = expression;
 
             // Ensure (Ref/Nullable)
-            if (expression.Type.IsNullable())
+            var cachedType = TypeCache.Get(expression.Type);
+            if (cachedType.IsNullable())
             {
                 isNullExpression = Expression.Equal(Expression.Constant(null), expression);
                 trueExpression = GetNullableTypeExpression(toType);
             }
 
             // Casting
-            if (expression.Type.GetUnderlyingType() != toType.GetUnderlyingType())
+            if (cachedType.GetUnderlyingType() != TypeCache.Get(toType).GetUnderlyingType())
             {
                 falseExpression = ConvertExpressionToTypeExpression(expression, toType);
             }
 
             // Nullable
-            if (expression.Type.IsNullable())
+            if (cachedType.IsNullable())
             {
                 falseExpression = ConvertExpressionToNullableExpression(falseExpression, toType);
             }
@@ -829,13 +831,13 @@ namespace RepoDb.Reflection
             }
 
             var underlyingType = Nullable.GetUnderlyingType(expression.Type);
-            targetNullableType = targetNullableType.GetUnderlyingType();
+            targetNullableType = TypeCache.Get(targetNullableType).GetUnderlyingType();
 
             if (targetNullableType.IsValueType && (underlyingType == null || underlyingType != targetNullableType))
             {
                 var nullableType = StaticType.Nullable.MakeGenericType(targetNullableType);
                 var constructor = nullableType.GetConstructor(new[] { targetNullableType });
-                expression = expression.Type.IsNullable() ? expression :
+                expression = TypeCache.Get(expression.Type).IsNullable() ? expression :
                     Expression.New(constructor, ConvertExpressionToTypeExpression(expression, targetNullableType));
             }
 
@@ -851,7 +853,7 @@ namespace RepoDb.Reflection
         internal static Expression ConvertExpressionWithAutomaticConversion(Expression expression,
             Type toType)
         {
-            var fromType = expression.Type.GetUnderlyingType();
+            var fromType = TypeCache.Get(expression.Type).GetUnderlyingType();
 
             // Guid to String
             if (fromType == StaticType.Guid && toType == StaticType.String)
@@ -997,7 +999,7 @@ namespace RepoDb.Reflection
 
             // Nullable
             expression = ConvertExpressionToNullableExpression(expression,
-                setParameter.ParameterType.GetUnderlyingType() ?? targetType);
+                TypeCache.Get(setParameter.ParameterType).GetUnderlyingType() ?? targetType);
 
             // Call
             var valueExpression = ConvertExpressionToTypeExpression(expression, setParameter.ParameterType);
@@ -1210,7 +1212,7 @@ namespace RepoDb.Reflection
             var readerGetValueMethod = GetDbReaderGetValueOrDefaultMethod(readerField);
             var valueExpression = (Expression)GetDbReaderGetValueExpression(readerParameterExpression,
                 readerGetValueMethod, readerField.Ordinal);
-            var targetTypeUnderlyingType = targetType.GetUnderlyingType();
+            var targetTypeUnderlyingType = TypeCache.Get(targetType).GetUnderlyingType();
             var isAutomaticConversion = GlobalConfiguration.Options.ConversionType == ConversionType.Automatic ||
                 targetTypeUnderlyingType == StaticType.TimeSpan ||
                 /* SQLite: Guid/String (Vice-Versa) : Enforce automatic conversion for the Primary/Identity fields */
@@ -1227,7 +1229,7 @@ namespace RepoDb.Reflection
                 if (handlerInstance != null)
                 {
                     var getParameter = GetPropertyHandlerGetParameter(GetPropertyHandlerGetMethod(handlerInstance));
-                    autoConvertEnum = !(getParameter.ParameterType.GetUnderlyingType() == readerField.Type);
+                    autoConvertEnum = !(TypeCache.Get(getParameter.ParameterType).GetUnderlyingType() == readerField.Type);
                 }
                 if (autoConvertEnum)
                 {
@@ -1293,7 +1295,7 @@ namespace RepoDb.Reflection
         /// <param name="targetType"></param>
         /// <returns></returns>
         internal static Expression GetNullableTypeExpression(Type targetType) =>
-            Expression.New(StaticType.Nullable.MakeGenericType(targetType.GetUnderlyingType()));
+            Expression.New(StaticType.Nullable.MakeGenericType(TypeCache.Get(targetType).GetUnderlyingType()));
 
         /// <summary>
         ///
@@ -1528,7 +1530,7 @@ namespace RepoDb.Reflection
             var expression = (Expression)Expression.Property(entityInstanceExpression, classProperty.PropertyInfo);
 
             // Target type
-            var handlerInstance = classProperty.GetPropertyHandler() ?? PropertyHandlerCache.Get<object>(dbField.Type.GetUnderlyingType());
+            var handlerInstance = classProperty.GetPropertyHandler() ?? PropertyHandlerCache.Get<object>(TypeCache.Get(dbField.Type).GetUnderlyingType());
             var targetType = GetPropertyHandlerSetParameter(handlerInstance)?.ParameterType ?? dbField.Type;
 
             /*
@@ -1537,14 +1539,14 @@ namespace RepoDb.Reflection
              */
 
             // Enum Handling
-            if (classProperty.PropertyInfo.PropertyType.GetUnderlyingType().IsEnum == true)
+            if (TypeCache.Get(classProperty.PropertyInfo.PropertyType).GetUnderlyingType().IsEnum == true)
             {
                 try
                 {
                     if (!IsPostgreSqlUserDefined(dbField))
                     {
-                        var dbType = classProperty.GetDbType() ?? classProperty.PropertyInfo.PropertyType.GetUnderlyingType().GetDbType();
-                        var toType = dbType.HasValue ? new DbTypeToClientTypeResolver().Resolve(dbType.Value) : targetType?.GetUnderlyingType();
+                        var dbType = classProperty.GetDbType() ?? TypeCache.Get(classProperty.PropertyInfo.PropertyType).GetUnderlyingType().GetDbType();
+                        var toType = dbType.HasValue ? new DbTypeToClientTypeResolver().Resolve(dbType.Value) : TypeCache.Get(targetType)?.GetUnderlyingType();
                         expression = ConvertEnumExpressionToTypeExpression(expression, toType);
                     }
                 }
@@ -1560,7 +1562,7 @@ namespace RepoDb.Reflection
             {
                 try
                 {
-                    expression = ConvertExpressionWithAutomaticConversion(expression, targetType?.GetUnderlyingType());
+                    expression = ConvertExpressionWithAutomaticConversion(expression, TypeCache.Get(targetType)?.GetUnderlyingType());
                 }
                 catch (Exception ex)
                 {
@@ -1573,7 +1575,7 @@ namespace RepoDb.Reflection
             try
             {
                 expression = ConvertExpressionToPropertyHandlerSetExpression(
-                    expression, null, classProperty, dbField?.Type.GetUnderlyingType());
+                    expression, null, classProperty, TypeCache.Get(dbField?.Type).GetUnderlyingType());
             }
             catch (Exception ex)
             {
@@ -1620,7 +1622,7 @@ namespace RepoDb.Reflection
 
             // Property Handler
             expression = ConvertExpressionToPropertyHandlerSetExpression(expression,
-                null, null, dbField?.Type.GetUnderlyingType());
+                null, null, TypeCache.Get(dbField?.Type).GetUnderlyingType());
 
             // Convert to object
             return ConvertExpressionToTypeExpression(expression, StaticType.Object);
@@ -1640,7 +1642,7 @@ namespace RepoDb.Reflection
 
             // Property Handler
             expression = ConvertExpressionToPropertyHandlerSetExpression(expression,
-                null, null, dbField.Type.GetUnderlyingType());
+                null, null, TypeCache.Get(dbField.Type).GetUnderlyingType());
 
             // Convert to object
             return ConvertExpressionToTypeExpression(expression, StaticType.Object);
@@ -1722,7 +1724,7 @@ namespace RepoDb.Reflection
             var dbType = IsPostgreSqlUserDefined(dbField) ? DbType.Object : classProperty?.GetDbType();
             if (dbType == null)
             {
-                var underlyingType = dbField?.Type?.GetUnderlyingType();
+                var underlyingType = TypeCache.Get(dbField?.Type)?.GetUnderlyingType();
                 dbType = TypeMapper.Get(underlyingType) ?? new ClientTypeToDbTypeResolver().Resolve(underlyingType);
             }
             return dbType;
@@ -2056,7 +2058,7 @@ namespace RepoDb.Reflection
             var propertyName = fieldDirection.DbField.Name.AsUnquoted(true, dbSetting);
 
             // Set the proper assignments (property)
-            if (entityExpression.Type.IsClassType() == false)
+            if (TypeCache.Get(entityExpression.Type).IsClassType() == false)
             {
                 var typeGetPropertyMethod = StaticType.Type.GetMethod("GetProperty", new[]
                 {

@@ -21,7 +21,7 @@ namespace RepoDb.Extensions
         /// <returns>The list of <see cref="ClassProperty"/> objects.</returns>
         public static IEnumerable<ClassProperty> GetProperties(Type type)
         {
-            foreach (var property in type.GetProperties())
+            foreach (var property in TypeCache.Get(type).GetProperties())
             {
                 yield return new ClassProperty(type, property);
             }

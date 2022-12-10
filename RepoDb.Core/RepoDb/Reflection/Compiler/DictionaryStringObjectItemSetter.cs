@@ -23,7 +23,7 @@ namespace RepoDb.Reflection
 
             // Variables for type
             var valueParameter = Expression.Parameter(StaticType.Object, "value");
-            var targetType = field.Type?.GetUnderlyingType();
+            var targetType = TypeCache.Get(field.Type)?.GetUnderlyingType();
             var valueExpression = (Expression)valueParameter;
 
             if (targetType != null)
@@ -32,7 +32,7 @@ namespace RepoDb.Reflection
                 var toTypeMethod = StaticType
                     .Converter
                     .GetMethod("ToType", new[] { StaticType.Object })
-                    .MakeGenericMethod(field.Type?.GetUnderlyingType());
+                    .MakeGenericMethod(TypeCache.Get(field.Type)?.GetUnderlyingType());
 
                 // Conversion (if needed)
                 valueExpression = ConvertExpressionToTypeExpression(Expression.Call(toTypeMethod, valueParameter), targetType);

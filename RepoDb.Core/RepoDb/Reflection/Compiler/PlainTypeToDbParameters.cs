@@ -66,7 +66,7 @@ namespace RepoDb.Reflection
                 {
                     #region NewParameter
 
-                    var underlyingType = targetProperty.PropertyInfo.PropertyType.GetUnderlyingType();
+                    var underlyingType = TypeCache.Get(targetProperty.PropertyInfo.PropertyType).GetUnderlyingType();
                     var valueType = GetPropertyHandlerSetMethodReturnType(paramProperty, underlyingType) ?? underlyingType;
                     var parameterVariableExpression = Expression.Variable(StaticType.DbParameter, $"var{parameterName}");
                     var parameterCallExpressions = new List<Expression>();
@@ -81,7 +81,7 @@ namespace RepoDb.Reflection
                     // Convert
                     if (GlobalConfiguration.Options.ConversionType == ConversionType.Automatic && dbField?.Type != null)
                     {
-                        valueType = dbField.Type.GetUnderlyingType();
+                        valueType = TypeCache.Get(dbField.Type).GetUnderlyingType();
                         valueExpression = ConvertExpressionWithAutomaticConversion(valueExpression, valueType);
                     }
 
@@ -97,7 +97,7 @@ namespace RepoDb.Reflection
                     }
                     else
                     {
-                        var targetType = dbField?.Type.GetUnderlyingType() ?? valueType;
+                        var targetType = TypeCache.Get(dbField?.Type).GetUnderlyingType() ?? valueType;
                         dbType = targetProperty.GetDbType() ??
                             targetType?.GetDbType() ??
                             new ClientTypeToDbTypeResolver().Resolve(targetType);

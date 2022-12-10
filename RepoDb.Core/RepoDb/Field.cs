@@ -113,7 +113,7 @@ namespace RepoDb
         /// <param name="obj">An object to be parsed.</param>
         /// <returns>An enumerable of <see cref="Field"/> objects.</returns>
         public static IEnumerable<Field> Parse(object obj) =>
-            obj?.GetType().IsDictionaryStringObject() == true ?
+            TypeCache.Get(obj?.GetType()).IsDictionaryStringObject() == true ?
                 ParseDictionaryStringObject((IDictionary<string, object>)obj) : Parse(obj?.GetType());
 
         /// <summary>
@@ -133,7 +133,7 @@ namespace RepoDb
         {
             if (type != null)
             {
-                foreach (var property in type.GetProperties())
+                foreach (var property in TypeCache.Get(type).GetProperties())
                 {
                     yield return property.AsField();
                 }

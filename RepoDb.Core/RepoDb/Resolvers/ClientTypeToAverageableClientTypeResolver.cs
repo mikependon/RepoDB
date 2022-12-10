@@ -22,7 +22,7 @@ namespace RepoDb.Resolvers
             }
 
             // Get the type
-            type = type.GetUnderlyingType();
+            type = TypeCache.Get(type).GetUnderlyingType();
 
             // Only convert those numerics
             if (type == StaticType.Int16 ||
