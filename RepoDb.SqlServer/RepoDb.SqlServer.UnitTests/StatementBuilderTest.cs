@@ -2081,5 +2081,351 @@ namespace RepoDb.SqlServer.Tests.UnitTests
         }
 
         #endregion
+
+        #region CreateSkipQuery
+
+        [TestMethod]
+        public void TestSqlServerStatementBuilderCreateSkipQueryFirstBatch()
+        {
+            // Setup
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
+            var tableName = "Table";
+            var fields = Field.From(new[] { "Field1", "Field2" });
+            var orderBy = OrderField.Parse(new { Field1 = Order.Ascending });
+
+            // Act
+            var actual = statementBuilder.CreateSkipQuery(tableName: tableName,
+                fields: fields,
+                skip: 0,
+                take: 10,
+                orderBy: orderBy,
+                where: null);
+            var expected = $"" +
+                $"WITH CTE AS " +
+                $"( " +
+                $"SELECT TOP (10) ROW_NUMBER() OVER ( ORDER BY [Field1] ASC ) AS [RowNumber], [Field1], [Field2] " +
+                $"FROM [Table] " +
+                $"ORDER BY [Field1] ASC " +
+                $") " +
+                $"SELECT [Field1], [Field2] " +
+                $"FROM CTE " +
+                $"WHERE ([RowNumber] BETWEEN 1 AND 10) ;";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestSqlServerStatementBuilderCreateSkipQuerySecondBatch()
+        {
+            // Setup
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
+            var tableName = "Table";
+            var fields = Field.From(new[] { "Field1", "Field2" });
+            var orderBy = OrderField.Parse(new { Field1 = Order.Ascending });
+
+            // Act
+            var actual = statementBuilder.CreateSkipQuery(tableName: tableName,
+                fields: fields,
+                skip: 10,
+                take: 10,
+                orderBy: orderBy,
+                where: null);
+            var expected = $"" +
+                $"WITH CTE AS " +
+                $"( " +
+                $"SELECT TOP (20) ROW_NUMBER() OVER ( ORDER BY [Field1] ASC ) AS [RowNumber], [Field1], [Field2] " +
+                $"FROM [Table] " +
+                $"ORDER BY [Field1] ASC " +
+                $") " +
+                $"SELECT [Field1], [Field2] " +
+                $"FROM CTE " +
+                $"WHERE ([RowNumber] BETWEEN 11 AND 20) ;";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestSqlServerStatementBuilderCreateSkipQueryWithHints()
+        {
+            // Setup
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
+            var tableName = "[dbo].[Table]";
+            var fields = Field.From(new[] { "Field1", "Field2" });
+            var orderBy = OrderField.Parse(new { Field1 = Order.Ascending });
+
+            // Act
+            var actual = statementBuilder.CreateSkipQuery(tableName: tableName,
+                fields: fields,
+                skip: 0,
+                take: 10,
+                orderBy: orderBy,
+                where: null,
+                hints: SqlServerTableHints.NoLock);
+            var expected = $"" +
+                $"WITH CTE AS " +
+                $"( " +
+                $"SELECT TOP (10) ROW_NUMBER() OVER ( ORDER BY [Field1] ASC ) AS [RowNumber], [Field1], [Field2] " +
+                $"FROM [dbo].[Table] WITH (NOLOCK) " +
+                $"ORDER BY [Field1] ASC " +
+                $") " +
+                $"SELECT [Field1], [Field2] " +
+                $"FROM CTE " +
+                $"WHERE ([RowNumber] BETWEEN 1 AND 10) ;";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestSqlServerStatementBuilderCreateSkipQueryWithQuotedTableSchema()
+        {
+            // Setup
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
+            var tableName = "[dbo].[Table]";
+            var fields = Field.From(new[] { "Field1", "Field2" });
+            var orderBy = OrderField.Parse(new { Field1 = Order.Ascending });
+
+            // Act
+            var actual = statementBuilder.CreateSkipQuery(tableName: tableName,
+                fields: fields,
+                skip: 0,
+                take: 10,
+                orderBy: orderBy,
+                where: null);
+            var expected = $"" +
+                $"WITH CTE AS " +
+                $"( " +
+                $"SELECT TOP (10) ROW_NUMBER() OVER ( ORDER BY [Field1] ASC ) AS [RowNumber], [Field1], [Field2] " +
+                $"FROM [dbo].[Table] " +
+                $"ORDER BY [Field1] ASC " +
+                $") " +
+                $"SELECT [Field1], [Field2] " +
+                $"FROM CTE " +
+                $"WHERE ([RowNumber] BETWEEN 1 AND 10) ;";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestSqlServerStatementBuilderCreateSkipQueryWithUnquotedTableSchema()
+        {
+            // Setup
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
+            var tableName = "dbo.Table";
+            var fields = Field.From(new[] { "Field1", "Field2" });
+            var orderBy = OrderField.Parse(new { Field1 = Order.Ascending });
+
+            // Act
+            var actual = statementBuilder.CreateSkipQuery(tableName: tableName,
+                fields: fields,
+                skip: 0,
+                take: 10,
+                orderBy: orderBy,
+                where: null);
+            var expected = $"" +
+                $"WITH CTE AS " +
+                $"( " +
+                $"SELECT TOP (10) ROW_NUMBER() OVER ( ORDER BY [Field1] ASC ) AS [RowNumber], [Field1], [Field2] " +
+                $"FROM [dbo].[Table] " +
+                $"ORDER BY [Field1] ASC " +
+                $") " +
+                $"SELECT [Field1], [Field2] " +
+                $"FROM CTE " +
+                $"WHERE ([RowNumber] BETWEEN 1 AND 10) ;";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestSqlServerStatementBuilderCreateSkipQueryWithWhereExpression()
+        {
+            // Setup
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
+            var tableName = "Table";
+            var fields = Field.From(new[] { "Field1", "Field2" });
+            var where = new QueryGroup(new QueryField("Field1", Operation.NotEqual, 1));
+            var orderBy = OrderField.Parse(new { Field1 = Order.Ascending });
+
+            // Act
+            var actual = statementBuilder.CreateSkipQuery(tableName: tableName,
+                fields: fields,
+                skip: 10,
+                take: 10,
+                orderBy: orderBy,
+                where: where);
+            var expected = $"" +
+                $"WITH CTE AS " +
+                $"( " +
+                $"SELECT TOP (20) ROW_NUMBER() OVER ( ORDER BY [Field1] ASC ) AS [RowNumber], [Field1], [Field2] " +
+                $"FROM [Table] " +
+                $"WHERE ([Field1] <> @Field1) " +
+                $"ORDER BY [Field1] ASC " +
+                $") " +
+                $"SELECT [Field1], [Field2] " +
+                $"FROM CTE " +
+                $"WHERE ([RowNumber] BETWEEN 11 AND 20) ;";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestSqlServerStatementBuilderCreateSkipQueryWithWhereExpressionUniqueField()
+        {
+            // Setup
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
+            var tableName = "Table";
+            var fields = Field.From(new[] { "Field1", "Field2" });
+            var where = new QueryGroup(new QueryField("Id", Operation.NotEqual, 1));
+            var orderBy = OrderField.Parse(new { Field1 = Order.Ascending });
+
+            // Act
+            var actual = statementBuilder.CreateSkipQuery(tableName: tableName,
+                fields: fields,
+                skip: 10,
+                take: 10,
+                orderBy: orderBy,
+                where: where);
+            var expected = $"" +
+                $"WITH CTE AS " +
+                $"( " +
+                $"SELECT TOP (20) ROW_NUMBER() OVER ( ORDER BY [Field1] ASC ) AS [RowNumber], [Field1], [Field2] " +
+                $"FROM [Table] " +
+                $"WHERE ([Id] <> @Id) " +
+                $"ORDER BY [Field1] ASC " +
+                $") " +
+                $"SELECT [Field1], [Field2] " +
+                $"FROM CTE " +
+                $"WHERE ([RowNumber] BETWEEN 11 AND 20) ;";
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        public void ThrowExceptionOnSqlServerStatementBuilderCreateSkipQueryIfTheTableIsNull()
+        {
+            // Setup
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
+            var tableName = (string)null;
+            var fields = Field.From(new[] { "Field1", "Field2" });
+
+            // Act/Assert
+            statementBuilder.CreateSkipQuery(tableName: tableName,
+                fields: fields,
+                skip: 0,
+                take: 10,
+                orderBy: null,
+                where: null);
+        }
+
+        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        public void ThrowExceptionOnSqlServerStatementBuilderCreateSkipQueryIfTheTableIsEmpty()
+        {
+            // Setup
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
+            var tableName = "";
+            var fields = Field.From(new[] { "Field1", "Field2" });
+
+            // Act/Assert
+            statementBuilder.CreateSkipQuery(tableName: tableName,
+                fields: fields,
+                skip: 0,
+                take: 10,
+                orderBy: null,
+                where: null);
+        }
+
+        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        public void ThrowExceptionOnSqlServerStatementBuilderCreateSkipQueryIfTheTableIsWhitespace()
+        {
+            // Setup
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
+            var tableName = " ";
+            var fields = Field.From(new[] { "Field1", "Field2" });
+
+            // Act/Assert
+            statementBuilder.CreateSkipQuery(tableName: tableName,
+                fields: fields,
+                skip: 0,
+                take: 10,
+                orderBy: null,
+                where: null);
+        }
+
+        [TestMethod, ExpectedException(typeof(MissingFieldsException))]
+        public void ThrowExceptionOnSqlServerStatementBuilderCreateSkipQueryIfTheFieldsAreNull()
+        {
+            // Setup
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
+            var tableName = "Table";
+            var orderBy = OrderField.Parse(new { Field1 = Order.Ascending });
+
+            // Act/Assert
+            statementBuilder.CreateSkipQuery(tableName: tableName,
+                fields: null,
+                skip: 0,
+                take: 10,
+                orderBy: orderBy,
+                where: null);
+        }
+
+        [TestMethod, ExpectedException(typeof(EmptyException))]
+        public void ThrowExceptionOnSqlServerStatementBuilderCreateSkipQueryIfThereAreNoOrderFields()
+        {
+            // Setup
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
+            var tableName = "Table";
+            var fields = Field.From(new[] { "Field1", "Field2" });
+
+            // Act/Assert
+            statementBuilder.CreateSkipQuery(tableName: tableName,
+                fields: fields,
+                skip: 0,
+                take: 10,
+                orderBy: null,
+                where: null);
+        }
+
+        [TestMethod, ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void ThrowExceptionOnSqlServerStatementBuilderCreateSkipQueryIfThePageIsLessThanZero()
+        {
+            // Setup
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
+            var tableName = "Table";
+            var fields = Field.From(new[] { "Field1", "Field2" });
+            var orderBy = OrderField.Parse(new { Field1 = Order.Ascending });
+
+            // Act/Assert
+            statementBuilder.CreateSkipQuery(tableName: tableName,
+                fields: fields,
+                skip: -1,
+                take: 10,
+                orderBy: orderBy,
+                where: null);
+        }
+
+        [TestMethod, ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void ThrowExceptionOnSqlServerStatementBuilderCreateSkipQueryIfTheRowsPerBatchIsLessThanOne()
+        {
+            // Setup
+            var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
+            var tableName = "Table";
+            var fields = Field.From(new[] { "Field1", "Field2" });
+            var orderBy = OrderField.Parse(new { Field1 = Order.Ascending });
+
+            // Act/Assert
+            statementBuilder.CreateSkipQuery(tableName: tableName,
+                fields: fields,
+                skip: 0,
+                take: 0,
+                orderBy: orderBy,
+                where: null);
+        }
+        #endregion
     }
 }

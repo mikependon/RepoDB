@@ -98,6 +98,11 @@ namespace RepoDb.UnitTests.CustomObjects
             return string.Empty;
         }
 
+        public string CreateSkipQuery(string tableName, IEnumerable<Field> fields, int skip, int take, IEnumerable<OrderField> orderBy = null, QueryGroup where = null, string hints = null)
+        {
+            return string.Empty;
+        }
+
         public string CreateSum(string tableName, Field field, QueryGroup where = null, string hints = null)
         {
             return string.Empty;
@@ -155,6 +160,11 @@ namespace RepoDb.UnitTests.CustomObjects
         }
 
         public override string CreateMergeAll(string tableName, IEnumerable<Field> fields, IEnumerable<Field> qualifiers = null, int batchSize = 10, DbField primaryField = null, DbField identityField = null, string hints = null)
+        {
+            return string.Empty;
+        }
+
+        public override string CreateSkipQuery(string tableName, IEnumerable<Field> fields, int skip, int take, IEnumerable<OrderField> orderBy = null, QueryGroup where = null, string hints = null)
         {
             return string.Empty;
         }

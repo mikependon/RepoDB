@@ -617,5 +617,93 @@ namespace RepoDb.StatementBuilders
         }
 
         #endregion
+
+        #region CreateSkipQuery
+
+        /// <summary>
+        /// Creates a SQL Statement for 'BatchQuery' operation.
+        /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
+        /// <param name="skip">The number of rows to skip.</param>
+        /// <param name="take">The number of rows per batch.</param>
+        /// <param name="orderBy">The list of fields for ordering.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <returns>A sql statement for batch query operation.</returns>
+        public override string CreateSkipQuery(string tableName,
+            IEnumerable<Field> fields,
+            int skip,
+            int take,
+            IEnumerable<OrderField> orderBy = null,
+            QueryGroup where = null,
+            string hints = null)
+        {
+            // Ensure with guards
+            GuardTableName(tableName);
+
+            // Validate the hints
+            GuardHints(hints);
+
+            // There should be fields
+            if (fields?.Any() != true)
+            {
+                throw new MissingFieldsException(fields?.Select(f => f.Name));
+            }
+
+            // Validate order by
+            if (orderBy == null || orderBy.Any() != true)
+            {
+                throw new EmptyException("The argument 'orderBy' is required.");
+            }
+
+            // Validate the skip
+            if (skip < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(skip), "The rows skipped must be equals or greater than 0.");
+            }
+
+            // Validate the take
+            if (take < 1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(take), "The rows per batch must be equals or greater than 1.");
+            }
+
+            // Initialize the builder
+            var builder = new QueryBuilder();
+
+            // Build the query
+            builder.Clear()
+                .With()
+                .WriteText("CTE")
+                .As()
+                .OpenParen()
+                .Select()
+                .TopFrom(take + skip)
+                .RowNumber()
+                .Over()
+                .OpenParen()
+                .OrderByFrom(orderBy, DbSetting)
+                .CloseParen()
+                .As("[RowNumber],")
+                .FieldsFrom(fields, DbSetting)
+                .From()
+                .TableNameFrom(tableName, DbSetting)
+                .HintsFrom(hints)
+                .WhereFrom(where, DbSetting)
+                .OrderByFrom(orderBy, DbSetting)
+                .CloseParen()
+                .Select()
+                .FieldsFrom(fields, DbSetting)
+                .From()
+                .WriteText("CTE")
+                .WriteText(string.Concat("WHERE ([RowNumber] BETWEEN ", skip + 1, " AND ", take + skip, ")"))
+                .End();
+
+            // Return the query
+            return builder.GetString();
+        }
+
+        #endregion
     }
 }

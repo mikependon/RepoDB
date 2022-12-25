@@ -724,6 +724,118 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests
 
         #endregion
 
+        #region CreateSkipQuery
+
+        [TestMethod]
+        public void TestMdsSqLiteStatementBuilderCreateSkipQuery()
+        {
+            // Setup
+            var builder = StatementBuilderMapper.Get<SqliteConnection>();
+
+            // Act
+            var query = builder.CreateSkipQuery("Table",
+                Field.From("Id", "Name"),
+                0,
+                10,
+                OrderField.Parse(new { Id = Order.Ascending }));
+            var expected = "SELECT [Id], [Name] FROM [Table] ORDER BY [Id] ASC LIMIT 10 ;";
+
+            // Assert
+            Assert.AreEqual(expected, query);
+        }
+
+        [TestMethod]
+        public void TestMdsSqLiteStatementBuilderCreateSkipQueryWithSkip()
+        {
+            // Setup
+            var builder = StatementBuilderMapper.Get<SqliteConnection>();
+
+            // Act
+            var query = builder.CreateSkipQuery("Table",
+                Field.From("Id", "Name"),
+                30,
+                10,
+                OrderField.Parse(new { Id = Order.Ascending }));
+            var expected = "SELECT [Id], [Name] FROM [Table] ORDER BY [Id] ASC LIMIT 30, 10 ;";
+
+            // Assert
+            Assert.AreEqual(expected, query);
+        }
+
+        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        public void ThrowExceptionOnMdsSqLiteStatementBuilderSkipBatchQueryIfThereAreNoFields()
+        {
+            // Setup
+            var builder = StatementBuilderMapper.Get<SqliteConnection>();
+
+            // Act
+            builder.CreateSkipQuery("Table",
+                null,
+                0,
+                10,
+                OrderField.Parse(new { Id = Order.Ascending }));
+        }
+
+        [TestMethod, ExpectedException(typeof(EmptyException))]
+        public void ThrowExceptionOnMdsSqLiteStatementBuilderCreateSkipQueryIfThereAreNoOrderFields()
+        {
+            // Setup
+            var builder = StatementBuilderMapper.Get<SqliteConnection>();
+
+            // Act
+            builder.CreateSkipQuery("Table",
+                Field.From("Id", "Name"),
+                0,
+                10,
+                null);
+        }
+
+        [TestMethod, ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void ThrowExceptionOnMdsSqLiteStatementBuilderCreateSkipQueryIfThePageValueIsNullOrOutOfRange()
+        {
+            // Setup
+            var builder = StatementBuilderMapper.Get<SqliteConnection>();
+
+            // Act
+            builder.CreateSkipQuery("Table",
+                Field.From("Id", "Name"),
+                -1,
+                10,
+                OrderField.Parse(new { Id = Order.Ascending }));
+        }
+
+        [TestMethod, ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void ThrowExceptionOnMdsSqLiteStatementBuilderCreateSkipQueryIfTheRowsPerBatchValueIsNullOrOutOfRange()
+        {
+            // Setup
+            var builder = StatementBuilderMapper.Get<SqliteConnection>();
+
+            // Act
+            builder.CreateSkipQuery("Table",
+                Field.From("Id", "Name"),
+                0,
+                -1,
+                OrderField.Parse(new { Id = Order.Ascending }));
+        }
+
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public void ThrowExceptionOnMdsSqLiteStatementBuilderCreateSkipQueryIfThereAreHints()
+        {
+            // Setup
+            var builder = StatementBuilderMapper.Get<SqliteConnection>();
+
+            // Act
+            builder.CreateSkipQuery("Table",
+                Field.From("Id", "Name"),
+                0,
+                -1,
+                OrderField.Parse(new { Id = Order.Ascending }),
+                null,
+                "WhatEver");
+        }
+
+        #endregion
+
         #region CreateTruncate
 
         [TestMethod]

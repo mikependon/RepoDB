@@ -929,6 +929,118 @@ namespace RepoDb.PostgreSql.UnitTests
 
         #endregion
 
+        #region CreateSkipQuery
+
+        [TestMethod]
+        public void TestPostgreSqlStatementBuilderCreateSkipQuery()
+        {
+            // Setup
+            var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
+
+            // Act
+            var query = builder.CreateSkipQuery("Table",
+                Field.From("Id", "Name"),
+                0,
+                10,
+                OrderField.Parse(new { Id = Order.Ascending }));
+            var expected = "SELECT \"Id\", \"Name\" FROM \"Table\" ORDER BY \"Id\" ASC LIMIT 10 ;";
+
+            // Assert
+            Assert.AreEqual(expected, query);
+        }
+
+        [TestMethod]
+        public void TestPostgreSqlStatementBuilderCreateSkipQueryWithSkip()
+        {
+            // Setup
+            var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
+
+            // Act
+            var query = builder.CreateSkipQuery("Table",
+                Field.From("Id", "Name"),
+                30,
+                10,
+                OrderField.Parse(new { Id = Order.Ascending }));
+            var expected = "SELECT \"Id\", \"Name\" FROM \"Table\" ORDER BY \"Id\" ASC LIMIT 10 OFFSET 30 ;";
+
+            // Assert
+            Assert.AreEqual(expected, query);
+        }
+
+        [TestMethod, ExpectedException(typeof(EmptyException))]
+        public void ThrowExceptionOnPostgreSqlStatementBuilderCreateSkipQueryIfThereAreNoFields()
+        {
+            // Setup
+            var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
+
+            // Act
+            builder.CreateSkipQuery("Table",
+                null,
+                0,
+                10,
+                OrderField.Parse(new { Id = Order.Ascending }));
+        }
+
+        [TestMethod, ExpectedException(typeof(EmptyException))]
+        public void ThrowExceptionOnPostgreSqlStatementBuilderCreateSkipQueryIfThereAreNoOrderFields()
+        {
+            // Setup
+            var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
+
+            // Act
+            builder.CreateSkipQuery("Table",
+                Field.From("Id", "Name"),
+                0,
+                10,
+                null);
+        }
+
+        [TestMethod, ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void ThrowExceptionOnPostgreSqlStatementBuilderCreateSkipQueryIfThePageValueIsNullOrOutOfRange()
+        {
+            // Setup
+            var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
+
+            // Act
+            builder.CreateSkipQuery("Table",
+                Field.From("Id", "Name"),
+                -1,
+                10,
+                OrderField.Parse(new { Id = Order.Ascending }));
+        }
+
+        [TestMethod, ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void ThrowExceptionOnPostgreSqlStatementBuilderCreateSkipQueryIfTheRowsPerBatchValueIsNullOrOutOfRange()
+        {
+            // Setup
+            var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
+
+            // Act
+            builder.CreateSkipQuery("Table",
+                Field.From("Id", "Name"),
+                0,
+                -1,
+                OrderField.Parse(new { Id = Order.Ascending }));
+        }
+
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public void ThrowExceptionOnPostgreSqlStatementBuilderCreateSkipQueryIfThereAreHints()
+        {
+            // Setup
+            var builder = StatementBuilderMapper.Get<NpgsqlConnection>();
+
+            // Act
+            builder.CreateSkipQuery("Table",
+                Field.From("Id", "Name"),
+                0,
+                -1,
+                OrderField.Parse(new { Id = Order.Ascending }),
+                null,
+                "WhatEver");
+        }
+
+        #endregion
+
         #region CreateSum
 
         [TestMethod]
