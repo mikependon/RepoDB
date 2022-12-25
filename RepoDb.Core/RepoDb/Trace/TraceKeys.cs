@@ -126,6 +126,11 @@
         public const string QueryMultiple = "QueryMultiple";
 
         /// <summary>
+        /// The trace key for the 'SkipQuery' operation.
+        /// </summary>
+        public const string SkipQuery = "SkipQuery";
+
+        /// <summary>
         /// The trace key for the 'Sum' operation.
         /// </summary>
         public const string Sum = "Sum";
