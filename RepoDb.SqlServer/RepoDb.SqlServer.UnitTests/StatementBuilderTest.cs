@@ -36,15 +36,11 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 orderBy: orderBy,
                 where: null);
             var expected = $"" +
-                $"WITH CTE AS " +
-                $"( " +
-                $"SELECT TOP (10) ROW_NUMBER() OVER ( ORDER BY [Field1] ASC ) AS [RowNumber], [Field1], [Field2] " +
+                $"SELECT [Field1], [Field2] " +
                 $"FROM [Table] " +
                 $"ORDER BY [Field1] ASC " +
-                $") " +
-                $"SELECT [Field1], [Field2] " +
-                $"FROM CTE " +
-                $"WHERE ([RowNumber] BETWEEN 1 AND 10) ;";
+                $"OFFSET 0 " +
+                $"ROWS FETCH NEXT 10 ROWS ONLY ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -67,15 +63,11 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 orderBy: orderBy,
                 where: null);
             var expected = $"" +
-                $"WITH CTE AS " +
-                $"( " +
-                $"SELECT TOP (20) ROW_NUMBER() OVER ( ORDER BY [Field1] ASC ) AS [RowNumber], [Field1], [Field2] " +
+                $"SELECT [Field1], [Field2] " +
                 $"FROM [Table] " +
                 $"ORDER BY [Field1] ASC " +
-                $") " +
-                $"SELECT [Field1], [Field2] " +
-                $"FROM CTE " +
-                $"WHERE ([RowNumber] BETWEEN 11 AND 20) ;";
+                $"OFFSET 10 " +
+                $"ROWS FETCH NEXT 10 ROWS ONLY ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -99,16 +91,11 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 where: null,
                 hints: SqlServerTableHints.NoLock);
             var expected = $"" +
-                $"WITH CTE AS " +
-                $"( " +
-                $"SELECT TOP (10) ROW_NUMBER() OVER ( ORDER BY [Field1] ASC ) AS [RowNumber], [Field1], [Field2] " +
+                $"SELECT [Field1], [Field2] " +
                 $"FROM [dbo].[Table] WITH (NOLOCK) " +
                 $"ORDER BY [Field1] ASC " +
-                $") " +
-                $"SELECT [Field1], [Field2] " +
-                $"FROM CTE " +
-                $"WHERE ([RowNumber] BETWEEN 1 AND 10) ;";
-
+                $"OFFSET 0 " +
+                $"ROWS FETCH NEXT 10 ROWS ONLY ;";
             // Assert
             Assert.AreEqual(expected, actual);
         }
@@ -130,16 +117,11 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 orderBy: orderBy,
                 where: null);
             var expected = $"" +
-                $"WITH CTE AS " +
-                $"( " +
-                $"SELECT TOP (10) ROW_NUMBER() OVER ( ORDER BY [Field1] ASC ) AS [RowNumber], [Field1], [Field2] " +
+                $"SELECT [Field1], [Field2] " +
                 $"FROM [dbo].[Table] " +
                 $"ORDER BY [Field1] ASC " +
-                $") " +
-                $"SELECT [Field1], [Field2] " +
-                $"FROM CTE " +
-                $"WHERE ([RowNumber] BETWEEN 1 AND 10) ;";
-
+                $"OFFSET 0 " +
+                $"ROWS FETCH NEXT 10 ROWS ONLY ;";
             // Assert
             Assert.AreEqual(expected, actual);
         }
@@ -161,16 +143,11 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 orderBy: orderBy,
                 where: null);
             var expected = $"" +
-                $"WITH CTE AS " +
-                $"( " +
-                $"SELECT TOP (10) ROW_NUMBER() OVER ( ORDER BY [Field1] ASC ) AS [RowNumber], [Field1], [Field2] " +
+                $"SELECT [Field1], [Field2] " +
                 $"FROM [dbo].[Table] " +
                 $"ORDER BY [Field1] ASC " +
-                $") " +
-                $"SELECT [Field1], [Field2] " +
-                $"FROM CTE " +
-                $"WHERE ([RowNumber] BETWEEN 1 AND 10) ;";
-
+                $"OFFSET 0 " +
+                $"ROWS FETCH NEXT 10 ROWS ONLY ;";
             // Assert
             Assert.AreEqual(expected, actual);
         }
@@ -193,17 +170,12 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 orderBy: orderBy,
                 where: where);
             var expected = $"" +
-                $"WITH CTE AS " +
-                $"( " +
-                $"SELECT TOP (20) ROW_NUMBER() OVER ( ORDER BY [Field1] ASC ) AS [RowNumber], [Field1], [Field2] " +
+                $"SELECT [Field1], [Field2] " +
                 $"FROM [Table] " +
                 $"WHERE ([Field1] <> @Field1) " +
                 $"ORDER BY [Field1] ASC " +
-                $") " +
-                $"SELECT [Field1], [Field2] " +
-                $"FROM CTE " +
-                $"WHERE ([RowNumber] BETWEEN 11 AND 20) ;";
-
+                $"OFFSET 10 " +
+                $"ROWS FETCH NEXT 10 ROWS ONLY ;";
             // Assert
             Assert.AreEqual(expected, actual);
         }
@@ -226,17 +198,12 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 orderBy: orderBy,
                 where: where);
             var expected = $"" +
-                $"WITH CTE AS " +
-                $"( " +
-                $"SELECT TOP (20) ROW_NUMBER() OVER ( ORDER BY [Field1] ASC ) AS [RowNumber], [Field1], [Field2] " +
+                $"SELECT [Field1], [Field2] " +
                 $"FROM [Table] " +
                 $"WHERE ([Id] <> @Id) " +
                 $"ORDER BY [Field1] ASC " +
-                $") " +
-                $"SELECT [Field1], [Field2] " +
-                $"FROM CTE " +
-                $"WHERE ([RowNumber] BETWEEN 11 AND 20) ;";
-
+                $"OFFSET 10 " +
+                $"ROWS FETCH NEXT 10 ROWS ONLY ;";
             // Assert
             Assert.AreEqual(expected, actual);
         }

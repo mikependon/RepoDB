@@ -93,30 +93,15 @@ namespace RepoDb.StatementBuilders
 
             // Build the query
             builder.Clear()
-                .With()
-                .WriteText("CTE")
-                .As()
-                .OpenParen()
                 .Select()
-                .TopFrom((page + 1) * rowsPerBatch)
-                .RowNumber()
-                .Over()
-                .OpenParen()
-                .OrderByFrom(orderBy, DbSetting)
-                .CloseParen()
-                .As("[RowNumber],")
                 .FieldsFrom(fields, DbSetting)
                 .From()
                 .TableNameFrom(tableName, DbSetting)
                 .HintsFrom(hints)
                 .WhereFrom(where, DbSetting)
                 .OrderByFrom(orderBy, DbSetting)
-                .CloseParen()
-                .Select()
-                .FieldsFrom(fields, DbSetting)
-                .From()
-                .WriteText("CTE")
-                .WriteText(string.Concat("WHERE ([RowNumber] BETWEEN ", (page * rowsPerBatch) + 1, " AND ", (page + 1) * rowsPerBatch, ")"))
+                .WriteText(string.Concat("OFFSET ", page * rowsPerBatch))
+                .WriteText(string.Concat("ROWS FETCH NEXT " + rowsPerBatch + " ROWS ONLY"))
                 .End();
 
             // Return the query
