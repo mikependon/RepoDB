@@ -833,6 +833,80 @@ namespace RepoDb
 
         #endregion
 
+        #region GetSkipQueryText
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        internal static string GetSkipQueryText(SkipQueryRequest request)
+        {
+            if (cache.TryGetValue(request, out var commandText) == false)
+            {
+                var fields = GetTargetFields(request.Connection,
+                    request.Name,
+                    request.Fields,
+                    request.Transaction);
+                ValidateOrderFields(request.Connection,
+                    request.Name,
+                    request.OrderBy,
+                    request.Transaction);
+                commandText = GetSkipQueryTextInternal(request, fields);
+                cache.TryAdd(request, commandText);
+            }
+            return commandText;
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        internal static async Task<string> GetSkipQueryTextAsync(SkipQueryRequest request,
+            CancellationToken cancellationToken = default)
+        {
+            if (cache.TryGetValue(request, out var commandText) == false)
+            {
+                var fields = await GetTargetFieldsAsync(request.Connection,
+                    request.Name,
+                    request.Fields,
+                    request.Transaction,
+                    cancellationToken);
+                await ValidateOrderFieldsAsync(request.Connection,
+                    request.Name,
+                    request.OrderBy,
+                    request.Transaction,
+                    cancellationToken);
+                commandText = GetSkipQueryTextInternal(request, fields);
+                cache.TryAdd(request, commandText);
+            }
+            return commandText;
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="fields"></param>
+        /// <returns></returns>
+        internal static string GetSkipQueryTextInternal(SkipQueryRequest request,
+            IEnumerable<Field> fields)
+        {
+            var statementBuilder = EnsureStatementBuilder(request.Connection, request.StatementBuilder);
+            return statementBuilder.CreateSkipQuery(request.Name,
+                fields,
+                request.Skip,
+                request.RowsPerBatch,
+                request.OrderBy,
+                request.Where,
+                request.Hints);
+        }
+
+        #endregion
+
+
         #region GetSumText
 
         /// <summary>

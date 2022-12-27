@@ -928,6 +928,118 @@ namespace RepoDb.MySql.UnitTests
 
         #endregion
 
+        #region CreateSkipQuery
+
+        [TestMethod]
+        public void TestMySqlStatementBuilderCreateSkipQuery()
+        {
+            // Setup
+            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+
+            // Act
+            var query = builder.CreateSkipQuery("Table",
+                Field.From("Id", "Name"),
+                0,
+                10,
+                OrderField.Parse(new { Id = Order.Ascending }));
+            var expected = "SELECT `Id`, `Name` FROM `Table` ORDER BY `Id` ASC LIMIT 10 ;";
+
+            // Assert
+            Assert.AreEqual(expected, query);
+        }
+
+        [TestMethod]
+        public void TestMySqlStatementBuilderCreateSkipQueryWithSkip()
+        {
+            // Setup
+            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+
+            // Act
+            var query = builder.CreateSkipQuery("Table",
+                Field.From("Id", "Name"),
+                30,
+                10,
+                OrderField.Parse(new { Id = Order.Ascending }));
+            var expected = "SELECT `Id`, `Name` FROM `Table` ORDER BY `Id` ASC LIMIT 30, 10 ;";
+
+            // Assert
+            Assert.AreEqual(expected, query);
+        }
+
+        [TestMethod, ExpectedException(typeof(NullReferenceException))]
+        public void ThrowExceptionOnMySqlStatementBuilderCreateSkipQueryIfThereAreNoFields()
+        {
+            // Setup
+            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+
+            // Act
+            builder.CreateSkipQuery("Table",
+                null,
+                0,
+                10,
+                OrderField.Parse(new { Id = Order.Ascending }));
+        }
+
+        [TestMethod, ExpectedException(typeof(EmptyException))]
+        public void ThrowExceptionOnMySqlStatementBuilderCreateSkipQueryIfThereAreNoOrderFields()
+        {
+            // Setup
+            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+
+            // Act
+            builder.CreateSkipQuery("Table",
+                Field.From("Id", "Name"),
+                0,
+                10,
+                null);
+        }
+
+        [TestMethod, ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void ThrowExceptionOnMySqlStatementBuilderCreateSkipQueryIfTheSkipValueIsNullOrOutOfRange()
+        {
+            // Setup
+            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+
+            // Act
+            builder.CreateSkipQuery("Table",
+                Field.From("Id", "Name"),
+                -1,
+                10,
+                OrderField.Parse(new { Id = Order.Ascending }));
+        }
+
+        [TestMethod, ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void ThrowExceptionOnMySqlStatementBuilderCreateSkipQueryIfTheTakeValueIsNullOrOutOfRange()
+        {
+            // Setup
+            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+
+            // Act
+            builder.CreateSkipQuery("Table",
+                Field.From("Id", "Name"),
+                0,
+                -1,
+                OrderField.Parse(new { Id = Order.Ascending }));
+        }
+
+        [TestMethod, ExpectedException(typeof(NotSupportedException))]
+        public void ThrowExceptionOnMySqlStatementBuilderCreateSkipQueryIfThereAreHints()
+        {
+            // Setup
+            var builder = StatementBuilderMapper.Get<MySqlConnection>();
+
+            // Act
+            builder.CreateSkipQuery("Table",
+                Field.From("Id", "Name"),
+                0,
+                -1,
+                OrderField.Parse(new { Id = Order.Ascending }),
+                null,
+                "WhatEver");
+        }
+
+        #endregion
+
         #region CreateSum
 
         [TestMethod]

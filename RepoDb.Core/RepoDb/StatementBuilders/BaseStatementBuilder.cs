@@ -1127,6 +1127,29 @@ namespace RepoDb.StatementBuilders
 
         #endregion
 
+        #region CreateSkipQuery
+
+        /// <summary>
+        /// Creates a SQL Statement for 'BatchQuery' operation.
+        /// </summary>
+        /// <param name="tableName">The name of the target table.</param>
+        /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
+        /// <param name="skip">The number of rows to skip.</param>
+        /// <param name="take">The number of rows per batch.</param>
+        /// <param name="orderBy">The list of fields for ordering.</param>
+        /// <param name="where">The query expression.</param>
+        /// <param name="hints">The table hints to be used.</param>
+        /// <returns>A sql statement for batch query operation.</returns>
+        public abstract string CreateSkipQuery(string tableName,
+            IEnumerable<Field> fields,
+            int skip,
+            int take,
+            IEnumerable<OrderField> orderBy = null,
+            QueryGroup where = null,
+            string hints = null);
+
+        #endregion
+
         #endregion
 
         #region Helpers
