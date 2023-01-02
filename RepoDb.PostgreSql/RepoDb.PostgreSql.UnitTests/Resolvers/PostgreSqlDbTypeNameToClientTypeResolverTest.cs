@@ -519,7 +519,12 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
             var result = resolver.Resolve("DATE");
 
             // Assert
+            #if NET6_0_OR_GREATER
+            Assert.AreEqual(typeof(DateOnly), result);
+            #else
             Assert.AreEqual(typeof(DateTime), result);
+            #endif
+            
         }
 
         [TestMethod]
@@ -558,7 +563,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
             var result = resolver.Resolve("TIMESTAMP WITH TIME ZONE");
 
             // Assert
-            Assert.AreEqual(typeof(DateTime), result);
+            Assert.AreEqual(typeof(DateTimeOffset), result);
         }
         
         [TestMethod]
@@ -571,7 +576,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
             var result = resolver.Resolve("TIMESTAMPTZ");
 
             // Assert
-            Assert.AreEqual(typeof(DateTime), result);
+            Assert.AreEqual(typeof(DateTimeOffset), result);
         }
 
         [TestMethod]
@@ -636,7 +641,11 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
             var result = resolver.Resolve("TIME WITHOUT TIME ZONE");
 
             // Assert
+            #if NET6_0_OR_GREATER
+            Assert.AreEqual(typeof(TimeOnly), result);
+            #else
             Assert.AreEqual(typeof(TimeSpan), result);
+            #endif 
         }
         
         [TestMethod]
@@ -647,9 +656,12 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
 
             // Act
             var result = resolver.Resolve("TIME");
-
             // Assert
+            #if NET6_0_OR_GREATER
+            Assert.AreEqual(typeof(TimeOnly), result);
+            #else
             Assert.AreEqual(typeof(TimeSpan), result);
+            #endif
         }
 
         [TestMethod]
@@ -815,7 +827,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
             var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
 
             // Act
-            var result = resolver.Resolve("TIMETZ");
+            var result = resolver.Resolve("TIMESTAMPTZ");
 
             // Assert
             Assert.AreEqual(typeof(System.DateTimeOffset), result);

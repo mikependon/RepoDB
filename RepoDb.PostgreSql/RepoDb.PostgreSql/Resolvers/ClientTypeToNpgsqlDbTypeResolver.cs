@@ -94,12 +94,22 @@ namespace RepoDb.Resolvers
             }
             else if (type == typeof(DateTime))
             {
-                return NpgsqlDbType.Date;
+                return NpgsqlDbType.Timestamp;
             }
             else if (type == typeof(DateTimeOffset))
             {
-                return NpgsqlDbType.TimeTz;
+                return NpgsqlDbType.TimestampTz;
             }
+            #if NET6_0_OR_GREATER
+            else if (type == typeof(DateOnly))
+            {
+                return NpgsqlDbType.Date;
+            }
+            else if (type == typeof(TimeOnly))
+            {
+                return NpgsqlDbType.Time;
+            }
+            #endif
             else if (type == typeof(Decimal))
             {
                 return NpgsqlDbType.Money;

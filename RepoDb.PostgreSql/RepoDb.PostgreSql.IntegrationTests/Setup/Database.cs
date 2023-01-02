@@ -37,7 +37,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Setup
 
             // For >= v6.0.0: To reutilize the legacy behavior
             // https://github.com/abpframework/abp/issues/10273
-            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+            // AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
             // Initialize PostgreSql
             GlobalConfiguration

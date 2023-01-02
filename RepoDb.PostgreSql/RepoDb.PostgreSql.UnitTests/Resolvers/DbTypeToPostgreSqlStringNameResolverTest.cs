@@ -104,7 +104,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
             var resolver = new DbTypeToPostgreSqlStringNameResolver();
 
             // Assert
-            Assert.AreEqual("DATE", resolver.Resolve(DbType.DateTime));
+            Assert.AreEqual("TIMESTAMP", resolver.Resolve(DbType.DateTime));
         }
 
         [TestMethod]
@@ -114,7 +114,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
             var resolver = new DbTypeToPostgreSqlStringNameResolver();
 
             // Assert
-            Assert.AreEqual("DATE", resolver.Resolve(DbType.DateTime2));
+            Assert.AreEqual("TIMESTAMP", resolver.Resolve(DbType.DateTime2));
         }
 
         [TestMethod]
@@ -124,7 +124,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
             var resolver = new DbTypeToPostgreSqlStringNameResolver();
 
             // Assert
-            Assert.AreEqual("DATE", resolver.Resolve(DbType.DateTimeOffset));
+            Assert.AreEqual("TIMESTAMPTZ", resolver.Resolve(DbType.DateTimeOffset));
         }
 
         [TestMethod]

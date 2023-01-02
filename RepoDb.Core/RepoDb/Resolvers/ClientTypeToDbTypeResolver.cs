@@ -61,6 +61,16 @@ namespace RepoDb.Resolvers
             {
                 return DbType.DateTimeOffset;
             }
+            #if NET6_0_OR_GREATER
+            else if (type == StaticType.DateOnly)
+            {
+                return DbType.Date;
+            }
+            else if (type == StaticType.TimeOnly)
+            {
+                return DbType.Time;
+            }
+            #endif
             else if (type == StaticType.Decimal)
             {
                 return DbType.Decimal;

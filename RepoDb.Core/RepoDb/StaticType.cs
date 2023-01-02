@@ -94,7 +94,18 @@ namespace RepoDb
         /// Gets a type of the <see cref="System.DateTimeOffset"/> .NET CLR type.
         /// </summary>
         public static Type DateTimeOffset => typeof(DateTimeOffset);
-
+        
+        #if NET6_0_OR_GREATER
+        /// <summary>
+        /// Gets a type of the <see cref="System.DateOnly"/> .NET CLR type.
+        /// </summary>
+        public static Type DateOnly => typeof(DateOnly);
+        /// <summary>
+        /// Gets a type of the <see cref="System.TimeOnly"/> .NET CLR type.
+        /// </summary>
+        public static Type TimeOnly => typeof(TimeOnly);
+        #endif
+        
         /// <summary>
         /// Gets a type of the <see cref="System.Data.Common.DbCommand"/> .NET CLR type.
         /// </summary>

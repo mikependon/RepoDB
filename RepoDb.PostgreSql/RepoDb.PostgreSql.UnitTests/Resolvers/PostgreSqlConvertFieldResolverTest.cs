@@ -73,8 +73,24 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
             var result = resolver.Resolve(field, setting);
 
             // Assert
-            Assert.AreEqual("CAST(\"Field\" AS DATE)", result);
+            Assert.AreEqual("CAST(\"Field\" AS TIMESTAMP)", result);
         }
+        
+        [TestMethod]
+        public void TestSqLiteConvertFieldResolverForDateTimeOffset()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<NpgsqlConnection>();
+            var resolver = new PostgreSqlConvertFieldResolver();
+            var field = new Field("Field", typeof(DateTimeOffset));
+
+            // Act
+            var result = resolver.Resolve(field, setting);
+
+            // Assert
+            Assert.AreEqual("CAST(\"Field\" AS TIMESTAMPTZ)", result);
+        }
+
 
         [TestMethod]
         public void TestSqLiteConvertFieldResolverForString()
@@ -150,5 +166,36 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
             // Assert
             Assert.AreEqual("CAST(\"Field\" AS INTERVAL)", result);
         }
+#if NET6_0_OR_GREATER
+        [TestMethod]
+        public void TestSqLiteConvertFieldResolverForDate()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<NpgsqlConnection>();
+            var resolver = new PostgreSqlConvertFieldResolver();
+            var field = new Field("Field", typeof(DateOnly));
+
+            // Act
+            var result = resolver.Resolve(field, setting);
+
+            // Assert
+            Assert.AreEqual("CAST(\"Field\" AS DATE)", result);
+        }
+        [TestMethod]
+        public void TestSqLiteConvertFieldResolverForTime()
+        {
+            // Setup
+            var setting = DbSettingMapper.Get<NpgsqlConnection>();
+            var resolver = new PostgreSqlConvertFieldResolver();
+            var field = new Field("Field", typeof(TimeOnly));
+
+            // Act
+            var result = resolver.Resolve(field, setting);
+
+            // Assert
+            Assert.AreEqual("CAST(\"Field\" AS INTERVAL)", result);
+        }
+#endif
+
     }
 }

@@ -31,7 +31,14 @@ namespace RepoDb.PostgreSql.IntegrationTests
         #endregion
 
         #region Methods
+        private const string TimeFormat = "yyyy-MM-dd HH:mm:ss.fffff";
 
+        private static DateTime CurrentUtcTime() =>
+            DateTime.Parse(DateTime.Now.ToString(TimeFormat));
+
+        private static DateTimeOffset ToOffset(DateTime dateTime) =>
+            new (dateTime.ToUniversalTime());
+        
         /// <summary>
         /// Asserts the properties equality of 2 types.
         /// </summary>
@@ -65,6 +72,12 @@ namespace RepoDb.PostgreSql.IntegrationTests
                         Assert.AreEqual(v1, v2,
                             $"Assert failed for '{propertyOfType1.Name}'. The values are '{value1} ({propertyOfType1.PropertyType.FullName})' and '{value2} ({propertyOfType2.PropertyType.FullName})'.");
                     }
+                }
+                else if (value1 is DateTime dt1 && value2 is DateTime dt2 && dt1.Kind == DateTimeKind.Utc && dt2.Kind == DateTimeKind.Unspecified)
+                {
+                    var dt2u = DateTime.SpecifyKind(dt2, dt1.Kind);
+                    Assert.AreEqual(dt1, dt2u,
+                        $"Assert failed for '{propertyOfType1.Name}'. The values are '{value1} ({propertyOfType1.PropertyType.FullName})' and '{value2} ({propertyOfType2.PropertyType.FullName})'.");
                 }
                 else
                 {
@@ -157,9 +170,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         public static List<CompleteTable> CreateCompleteTables(int count)
         {
             var tables = new List<CompleteTable>();
-            var now = DateTime.SpecifyKind(
-                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
-                    DateTimeKind.Unspecified);
+            var now = CurrentUtcTime();
             for (var i = 0; i < count; i++)
             {
                 tables.Add(new CompleteTable
@@ -185,7 +196,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
                     ColumnReal = Convert.ToSingle(i),
                     ColumnSmallInt = Convert.ToInt16(i),
                     ColumnText = $"ColumnText{i}",
-                    ColumnTimestampWithTimeZone = now,
+                    ColumnTimestampWithTimeZone = ToOffset(now),
                     ColumnTimestampWithoutTimeZone = now
                 });
             }
@@ -198,9 +209,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         /// <param name="table"></param>
         public static void UpdateCompleteTableProperties(CompleteTable table)
         {
-            var now = DateTime.SpecifyKind(
-                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
-                    DateTimeKind.Unspecified);
+            var now = CurrentUtcTime();
             table.ColumnBigInt = Convert.ToInt64(2);
             table.ColumnBigIntAsArray = new long[] { 1, 2, 3, 4, 5 };
             table.ColumnBigSerial = Convert.ToInt64(2);
@@ -221,7 +230,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
             table.ColumnReal = Convert.ToSingle(2);
             table.ColumnSmallInt = Convert.ToInt16(2);
             table.ColumnText = $"{table.ColumnText} (Updated)";
-            table.ColumnTimestampWithTimeZone = now;
+            table.ColumnTimestampWithTimeZone = ToOffset(now);
             table.ColumnTimestampWithoutTimeZone = now;
         }
 
@@ -233,9 +242,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         public static List<dynamic> CreateCompleteTablesAsDynamics(int count)
         {
             var tables = new List<dynamic>();
-            var now = DateTime.SpecifyKind(
-                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
-                    DateTimeKind.Unspecified);
+            var now = CurrentUtcTime();
             for (var i = 0; i < count; i++)
             {
                 tables.Add(new
@@ -261,7 +268,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
                     ColumnReal = Convert.ToSingle(i),
                     ColumnSmallInt = Convert.ToInt16(i),
                     ColumnText = $"ColumnText{i}",
-                    ColumnTimestampWithTimeZone = now,
+                    ColumnTimestampWithTimeZone = ToOffset(now),
                     ColumnTimestampWithoutTimeZone = now
                 });
             }
@@ -274,9 +281,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         /// <param name="table"></param>
         public static void UpdateCompleteTableAsDynamicProperties(dynamic table)
         {
-            var now = DateTime.SpecifyKind(
-                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
-                    DateTimeKind.Unspecified);
+            var now = CurrentUtcTime();
             table.ColumnBigInt = Convert.ToInt64(2);
             table.ColumnBigIntAsArray = new long[] { 1, 2, 3, 4, 5 };
             table.ColumnBigSerial = Convert.ToInt64(2);
@@ -297,7 +302,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
             table.ColumnReal = Convert.ToSingle(2);
             table.ColumnSmallInt = Convert.ToInt16(2);
             table.ColumnText = $"{table.ColumnText} (Updated)";
-            table.ColumnTimestampWithTimeZone = now;
+            table.ColumnTimestampWithTimeZone = ToOffset(now);
             table.ColumnTimestampWithoutTimeZone = now;
         }
 
@@ -309,9 +314,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         public static List<ExpandoObject> CreateCompleteTablesAsExpandoObjects(int count)
         {
             var tables = new List<ExpandoObject>();
-            var now = DateTime.SpecifyKind(
-                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
-                    DateTimeKind.Unspecified);
+            var now = CurrentUtcTime();
             for (var i = 0; i < count; i++)
             {
                 var item = new ExpandoObject() as IDictionary<string, object>;
@@ -336,7 +339,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 item["ColumnReal"] = Convert.ToSingle(i);
                 item["ColumnSmallInt"] = Convert.ToInt16(i);
                 item["ColumnText"] = $"ColumnText{i}";
-                item["ColumnTimestampWithTimeZone"] = now;
+                item["ColumnTimestampWithTimeZone"] = ToOffset(now);
                 item["ColumnTimestampWithoutTimeZone"] = now;
                 tables.Add((ExpandoObject)item);
             }
@@ -349,9 +352,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         /// <param name="table"></param>
         public static void UpdateCompleteTableAsExpandoObjectProperties(CompleteTable table)
         {
-            var now = DateTime.SpecifyKind(
-                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
-                    DateTimeKind.Unspecified);
+            var now = CurrentUtcTime();
             var item = table as IDictionary<string, object>;
             item["ColumnBigInt"] = Convert.ToInt64(2);
             item["ColumnBigIntAsArray"] = new long[] { 1, 2, 3, 4, 5 };
@@ -373,7 +374,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
             item["ColumnReal"] = Convert.ToSingle(2);
             item["ColumnSmallInt"] = Convert.ToInt16(2);
             item["ColumnText"] = $"ColumnText-{Guid.NewGuid()}-Updated";
-            item["ColumnTimestampWithTimeZone"] = now;
+            item["ColumnTimestampWithTimeZone"] = ToOffset(now);
             item["ColumnTimestampWithoutTimeZone"] = now;
         }
 
@@ -389,9 +390,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         public static List<NonIdentityCompleteTable> CreateNonIdentityCompleteTables(int count)
         {
             var tables = new List<NonIdentityCompleteTable>();
-            var now = DateTime.SpecifyKind(
-                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
-                    DateTimeKind.Unspecified);
+            var now = CurrentUtcTime();
             for (var i = 0; i < count; i++)
             {
                 tables.Add(new NonIdentityCompleteTable
@@ -417,7 +416,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
                     ColumnReal = Convert.ToSingle(i),
                     ColumnSmallInt = Convert.ToInt16(i),
                     ColumnText = $"ColumnText{i}",
-                    ColumnTimestampWithTimeZone = now,
+                    ColumnTimestampWithTimeZone = ToOffset(now),
                     ColumnTimestampWithoutTimeZone = now
                 });
             }
@@ -430,9 +429,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         /// <param name="table"></param>
         public static void UpdateNonIdentityCompleteTableProperties(NonIdentityCompleteTable table)
         {
-            var now = DateTime.SpecifyKind(
-                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
-                    DateTimeKind.Unspecified);
+            var now = CurrentUtcTime();
             table.ColumnBigInt = Convert.ToInt64(2);
             table.ColumnBigIntAsArray = new long[] { 1, 2, 3, 4, 5 };
             table.ColumnBigSerial = Convert.ToInt64(2);
@@ -453,7 +450,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
             table.ColumnReal = Convert.ToSingle(2);
             table.ColumnSmallInt = Convert.ToInt16(2);
             table.ColumnText = $"{table.ColumnText} (Updated)";
-            table.ColumnTimestampWithTimeZone = now;
+            table.ColumnTimestampWithTimeZone = ToOffset(now);
             table.ColumnTimestampWithoutTimeZone = now;
         }
 
@@ -465,9 +462,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         public static List<dynamic> CreateNonIdentityCompleteTablesAsDynamics(int count)
         {
             var tables = new List<dynamic>();
-            var now = DateTime.SpecifyKind(
-                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
-                    DateTimeKind.Unspecified);
+            var now = CurrentUtcTime();
             for (var i = 0; i < count; i++)
             {
                 tables.Add(new
@@ -493,7 +488,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
                     ColumnReal = Convert.ToSingle(i),
                     ColumnSmallInt = Convert.ToInt16(i),
                     ColumnText = $"ColumnText{i}",
-                    ColumnTimestampWithTimeZone = now,
+                    ColumnTimestampWithTimeZone = ToOffset(now),
                     ColumnTimestampWithoutTimeZone = now
                 });
             }
@@ -506,9 +501,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         /// <param name="table"></param>
         public static void UpdateNonIdentityCompleteTableAsDynamicProperties(dynamic table)
         {
-            var now = DateTime.SpecifyKind(
-                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
-                    DateTimeKind.Unspecified);
+            var now = CurrentUtcTime();
             table.ColumnBigInt = Convert.ToInt64(2);
             table.ColumnBigIntAsArray = new long[] { 1, 2, 3, 4, 5 };
             table.ColumnBigSerial = Convert.ToInt64(2);
@@ -529,7 +522,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
             table.ColumnReal = Convert.ToSingle(2);
             table.ColumnSmallInt = Convert.ToInt16(2);
             table.ColumnText = $"{table.ColumnText} (Updated)";
-            table.ColumnTimestampWithTimeZone = now;
+            table.ColumnTimestampWithTimeZone = ToOffset(now);
             table.ColumnTimestampWithoutTimeZone = now;
         }
 
@@ -541,9 +534,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         public static List<ExpandoObject> CreateNonIdentityCompleteTablesAsExpandoObjects(int count)
         {
             var tables = new List<ExpandoObject>();
-            var now = DateTime.SpecifyKind(
-                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
-                    DateTimeKind.Unspecified);
+            var now = CurrentUtcTime();
             for (var i = 0; i < count; i++)
             {
                 var item = new ExpandoObject() as IDictionary<string, object>;
@@ -568,7 +559,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 item["ColumnReal"] = Convert.ToSingle(i);
                 item["ColumnSmallInt"] = Convert.ToInt16(i);
                 item["ColumnText"] = $"ColumnText{i}";
-                item["ColumnTimestampWithTimeZone"] = now;
+                item["ColumnTimestampWithTimeZone"] = ToOffset(now);
                 item["ColumnTimestampWithoutTimeZone"] = now;
                 tables.Add((ExpandoObject)item);
             }
@@ -581,9 +572,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         /// <param name="table"></param>
         public static void UpdateNonIdentityCompleteTableAsExpandoObjectProperties(CompleteTable table)
         {
-            var now = DateTime.SpecifyKind(
-                DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fffff")),
-                    DateTimeKind.Unspecified);
+            var now = CurrentUtcTime();
             var item = table as IDictionary<string, object>;
             item["ColumnBigInt"] = Convert.ToInt64(2);
             item["ColumnBigIntAsArray"] = new long[] { 1, 2, 3, 4, 5 };
@@ -605,7 +594,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
             item["ColumnReal"] = Convert.ToSingle(2);
             item["ColumnSmallInt"] = Convert.ToInt16(2);
             item["ColumnText"] = $"ColumnText-{Guid.NewGuid()}-Updated";
-            item["ColumnTimestampWithTimeZone"] = now;
+            item["ColumnTimestampWithTimeZone"] = ToOffset(now);
             item["ColumnTimestampWithoutTimeZone"] = now;
         }
 
