@@ -151,6 +151,11 @@ namespace RepoDb.PostgreSql.IntegrationTests
                         {
                             value2 = dateTime.TimeOfDay;
                         }
+
+                        if (propertyType == typeof(DateTimeOffset) && (value2 is DateTime dt && dt.Kind == DateTimeKind.Utc))
+                        {
+                            value2 = (DateTimeOffset)dt;
+                        }
                         Assert.AreEqual(Convert.ChangeType(value1, propertyType), Convert.ChangeType(value2, propertyType),
                             $"Assert failed for '{property.Name}'. The values are '{value1}' and '{value2}'.");
                     }

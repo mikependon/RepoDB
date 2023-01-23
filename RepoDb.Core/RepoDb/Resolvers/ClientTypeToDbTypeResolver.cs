@@ -55,7 +55,7 @@ namespace RepoDb.Resolvers
             }
             else if (type == StaticType.DateTime)
             {
-                return DbType.DateTime;
+                return DbType.DateTime2;
             }
             else if (type == StaticType.DateTimeOffset)
             {
