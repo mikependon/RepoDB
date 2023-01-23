@@ -20,7 +20,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Models
         public string ColumnText { get; set; }
         public DateTime? ColumnTimeWithTimeZone { get; set; }
         public DateTime? ColumnTimeWithoutTimeZone { get; set; }
-        public DateTime? ColumnTimestampWithTimeZone { get; set; }
+        public DateTimeOffset? ColumnTimestampWithTimeZone { get; set; }
         public DateTime? ColumnTimestampWithoutTimeZone { get; set; }
     }
 }

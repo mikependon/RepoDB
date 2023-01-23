@@ -21,8 +21,9 @@ namespace RepoDb.Resolvers
                 DbType.Binary or DbType.Byte => "BYTEA",
                 DbType.Boolean => "BOOLEAN",
                 DbType.AnsiString or DbType.AnsiStringFixedLength or DbType.String or DbType.StringFixedLength => "TEXT",
-                DbType.Date or DbType.DateTime or DbType.DateTime2 or
-                DbType.DateTimeOffset => "DATE",
+                DbType.Date => "DATE",
+                DbType.DateTime2 => "TIMESTAMP",
+                DbType.DateTime or DbType.DateTimeOffset => "TIMESTAMPTZ", 
                 DbType.Decimal => "NUMERIC",
                 DbType.Single => "REAL",
                 DbType.Double => "DOUBLE PRECISION",

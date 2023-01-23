@@ -45,7 +45,7 @@ namespace RepoDb.PostgreSql.IntegrationTests
         {
             public System.Int64 Id { get; set; }
             [NpgsqlDbType(NpgsqlDbType.TimestampTz)]
-            public System.DateTime ColumnTimestampWithTimeZone { get; set; }
+            public System.DateTimeOffset ColumnTimestampWithTimeZone { get; set; }
             [NpgsqlDbType(NpgsqlDbType.Timestamp)]
             public System.DateTime ColumnTimestampWithoutTimeZone { get; set; }
         }
@@ -74,8 +74,8 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 yield return new CompleteTableForDateTime
                 {
                     Id = 1,
-                    ColumnTimestampWithTimeZone = DateTime.Now.Date.AddSeconds(random.Next(60)),
-                    ColumnTimestampWithoutTimeZone = DateTime.UtcNow.Date.AddSeconds(random.Next(60))
+                    ColumnTimestampWithTimeZone = DateTimeOffset.Now.Date.AddSeconds(random.Next(60)).ToUniversalTime(),
+                    ColumnTimestampWithoutTimeZone = DateTime.Now.Date.AddSeconds(random.Next(60))
                 };
             }
         }
@@ -178,8 +178,8 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 connection.Insert(entity);
 
                 // Setup
-                var startDate = DateTime.Now.Date.AddHours(-5);
-                var endDate = DateTime.Now.Date.AddHours(5);
+                DateTimeOffset startDate = DateTimeOffset.Now.Date.AddHours(-5).ToUniversalTime();
+                DateTimeOffset endDate = DateTimeOffset.Now.Date.AddHours(5).ToUniversalTime();
 
                 // Act
                 var queryResult = connection.Query<CompleteTableForDateTime>(e =>
@@ -202,8 +202,8 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 connection.Insert(entity);
 
                 // Setup
-                var startDate = DateTime.Now.Date.AddHours(-5);
-                var endDate = DateTime.Now.Date.AddHours(5);
+                DateTimeOffset startDate = DateTimeOffset.Now.Date.AddHours(-5).ToUniversalTime();
+                DateTimeOffset endDate = DateTimeOffset.Now.Date.AddHours(5).ToUniversalTime();
 
                 // Act
                 var queryResult = connection.Query<CompleteTableForDateTime>(e =>
@@ -228,8 +228,8 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 connection.Insert(entity);
 
                 // Setup
-                var startDate = DateTime.Now.Date.AddHours(-5);
-                var endDate = DateTime.Now.Date.AddHours(5);
+                DateTimeOffset startDate = DateTimeOffset.Now.Date.AddHours(-5).ToUniversalTime();
+                DateTimeOffset endDate = DateTimeOffset.Now.Date.AddHours(5).ToUniversalTime();
 
                 // Act
                 var queryResult = connection.Query<CompleteTableForDateTime>(e =>
@@ -254,8 +254,8 @@ namespace RepoDb.PostgreSql.IntegrationTests
                 connection.Insert(entity);
 
                 // Setup
-                var startDate = DateTime.Now.Date.AddHours(-5);
-                var endDate = DateTime.Now.Date.AddHours(5);
+                DateTimeOffset startDate = DateTimeOffset.Now.Date.AddHours(-5).ToUniversalTime();
+                DateTimeOffset endDate = DateTimeOffset.Now.Date.AddHours(5).ToUniversalTime();
 
                 // Act
                 var queryResult = connection.Query<CompleteTableForDateTime>(e =>
