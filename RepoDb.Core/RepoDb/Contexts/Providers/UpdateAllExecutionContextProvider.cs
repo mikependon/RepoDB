@@ -184,7 +184,6 @@ namespace RepoDb.Contexts.Providers
         /// <param name="tableName"></param>
         /// <param name="entities"></param>
         /// <param name="dbFields"></param>
-        /// <param name="qualifiers"></param>
         /// <param name="batchSize"></param>
         /// <param name="fields"></param>
         /// <param name="commandText"></param>

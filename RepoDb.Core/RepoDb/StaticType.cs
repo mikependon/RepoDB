@@ -16,12 +16,13 @@ using System.Reflection;
 namespace RepoDb
 {
     /// <summary>
-    /// A static class that contains all the .NET CLR types needed within the library.
+    /// A static class that contains all the .NET CLR types needed within the library. This class is usually used
+    /// when a type is being compared from one another to gain performance during the on-the-fly comparisson.
     /// </summary>
     internal static class StaticType
     {
         /// <summary>
-        /// Gets a type of the <see cref="System.ReflectionBindingFlags"/> .NET CLR type.
+        /// Gets a type of the <see cref="System.Reflection.BindingFlags"/> .NET CLR type.
         /// </summary>
         public static Type BindingFlags => typeof(BindingFlags);
 
@@ -172,7 +173,7 @@ namespace RepoDb
         public static Type Enum => typeof(Enum);
 
         /// <summary>
-        /// Gets a type of the <see cref="System.DynamicExpandoObject"/> .NET CLR type.
+        /// Gets a type of the <see cref="System.Dynamic.ExpandoObject"/> .NET CLR type.
         /// </summary>
         public static Type ExpandoObject => typeof(ExpandoObject);
 
@@ -182,7 +183,7 @@ namespace RepoDb
         public static Type Guid => typeof(Guid);
 
         /// <summary>
-        /// Gets a type of the <see cref="IClassHandler"/> .NET CLR type.
+        /// Gets a type of the <see cref="IClassHandler{TEntity}"/> .NET CLR type.
         /// </summary>
         public static Type IClassHandler => typeof(IClassHandler<>);
 
@@ -192,7 +193,7 @@ namespace RepoDb
         public static Type IDbCommand => typeof(IDbCommand);
 
         /// <summary>
-        /// Gets a type of the <see cref="Nullable{T}"/> (of type <see cref="DbType"/>) .NET CLR type.
+        /// Gets a type of the <see cref="Nullable{T}"/> (of type <see cref="System.Data.DbType"/>) .NET CLR type.
         /// </summary>
         public static Type DbTypeNullable => typeof(Nullable<DbType>);
 
@@ -237,7 +238,7 @@ namespace RepoDb
         public static Type Int64 => typeof(long);
 
         /// <summary>
-        /// Gets a type of the <see cref="IPropertyHandler"/> .NET CLR type.
+        /// Gets a type of the <see cref="IPropertyHandler{TInput, TResult}"/> .NET CLR type.
         /// </summary>
         public static Type IPropertyHandler => typeof(IPropertyHandler<,>);
 
@@ -252,7 +253,7 @@ namespace RepoDb
         public static Type MapAttribute => typeof(MapAttribute);
 
         /// <summary>
-        /// Gets a type of the <see cref="Attributes.Parameter.ColumnAttribute"/> .NET CLR type.
+        /// Gets a type of the <see cref="Attributes.Parameter.NameAttribute"/> .NET CLR type.
         /// </summary>
         public static Type NameAttribute => typeof(NameAttribute);
 
@@ -287,7 +288,7 @@ namespace RepoDb
         public static Type PropertyHandlerSetOptions => typeof(PropertyHandlerSetOptions);
 
         /// <summary>
-        /// Gets a type of the <see cref="PropertyValueAttribute"/> .NET CLR type.
+        /// Gets a type of the <see cref="RepoDb.Attributes.Parameter.PropertyValueAttribute"/> .NET CLR type.
         /// </summary>
         public static Type PropertyValueAttribute => typeof(PropertyValueAttribute);
 

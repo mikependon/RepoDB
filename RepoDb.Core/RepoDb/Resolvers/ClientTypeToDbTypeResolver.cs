@@ -55,13 +55,13 @@ namespace RepoDb.Resolvers
             }
             else if (type == StaticType.DateTime)
             {
-                return DbType.DateTime2;
+                return DbType.DateTime;
             }
             else if (type == StaticType.DateTimeOffset)
             {
                 return DbType.DateTimeOffset;
             }
-            #if NET6_0_OR_GREATER
+#if NET6_0_OR_GREATER
             else if (type == StaticType.DateOnly)
             {
                 return DbType.Date;
@@ -70,7 +70,7 @@ namespace RepoDb.Resolvers
             {
                 return DbType.Time;
             }
-            #endif
+#endif
             else if (type == StaticType.Decimal)
             {
                 return DbType.Decimal;

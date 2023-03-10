@@ -27,7 +27,7 @@ namespace RepoDb.IntegrationTests.Setup
             TypeMapper.Add(typeof(DateTime), System.Data.DbType.DateTime2, true);
 
             // Initialize the SqlServer
-            SqlServerBootstrap.Initialize();
+            GlobalConfiguration.Setup().UseSqlServer();
 
             // Create the database first
             CreateDatabase();

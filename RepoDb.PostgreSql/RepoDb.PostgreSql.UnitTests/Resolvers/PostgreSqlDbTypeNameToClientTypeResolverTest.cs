@@ -519,12 +519,26 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
             var result = resolver.Resolve("DATE");
 
             // Assert
-            #if NET6_0_OR_GREATER
+            // TODO: This requires a mapping whether which type to use.
+#if NET6_0_OR_GREATER
             Assert.AreEqual(typeof(DateOnly), result);
-            #else
+#else
             Assert.AreEqual(typeof(DateTime), result);
-            #endif
-            
+#endif
+
+        }
+
+        [TestMethod]
+        public void TestPostgreSqlDbTypeNameToClientTypeResolverForTimestamp()
+        {
+            // Setup
+            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
+
+            // Act
+            var result = resolver.Resolve("TIMESTAMP");
+
+            // Assert
+            Assert.AreEqual(typeof(DateTime), result);
         }
 
         [TestMethod]
@@ -539,20 +553,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
             // Assert
             Assert.AreEqual(typeof(DateTime), result);
         }
-        
-        [TestMethod]
-        public void TestPostgreSqlDbTypeNameToClientTypeResolverForTimestamp()
-        {
-            // Setup
-            var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
 
-            // Act
-            var result = resolver.Resolve("TIMESTAMP");
-
-            // Assert
-            Assert.AreEqual(typeof(DateTime), result);
-        }
-        
         [TestMethod]
         public void TestPostgreSqlDbTypeNameToClientTypeResolverForTimestampWithTimeZone()
         {
@@ -565,7 +566,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
             // Assert
             Assert.AreEqual(typeof(DateTimeOffset), result);
         }
-        
+
         [TestMethod]
         public void TestPostgreSqlDbTypeNameToClientTypeResolverForTimestampTz()
         {
@@ -641,13 +642,13 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
             var result = resolver.Resolve("TIME WITHOUT TIME ZONE");
 
             // Assert
-            #if NET6_0_OR_GREATER
+#if NET6_0_OR_GREATER
             Assert.AreEqual(typeof(TimeOnly), result);
-            #else
+#else
             Assert.AreEqual(typeof(TimeSpan), result);
-            #endif 
+#endif
         }
-        
+
         [TestMethod]
         public void TestPostgreSqlDbTypeNameToClientTypeResolverForTime()
         {
@@ -657,11 +658,11 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
             // Act
             var result = resolver.Resolve("TIME");
             // Assert
-            #if NET6_0_OR_GREATER
+#if NET6_0_OR_GREATER
             Assert.AreEqual(typeof(TimeOnly), result);
-            #else
+#else
             Assert.AreEqual(typeof(TimeSpan), result);
-            #endif
+#endif
         }
 
         [TestMethod]
@@ -827,12 +828,12 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
             var resolver = new PostgreSqlDbTypeNameToClientTypeResolver();
 
             // Act
-            var result = resolver.Resolve("TIMESTAMPTZ");
+            var result = resolver.Resolve("TIMETZ");
 
             // Assert
-            Assert.AreEqual(typeof(System.DateTimeOffset), result);
+            Assert.AreEqual(typeof(DateTimeOffset), result);
         }
-        
+
         [TestMethod]
         public void TestPostgreSqlDbTypeNameToClientTypeResolverForTimeWithTimeZone()
         {
@@ -843,7 +844,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
             var result = resolver.Resolve("TIME WITH TIME ZONE");
 
             // Assert
-            Assert.AreEqual(typeof(System.DateTimeOffset), result);
+            Assert.AreEqual(typeof(DateTimeOffset), result);
         }
 
         [TestMethod]

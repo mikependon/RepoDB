@@ -8,7 +8,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
     public class DbTypeToPostgreSqlStringNameResolverTest
     {
         [TestMethod]
-        public void TestDbTypeToSqLiteStringNameResolverInt64()
+        public void TestDbTypeToPostgreSqlStringNameResolverInt64()
         {
             // Setup
             var resolver = new DbTypeToPostgreSqlStringNameResolver();
@@ -18,7 +18,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void TestDbTypeToSqLiteStringNameResolverByte()
+        public void TestDbTypeToPostgreSqlStringNameResolverByte()
         {
             // Setup
             var resolver = new DbTypeToPostgreSqlStringNameResolver();
@@ -28,7 +28,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void TestDbTypeToSqLiteStringNameResolverBinary()
+        public void TestDbTypeToPostgreSqlStringNameResolverBinary()
         {
             // Setup
             var resolver = new DbTypeToPostgreSqlStringNameResolver();
@@ -38,7 +38,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void TestDbTypeToSqLiteStringNameResolverBoolean()
+        public void TestDbTypeToPostgreSqlStringNameResolverBoolean()
         {
             // Setup
             var resolver = new DbTypeToPostgreSqlStringNameResolver();
@@ -48,7 +48,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void TestDbTypeToSqLiteStringNameResolverString()
+        public void TestDbTypeToPostgreSqlStringNameResolverString()
         {
             // Setup
             var resolver = new DbTypeToPostgreSqlStringNameResolver();
@@ -58,7 +58,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void TestDbTypeToSqLiteStringNameResolverAnsiString()
+        public void TestDbTypeToPostgreSqlStringNameResolverAnsiString()
         {
             // Setup
             var resolver = new DbTypeToPostgreSqlStringNameResolver();
@@ -68,7 +68,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void TestDbTypeToSqLiteStringNameResolverAnsiStringFixedLength()
+        public void TestDbTypeToPostgreSqlStringNameResolverAnsiStringFixedLength()
         {
             // Setup
             var resolver = new DbTypeToPostgreSqlStringNameResolver();
@@ -78,7 +78,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void TestDbTypeToSqLiteStringNameResolverStringFixedLength()
+        public void TestDbTypeToPostgreSqlStringNameResolverStringFixedLength()
         {
             // Setup
             var resolver = new DbTypeToPostgreSqlStringNameResolver();
@@ -88,7 +88,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void TestDbTypeToSqLiteStringNameResolverDate()
+        public void TestDbTypeToPostgreSqlStringNameResolverDate()
         {
             // Setup
             var resolver = new DbTypeToPostgreSqlStringNameResolver();
@@ -98,7 +98,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void TestDbTypeToSqLiteStringNameResolverDateTime()
+        public void TestDbTypeToPostgreSqlStringNameResolverDateTime()
         {
             // Setup
             var resolver = new DbTypeToPostgreSqlStringNameResolver();
@@ -108,7 +108,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void TestDbTypeToSqLiteStringNameResolverDateTime2()
+        public void TestDbTypeToPostgreSqlStringNameResolverDateTime2()
         {
             // Setup
             var resolver = new DbTypeToPostgreSqlStringNameResolver();
@@ -118,7 +118,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void TestDbTypeToSqLiteStringNameResolverDateTimeOffset()
+        public void TestDbTypeToPostgreSqlStringNameResolverDateTimeOffset()
         {
             // Setup
             var resolver = new DbTypeToPostgreSqlStringNameResolver();
@@ -128,7 +128,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void TestDbTypeToSqLiteStringNameResolverDecimal()
+        public void TestDbTypeToPostgreSqlStringNameResolverDecimal()
         {
             // Setup
             var resolver = new DbTypeToPostgreSqlStringNameResolver();
@@ -138,7 +138,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void TestDbTypeToSqLiteStringNameResolverSingle()
+        public void TestDbTypeToPostgreSqlStringNameResolverSingle()
         {
             // Setup
             var resolver = new DbTypeToPostgreSqlStringNameResolver();
@@ -148,7 +148,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void TestDbTypeToSqLiteStringNameResolverDouble()
+        public void TestDbTypeToPostgreSqlStringNameResolverDouble()
         {
             // Setup
             var resolver = new DbTypeToPostgreSqlStringNameResolver();
@@ -158,7 +158,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void TestDbTypeToSqLiteStringNameResolverInt32()
+        public void TestDbTypeToPostgreSqlStringNameResolverInt32()
         {
             // Setup
             var resolver = new DbTypeToPostgreSqlStringNameResolver();
@@ -168,7 +168,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void TestDbTypeToSqLiteStringNameResolverInt16()
+        public void TestDbTypeToPostgreSqlStringNameResolverInt16()
         {
             // Setup
             var resolver = new DbTypeToPostgreSqlStringNameResolver();
@@ -178,7 +178,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
         }
 
         [TestMethod]
-        public void TestDbTypeToSqLiteStringNameResolverTime()
+        public void TestDbTypeToPostgreSqlStringNameResolverTime()
         {
             // Setup
             var resolver = new DbTypeToPostgreSqlStringNameResolver();
