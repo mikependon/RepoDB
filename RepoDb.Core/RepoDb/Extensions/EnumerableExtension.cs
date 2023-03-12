@@ -20,12 +20,12 @@ namespace RepoDb.Extensions
         public static IEnumerable<IEnumerable<T>> Split<T>(this IEnumerable<T> value,
             int sizePerSplit)
         {
-#if NETSTANDARD2_0
             var count = value?.Count() ?? 0;
             if (sizePerSplit == 0 || count <= sizePerSplit)
             {
                 return new[] { value };
             }
+#if NETSTANDARD2_0
             else
             {
                 var batchCount = Convert.ToInt32(count / sizePerSplit) + ((count % sizePerSplit) != 0 ? 1 : 0);
