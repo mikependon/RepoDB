@@ -169,23 +169,23 @@ namespace RepoDb.Resolvers
                 "bytea" => typeof(Byte[]),
                 "cid" or "oid" or "regconfig" or "regtype" or "xid" => typeof(UInt32),
                 "circle" => typeof(NpgsqlTypes.NpgsqlCircle),
-                "date" 
-                    #if NET6_0_OR_GREATER 
+                "date"
+#if NET6_0_OR_GREATER
                     => typeof(DateOnly),
-                    #else
+#else
                     or 
-                    #endif 
-                "timestamp without time zone" or "timestamp"  => typeof(DateTime),
+#endif
+                "timestamp without time zone" or "timestamp" => typeof(DateTime),
                 "timestamp with time zone" or "timestamptz" => typeof(DateTimeOffset),
                 "double precision" => typeof(Double),
                 "inet" => typeof(System.Net.IPAddress),
                 "integer" => typeof(Int32),
-                "time without time zone" or "time" 
-                    #if NET6_0_OR_GREATER 
+                "time without time zone" or "time"
+#if NET6_0_OR_GREATER
                     => typeof(TimeOnly),
-                    #else
+#else
                     or 
-                    #endif 
+#endif
                 "interval" => typeof(TimeSpan),
                 "line" => typeof(NpgsqlTypes.NpgsqlLine),
                 "lseg" => typeof(NpgsqlTypes.NpgsqlLSeg),

@@ -642,6 +642,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
             var result = resolver.Resolve("TIME WITHOUT TIME ZONE");
 
             // Assert
+            // TODO: We should not just change it this
 #if NET6_0_OR_GREATER
             Assert.AreEqual(typeof(TimeOnly), result);
 #else

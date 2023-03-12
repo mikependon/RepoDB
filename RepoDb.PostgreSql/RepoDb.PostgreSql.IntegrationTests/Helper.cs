@@ -81,14 +81,16 @@ namespace RepoDb.PostgreSql.IntegrationTests
                             $"Assert failed for '{propertyOfType1.Name}'. The values are '{value1} ({propertyOfType1.PropertyType.FullName})' and '{value2} ({propertyOfType2.PropertyType.FullName})'.");
                     }
                 }
-                else if (value1 is DateTime dt1 && value2 is DateTime dt2)
+                else if (value1 is DateTime dt1 || value2 is DateTime dt2)
                 {
-                    if (dt1.Kind != dt2.Kind && ToUtcKind(dt1) != ToUtcKind(dt2))
+                    var dtValue1 = value1 is DateTime ? (DateTime)value1 : ((DateTimeOffset)value1).DateTime;
+                    var dtValue2 = value2 is DateTime ? (DateTime)value2 : ((DateTimeOffset)value2).DateTime;
+                    if (dtValue1.Kind != dtValue2.Kind && ToUtcKind(dtValue1) != ToUtcKind(dtValue2))
                     {
-                        dt1 = dt1.ToUniversalTime();
-                        dt2 = dt2.ToUniversalTime();
+                        dtValue1 = dtValue1.ToUniversalTime();
+                        dtValue2 = dtValue2.ToUniversalTime();
                     }
-                    Assert.AreEqual(dt1, dt2,
+                    Assert.AreEqual(dtValue1, dtValue2,
                         $"Assert failed for '{propertyOfType1.Name}'. The values are '{value1} ({propertyOfType1.PropertyType.FullName})' and '{value2} ({propertyOfType2.PropertyType.FullName})'.");
                 }
                 else
@@ -156,18 +158,21 @@ namespace RepoDb.PostgreSql.IntegrationTests
                                 $"Assert failed for '{property.Name}'. The values are '{v1}' and '{v2}'.");
                         }
                     }
+                    else if (value1 is DateTime dt1 || value2 is DateTime dt2)
+                    {
+                        var dtValue1 = value1 is DateTime ? (DateTime)value1 : ((DateTimeOffset)value1).DateTime;
+                        var dtValue2 = value2 is DateTime ? (DateTime)value2 : ((DateTimeOffset)value2).DateTime;
+                        if (dtValue1.Kind != dtValue2.Kind && ToUtcKind(dtValue1) != ToUtcKind(dtValue2))
+                        {
+                            dtValue1 = dtValue1.ToUniversalTime();
+                            dtValue2 = dtValue2.ToUniversalTime();
+                        }
+                        Assert.AreEqual(dtValue1, dtValue2,
+                            $"Assert failed for '{property.Name}'. The values are '{value1}' and '{value2}'.");
+                    }
                     else
                     {
                         var propertyType = property.PropertyType.GetUnderlyingType();
-                        if (propertyType == typeof(TimeSpan) && value2 is DateTime dateTime)
-                        {
-                            value2 = dateTime.TimeOfDay;
-                        }
-
-                        if (propertyType == typeof(DateTimeOffset) && (value2 is DateTime dt && dt.Kind == DateTimeKind.Utc))
-                        {
-                            value2 = (DateTimeOffset)dt;
-                        }
                         Assert.AreEqual(Convert.ChangeType(value1, propertyType), Convert.ChangeType(value2, propertyType),
                             $"Assert failed for '{property.Name}'. The values are '{value1}' and '{value2}'.");
                     }
