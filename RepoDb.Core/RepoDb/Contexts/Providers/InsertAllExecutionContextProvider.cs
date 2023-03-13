@@ -214,6 +214,7 @@ namespace RepoDb.Contexts.Providers
             string commandText)
         {
             var dbSetting = connection.GetDbSetting();
+            var dbHelper = connection.GetDbHelper();
             var inputFields = (IEnumerable<DbField>)null;
 
             // Filter the actual properties for input fields
@@ -243,20 +244,22 @@ namespace RepoDb.Contexts.Providers
             {
                 singleEntityParametersSetterFunc = FunctionCache
                     .GetDataEntityDbParameterSetterCompiledFunction(entityType,
-                        string.Concat(entityType.FullName, StringConstant.Period, tableName, ".InsertAll"),
+                        string.Concat(entityType.FullName, CharConstant.Period, tableName, ".InsertAll"),
                         inputFields,
                         null,
-                        dbSetting);
+                        dbSetting,
+                        dbHelper);
             }
             else
             {
                 multipleEntitiesParametersSetterFunc = FunctionCache
                     .GetDataEntityListDbParameterSetterCompiledFunction(entityType,
-                        string.Concat(entityType.FullName, StringConstant.Period, tableName, ".InsertAll"),
+                        string.Concat(entityType.FullName, CharConstant.Period, tableName, ".InsertAll"),
                         inputFields,
                         null,
                         batchSize,
-                        dbSetting);
+                        dbSetting,
+                        dbHelper);
             }
 
             // Return the value

@@ -16,15 +16,17 @@ namespace RepoDb.Reflection
         /// <param name="outputFields"></param>
         /// <param name="batchSize"></param>
         /// <param name="dbSetting"></param>
+        /// <param name="dbHelper"></param>
         /// <returns></returns>
         internal static Action<DbCommand, IList<object>> CompileDataEntityListDbParameterSetter(Type entityType,
             IEnumerable<DbField> inputFields,
             IEnumerable<DbField> outputFields,
             int batchSize,
-            IDbSetting dbSetting)
+            IDbSetting dbSetting,
+            IDbHelper dbHelper)
         {
             var typeOfListEntity = typeof(IList<>).MakeGenericType(StaticType.Object);
-            var commandParameterExpression = Expression.Parameter(StaticType.DbCommand, "command");
+            var dbCommandExpression = Expression.Parameter(StaticType.DbCommand, "command");
             var entitiesParameterExpression = Expression.Parameter(typeOfListEntity, "entities");
             var fieldDirections = new List<FieldDirection>();
             var bodyExpressions = new List<Expression>();
@@ -34,18 +36,19 @@ namespace RepoDb.Reflection
             fieldDirections.AddRange(GetOutputFieldDirections(outputFields));
 
             // Clear the parameter collection first
-            bodyExpressions.Add(GetDbCommandParametersClearExpression(commandParameterExpression));
+            bodyExpressions.Add(GetDbCommandParametersClearExpression(dbCommandExpression));
 
             // Iterate by batch size
             for (var entityIndex = 0; entityIndex < batchSize; entityIndex++)
             {
                 // Add to the instance block
                 var indexDbParameterSetterExpression = GetIndexDbParameterSetterExpression(entityType,
-                    commandParameterExpression,
+                    dbCommandExpression,
                     entitiesParameterExpression,
                     fieldDirections,
                     entityIndex,
-                    dbSetting);
+                    dbSetting,
+                    dbHelper);
 
                 // Add to the body
                 bodyExpressions.Add(indexDbParameterSetterExpression);
@@ -53,7 +56,7 @@ namespace RepoDb.Reflection
 
             // Set the function value
             return Expression
-                .Lambda<Action<DbCommand, IList<object>>>(Expression.Block(bodyExpressions), commandParameterExpression, entitiesParameterExpression)
+                .Lambda<Action<DbCommand, IList<object>>>(Expression.Block(bodyExpressions), dbCommandExpression, entitiesParameterExpression)
                 .Compile();
         }
     }

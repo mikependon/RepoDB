@@ -175,6 +175,7 @@ namespace RepoDb.Contexts.Providers
             string commandText)
         {
             var dbSetting = connection.GetDbSetting();
+            var dbHelper = connection.GetDbHelper();
             var inputFields = dbFields?.GetItems()
                 .Where(dbField =>
                     fields.FirstOrDefault(field =>
@@ -200,10 +201,11 @@ namespace RepoDb.Contexts.Providers
                 InputFields = inputFields,
                 ParametersSetterFunc = FunctionCache
                     .GetDataEntityDbParameterSetterCompiledFunction(entityType,
-                        string.Concat(entityType.FullName, StringConstant.Period, tableName, ".Merge"),
+                        string.Concat(entityType.FullName, CharConstant.Period, tableName, ".Merge"),
                         inputFields?.AsList(),
                         null,
-                        dbSetting),
+                        dbSetting,
+                        dbHelper),
                 KeyPropertySetterFunc = keyPropertySetterFunc
             };
         }

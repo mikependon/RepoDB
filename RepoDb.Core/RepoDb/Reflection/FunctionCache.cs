@@ -162,17 +162,20 @@ namespace RepoDb
         /// <param name="inputFields"></param>
         /// <param name="outputFields"></param>
         /// <param name="dbSetting"></param>
+        /// <param name="dbHelper"></param>
         /// <returns></returns>
         internal static Action<DbCommand, object> GetDataEntityDbParameterSetterCompiledFunction(Type entityType,
             string cacheKey,
             IEnumerable<DbField> inputFields,
             IEnumerable<DbField> outputFields,
-            IDbSetting dbSetting = null) =>
+            IDbSetting dbSetting = null,
+            IDbHelper dbHelper = null) =>
             DataEntityDbParameterSetterCache.Get(entityType,
                 cacheKey,
                 inputFields,
                 outputFields,
-                dbSetting);
+                dbSetting,
+                dbHelper);
 
         #region DataEntityDbParameterSetterCache
 
@@ -191,23 +194,25 @@ namespace RepoDb
             /// <param name="inputFields"></param>
             /// <param name="outputFields"></param>
             /// <param name="dbSetting"></param>
+            /// <param name="dbHelper"></param>
             /// <returns></returns>
             internal static Action<DbCommand, object> Get(Type entityType,
                 string cacheKey,
                 IEnumerable<DbField> inputFields,
                 IEnumerable<DbField> outputFields,
-                IDbSetting dbSetting = null)
+                IDbSetting dbSetting = null,
+                IDbHelper dbHelper = null)
             {
                 var key = GetKey(entityType, cacheKey, inputFields, outputFields);
                 if (cache.TryGetValue(key, out var func) == false)
                 {
                     if (TypeCache.Get(entityType).IsDictionaryStringObject())
                     {
-                        func = FunctionFactory.CompileDictionaryStringObjectDbParameterSetter(entityType, inputFields, dbSetting);
+                        func = FunctionFactory.CompileDictionaryStringObjectDbParameterSetter(entityType, inputFields, dbSetting, dbHelper);
                     }
                     else
                     {
-                        func = FunctionFactory.CompileDataEntityDbParameterSetter(entityType, inputFields, outputFields, dbSetting);
+                        func = FunctionFactory.CompileDataEntityDbParameterSetter(entityType, inputFields, outputFields, dbSetting, dbHelper);
                     }
                 }
                 return func;
@@ -260,14 +265,16 @@ namespace RepoDb
         /// <param name="outputFields"></param>
         /// <param name="batchSize"></param>
         /// <param name="dbSetting"></param>
+        /// <param name="dbHelper"></param>
         /// <returns></returns>
         internal static Action<DbCommand, IList<object>> GetDataEntityListDbParameterSetterCompiledFunction(Type entityType,
             string cacheKey,
             IEnumerable<DbField> inputFields,
             IEnumerable<DbField> outputFields,
             int batchSize,
-            IDbSetting dbSetting = null) =>
-            DataEntityListDbParameterSetterCache.Get(entityType, cacheKey, inputFields, outputFields, batchSize, dbSetting);
+            IDbSetting dbSetting = null,
+            IDbHelper dbHelper = null) =>
+            DataEntityListDbParameterSetterCache.Get(entityType, cacheKey, inputFields, outputFields, batchSize, dbSetting, dbHelper);
 
         #region DataEntityListDbParameterSetterCache
 
@@ -287,13 +294,15 @@ namespace RepoDb
             /// <param name="outputFields"></param>
             /// <param name="batchSize"></param>
             /// <param name="dbSetting"></param>
+            /// <param name="dbHelper"></param>
             /// <returns></returns>
             internal static Action<DbCommand, IList<object>> Get(Type entityType,
                 string cacheKey,
                 IEnumerable<DbField> inputFields,
                 IEnumerable<DbField> outputFields,
                 int batchSize,
-                IDbSetting dbSetting = null)
+                IDbSetting dbSetting = null,
+                IDbHelper dbHelper = null)
             {
                 var key = GetKey(entityType, cacheKey, inputFields, outputFields, batchSize);
                 if (cache.TryGetValue(key, out var func) == false)
@@ -303,7 +312,8 @@ namespace RepoDb
                         func = FunctionFactory.CompileDictionaryStringObjectListDbParameterSetter(entityType,
                             inputFields,
                             batchSize,
-                            dbSetting);
+                            dbSetting,
+                            dbHelper);
                     }
                     else
                     {
@@ -311,7 +321,8 @@ namespace RepoDb
                             inputFields,
                             outputFields,
                             batchSize,
-                            dbSetting);
+                            dbSetting,
+                            dbHelper);
                     }
                     cache.TryAdd(key, func);
                 }

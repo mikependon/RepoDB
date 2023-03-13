@@ -14,14 +14,16 @@ namespace RepoDb.Reflection
         /// <param name="entityType"></param>
         /// <param name="inputFields"></param>
         /// <param name="dbSetting"></param>
+        /// <param name="dbHelper"></param>
         /// <returns></returns>
         internal static Action<DbCommand, object> CompileDictionaryStringObjectDbParameterSetter(Type entityType,
             IEnumerable<DbField> inputFields,
-            IDbSetting dbSetting)
+            IDbSetting dbSetting,
+            IDbHelper dbHelper)
         {
-            var commandParameterExpression = Expression.Parameter(StaticType.DbCommand, "command");
+            var dbCommandExpression = Expression.Parameter(StaticType.DbCommand, "command");
             var entityParameterExpression = Expression.Parameter(StaticType.Object, "entityParameter");
-            var dbParameterCollectionExpression = Expression.Property(commandParameterExpression,
+            var dbParameterCollectionExpression = Expression.Property(dbCommandExpression,
                 StaticType.DbCommand.GetProperty("Parameters"));
             var dictionaryInstanceExpression = ConvertExpressionToTypeExpression(entityParameterExpression, StaticType.IDictionaryStringObject);
             var bodyExpressions = new List<Expression>();
@@ -32,11 +34,12 @@ namespace RepoDb.Reflection
             // Iterate the fields
             foreach (var dbField in inputFields)
             {
-                var dictionaryParameterExpression = GetDictionaryStringObjectParameterAssignmentExpression(commandParameterExpression,
+                var dictionaryParameterExpression = GetDictionaryStringObjectParameterAssignmentExpression(dbCommandExpression,
                     0,
                     dictionaryInstanceExpression,
                     dbField,
-                    dbSetting);
+                    dbSetting,
+                    dbHelper);
 
                 // Add to body
                 bodyExpressions.Add(dictionaryParameterExpression);
@@ -45,7 +48,7 @@ namespace RepoDb.Reflection
             // Compile
             return Expression
                 .Lambda<Action<DbCommand, object>>(Expression.Block(bodyExpressions),
-                    commandParameterExpression,
+                    dbCommandExpression,
                     entityParameterExpression)
                 .Compile();
         }

@@ -22,8 +22,8 @@ namespace RepoDb.Reflection
         /// <param name="dbSetting">The instance of <see cref="IDbSetting"/> object to be used.</param>
         /// <returns></returns>
         public static Func<DbDataReader, TResult> CompileDataReaderToType<TResult>(DbDataReader reader,
-            DbFieldCollection dbFields = null,
-            IDbSetting dbSetting = null) =>
+            DbFieldCollection dbFields,
+            IDbSetting dbSetting) =>
             Compiler.CompileDataReaderToType<TResult>(reader, dbFields, dbSetting);
 
         #endregion
@@ -38,8 +38,8 @@ namespace RepoDb.Reflection
         /// <param name="dbSetting"></param>
         /// <returns></returns>
         public static Func<DbDataReader, ExpandoObject> CompileDataReaderToExpandoObject(DbDataReader reader,
-            DbFieldCollection dbFields = null,
-            IDbSetting dbSetting = null) =>
+            DbFieldCollection dbFields,
+            IDbSetting dbSetting) =>
             Compiler.CompileDataReaderToExpandoObject(reader, dbFields, dbSetting);
 
         #endregion
@@ -53,12 +53,14 @@ namespace RepoDb.Reflection
         /// <param name="inputFields"></param>
         /// <param name="outputFields"></param>
         /// <param name="dbSetting"></param>
+        /// <param name="dbHelper"></param>
         /// <returns></returns>
         public static Action<DbCommand, object> CompileDataEntityDbParameterSetter(Type entityType,
             IEnumerable<DbField> inputFields,
             IEnumerable<DbField> outputFields,
-            IDbSetting dbSetting = null) =>
-            Compiler.CompileDataEntityDbParameterSetter(entityType, inputFields, outputFields, dbSetting);
+            IDbSetting dbSetting,
+            IDbHelper dbHelper) =>
+            Compiler.CompileDataEntityDbParameterSetter(entityType, inputFields, outputFields, dbSetting, dbHelper);
 
         #endregion
 
@@ -72,13 +74,15 @@ namespace RepoDb.Reflection
         /// <param name="outputFields"></param>
         /// <param name="batchSize"></param>
         /// <param name="dbSetting"></param>
+        /// <param name="dbHelper"></param>
         /// <returns></returns>
         public static Action<DbCommand, IList<object>> CompileDataEntityListDbParameterSetter(Type entityType,
             IEnumerable<DbField> inputFields,
             IEnumerable<DbField> outputFields,
             int batchSize,
-            IDbSetting dbSetting = null) =>
-            Compiler.CompileDataEntityListDbParameterSetter(entityType, inputFields, outputFields, batchSize, dbSetting);
+            IDbSetting dbSetting,
+            IDbHelper dbHelper) =>
+            Compiler.CompileDataEntityListDbParameterSetter(entityType, inputFields, outputFields, batchSize, dbSetting, dbHelper);
 
         #endregion
 
@@ -90,11 +94,13 @@ namespace RepoDb.Reflection
         /// <param name="entityType"></param>
         /// <param name="inputFields"></param>
         /// <param name="dbSetting"></param>
+        /// <param name="dbHelper"></param>
         /// <returns></returns>
         public static Action<DbCommand, object> CompileDictionaryStringObjectDbParameterSetter(Type entityType,
             IEnumerable<DbField> inputFields,
-            IDbSetting dbSetting = null) =>
-            Compiler.CompileDictionaryStringObjectDbParameterSetter(entityType, inputFields, dbSetting);
+            IDbSetting dbSetting,
+            IDbHelper dbHelper) =>
+            Compiler.CompileDictionaryStringObjectDbParameterSetter(entityType, inputFields, dbSetting, dbHelper);
 
         #endregion
 
@@ -107,12 +113,14 @@ namespace RepoDb.Reflection
         /// <param name="inputFields"></param>
         /// <param name="batchSize"></param>
         /// <param name="dbSetting"></param>
+        /// <param name="dbHelper"></param>
         /// <returns></returns>
         public static Action<DbCommand, IList<object>> CompileDictionaryStringObjectListDbParameterSetter(Type entityType,
             IEnumerable<DbField> inputFields,
             int batchSize,
-            IDbSetting dbSetting = null) =>
-            Compiler.CompileDictionaryStringObjectListDbParameterSetter(entityType, inputFields, batchSize, dbSetting);
+            IDbSetting dbSetting,
+            IDbHelper dbHelper) =>
+            Compiler.CompileDictionaryStringObjectListDbParameterSetter(entityType, inputFields, batchSize, dbSetting, dbHelper);
 
         #endregion
 
@@ -144,7 +152,7 @@ namespace RepoDb.Reflection
         public static Action<TEntity, DbCommand> CompileDbCommandToProperty<TEntity>(Field field,
             string parameterName,
             int index,
-            IDbSetting dbSetting = null)
+            IDbSetting dbSetting)
             where TEntity : class =>
             Compiler.CompileDbCommandToProperty<TEntity>(field, parameterName, index, dbSetting);
 

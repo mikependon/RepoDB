@@ -199,6 +199,7 @@ namespace RepoDb.Contexts.Providers
         {
             // Variables needed
             var dbSetting = connection.GetDbSetting();
+            var dbHelper = connection.GetDbHelper();
             var inputFields = new List<DbField>();
 
             // Filter the actual properties for input fields
@@ -225,19 +226,21 @@ namespace RepoDb.Contexts.Providers
             if (batchSize <= 1)
             {
                 singleEntityParametersSetterFunc = FunctionCache.GetDataEntityDbParameterSetterCompiledFunction(entityType,
-                    string.Concat(entityType.FullName, StringConstant.Period, tableName, ".UpdateAll"),
+                    string.Concat(entityType.FullName, CharConstant.Period, tableName, ".UpdateAll"),
                     inputFields,
                     null,
-                    dbSetting);
+                    dbSetting,
+                    dbHelper);
             }
             else
             {
                 multipleEntitiesParametersSetterFunc = FunctionCache.GetDataEntityListDbParameterSetterCompiledFunction(entityType,
-                    string.Concat(entityType.FullName, StringConstant.Period, tableName, ".UpdateAll"),
+                    string.Concat(entityType.FullName, CharConstant.Period, tableName, ".UpdateAll"),
                     inputFields,
                     null,
                     batchSize,
-                    dbSetting);
+                    dbSetting,
+                    dbHelper);
             }
 
             // Return the value

@@ -175,6 +175,7 @@ namespace RepoDb.Contexts.Providers
             string commandText)
         {
             var dbSetting = connection.GetDbSetting();
+            var dbHelper = connection.GetDbHelper();
             var inputFields = new List<DbField>();
 
             // Filter the actual properties for input fields
@@ -190,10 +191,11 @@ namespace RepoDb.Contexts.Providers
                 CommandText = commandText,
                 InputFields = inputFields,
                 ParametersSetterFunc = FunctionCache.GetDataEntityDbParameterSetterCompiledFunction(entityType,
-                    string.Concat(entityType.FullName, StringConstant.Period, tableName, ".Update"),
+                    string.Concat(entityType.FullName, CharConstant.Period, tableName, ".Update"),
                     inputFields?.AsList(),
                     null,
-                    dbSetting)
+                    dbSetting,
+                    dbHelper)
             };
         }
     }
