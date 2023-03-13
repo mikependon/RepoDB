@@ -5,6 +5,6 @@
     /// </summary>
     internal static class StringConstant
     {
-        public const string Period = ".";
+        // No constants for now
     }
 }

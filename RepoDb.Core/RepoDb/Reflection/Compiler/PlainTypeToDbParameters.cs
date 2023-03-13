@@ -23,7 +23,7 @@ namespace RepoDb.Reflection
             Type entityType,
             DbFieldCollection dbFields = null)
         {
-            var commandParameterExpression = Expression.Parameter(StaticType.DbCommand, "command");
+            var dbCommandExpression = Expression.Parameter(StaticType.DbCommand, "command");
             var entityParameterExpression = Expression.Parameter(StaticType.Object, "entity");
             var entityExpression = ConvertExpressionToTypeExpression(entityParameterExpression, paramType);
             var methodInfo = GetDbCommandCreateParameterMethod();
@@ -57,7 +57,7 @@ namespace RepoDb.Reflection
                     callExpressions.AddIfNotNull(setNameExpression);
 
                     // DbCommand.Parameters.Add
-                    var addExpression = GetDbCommandParametersAddExpression(commandParameterExpression, valueExpression);
+                    var addExpression = GetDbCommandParametersAddExpression(dbCommandExpression, valueExpression);
                     callExpressions.Add(addExpression);
 
                     #endregion
@@ -68,14 +68,14 @@ namespace RepoDb.Reflection
 
                     var underlyingType = TypeCache.Get(targetProperty.PropertyInfo.PropertyType).GetUnderlyingType();
                     var valueType = GetPropertyHandlerSetMethodReturnType(paramProperty, underlyingType) ?? underlyingType;
-                    var parameterVariableExpression = Expression.Variable(StaticType.DbParameter, $"var{parameterName}");
+                    var dbParameterExpression = Expression.Variable(StaticType.DbParameter, $"var{parameterName}");
                     var parameterCallExpressions = new List<Expression>();
 
                     // Create
                     var createParameterExpression =
-                        CreateDbParameterExpression(commandParameterExpression, parameterName, valueExpression);
+                        CreateDbParameterExpression(dbCommandExpression, parameterName, valueExpression);
                     parameterCallExpressions.Add(
-                        Expression.Assign(parameterVariableExpression,
+                        Expression.Assign(dbParameterExpression,
                             ConvertExpressionToTypeExpression(createParameterExpression, StaticType.DbParameter)));
 
                     // Convert
@@ -102,15 +102,15 @@ namespace RepoDb.Reflection
                             targetType?.GetDbType() ??
                             new ClientTypeToDbTypeResolver().Resolve(targetType);
                     }
-                    var setDbTypeExpression = GetDbParameterDbTypeAssignmentExpression(parameterVariableExpression, dbType);
+                    var setDbTypeExpression = GetDbParameterDbTypeAssignmentExpression(dbParameterExpression, dbType);
                     parameterCallExpressions.AddIfNotNull(setDbTypeExpression);
 
                     // PropertyHandler
                     InvokePropertyHandlerViaExpression(
-                        parameterVariableExpression, paramProperty, ref valueType, ref valueExpression);
+                        dbParameterExpression, paramProperty, ref valueType, ref valueExpression);
 
                     // Value
-                    var setValueExpression = GetDbParameterValueAssignmentExpression(parameterVariableExpression,
+                    var setValueExpression = GetDbParameterValueAssignmentExpression(dbParameterExpression,
                         valueExpression);
                     parameterCallExpressions.AddIfNotNull(setValueExpression);
 
@@ -118,27 +118,27 @@ namespace RepoDb.Reflection
                     var size = GetSize(null, dbField);
                     if (size > 0)
                     {
-                        var setSizeExpression = GetDbParameterSizeAssignmentExpression(parameterVariableExpression, size);
+                        var setSizeExpression = GetDbParameterSizeAssignmentExpression(dbParameterExpression, size);
                         parameterCallExpressions.AddIfNotNull(setSizeExpression);
                     }
 
                     // Table-Valued Parameters
                     if (valueType == StaticType.DataTable)
                     {
-                        parameterCallExpressions.AddIfNotNull(EnsureTableValueParameterExpression(parameterVariableExpression));
+                        parameterCallExpressions.AddIfNotNull(EnsureTableValueParameterExpression(dbParameterExpression));
                     }
 
                     // Type map attributes
                     var parameterPropertyValueSetterAttributesExpressions = GetParameterPropertyValueSetterAttributesAssignmentExpressions(
-                        parameterVariableExpression, targetProperty);
+                        dbParameterExpression, targetProperty);
                     parameterCallExpressions.AddRangeIfNotNullOrNotEmpty(parameterPropertyValueSetterAttributesExpressions);
 
                     // DbCommand.Parameters.Add
-                    var addExpression = GetDbCommandParametersAddExpression(commandParameterExpression, parameterVariableExpression);
+                    var addExpression = GetDbCommandParametersAddExpression(dbCommandExpression, dbParameterExpression);
                     parameterCallExpressions.Add(addExpression);
 
                     // Add the parameter block
-                    callExpressions.Add(Expression.Block(new[] { parameterVariableExpression }, parameterCallExpressions));
+                    callExpressions.Add(Expression.Block(new[] { dbParameterExpression }, parameterCallExpressions));
 
                     #endregion
                 }
@@ -146,18 +146,18 @@ namespace RepoDb.Reflection
 
             // Return
             return Expression
-                .Lambda<Action<DbCommand, object>>(Expression.Block(callExpressions), commandParameterExpression, entityParameterExpression)
+                .Lambda<Action<DbCommand, object>>(Expression.Block(callExpressions), dbCommandExpression, entityParameterExpression)
                 .Compile();
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="commandParameterExpression"></param>
+        /// <param name="dbCommandExpression"></param>
         /// <param name="parameterName"></param>
         /// <param name="valueExpression"></param>
         /// <returns></returns>
-        public static Expression CreateDbParameterExpression(Expression commandParameterExpression,
+        public static Expression CreateDbParameterExpression(Expression dbCommandExpression,
             string parameterName,
             Expression valueExpression)
         {
@@ -165,7 +165,7 @@ namespace RepoDb.Reflection
 
             return Expression.Call(methodInfo, new Expression[]
             {
-                commandParameterExpression,
+                dbCommandExpression,
                 Expression.Constant(parameterName),
                 ConvertExpressionToTypeExpression(valueExpression, StaticType.Object),
                 Expression.Default(StaticType.DbTypeNullable),

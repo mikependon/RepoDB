@@ -17,22 +17,22 @@ namespace RepoDb.Reflection
         /// <summary>
         ///
         /// </summary>
-        /// <param name="parameterVariable"></param>
+        /// <param name="dbParameterExpression"></param>
         /// <param name="classProperty"></param>
         /// <returns></returns>
         internal static IEnumerable<Expression> GetPropertyValueAttributeAssignmentExpressions(
-            ParameterExpression parameterVariable,
+            ParameterExpression dbParameterExpression,
             ClassProperty classProperty) =>
-            GetParameterPropertyValueSetterAttributesAssignmentExpressions((Expression)parameterVariable, classProperty);
+            GetParameterPropertyValueSetterAttributesAssignmentExpressions((Expression)dbParameterExpression, classProperty);
 
         /// <summary>
         ///
         /// </summary>
-        /// <param name="parameterVariable"></param>
+        /// <param name="dbParameterExpression"></param>
         /// <param name="classProperty"></param>
         /// <returns></returns>
         internal static IEnumerable<Expression> GetParameterPropertyValueSetterAttributesAssignmentExpressions(
-            Expression parameterVariable,
+            Expression dbParameterExpression,
             ClassProperty classProperty)
         {
             var attributes = classProperty?.GetPropertyValueAttributes();
@@ -53,7 +53,7 @@ namespace RepoDb.Reflection
                     continue;
                 }
 
-                var expression = GetPropertyValueAttributesAssignmentExpression(parameterVariable,
+                var expression = GetPropertyValueAttributesAssignmentExpression(dbParameterExpression,
                     attribute);
                 expressions.AddIfNotNull(expression);
             }
@@ -64,13 +64,13 @@ namespace RepoDb.Reflection
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="parameterVariableExpression"></param>
+        /// <param name="dbParameterExpression"></param>
         /// <param name="attribute"></param>
         /// <returns></returns>
         internal static Expression GetPropertyValueAttributesAssignmentExpression(
-            ParameterExpression parameterVariableExpression,
+            ParameterExpression dbParameterExpression,
             PropertyValueAttribute attribute) =>
-            GetPropertyValueAttributesAssignmentExpression((Expression)parameterVariableExpression, attribute);
+            GetPropertyValueAttributesAssignmentExpression((Expression)dbParameterExpression, attribute);
 
         /// <summary>
         /// 

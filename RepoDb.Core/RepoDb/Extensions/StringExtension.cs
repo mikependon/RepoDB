@@ -119,7 +119,7 @@ namespace RepoDb.Extensions
             else
             {
                 var splitted = value.Split(CharConstant.Period);
-                return splitted.Select(s => s.AsUnquotedInternal(trim, dbSetting)).Join(StringConstant.Period);
+                return splitted.Select(s => s.AsUnquotedInternal(trim, dbSetting)).Join(CharConstant.Period.ToString());
             }
         }
 
@@ -213,7 +213,7 @@ namespace RepoDb.Extensions
             IDbSetting dbSetting)
         {
             // TODO: Refactor this method
-            var splitted = value.Split(StringConstant.Period.ToCharArray());
+            var splitted = value.Split(CharConstant.Period);
             if (splitted.Length > 2)
             {
                 var list = new List<string>(splitted.Length);
@@ -225,7 +225,7 @@ namespace RepoDb.Extensions
                         if (current.StartsWith(dbSetting.OpeningQuote, StringComparison.OrdinalIgnoreCase)
                             && item.EndsWith(dbSetting.ClosingQuote, StringComparison.OrdinalIgnoreCase))
                         {
-                            list.Add(string.Concat(current, StringConstant.Period, item));
+                            list.Add(string.Concat(current, CharConstant.Period, item));
                             current = null;
                         }
                     }
@@ -252,11 +252,19 @@ namespace RepoDb.Extensions
                 {
                     list.Add(current.AsQuotedInternal(dbSetting));
                 }
-                return string.Join(StringConstant.Period, list);
+#if NETSTANDARD2_0
+                return string.Join(CharConstant.Period.ToString(), list);
+#else
+                return string.Join(CharConstant.Period, list);
+#endif
             }
             else
             {
-                return string.Join(StringConstant.Period, splitted.Select(item => item.AsQuotedInternal(dbSetting)));
+#if NETSTANDARD2_0
+                return string.Join(CharConstant.Period.ToString(), splitted.Select(item => item.AsQuotedInternal(dbSetting)));
+#else
+                return string.Join(CharConstant.Period, splitted.Select(item => item.AsQuotedInternal(dbSetting)));
+#endif
             }
         }
 
@@ -387,8 +395,8 @@ namespace RepoDb.Extensions
             string leftAlias,
             string rightAlias,
             IDbSetting dbSetting) =>
-            string.Concat(leftAlias, StringConstant.Period, value.AsQuoted(true, true, dbSetting), " = ",
-                rightAlias, StringConstant.Period, value.AsQuoted(true, true, dbSetting));
+            string.Concat(leftAlias, CharConstant.Period, value.AsQuoted(true, true, dbSetting), " = ",
+                rightAlias, CharConstant.Period, value.AsQuoted(true, true, dbSetting));
 
         /// <summary>
         /// 
@@ -404,8 +412,8 @@ namespace RepoDb.Extensions
             IDbSetting dbSetting)
         {
             var qualifiersWithoutNullChecks = AsJoinQualifierWithoutNullChecks(value, leftAlias, rightAlias, dbSetting);
-            var qualifiersWithNullChecks = string.Concat("(", leftAlias, StringConstant.Period, value.AsQuoted(true, true, dbSetting), " IS NULL",
-                " AND ", rightAlias, StringConstant.Period, value.AsQuoted(true, true, dbSetting), " IS NULL)");
+            var qualifiersWithNullChecks = string.Concat("(", leftAlias, CharConstant.Period, value.AsQuoted(true, true, dbSetting), " IS NULL",
+                " AND ", rightAlias, CharConstant.Period, value.AsQuoted(true, true, dbSetting), " IS NULL)");
             return string.Concat("(", qualifiersWithoutNullChecks, " OR ", qualifiersWithNullChecks, ")");
         }
 
@@ -419,7 +427,7 @@ namespace RepoDb.Extensions
         internal static string AsAliasField(this string value,
             string alias,
             IDbSetting dbSetting) =>
-            string.Concat(alias, StringConstant.Period, value.AsQuoted(true, true, dbSetting));
+            string.Concat(alias, CharConstant.Period, value.AsQuoted(true, true, dbSetting));
 
         /// <summary>
         /// 
@@ -458,8 +466,8 @@ namespace RepoDb.Extensions
             string rightAlias,
             IDbSetting dbSetting) =>
             string.Concat(
-                (string.IsNullOrWhiteSpace(leftAlias) ? string.Empty : string.Concat(leftAlias, StringConstant.Period)), AsField(value, dbSetting), " = ",
-                (string.IsNullOrWhiteSpace(rightAlias) ? string.Empty : string.Concat(rightAlias, StringConstant.Period)), AsField(value, dbSetting));
+                (string.IsNullOrWhiteSpace(leftAlias) ? string.Empty : string.Concat(leftAlias, CharConstant.Period)), AsField(value, dbSetting), " = ",
+                (string.IsNullOrWhiteSpace(rightAlias) ? string.Empty : string.Concat(rightAlias, CharConstant.Period)), AsField(value, dbSetting));
 
         /// <summary>
         /// 

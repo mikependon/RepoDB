@@ -51,7 +51,7 @@ namespace RepoDb.Extensions
             {
                 return tableAttribute.Name;
             }
-            return string.Concat(tableAttribute.Schema, StringConstant.Period, tableAttribute.Name);
+            return string.Concat(tableAttribute.Schema, CharConstant.Period, tableAttribute.Name);
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace RepoDb.Extensions
         {
             if (tableName.IsOpenQuoted(dbSetting))
             {
-                var index = tableName.IndexOf(string.Concat(dbSetting.ClosingQuote, StringConstant.Period), StringComparison.OrdinalIgnoreCase);
+                var index = tableName.IndexOf(string.Concat(dbSetting.ClosingQuote, CharConstant.Period), StringComparison.OrdinalIgnoreCase);
                 if (index >= 0)
                 {
                     return tableName.Substring(0, index + 1);
@@ -132,7 +132,7 @@ namespace RepoDb.Extensions
         {
             if (tableName.IsOpenQuoted(dbSetting))
             {
-                var index = tableName.IndexOf(string.Concat(dbSetting.ClosingQuote, StringConstant.Period), StringComparison.OrdinalIgnoreCase);
+                var index = tableName.IndexOf(string.Concat(dbSetting.ClosingQuote, CharConstant.Period), StringComparison.OrdinalIgnoreCase);
                 if (index >= 0 && tableName.Length > index + 2)
                 {
                     return tableName.Substring(index + 2);

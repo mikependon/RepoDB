@@ -125,7 +125,7 @@ namespace RepoDb.Extensions
         internal static string AsFieldAndAliasField(this PropertyInfo property,
             string alias,
             IDbSetting dbSetting) =>
-            string.Concat(AsFieldAsString(property, dbSetting), " = ", alias, StringConstant.Period, AsFieldAsString(property, dbSetting));
+            string.Concat(AsFieldAsString(property, dbSetting), " = ", alias, CharConstant.Period, AsFieldAsString(property, dbSetting));
 
         /// <summary>
         /// Generates a hashcode of the <see cref="PropertyInfo"/> object based on the parent class name and its own name.
