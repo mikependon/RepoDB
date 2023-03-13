@@ -165,6 +165,7 @@ namespace RepoDb.Contexts.Providers
             string commandText)
         {
             var dbSetting = connection.GetDbSetting();
+            var dbHelper = connection.GetDbHelper();
             var inputFields = dbFields?.GetItems()
                 .Where(dbField =>
                     dbField.IsIdentity == false)
@@ -192,10 +193,11 @@ namespace RepoDb.Contexts.Providers
                 InputFields = inputFields,
                 ParametersSetterFunc = FunctionCache
                     .GetDataEntityDbParameterSetterCompiledFunction(entityType,
-                        string.Concat(entityType.FullName, StringConstant.Period, tableName, ".Insert"),
+                        string.Concat(entityType.FullName, CharConstant.Period, tableName, ".Insert"),
                         inputFields?.AsList(),
                         null,
-                        dbSetting),
+                        dbSetting,
+                        dbHelper),
                 KeyPropertySetterFunc = keyPropertySetterFunc
             };
         }

@@ -237,6 +237,7 @@ namespace RepoDb.Contexts.Providers
             string commandText)
         {
             var dbSetting = connection.GetDbSetting();
+            var dbHelper = connection.GetDbHelper();
             var inputFields = (IEnumerable<DbField>)null;
 
             // Check the fields
@@ -288,20 +289,22 @@ namespace RepoDb.Contexts.Providers
             {
                 singleEntityParametersSetterFunc = FunctionCache
                     .GetDataEntityDbParameterSetterCompiledFunction(entityType,
-                        string.Concat(entityType.FullName, StringConstant.Period, tableName, ".MergeAll"),
+                        string.Concat(entityType.FullName, CharConstant.Period, tableName, ".MergeAll"),
                         inputFields,
                         null,
-                        dbSetting);
+                        dbSetting,
+                        dbHelper);
             }
             else
             {
                 multipleEntitiesParametersSetterFunc = FunctionCache
                     .GetDataEntityListDbParameterSetterCompiledFunction(entityType,
-                        string.Concat(entityType.FullName, StringConstant.Period, tableName, ".MergeAll"),
+                        string.Concat(entityType.FullName, CharConstant.Period, tableName, ".MergeAll"),
                         inputFields,
                         null,
                         batchSize,
-                        dbSetting);
+                        dbSetting,
+                        dbHelper);
             }
 
             // Return the value

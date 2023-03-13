@@ -193,6 +193,11 @@ namespace RepoDb
         public static Type IDbCommand => typeof(IDbCommand);
 
         /// <summary>
+        /// Gets a type of the <see cref="IDbHelper"/> .NET CLR type.
+        /// </summary>
+        public static Type IDbHelper => typeof(IDbHelper);
+
+        /// <summary>
         /// Gets a type of the <see cref="Nullable{T}"/> (of type <see cref="System.Data.DbType"/>) .NET CLR type.
         /// </summary>
         public static Type DbTypeNullable => typeof(Nullable<DbType>);

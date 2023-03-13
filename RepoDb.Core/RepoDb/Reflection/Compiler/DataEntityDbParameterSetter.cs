@@ -15,15 +15,17 @@ namespace RepoDb.Reflection
         /// <param name="inputFields"></param>
         /// <param name="outputFields"></param>
         /// <param name="dbSetting"></param>
+        /// <param name="dbHelper"></param>
         /// <returns></returns>
         internal static Action<DbCommand, object> CompileDataEntityDbParameterSetter(Type entityType,
             IEnumerable<DbField> inputFields,
             IEnumerable<DbField> outputFields,
-            IDbSetting dbSetting)
+            IDbSetting dbSetting,
+            IDbHelper dbHelper)
         {
-            var commandParameterExpression = Expression.Parameter(StaticType.DbCommand, "command");
+            var dbCommandExpression = Expression.Parameter(StaticType.DbCommand, "command");
             var entityParameterExpression = Expression.Parameter(StaticType.Object, "entityParameter");
-            var dbParameterCollectionExpression = Expression.Property(commandParameterExpression,
+            var dbParameterCollectionExpression = Expression.Property(dbCommandExpression,
                 StaticType.DbCommand.GetProperty("Parameters"));
             var entityVariableExpression = Expression.Variable(StaticType.Object, "entityVariable");
             var entityExpressions = new List<Expression>();
@@ -32,7 +34,7 @@ namespace RepoDb.Reflection
             var bodyExpressions = new List<Expression>();
 
             // Class handler
-            var handledEntityParameterExpression = ConvertExpressionToClassHandlerSetExpression(commandParameterExpression, entityType, entityParameterExpression);
+            var handledEntityParameterExpression = ConvertExpressionToClassHandlerSetExpression(dbCommandExpression, entityType, entityParameterExpression);
 
             // Field directions
             fieldDirections.AddRange(GetInputFieldDirections(inputFields));
@@ -52,11 +54,12 @@ namespace RepoDb.Reflection
             foreach (var fieldDirection in fieldDirections)
             {
                 // Add the property block
-                var propertyBlock = GetPropertyFieldExpression(commandParameterExpression,
+                var propertyBlock = GetPropertyFieldExpression(dbCommandExpression,
                     ConvertExpressionToTypeExpression(entityVariableExpression, entityType),
                     fieldDirection,
                     0,
-                    dbSetting);
+                    dbSetting,
+                    dbHelper);
 
                 // Add to instance expression
                 entityExpressions.Add(propertyBlock);
@@ -70,7 +73,7 @@ namespace RepoDb.Reflection
 
             // Set the function value
             return Expression
-                .Lambda<Action<DbCommand, object>>(Expression.Block(bodyExpressions), commandParameterExpression, entityParameterExpression)
+                .Lambda<Action<DbCommand, object>>(Expression.Block(bodyExpressions), dbCommandExpression, entityParameterExpression)
                 .Compile();
         }
     }
