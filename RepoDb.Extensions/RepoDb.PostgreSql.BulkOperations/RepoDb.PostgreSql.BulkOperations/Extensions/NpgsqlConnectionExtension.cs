@@ -132,20 +132,7 @@ namespace RepoDb
                 {
                     foreach (var mapping in mappings)
                     {
-                        var data = row[mapping.SourceColumn];
-                        if (data is Enum)
-                        {
-                            if (mapping.NpgsqlDbType == NpgsqlDbType.Integer ||
-                                mapping.NpgsqlDbType == NpgsqlDbType.Bigint ||
-                                mapping.NpgsqlDbType == NpgsqlDbType.Smallint)
-                            {
-                                data = Convert.ToInt32(data);
-                            }
-                            else if (mapping.NpgsqlDbType == NpgsqlDbType.Text)
-                            {
-                                data = Convert.ToString(data);
-                            }
-                        }
+                        var data = GetDataRowColumnData(row, mapping.SourceColumn, mapping.NpgsqlDbType);
                         BinaryImportWrite(importer, data, mapping.NpgsqlDbType);
                     }
                 },
@@ -398,8 +385,8 @@ namespace RepoDb
                 {
                     foreach (var mapping in mappings)
                     {
-                        await BinaryImportWriteAsync(importer, row[mapping.SourceColumn],
-                            mapping.NpgsqlDbType, cancellationToken);
+                        var data = GetDataRowColumnData(row, mapping.SourceColumn, mapping.NpgsqlDbType);
+                        await BinaryImportWriteAsync(importer, data, mapping.NpgsqlDbType, cancellationToken);
                     }
                 },
                 identityBehavior,
@@ -558,6 +545,42 @@ namespace RepoDb
         private static string GetTextColumns(IEnumerable<NpgsqlBulkInsertMapItem> mappings,
             IDbSetting dbSetting) =>
             mappings?.Select(mapping => mapping.DestinationColumn.AsQuoted(true, dbSetting)).Join(", ");
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="row"></param>
+        /// <param name="columnName"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        private static object GetDataRowColumnData(DataRow row,
+            string columnName,
+            NpgsqlDbType? type)
+        {
+            var columnType = row.Table.Columns[columnName].DataType;
+            var data = row[columnName];
+            if (columnType.IsEnum)
+            {
+                if (type == NpgsqlDbType.Integer ||
+                    type == NpgsqlDbType.Bigint ||
+                    type == NpgsqlDbType.Smallint)
+                {
+                    data = Convert.ToInt32(data);
+                }
+                else if (type == NpgsqlDbType.Text)
+                {
+                    data = Convert.ToString(data);
+                }
+                else
+                {
+                    if (!(data is Enum) && data != DBNull.Value)
+                    {
+                        data = Enum.ToObject(columnType, data);
+                    }
+                }
+            }
+            return data;
+        }
 
         #endregion
     }

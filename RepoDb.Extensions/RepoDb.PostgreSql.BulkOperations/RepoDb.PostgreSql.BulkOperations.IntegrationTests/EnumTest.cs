@@ -97,7 +97,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 tables.Add(new
                 {
                     Id = (long)(hasId ? index + addToKey : 0),
-                    ColumnEnumHand = Hands.Right.ToString(),
+                    ColumnEnumHand = Hands.Right,
                     ColumnEnumInt = (int?)Hands.Left,
                     ColumnEnumText = Hands.Unidentified.ToString()
                 });
@@ -116,7 +116,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 tables.Add(new
                 {
                     Id = (long)(hasId ? index + addToKey : 0),
-                    ColumnEnumHand = (string)null,
+                    ColumnEnumHand = (Hands?)null,
                     ColumnEnumInt = (int?)null,
                     ColumnEnumText = (string)null
                 });
