@@ -256,7 +256,7 @@ namespace RepoDb.DbHelpers
         {
             if (key == "RepoDb.Internal.Compiler.Events[AfterCreateDbParameter]")
             {
-                HandleDbParameterPostCreation((NpgsqlParameter)(object)instance);
+                HandleDbParameterPostCreation(instance as NpgsqlParameter);
             }
         }
 
@@ -268,13 +268,16 @@ namespace RepoDb.DbHelpers
         /// <param name="parameter"></param>
         private void HandleDbParameterPostCreation(NpgsqlParameter parameter)
         {
-            parameter.NpgsqlDbType = NpgsqlDbType.Unknown;
+            if (parameter?.Value is Enum)
+            {
+                parameter.NpgsqlDbType = NpgsqlDbType.Unknown;
+            }
         }
 
-        #endregion
+#endregion
 
-        #endregion
+#endregion
 
-        #endregion
+#endregion
     }
 }
