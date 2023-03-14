@@ -23,7 +23,7 @@ namespace RepoDb.IntegrationTests.Setup
                 @"Server=(local);Database=RepoDb;Integrated Security=SSPI;TrustServerCertificate=True;";
 
             // Initialize the SqlServer
-            SqlServerBootstrap.Initialize();
+            GlobalConfiguration.Setup().UseSqlServer();
 
             // Create the database first
             CreateDatabase();

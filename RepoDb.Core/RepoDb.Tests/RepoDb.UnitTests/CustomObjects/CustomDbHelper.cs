@@ -46,6 +46,11 @@ namespace RepoDb.UnitTests.CustomObjects
         {
             return Task.FromResult<T>(default);
         }
+        public void DynamicHandler<TEventInstance>(TEventInstance instance,
+            string key)
+        {
+            // Do nothing
+        }
     }
 
 }

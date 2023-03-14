@@ -9,7 +9,6 @@ namespace RepoDb
     /// <summary>
     /// A class that is being used to initialize the necessary settings for the <see cref="SqlConnection"/> object.
     /// </summary>
-    [Obsolete("This class will soon to be hidden as internal class. Use the 'GlobalConfiguration' class instead.")]
     public static class SqlServerBootstrap
     {
         #region Properties
@@ -26,13 +25,13 @@ namespace RepoDb
         /// <summary>
         /// Initializes all the necessary settings for SQL Server.
         /// </summary>
-        [Obsolete("Use the 'GlobalConfiguration.Setup().UseSqlServer()' method instead.")]
+        [Obsolete("This class will soon to be hidden as internal class. Use the 'GlobalConfiguration.Setup().UseSqlServer()' method instead.")]
         public static void Initialize() => InitializeInternal();
 
         /// <summary>
         /// 
         /// </summary>
-        public static void InitializeInternal()
+        internal static void InitializeInternal()
         {
             // Skip if already initialized
             if (IsInitialized == true)

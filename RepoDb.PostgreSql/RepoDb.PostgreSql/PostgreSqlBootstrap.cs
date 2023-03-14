@@ -9,7 +9,6 @@ namespace RepoDb
     /// <summary>
     /// A class used to initialize necessary objects that is connected to <see cref="NpgsqlConnection"/> object.
     /// </summary>
-    [Obsolete("This class will soon to be hidden as internal class. Use the 'GlobalConfiguration' class instead.")]
     public static class PostgreSqlBootstrap
     {
         #region Properties
@@ -26,13 +25,13 @@ namespace RepoDb
         /// <summary>
         /// Initializes all necessary settings for PostgreSql.
         /// </summary>
-        [Obsolete("Use the 'GlobalConfiguration.Setup().UsePostgreSql()' method instead.")]
+        [Obsolete("This class will soon to be hidden as internal class. Use the 'GlobalConfiguration.Setup().UsePostgreSql()' method instead.")]
         public static void Initialize() => InitializeInternal();
 
         /// <summary>
         /// 
         /// </summary>
-        public static void InitializeInternal()
+        internal static void InitializeInternal()
         {
             // Skip if already initialized
             if (IsInitialized == true)

@@ -164,7 +164,6 @@ namespace RepoDb
         /// <param name="connection"></param>
         /// <param name="tableName"></param>
         /// <param name="reader"></param>
-        /// <param name="dbFields"></param>
         /// <param name="mappings"></param>
         /// <param name="options"></param>
         /// <param name="bulkCopyTimeout"></param>
