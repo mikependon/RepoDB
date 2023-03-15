@@ -1162,7 +1162,7 @@ SET ""Identity"" = EXCLUDED.""Identity"";";
         /// <returns></returns>
         private static string GetBinaryBulkInsertPseudoTableName(string tableName,
             IDbSetting dbSetting) =>
-            $"_RepoDb_BinaryBulkInsert_{tableName.AsUnquoted(true, dbSetting)}";
+            $"_RepoDb_BinaryBulkInsert_{tableName.AsUnquoted(true, dbSetting).AsAlphaNumeric()}";
 
         /// <summary>
         /// 
@@ -1172,7 +1172,7 @@ SET ""Identity"" = EXCLUDED.""Identity"";";
         /// <returns></returns>
         private static string GetBinaryBulkMergePseudoTableName(string tableName,
             IDbSetting dbSetting) =>
-            $"_RepoDb_BinaryBulkMerge_{tableName.AsUnquoted(true, dbSetting)}";
+            $"_RepoDb_BinaryBulkMerge_{tableName.AsUnquoted(true, dbSetting).AsAlphaNumeric()}";
 
         /// <summary>
         /// 
@@ -1182,7 +1182,7 @@ SET ""Identity"" = EXCLUDED.""Identity"";";
         /// <returns></returns>
         private static string GetBinaryBulkUpdatePseudoTableName(string tableName,
             IDbSetting dbSetting) =>
-            $"_RepoDb_BinaryBulkUpdate_{tableName.AsUnquoted(true, dbSetting)}";
+            $"_RepoDb_BinaryBulkUpdate_{tableName.AsUnquoted(true, dbSetting).AsAlphaNumeric()}";
 
         /// <summary>
         /// 
@@ -1192,7 +1192,7 @@ SET ""Identity"" = EXCLUDED.""Identity"";";
         /// <returns></returns>
         private static string GetBinaryBulkDeletePseudoTableName(string tableName,
             IDbSetting dbSetting) =>
-            $"_RepoDb_BinaryBulkDelete_{tableName.AsUnquoted(true, dbSetting)}";
+            $"_RepoDb_BinaryBulkDelete_{tableName.AsUnquoted(true, dbSetting).AsAlphaNumeric()}";
 
         /// <summary>
         /// 
