@@ -6,6 +6,7 @@ using RepoDb.PostgreSql.BulkOperations.IntegrationTests.Models;
 using System;
 using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
 {
@@ -54,6 +55,27 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => entities.IndexOf(t1) == queryResult.IndexOf(t2));
                 Assert.AreEqual(entities.Count(), assertCount);
             }
+        }
+        
+        [TestMethod]
+        public void TestBinaryBulkInsertTableNameWithSchema()
+        {
+            using var connection = GetConnection();
+            
+            // Prepare
+            var entities = Helper.CreateBulkOperationLightIdentityTables(10, false);
+            var tableName = "public.BulkOperationIdentityTable";
+            
+            // Act
+            var result = connection.BinaryBulkInsert(tableName, entities);
+
+            // Assert
+            Assert.AreEqual(entities.Count, result);
+
+            // Assert
+            var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
+            var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => entities.IndexOf(t1) == queryResult.IndexOf(t2));
+            Assert.AreEqual(entities.Count, assertCount);
         }
 
         [TestMethod]
@@ -2023,6 +2045,27 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
             }
         }
 
+        [TestMethod]
+        public async Task TestBinaryBulkInsertAsyncTableNameWithSchema()
+        {
+            await using var connection = GetConnection();
+            
+            // Prepare
+            var entities = Helper.CreateBulkOperationLightIdentityTables(10, false);
+            var tableName = "public.BulkOperationIdentityTable";
+            
+            // Act
+            var result = await connection.BinaryBulkInsertAsync(tableName, entities);
+
+            // Assert
+            Assert.AreEqual(entities.Count, result);
+
+            // Assert
+            var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
+            var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => entities.IndexOf(t1) == queryResult.IndexOf(t2));
+            Assert.AreEqual(entities.Count, assertCount);
+        }
+        
         [TestMethod]
         public void TestBinaryBulkInsertAsyncWithIdentityValues()
         {

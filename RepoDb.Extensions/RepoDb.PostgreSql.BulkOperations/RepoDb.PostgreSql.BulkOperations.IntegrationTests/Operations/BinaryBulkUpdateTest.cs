@@ -4,6 +4,7 @@ using RepoDb.Enumerations.PostgreSql;
 using RepoDb.IntegrationTests.Setup;
 using RepoDb.PostgreSql.BulkOperations.IntegrationTests.Models;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
 {
@@ -62,6 +63,37 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => t1.Id == t2.Id, false);
                 Assert.AreEqual(entities.Count(), assertCount);
             }
+        }
+        
+        [TestMethod]
+        public void TestBinaryBulkUpdateTableNameWithSchema()
+        {
+            using var connection = GetConnection();
+            
+            // Prepare
+            var createdEntities = Helper.CreateBulkOperationLightIdentityTables(10, true);
+            var tableName = "public.BulkOperationIdentityTable";
+            
+            // Act
+            connection.BinaryBulkInsert(tableName,
+                entities: createdEntities,
+                identityBehavior: BulkImportIdentityBehavior.KeepIdentity);
+
+            // Prepare
+            var updatedEntities = Helper.UpdateBulkOperationLightIdentityTables(createdEntities);
+
+            // Act
+            var result = connection.BinaryBulkUpdate(tableName, updatedEntities);
+
+            // Assert
+            Assert.AreEqual(updatedEntities.Count, result);
+
+            // Assert
+            var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
+            Assert.AreEqual(10, queryResult.Count);
+            
+            var assertCount = Helper.AssertEntitiesEquality(updatedEntities, queryResult, (t1, t2) => t1.Id == t2.Id, false);
+            Assert.AreEqual(expected: updatedEntities.Count, assertCount);
         }
 
         [TestMethod]
@@ -1693,6 +1725,37 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var assertCount = Helper.AssertEntitiesEquality(entities, queryResult, (t1, t2) => t1.Id == t2.Id, false);
                 Assert.AreEqual(entities.Count(), assertCount);
             }
+        }
+        
+        [TestMethod]
+        public async Task TestBinaryBulkUpdateAsyncTableNameWithSchema()
+        {
+            await using var connection = GetConnection();
+            
+            // Prepare
+            var createdEntities = Helper.CreateBulkOperationLightIdentityTables(10, true);
+            var tableName = "public.BulkOperationIdentityTable";
+            
+            // Act
+            await connection.BinaryBulkInsertAsync(tableName,
+                entities: createdEntities,
+                identityBehavior: BulkImportIdentityBehavior.KeepIdentity);
+
+            // Prepare
+            var updatedEntities = Helper.UpdateBulkOperationLightIdentityTables(createdEntities);
+
+            // Act
+            var result = await connection.BinaryBulkUpdateAsync(tableName, updatedEntities);
+
+            // Assert
+            Assert.AreEqual(updatedEntities.Count, result);
+
+            // Assert
+            var queryResult = connection.QueryAll<BulkOperationLightIdentityTable>(tableName).ToList();
+            Assert.AreEqual(10, queryResult.Count);
+            
+            var assertCount = Helper.AssertEntitiesEquality(updatedEntities, queryResult, (t1, t2) => t1.Id == t2.Id, false);
+            Assert.AreEqual(expected: updatedEntities.Count, assertCount);
         }
 
         [TestMethod]

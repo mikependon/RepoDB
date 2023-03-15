@@ -4,6 +4,7 @@ using RepoDb.Enumerations.PostgreSql;
 using RepoDb.IntegrationTests.Setup;
 using RepoDb.PostgreSql.BulkOperations.IntegrationTests.Models;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
 {
@@ -57,6 +58,31 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var countResult = connection.CountAll(tableName);
                 Assert.AreEqual(0, countResult);
             }
+        }
+        
+        [TestMethod]
+        public void TestBinaryBulkDeleteTableNameWithSchema()
+        {
+            using var connection = GetConnection();
+            
+            // Prepare
+            var entities = Helper.CreateBulkOperationLightIdentityTables(10, true);
+            var tableName = "public.BulkOperationIdentityTable";
+            
+            // Act
+            connection.BinaryBulkInsert(tableName,
+                entities: entities,
+                identityBehavior: BulkImportIdentityBehavior.KeepIdentity);
+
+            // Act
+            var result = connection.BinaryBulkDelete(tableName, entities);
+
+            // Assert
+            Assert.AreEqual(entities.Count, result);
+
+            // Assert
+            var countResult = connection.CountAll(tableName);
+            Assert.AreEqual(0, countResult);
         }
 
         [TestMethod]
@@ -1243,6 +1269,31 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests.Operations
                 var countResult = connection.CountAll(tableName);
                 Assert.AreEqual(0, countResult);
             }
+        }
+        
+        [TestMethod]
+        public async Task TestBinaryBulkDeleteAsyncTableNameWithSchema()
+        {
+            await using var connection = GetConnection();
+            
+            // Prepare
+            var entities = Helper.CreateBulkOperationLightIdentityTables(10, true);
+            var tableName = "public.BulkOperationIdentityTable";
+            
+            // Act
+            await connection.BinaryBulkInsertAsync(tableName,
+                entities: entities,
+                identityBehavior: BulkImportIdentityBehavior.KeepIdentity);
+
+            // Act
+            var result = await connection.BinaryBulkDeleteAsync(tableName, entities);
+
+            // Assert
+            Assert.AreEqual(entities.Count, result);
+
+            // Assert
+            var countResult = await connection.CountAllAsync(tableName);
+            Assert.AreEqual(0, countResult);
         }
 
         [TestMethod]
