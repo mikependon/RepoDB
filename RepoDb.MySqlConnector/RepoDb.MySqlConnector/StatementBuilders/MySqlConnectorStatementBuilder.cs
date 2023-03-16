@@ -608,8 +608,8 @@ namespace RepoDb.StatementBuilders
         /// </summary>
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="fields">The list of fields to be queried.</param>
-        /// <param name="page">The page of the batch.</param>
-        /// <param name="rowsPerBatch">The number of rows per batch.</param>
+        /// <param name="skip">The number of rows to skip.</param>
+        /// <param name="take">The number of rows to take.</param>
         /// <param name="orderBy">The list of fields for ordering.</param>
         /// <param name="where">The query expression.</param>
         /// <param name="hints">The table hints to be used.</param>

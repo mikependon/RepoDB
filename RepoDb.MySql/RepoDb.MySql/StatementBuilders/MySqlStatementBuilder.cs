@@ -610,7 +610,7 @@ namespace RepoDb.StatementBuilders
         /// <param name="tableName">The name of the target table.</param>
         /// <param name="fields">The mapping list of <see cref="Field"/> objects to be used.</param>
         /// <param name="skip">The number of rows to skip.</param>
-        /// <param name="take">The number of rows per batch.</param>
+        /// <param name="take">The number of rows to take.</param>
         /// <param name="orderBy">The list of fields for ordering.</param>
         /// <param name="where">The query expression.</param>
         /// <param name="hints">The table hints to be used.</param>

@@ -844,21 +844,21 @@ namespace RepoDb.Extensions
             DbFieldCollection dbFields)
         {
             if (dbFields is null || dbFields.IsEmpty()) return null;
-            
+
             var fieldNameSpan = fieldName.AsSpan();
-            
+
             if (fieldNameSpan.IsEmpty || fieldNameSpan.IsWhiteSpace())
             {
                 return null;
             }
-            
+
             var index = fieldNameSpan.IndexOf("_In_".AsSpan(), StringComparison.OrdinalIgnoreCase);
 
             if (index >= 0)
             {
                 fieldNameSpan = fieldNameSpan.Slice(0, index);
             }
-            
+
             return dbFields.GetByName(fieldNameSpan.ToString());
         }
 
@@ -887,7 +887,7 @@ namespace RepoDb.Extensions
             }
             else
             {
-                return Convert.ChangeType(value, targetType);
+                return (value != DBNull.Value) ? Convert.ChangeType(value, targetType) : Activator.CreateInstance(targetType);
             }
         }
 
