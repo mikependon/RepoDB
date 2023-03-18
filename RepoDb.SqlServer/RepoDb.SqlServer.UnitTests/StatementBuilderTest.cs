@@ -528,11 +528,9 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 primaryField: null,
                 identityField: identityField);
             var expected = $"" +
-                $"INSERT INTO [Table] " +
-                $"( [Field2], [Field3] ) " +
-                $"VALUES " +
-                $"( @Field2, @Field3 ) ; " +
-                $"SELECT CONVERT(INT, SCOPE_IDENTITY()) AS [Result], @__RepoDb_OrderColumn_0 AS [OrderColumn] ;";
+                $"INSERT INTO [Table] ( [Field2], [Field3] ) " +
+                $"OUTPUT CONVERT(INT, [INSERTED].[Field1]) AS [Result] " +
+                $"VALUES ( @Field2, @Field3 ) ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -554,11 +552,9 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 primaryField: null,
                 identityField: identityField);
             var expected = $"" +
-                $"INSERT INTO [Table] " +
-                $"( [Field2], [Field3] ) " +
-                $"VALUES " +
-                $"( @Field2, @Field3 ) ; " +
-                $"SELECT CONVERT(BIGINT, SCOPE_IDENTITY()) AS [Result], @__RepoDb_OrderColumn_0 AS [OrderColumn] ;";
+                $"INSERT INTO [Table] ( [Field2], [Field3] ) " +
+                $"OUTPUT CONVERT(BIGINT, [INSERTED].[Field1]) AS [Result] " +
+                $"VALUES ( @Field2, @Field3 ) ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -571,7 +567,6 @@ namespace RepoDb.SqlServer.Tests.UnitTests
             var statementBuilder = StatementBuilderMapper.Get<SqlConnection>();
             var tableName = "Table";
             var fields = Field.From(new[] { "Field1", "Field2", "Field3" });
-            var primaryField = new DbField("Field1", true, false, false, typeof(int), null, null, null, null);
             var identityField = new DbField("Field2", false, true, false, typeof(int), null, null, null, null);
 
             // Act
@@ -581,11 +576,9 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 primaryField: null,
                 identityField: identityField);
             var expected = $"" +
-                $"INSERT INTO [Table] " +
-                $"( [Field1], [Field3] ) " +
-                $"VALUES " +
-                $"( @Field1, @Field3 ) ; " +
-                $"SELECT CONVERT(INT, SCOPE_IDENTITY()) AS [Result], @__RepoDb_OrderColumn_0 AS [OrderColumn] ;";
+                $"INSERT INTO [Table] ( [Field1], [Field3] ) " +
+                $"OUTPUT CONVERT(INT, [INSERTED].[Field2]) AS [Result] " +
+                $"VALUES ( @Field1, @Field3 ) ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -608,11 +601,9 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 primaryField: null,
                 identityField: identityField);
             var expected = $"" +
-                $"INSERT INTO [Table] " +
-                $"( [Field1], [Field3] ) " +
-                $"VALUES " +
-                $"( @Field1, @Field3 ) ; " +
-                $"SELECT CONVERT(BIGINT, SCOPE_IDENTITY()) AS [Result], @__RepoDb_OrderColumn_0 AS [OrderColumn] ;";
+                $"INSERT INTO [Table] ( [Field1], [Field3] ) " +
+                $"OUTPUT CONVERT(BIGINT, [INSERTED].[Field2]) AS [Result] " +
+                $"VALUES ( @Field1, @Field3 ) ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -634,21 +625,9 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 primaryField: null,
                 identityField: identityField);
             var expected = $"" +
-                $"INSERT INTO [Table] " +
-                $"( [Field2], [Field3] ) " +
-                $"VALUES " +
-                $"( @Field2, @Field3 ) ; " +
-                $"SELECT CONVERT(INT, SCOPE_IDENTITY()) AS [Result], @__RepoDb_OrderColumn_0 AS [OrderColumn] ; " +
-                $"INSERT INTO [Table] " +
-                $"( [Field2], [Field3] ) " +
-                $"VALUES " +
-                $"( @Field2_1, @Field3_1 ) ; " +
-                $"SELECT CONVERT(INT, SCOPE_IDENTITY()) AS [Result], @__RepoDb_OrderColumn_1 AS [OrderColumn] ; " +
-                $"INSERT INTO [Table] " +
-                $"( [Field2], [Field3] ) " +
-                $"VALUES " +
-                $"( @Field2_2, @Field3_2 ) ; " +
-                $"SELECT CONVERT(INT, SCOPE_IDENTITY()) AS [Result], @__RepoDb_OrderColumn_2 AS [OrderColumn] ;";
+                $"INSERT INTO [Table] ( [Field2], [Field3] ) " +
+                $"OUTPUT CONVERT(INT, [INSERTED].[Field1]) AS [Result] " +
+                $"VALUES ( @Field2, @Field3 ) , ( @Field2_1, @Field3_1 ) , ( @Field2_2, @Field3_2 ) ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -671,11 +650,9 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 identityField: identityField,
                 hints: SqlServerTableHints.TabLock);
             var expected = $"" +
-                $"INSERT INTO [Table] WITH (TABLOCK) " +
-                $"( [Field2], [Field3] ) " +
-                $"VALUES " +
-                $"( @Field2, @Field3 ) ; " +
-                $"SELECT CONVERT(INT, SCOPE_IDENTITY()) AS [Result], @__RepoDb_OrderColumn_0 AS [OrderColumn] ;";
+                $"INSERT INTO [Table] WITH (TABLOCK) ( [Field2], [Field3] ) " +
+                $"OUTPUT CONVERT(INT, [INSERTED].[Field1]) AS [Result] " +
+                $"VALUES ( @Field2, @Field3 ) ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -698,21 +675,9 @@ namespace RepoDb.SqlServer.Tests.UnitTests
                 identityField: identityField,
                 hints: SqlServerTableHints.TabLock);
             var expected = $"" +
-                $"INSERT INTO [Table] WITH (TABLOCK) " +
-                $"( [Field2], [Field3] ) " +
-                $"VALUES " +
-                $"( @Field2, @Field3 ) ; " +
-                $"SELECT CONVERT(INT, SCOPE_IDENTITY()) AS [Result], @__RepoDb_OrderColumn_0 AS [OrderColumn] ; " +
-                $"INSERT INTO [Table] WITH (TABLOCK) " +
-                $"( [Field2], [Field3] ) " +
-                $"VALUES " +
-                $"( @Field2_1, @Field3_1 ) ; " +
-                $"SELECT CONVERT(INT, SCOPE_IDENTITY()) AS [Result], @__RepoDb_OrderColumn_1 AS [OrderColumn] ; " +
-                $"INSERT INTO [Table] WITH (TABLOCK) " +
-                $"( [Field2], [Field3] ) " +
-                $"VALUES " +
-                $"( @Field2_2, @Field3_2 ) ; " +
-                $"SELECT CONVERT(INT, SCOPE_IDENTITY()) AS [Result], @__RepoDb_OrderColumn_2 AS [OrderColumn] ;";
+                $"INSERT INTO [Table] WITH (TABLOCK) ( [Field2], [Field3] ) " +
+                $"OUTPUT CONVERT(INT, [INSERTED].[Field1]) AS [Result] " +
+                $"VALUES ( @Field2, @Field3 ) , ( @Field2_1, @Field3_1 ) , ( @Field2_2, @Field3_2 ) ;";
 
             // Assert
             Assert.AreEqual(expected, actual);

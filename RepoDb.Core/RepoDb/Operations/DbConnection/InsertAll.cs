@@ -597,18 +597,16 @@ namespace RepoDb
 
                                 // Get the results
                                 var position = 0;
-                                do
+                                while (reader.Read())
                                 {
-                                    if (reader.Read())
-                                    {
-                                        var value = Converter.DbNullToNull(reader.GetValue(0));
-                                        var index = batchItems.Count > 1 && reader.FieldCount > 1 ? reader.GetInt32(1) : position;
-                                        context.KeyPropertySetterFunc.Invoke(batchItems[index], value);
-                                        result++;
-                                    }
+                                    var value = Converter.DbNullToNull(reader.GetValue(0));
+                                    var index = batchItems.Count > 1 && reader.FieldCount > 1 ? reader.GetInt32(1) : position;
+                                    context.KeyPropertySetterFunc.Invoke(batchItems[index], value);
                                     position++;
                                 }
-                                while (reader.NextResult());
+
+                                // Set the result
+                                result += batchItems.Count;
 
                                 // After Execution
                                 Tracer
@@ -841,19 +839,16 @@ namespace RepoDb
 
                                 // Get the results
                                 var position = 0;
-                                do
+                                while (await reader.ReadAsync(cancellationToken))
                                 {
-                                    if (await reader.ReadAsync(cancellationToken))
-                                    {
-                                        // No need to use async on this level (await reader.GetFieldValueAsync<object>(0, cancellationToken))
-                                        var value = Converter.DbNullToNull(reader.GetValue(0));
-                                        var index = batchItems.Count > 1 && reader.FieldCount > 1 ? reader.GetInt32(1) : position;
-                                        context.KeyPropertySetterFunc.Invoke(batchItems[index], value);
-                                        result++;
-                                    }
+                                    var value = Converter.DbNullToNull(reader.GetValue(0));
+                                    var index = batchItems.Count > 1 && reader.FieldCount > 1 ? reader.GetInt32(1) : position;
+                                    context.KeyPropertySetterFunc.Invoke(batchItems[index], value);
                                     position++;
                                 }
-                                while (await reader.NextResultAsync(cancellationToken));
+
+                                // Set the result
+                                result += batchItems.Count;
 
                                 // After Execution
                                 await Tracer

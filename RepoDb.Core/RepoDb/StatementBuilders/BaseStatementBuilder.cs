@@ -466,25 +466,33 @@ namespace RepoDb.StatementBuilders
             // Build the query
             builder.Clear();
 
+            // Compose
+            builder.Insert()
+                .Into()
+                .TableNameFrom(tableName, DbSetting)
+                .HintsFrom(hints)
+                .OpenParen()
+                .FieldsFrom(insertableFields, DbSetting)
+                .CloseParen()
+                .Values();
+
             // Iterate the indexes
             for (var index = 0; index < batchSize; index++)
             {
-                builder.Insert()
-                    .Into()
-                    .TableNameFrom(tableName, DbSetting)
-                    .HintsFrom(hints)
-                    .OpenParen()
-                    .FieldsFrom(insertableFields, DbSetting)
-                    .CloseParen()
-                    .Values()
+                builder
                     .OpenParen()
                     .ParametersFrom(insertableFields, index, DbSetting)
-                    .CloseParen()
-                    .End();
+                    .CloseParen();
+
+                if (index < batchSize - 1)
+                {
+                    builder
+                        .WriteText(",");
+                }
             }
 
             // Return the query
-            return builder.GetString();
+            return builder.End().GetString();
         }
 
         #endregion
