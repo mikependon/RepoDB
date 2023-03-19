@@ -573,7 +573,7 @@ namespace RepoDb.StatementBuilders
                         .WriteText(string.Concat("OUTPUT INSERTED.", keyColumn.Name.AsField(DbSetting)))
                             .As("[Result],")
                         .WriteText($"{DbSetting.ParameterPrefix}__RepoDb_OrderColumn_{index}")
-                            .As("[OrderColumn]");
+                            .As("[__RepoDb_OrderColumn]");
                 }
 
                 // End the builder
