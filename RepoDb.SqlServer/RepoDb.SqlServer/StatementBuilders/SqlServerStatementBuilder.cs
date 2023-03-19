@@ -286,8 +286,7 @@ namespace RepoDb.StatementBuilders
                         string.Concat("[INSERTED].", keyColumn.Name.AsQuoted(DbSetting)) :
                             string.Concat("CONVERT(", databaseType, ", [INSERTED].", keyColumn.Name.AsQuoted(DbSetting), ")");
                 var result = string.Concat("OUTPUT ", returnValue, $" AS [Result] ");
-                //$", {DbSetting.ParameterPrefix}__RepoDb_OrderColumn_{0} AS [OrderColumn] ");
-                commandText = commandText.Insert(commandText.IndexOf("VALUES"), result);
+                commandText = commandText.Insert(commandText.IndexOf("SELECT"), result);
             }
 
             // Return the query

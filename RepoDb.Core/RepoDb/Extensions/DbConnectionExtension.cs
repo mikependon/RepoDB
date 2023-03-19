@@ -2250,15 +2250,12 @@ namespace RepoDb
 
         #region Order Columns
 
-        // TODO: Remove this
-        
         /// <summary>
         ///
         /// </summary>
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="command"></param>
         /// <param name="entities"></param>
-        [Obsolete("Can be removed during the fixes to #1143.")]
         private static void AddOrderColumnParameters<TEntity>(DbCommand command,
             IEnumerable<TEntity> entities)
             where TEntity : class

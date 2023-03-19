@@ -5,6 +5,7 @@ using System.Linq;
 using System;
 using RepoDb.Exceptions;
 using RepoDb.Enumerations;
+using System.Reflection;
 
 namespace RepoDb.StatementBuilders
 {
@@ -467,13 +468,18 @@ namespace RepoDb.StatementBuilders
             builder.Clear();
 
             // Compose
-            builder.Insert()
+            builder
+                .Insert()
                 .Into()
                 .TableNameFrom(tableName, DbSetting)
                 .HintsFrom(hints)
                 .OpenParen()
                 .FieldsFrom(insertableFields, DbSetting)
                 .CloseParen()
+                .Select()
+                .FieldsFrom(insertableFields, DbSetting)
+                .From()
+                .OpenParen()
                 .Values();
 
             // Iterate the indexes
@@ -482,6 +488,9 @@ namespace RepoDb.StatementBuilders
                 builder
                     .OpenParen()
                     .ParametersFrom(insertableFields, index, DbSetting)
+                    .WriteText(
+                        string.Concat(", ",
+                            $"{DbSetting.ParameterPrefix}__RepoDb_OrderColumn_{index}"))
                     .CloseParen();
 
                 if (index < batchSize - 1)
@@ -491,8 +500,20 @@ namespace RepoDb.StatementBuilders
                 }
             }
 
+            // Close
+            builder
+                .CloseParen()
+                .As("T")
+                .OpenParen()
+                .FieldsFrom(insertableFields, DbSetting)
+                .WriteText(string.Concat(", ", "__RepoDb_OrderColumn".AsQuoted(DbSetting)))
+                .CloseParen()
+                .OrderBy()
+                .WriteText("__RepoDb_OrderColumn".AsQuoted(DbSetting))
+                .End();
+
             // Return the query
-            return builder.End().GetString();
+            return builder.GetString();
         }
 
         #endregion
