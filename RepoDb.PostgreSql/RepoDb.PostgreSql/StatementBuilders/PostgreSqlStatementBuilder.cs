@@ -223,41 +223,128 @@ namespace RepoDb.StatementBuilders
             DbField identityField = null,
             string hints = null)
         {
-            // Call the base
-            var commandText = base.CreateInsertAll(tableName,
-                fields,
-                batchSize,
-                primaryField,
-                identityField,
-                hints);
+            #region Old
+
+            // PGSQL is failing if we are using sub-table expression.
+            // See: https://github.com/mikependon/RepoDB/issues/1143
+
+            //// Call the base
+            //var commandText = base.CreateInsertAll(tableName,
+            //    fields,
+            //    batchSize,
+            //    primaryField,
+            //    identityField,
+            //    hints);
+
+            //// Variables needed
+            //var keyColumn = GetReturnKeyColumnAsDbField(primaryField, identityField);
+
+            //// Set the return value
+            //if (keyColumn != null)
+            //{
+            //    var dbType = new ClientTypeToDbTypeResolver().Resolve(keyColumn.Type);
+            //    var databaseType = (dbType != null) ? new DbTypeToPostgreSqlStringNameResolver().Resolve(dbType.Value) : null;
+            //    var returnValue = keyColumn == null ? "NULL" :
+            //        string.IsNullOrWhiteSpace(databaseType) ?
+            //            keyColumn.Name.AsQuoted(DbSetting) :
+            //                string.Concat("CAST(", keyColumn.Name.AsQuoted(DbSetting), " AS ", databaseType, ")");
+            //    var result = string.Concat("RETURNING ", returnValue, $" AS ", "Result".AsQuoted(DbSetting), " ");
+            //    commandText = commandText.Insert(commandText.Length - 1, result);
+            //}
+
+            //// Return the query
+            //return commandText;
+
+            #endregion
+
+            // Ensure with guards
+            GuardTableName(tableName);
+            GuardHints(hints);
+            GuardPrimary(primaryField);
+            GuardIdentity(identityField);
+
+            // Validate the multiple statement execution
+            ValidateMultipleStatementExecution(batchSize);
+
+            // Verify the fields
+            if (fields?.Any() != true)
+            {
+                throw new EmptyException("The list of fields cannot be null or empty.");
+            }
+
+            // Primary Key
+            if (primaryField != null &&
+                primaryField.HasDefaultValue == false &&
+                !string.Equals(primaryField.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase))
+            {
+                var isPresent = fields
+                    .FirstOrDefault(f =>
+                        string.Equals(f.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase)) != null;
+
+                if (isPresent == false)
+                {
+                    throw new PrimaryFieldNotFoundException($"As the primary field '{primaryField.Name}' is not an identity nor has a default value, it must be present on the insert operation.");
+                }
+            }
+
+            // Insertable fields
+            var insertableFields = fields
+                .Where(f =>
+                    !string.Equals(f.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase));
+
+            // Initialize the builder
+            var builder = new QueryBuilder();
+
+            // Build the query
+            builder.Clear();
+
+            // Compose
+            builder
+                .Insert()
+                .Into()
+                .TableNameFrom(tableName, DbSetting)
+                .HintsFrom(hints)
+                .OpenParen()
+                .FieldsFrom(insertableFields, DbSetting)
+                .CloseParen()
+                .Values();
+
+            // Iterate the indexes
+            for (var index = 0; index < batchSize; index++)
+            {
+                builder
+                    .OpenParen()
+                    .ParametersFrom(insertableFields, index, DbSetting)
+                    .CloseParen();
+
+                if (index < batchSize - 1)
+                {
+                    builder
+                        .WriteText(",");
+                }
+            }
 
             // Variables needed
             var keyColumn = GetReturnKeyColumnAsDbField(primaryField, identityField);
-            var returnValue = "NULL";
-
-            // Key Column
-            if (keyColumn != null)
-            {
-                var databaseType = GetDatabaseType(keyColumn);
-                returnValue = string.IsNullOrWhiteSpace(databaseType) ?
-                    keyColumn.Name.AsQuoted(DbSetting) : $"CAST({keyColumn.Name.AsQuoted(DbSetting)} AS {databaseType})";
-            }
 
             // Set the return value
-            var commandTexts = new List<string>();
-            var splitted = commandText.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-
-            for (var index = 0; index < splitted.Length; index++)
+            if (keyColumn != null)
             {
-                var line = splitted[index].Trim();
-                commandTexts.Add(string.Concat(line, " RETURNING ", returnValue, " AS ", "Result".AsQuoted(DbSetting), ", ",
-                    $"{DbSetting.ParameterPrefix}__RepoDb_OrderColumn_{index} AS ", "OrderColumn".AsQuoted(DbSetting), " ;"));
+                var dbType = new ClientTypeToDbTypeResolver().Resolve(keyColumn.Type);
+                var databaseType = (dbType != null) ? new DbTypeToPostgreSqlStringNameResolver().Resolve(dbType.Value) : null;
+                var returnValue = keyColumn == null ? "NULL" :
+                    string.IsNullOrWhiteSpace(databaseType) ?
+                        keyColumn.Name.AsQuoted(DbSetting) :
+                            string.Concat("CAST(", keyColumn.Name.AsQuoted(DbSetting), " AS ", databaseType, ")");
+                builder
+                    .WriteText(
+                        string.Concat("RETURNING ", returnValue, $" AS ", "Result".AsQuoted(DbSetting)));
             }
 
-            commandText = commandTexts.Join(" ");
-
             // Return the query
-            return commandText;
+            return builder
+                .End()
+                .GetString();
         }
 
         #endregion
