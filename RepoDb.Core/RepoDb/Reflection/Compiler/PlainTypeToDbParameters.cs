@@ -100,9 +100,13 @@ namespace RepoDb.Reflection
                                 valueType.GetDbType() ??
                                 (dbField != null ? new ClientTypeToDbTypeResolver().Resolve(dbField.Type) : null) ??
                                 (DbType?)GlobalConfiguration.Options.EnumDefaultDatabaseType;
-                            var toType = new DbTypeToClientTypeResolver().Resolve(dbType.Value);
-                            valueExpression = ConvertEnumExpressionToTypeExpression(valueExpression, valueType.GetEnumUnderlyingType());
-                        }
+
+                            if (GlobalConfiguration.Options.ConversionType == ConversionType.Automatic)
+                            {
+                                var toType = dbType.HasValue ? new DbTypeToClientTypeResolver().Resolve(dbType.Value) : TypeCache.Get(valueType)?.GetUnderlyingType();
+                                valueExpression = ConvertEnumExpressionToTypeExpression(valueExpression, toType);
+                            }
+                        } 
                         else
                         {
                             dbType = default;
