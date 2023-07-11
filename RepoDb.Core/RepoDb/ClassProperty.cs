@@ -33,6 +33,17 @@ namespace RepoDb
         {
             declaringType = parentType;
             PropertyInfo = property;
+
+            typeMapAttribute = new Lazy<TypeMapAttribute>(() => PropertyInfo.GetCustomAttribute<TypeMapAttribute>(), true);
+            propertyHandlerAttribute = new Lazy<PropertyHandlerAttribute>(() => PropertyInfo.GetCustomAttribute<PropertyHandlerAttribute>(), true);
+            dbType = new Lazy<DbType?>(() => PropertyInfo.GetDbType(), true);
+            propertyValueAttributes = new Lazy<IEnumerable<PropertyValueAttribute>>(() => PropertyInfo.GetPropertyValueAttributes(GetDeclaringType()), true);
+            propertyValueAttribute = new Lazy<PropertyValueAttribute>(() =>
+            {
+                return (PropertyInfo.GetCustomAttribute<DbTypeAttribute>() ?? PropertyInfo.GetCustomAttribute<TypeMapAttribute>()) ??
+                       (GetPropertyValueAttributes()
+                           .LastOrDefault(e => string.Equals(nameof(IDbDataParameter.ParameterName), e.PropertyName, StringComparison.OrdinalIgnoreCase)));
+            }, true);
         }
 
         #region Properties
@@ -136,8 +147,7 @@ namespace RepoDb
         /*
          * GetTypeMapAttribute
          */
-        private bool isTypeMapAttributeWasSet;
-        private TypeMapAttribute typeMapAttribute;
+        private readonly Lazy<TypeMapAttribute> typeMapAttribute;
 
         /// <summary>
         /// Gets the <see cref="TypeMapAttribute"/> if present.
@@ -145,19 +155,13 @@ namespace RepoDb
         /// <returns>The instance of <see cref="TypeMapAttribute"/>.</returns>
         public TypeMapAttribute GetTypeMapAttribute()
         {
-            if (isTypeMapAttributeWasSet)
-            {
-                return typeMapAttribute;
-            }
-            isTypeMapAttributeWasSet = true;
-            return typeMapAttribute = PropertyInfo.GetCustomAttribute<TypeMapAttribute>();
+            return typeMapAttribute.Value;
         }
 
         /*
          * GetDbTypeAttribute
          */
-        private bool isDbTypeAttributeWasSet;
-        private PropertyValueAttribute propertyValueAttribute;
+        private readonly Lazy<PropertyValueAttribute> propertyValueAttribute;
 
         /// <summary>
         /// Gets the <see cref="PropertyValueAttribute"/> if present.
@@ -165,24 +169,13 @@ namespace RepoDb
         /// <returns>The instance of <see cref="PropertyValueAttribute"/>.</returns>
         public PropertyValueAttribute GetDbTypeAttribute()
         {
-            if (isDbTypeAttributeWasSet)
-            {
-                return propertyValueAttribute;
-            }
-            isDbTypeAttributeWasSet = true;
-            return propertyValueAttribute = (PropertyInfo.GetCustomAttribute<DbTypeAttribute>() ??
-                PropertyInfo.GetCustomAttribute<TypeMapAttribute>()) ??
-                (GetPropertyValueAttributes()
-                    .Where(
-                        e => string.Equals(nameof(IDbDataParameter.ParameterName), e.PropertyName, StringComparison.OrdinalIgnoreCase))
-                    .LastOrDefault());
+            return propertyValueAttribute.Value;
         }
 
         /*
          * GetPropertyHandlerAttribute
          */
-        private bool isPropertyHandlerAttributeWasSet;
-        private PropertyHandlerAttribute propertyHandlerAttribute;
+        private readonly Lazy<PropertyHandlerAttribute> propertyHandlerAttribute;
 
         /// <summary>
         /// Gets the <see cref="PropertyHandlerAttribute"/> if present.
@@ -190,12 +183,7 @@ namespace RepoDb
         /// <returns>The instance of <see cref="PropertyHandlerAttribute"/>.</returns>
         public PropertyHandlerAttribute GetPropertyHandlerAttribute()
         {
-            if (isPropertyHandlerAttributeWasSet)
-            {
-                return propertyHandlerAttribute;
-            }
-            isPropertyHandlerAttributeWasSet = true;
-            return propertyHandlerAttribute = PropertyInfo.GetCustomAttribute<PropertyHandlerAttribute>();
+            return propertyHandlerAttribute.Value;
         }
 
         /*
@@ -238,8 +226,7 @@ namespace RepoDb
         /*
          * GetDbType
          */
-        private bool isDbTypeWasSet;
-        private DbType? dbType;
+        private readonly Lazy<DbType?> dbType;
 
         /// <summary>
         /// Gets the mapped <see cref="DbType"/> for the current property.
@@ -247,19 +234,12 @@ namespace RepoDb
         /// <returns>The mapped <see cref="DbType"/> value.</returns>
         public DbType? GetDbType()
         {
-            if (isDbTypeWasSet == true)
-            {
-                return dbType;
-            }
-            isDbTypeWasSet = true;
-            return dbType = PropertyInfo.GetDbType();
+            return dbType.Value;
         }
 
         /*
          * GetPropertyHandler
          */
-        private bool propertyHandlerWasSet;
-        private object propertyHandler;
 
         /// <summary>
         /// Gets the mapped property handler object for the current property.
@@ -275,13 +255,7 @@ namespace RepoDb
         /// <returns>The mapped property handler object.</returns>
         public TPropertyHandler GetPropertyHandler<TPropertyHandler>()
         {
-            if (propertyHandlerWasSet == true)
-            {
-                return Converter.ToType<TPropertyHandler>(propertyHandler);
-            }
-            propertyHandlerWasSet = true;
-            propertyHandler = PropertyHandlerCache.Get<TPropertyHandler>(GetDeclaringType(), PropertyInfo);
-            return Converter.ToType<TPropertyHandler>(propertyHandler);
+            return Converter.ToType<TPropertyHandler>(PropertyHandlerCache.Get<TPropertyHandler>(GetDeclaringType(), PropertyInfo));
         }
 
         /*
@@ -300,8 +274,7 @@ namespace RepoDb
         /*
          * PropertyHandlerAttributes
          */
-        private bool isPropertyValueAttributesWasSet;
-        private IEnumerable<PropertyValueAttribute> propertyValueAttributes;
+        private readonly Lazy<IEnumerable<PropertyValueAttribute>> propertyValueAttributes;
 
         /// <summary>
         /// Gets the list of mapped <see cref="PropertyValueAttribute"/> object for the current property.
@@ -309,12 +282,7 @@ namespace RepoDb
         /// <returns>The list of mapped <see cref="PropertyValueAttribute"/> object.</returns>
         public IEnumerable<PropertyValueAttribute> GetPropertyValueAttributes()
         {
-            if (isPropertyValueAttributesWasSet == true)
-            {
-                return propertyValueAttributes;
-            }
-            isPropertyValueAttributesWasSet = true;
-            return propertyValueAttributes = PropertyInfo.GetPropertyValueAttributes(GetDeclaringType());
+            return propertyValueAttributes.Value;
         }
 
         #endregion
