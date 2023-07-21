@@ -732,8 +732,12 @@ namespace RepoDb.PostgreSql.BulkOperations
             public static Func<TEntity, object[], TResult> GetFunc(string methodName,
                 Type[] types)
             {
-                var key = methodName.GetHashCode() + types?.Sum(e => e.GetHashCode());
-                if (cache.TryGetValue(key.Value, out var func) == false)
+                var key = HashCode.Combine(methodName.GetHashCode());
+                for (int i = 0; i < types.Length; i++)
+                {
+                    key = HashCode.Combine(key, types[i].GetHashCode());
+                }
+                if (cache.TryGetValue(key, out var func) == false)
                 {
                     var typeOfEntity = typeof(TEntity);
                     var method = typeOfEntity.GetMethod(methodName, types);
@@ -756,7 +760,7 @@ namespace RepoDb.PostgreSql.BulkOperations
                             .Compile();
                     }
 
-                    cache.TryAdd(key.Value, func);
+                    cache.TryAdd(key, func);
                 }
                 return func;
             }
@@ -796,8 +800,12 @@ namespace RepoDb.PostgreSql.BulkOperations
             public static Action<TEntity, object[]> GetFunc(string methodName,
                 Type[] types)
             {
-                var key = methodName.GetHashCode() + types?.Sum(e => e.GetHashCode());
-                if (cache.TryGetValue(key.Value, out var func) == false)
+                var key = HashCode.Combine(methodName.GetHashCode());
+                for (int i = 0; i < types.Length; i++)
+                {
+                    key = HashCode.Combine(key, types[i].GetHashCode());
+                }
+                if (cache.TryGetValue(key, out var func) == false)
                 {
                     var typeOfEntity = typeof(TEntity);
                     var method = typeOfEntity.GetMethod(methodName, types);
@@ -820,7 +828,7 @@ namespace RepoDb.PostgreSql.BulkOperations
                             .Compile();
                     }
 
-                    cache.TryAdd(key.Value, func);
+                    cache.TryAdd(key, func);
                 }
                 return func;
             }

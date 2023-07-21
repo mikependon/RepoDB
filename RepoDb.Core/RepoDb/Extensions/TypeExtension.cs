@@ -241,7 +241,7 @@ namespace RepoDb.Extensions
         /// <returns>The generated hashcode.</returns>
         public static int GenerateHashCode(Type entityType,
             PropertyInfo propertyInfo) =>
-            entityType.GetHashCode() + propertyInfo.GenerateCustomizedHashCode(entityType);
+            HashCode.Combine(entityType.GetHashCode(), propertyInfo.GenerateCustomizedHashCode(entityType));
 
         /// <summary>
         /// A helper method to return the instance of <see cref="PropertyInfo"/> object based on name.
