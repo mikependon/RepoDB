@@ -508,6 +508,13 @@ namespace RepoDb.Reflection
         /// 
         /// </summary>
         /// <returns></returns>
+        internal static MethodInfo GetDateOnlyFromDateTimeStaticMethod() =>
+            StaticType.DateOnly.GetMethod("FromDateTime");
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <returns></returns>
         internal static MethodInfo GetEnumParseMethod() =>
             StaticType.Enum.GetMethod("Parse", new[] { StaticType.Type, StaticType.String, StaticType.Boolean });
 
@@ -593,6 +600,14 @@ namespace RepoDb.Reflection
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
+        internal static Expression ConvertExpressionToDateTimeToDateOnlyExpression(Expression expression) =>
+            ConvertExpressionToNullableGetValueOrDefaultExpression(ConvertExpressionToDateOnlyFromDateTimeExpression(expression));
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns></returns>
         internal static Expression ConvertExpressionToTimeSpanTicksExpression(Expression expression) =>
             Expression.Call(expression, GetTimeSpanTicksPropertyGetMethod());
 
@@ -603,6 +618,14 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static Expression ConvertExpressionToDateTimeTimeOfDayExpression(Expression expression) =>
             Expression.Call(expression, GetDateTimeTimeOfDayPropertyGetMethod());
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        internal static Expression ConvertExpressionToDateOnlyFromDateTimeExpression(Expression expression) =>
+            Expression.Call(null, GetDateOnlyFromDateTimeStaticMethod(), expression);
 
         /// <summary>
         ///
@@ -877,6 +900,12 @@ namespace RepoDb.Reflection
             else if (fromType == StaticType.DateTime && toType == StaticType.TimeSpan)
             {
                 expression = ConvertExpressionToDateTimeToTimeSpanExpression(expression);
+            }
+
+            // DateTime to DateOnly
+            else if (fromType == StaticType.DateTime && toType == StaticType.DateOnly)
+            {
+                expression = ConvertExpressionToDateTimeToDateOnlyExpression(expression);
             }
 
             // Others
@@ -1215,6 +1244,7 @@ namespace RepoDb.Reflection
             var targetTypeUnderlyingType = TypeCache.Get(targetType).GetUnderlyingType();
             var isAutomaticConversion = GlobalConfiguration.Options.ConversionType == ConversionType.Automatic ||
                 targetTypeUnderlyingType == StaticType.TimeSpan ||
+                targetTypeUnderlyingType == StaticType.DateOnly ||
                 /* SQLite: Guid/String (Vice-Versa) : Enforce automatic conversion for the Primary/Identity fields */
                 readerField.DbField?.IsPrimary == true || readerField.DbField?.IsIdentity == true;
 
