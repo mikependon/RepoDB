@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -503,14 +503,14 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static MethodInfo GetDateTimeTimeOfDayPropertyGetMethod() =>
             GetDateTimeTimeOfDayProperty().GetMethod;
-
+#if NET6_0_OR_GREATER
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         internal static MethodInfo GetDateOnlyFromDateTimeStaticMethod() =>
             StaticType.DateOnly.GetMethod("FromDateTime");
-
+#endif
         /// <summary>
         ///
         /// </summary>
@@ -519,14 +519,14 @@ namespace RepoDb.Reflection
             StaticType.Enum.GetMethod("Parse", new[] { StaticType.Type, StaticType.String, StaticType.Boolean });
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         internal static MethodInfo GetEnumGetNameMethod() =>
             StaticType.Enum.GetMethod("GetName", new[] { StaticType.Type, StaticType.Object });
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         internal static MethodInfo GetEnumIsDefinedMethod() =>
@@ -594,7 +594,7 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static Expression ConvertExpressionToDateTimeToTimeSpanExpression(Expression expression) =>
             ConvertExpressionToNullableGetValueOrDefaultExpression(ConvertExpressionToDateTimeTimeOfDayExpression(expression));
-
+#if NET6_0_OR_GREATER
         /// <summary>
         ///
         /// </summary>
@@ -602,7 +602,7 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static Expression ConvertExpressionToDateTimeToDateOnlyExpression(Expression expression) =>
             ConvertExpressionToNullableGetValueOrDefaultExpression(ConvertExpressionToDateOnlyFromDateTimeExpression(expression));
-
+#endif
         /// <summary>
         ///
         /// </summary>
@@ -618,7 +618,7 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static Expression ConvertExpressionToDateTimeTimeOfDayExpression(Expression expression) =>
             Expression.Call(expression, GetDateTimeTimeOfDayPropertyGetMethod());
-
+#if NET6_0_OR_GREATER
         /// <summary>
         ///
         /// </summary>
@@ -626,7 +626,7 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static Expression ConvertExpressionToDateOnlyFromDateTimeExpression(Expression expression) =>
             Expression.Call(null, GetDateOnlyFromDateTimeStaticMethod(), expression);
-
+#endif
         /// <summary>
         ///
         /// </summary>
@@ -901,13 +901,13 @@ namespace RepoDb.Reflection
             {
                 expression = ConvertExpressionToDateTimeToTimeSpanExpression(expression);
             }
-
+#if NET6_0_OR_GREATER
             // DateTime to DateOnly
             else if (fromType == StaticType.DateTime && toType == StaticType.DateOnly)
             {
                 expression = ConvertExpressionToDateTimeToDateOnlyExpression(expression);
             }
-
+#endif
             // Others
             else
             {
@@ -1084,12 +1084,12 @@ namespace RepoDb.Reflection
             return entityOrEntitiesExpression;
         }
 
-        #endregion
+#endregion
 
         #region Common
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="expression"></param>
         /// <param name="enumType"></param>
@@ -1109,7 +1109,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="expression"></param>
         /// <param name="enumType"></param>
@@ -1126,7 +1126,7 @@ namespace RepoDb.Reflection
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="expression"></param>
         /// <param name="enumType"></param>
@@ -1244,7 +1244,9 @@ namespace RepoDb.Reflection
             var targetTypeUnderlyingType = TypeCache.Get(targetType).GetUnderlyingType();
             var isAutomaticConversion = GlobalConfiguration.Options.ConversionType == ConversionType.Automatic ||
                 targetTypeUnderlyingType == StaticType.TimeSpan ||
+#if NET6_0_OR_GREATER
                 targetTypeUnderlyingType == StaticType.DateOnly ||
+#endif
                 /* SQLite: Guid/String (Vice-Versa) : Enforce automatic conversion for the Primary/Identity fields */
                 readerField.DbField?.IsPrimary == true || readerField.DbField?.IsIdentity == true;
 
