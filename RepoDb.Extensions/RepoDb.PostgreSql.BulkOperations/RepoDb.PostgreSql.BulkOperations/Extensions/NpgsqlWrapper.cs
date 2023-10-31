@@ -334,7 +334,7 @@ namespace RepoDb
         {
             // Variables
             var result = default(TResult);
-            var hasTransaction = transaction != null;
+            var hasTransaction = (transaction == null || Transaction.Current != null);
 
             // Open
             await connection.EnsureOpenAsync(cancellationToken);
