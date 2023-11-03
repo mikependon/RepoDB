@@ -1,9 +1,12 @@
-﻿using System;
-using RepoDb.Exceptions;
+using System;
 using System.Collections.Concurrent;
 using System.Data;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+
+using RepoDb.Exceptions;
+using RepoDb.Interfaces;
 
 namespace RepoDb
 {
@@ -13,6 +16,7 @@ namespace RepoDb
     public static class DbFieldCache
     {
         private static readonly ConcurrentDictionary<long, DbFieldCollection> cache = new();
+        private static readonly ConcurrentDictionary<IDbHelper, SemaphoreSlim> semaphores = new();
 
         #region Helpers
 
@@ -101,11 +105,31 @@ namespace RepoDb
             // Try get the value
             if (cache.TryGetValue(key, out var result) == false)
             {
-                // Get from DB
-                result = new DbFieldCollection(connection
-                    .GetDbHelper()
-                    .GetFields(connection, tableName, transaction),
-                    connection.GetDbSetting());
+                var dbHelper = connection.GetDbHelper();
+                var semaphore = semaphores.GetOrAdd(dbHelper, _ => new SemaphoreSlim(1, 1));
+                Debug.WriteLine($"Getting fields sync for '{tableName}' from {connection.GetType()}");
+                semaphore.Wait();
+                Debug.WriteLine($"Lock acquired to get fields sync for '{tableName}' from {connection.GetType()}");
+                try
+                {
+                    if (cache.TryGetValue(key, out result) == false)
+                    {
+                        // Get from DB
+                        result = new DbFieldCollection(
+                            dbHelper.GetFields(connection, tableName, transaction),
+                            connection.GetDbSetting());
+                        Debug.WriteLine($"Fields for '{tableName}' from {connection.GetType()} retrieved sync");
+                    }
+                    else
+                    {
+                        Debug.WriteLine($"Fields for '{tableName}' from {connection.GetType()} already there");
+                    }
+                }
+                finally
+                {
+                    semaphore.Release();
+                    Debug.WriteLine($"Lock released to get fields sync for '{tableName}' from {connection.GetType()}");
+                }
 
                 // Validate
                 if (enableValidation)
@@ -191,10 +215,31 @@ namespace RepoDb
             if (cache.TryGetValue(key, out var result) == false)
             {
                 // Get from DB
-                result = new DbFieldCollection(await connection
-                    .GetDbHelper()
-                    .GetFieldsAsync(connection, tableName, transaction, cancellationToken),
-                    connection.GetDbSetting());
+                var dbHelper = connection.GetDbHelper();
+                var semaphore = semaphores.GetOrAdd(dbHelper, _ => new SemaphoreSlim(1, 1));
+                Debug.WriteLine($"Getting fields async for '{tableName}' from {connection.GetType()}");
+                await semaphore.WaitAsync();
+                Debug.WriteLine($"Lock acquired to get fields async for '{tableName}' from {connection.GetType()}");
+                try
+                {
+                    if (cache.TryGetValue(key, out result) == false)
+                    {
+                        result = new DbFieldCollection(
+                            await dbHelper.GetFieldsAsync(connection, tableName, transaction, cancellationToken),
+                            connection.GetDbSetting());
+                        Debug.WriteLine($"Fields for '{tableName}' from {connection.GetType()} retrieved async");
+                    }
+                    else
+                    {
+                        Debug.WriteLine($"Fields for '{tableName}' from {connection.GetType()} already there");
+                    }
+                }
+                finally
+                {
+                    semaphore.Release();
+                    Debug.WriteLine($"Lock released to get fields async for '{tableName}' from {connection.GetType()}");
+                }
+
 
                 // Validate
                 if (enableValidation)
