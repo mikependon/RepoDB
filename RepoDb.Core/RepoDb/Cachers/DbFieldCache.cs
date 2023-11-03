@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using RepoDb.Exceptions;
 using System.Collections.Concurrent;
 using System.Data;
