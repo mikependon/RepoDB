@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 
 using LinqToDB;
-using LinqToDB.Configuration;
 using LinqToDB.Mapping;
 
 namespace DataModels
@@ -28,7 +27,7 @@ namespace DataModels
 			InitMappingSchema();
 		}
 
-		public RepoDbDB(LinqToDBConnectionOptions options)
+		public RepoDbDB(DataOptions options)
 			: base(options)
 		{
 			InitDataContext();
