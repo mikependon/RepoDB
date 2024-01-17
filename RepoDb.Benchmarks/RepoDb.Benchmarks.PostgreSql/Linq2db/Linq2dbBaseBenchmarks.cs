@@ -2,7 +2,7 @@
 using System.Linq;
 using BenchmarkDotNet.Attributes;
 using DataModels;
-using LinqToDB.Configuration;
+using LinqToDB;
 using RepoDb.Benchmarks.PostgreSql.Configurations;
 using RepoDb.Benchmarks.PostgreSql.Setup;
 
@@ -23,10 +23,10 @@ namespace RepoDb.Benchmarks.PostgreSql.Linq2db
         
         protected static RepoDbDB GetDb()
         {
-            var builder = new LinqToDBConnectionOptionsBuilder();
-            builder.UsePostgreSQL(DatabaseHelper.ConnectionString);
+            var options = new DataOptions();
+            options = options.UsePostgreSQL(DatabaseHelper.ConnectionString);
             
-            return new RepoDbDB(builder.Build());
+            return new RepoDbDB(options);
         }
     }
 }
