@@ -5,6 +5,7 @@ using System.Linq;
 using System;
 using RepoDb.Exceptions;
 using RepoDb.Enumerations;
+using System.Reflection;
 
 namespace RepoDb.StatementBuilders
 {
@@ -466,22 +467,50 @@ namespace RepoDb.StatementBuilders
             // Build the query
             builder.Clear();
 
+            // Compose
+            builder
+                .Insert()
+                .Into()
+                .TableNameFrom(tableName, DbSetting)
+                .HintsFrom(hints)
+                .OpenParen()
+                .FieldsFrom(insertableFields, DbSetting)
+                .CloseParen()
+                .Select()
+                .FieldsFrom(insertableFields, DbSetting)
+                .From()
+                .OpenParen()
+                .Values();
+
             // Iterate the indexes
             for (var index = 0; index < batchSize; index++)
             {
-                builder.Insert()
-                    .Into()
-                    .TableNameFrom(tableName, DbSetting)
-                    .HintsFrom(hints)
-                    .OpenParen()
-                    .FieldsFrom(insertableFields, DbSetting)
-                    .CloseParen()
-                    .Values()
+                builder
                     .OpenParen()
                     .ParametersFrom(insertableFields, index, DbSetting)
-                    .CloseParen()
-                    .End();
+                    .WriteText(
+                        string.Concat(", ",
+                            $"{DbSetting.ParameterPrefix}__RepoDb_OrderColumn_{index}"))
+                    .CloseParen();
+
+                if (index < batchSize - 1)
+                {
+                    builder
+                        .WriteText(",");
+                }
             }
+
+            // Close
+            builder
+                .CloseParen()
+                .As("T")
+                .OpenParen()
+                .FieldsFrom(insertableFields, DbSetting)
+                .WriteText(string.Concat(", ", "__RepoDb_OrderColumn".AsQuoted(DbSetting)))
+                .CloseParen()
+                .OrderBy()
+                .WriteText("__RepoDb_OrderColumn".AsQuoted(DbSetting))
+                .End();
 
             // Return the query
             return builder.GetString();

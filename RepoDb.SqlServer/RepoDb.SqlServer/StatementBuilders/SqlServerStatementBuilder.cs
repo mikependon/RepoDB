@@ -280,30 +280,13 @@ namespace RepoDb.StatementBuilders
             if (keyColumn != null)
             {
                 var dbType = new ClientTypeToDbTypeResolver().Resolve(keyColumn.Type);
-                string databaseType = null;
-
-                if (dbType != null)
-                {
-                    databaseType = new DbTypeToSqlServerStringNameResolver().Resolve(dbType.Value);
-                }
-
-                var commandTexts = new List<string>();
-                var splitted = commandText.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-
-                for (var index = 0; index < splitted.Length; index++)
-                {
-                    var line = splitted[index].Trim();
-                    var keyColumnText = (keyColumn == identityField || string.Equals(keyColumn.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase)) ? "SCOPE_IDENTITY()" :
-                        keyColumn.Name.AsParameter(index, DbSetting);
-                    var returnValue = keyColumn != null ?
-                        string.IsNullOrWhiteSpace(databaseType) ?
-                        keyColumnText : string.Concat("CONVERT(", databaseType, ", ", keyColumnText, ")") : "NULL";
-                    var result = string.Concat("SELECT ", returnValue, $" AS [Result]," +
-                        $" {DbSetting.ParameterPrefix}__RepoDb_OrderColumn_{index} AS [OrderColumn] ;");
-                    commandTexts.Add(string.Concat(line, " ; ", result));
-                }
-
-                commandText = commandTexts.Join(" ");
+                var databaseType = (dbType != null) ? new DbTypeToSqlServerStringNameResolver().Resolve(dbType.Value) : null;
+                var returnValue = keyColumn == null ? "NULL" :
+                    string.IsNullOrWhiteSpace(databaseType) ?
+                        string.Concat("[INSERTED].", keyColumn.Name.AsQuoted(DbSetting)) :
+                            string.Concat("CONVERT(", databaseType, ", [INSERTED].", keyColumn.Name.AsQuoted(DbSetting), ")");
+                var result = string.Concat("OUTPUT ", returnValue, $" AS [Result] ");
+                commandText = commandText.Insert(commandText.IndexOf("SELECT"), result);
             }
 
             // Return the query
@@ -590,7 +573,7 @@ namespace RepoDb.StatementBuilders
                         .WriteText(string.Concat("OUTPUT INSERTED.", keyColumn.Name.AsField(DbSetting)))
                             .As("[Result],")
                         .WriteText($"{DbSetting.ParameterPrefix}__RepoDb_OrderColumn_{index}")
-                            .As("[OrderColumn]");
+                            .As("[__RepoDb_OrderColumn]");
                 }
 
                 // End the builder

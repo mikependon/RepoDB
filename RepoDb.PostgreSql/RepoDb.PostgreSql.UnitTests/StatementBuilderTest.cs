@@ -309,9 +309,11 @@ namespace RepoDb.PostgreSql.UnitTests
                 3,
                 null,
                 null);
-            var expected = "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( @Id, @Name, @Address ) RETURNING NULL AS \"Result\", @__RepoDb_OrderColumn_0 AS \"OrderColumn\" ; " +
-                "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( @Id_1, @Name_1, @Address_1 ) RETURNING NULL AS \"Result\", @__RepoDb_OrderColumn_1 AS \"OrderColumn\" ; " +
-                "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( @Id_2, @Name_2, @Address_2 ) RETURNING NULL AS \"Result\", @__RepoDb_OrderColumn_2 AS \"OrderColumn\" ;";
+            var expected = "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) " +
+                "VALUES " +
+                "( @Id, @Name, @Address ) , " +
+                "( @Id_1, @Name_1, @Address_1 ) , " +
+                "( @Id_2, @Name_2, @Address_2 ) ;";
 
             // Assert
             Assert.AreEqual(expected, query);
@@ -329,9 +331,12 @@ namespace RepoDb.PostgreSql.UnitTests
                 3,
                 new DbField("Id", true, false, false, typeof(int), null, null, null, null),
                 null);
-            var expected = "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( @Id, @Name, @Address ) RETURNING CAST(\"Id\" AS INTEGER) AS \"Result\", @__RepoDb_OrderColumn_0 AS \"OrderColumn\" ; " +
-                "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( @Id_1, @Name_1, @Address_1 ) RETURNING CAST(\"Id\" AS INTEGER) AS \"Result\", @__RepoDb_OrderColumn_1 AS \"OrderColumn\" ; " +
-                "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) VALUES ( @Id_2, @Name_2, @Address_2 ) RETURNING CAST(\"Id\" AS INTEGER) AS \"Result\", @__RepoDb_OrderColumn_2 AS \"OrderColumn\" ;";
+            var expected = "INSERT INTO \"Table\" ( \"Id\", \"Name\", \"Address\" ) " +
+                "VALUES " +
+                "( @Id, @Name, @Address ) , " +
+                "( @Id_1, @Name_1, @Address_1 ) , " +
+                "( @Id_2, @Name_2, @Address_2 ) " +
+                "RETURNING CAST(\"Id\" AS INTEGER) AS \"Result\" ;";
 
             // Assert
             Assert.AreEqual(expected, query);
@@ -349,9 +354,12 @@ namespace RepoDb.PostgreSql.UnitTests
                 3,
                 null,
                 new DbField("Id", false, true, false, typeof(int), null, null, null, null));
-            var expected = "INSERT INTO \"Table\" ( \"Name\", \"Address\" ) VALUES ( @Name, @Address ) RETURNING CAST(\"Id\" AS INTEGER) AS \"Result\", @__RepoDb_OrderColumn_0 AS \"OrderColumn\" ; " +
-                "INSERT INTO \"Table\" ( \"Name\", \"Address\" ) VALUES ( @Name_1, @Address_1 ) RETURNING CAST(\"Id\" AS INTEGER) AS \"Result\", @__RepoDb_OrderColumn_1 AS \"OrderColumn\" ; " +
-                "INSERT INTO \"Table\" ( \"Name\", \"Address\" ) VALUES ( @Name_2, @Address_2 ) RETURNING CAST(\"Id\" AS INTEGER) AS \"Result\", @__RepoDb_OrderColumn_2 AS \"OrderColumn\" ;";
+            var expected = "INSERT INTO \"Table\" ( \"Name\", \"Address\" ) " +
+                "VALUES " +
+                "( @Name, @Address ) , " +
+                "( @Name_1, @Address_1 ) , " +
+                "( @Name_2, @Address_2 ) " +
+                "RETURNING CAST(\"Id\" AS INTEGER) AS \"Result\" ;";
 
             // Assert
             Assert.AreEqual(expected, query);
