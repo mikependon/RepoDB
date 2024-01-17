@@ -89,11 +89,28 @@ namespace RepoDb.Reflection
                     var dbType = (DbType?)null;
                     if (valueType.IsEnum)
                     {
-                        dbType = IsPostgreSqlUserDefined(dbField) ? default :
-                            paramProperty.GetDbType() ??
-                            valueType.GetDbType() ??
-                            (dbField != null ? new ClientTypeToDbTypeResolver().Resolve(dbField.Type) : null) ??
-                            (DbType?)GlobalConfiguration.Options.EnumDefaultDatabaseType;
+                        /*
+                         * Note: The other data provider can coerce the Enum into its destination data type in the DB by default,
+                         *       except for PostgreSQL. The code written below is only to address the issue for this specific provider.
+                         */
+
+                        if (!IsPostgreSqlUserDefined(dbField))
+                        {
+                            dbType = paramProperty.GetDbType() ??
+                                valueType.GetDbType() ??
+                                (dbField != null ? new ClientTypeToDbTypeResolver().Resolve(dbField.Type) : null) ??
+                                (DbType?)GlobalConfiguration.Options.EnumDefaultDatabaseType;
+
+                            if (GlobalConfiguration.Options.ConversionType == ConversionType.Automatic)
+                            {
+                                var toType = dbType.HasValue ? new DbTypeToClientTypeResolver().Resolve(dbType.Value) : TypeCache.Get(valueType)?.GetUnderlyingType();
+                                valueExpression = ConvertEnumExpressionToTypeExpression(valueExpression, toType);
+                            }
+                        } 
+                        else
+                        {
+                            dbType = default;
+                        }
                     }
                     else
                     {

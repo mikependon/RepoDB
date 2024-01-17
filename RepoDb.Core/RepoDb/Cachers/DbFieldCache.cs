@@ -1,4 +1,5 @@
-﻿using RepoDb.Exceptions;
+using System;
+using RepoDb.Exceptions;
 using System.Collections.Concurrent;
 using System.Data;
 using System.Threading;
@@ -88,13 +89,13 @@ namespace RepoDb
             // Note: For SqlConnection, the ConnectionString is changing if the (Integrated Security=False). Actually for this isolation, the database name is enough.
             if (!string.IsNullOrWhiteSpace(connection.Database))
             {
-                key += connection.Database.GetHashCode();
+                key = HashCode.Combine(key, connection.Database.GetHashCode());
             }
 
             // Add the hashcode of the table name
             if (string.IsNullOrWhiteSpace(tableName) == false)
             {
-                key += tableName.GetHashCode();
+                key = HashCode.Combine(key, tableName.GetHashCode());
             }
 
             // Try get the value
@@ -177,13 +178,13 @@ namespace RepoDb
             // Note: For SqlConnection, the ConnectionString is changing if the (Integrated Security=False). Actually for this isolation, the database name is enough.
             if (!string.IsNullOrWhiteSpace(connection.Database))
             {
-                key += connection.Database.GetHashCode();
+                key = HashCode.Combine(key, connection.Database.GetHashCode());
             }
 
             // Add the hashcode of the table name
             if (string.IsNullOrWhiteSpace(tableName) == false)
             {
-                key += tableName.GetHashCode();
+                key = HashCode.Combine(key, tableName.GetHashCode());
             }
 
             // Try get the value
