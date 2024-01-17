@@ -40,8 +40,12 @@ namespace RepoDb.UnitTests.StatementBuilders
             var expected = $"" +
                 $"INSERT INTO [Table] " +
                 $"( [Field1], [Field2], [Field3] ) " +
-                $"VALUES " +
-                $"( @Field1, @Field2, @Field3 ) ;";
+                $"SELECT [Field1], [Field2], [Field3] " +
+                $"FROM ( " +
+                $"VALUES ( @Field1, @Field2, @Field3 , @__RepoDb_OrderColumn_0 ) " +
+                $") AS T " +
+                $"( [Field1], [Field2], [Field3] , [__RepoDb_OrderColumn] ) " +
+                $"ORDER BY [__RepoDb_OrderColumn] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -64,8 +68,13 @@ namespace RepoDb.UnitTests.StatementBuilders
             var expected = $"" +
                 $"INSERT INTO [dbo].[Table] " +
                 $"( [Field1], [Field2], [Field3] ) " +
-                $"VALUES " +
-                $"( @Field1, @Field2, @Field3 ) ;";
+                $"SELECT [Field1], [Field2], [Field3] " +
+                $"FROM " +
+                $"( " +
+                $"VALUES ( @Field1, @Field2, @Field3 , @__RepoDb_OrderColumn_0 ) " +
+                $") AS T " +
+                $"( [Field1], [Field2], [Field3] , [__RepoDb_OrderColumn] ) " +
+                $"ORDER BY [__RepoDb_OrderColumn] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -88,8 +97,14 @@ namespace RepoDb.UnitTests.StatementBuilders
             var expected = $"" +
                 $"INSERT INTO [dbo].[Table] " +
                 $"( [Field1], [Field2], [Field3] ) " +
+                $"SELECT [Field1], [Field2], [Field3] " +
+                $"FROM " +
+                $"( " +
                 $"VALUES " +
-                $"( @Field1, @Field2, @Field3 ) ;";
+                $"( @Field1, @Field2, @Field3 , @__RepoDb_OrderColumn_0 ) " +
+                $") AS T " +
+                $"( [Field1], [Field2], [Field3] , [__RepoDb_OrderColumn] ) " +
+                $"ORDER BY [__RepoDb_OrderColumn] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -113,8 +128,14 @@ namespace RepoDb.UnitTests.StatementBuilders
             var expected = $"" +
                 $"INSERT INTO [Table] " +
                 $"( [Field1], [Field2], [Field3] ) " +
+                $"SELECT [Field1], [Field2], [Field3] " +
+                $"FROM " +
+                $"( " +
                 $"VALUES " +
-                $"( @Field1, @Field2, @Field3 ) ;";
+                $"( @Field1, @Field2, @Field3 , @__RepoDb_OrderColumn_0 ) " +
+                $") AS T " +
+                $"( [Field1], [Field2], [Field3] , [__RepoDb_OrderColumn] ) " +
+                $"ORDER BY [__RepoDb_OrderColumn] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -138,16 +159,15 @@ namespace RepoDb.UnitTests.StatementBuilders
             var expected = $"" +
                 $"INSERT INTO [Table] " +
                 $"( [Field2], [Field3] ) " +
+                $"SELECT [Field2], [Field3] " +
+                $"FROM ( " +
                 $"VALUES " +
-                $"( @Field2, @Field3 ) ; " +
-                $"INSERT INTO [Table] " +
-                $"( [Field2], [Field3] ) " +
-                $"VALUES " +
-                $"( @Field2_1, @Field3_1 ) ; " +
-                $"INSERT INTO [Table] " +
-                $"( [Field2], [Field3] ) " +
-                $"VALUES " +
-                $"( @Field2_2, @Field3_2 ) ;";
+                $"( @Field2, @Field3 , @__RepoDb_OrderColumn_0 ) , " +
+                $"( @Field2_1, @Field3_1 , @__RepoDb_OrderColumn_1 ) , " +
+                $"( @Field2_2, @Field3_2 , @__RepoDb_OrderColumn_2 ) " +
+                $") AS T " +
+                $"( [Field2], [Field3] , [__RepoDb_OrderColumn] ) " +
+                $"ORDER BY [__RepoDb_OrderColumn] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -171,8 +191,14 @@ namespace RepoDb.UnitTests.StatementBuilders
             var expected = $"" +
                 $"INSERT INTO [Table] WITH (TABLOCK) " +
                 $"( [Field1], [Field2], [Field3] ) " +
+                $"SELECT [Field1], [Field2], [Field3] " +
+                $"FROM ( " +
                 $"VALUES " +
-                $"( @Field1, @Field2, @Field3 ) ;";
+                $"( " +
+                $"@Field1, @Field2, @Field3 , @__RepoDb_OrderColumn_0 ) " +
+                $") AS T " +
+                $"( [Field1], [Field2], [Field3] , [__RepoDb_OrderColumn] ) " +
+                $"ORDER BY [__RepoDb_OrderColumn] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -197,16 +223,15 @@ namespace RepoDb.UnitTests.StatementBuilders
             var expected = $"" +
                 $"INSERT INTO [Table] WITH (TABLOCK) " +
                 $"( [Field2], [Field3] ) " +
+                $"SELECT [Field2], [Field3] " +
+                $"FROM ( " +
                 $"VALUES " +
-                $"( @Field2, @Field3 ) ; " +
-                $"INSERT INTO [Table] WITH (TABLOCK) " +
-                $"( [Field2], [Field3] ) " +
-                $"VALUES " +
-                $"( @Field2_1, @Field3_1 ) ; " +
-                $"INSERT INTO [Table] WITH (TABLOCK) " +
-                $"( [Field2], [Field3] ) " +
-                $"VALUES " +
-                $"( @Field2_2, @Field3_2 ) ;";
+                $"( @Field2, @Field3 , @__RepoDb_OrderColumn_0 ) , " +
+                $"( @Field2_1, @Field3_1 , @__RepoDb_OrderColumn_1 ) , " +
+                $"( @Field2_2, @Field3_2 , @__RepoDb_OrderColumn_2 ) " +
+                $") AS T " +
+                $"( [Field2], [Field3] , [__RepoDb_OrderColumn] ) " +
+                $"ORDER BY [__RepoDb_OrderColumn] ;";
 
             // Assert
             Assert.AreEqual(expected, actual);
