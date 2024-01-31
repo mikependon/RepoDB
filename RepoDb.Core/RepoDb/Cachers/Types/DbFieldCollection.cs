@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq;
 using RepoDb.Extensions;
@@ -15,8 +16,8 @@ public class DbFieldCollection
     private readonly IReadOnlyList<DbField> dbFields;
     private readonly Lazy<IEnumerable<Field>> lazyFields;
     private readonly Lazy<DbField> lazyIdentity;
-    private readonly Lazy<Dictionary<string, DbField>> lazyMapByName;
-    private readonly Lazy<Dictionary<string, DbField>> lazyMapByUnquotedName;
+    private readonly Lazy<FrozenDictionary<string, DbField>> lazyMapByName;
+    private readonly Lazy<FrozenDictionary<string, DbField>> lazyMapByUnquotedName;
     private readonly Lazy<DbField> lazyPrimary;
 
     /// <summary>
@@ -31,8 +32,8 @@ public class DbFieldCollection
 
         lazyPrimary = new Lazy<DbField>(GetPrimaryDbField);
         lazyIdentity = new Lazy<DbField>(GetIdentityDbField);
-        lazyMapByName = new Lazy<Dictionary<string, DbField>>(GetDbFieldsMappedByName);
-        lazyMapByUnquotedName = new Lazy<Dictionary<string, DbField>>(GetDbFieldsMappedByUnquotedName);
+        lazyMapByName = new Lazy<FrozenDictionary<string, DbField>>(GetDbFieldsMappedByName);
+        lazyMapByUnquotedName = new Lazy<FrozenDictionary<string, DbField>>(GetDbFieldsMappedByUnquotedName);
         lazyFields = new Lazy<IEnumerable<Field>>(GetDbFieldsAsFields);
     }
     
@@ -90,11 +91,11 @@ public class DbFieldCollection
         return dbField;
     }
 
-    private Dictionary<string, DbField> GetDbFieldsMappedByName() => 
-        dbFields.ToDictionary(df => df.Name, df => df, StringComparer.OrdinalIgnoreCase);
+    private FrozenDictionary<string, DbField> GetDbFieldsMappedByName() => 
+        dbFields.ToFrozenDictionary(df => df.Name, df => df, StringComparer.OrdinalIgnoreCase);
 
-    private Dictionary<string, DbField> GetDbFieldsMappedByUnquotedName() =>
-        dbFields.ToDictionary(df => df.Name.AsUnquoted(true, dbSetting), df => df, StringComparer.OrdinalIgnoreCase);
+    private FrozenDictionary<string, DbField> GetDbFieldsMappedByUnquotedName() =>
+        dbFields.ToFrozenDictionary(df => df.Name.AsUnquoted(true, dbSetting), df => df, StringComparer.OrdinalIgnoreCase);
 
     private DbField GetPrimaryDbField() => dbFields.FirstOrDefault(df => df.IsPrimary);
 
