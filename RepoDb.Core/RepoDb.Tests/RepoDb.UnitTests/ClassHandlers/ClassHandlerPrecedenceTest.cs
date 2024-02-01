@@ -24,6 +24,13 @@ namespace RepoDb.UnitTests.ClassHandlers
             DbSettingMapper.Add<ClassHandlerForEntityWithAttributeConnection>(new CustomDbSetting(), true);
             DbHelperMapper.Add<ClassHandlerForEntityWithAttributeConnection>(new CustomDbHelper(), true);
             StatementBuilderMapper.Add<ClassHandlerForEntityWithAttributeConnection>(new CustomStatementBuilder(), true);
+            
+#if NET7_0_OR_GREATER
+            // For Generic Attributed Entity
+            DbSettingMapper.Add<ClassHandlerForEntityWithGenericAttributeConnection>(new CustomDbSetting(), true);
+            DbHelperMapper.Add<ClassHandlerForEntityWithGenericAttributeConnection>(new CustomDbHelper(), true);
+            StatementBuilderMapper.Add<ClassHandlerForEntityWithGenericAttributeConnection>(new CustomStatementBuilder(), true);
+#endif
         }
 
         [TestCleanup]
@@ -73,7 +80,28 @@ namespace RepoDb.UnitTests.ClassHandlers
                 return reader;
             }
         }
+        
+#if NET7_0_OR_GREATER
+        private class ClassHandlerForEntityWithGenericAttributeConnection : CustomDbConnection
+        {
+            protected override DbCommand CreateDbCommand()
+            {
+                return new ClassHandlerForEntityWithGenericAttributeDbCommand();
+            }
+        }
 
+        private class ClassHandlerForEntityWithGenericAttributeDbCommand : CustomDbCommand
+        {
+            protected override DbDataReader ExecuteDbDataReader(CommandBehavior behavior)
+            {
+                var reader = new DataEntityDataReader<ClassHandlerTestClassWithGenericAttribute>(new[]
+                {
+                    new ClassHandlerTestClassWithGenericAttribute { Id = 1, Name = "James Doe" }
+                });
+                return reader;
+            }
+        }
+#endif
         #endregion
 
         #region ClassHandlers
@@ -103,6 +131,21 @@ namespace RepoDb.UnitTests.ClassHandlers
                 return entity;
             }
         }
+        
+#if NET7_0_OR_GREATER
+        public class TestClassHandlerForEntityWithGenericAttribute : IClassHandler<ClassHandlerTestClassWithGenericAttribute>
+        {
+            public ClassHandlerTestClassWithGenericAttribute Get(ClassHandlerTestClassWithGenericAttribute entity, ClassHandlerGetOptions options)
+            {
+                return entity;
+            }
+
+            public ClassHandlerTestClassWithGenericAttribute Set(ClassHandlerTestClassWithGenericAttribute entity, ClassHandlerSetOptions options)
+            {
+                return entity;
+            }
+        }
+#endif
 
         #endregion
 
@@ -120,7 +163,15 @@ namespace RepoDb.UnitTests.ClassHandlers
             public int Id { get; set; }
             public string Name { get; set; }
         }
-
+        
+#if NET7_0_OR_GREATER
+        [ClassHandler<TestClassHandlerForEntityWithGenericAttribute>]
+        public class ClassHandlerTestClassWithGenericAttribute
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
+        }
+#endif
         #endregion
 
         #region Methods
@@ -162,7 +213,27 @@ namespace RepoDb.UnitTests.ClassHandlers
             // Assert
             classHandler.Verify(c => c.Get(It.IsAny<ClassHandlerTestClassWithAttribute>(), It.IsAny<ClassHandlerGetOptions>()), Times.Never);
         }
+        
+#if NET7_0_OR_GREATER
+        [TestMethod]
+        public void TestClassHandlerPrecedenceWithGenericAttribute()
+        {
+            // Prepare
+            var classHandler = new Mock<IClassHandler<ClassHandlerTestClassWithGenericAttribute>>();
+            FluentMapper
+                .Entity<ClassHandlerTestClassWithGenericAttribute>()
+                .ClassHandler(classHandler.Object);
 
+            // Act
+            using (var connection = new ClassHandlerForEntityWithGenericAttributeConnection())
+            {
+                var result = connection.QueryAll<ClassHandlerTestClassWithGenericAttribute>();
+            }
+
+            // Assert
+            classHandler.Verify(c => c.Get(It.IsAny<ClassHandlerTestClassWithGenericAttribute>(), It.IsAny<ClassHandlerGetOptions>()), Times.Never);
+        }
+#endif
         #endregion
     }
 }
