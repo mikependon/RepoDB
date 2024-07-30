@@ -368,7 +368,7 @@ namespace RepoDb
             object param = null,
             CommandType? commandType = null,
             string cacheKey = null,
-            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? cacheItemExpiration = null,
             IDbTransaction transaction = null)
         {
             // Create a connection
@@ -381,7 +381,7 @@ namespace RepoDb
                     param: param,
                     commandType: commandType,
                     cacheKey: cacheKey,
-                    cacheItemExpiration: cacheItemExpiration,
+                    cacheItemExpiration: cacheItemExpiration ?? CacheItemExpiration,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     cache: Cache);
@@ -420,7 +420,7 @@ namespace RepoDb
             object param = null,
             CommandType? commandType = null,
             string cacheKey = null,
-            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? cacheItemExpiration = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
         {
@@ -434,7 +434,7 @@ namespace RepoDb
                     param: param,
                     commandType: commandType,
                     cacheKey: cacheKey,
-                    cacheItemExpiration: cacheItemExpiration,
+                    cacheItemExpiration: cacheItemExpiration ?? CacheItemExpiration,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     cache: Cache,
@@ -474,7 +474,7 @@ namespace RepoDb
             object param = null,
             CommandType? commandType = null,
             string cacheKey = null,
-            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? cacheItemExpiration = null,
             IDbTransaction transaction = null)
             where TEntity : class
         {
@@ -488,7 +488,7 @@ namespace RepoDb
                     param: param,
                     commandType: commandType,
                     cacheKey: cacheKey,
-                    cacheItemExpiration: cacheItemExpiration,
+                    cacheItemExpiration: cacheItemExpiration ?? CacheItemExpiration,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     cache: Cache);
@@ -528,7 +528,7 @@ namespace RepoDb
             object param = null,
             CommandType? commandType = null,
             string cacheKey = null,
-            int? cacheItemExpiration = Constant.DefaultCacheItemExpirationInMinutes,
+            int? cacheItemExpiration = null,
             IDbTransaction transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
@@ -543,7 +543,7 @@ namespace RepoDb
                     param: param,
                     commandType: commandType,
                     cacheKey: cacheKey,
-                    cacheItemExpiration: cacheItemExpiration,
+                    cacheItemExpiration: cacheItemExpiration ?? CacheItemExpiration,
                     commandTimeout: CommandTimeout,
                     transaction: transaction,
                     cache: Cache,
