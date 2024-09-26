@@ -127,7 +127,8 @@ namespace RepoDb
                         identityDbField?.AsField(),
                         hints,
                         dbSetting,
-                        withPseudoExecution);
+                        withPseudoExecution,
+                        options.HasFlag(SqlBulkCopyOptions.KeepIdentity));
 
                     // Execute the SQL
                     using (var reader = (DbDataReader)connection.ExecuteReader(sql, commandTimeout: bulkCopyTimeout, transaction: transaction))
@@ -372,7 +373,8 @@ namespace RepoDb
                             identityDbField?.AsField(),
                             hints,
                             dbSetting,
-                            withPseudoExecution);
+                            withPseudoExecution,
+                            options.HasFlag(SqlBulkCopyOptions.KeepIdentity));
 
                         // Identify the column
                         var column = dataTable.Columns[identityDbField.Name];
@@ -532,7 +534,8 @@ namespace RepoDb
                         identityDbField?.AsField(),
                         hints,
                         dbSetting,
-                        withPseudoExecution);
+                        withPseudoExecution,
+                        options.HasFlag(SqlBulkCopyOptions.KeepIdentity));
 
                     // Execute the SQL
                     using (var reader = (DbDataReader)(await connection.ExecuteReaderAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, cancellationToken: cancellationToken)))
@@ -782,7 +785,8 @@ namespace RepoDb
                             identityDbField?.AsField(),
                             hints,
                             dbSetting,
-                            withPseudoExecution);
+                            withPseudoExecution,
+                            options.HasFlag(SqlBulkCopyOptions.KeepIdentity));
 
                         // Identify the column
                         var column = dataTable.Columns[identityDbField.Name];
