@@ -613,7 +613,8 @@ namespace RepoDb
             Field identityField,
             string hints,
             IDbSetting dbSetting,
-            bool isReturnIdentity)
+            bool isReturnIdentity,
+            bool keepIdentity)
         {
             // Validate the presence
             if (fields?.Any() != true)
@@ -626,10 +627,21 @@ namespace RepoDb
 
             // Insertable fields
             var insertableFields = fields
-                .Where(field => string.Equals(field.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase) == false);
+                .Where(field => keepIdentity == true || string.Equals(field.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase) == false);
 
             // Compose the statement
-            builder.Clear()
+            builder.Clear();
+
+            // SET IDENTITY_INSERT ON
+            if (keepIdentity)
+            {
+                builder
+                    .WriteText("SET IDENTITY_INSERT")
+                    .TableNameFrom(tableName, dbSetting)
+                    .WriteText("ON;");
+            }
+
+            builder
                 // MERGE T USING S
                 .Merge()
                 .TableNameFrom(tableName, dbSetting)
@@ -690,6 +702,15 @@ namespace RepoDb
             // End
             builder.End();
 
+            // SET IDENTITY_INSERT OFF (probably not necessary, but it won't hurt)
+            if (keepIdentity)
+            {
+                builder
+                    .WriteText("SET IDENTITY_INSERT")
+                    .TableNameFrom(tableName, dbSetting)
+                    .WriteText("OFF;");
+            }
+
             // Return the sql
             return builder.ToString();
         }
@@ -706,6 +727,7 @@ namespace RepoDb
         /// <param name="hints"></param>
         /// <param name="dbSetting"></param>
         /// <param name="isReturnIdentity"></param>
+        /// <param name="keepIdentity"></param>
         /// <returns></returns>
         private static string GetBulkMergeSqlText(string tableName,
             string tempTableName,
@@ -715,7 +737,8 @@ namespace RepoDb
             Field identityField,
             string hints,
             IDbSetting dbSetting,
-            bool isReturnIdentity)
+            bool isReturnIdentity,
+            bool keepIdentity)
         {
             // Validate the presence
             if (fields?.Any() != true)
@@ -733,7 +756,7 @@ namespace RepoDb
 
             // Insertable fields
             var insertableFields = fields
-                .Where(field => string.Equals(field.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase) == false);
+                .Where(field => keepIdentity == true || string.Equals(field.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase) == false);
 
             // Updatable fields
             var updateableFields = fields
@@ -743,7 +766,18 @@ namespace RepoDb
                         q => string.Equals(q.Name, field.Name, StringComparison.OrdinalIgnoreCase)) == false);
 
             // Compose the statement
-            builder.Clear()
+            builder.Clear();
+
+            // SET IDENTITY_INSERT ON
+            if (keepIdentity)
+            {
+                builder
+                    .WriteText("SET IDENTITY_INSERT")
+                    .TableNameFrom(tableName, dbSetting)
+                    .WriteText("ON;");
+            }
+
+            builder
                 // MERGE T USING S
                 .Merge()
                 .TableNameFrom(tableName, dbSetting)
@@ -823,6 +857,15 @@ namespace RepoDb
 
             // End the builder
             builder.End();
+
+            // SET IDENTITY_INSERT OFF (probably not necessary, but it won't hurt)
+            if (keepIdentity)
+            {
+                builder
+                    .WriteText("SET IDENTITY_INSERT")
+                    .TableNameFrom(tableName, dbSetting)
+                    .WriteText("OFF;");
+            }
 
             // Return the sql
             return builder.ToString();

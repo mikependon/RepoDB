@@ -163,7 +163,8 @@ namespace RepoDb
                     identityDbField?.AsField(),
                     hints,
                     dbSetting,
-                    isReturnIdentity.GetValueOrDefault());
+                    isReturnIdentity.GetValueOrDefault(),
+                    options.HasFlag(SqlBulkCopyOptions.KeepIdentity));
 
                 // Identity if the identity is to return
                 if (hasOrderingColumn != true || TypeCache.Get(entityType).IsAnonymousType())
@@ -340,7 +341,8 @@ namespace RepoDb
                     identityDbField?.AsField(),
                     hints,
                     dbSetting,
-                    false);
+                    false,
+                    options.HasFlag(SqlBulkCopyOptions.KeepIdentity));
                 result = connection.ExecuteNonQuery(sql, commandTimeout: bulkCopyTimeout, transaction: transaction);
 
                 // Drop the table after used
@@ -511,7 +513,8 @@ namespace RepoDb
                     identityDbField?.AsField(),
                     hints,
                     dbSetting,
-                    isReturnIdentity.GetValueOrDefault());
+                    isReturnIdentity.GetValueOrDefault(),
+                    options.HasFlag(SqlBulkCopyOptions.KeepIdentity));
 
                 // Identity if the identity is to return
                 var column = identityDbField is not null ? dataTable.Columns[identityDbField.Name] : null;
@@ -706,7 +709,8 @@ namespace RepoDb
                     identityDbField?.AsField(),
                     hints,
                     dbSetting,
-                    isReturnIdentity.GetValueOrDefault());
+                    isReturnIdentity.GetValueOrDefault(),
+                    options.HasFlag(SqlBulkCopyOptions.KeepIdentity));
 
                 // Identity if the identity is to return
                 if (hasOrderingColumn != true || TypeCache.Get(entityType).IsAnonymousType())
@@ -885,7 +889,8 @@ namespace RepoDb
                     identityDbField?.AsField(),
                     hints,
                     dbSetting,
-                    false);
+                    false,
+                    options.HasFlag(SqlBulkCopyOptions.KeepIdentity));
                 result = await connection.ExecuteNonQueryAsync(sql, commandTimeout: bulkCopyTimeout, transaction: transaction, cancellationToken: cancellationToken);
 
                 // Drop the table after used
@@ -1059,7 +1064,8 @@ namespace RepoDb
                     identityDbField?.AsField(),
                     hints,
                     dbSetting,
-                    isReturnIdentity.GetValueOrDefault());
+                    isReturnIdentity.GetValueOrDefault(),
+                    options.HasFlag(SqlBulkCopyOptions.KeepIdentity));
 
                 // Identity if the identity is to return
                 var column = identityDbField is not null ? dataTable.Columns[identityDbField.Name] : null;
