@@ -1,3 +1,8 @@
+using RepoDb.Enumerations;
+using RepoDb.Exceptions;
+using RepoDb.Extensions;
+using RepoDb.Interfaces;
+using RepoDb.Resolvers;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -5,11 +10,6 @@ using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using RepoDb.Enumerations;
-using RepoDb.Exceptions;
-using RepoDb.Extensions;
-using RepoDb.Interfaces;
-using RepoDb.Resolvers;
 
 namespace RepoDb.Reflection
 {
@@ -510,7 +510,15 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static MethodInfo GetDateOnlyFromDateTimeStaticMethod() =>
             StaticType.DateOnly.GetMethod("FromDateTime");
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <returns></returns>
+        internal static MethodInfo GetDateTimeFromDateOnlyMethod() =>
+            StaticType.DateOnly.GetMethod("ToDateTime", new Type[] { StaticType.TimeOnly });
 #endif
+
         /// <summary>
         ///
         /// </summary>
@@ -547,6 +555,24 @@ namespace RepoDb.Reflection
             }
             return expression;
         }
+
+#if NET6_0_OR_GREATER
+        internal static Expression ConvertExpressionToNullableGetValueOrDefaultExpression(Func<Expression, Expression> converter, Expression expression)
+        {
+            if (Nullable.GetUnderlyingType(expression.Type) != null)
+            {
+                var converted = converter(ConvertExpressionToNullableGetValueOrDefaultExpression(expression));
+                var nullableType = typeof(Nullable<>).MakeGenericType(converted.Type);
+                return Expression.Condition(
+                    Expression.Property(expression, nameof(Nullable<int>.HasValue)),
+                    Expression.Convert(converted, nullableType),
+                    Expression.Constant(null, nullableType)
+                );
+            }
+
+            return converter(expression);
+        }
+#endif
 
         /// <summary>
         ///
@@ -601,7 +627,15 @@ namespace RepoDb.Reflection
         /// <param name="expression"></param>
         /// <returns></returns>
         internal static Expression ConvertExpressionToDateTimeToDateOnlyExpression(Expression expression) =>
-            ConvertExpressionToNullableGetValueOrDefaultExpression(ConvertExpressionToDateOnlyFromDateTimeExpression(expression));
+            ConvertExpressionToNullableGetValueOrDefaultExpression(ConvertExpressionToDateTimeFromDateOnlyExpression, expression);
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        internal static Expression ConvertExpressionToDateOnlyToDateTimeExpression(Expression expression) =>
+            ConvertExpressionToNullableGetValueOrDefaultExpression(ConvertExpressionToDateOnlyFromDateTimeExpression, expression);
 #endif
         /// <summary>
         ///
@@ -625,6 +659,14 @@ namespace RepoDb.Reflection
         /// <param name="expression"></param>
         /// <returns></returns>
         internal static Expression ConvertExpressionToDateOnlyFromDateTimeExpression(Expression expression) =>
+            Expression.Call(expression, GetDateTimeFromDateOnlyMethod(), Expression.Constant(default(TimeOnly)));
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        internal static Expression ConvertExpressionToDateTimeFromDateOnlyExpression(Expression expression) =>
             Expression.Call(null, GetDateOnlyFromDateTimeStaticMethod(), expression);
 #endif
         /// <summary>
@@ -907,6 +949,12 @@ namespace RepoDb.Reflection
             {
                 expression = ConvertExpressionToDateTimeToDateOnlyExpression(expression);
             }
+
+            // DateOnly to DateTime
+            else if (fromType == StaticType.DateOnly && toType == StaticType.DateTime)
+            {
+                expression = ConvertExpressionToDateOnlyToDateTimeExpression(expression);
+            }
 #endif
             // Others
             else
@@ -1084,7 +1132,7 @@ namespace RepoDb.Reflection
             return entityOrEntitiesExpression;
         }
 
-#endregion
+        #endregion
 
         #region Common
 
