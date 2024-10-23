@@ -39,6 +39,10 @@
 		<PackageReference Include="System.Memory" Version="4.5.5" />
 	</ItemGroup>
 
+	<ItemGroup Condition="'$(TargetFramework)' != 'net8.0'">
+		<PackageReference Include="System.Collections.Immutable" Version="8.0.0" />
+	</ItemGroup>
+
 	<ItemGroup>
 		<None Include="..\..\LICENSE.txt">
 			<Pack>True</Pack>
