@@ -1,8 +1,8 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MySql.Data.MySqlClient;
 using RepoDb.Enumerations;
 using RepoDb.Exceptions;
-using System;
 
 namespace RepoDb.MySql.UnitTests
 {
@@ -309,16 +309,15 @@ namespace RepoDb.MySql.UnitTests
                 3,
                 null,
                 null);
-            var expected = "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id, @Name, @Address ) ; SELECT NULL AS `Result`, @__RepoDb_OrderColumn_0 AS `OrderColumn` ; " +
-                "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id_1, @Name_1, @Address_1 ) ; SELECT NULL AS `Result`, @__RepoDb_OrderColumn_1 AS `OrderColumn` ; " +
-                "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id_2, @Name_2, @Address_2 ) ; SELECT NULL AS `Result`, @__RepoDb_OrderColumn_2 AS `OrderColumn` ;";
+            var expected = "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ROW ( @Id, @Name, @Address ) ," +
+                " ROW ( @Id_1, @Name_1, @Address_1 ) , ROW ( @Id_2, @Name_2, @Address_2 ) ; SELECT NULL AS `Result`;";
 
             // Assert
             Assert.AreEqual(expected, query);
         }
 
         [TestMethod]
-        public void TestMySqlStatementBuilderCreateInserAlltWithPrimary()
+        public void TestMySqlStatementBuilderCreateInsertAllWithPrimary()
         {
             // Setup
             var builder = StatementBuilderMapper.Get<MySqlConnection>();
@@ -329,9 +328,8 @@ namespace RepoDb.MySql.UnitTests
                 3,
                 new DbField("Id", true, false, false, typeof(int), null, null, null, null, false),
                 null);
-            var expected = "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id, @Name, @Address ) ; SELECT @Id AS `Result`, @__RepoDb_OrderColumn_0 AS `OrderColumn` ; " +
-                "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id_1, @Name_1, @Address_1 ) ; SELECT @Id_1 AS `Result`, @__RepoDb_OrderColumn_1 AS `OrderColumn` ; " +
-                "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ( @Id_2, @Name_2, @Address_2 ) ; SELECT @Id_2 AS `Result`, @__RepoDb_OrderColumn_2 AS `OrderColumn` ;";
+            var expected = "INSERT INTO `Table` ( `Id`, `Name`, `Address` ) VALUES ROW ( @Id, @Name, @Address ) , ROW ( @Id_1, @Name_1, @Address_1 ) ," +
+                " ROW ( @Id_2, @Name_2, @Address_2 ) ; SELECT @Id AS `Result`;";
 
             // Assert
             Assert.AreEqual(expected, query);
@@ -349,9 +347,9 @@ namespace RepoDb.MySql.UnitTests
                 3,
                 null,
                 new DbField("Id", false, true, false, typeof(int), null, null, null, null, false));
-            var expected = "INSERT INTO `Table` ( `Name`, `Address` ) VALUES ( @Name, @Address ) ; SELECT LAST_INSERT_ID() AS `Result`, @__RepoDb_OrderColumn_0 AS `OrderColumn` ; " +
-                "INSERT INTO `Table` ( `Name`, `Address` ) VALUES ( @Name_1, @Address_1 ) ; SELECT LAST_INSERT_ID() AS `Result`, @__RepoDb_OrderColumn_1 AS `OrderColumn` ; " +
-                "INSERT INTO `Table` ( `Name`, `Address` ) VALUES ( @Name_2, @Address_2 ) ; SELECT LAST_INSERT_ID() AS `Result`, @__RepoDb_OrderColumn_2 AS `OrderColumn` ;";
+            var expected = "INSERT INTO `Table` ( `Name`, `Address` ) VALUES ROW ( @Name, @Address ) , " +
+                "ROW ( @Name_1, @Address_1 ) , ROW ( @Name_2, @Address_2 ) ; VALUES ROW ( LAST_INSERT_ID() + 0 ) " +
+                ", ROW ( LAST_INSERT_ID() + 1 ) , ROW ( LAST_INSERT_ID() + 2 ) ;";
 
             // Assert
             Assert.AreEqual(expected, query);
