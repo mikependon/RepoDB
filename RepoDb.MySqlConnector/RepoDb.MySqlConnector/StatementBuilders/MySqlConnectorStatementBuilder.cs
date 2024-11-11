@@ -1,10 +1,10 @@
-﻿using MySqlConnector;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using MySqlConnector;
 using RepoDb.Exceptions;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace RepoDb.StatementBuilders
 {
@@ -252,41 +252,133 @@ namespace RepoDb.StatementBuilders
         /// <param name="hints">The table hints to be used.</param>
         /// <returns>A sql statement for insert operation.</returns>
         public override string CreateInsertAll(string tableName,
-            IEnumerable<Field> fields = null,
-            int batchSize = 1,
-            DbField primaryField = null,
-            DbField identityField = null,
-            string hints = null)
+          IEnumerable<Field> fields = null,
+          int batchSize = 1,
+          DbField primaryField = null,
+          DbField identityField = null,
+          string hints = null)
         {
-            // Call the base
-            var commandText = base.CreateInsertAll(tableName,
-                fields,
-                batchSize,
-                primaryField,
-                identityField,
-                hints);
+            // Ensure with guards
+            GuardTableName(tableName);
+            GuardHints(hints);
+            GuardPrimary(primaryField);
+            GuardIdentity(identityField);
 
-            // Variables needed
-            var commandTexts = new List<string>();
-            var splitted = commandText.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-            var keyColumn = GetReturnKeyColumnAsDbField(primaryField, identityField);
+            // Validate the multiple statement execution
+            ValidateMultipleStatementExecution(batchSize);
 
-            // Iterate the indexes
-            for (var index = 0; index < splitted.Length; index++)
+            // Verify the fields
+            if (fields?.Any() != true)
             {
-                var returnValue = keyColumn != null ?
-                    keyColumn.IsIdentity ? "LAST_INSERT_ID()" :
-                        keyColumn.Name.AsParameter(index, DbSetting) : "NULL";
-                var line = splitted[index].Trim();
-                commandTexts.Add(string.Concat(line, " ; SELECT ", returnValue, " AS ", "Result".AsQuoted(DbSetting), ", ",
-                    $"@__RepoDb_OrderColumn_{index} AS ", "OrderColumn".AsQuoted(DbSetting), " ;"));
+                throw new EmptyException("The list of fields cannot be null or empty.");
             }
 
-            // Set the command text
-            commandText = commandTexts.Join(" ");
+            // Primary Key
+            if (primaryField != null &&
+                primaryField.HasDefaultValue == false &&
+                !string.Equals(primaryField.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase))
+            {
+                var isPresent = fields
+                    .FirstOrDefault(f =>
+                        string.Equals(f.Name, primaryField.Name, StringComparison.OrdinalIgnoreCase)) != null;
 
-            // Return the query
-            return commandText;
+                if (isPresent == false)
+                {
+                    throw new PrimaryFieldNotFoundException($"As the primary field '{primaryField.Name}' is not an identity nor has a default value, it must be present on the insert operation.");
+                }
+            }
+
+            // Insertable fields
+            var insertableFields = fields
+                .Where(f =>
+                    !string.Equals(f.Name, identityField?.Name, StringComparison.OrdinalIgnoreCase));
+
+            // Initialize the builder
+            var builder = new QueryBuilder();
+
+            // Build the query
+            builder.Clear();
+
+            // Compose
+            builder
+                .Insert()
+                .Into()
+                .TableNameFrom(tableName, DbSetting)
+                .HintsFrom(hints)
+                .OpenParen()
+                .FieldsFrom(insertableFields, DbSetting)
+                .CloseParen()
+                .Values();
+
+            // Iterate the indexes
+            for (var index = 0; index < batchSize; index++)
+            {
+                builder
+                    .WriteText("ROW")
+                    .OpenParen()
+                    .ParametersFrom(insertableFields, index, DbSetting)
+                    .CloseParen();
+
+                if (index < batchSize - 1)
+                {
+                    builder
+                        .WriteText(",");
+                }
+            }
+
+            // Close
+            builder
+                .End();
+
+            var keyColumn = GetReturnKeyColumnAsDbField(primaryField, identityField);
+
+            if (keyColumn?.IsIdentity == true)
+            {
+                builder
+                .Values();
+
+                for (var index = 0; index < batchSize; index++)
+                {
+                    if (index > 0)
+                        builder.WriteText(",");
+
+                    builder
+                        .WriteText("ROW")
+                        .OpenParen()
+                        .WriteText("LAST_INSERT_ID() +")
+                        .WriteText($"{index}")
+                        .CloseParen();
+                };
+
+                builder.End();
+
+                return builder.GetString();
+            }
+            else
+            {
+                var commandText = builder.GetString();
+
+                // Variables needed
+                var commandTexts = new List<string>();
+                var splitted = commandText.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+
+
+                // Iterate the indexes
+                for (var index = 0; index < splitted.Length; index++)
+                {
+                    var returnValue = keyColumn != null ?
+                        keyColumn.IsIdentity ? "LAST_INSERT_ID()" :
+                            keyColumn.Name.AsParameter(index, DbSetting) : "NULL";
+                    var line = splitted[index].Trim();
+                    commandTexts.Add(string.Concat(line, " ; SELECT ", returnValue, " AS ", "Result".AsQuoted(DbSetting), ";"));
+                }
+
+                // Set the command text
+                commandText = commandTexts.Join(" ");
+
+                // Return the query
+                return commandText;
+            }
         }
 
         #endregion
