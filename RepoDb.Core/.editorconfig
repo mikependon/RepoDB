@@ -1,4 +1,0 @@
-﻿[*.cs]
-
-# CS1574: XML comment has cref attribute that could not be resolved
-dotnet_diagnostic.CS1574.severity = none

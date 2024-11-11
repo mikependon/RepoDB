@@ -1,10 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-	<TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+    <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
     <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <EnableMSTestRunner>true</EnableMSTestRunner>
+    <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
   </PropertyGroup>
-
   <ItemGroup>
     <Compile Remove="Operations\Microsoft.Data.SqlClient\BaseRepository\**" />
     <Compile Remove="Operations\Microsoft.Data.SqlClient\DbRepository\**" />
@@ -19,21 +20,16 @@
     <None Remove="Operations\Microsoft.Data.SqlClient\SqlConnection\**" />
     <None Remove="Operations\System.Data.SqlClient\**" />
   </ItemGroup>
-
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
-    <PackageReference Include="MSTest.TestAdapter" Version="3.1.1" />
-    <PackageReference Include="MSTest.TestFramework" Version="3.1.1" />
-    <PackageReference Include="coverlet.collector" Version="6.0.0">
+    <PackageReference Include="MSTest" />
+    <PackageReference Include="coverlet.collector">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
     <ProjectReference Include="..\..\..\RepoDb.SqlServer\RepoDb.SqlServer\RepoDb.SqlServer.csproj" />
     <ProjectReference Include="..\RepoDb.SqlServer.BulkOperations\RepoDb.SqlServer.BulkOperations.csproj" />
   </ItemGroup>
-
 </Project>

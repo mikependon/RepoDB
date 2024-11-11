@@ -1,10 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
     <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <EnableMSTestRunner>true</EnableMSTestRunner>
+    <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
   </PropertyGroup>
-
   <ItemGroup>
     <Compile Remove="Types\Bytes\**" />
     <Compile Remove="Types\Dates\**" />
@@ -25,24 +26,18 @@
     <None Remove="Types\Spatials\**" />
     <None Remove="Types\Strings\**" />
   </ItemGroup>
-
   <ItemGroup>
     <Compile Remove="ClassMappingTest.cs" />
     <Compile Remove="Operations\BaseRepositoryOperationsTest.cs" />
     <Compile Remove="Operations\DbRepositoryOperationsTest.cs" />
     <Compile Remove="Operations\SqlConnectionOperationsTest.cs" />
   </ItemGroup>
-
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
-    <PackageReference Include="Microsoft.SqlServer.Types" Version="160.1000.6" />
-    <PackageReference Include="MSTest.TestAdapter" Version="3.1.1" />
-    <PackageReference Include="MSTest.TestFramework" Version="3.1.1" />
+    <PackageReference Include="Microsoft.SqlServer.Types" />
+    <PackageReference Include="MSTest" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\..\RepoDb.SqlServer\RepoDb.SqlServer\RepoDb.SqlServer.csproj" />
     <ProjectReference Include="..\..\RepoDb\RepoDb.csproj" />
   </ItemGroup>
-
 </Project>
