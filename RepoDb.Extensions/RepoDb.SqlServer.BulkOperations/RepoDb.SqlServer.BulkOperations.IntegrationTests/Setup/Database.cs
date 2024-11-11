@@ -1,6 +1,6 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using System;
+using Microsoft.Data.SqlClient;
 using RepoDb.SqlServer.BulkOperations.IntegrationTests.Models;
-using System;
 
 namespace RepoDb.IntegrationTests.Setup
 {
@@ -15,15 +15,23 @@ namespace RepoDb.IntegrationTests.Setup
         public static void Initialize()
         {
             // Master connection
-            ConnectionStringForMaster = Environment.GetEnvironmentVariable("REPODB_CONSTR_MASTER", EnvironmentVariableTarget.Process) ??
-                @"Server=(local);Database=master;Integrated Security=SSPI;TrustServerCertificate=True;";
+            ConnectionStringForMaster =
+                Environment.GetEnvironmentVariable("REPODB_SQLSERVER_CONSTR_MASTER")
+                ?? Environment.GetEnvironmentVariable("REPODB_CONSTR_MASTER")
+                // ?? @"Server=tcp:127.0.0.1,41433;Database=master;User ID=sa;Password=ddd53e85-b15e-4da8-91e5-a7d3b00a0ab2;TrustServerCertificate=True;" // Docker Test Configuration
+                ?? @"Server=(local);Database=master;Integrated Security=SSPI;TrustServerCertificate=True;";
 
             // RepoDb connection
-            ConnectionStringForRepoDb = Environment.GetEnvironmentVariable("REPODB_CONSTR", EnvironmentVariableTarget.Process) ??
-                @"Server=(local);Database=RepoDb;Integrated Security=SSPI;TrustServerCertificate=True;";
+            ConnectionStringForRepoDb =
+                Environment.GetEnvironmentVariable("REPODB_SQLSERVER_CONSTR_REPODBTEST")
+                ?? Environment.GetEnvironmentVariable("REPODB_CONSTR")
+                // ?? @"Server=tcp:127.0.0.1,41433;Database=RepoDbTest;User ID=sa;Password=ddd53e85-b15e-4da8-91e5-a7d3b00a0ab2;TrustServerCertificate=True;" // Docker Test Configuration
+                ?? @"Server=(local);Database=RepoDbTest;Integrated Security=SSPI;TrustServerCertificate=True;";
 
             // Initialize the SqlServer
-            GlobalConfiguration.Setup().UseSqlServer();
+            GlobalConfiguration
+                .Setup()
+                .UseSqlServer();
 
             // Create the database first
             CreateDatabase();
@@ -49,9 +57,9 @@ namespace RepoDb.IntegrationTests.Setup
         /// </summary>
         public static void CreateDatabase()
         {
-            var commandText = @"IF (NOT EXISTS(SELECT * FROM sys.databases WHERE name = 'RepoDb'))
+            var commandText = @"IF (NOT EXISTS(SELECT * FROM sys.databases WHERE name = 'RepoDbTest'))
                 BEGIN
-	                CREATE DATABASE [RepoDb];
+	                CREATE DATABASE [RepoDbTest];
                 END";
             using (var connection = new SqlConnection(ConnectionStringForMaster).EnsureOpen())
             {
