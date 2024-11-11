@@ -2,12 +2,12 @@
   <PropertyGroup>
     <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
     <IsPackable>false</IsPackable>
-	<IsTestProject>true</IsTestProject>
-	<EnableMSTestRunner>true</EnableMSTestRunner>
-	<TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
+    <IsTestProject>true</IsTestProject>
+    <EnableMSTestRunner>true</EnableMSTestRunner>
+    <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
   </PropertyGroup>
   <ItemGroup>
-	<PackageReference Include="MSTest" />
+    <PackageReference Include="MSTest" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RepoDb.Sqlite.Microsoft\RepoDb.Sqlite.Microsoft.csproj" />
