@@ -1,10 +1,10 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using System.Linq;
+using Microsoft.Data.SqlClient;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Attributes;
 using RepoDb.Enumerations;
 using RepoDb.IntegrationTests.Setup;
-using System;
-using Microsoft.Data.SqlClient;
-using System.Linq;
 
 namespace RepoDb.IntegrationTests
 {
@@ -134,6 +134,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlConnectionExecuteQueryConversionFromStringToDecimal()
         {
+            using var _ = new CultureScope("EN-US");
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Query
@@ -147,6 +148,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlConnectionExecuteQueryConversionFromStringToFloat()
         {
+            using var _ = new CultureScope("EN-US");
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Query
@@ -263,6 +265,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlConnectionExecuteQueryConversionFromDecimalToString()
         {
+            using var _ = new CultureScope("EN-US");
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Query
@@ -306,6 +309,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlConnectionExecuteQueryConversionFromRealToString()
         {
+            using var _ = new CultureScope("EN-US");
             using (var connection = new SqlConnection(Database.ConnectionStringForRepoDb).EnsureOpen())
             {
                 // Act Query
@@ -521,6 +525,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlConnectionInsertAndQueryConversionFromStringToDecimal()
         {
+            using var _ = new CultureScope("EN-US");
             // Setup
             var entity = new StringToDecimalClass
             {
@@ -556,6 +561,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlConnectionInsertAndQueryConversionFromStringToFloat()
         {
+            using var _ = new CultureScope("EN-US");
             // Setup
             var entity = new StringToFloatClass
             {
@@ -626,6 +632,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlConnectionInsertAndQueryConversionFromStringToMoney()
         {
+            using var _ = new CultureScope("EN-US");
             // Setup
             var entity = new StringToMoneyClass
             {
@@ -661,6 +668,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlConnectionInsertAndQueryConversionFromStringToNumeric()
         {
+            using var _ = new CultureScope("EN-US");
             // Setup
             var entity = new StringToNumericClass
             {
@@ -696,6 +704,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlConnectionInsertAndQueryConversionFromStringToReal()
         {
+            using var _ = new CultureScope("EN-US");
             // Setup
             var entity = new StringToRealClass
             {
@@ -766,6 +775,7 @@ namespace RepoDb.IntegrationTests
         [TestMethod]
         public void TestSqlConnectionInsertAndQueryConversionFromStringToSmallMoney()
         {
+            using var _ = new CultureScope("EN-US");
             // Setup
             var entity = new StringToSmallMoneyClass
             {

@@ -1,8 +1,3 @@
-using RepoDb.Enumerations;
-using RepoDb.Exceptions;
-using RepoDb.Extensions;
-using RepoDb.Interfaces;
-using RepoDb.Resolvers;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,6 +5,11 @@ using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using RepoDb.Enumerations;
+using RepoDb.Exceptions;
+using RepoDb.Extensions;
+using RepoDb.Interfaces;
+using RepoDb.Resolvers;
 
 namespace RepoDb.Reflection
 {
@@ -773,6 +773,10 @@ namespace RepoDb.Reflection
             }
             else
             {
+                // Handle long/short to enum and/or non integer based enums
+                if (expression.Type != Enum.GetUnderlyingType(toEnumType))
+                    expression = Expression.Convert(expression, Enum.GetUnderlyingType(toEnumType));
+
                 return ConvertExpressionToEnumExpressionForString(
                     GetEnumGetNameExpression(expression, toEnumType), toEnumType);
             }
