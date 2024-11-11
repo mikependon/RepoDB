@@ -1,8 +1,8 @@
-﻿using RepoDb.SqlServer.IntegrationTests.Models;
-using Microsoft.Data.SqlClient;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using Microsoft.Data.SqlClient;
+using RepoDb.SqlServer.IntegrationTests.Models;
 
 namespace RepoDb.SqlServer.IntegrationTests.Setup
 {
@@ -27,12 +27,18 @@ namespace RepoDb.SqlServer.IntegrationTests.Setup
         public static void Initialize()
         {
             // Master connection
-            ConnectionStringForMaster = Environment.GetEnvironmentVariable("REPODB_CONSTR_MASTER", EnvironmentVariableTarget.Process) ??
-                @"Server=(local);Database=master;Integrated Security=SSPI;TrustServerCertificate=True;";
+            ConnectionStringForMaster =
+                Environment.GetEnvironmentVariable("REPODB_SQLSERVER_CONSTR_MASTER")
+                ?? Environment.GetEnvironmentVariable("REPODB_CONSTR_MASTER")
+                // ?? @"Server=tcp:127.0.0.1,41433;Database=master;User ID=sa;Password=ddd53e85-b15e-4da8-91e5-a7d3b00a0ab2;TrustServerCertificate=True;" // Docker Test Configuration
+                ?? @"Server=(local);Database=master;Integrated Security=SSPI;TrustServerCertificate=True;";
 
             // RepoDb connection
-            ConnectionString = Environment.GetEnvironmentVariable("REPODB_CONSTR", EnvironmentVariableTarget.Process) ??
-                @"Server=(local);Database=RepoDbTest;Integrated Security=SSPI;TrustServerCertificate=True;";
+            ConnectionString =
+                Environment.GetEnvironmentVariable("REPODB_SQLSERVER_CONSTR_REPODBTEST")
+                ?? Environment.GetEnvironmentVariable("REPODB_CONSTR")
+                // ?? @"Server=tcp:127.0.0.1,41433;Database=RepoDbTest;User ID=sa;Password=ddd53e85-b15e-4da8-91e5-a7d3b00a0ab2;TrustServerCertificate=True;" // Docker Test Configuration
+                ?? @"Server=(local);Database=RepoDbTest;Integrated Security=SSPI;TrustServerCertificate=True;";
 
             // Initialize the SqlServer
             GlobalConfiguration
