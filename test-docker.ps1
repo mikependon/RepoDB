@@ -1,4 +1,5 @@
-# Start instances of all database engines in docker
+# Start instances of all database engines in clean docker instances
+docker compose down
 docker compose up -d
 
 $cd = (Get-Location).Path
@@ -49,6 +50,3 @@ foreach ($test in $tests) {
     Exit(1)
   }
 }
-
-docker compose down
-#docker compose rm
