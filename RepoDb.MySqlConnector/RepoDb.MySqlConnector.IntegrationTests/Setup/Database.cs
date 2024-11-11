@@ -1,7 +1,7 @@
-﻿using RepoDb.MySqlConnector.IntegrationTests.Models;
-using MySqlConnector;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using MySqlConnector;
+using RepoDb.MySqlConnector.IntegrationTests.Models;
 
 namespace RepoDb.MySqlConnector.IntegrationTests.Setup
 {
@@ -25,13 +25,17 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Setup
 
         public static void Initialize()
         {
-            // Get the connection string
-            var connectionStringForSys = Environment.GetEnvironmentVariable("REPODB_CONSTR_SYS", EnvironmentVariableTarget.Process);
-            var connectionString = Environment.GetEnvironmentVariable("REPODB_CONSTR", EnvironmentVariableTarget.Process);
+            ConnectionStringForSys =
+                Environment.GetEnvironmentVariable("REPODB_MYSQL_CONSTR_SYS")
+                ?? Environment.GetEnvironmentVariable("REPODB_CONSTR_SYS")
+                // ?? @"Server=127.0.0.1;Port=43306;Database=sys;User ID=root;Password=ddd53e85-b15e-4da8-91e5-a7d3b00a0ab2;" // Docker test configuration
+                ?? @"Server=localhost;Database=sys;Uid=user;Pwd=Password123;";
 
-            // Set the connection string
-            ConnectionStringForSys = (connectionStringForSys ?? @"Server=localhost;Database=sys;Uid=user;Pwd=Password123;");
-            ConnectionString = (connectionString ?? @"Server=localhost;Database=RepoDb;Uid=user;Pwd=Password123;");
+            ConnectionString =
+                Environment.GetEnvironmentVariable("REPODB_MYSQL_CONSTR_REPODBTEST")
+                ?? Environment.GetEnvironmentVariable("REPODB_CONSTR")
+                // ?? @"Server=127.0.0.1;Port=43306;Database=RepoDbTest;User ID=root;Password=ddd53e85-b15e-4da8-91e5-a7d3b00a0ab2;" // Docker test configuration
+                ?? @"Server=localhost;Database=RepoDbTest;Uid=user;Pwd=Password123;";
 
             // Initialize MySql
             GlobalConfiguration
@@ -90,7 +94,8 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Setup
         {
             using (var connection = new MySqlConnection(ConnectionStringForSys))
             {
-                connection.ExecuteNonQuery(@"CREATE SCHEMA IF NOT EXISTS `RepoDb`;");
+                connection.ExecuteNonQuery(@"CREATE DATABASE IF NOT EXISTS `RepoDbTest`;");
+                connection.ExecuteNonQuery(@"GRANT ALL Privileges on RepoDbTest.* to 'root'@'%';");
             }
         }
 
@@ -108,7 +113,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Setup
         {
             using (var connection = new MySqlConnection(ConnectionString))
             {
-                connection.ExecuteNonQuery(@"CREATE TABLE IF NOT EXISTS `completetable`
+                connection.ExecuteNonQuery(@"CREATE TABLE IF NOT EXISTS `CompleteTable`
                     (
                         `Id` bigint(20) NOT NULL AUTO_INCREMENT,
                         `ColumnVarchar` varchar(256) DEFAULT NULL,
@@ -161,7 +166,7 @@ namespace RepoDb.MySqlConnector.IntegrationTests.Setup
         {
             using (var connection = new MySqlConnection(ConnectionString))
             {
-                connection.ExecuteNonQuery(@"CREATE TABLE IF NOT EXISTS `nonidentitycompletetable`
+                connection.ExecuteNonQuery(@"CREATE TABLE IF NOT EXISTS `NonIdentityCompleteTable`
                     (
                         `Id` bigint(20) NOT NULL,
                         `ColumnVarchar` varchar(256) DEFAULT NULL,

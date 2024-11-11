@@ -1,7 +1,7 @@
-﻿using RepoDb.PostgreSql.IntegrationTests.Models;
-using Npgsql;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Npgsql;
+using RepoDb.PostgreSql.IntegrationTests.Models;
 
 namespace RepoDb.PostgreSql.IntegrationTests.Setup
 {
@@ -12,7 +12,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Setup
         /// <summary>
         /// Gets or sets the connection string to be used for Postgres database.
         /// </summary>
-        public static string ConnectionStringForPosgres { get; private set; }
+        public static string ConnectionStringForPostgres { get; private set; }
 
         /// <summary>
         /// Gets or sets the connection string to be used.
@@ -25,15 +25,19 @@ namespace RepoDb.PostgreSql.IntegrationTests.Setup
 
         public static void Initialize()
         {
-            // Check the connection string
-            var connectionStringForPosgres = Environment.GetEnvironmentVariable("REPODB_CONSTR_POSTGRESDB", EnvironmentVariableTarget.Process);
-            var connectionString = Environment.GetEnvironmentVariable("REPODB_CONSTR", EnvironmentVariableTarget.Process);
-
             // Master connection
-            ConnectionStringForPosgres = (connectionStringForPosgres ?? "Server=127.0.0.1;Port=5432;Database=postgres;User Id=postgres;Password=Password123;");
+            ConnectionStringForPostgres =
+                Environment.GetEnvironmentVariable("REPODB_POSTGRESQL_CONSTR_POSTGRESDB")
+                ?? Environment.GetEnvironmentVariable("REPODB_CONSTR_POSTGRESDB")
+                // ?? "Server=127.0.0.1;Port=45432;Database=postgres;User Id=postgres;Password=ddd53e85-b15e-4da8-91e5-a7d3b00a0ab2;" // Docker test configuration
+                ?? "Server=127.0.0.1;Port=5432;Database=postgres;User Id=postgres;Password=Password123;";
 
             // RepoDb connection
-            ConnectionString = (connectionString ?? "Server=127.0.0.1;Port=5432;Database=RepoDb;User Id=postgres;Password=Password123;");
+            ConnectionString =
+                Environment.GetEnvironmentVariable("REPODB_POSTGRESQL_CONSTR")
+                ?? Environment.GetEnvironmentVariable("REPODB_CONSTR")
+                // ?? "Server=127.0.0.1;Port=45432;Database=RepoDb;User Id=postgres;Password=ddd53e85-b15e-4da8-91e5-a7d3b00a0ab2;" // Docker test configuration
+                ?? "Server=127.0.0.1;Port=5432;Database=RepoDb;User Id=postgres;Password=Password123;";
 
             // For >= v6.0.0: To reutilize the legacy behavior
             // https://github.com/abpframework/abp/issues/10273
@@ -67,7 +71,7 @@ namespace RepoDb.PostgreSql.IntegrationTests.Setup
 
         private static void CreateDatabase()
         {
-            using (var connection = new NpgsqlConnection(ConnectionStringForPosgres))
+            using (var connection = new NpgsqlConnection(ConnectionStringForPostgres))
             {
                 var recordCount = connection.ExecuteScalar<int>("SELECT COUNT(*) FROM pg_database WHERE datname = 'RepoDb';");
                 if (recordCount <= 0)

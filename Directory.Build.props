@@ -1,13 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
   <PropertyGroup>
-    <Authors>Michael Camara Pendon</Authors>
+    <Authors>Michael Camara Pendon and others</Authors>
     <Company>RepoDb</Company>
     <Product>RepoDb</Product>
+    <Version Condition="'$(Version)' == ''">0.0.1-dev</Version>
     <LangVersion>default</LangVersion>
-    <Copyright>Copyright © 2020</Copyright>
+    <Copyright>Copyright © 2020-2024</Copyright>
     <PackageProjectUrl>https://repodb.net/</PackageProjectUrl>
     <RepositoryType>Github</RepositoryType>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <DebugType>portable</DebugType>
+    <IncludeSymbols>true</IncludeSymbols>
+    <Nullable>annotations</Nullable>
+    <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
+    <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
   </PropertyGroup>
+  <Target Name="SetGenerateBeforeBuild" BeforeTargets="Build">
+    <!-- IsPackable is set in project files, so delay evaluating this -->
+    <PropertyGroup>
+      <GenerateDocumentationFile Condition="'$(IsPackable)' != 'false'">true</GenerateDocumentationFile>
+    </PropertyGroup>
+  </Target>
 </Project>

@@ -1,24 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="BenchmarkDotNet" Version="0.13.10" />
-    <PackageReference Include="Dapper" Version="2.1.21" />
-    <PackageReference Include="Dapper.Contrib" Version="2.0.78" />
-    <PackageReference Include="linq2db" Version="5.3.2" />
-    <PackageReference Include="linq2db.PostgreSQL" Version="5.3.2" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.0" />
-    <PackageReference Include="NHibernate" Version="5.4.6" />
-    <PackageReference Include="Npgsql" Version="7.0.6" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.0" />
+    <PackageReference Include="BenchmarkDotNet" />
+    <PackageReference Include="Dapper" />
+    <PackageReference Include="Dapper.Contrib" />
+    <PackageReference Include="linq2db" />
+    <PackageReference Include="linq2db.PostgreSQL" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" />
+    <PackageReference Include="NHibernate" />
+    <PackageReference Include="Npgsql" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\RepoDb.PostgreSql\RepoDb.PostgreSql\RepoDb.PostgreSql.csproj" />
   </ItemGroup>
-
 </Project>

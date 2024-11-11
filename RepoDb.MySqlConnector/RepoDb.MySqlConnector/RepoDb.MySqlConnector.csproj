@@ -1,42 +1,25 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
-	<PropertyGroup>
-		<Title>RepoDb.MySqlConnector</Title>
-		<TargetFrameworks>netstandard2.0;net6.0;net7.0;net8.0</TargetFrameworks>
-		<Version>0.0.1</Version>
-		<AssemblyVersion>0.0.1</AssemblyVersion>
-		<FileVersion>0.0.1</FileVersion>
-		<Description>A hybrid .NET ORM library for MySQL (using MySqlConnector).</Description>
-		<PackageTags>orm hybrid-orm micro-orm mysql mysqlconnector</PackageTags>
-		<RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.MySqlConnector</RepositoryUrl>
-		<PackageReleaseNotes>http://repodb.net/release/mysqlconnector</PackageReleaseNotes>
-		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<PackageProjectUrl>https://repodb.net/tutorial/get-started-mysql</PackageProjectUrl>
-	</PropertyGroup>
-
-	<ItemGroup>
-		<Compile Remove="Attributes\MySqlConnectorTypeMapAttribute.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<PackageReference Include="MySqlConnector" Version="2.3.0" />
-		<PackageReference Include="RepoDb" Version="0.0.1" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<None Include="..\..\LICENSE.txt">
-			<Pack>True</Pack>
-			<PackagePath></PackagePath>
-		</None>
-	</ItemGroup>
-
-	<ItemGroup>
-		<ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
-	</ItemGroup>
-
-	<Target Name="CopyPackage" AfterTargets="Pack" Condition="'$(Configuration)'=='Release'">
-		<Copy SourceFiles="$(OutputPath)$(PackageId).$(Version).nupkg" DestinationFolder="..\..\RepoDb.NuGet\Packages\$(Version)" />
-	</Target>
-
+  <PropertyGroup>
+    <Title>RepoDb.MySqlConnector</Title>
+    <TargetFrameworks>netstandard2.0;net6.0;net7.0;net8.0</TargetFrameworks>
+    <Nullable>annotations</Nullable>
+    <Description>A hybrid .NET ORM library for MySQL (using MySqlConnector).</Description>
+    <PackageTags>orm hybrid-orm micro-orm mysql mysqlconnector</PackageTags>
+    <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.MySqlConnector</RepositoryUrl>
+    <PackageReleaseNotes>http://repodb.net/release/mysqlconnector</PackageReleaseNotes>
+    <PackageProjectUrl>https://repodb.net/tutorial/get-started-mysql</PackageProjectUrl>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Attributes\MySqlConnectorTypeMapAttribute.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="MySqlConnector" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\LICENSE.txt" Pack="True" PackagePath="\" />
+    <None Include="..\README.md" Pack="True" PackagePath="\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
+  </ItemGroup>
 </Project>
