@@ -10,6 +10,7 @@
     <PackageTags>orm hybrid-orm micro-orm postgresql bulkoperations</PackageTags>
     <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.Extensions/RepoDb.PostgreSql.BulkOperations</RepositoryUrl>
     <PackageReleaseNotes>http://repodb.net/release/postgresqlbulk</PackageReleaseNotes>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageProjectUrl>https://repodb.net/tutorial/get-started-postgresql</PackageProjectUrl>
@@ -19,11 +20,8 @@
     <PackageReference Include="RepoDb.PostgreSql" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\LICENSE.txt">
-      <Pack>True</Pack>
-      <PackagePath>
-      </PackagePath>
-    </None>
+    <None Include="..\..\..\LICENSE.txt" Pack="True" PackagePath="\" />
+    <None Include="..\..\README.md" Pack="True" PackagePath="\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />

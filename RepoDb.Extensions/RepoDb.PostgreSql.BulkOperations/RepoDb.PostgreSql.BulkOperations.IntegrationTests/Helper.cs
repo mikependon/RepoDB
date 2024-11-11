@@ -1,14 +1,14 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Dynamic;
+using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Npgsql;
 using RepoDb.Extensions;
 using RepoDb.Interfaces;
 using RepoDb.PostgreSql.BulkOperations.IntegrationTests.Enumerations;
 using RepoDb.PostgreSql.BulkOperations.IntegrationTests.Models;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Dynamic;
-using System.Linq;
 
 namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
 {
@@ -760,7 +760,7 @@ namespace RepoDb.PostgreSql.BulkOperations.IntegrationTests
                 expandoObject["Id"] = (long)(hasId ? index + addToKey : 0);
                 expandoObject["ColumnEnumHand"] = Hands.Right;
                 expandoObject["ColumnEnumInt"] = (int?)null; // Hands.Left;
-                expandoObject["ColumnEnumText"] = (string?)null; // Hands.Unidentified;
+                expandoObject["ColumnEnumText"] = (string)null; // Hands.Unidentified;
                 tables.Add((ExpandoObject)expandoObject);
             }
             return tables;
