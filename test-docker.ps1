@@ -28,11 +28,9 @@ $tests = @(
 )
 
 # Build all test project
-foreach ($test in $tests) {
-  dotnet build $test -f $framework
-  if(-not $?){
-    Exit(1)
-  }
+dotnet build -f $framework
+if(-not $?){
+  Exit(1)
 }
 
 # SqlServer SA

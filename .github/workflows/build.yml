@@ -44,7 +44,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build all
-        run: dotnet build
+        run: dotnet build -f net8.0 
 
       - name: Run tests for .Net 8
-        run: dotnet test -f net8.0 --no-build
+        run: dotnet test -f net8.0 --no-build -p:TestingPlatformShowTestsFailure=true -p:TestingPlatformCaptureOutput=false
