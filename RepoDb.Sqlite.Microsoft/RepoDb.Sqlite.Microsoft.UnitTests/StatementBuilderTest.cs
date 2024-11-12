@@ -1,8 +1,8 @@
+using System;
 using Microsoft.Data.Sqlite;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Enumerations;
 using RepoDb.Exceptions;
-using System;
 
 namespace RepoDb.Sqlite.Microsoft.UnitTests
 {
@@ -151,8 +151,11 @@ namespace RepoDb.Sqlite.Microsoft.UnitTests
         #region CreateInsert
 
         [TestMethod]
-        public void TestMdsSqLiteStatementBuilderCreateInsert()
+        [DataRow(ConversionType.Automatic)]
+        [DataRow(ConversionType.Default)]
+        public void TestMdsSqLiteStatementBuilderCreateInsert(ConversionType conversionType)
         {
+            GlobalConfiguration.Options.ConversionType = conversionType;
             // Setup
             var builder = StatementBuilderMapper.Get<SqliteConnection>();
 
