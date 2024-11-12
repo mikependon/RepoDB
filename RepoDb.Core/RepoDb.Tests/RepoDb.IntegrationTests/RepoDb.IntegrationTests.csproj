@@ -7,32 +7,6 @@
     <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="Types\Bytes\**" />
-    <Compile Remove="Types\Dates\**" />
-    <Compile Remove="Types\Numbers\**" />
-    <Compile Remove="Types\Others\**" />
-    <Compile Remove="Types\Spatials\**" />
-    <Compile Remove="Types\Strings\**" />
-    <EmbeddedResource Remove="Types\Bytes\**" />
-    <EmbeddedResource Remove="Types\Dates\**" />
-    <EmbeddedResource Remove="Types\Numbers\**" />
-    <EmbeddedResource Remove="Types\Others\**" />
-    <EmbeddedResource Remove="Types\Spatials\**" />
-    <EmbeddedResource Remove="Types\Strings\**" />
-    <None Remove="Types\Bytes\**" />
-    <None Remove="Types\Dates\**" />
-    <None Remove="Types\Numbers\**" />
-    <None Remove="Types\Others\**" />
-    <None Remove="Types\Spatials\**" />
-    <None Remove="Types\Strings\**" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="ClassMappingTest.cs" />
-    <Compile Remove="Operations\BaseRepositoryOperationsTest.cs" />
-    <Compile Remove="Operations\DbRepositoryOperationsTest.cs" />
-    <Compile Remove="Operations\SqlConnectionOperationsTest.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="Microsoft.SqlServer.Types" />
     <PackageReference Include="MSTest" />
   </ItemGroup>

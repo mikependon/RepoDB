@@ -31,8 +31,8 @@
     <PackageReference Include="System.Memory" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\LICENSE.txt" Pack="True" PackagePath="" />
-    <None Include="..\..\README.md" Pack="True" PackagePath="" />
+    <None Include="..\..\LICENSE.txt" Pack="True" PackagePath="\" />
+    <None Include="..\..\README.md" Pack="True" PackagePath="\" />
     <None Include="..\..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
   <ItemGroup>

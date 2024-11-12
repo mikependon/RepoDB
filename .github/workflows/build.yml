@@ -43,18 +43,8 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v4
 
-      - run: dotnet test RepoDb.Core/RepoDb.Tests/RepoDb.UnitTests/RepoDb.UnitTests.csproj
-      - run: dotnet test RepoDb.MySql/RepoDb.MySql.UnitTests/RepoDb.MySql.UnitTests.csproj
-      - run: dotnet test RepoDb.MySqlConnector/RepoDb.MySqlConnector.UnitTests/RepoDb.MySqlConnector.UnitTests.csproj
-      - run: dotnet test RepoDb.PostgreSql/RepoDb.PostgreSql.UnitTests/RepoDb.PostgreSql.UnitTests.csproj
-      - run: dotnet test RepoDb.Sqlite.Microsoft/RepoDb.Sqlite.Microsoft.UnitTests/RepoDb.Sqlite.Microsoft.UnitTests.csproj
-      - run: dotnet test RepoDb.SQLite.System/RepoDb.SQLite.System.UnitTests/RepoDb.SQLite.System.UnitTests.csproj
-      - run: dotnet test RepoDb.SqlServer/RepoDb.SqlServer.UnitTests/RepoDb.SqlServer.UnitTests.csproj
-      
-      - run: dotnet test RepoDb.Core/RepoDb.Tests/RepoDb.IntegrationTests/RepoDb.IntegrationTests.csproj
-      - run: dotnet test RepoDb.MySql/RepoDb.MySql.IntegrationTests/RepoDb.MySql.IntegrationTests.csproj
-      - run: dotnet test RepoDb.MySqlConnector/RepoDb.MySqlConnector.IntegrationTests/RepoDb.MySqlConnector.IntegrationTests.csproj
-      - run: dotnet test RepoDb.PostgreSql/RepoDb.PostgreSql.IntegrationTests/RepoDb.PostgreSql.IntegrationTests.csproj
-      - run: dotnet test RepoDb.Sqlite.Microsoft/RepoDb.Sqlite.Microsoft.IntegrationTests/RepoDb.Sqlite.Microsoft.IntegrationTests.csproj
-      - run: dotnet test RepoDb.SQLite.System/RepoDb.SQLite.System.IntegrationTests/RepoDb.SQLite.System.IntegrationTests.csproj
-      - run: dotnet test RepoDb.SqlServer/RepoDb.SqlServer.IntegrationTests/RepoDb.SqlServer.IntegrationTests.csproj
+      - name: Build all
+        run: dotnet build
+
+      - name: Run tests for .Net 8
+        run: dotnet test -f net8.0 --no-build

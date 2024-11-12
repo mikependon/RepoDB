@@ -15,18 +15,11 @@
     <PackageProjectUrl>https://repodb.net/tutorial/get-started-mysql</PackageProjectUrl>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="Attributes\MySqlConnectorTypeMapAttribute.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="MySqlConnector" />
-    <PackageReference Include="RepoDb" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\LICENSE.txt">
-      <Pack>True</Pack>
-      <PackagePath>
-      </PackagePath>
-    </None>
+    <None Include="..\..\LICENSE.txt" Pack="True" PackagePath="\" />
+    <None Include="..\..\README.md" Pack="True" PackagePath="\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />

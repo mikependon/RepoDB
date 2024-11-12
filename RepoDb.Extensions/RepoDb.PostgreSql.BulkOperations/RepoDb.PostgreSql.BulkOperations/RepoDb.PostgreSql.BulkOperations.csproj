@@ -16,10 +16,6 @@
     <PackageProjectUrl>https://repodb.net/tutorial/get-started-postgresql</PackageProjectUrl>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="RepoDb" />
-    <PackageReference Include="RepoDb.PostgreSql" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="..\..\..\LICENSE.txt" Pack="True" PackagePath="\" />
     <None Include="..\..\README.md" Pack="True" PackagePath="\" />
   </ItemGroup>

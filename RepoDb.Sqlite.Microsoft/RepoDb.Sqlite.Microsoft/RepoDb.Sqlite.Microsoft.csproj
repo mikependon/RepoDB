@@ -10,30 +10,20 @@
     <PackageTags>orm hybrid-orm micro-orm sqlite</PackageTags>
     <RepositoryUrl>https://github.com/mikependon/RepoDb/tree/master/RepoDb.SqLite</RepositoryUrl>
     <PackageReleaseNotes>http://repodb.net/release/sqlite</PackageReleaseNotes>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageProjectUrl>https://repodb.net/tutorial/get-started-sqlite</PackageProjectUrl>
-    <AssemblyName>RepoDb.Sqlite.Microsoft</AssemblyName>
-    <RootNamespace>RepoDb.Sqlite.Microsoft</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="Properties\**" />
-    <EmbeddedResource Remove="Properties\**" />
-    <None Remove="Properties\**" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="Microsoft.Data.Sqlite" />
-    <PackageReference Include="RepoDb" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\LICENSE.txt">
-      <Pack>True</Pack>
-      <PackagePath>
-      </PackagePath>
-    </None>
+    <None Include="..\..\LICENSE.txt" Pack="True" PackagePath="\" />
+    <None Include="..\..\README.md" Pack="True" PackagePath="\" />
   </ItemGroup>
   <Target Name="CopyPackage" AfterTargets="Pack" Condition="'$(Configuration)'=='Release'">
     <Copy SourceFiles="$(OutputPath)$(PackageId).$(Version).nupkg" DestinationFolder="..\..\RepoDb.NuGet\Packages\$(Version)" />

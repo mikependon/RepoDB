@@ -7,16 +7,6 @@
     <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="Interfaces\ICacheForBaseRepositoryTest.cs" />
-    <Compile Remove="Interfaces\ICacheForDbRepositoryTest.cs" />
-    <Compile Remove="Interfaces\IStatementBuilderForBaseRepositoryTest.cs" />
-    <Compile Remove="Interfaces\IStatementBuilderForDbRepositoryTest.cs" />
-    <Compile Remove="Interfaces\ITraceForBaseRepositoryTest.cs" />
-    <Compile Remove="Interfaces\ITraceForDbRepositoryTest.cs" />
-    <Compile Remove="Mappers\ClassMapTest.cs" />
-    <Compile Remove="Others\ClassMapTest.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="Moq" />
     <PackageReference Include="MSTest" />
     <PackageReference Include="System.Dynamic.Runtime" />

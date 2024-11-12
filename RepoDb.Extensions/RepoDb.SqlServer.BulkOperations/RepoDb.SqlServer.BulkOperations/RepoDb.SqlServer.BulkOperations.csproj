@@ -14,24 +14,13 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="System.Data.SqlClient\**" />
-    <EmbeddedResource Remove="System.Data.SqlClient\**" />
-    <None Remove="System.Data.SqlClient\**" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="RepoDb" />
-    <PackageReference Include="RepoDb.SqlServer" />
     <PackageReference Include="System.Linq.Async" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\LICENSE.txt">
-      <Pack>True</Pack>
-      <PackagePath>
-      </PackagePath>
-    </None>
+    <None Include="..\..\..\LICENSE.txt" Pack="True" PackagePath="\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />
