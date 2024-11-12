@@ -1,130 +1,147 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29613.14
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35424.110 d17.12
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb", "RepoDb\RepoDb.csproj", "{848A3476-B319-4BCC-A9CB-572182785B58}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb", "RepoDb.Core\RepoDb\RepoDb.csproj", "{848A3476-B319-4BCC-A9CB-572182785B58}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Base", "RepoDb.Base", "{810FF947-4368-477F-9193-07532892B492}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Base", "Base", "{810FF947-4368-477F-9193-07532892B492}"
 	ProjectSection(SolutionItems) = preProject
-		..\CODE_OF_CONDUCT.md = ..\CODE_OF_CONDUCT.md
-		..\LICENSE.txt = ..\LICENSE.txt
-		..\README.md = ..\README.md
+		CODE_OF_CONDUCT.md = CODE_OF_CONDUCT.md
+		LICENSE.txt = LICENSE.txt
+		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.MySql", "..\RepoDb.MySql\RepoDb.MySql\RepoDb.MySql.csproj", "{C6E790E9-1DB0-4953-B5A4-ABC517C0C19F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.MySql", "RepoDb.MySql\RepoDb.MySql\RepoDb.MySql.csproj", "{C6E790E9-1DB0-4953-B5A4-ABC517C0C19F}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Nuget", "RepoDb.Nuget", "{006AD8A9-75F1-4F67-AF75-0B5204E2E0A4}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nuget", "Nuget", "{006AD8A9-75F1-4F67-AF75-0B5204E2E0A4}"
 	ProjectSection(SolutionItems) = preProject
-		..\RepoDb.Nuget\documentation.md = ..\RepoDb.Nuget\documentation.md
-		..\RepoDb.Nuget\install.txt = ..\RepoDb.Nuget\install.txt
-		..\RepoDb.Nuget\readme.txt = ..\RepoDb.Nuget\readme.txt
+		RepoDb.Nuget\documentation.md = RepoDb.Nuget\documentation.md
+		RepoDb.Nuget\install.txt = RepoDb.Nuget\install.txt
+		RepoDb.Nuget\readme.txt = RepoDb.Nuget\readme.txt
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Docs", "RepoDb.Docs", "{C7222746-534E-4D95-9B7E-9593C191FDE2}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{C7222746-534E-4D95-9B7E-9593C191FDE2}"
 	ProjectSection(SolutionItems) = preProject
-		..\RepoDb.Docs\atomic-batch-bulk.md = ..\RepoDb.Docs\atomic-batch-bulk.md
-		..\RepoDb.Docs\building-the-solutions.md = ..\RepoDb.Docs\building-the-solutions.md
-		..\RepoDb.Docs\bulk-operation-edge-cases.md = ..\RepoDb.Docs\bulk-operation-edge-cases.md
-		..\RepoDb.Docs\coding-standards.md = ..\RepoDb.Docs\coding-standards.md
-		..\RepoDb.Docs\development-experience.md = ..\RepoDb.Docs\development-experience.md
-		..\RepoDb.Docs\issuing-a-pull-request.md = ..\RepoDb.Docs\issuing-a-pull-request.md
-		..\RepoDb.Docs\limitations.md = ..\RepoDb.Docs\limitations.md
-		..\RepoDb.Docs\reporting-an-issue.md = ..\RepoDb.Docs\reporting-an-issue.md
-		..\RepoDb.Docs\support-policy.md = ..\RepoDb.Docs\support-policy.md
+		RepoDb.Docs\atomic-batch-bulk.md = RepoDb.Docs\atomic-batch-bulk.md
+		RepoDb.Docs\building-the-solutions.md = RepoDb.Docs\building-the-solutions.md
+		RepoDb.Docs\bulk-operation-edge-cases.md = RepoDb.Docs\bulk-operation-edge-cases.md
+		RepoDb.Docs\coding-standards.md = RepoDb.Docs\coding-standards.md
+		RepoDb.Docs\development-experience.md = RepoDb.Docs\development-experience.md
+		RepoDb.Docs\issuing-a-pull-request.md = RepoDb.Docs\issuing-a-pull-request.md
+		RepoDb.Docs\limitations.md = RepoDb.Docs\limitations.md
+		RepoDb.Docs\reporting-an-issue.md = RepoDb.Docs\reporting-an-issue.md
+		RepoDb.Docs\support-policy.md = RepoDb.Docs\support-policy.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "READMEs", "READMEs", "{5EA323B8-B4B6-4083-97A3-018C9423B20A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SqLite", "SqLite", "{D203DBE3-A86A-4F48-AE16-3CCCCA443ABC}"
 	ProjectSection(SolutionItems) = preProject
-		..\RepoDb.SqLite\README.md = ..\RepoDb.SqLite\README.md
+		RepoDb.SqLite\README.md = RepoDb.SqLite\README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MySql", "MySql", "{97CDB540-A186-42B9-9492-608A2392A8C5}"
 	ProjectSection(SolutionItems) = preProject
-		..\RepoDb.MySql\README.md = ..\RepoDb.MySql\README.md
+		RepoDb.MySql\README.md = RepoDb.MySql\README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PostgreSql", "PostgreSql", "{97F2640B-CD0C-430E-8E18-D948A6966C85}"
 	ProjectSection(SolutionItems) = preProject
-		..\RepoDb.PostgreSql\README.md = ..\RepoDb.PostgreSql\README.md
+		RepoDb.PostgreSql\README.md = RepoDb.PostgreSql\README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{FCAEE688-26E0-490C-9C70-0A52AA7AFF62}"
 	ProjectSection(SolutionItems) = preProject
-		README.md = README.md
+		RepoDb.Core\README.md = RepoDb.Core\README.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.PostgreSql", "..\RepoDb.PostgreSql\RepoDb.PostgreSql\RepoDb.PostgreSql.csproj", "{FAD179C4-B9E1-44F3-956A-D755459747F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.PostgreSql", "RepoDb.PostgreSql\RepoDb.PostgreSql\RepoDb.PostgreSql.csproj", "{FAD179C4-B9E1-44F3-956A-D755459747F8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.SqlServer", "..\RepoDb.SqlServer\RepoDb.SqlServer\RepoDb.SqlServer.csproj", "{DBE1E50B-564D-4B81-9DE7-EC6A141A515A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.SqlServer", "RepoDb.SqlServer\RepoDb.SqlServer\RepoDb.SqlServer.csproj", "{DBE1E50B-564D-4B81-9DE7-EC6A141A515A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SqlServer", "SqlServer", "{B57B1387-2718-46F0-9608-11746ECB4DF2}"
 	ProjectSection(SolutionItems) = preProject
-		..\RepoDb.SqlServer\README.md = ..\RepoDb.SqlServer\README.md
+		RepoDb.SqlServer\README.md = RepoDb.SqlServer\README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SqlServer.BulkOperations", "SqlServer.BulkOperations", "{1E85E11D-431C-4969-B2EE-C82EB0D92DC7}"
 	ProjectSection(SolutionItems) = preProject
-		..\RepoDb.Extensions\RepoDb.SqlServer.BulkOperations\README.md = ..\RepoDb.Extensions\RepoDb.SqlServer.BulkOperations\README.md
+		RepoDb.Extensions\RepoDb.SqlServer.BulkOperations\README.md = RepoDb.Extensions\RepoDb.SqlServer.BulkOperations\README.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.SqlServer.BulkOperations", "..\RepoDb.Extensions\RepoDb.SqlServer.BulkOperations\RepoDb.SqlServer.BulkOperations\RepoDb.SqlServer.BulkOperations.csproj", "{E6E02782-931E-450D-AAF6-7C1960B2AA17}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.SqlServer.BulkOperations", "RepoDb.Extensions\RepoDb.SqlServer.BulkOperations\RepoDb.SqlServer.BulkOperations\RepoDb.SqlServer.BulkOperations.csproj", "{E6E02782-931E-450D-AAF6-7C1960B2AA17}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.MySqlConnector", "..\RepoDb.MySqlConnector\RepoDb.MySqlConnector\RepoDb.MySqlConnector.csproj", "{C63D73DF-E9CC-4DC7-A2AC-44FD7A378090}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.MySqlConnector", "RepoDb.MySqlConnector\RepoDb.MySqlConnector\RepoDb.MySqlConnector.csproj", "{C63D73DF-E9CC-4DC7-A2AC-44FD7A378090}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MySqlConnector", "MySqlConnector", "{419BA40B-7803-4E45-893F-FB8A6E81FAC5}"
 	ProjectSection(SolutionItems) = preProject
-		..\RepoDb.MySqlConnector\README.md = ..\RepoDb.MySqlConnector\README.md
+		RepoDb.MySqlConnector\README.md = RepoDb.MySqlConnector\README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0D6226D2-45AA-4EE3-BC76-BD0B60D8AE6A}"
 	ProjectSection(SolutionItems) = preProject
-		..\Directory.Build.props = ..\Directory.Build.props
+		Directory.Build.props = Directory.Build.props
+		Directory.Packages.props = Directory.Packages.props
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.IntegrationTests", "RepoDb.Tests\RepoDb.IntegrationTests\RepoDb.IntegrationTests.csproj", "{86A5DB6E-622C-4320-93F7-8E7DE6CC361B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.IntegrationTests", "RepoDb.Core\RepoDb.Tests\RepoDb.IntegrationTests\RepoDb.IntegrationTests.csproj", "{86A5DB6E-622C-4320-93F7-8E7DE6CC361B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.UnitTests", "RepoDb.Tests\RepoDb.UnitTests\RepoDb.UnitTests.csproj", "{2EB719D0-36CB-4F3B-9429-10C9CE29C12E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.UnitTests", "RepoDb.Core\RepoDb.Tests\RepoDb.UnitTests\RepoDb.UnitTests.csproj", "{2EB719D0-36CB-4F3B-9429-10C9CE29C12E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.MySql.IntegrationTests", "..\RepoDb.MySql\RepoDb.MySql.IntegrationTests\RepoDb.MySql.IntegrationTests.csproj", "{BE11218C-C218-4A8F-ABDE-0EF65A920F4B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.MySql.IntegrationTests", "RepoDb.MySql\RepoDb.MySql.IntegrationTests\RepoDb.MySql.IntegrationTests.csproj", "{BE11218C-C218-4A8F-ABDE-0EF65A920F4B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.MySql.UnitTests", "..\RepoDb.MySql\RepoDb.MySql.UnitTests\RepoDb.MySql.UnitTests.csproj", "{B14F45B8-1B78-473E-BDE0-6E27AC622AED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.MySql.UnitTests", "RepoDb.MySql\RepoDb.MySql.UnitTests\RepoDb.MySql.UnitTests.csproj", "{B14F45B8-1B78-473E-BDE0-6E27AC622AED}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.MySqlConnector.UnitTests", "..\RepoDb.MySqlConnector\RepoDb.MySqlConnector.UnitTests\RepoDb.MySqlConnector.UnitTests.csproj", "{D456EA78-645F-4A9A-BF76-A3AD7BC56E2A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.MySqlConnector.UnitTests", "RepoDb.MySqlConnector\RepoDb.MySqlConnector.UnitTests\RepoDb.MySqlConnector.UnitTests.csproj", "{D456EA78-645F-4A9A-BF76-A3AD7BC56E2A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.MySqlConnector.IntegrationTests", "..\RepoDb.MySqlConnector\RepoDb.MySqlConnector.IntegrationTests\RepoDb.MySqlConnector.IntegrationTests.csproj", "{80A2A415-1223-4A8A-BF96-E19F90B933A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.MySqlConnector.IntegrationTests", "RepoDb.MySqlConnector\RepoDb.MySqlConnector.IntegrationTests\RepoDb.MySqlConnector.IntegrationTests.csproj", "{80A2A415-1223-4A8A-BF96-E19F90B933A5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.PostgreSql.IntegrationTests", "..\RepoDb.PostgreSql\RepoDb.PostgreSql.IntegrationTests\RepoDb.PostgreSql.IntegrationTests.csproj", "{C2A0A9CE-742C-4DAE-BA49-B27718E411B9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.PostgreSql.IntegrationTests", "RepoDb.PostgreSql\RepoDb.PostgreSql.IntegrationTests\RepoDb.PostgreSql.IntegrationTests.csproj", "{C2A0A9CE-742C-4DAE-BA49-B27718E411B9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.PostgreSql.UnitTests", "..\RepoDb.PostgreSql\RepoDb.PostgreSql.UnitTests\RepoDb.PostgreSql.UnitTests.csproj", "{0FEFE776-A12C-4C9E-A440-A69D0BE90889}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.PostgreSql.UnitTests", "RepoDb.PostgreSql\RepoDb.PostgreSql.UnitTests\RepoDb.PostgreSql.UnitTests.csproj", "{0FEFE776-A12C-4C9E-A440-A69D0BE90889}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.SqlServer.IntegrationTests", "..\RepoDb.SqlServer\RepoDb.SqlServer.IntegrationTests\RepoDb.SqlServer.IntegrationTests.csproj", "{8257EF67-47B6-48F0-9E90-546DD2C20AAB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.SqlServer.IntegrationTests", "RepoDb.SqlServer\RepoDb.SqlServer.IntegrationTests\RepoDb.SqlServer.IntegrationTests.csproj", "{8257EF67-47B6-48F0-9E90-546DD2C20AAB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.SqlServer.UnitTests", "..\RepoDb.SqlServer\RepoDb.SqlServer.UnitTests\RepoDb.SqlServer.UnitTests.csproj", "{2D39959C-CE70-4D10-92F5-951B9A773DC6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoDb.SqlServer.UnitTests", "RepoDb.SqlServer\RepoDb.SqlServer.UnitTests\RepoDb.SqlServer.UnitTests.csproj", "{2D39959C-CE70-4D10-92F5-951B9A773DC6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Benchmarks.SqlServer", "..\RepoDb.Benchmarks\RepoDb.Benchmarks.SqlServer\RepoDb.Benchmarks.SqlServer.csproj", "{52D8E025-4143-4D46-B4DC-AE016281907A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Benchmarks.SqlServer", "RepoDb.Benchmarks\RepoDb.Benchmarks.SqlServer\RepoDb.Benchmarks.SqlServer.csproj", "{52D8E025-4143-4D46-B4DC-AE016281907A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Benchmarks.PostgreSql", "..\RepoDb.Benchmarks\RepoDb.Benchmarks.PostgreSql\RepoDb.Benchmarks.PostgreSql.csproj", "{9614BDFB-2E88-4503-A066-49B8F701B190}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Benchmarks.PostgreSql", "RepoDb.Benchmarks\RepoDb.Benchmarks.PostgreSql\RepoDb.Benchmarks.PostgreSql.csproj", "{9614BDFB-2E88-4503-A066-49B8F701B190}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.SQLite.System", "..\RepoDb.SQLite.System\RepoDb.SQLite.System\RepoDb.SQLite.System.csproj", "{0EE50932-20D7-4132-8077-B89D3BDA48FF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.SQLite.System", "RepoDb.SQLite.System\RepoDb.SQLite.System\RepoDb.SQLite.System.csproj", "{0EE50932-20D7-4132-8077-B89D3BDA48FF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.SQLite.System.IntegrationTests", "..\RepoDb.SQLite.System\RepoDb.SQLite.System.IntegrationTests\RepoDb.SQLite.System.IntegrationTests.csproj", "{BD2A25DC-0645-4858-B5D2-4739D108ED59}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.SQLite.System.IntegrationTests", "RepoDb.SQLite.System\RepoDb.SQLite.System.IntegrationTests\RepoDb.SQLite.System.IntegrationTests.csproj", "{BD2A25DC-0645-4858-B5D2-4739D108ED59}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.SQLite.System.UnitTests", "..\RepoDb.SQLite.System\RepoDb.SQLite.System.UnitTests\RepoDb.SQLite.System.UnitTests.csproj", "{C98D7388-CF04-44B1-8FBA-3444D5C44A57}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.SQLite.System.UnitTests", "RepoDb.SQLite.System\RepoDb.SQLite.System.UnitTests\RepoDb.SQLite.System.UnitTests.csproj", "{C98D7388-CF04-44B1-8FBA-3444D5C44A57}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Sqlite.Microsoft", "..\RepoDb.Sqlite.Microsoft\RepoDb.Sqlite.Microsoft\RepoDb.Sqlite.Microsoft.csproj", "{D70CDE56-44C4-456F-8483-AB6DB68F363F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Sqlite.Microsoft", "RepoDb.Sqlite.Microsoft\RepoDb.Sqlite.Microsoft\RepoDb.Sqlite.Microsoft.csproj", "{D70CDE56-44C4-456F-8483-AB6DB68F363F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Sqlite.Microsoft.IntegrationTests", "..\RepoDb.Sqlite.Microsoft\RepoDb.Sqlite.Microsoft.IntegrationTests\RepoDb.Sqlite.Microsoft.IntegrationTests.csproj", "{E0B2E6E9-943B-4843-99CB-25564F03ACF1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Sqlite.Microsoft.IntegrationTests", "RepoDb.Sqlite.Microsoft\RepoDb.Sqlite.Microsoft.IntegrationTests\RepoDb.Sqlite.Microsoft.IntegrationTests.csproj", "{E0B2E6E9-943B-4843-99CB-25564F03ACF1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Sqlite.Microsoft.UnitTests", "..\RepoDb.Sqlite.Microsoft\RepoDb.Sqlite.Microsoft.UnitTests\RepoDb.Sqlite.Microsoft.UnitTests.csproj", "{A98AD547-9E71-439A-A25D-3D0B20AC5FF3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.Sqlite.Microsoft.UnitTests", "RepoDb.Sqlite.Microsoft\RepoDb.Sqlite.Microsoft.UnitTests\RepoDb.Sqlite.Microsoft.UnitTests.csproj", "{A98AD547-9E71-439A-A25D-3D0B20AC5FF3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.PostgreSql.BulkOperations", "..\RepoDb.Extensions\RepoDb.PostgreSql.BulkOperations\RepoDb.PostgreSql.BulkOperations\RepoDb.PostgreSql.BulkOperations.csproj", "{2C23EF04-E3D3-44F0-820A-5CBA5A1D86F9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.PostgreSql.BulkOperations", "RepoDb.Extensions\RepoDb.PostgreSql.BulkOperations\RepoDb.PostgreSql.BulkOperations\RepoDb.PostgreSql.BulkOperations.csproj", "{2C23EF04-E3D3-44F0-820A-5CBA5A1D86F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.PostgreSql.BulkOperations.IntegrationTests", "..\RepoDb.Extensions\RepoDb.PostgreSql.BulkOperations\RepoDb.PostgreSql.BulkOperations.IntegrationTests\RepoDb.PostgreSql.BulkOperations.IntegrationTests.csproj", "{B4E1D3CC-D308-44FA-90DF-4398572DEFB5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.PostgreSql.BulkOperations.IntegrationTests", "RepoDb.Extensions\RepoDb.PostgreSql.BulkOperations\RepoDb.PostgreSql.BulkOperations.IntegrationTests\RepoDb.PostgreSql.BulkOperations.IntegrationTests.csproj", "{B4E1D3CC-D308-44FA-90DF-4398572DEFB5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.SqlServer.BulkOperations.IntegrationTests", "..\RepoDb.Extensions\RepoDb.SqlServer.BulkOperations\RepoDb.SqlServer.BulkOperations.IntegrationTests\RepoDb.SqlServer.BulkOperations.IntegrationTests.csproj", "{318B1EF1-25E7-47EE-98C2-21A486813AE3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoDb.SqlServer.BulkOperations.IntegrationTests", "RepoDb.Extensions\RepoDb.SqlServer.BulkOperations\RepoDb.SqlServer.BulkOperations.IntegrationTests\RepoDb.SqlServer.BulkOperations.IntegrationTests.csproj", "{318B1EF1-25E7-47EE-98C2-21A486813AE3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Core", "RepoDb.Core", "{6A7B318D-F0E6-4CFC-A7E8-DCDD1DF3F18F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Z-RepoDb.Benchmarks", "Z-RepoDb.Benchmarks", "{802AB45C-B9BC-4DF4-AB77-60383D42AC8F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Mysql", "RepoDb.Mysql", "{94DB4277-1449-4EF9-A915-2AF1E7D3CFF3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.MysqlConnector", "RepoDb.MysqlConnector", "{7FAF93C1-067C-4232-A510-ADB1791FF0CD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.PostgreSql", "RepoDb.PostgreSql", "{31B2008C-C79A-444C-B056-02D056950819}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.Sqlite.Microsoft", "RepoDb.Sqlite.Microsoft", "{40FF279B-CC23-46E4-B3EA-F8D23BC268CF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.SQLite.System", "RepoDb.SQLite.System", "{DF85909C-ED1C-450A-98BC-0F2E97AF8DC0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RepoDb.SqlServer", "RepoDb.SqlServer", "{13208D19-44A9-48B0-BB2F-45B1FA090D90}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -245,14 +262,42 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{848A3476-B319-4BCC-A9CB-572182785B58} = {6A7B318D-F0E6-4CFC-A7E8-DCDD1DF3F18F}
+		{C6E790E9-1DB0-4953-B5A4-ABC517C0C19F} = {94DB4277-1449-4EF9-A915-2AF1E7D3CFF3}
+		{006AD8A9-75F1-4F67-AF75-0B5204E2E0A4} = {C7222746-534E-4D95-9B7E-9593C191FDE2}
 		{5EA323B8-B4B6-4083-97A3-018C9423B20A} = {810FF947-4368-477F-9193-07532892B492}
 		{D203DBE3-A86A-4F48-AE16-3CCCCA443ABC} = {5EA323B8-B4B6-4083-97A3-018C9423B20A}
 		{97CDB540-A186-42B9-9492-608A2392A8C5} = {5EA323B8-B4B6-4083-97A3-018C9423B20A}
 		{97F2640B-CD0C-430E-8E18-D948A6966C85} = {5EA323B8-B4B6-4083-97A3-018C9423B20A}
 		{FCAEE688-26E0-490C-9C70-0A52AA7AFF62} = {5EA323B8-B4B6-4083-97A3-018C9423B20A}
+		{FAD179C4-B9E1-44F3-956A-D755459747F8} = {31B2008C-C79A-444C-B056-02D056950819}
+		{DBE1E50B-564D-4B81-9DE7-EC6A141A515A} = {13208D19-44A9-48B0-BB2F-45B1FA090D90}
 		{B57B1387-2718-46F0-9608-11746ECB4DF2} = {5EA323B8-B4B6-4083-97A3-018C9423B20A}
 		{1E85E11D-431C-4969-B2EE-C82EB0D92DC7} = {5EA323B8-B4B6-4083-97A3-018C9423B20A}
+		{E6E02782-931E-450D-AAF6-7C1960B2AA17} = {13208D19-44A9-48B0-BB2F-45B1FA090D90}
+		{C63D73DF-E9CC-4DC7-A2AC-44FD7A378090} = {7FAF93C1-067C-4232-A510-ADB1791FF0CD}
 		{419BA40B-7803-4E45-893F-FB8A6E81FAC5} = {5EA323B8-B4B6-4083-97A3-018C9423B20A}
+		{86A5DB6E-622C-4320-93F7-8E7DE6CC361B} = {6A7B318D-F0E6-4CFC-A7E8-DCDD1DF3F18F}
+		{2EB719D0-36CB-4F3B-9429-10C9CE29C12E} = {6A7B318D-F0E6-4CFC-A7E8-DCDD1DF3F18F}
+		{BE11218C-C218-4A8F-ABDE-0EF65A920F4B} = {94DB4277-1449-4EF9-A915-2AF1E7D3CFF3}
+		{B14F45B8-1B78-473E-BDE0-6E27AC622AED} = {94DB4277-1449-4EF9-A915-2AF1E7D3CFF3}
+		{D456EA78-645F-4A9A-BF76-A3AD7BC56E2A} = {7FAF93C1-067C-4232-A510-ADB1791FF0CD}
+		{80A2A415-1223-4A8A-BF96-E19F90B933A5} = {7FAF93C1-067C-4232-A510-ADB1791FF0CD}
+		{C2A0A9CE-742C-4DAE-BA49-B27718E411B9} = {31B2008C-C79A-444C-B056-02D056950819}
+		{0FEFE776-A12C-4C9E-A440-A69D0BE90889} = {31B2008C-C79A-444C-B056-02D056950819}
+		{8257EF67-47B6-48F0-9E90-546DD2C20AAB} = {13208D19-44A9-48B0-BB2F-45B1FA090D90}
+		{2D39959C-CE70-4D10-92F5-951B9A773DC6} = {13208D19-44A9-48B0-BB2F-45B1FA090D90}
+		{52D8E025-4143-4D46-B4DC-AE016281907A} = {802AB45C-B9BC-4DF4-AB77-60383D42AC8F}
+		{9614BDFB-2E88-4503-A066-49B8F701B190} = {802AB45C-B9BC-4DF4-AB77-60383D42AC8F}
+		{0EE50932-20D7-4132-8077-B89D3BDA48FF} = {DF85909C-ED1C-450A-98BC-0F2E97AF8DC0}
+		{BD2A25DC-0645-4858-B5D2-4739D108ED59} = {DF85909C-ED1C-450A-98BC-0F2E97AF8DC0}
+		{C98D7388-CF04-44B1-8FBA-3444D5C44A57} = {DF85909C-ED1C-450A-98BC-0F2E97AF8DC0}
+		{D70CDE56-44C4-456F-8483-AB6DB68F363F} = {40FF279B-CC23-46E4-B3EA-F8D23BC268CF}
+		{E0B2E6E9-943B-4843-99CB-25564F03ACF1} = {40FF279B-CC23-46E4-B3EA-F8D23BC268CF}
+		{A98AD547-9E71-439A-A25D-3D0B20AC5FF3} = {40FF279B-CC23-46E4-B3EA-F8D23BC268CF}
+		{2C23EF04-E3D3-44F0-820A-5CBA5A1D86F9} = {31B2008C-C79A-444C-B056-02D056950819}
+		{B4E1D3CC-D308-44FA-90DF-4398572DEFB5} = {31B2008C-C79A-444C-B056-02D056950819}
+		{318B1EF1-25E7-47EE-98C2-21A486813AE3} = {13208D19-44A9-48B0-BB2F-45B1FA090D90}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D15A7161-5524-45B7-A22A-EA6C877AA840}
