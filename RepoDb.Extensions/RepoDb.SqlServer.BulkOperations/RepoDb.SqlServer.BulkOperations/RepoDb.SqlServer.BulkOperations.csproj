@@ -3,9 +3,6 @@
     <Title>RepoDb.SqlServer.BulkOperations</Title>
     <TargetFrameworks>netstandard2.0;net6.0;net7.0;net8.0</TargetFrameworks>
     <Nullable>annotations</Nullable>
-    <Version>0.0.1</Version>
-    <FileVersion>0.0.1</FileVersion>
-    <AssemblyVersion>0.0.1</AssemblyVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>An extension library that contains the official Bulk Operations of RepoDb for SQL Server.</Description>
     <PackageTags>orm hybrid-orm micro-orm sqlserver bulkoperations</PackageTags>
@@ -21,6 +18,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\LICENSE.txt" Pack="True" PackagePath="\" />
+    <None Include="..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\RepoDb.Core\RepoDb\RepoDb.csproj" />

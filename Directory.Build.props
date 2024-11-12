@@ -9,5 +9,7 @@
     <PackageProjectUrl>https://repodb.net/</PackageProjectUrl>
     <RepositoryType>Github</RepositoryType>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Version>0.0.1</Version>
   </PropertyGroup>
 </Project>
