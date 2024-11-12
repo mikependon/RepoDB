@@ -12,5 +12,6 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <Version>0.0.1-dev</Version>
     <IncludeSymbols>true</IncludeSymbols>
+    <IsPackable Condition="'$(Configuration)' != 'Release'">false</IsPackable>
   </PropertyGroup>
 </Project>
