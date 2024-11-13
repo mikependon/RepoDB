@@ -1,6 +1,4 @@
-﻿using RepoDb.Exceptions;
-using RepoDb.SqlServer.BulkOperations;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -8,6 +6,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
+using RepoDb.Exceptions;
+using RepoDb.Interfaces;
+using RepoDb.SqlServer.BulkOperations;
 
 namespace RepoDb
 {
@@ -28,16 +29,18 @@ namespace RepoDb
         /// <param name="batchSize"></param>
         /// <param name="hasOrderingColumn"></param>
         /// <param name="transaction"></param>
+        /// <param name="trace"></param>
         /// <returns></returns>
         private static int WriteToServerInternal<TEntity>(SqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<BulkInsertMapItem>? mappings = null,
             SqlBulkCopyOptions options = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool hasOrderingColumn = false,
-            SqlTransaction transaction = null)
+            SqlTransaction? transaction = null,
+            ITrace? trace = null)
             where TEntity : class
         {
             // Throw an error if there are no mappings
@@ -114,11 +117,11 @@ namespace RepoDb
         private static int WriteToServerInternal(SqlConnection connection,
             string tableName,
             DbDataReader reader,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<BulkInsertMapItem>? mappings = null,
             SqlBulkCopyOptions options = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            SqlTransaction transaction = null)
+            SqlTransaction? transaction = null)
         {
             // Throw an error if there are no mappings
             if (mappings?.Any() != true)
@@ -184,12 +187,12 @@ namespace RepoDb
             string tableName,
             DataTable dataTable,
             DataRowState? rowState = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<BulkInsertMapItem>? mappings = null,
             SqlBulkCopyOptions options = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool hasOrderingColumn = false,
-            SqlTransaction transaction = null)
+            SqlTransaction? transaction = null)
         {
             // Throw an error if there are no mappings
             if (mappings?.Any() != true)
@@ -271,12 +274,12 @@ namespace RepoDb
         private static async Task<int> WriteToServerAsyncInternal<TEntity>(SqlConnection connection,
             string tableName,
             IEnumerable<TEntity> entities,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<BulkInsertMapItem>? mappings = null,
             SqlBulkCopyOptions options = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool hasOrderingColumn = false,
-            SqlTransaction transaction = null,
+            SqlTransaction? transaction = null,
             CancellationToken cancellationToken = default)
             where TEntity : class
         {
@@ -355,11 +358,11 @@ namespace RepoDb
         private static async Task<int> WriteToServerAsyncInternal(SqlConnection connection,
             string tableName,
             DbDataReader reader,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<BulkInsertMapItem>? mappings = null,
             SqlBulkCopyOptions options = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            SqlTransaction transaction = null,
+            SqlTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Throw an error if there are no mappings
@@ -426,12 +429,12 @@ namespace RepoDb
             string tableName,
             DataTable dataTable,
             DataRowState? rowState = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<BulkInsertMapItem>? mappings = null,
             SqlBulkCopyOptions options = default,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
             bool hasOrderingColumn = false,
-            SqlTransaction transaction = null,
+            SqlTransaction? transaction = null,
             CancellationToken cancellationToken = default)
         {
             // Throw an error if there are no mappings
