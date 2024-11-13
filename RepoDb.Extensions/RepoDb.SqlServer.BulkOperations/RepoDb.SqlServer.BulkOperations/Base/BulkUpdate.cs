@@ -1,6 +1,4 @@
-﻿using RepoDb.Extensions;
-using RepoDb.SqlServer.BulkOperations;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -8,6 +6,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
+using RepoDb.Extensions;
+using RepoDb.Interfaces;
 
 namespace RepoDb
 {
@@ -29,18 +29,20 @@ namespace RepoDb
         /// <param name="batchSize"></param>
         /// <param name="usePhysicalPseudoTempTable"></param>
         /// <param name="transaction"></param>
+        /// <param name="trace"></param>
         /// <returns></returns>
         internal static int BulkUpdateInternalBase(SqlConnection connection,
             string tableName,
             DbDataReader reader,
-            IEnumerable<Field> qualifiers = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<Field>? qualifiers = null,
+            IEnumerable<BulkInsertMapItem>? mappings = null,
             SqlBulkCopyOptions options = default,
-            string hints = null,
+            string? hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            bool usePhysicalPseudoTempTable = false,
+            SqlTransaction? transaction = null,
+            ITrace? trace = null)
         {
             // Validate
             if (!reader.HasRows)
@@ -118,18 +120,18 @@ namespace RepoDb
                     fields,
                     dbSetting,
                     false);
-                connection.ExecuteNonQuery(sql, transaction: transaction);
+                connection.ExecuteNonQuery(sql, transaction: transaction, trace: trace);
 
-                // Set the options to KeepIdentity if needed
-                if (Equals(options, default(SqlBulkCopyOptions)) &&
-                    identityDbField?.IsIdentity == true &&
-                    qualifiers?.Any(
-                        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true &&
-                    fields?.Any(
-                        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true)
-                {
-                    options = Compiler.GetEnumFunc<SqlBulkCopyOptions>("KeepIdentity")();
-                }
+                //// Set the options to KeepIdentity if needed
+                //if (options == SqlBulkCopyOptions.Default &&
+                //    identityDbField?.IsIdentity == true &&
+                //    qualifiers?.Any(
+                //        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true &&
+                //    fields?.Any(
+                //        field => string.Equals(field.Name, identityDbField?.Name, StringComparison.OrdinalIgnoreCase)) == true)
+                //{
+                //    options = SqlBulkCopyOptions.KeepIdentity;
+                //}
 
                 // WriteToServer
                 WriteToServerInternal(connection,
@@ -145,7 +147,7 @@ namespace RepoDb
                 sql = GetCreateTemporaryTableClusteredIndexSqlText(tempTableName,
                     qualifiers,
                     dbSetting);
-                connection.ExecuteNonQuery(sql, transaction: transaction);
+                connection.ExecuteNonQuery(sql, transaction: transaction, trace: trace);
 
                 // Update the actual update
                 sql = GetBulkUpdateSqlText(tableName,
@@ -160,7 +162,7 @@ namespace RepoDb
 
                 // Drop the table after used
                 sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
-                connection.ExecuteNonQuery(sql, transaction: transaction);
+                connection.ExecuteNonQuery(sql, transaction: transaction, trace: trace);
 
                 CommitTransaction(transaction, hasTransaction);
             }
@@ -173,7 +175,7 @@ namespace RepoDb
             {
                 DisposeTransaction(transaction, hasTransaction);
             }
-            
+
             // Return the result
             return result;
         }
@@ -193,19 +195,21 @@ namespace RepoDb
         /// <param name="batchSize">The size per batch to be used.</param>
         /// <param name="usePhysicalPseudoTempTable">The flags that signify whether to create a physical pseudo table.</param>
         /// <param name="transaction">The transaction to be used.</param>
+        /// <param name="trace"></param>
         /// <returns>The number of rows affected by the execution.</returns>
         internal static int BulkUpdateInternalBase(SqlConnection connection,
             string tableName,
             DataTable dataTable,
-            IEnumerable<Field> qualifiers = null,
+            IEnumerable<Field>? qualifiers = null,
             DataRowState? rowState = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<BulkInsertMapItem>? mappings = null,
             SqlBulkCopyOptions options = default,
-            string hints = null,
+            string? hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null)
+            bool usePhysicalPseudoTempTable = false,
+            SqlTransaction? transaction = null,
+            ITrace? trace = null)
         {
             // Validate
             if (dataTable?.Rows.Count <= 0)
@@ -283,16 +287,16 @@ namespace RepoDb
                     fields,
                     dbSetting,
                     false);
-                connection.ExecuteNonQuery(sql, transaction: transaction);
+                connection.ExecuteNonQuery(sql, transaction: transaction, trace: trace);
 
-                // Set the options to KeepIdentity if needed
-                if (Equals(options, default(SqlBulkCopyOptions)) &&
-                    identityDbField?.IsIdentity == true &&
-                    fields?.FirstOrDefault(
-                        field => string.Equals(field.Name, identityDbField.Name, StringComparison.OrdinalIgnoreCase)) != null)
-                {
-                    options = Compiler.GetEnumFunc<SqlBulkCopyOptions>("KeepIdentity")();
-                }
+                //// Set the options to KeepIdentity if needed
+                //if (options == SqlBulkCopyOptions.Default &&
+                //    identityDbField?.IsIdentity == true &&
+                //    fields?.FirstOrDefault(
+                //        field => string.Equals(field.Name, identityDbField.Name, StringComparison.OrdinalIgnoreCase)) != null)
+                //{
+                //    options = SqlBulkCopyOptions.KeepIdentity;
+                //}
 
                 // WriteToServer
                 WriteToServerInternal(connection,
@@ -310,7 +314,7 @@ namespace RepoDb
                 sql = GetCreateTemporaryTableClusteredIndexSqlText(tempTableName,
                     qualifiers,
                     dbSetting);
-                connection.ExecuteNonQuery(sql, transaction: transaction);
+                connection.ExecuteNonQuery(sql, transaction: transaction, trace: trace);
 
                 // Update the actual update
                 sql = GetBulkUpdateSqlText(tableName,
@@ -325,7 +329,7 @@ namespace RepoDb
 
                 // Drop the table after used
                 sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
-                connection.ExecuteNonQuery(sql, transaction: transaction);
+                connection.ExecuteNonQuery(sql, transaction: transaction, trace: trace);
 
                 CommitTransaction(transaction, hasTransaction);
             }
@@ -338,7 +342,7 @@ namespace RepoDb
             {
                 DisposeTransaction(transaction, hasTransaction);
             }
-            
+
             // Return the result
             return result;
         }
@@ -361,19 +365,21 @@ namespace RepoDb
         /// <param name="batchSize"></param>
         /// <param name="usePhysicalPseudoTempTable"></param>
         /// <param name="transaction"></param>
+        /// <param name="trace"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         internal static async Task<int> BulkUpdateAsyncInternalBase(SqlConnection connection,
             string tableName,
             DbDataReader reader,
-            IEnumerable<Field> qualifiers = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<Field>? qualifiers = null,
+            IEnumerable<BulkInsertMapItem>? mappings = null,
             SqlBulkCopyOptions options = default,
-            string hints = null,
+            string? hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null,
+            bool usePhysicalPseudoTempTable = false,
+            SqlTransaction? transaction = null,
+            ITrace? trace = null,
             CancellationToken cancellationToken = default)
         {
             // Validate
@@ -452,16 +458,16 @@ namespace RepoDb
                     fields,
                     dbSetting,
                     false);
-                await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
+                await connection.ExecuteNonQueryAsync(sql, transaction: transaction, trace: trace, cancellationToken: cancellationToken);
 
-                // Set the options to KeepIdentity if needed
-                if (Equals(options, default(SqlBulkCopyOptions)) &&
-                    identityDbField?.IsIdentity == true &&
-                    fields?.FirstOrDefault(
-                        field => string.Equals(field.Name, identityDbField.Name, StringComparison.OrdinalIgnoreCase)) != null)
-                {
-                    options = Compiler.GetEnumFunc<SqlBulkCopyOptions>("KeepIdentity")();
-                }
+                //// Set the options to KeepIdentity if needed
+                //if (options == SqlBulkCopyOptions.Default &&
+                //    identityDbField?.IsIdentity == true &&
+                //    fields?.FirstOrDefault(
+                //        field => string.Equals(field.Name, identityDbField.Name, StringComparison.OrdinalIgnoreCase)) != null)
+                //{
+                //    options = SqlBulkCopyOptions.KeepIdentity;
+                //}
 
                 // WriteToServer
                 await WriteToServerAsyncInternal(connection,
@@ -478,7 +484,7 @@ namespace RepoDb
                 sql = GetCreateTemporaryTableClusteredIndexSqlText(tempTableName,
                     qualifiers,
                     dbSetting);
-                await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
+                await connection.ExecuteNonQueryAsync(sql, transaction: transaction, trace: trace, cancellationToken: cancellationToken);
 
                 // Update the actual update
                 sql = GetBulkUpdateSqlText(tableName,
@@ -493,7 +499,7 @@ namespace RepoDb
 
                 // Drop the table after used
                 sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
-                await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
+                await connection.ExecuteNonQueryAsync(sql, transaction: transaction, trace: trace, cancellationToken: cancellationToken);
 
                 CommitTransaction(transaction, hasTransaction);
             }
@@ -506,7 +512,7 @@ namespace RepoDb
             {
                 DisposeTransaction(transaction, hasTransaction);
             }
-            
+
             // Return the result
             return result;
         }
@@ -526,20 +532,22 @@ namespace RepoDb
         /// <param name="batchSize"></param>
         /// <param name="usePhysicalPseudoTempTable"></param>
         /// <param name="transaction"></param>
+        /// <param name="trace"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         internal static async Task<int> BulkUpdateAsyncInternalBase(SqlConnection connection,
             string tableName,
             DataTable dataTable,
-            IEnumerable<Field> qualifiers = null,
+            IEnumerable<Field>? qualifiers = null,
             DataRowState? rowState = null,
-            IEnumerable<BulkInsertMapItem> mappings = null,
+            IEnumerable<BulkInsertMapItem>? mappings = null,
             SqlBulkCopyOptions options = default,
-            string hints = null,
+            string? hints = null,
             int? bulkCopyTimeout = null,
             int? batchSize = null,
-            bool? usePhysicalPseudoTempTable = null,
-            SqlTransaction transaction = null,
+            bool usePhysicalPseudoTempTable = false,
+            SqlTransaction? transaction = null,
+            ITrace? trace = null,
             CancellationToken cancellationToken = default)
         {
             // Validate
@@ -618,16 +626,16 @@ namespace RepoDb
                     fields,
                     dbSetting,
                     false);
-                await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
+                await connection.ExecuteNonQueryAsync(sql, transaction: transaction, trace: trace, cancellationToken: cancellationToken);
 
-                // Set the options to KeepIdentity if needed
-                if (Equals(options, default(SqlBulkCopyOptions)) &&
-                    identityDbField?.IsIdentity == true &&
-                    fields?.FirstOrDefault(
-                        field => string.Equals(field.Name, identityDbField.Name, StringComparison.OrdinalIgnoreCase)) != null)
-                {
-                    options = Compiler.GetEnumFunc<SqlBulkCopyOptions>("KeepIdentity")();
-                }
+                //// Set the options to KeepIdentity if needed
+                //if (options == SqlBulkCopyOptions.Default &&
+                //    identityDbField?.IsIdentity == true &&
+                //    fields?.FirstOrDefault(
+                //        field => string.Equals(field.Name, identityDbField.Name, StringComparison.OrdinalIgnoreCase)) != null)
+                //{
+                //    options = SqlBulkCopyOptions.KeepIdentity;
+                //}
 
                 // WriteToServer
                 await WriteToServerAsyncInternal(connection,
@@ -646,7 +654,7 @@ namespace RepoDb
                 sql = GetCreateTemporaryTableClusteredIndexSqlText(tempTableName,
                     qualifiers,
                     dbSetting);
-                await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
+                await connection.ExecuteNonQueryAsync(sql, transaction: transaction, trace: trace, cancellationToken: cancellationToken);
 
                 // Update the actual update
                 sql = GetBulkUpdateSqlText(tableName,
@@ -661,7 +669,7 @@ namespace RepoDb
 
                 // Drop the table after used
                 sql = GetDropTemporaryTableSqlText(tempTableName, dbSetting);
-                await connection.ExecuteNonQueryAsync(sql, transaction: transaction, cancellationToken: cancellationToken);
+                await connection.ExecuteNonQueryAsync(sql, transaction: transaction, trace: trace, cancellationToken: cancellationToken);
 
                 CommitTransaction(transaction, hasTransaction);
             }
@@ -674,7 +682,7 @@ namespace RepoDb
             {
                 DisposeTransaction(transaction, hasTransaction);
             }
-            
+
             // Return the result
             return result;
         }
