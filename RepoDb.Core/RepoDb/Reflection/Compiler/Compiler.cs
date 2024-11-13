@@ -572,7 +572,7 @@ namespace RepoDb.Reflection
             return expression;
         }
 
-#if NET6_0_OR_GREATER
+#if NET
         internal static Expression ConvertExpressionToNullableGetValueOrDefaultExpression(Func<Expression, Expression> converter, Expression expression)
         {
             if (Nullable.GetUnderlyingType(expression.Type) != null)
@@ -636,7 +636,7 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static Expression ConvertExpressionToDateTimeToTimeSpanExpression(Expression expression) =>
             ConvertExpressionToNullableValue(ConvertExpressionToDateTimeTimeOfDayExpression(expression));
-#if NET6_0_OR_GREATER
+#if NET
         /// <summary>
         ///
         /// </summary>
@@ -668,7 +668,7 @@ namespace RepoDb.Reflection
         /// <returns></returns>
         internal static Expression ConvertExpressionToDateTimeTimeOfDayExpression(Expression expression) =>
             Expression.Call(expression, GetDateTimeTimeOfDayPropertyGetMethod());
-#if NET6_0_OR_GREATER
+#if NET
         /// <summary>
         ///
         /// </summary>
@@ -1029,7 +1029,7 @@ namespace RepoDb.Reflection
             {
                 expression = ConvertExpressionToDateTimeToTimeSpanExpression(expression);
             }
-#if NET6_0_OR_GREATER
+#if NET
             // DateTime to DateOnly
             else if (fromType == StaticType.DateTime && toType == StaticType.DateOnly)
             {
@@ -1358,7 +1358,7 @@ namespace RepoDb.Reflection
             var targetTypeUnderlyingType = TypeCache.Get(targetType).GetUnderlyingType();
             var isAutomaticConversion = GlobalConfiguration.Options.ConversionType == ConversionType.Automatic ||
                 targetTypeUnderlyingType == StaticType.TimeSpan ||
-#if NET6_0_OR_GREATER
+#if NET
                 targetTypeUnderlyingType == StaticType.DateOnly ||
 #endif
                 /* SQLite: Guid/String (Vice-Versa) : Enforce automatic conversion for the Primary/Identity fields */

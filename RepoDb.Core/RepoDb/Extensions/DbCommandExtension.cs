@@ -1,14 +1,13 @@
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 using RepoDb.Attributes.Parameter;
 using RepoDb.Enumerations;
 using RepoDb.Exceptions;
 using RepoDb.Interfaces;
 using RepoDb.Options;
 using RepoDb.Resolvers;
-
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
 
 namespace RepoDb.Extensions
 {
@@ -885,7 +884,7 @@ namespace RepoDb.Extensions
             {
                 return AutomaticConvertGuidToString(value);
             }
-#if NET6_0_OR_GREATER
+#if NET
             else if (fromType == StaticType.DateOnly && targetType == StaticType.DateTime)
             {
                 return AutomaticConvertDateOnlyToDateTime(value);
@@ -918,11 +917,11 @@ namespace RepoDb.Extensions
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        private static object AutomaticConvertGuidToString(object value) =>
+        private static string AutomaticConvertGuidToString(object value) =>
             value?.ToString();
 
-#if NET6_0_OR_GREATER
-        private static object AutomaticConvertDateOnlyToDateTime(object value) =>
+#if NET
+        private static DateTime? AutomaticConvertDateOnlyToDateTime(object value) =>
             (value is DateOnly dateOnly ? dateOnly.ToDateTime(default(TimeOnly)) : null);
 #endif
         #endregion

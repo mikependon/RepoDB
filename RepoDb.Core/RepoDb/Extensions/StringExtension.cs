@@ -1,8 +1,8 @@
-﻿using RepoDb.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using RepoDb.Interfaces;
 
 namespace RepoDb.Extensions
 {
@@ -252,7 +252,7 @@ namespace RepoDb.Extensions
                 {
                     list.Add(current.AsQuotedInternal(dbSetting));
                 }
-#if NETSTANDARD2_0
+#if !NET
                 return string.Join(CharConstant.Period.ToString(), list);
 #else
                 return string.Join(CharConstant.Period, list);
@@ -260,7 +260,7 @@ namespace RepoDb.Extensions
             }
             else
             {
-#if NETSTANDARD2_0
+#if !NET
                 return string.Join(CharConstant.Period.ToString(), splitted.Select(item => item.AsQuotedInternal(dbSetting)));
 #else
                 return string.Join(CharConstant.Period, splitted.Select(item => item.AsQuotedInternal(dbSetting)));
@@ -350,7 +350,7 @@ namespace RepoDb.Extensions
             return value;
         }
 
-#if NETSTANDARD2_0
+#if !NET
         /// <summary>
         /// Returns a value indicating whether a specified string occurs within this string, using the specified comparison rules.
         /// </summary>

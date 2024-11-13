@@ -13,7 +13,7 @@ namespace RepoDb.Benchmarks.PostgreSql.RepoDb
         [GlobalSetup]
         public void Setup()
         {
-            PostgreSqlBootstrap.Initialize();
+            GlobalConfiguration.Setup().UsePostgreSql();
             TypeMapper.Add(typeof(DateTime), DbType.DateTime2, true);
             BaseSetup();
         }

@@ -1,6 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Resolvers;
-using System;
 
 namespace RepoDb.PostgreSql.UnitTests.Resolvers
 {
@@ -520,7 +520,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
 
             // Assert
             // TODO: This requires a mapping whether which type to use.
-#if NET6_0_OR_GREATER
+#if NET
             Assert.AreEqual(typeof(DateOnly), result);
 #else
             Assert.AreEqual(typeof(DateTime), result);
@@ -643,7 +643,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
 
             // Assert
             // TODO: We should not just change it this
-#if NET6_0_OR_GREATER
+#if NET
             Assert.AreEqual(typeof(TimeOnly), result);
 #else
             Assert.AreEqual(typeof(TimeSpan), result);
@@ -659,7 +659,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
             // Act
             var result = resolver.Resolve("TIME");
             // Assert
-#if NET6_0_OR_GREATER
+#if NET
             Assert.AreEqual(typeof(TimeOnly), result);
 #else
             Assert.AreEqual(typeof(TimeSpan), result);

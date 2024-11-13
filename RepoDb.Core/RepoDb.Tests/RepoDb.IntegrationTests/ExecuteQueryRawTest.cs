@@ -1,12 +1,12 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using System.Data;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Attributes;
 using RepoDb.Extensions;
 using RepoDb.IntegrationTests.Setup;
-using System;
-using System.Data;
-using Microsoft.Data.SqlClient;
-using System.Linq;
-using System.Threading.Tasks;
 using RepoDb.Interfaces;
 using RepoDb.Options;
 
@@ -20,7 +20,7 @@ namespace RepoDb.IntegrationTests
         {
             FluentMapper.Type<DateTime>().DbType(DbType.DateTime2, true);
             FluentMapper.Type<uint>().PropertyHandler<IntPropertyHandler>(true);
-#if NET5_0_OR_GREATER
+#if NET
             FluentMapper.Type<StringRecord>().DbType(DbType.AnsiString, true);
 #endif
         }
@@ -152,7 +152,7 @@ namespace RepoDb.IntegrationTests
 
         #endregion
 
-#if NET5_0_OR_GREATER
+#if NET
 
         #region Records
 
@@ -1041,10 +1041,10 @@ namespace RepoDb.IntegrationTests
         #endregion
 
 
-#if NET5_0_OR_GREATER
+#if NET
 
         #region Records
-        
+
         [TestMethod]
         public void TestSqlConnectionExecuteQueryWithStringRecordParam()
         {
@@ -1052,14 +1052,14 @@ namespace RepoDb.IntegrationTests
             {
                 // Act
                 var result = connection.ExecuteQuery<string>("WITH CTE AS (SELECT 'ABC' AS Value UNION ALL SELECT 'DEF') SELECT * FROM CTE WHERE Value = @Value;",
-                    new { Value = new StringRecord("ABC")}).AsList();
+                    new { Value = new StringRecord("ABC") }).AsList();
 
                 // Assert
                 Assert.AreEqual(1, result.Count);
                 Assert.AreEqual("ABC", result[0]);
             }
         }
-        
+
         [TestMethod]
         public void TestSqlConnectionExecuteQueryWithMultipleStringRecordParams()
         {

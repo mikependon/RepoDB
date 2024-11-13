@@ -96,7 +96,7 @@ namespace RepoDb
         /// </summary>
         public static Type DateTimeOffset => typeof(DateTimeOffset);
 
-#if NET6_0_OR_GREATER
+#if NET
         /// <summary>
         /// Gets a type of the <see cref="System.DateOnly"/> .NET CLR type.
         /// </summary>

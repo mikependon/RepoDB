@@ -1,6 +1,6 @@
-﻿using NpgsqlTypes;
+﻿using System;
+using NpgsqlTypes;
 using RepoDb.Interfaces;
-using System;
 
 namespace RepoDb.Resolvers
 {
@@ -100,7 +100,7 @@ namespace RepoDb.Resolvers
             {
                 return NpgsqlDbType.TimestampTz;
             }
-            #if NET6_0_OR_GREATER
+#if NET
             else if (type == typeof(DateOnly))
             {
                 return NpgsqlDbType.Date;
@@ -109,7 +109,7 @@ namespace RepoDb.Resolvers
             {
                 return NpgsqlDbType.Time;
             }
-            #endif
+#endif
             else if (type == typeof(Decimal))
             {
                 return NpgsqlDbType.Money;

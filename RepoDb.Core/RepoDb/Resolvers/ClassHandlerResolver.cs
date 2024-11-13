@@ -1,8 +1,8 @@
-﻿using RepoDb.Attributes;
-using RepoDb.Interfaces;
-using System;
+﻿using System;
 using System.Linq;
 using System.Reflection;
+using RepoDb.Attributes;
+using RepoDb.Interfaces;
 
 namespace RepoDb.Resolvers
 {
@@ -19,7 +19,7 @@ namespace RepoDb.Resolvers
         public object Resolve(Type type)
         {
             object classHandler = null;
-            
+
             var attribute = type.GetCustomAttribute<ClassHandlerAttribute>();
             if (attribute is not null)
             {
@@ -27,8 +27,8 @@ namespace RepoDb.Resolvers
             }
 
             if (classHandler is not null) return classHandler;
-            
-#if NET7_0_OR_GREATER
+
+#if NET
             var genericAttribute = type.GetCustomAttribute(typeof(ClassHandlerAttribute<>));
             if (genericAttribute is not null)
             {

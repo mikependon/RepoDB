@@ -1,7 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Npgsql;
 using RepoDb.Resolvers;
-using System;
 
 namespace RepoDb.PostgreSql.UnitTests.Resolvers
 {
@@ -75,7 +75,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
             // Assert
             Assert.AreEqual("CAST(\"Field\" AS TIMESTAMP)", result);
         }
-        
+
         [TestMethod]
         public void TestSqLiteConvertFieldResolverForDateTimeOffset()
         {
@@ -166,7 +166,7 @@ namespace RepoDb.PostgreSql.UnitTests.Resolvers
             // Assert
             Assert.AreEqual("CAST(\"Field\" AS INTERVAL)", result);
         }
-#if NET6_0_OR_GREATER
+#if NET
         [TestMethod]
         public void TestSqLiteConvertFieldResolverForDate()
         {

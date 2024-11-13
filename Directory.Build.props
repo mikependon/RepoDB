@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
-  <PropertyGroup>
-    <Authors>Michael Camara Pendon</Authors>
-    <Company>RepoDb</Company>
-    <Product>RepoDb</Product>
-    <LangVersion>default</LangVersion>
-    <Copyright>Copyright © 2020-2024</Copyright>
-    <PackageProjectUrl>https://repodb.net/</PackageProjectUrl>
-    <RepositoryType>Github</RepositoryType>
-    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <Version>0.0.1-dev</Version>
-    <IncludeSymbols>true</IncludeSymbols>
-    <IsPackable Condition="'$(Configuration)' != 'Release'">false</IsPackable>
-  </PropertyGroup>
+    <PropertyGroup>
+        <Authors>Michael Camara Pendon</Authors>
+        <Company>RepoDb</Company>
+        <Product>RepoDb</Product>
+        <LangVersion>default</LangVersion>
+        <Copyright>Copyright © 2020-2024</Copyright>
+        <PackageProjectUrl>https://repodb.net/</PackageProjectUrl>
+        <RepositoryType>Github</RepositoryType>
+        <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <Version>0.0.1-dev</Version>
+        <IncludeSymbols>true</IncludeSymbols>
+        <IsPackable Condition="'$(Configuration)' != 'Release'">false</IsPackable>
+        <LangVersion>12</LangVersion>
+        <Nullable>annotations</Nullable>
+    </PropertyGroup>
 </Project>

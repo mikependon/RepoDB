@@ -1,11 +1,11 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RepoDb.Extensions;
+﻿using System.Collections.Generic;
 using System.Linq;
-using RepoDb.MySql.IntegrationTests.Setup;
-using MySql.Data.MySqlClient;
-using RepoDb.MySql.IntegrationTests.Models;
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using MySql.Data.MySqlClient;
+using RepoDb.Extensions;
+using RepoDb.MySql.IntegrationTests.Models;
+using RepoDb.MySql.IntegrationTests.Setup;
 
 namespace RepoDb.MySql.IntegrationTests.Operations
 {
@@ -206,7 +206,7 @@ namespace RepoDb.MySql.IntegrationTests.Operations
             using (var connection = new MySqlConnection(Database.ConnectionString))
             {
                 // Act
-                var result = await connection.MergeAllAsync<CompleteTable>(tables);
+                var result = await connection.MergeAllAsync<CompleteTable>(tables, trace: new SimpleTracer());
 
                 // Assert
                 Assert.AreEqual(tables.Count, connection.CountAll<CompleteTable>());

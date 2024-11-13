@@ -1,6 +1,5 @@
-﻿using Npgsql;
+﻿using System;
 using RepoDb.Interfaces;
-using System;
 
 namespace RepoDb.Resolvers
 {
@@ -170,10 +169,10 @@ namespace RepoDb.Resolvers
                 "cid" or "oid" or "regconfig" or "regtype" or "xid" => typeof(UInt32),
                 "circle" => typeof(NpgsqlTypes.NpgsqlCircle),
                 "date"
-#if NET6_0_OR_GREATER
+#if NET
                     => typeof(DateOnly),
 #else
-                    or 
+                    or
 #endif
                 "timestamp without time zone" or "timestamp" => typeof(DateTime),
                 "timestamp with time zone" or "timestamptz" => typeof(DateTimeOffset),
@@ -181,10 +180,10 @@ namespace RepoDb.Resolvers
                 "inet" => typeof(System.Net.IPAddress),
                 "integer" => typeof(Int32),
                 "time without time zone" or "time"
-#if NET6_0_OR_GREATER
+#if NET
                     => typeof(TimeOnly),
 #else
-                    or 
+                    or
 #endif
                 "interval" => typeof(TimeSpan),
                 "line" => typeof(NpgsqlTypes.NpgsqlLine),

@@ -1,16 +1,16 @@
-﻿using Npgsql;
-using NpgsqlTypes;
-using RepoDb.Enumerations.PostgreSql;
-using RepoDb.Extensions;
-using RepoDb.Interfaces;
-using RepoDb.PostgreSql.BulkOperations;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Npgsql;
+using NpgsqlTypes;
+using RepoDb.Enumerations.PostgreSql;
+using RepoDb.Extensions;
+using RepoDb.Interfaces;
+using RepoDb.PostgreSql.BulkOperations;
 
 namespace RepoDb
 {
@@ -281,7 +281,7 @@ namespace RepoDb
                 identityBehavior,
                 dbSetting);
 
-#if NET5_0
+#if NET
             var importer = await connection.BeginBinaryImportAsync(copyCommand, cancellationToken);
 #else
             var importer = await Task.FromResult(connection.BeginBinaryImport(copyCommand));

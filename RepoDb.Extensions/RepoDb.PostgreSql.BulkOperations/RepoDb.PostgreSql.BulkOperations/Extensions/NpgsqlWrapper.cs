@@ -1,14 +1,14 @@
-﻿using Npgsql;
-using RepoDb.Enumerations.PostgreSql;
-using RepoDb.Extensions;
-using RepoDb.Interfaces;
-using RepoDb.PostgreSql.BulkOperations;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Transactions;
+using Npgsql;
+using RepoDb.Enumerations.PostgreSql;
+using RepoDb.Extensions;
+using RepoDb.Interfaces;
+using RepoDb.PostgreSql.BulkOperations;
 
 namespace RepoDb
 {
@@ -342,7 +342,7 @@ namespace RepoDb
             // Ensure transaction
             if (hasTransaction == false)
             {
-#if NET5_0
+#if NET
                 transaction = await connection.BeginTransactionAsync(cancellationToken);
 #else
                 transaction = connection.BeginTransaction();

@@ -1,11 +1,11 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Data;
+using System.Data.Common;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using RepoDb.Attributes;
 using RepoDb.Interfaces;
 using RepoDb.Options;
 using RepoDb.UnitTests.CustomObjects;
-using System.Data;
-using System.Data.Common;
 
 namespace RepoDb.UnitTests.ClassHandlers
 {
@@ -24,8 +24,8 @@ namespace RepoDb.UnitTests.ClassHandlers
             DbSettingMapper.Add<ClassHandlerForEntityWithAttributeConnection>(new CustomDbSetting(), true);
             DbHelperMapper.Add<ClassHandlerForEntityWithAttributeConnection>(new CustomDbHelper(), true);
             StatementBuilderMapper.Add<ClassHandlerForEntityWithAttributeConnection>(new CustomStatementBuilder(), true);
-            
-#if NET7_0_OR_GREATER
+
+#if NET
             // For Generic Attributed Entity
             DbSettingMapper.Add<ClassHandlerForEntityWithGenericAttributeConnection>(new CustomDbSetting(), true);
             DbHelperMapper.Add<ClassHandlerForEntityWithGenericAttributeConnection>(new CustomDbHelper(), true);
@@ -80,8 +80,8 @@ namespace RepoDb.UnitTests.ClassHandlers
                 return reader;
             }
         }
-        
-#if NET7_0_OR_GREATER
+
+#if NET
         private class ClassHandlerForEntityWithGenericAttributeConnection : CustomDbConnection
         {
             protected override DbCommand CreateDbCommand()
@@ -131,8 +131,8 @@ namespace RepoDb.UnitTests.ClassHandlers
                 return entity;
             }
         }
-        
-#if NET7_0_OR_GREATER
+
+#if NET
         public class TestClassHandlerForEntityWithGenericAttribute : IClassHandler<ClassHandlerTestClassWithGenericAttribute>
         {
             public ClassHandlerTestClassWithGenericAttribute Get(ClassHandlerTestClassWithGenericAttribute entity, ClassHandlerGetOptions options)
@@ -163,8 +163,8 @@ namespace RepoDb.UnitTests.ClassHandlers
             public int Id { get; set; }
             public string Name { get; set; }
         }
-        
-#if NET7_0_OR_GREATER
+
+#if NET
         [ClassHandler<TestClassHandlerForEntityWithGenericAttribute>]
         public class ClassHandlerTestClassWithGenericAttribute
         {
@@ -213,8 +213,8 @@ namespace RepoDb.UnitTests.ClassHandlers
             // Assert
             classHandler.Verify(c => c.Get(It.IsAny<ClassHandlerTestClassWithAttribute>(), It.IsAny<ClassHandlerGetOptions>()), Times.Never);
         }
-        
-#if NET7_0_OR_GREATER
+
+#if NET
         [TestMethod]
         public void TestClassHandlerPrecedenceWithGenericAttribute()
         {

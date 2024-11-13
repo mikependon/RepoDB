@@ -1,7 +1,6 @@
-﻿using RepoDb.Extensions;
-using RepoDb.Interfaces;
-using System;
+﻿using System;
 using System.Data;
+using RepoDb.Interfaces;
 
 namespace RepoDb.Resolvers
 {
@@ -61,7 +60,7 @@ namespace RepoDb.Resolvers
             {
                 return DbType.DateTimeOffset;
             }
-#if NET6_0_OR_GREATER
+#if NET
             else if (type == StaticType.DateOnly)
             {
                 return DbType.Date;

@@ -1,11 +1,11 @@
-﻿using Microsoft.Data.Sqlite;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.Data.Sqlite;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RepoDb.Extensions;
 using RepoDb.Sqlite.Microsoft.IntegrationTests.Models;
 using RepoDb.Sqlite.Microsoft.IntegrationTests.Setup;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
 {
@@ -29,7 +29,7 @@ namespace RepoDb.Sqlite.Microsoft.IntegrationTests.Operations.MDS
         public void Cleanup()
         {
             Database.Cleanup();
-            Converter.ConversionType = Enumerations.ConversionType.Default;
+            GlobalConfiguration.Setup(new());
         }
 
         #region List

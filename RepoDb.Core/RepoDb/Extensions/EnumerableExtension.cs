@@ -25,7 +25,7 @@ namespace RepoDb.Extensions
             {
                 return new[] { value };
             }
-#if NETSTANDARD2_0
+#if !NET
             else
             {
                 var batchCount = Convert.ToInt32(count / sizePerSplit) + ((count % sizePerSplit) != 0 ? 1 : 0);
@@ -96,7 +96,7 @@ namespace RepoDb.Extensions
         /// <returns>A value indicating whether the collection is null or empty.</returns>
         public static bool IsNullOrEmpty<T>(this IEnumerable<T> value) => !value?.Any() ?? true;
 
-#if NETSTANDARD2_0
+#if !NET
         /// <summary>
         /// CCreates a new <see cref="HashSet{T}"/> from an <see cref="IEnumerable{T}"/>.
         /// </summary>
@@ -104,7 +104,7 @@ namespace RepoDb.Extensions
         /// <param name="source">The actual enumerable instance.</param>
         /// <param name="comparer">An <see cref="IEqualityComparer{T}"/> to compare keys.</param>
         /// <returns>The created <see cref="HashSet{T}"/> object.</returns>
-        internal static HashSet<T> ToHashSet<T>(this IEnumerable<T> source, IEqualityComparer<T> comparer) => 
+        internal static HashSet<T> ToHashSet<T>(this IEnumerable<T> source, IEqualityComparer<T> comparer) =>
             new(source, comparer);
 
         /// <summary>

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Title>RepoDb.PostgreSql.BulkOperations</Title>
-    <TargetFrameworks>netstandard2.0;net6.0;net7.0;net8.0</TargetFrameworks>
+    <TargetFrameworks>net9.0;net8.0;netstandard2.0</TargetFrameworks>
     <Nullable>annotations</Nullable>
     <Description>An extension library that contains the official Bulk Operations of RepoDb for PostgreSQL.</Description>
     <PackageTags>orm hybrid-orm micro-orm postgresql bulkoperations</PackageTags>
