@@ -1,8 +1,8 @@
-﻿using RepoDb.Enumerations;
-using RepoDb.Extensions;
-using System;
+﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
+using RepoDb.Enumerations;
+using RepoDb.Extensions;
 
 namespace RepoDb
 {
@@ -152,7 +152,11 @@ namespace RepoDb
                     ExpressionType.Convert or ExpressionType.ConvertChecked => operand,
                     _ => throw new NotSupportedException($"Unary operation '{expression.NodeType}' is currently not supported.")
                 }
-                : null;
+                : expression.Operand switch
+                {
+                    MemberExpression me => new QueryGroup(new QueryField(me.Member.Name, Operation.NotEqual, false)),
+                    _ => null,
+                };
         }
 
         /*
