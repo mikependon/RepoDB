@@ -74,11 +74,11 @@ namespace RepoDb
         /// </summary>
         /// <returns>The string representation of the current object.</returns>
         public override string ToString() =>
-            $"SessiontId: {SessionId}\n" +
+            $"SessionId: {SessionId}\n" +
             $"Key: {Key}\n" +
             $"Statement: {Statement}\n" +
-            $"StarTime (Ticks): {StartTime.Ticks}\n" +
-            $"Parameters: {(Parameters?.Any() == true ? string.Join(", ", Parameters.ToArray().Select(param => $"({param.ParameterName}={param.Value})")) : "No Parameters")}";
+            $"StartTime (Ticks): {StartTime.Ticks}\n" +
+            $"Parameters: {(Parameters?.Any() == true ? string.Join(", ", Parameters.ToArray().Select(param => $"({param.ParameterName}={(param.Value is DBNull ? "DBNull" : param.Value)})")) : "No Parameters")}";
 
         #endregion
     }
