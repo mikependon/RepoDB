@@ -17,14 +17,14 @@ namespace RepoDb.IntegrationTests.Setup
             ConnectionStringForMaster =
                 Environment.GetEnvironmentVariable("REPODB_SQLSERVER_CONSTR_MASTER")
                 ?? Environment.GetEnvironmentVariable("REPODB_CONSTR_MASTER")
-                // ?? "Server=tcp:127.0.0.1,41433;Database=master;User ID=sa;Password=ddd53e85-b15e-4da8-91e5-a7d3b00a0ab2;TrustServerCertificate=True;" // Docker test configuration
+                ?? "Server=tcp:127.0.0.1,41433;Database=master;User ID=sa;Password=ddd53e85-b15e-4da8-91e5-a7d3b00a0ab2;TrustServerCertificate=True;" // Docker test configuration
                 ?? "Server=(local);Database=master;Integrated Security=SSPI;TrustServerCertificate=True;";
 
             // RepoDb connection
             ConnectionStringForRepoDb =
                 Environment.GetEnvironmentVariable("REPODB_SQLSERVER_CONSTR_REPODB")
                 ?? Environment.GetEnvironmentVariable("REPODB_CONSTR")
-                // ?? "Server=tcp:127.0.0.1,41433;Database=RepoDb;User ID=sa;Password=ddd53e85-b15e-4da8-91e5-a7d3b00a0ab2;TrustServerCertificate=True;" // Docker test configuration
+                ?? "Server=tcp:127.0.0.1,41433;Database=RepoDb;User ID=sa;Password=ddd53e85-b15e-4da8-91e5-a7d3b00a0ab2;TrustServerCertificate=True;" // Docker test configuration
                 ?? "Server=(local);Database=RepoDb;Integrated Security=SSPI;TrustServerCertificate=True;";
 
             // Set the proper values for type mapper
